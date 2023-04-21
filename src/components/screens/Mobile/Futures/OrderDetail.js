@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { ArrowRight, Copy } from 'react-feather';
+import { ArrowRight } from 'react-feather';
 import {
     fees,
     getTypesLabel,
@@ -22,6 +22,8 @@ import fetchApi from 'utils/fetch-api';
 import { ApiStatus, ChartMode, DefaultFuturesFee } from 'redux/actions/const';
 import colors from 'styles/colors';
 import get from 'lodash/get';
+import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
+import CopyComponent from 'components/common/V2/ButtonV2/CopyComponent';
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),
@@ -153,7 +155,6 @@ const OrderDetail = ({
     };
 
     const renderModify = (metadata, key) => {
-        console.log({key})
         let value = null;
         switch (key) {
             case 'price':
@@ -520,11 +521,7 @@ const OrderDetail = ({
             <>
                 <Row>
                     <Label>ID</Label>
-                    <Span className="flex items-center"
-                          onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
-                        {order?.displaying_id}
-                        <Copy color={isDark ? colors.gray[7] : colors.gray[1]} size={16} className="ml-2 "/>
-                    </Span>
+                    <CopyComponent color="currentColor" copyClass="text-txtSecondary dark:text-txtSecondary-dark" size={16} text={order?.displaying_id} />
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:open_time')}</Label>
@@ -575,11 +572,7 @@ const OrderDetail = ({
             <>
                 <Row>
                     <Label>ID</Label>
-                    <Span className="flex items-center"
-                          onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
-                        {order?.displaying_id}
-                        <Copy color={isDark ? colors.gray[7] : colors.gray[1]} size={16} className="ml-2 "/>
-                    </Span>
+                    <CopyComponent color="currentColor" copyClass="text-txtSecondary dark:text-txtSecondary-dark" size={16} text={order?.displaying_id} />
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:open_time')}</Label>
@@ -657,11 +650,7 @@ const OrderDetail = ({
             <>
                 <Row>
                     <Label>ID</Label>
-                    <Span className="flex items-center"
-                          onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
-                        {order?.displaying_id}
-                        <Copy color={isDark ? colors.gray[7] : colors.gray[1]} size={16} className="ml-2 "/>
-                    </Span>
+                    <CopyComponent color="currentColor" copyClass="text-txtSecondary dark:text-txtSecondary-dark" size={16} text={order?.displaying_id} />
                 </Row>
                 <Row>
                     <Label>{t('futures:leverage:leverage')}</Label>
@@ -702,11 +691,11 @@ const OrderDetail = ({
                     </div>
                 </Tooltip>
                 <Row>
-                    <Label className="flex">
+                    <Label className="flex items-center whitespace-nowrap">
                         {t('futures:order_table:opening_volume')}
                         <div className="px-2" data-tip="" data-for="opening-volume"
                              id="tooltip-opening-volume">
-                            <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20}/>
+                            <QuestionMarkIcon color="currentColor" size={12} />
                         </div>
                     </Label>
                     <Span>{`${formatNumber(order?.order_value, decimalSymbol)} ${pairConfig?.quoteAsset} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
@@ -714,10 +703,10 @@ const OrderDetail = ({
                 {
                     isClosedOrder &&
                     <Row>
-                        <Label className="flex">{t('futures:order_table:closed_volume')}
+                        <Label className="flex items-center whitespace-nowrap">{t('futures:order_table:closed_volume')}
                             <div className="px-2" data-tip="" data-for="closed-volume"
                                  id="tooltip-closed-volume">
-                                <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20}/>
+                                <QuestionMarkIcon color="currentColor" size={12} />
                             </div>
                         </Label>
                         <Span>{`${formatNumber(order?.close_order_value || order?.quantity * order?.close_price || 0, decimalSymbol)} ${pairConfig?.quoteAsset} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
@@ -781,11 +770,11 @@ const OrderDetail = ({
                 </Tooltip>
                 {
                     isClosedOrder && <Row>
-                        <Label className="flex">
+                        <Label className="flex items-center whitespace-nowrap">
                             {t('futures:mobile:liq_price')}
                             <div className="px-2" data-tip="" data-for="liquidate-price"
                                  id="tooltip-liquidate-fee">
-                                <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20}/>
+                                <QuestionMarkIcon color="currentColor" size={12} />
                             </div>
                         </Label>
                         <Span>{renderLiqPrice(order)}</Span>
@@ -821,11 +810,11 @@ const OrderDetail = ({
                         </div>
                     </Tooltip>
                     <Row>
-                        <Label className="flex">
+                        <Label className="flex items-center whitespace-nowrap">
                             {t('futures:mobile:liquidate_fee')}
                             <div className="px-2" data-tip="" data-for="liquidate-fee"
                                  id="tooltip-liquidate-fee">
-                                <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20}/>
+                                <QuestionMarkIcon color="currentColor" size={12} />
                             </div>
                         </Label>
                         <Span>{renderFee(order, 'liquidate_order')}</Span>
@@ -845,10 +834,10 @@ const OrderDetail = ({
                             </div>
                         </Tooltip>
                         <Row>
-                            <Label className="flex">
+                            <Label className="flex items-center whitespace-nowrap">
                                 {t('futures:mobile:swap_fee')}
                                 <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
-                                    <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20}/>
+                                    <QuestionMarkIcon color="currentColor" size={12} />
                                 </div>
                             </Label>
                             <Span>{renderFee(order, 'swap')} {renderSwapHours(order)}</Span>
@@ -869,10 +858,10 @@ const OrderDetail = ({
                         </div>
                     </Tooltip>
                     <Row>
-                        <Label className="flex">
+                        <Label className="flex items-center whitespace-nowrap">
                             {t('futures:funding_fee')}
                             <div className="px-2" data-tip="" data-for="funding-fee" id="tooltip-funding-fee">
-                                <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20}/>
+                                <QuestionMarkIcon color="currentColor" size={12} />
                             </div>
                         </Label>
                         <Span

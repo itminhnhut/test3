@@ -69,7 +69,7 @@ const Slider = ({
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
     const _bgColorDot = onusMode ? (isDark ? colors.dark[2] : colors.gray[12]) : isDark ? colors.dark[2] : colors.gray[11];
-    const _bgColorActive = bgColorActive ? bgColorActive : onusMode ? '#418FFF' : colors.teal;
+    const _bgColorActive = bgColorActive ? bgColorActive : onusMode ? colors.teal : colors.teal;
 
 
     function getPosition() {

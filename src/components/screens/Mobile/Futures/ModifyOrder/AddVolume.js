@@ -351,7 +351,7 @@ const AddVolume = ({
                         decimalScale={configSymbol.decimalSymbol}
                         allowNegative={false}
                         thousandSeparator={true}
-                        containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] !bg-gray-12 dark:!bg-dark-2"
+                        containerClassName="px-2.5 flex-grow text-sm font-medium h-[44px] !bg-gray-12 dark:!bg-dark-2"
                         inputClassName="!text-center"
                         onValueChange={({ value }) => onChangeVolume(value)}
                         disabled={!available}
@@ -431,8 +431,8 @@ const AddVolume = ({
                                     decimalScale={0}
                                     allowNegative={false}
                                     thousandSeparator={true}
-                                    containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-gray-12 dark:!bg-dark-2 max-w-[6.25rem] min-w-[50px]"
-                                    inputClassName="!text-center"
+                                    containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-gray-12 dark:!bg-dark-2"
+                                    inputClassName="!text-center w-full"
                                     onValueChange={({ value }) => setLeverage(value)}
                                     disabled={!available}
                                     autoFocus

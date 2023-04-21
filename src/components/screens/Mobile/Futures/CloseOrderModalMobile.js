@@ -26,6 +26,7 @@ import fetchApi from 'utils/fetch-api';
 import { createSelector } from 'reselect';
 import find from 'lodash/find';
 import Tooltip from 'components/common/Tooltip';
+import InfoOutlined from 'components/svg/InfoOutlined';
 
 const getPairConfig = createSelector(
     [
@@ -313,7 +314,7 @@ const CloseOrderModalMobile = ({
                             <div className="font-semibold">{t('futures:mobile:adjust_margin:close_partially')}</div>
                             <Switcher
                                 onusMode
-                                addClass={`w-[22px] h-[22px] ${indicatorColorClass}`}
+                                addClass={`!w-[22px] !h-[22px] ${indicatorColorClass}`}
                                 wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
                                 active={partialClose}
                                 onChange={() => setPartialClose(!partialClose)}
@@ -349,8 +350,8 @@ const CloseOrderModalMobile = ({
                                             decimalScale={configSymbol.decimalSymbol}
                                             allowNegative={false}
                                             thousandSeparator={true}
-                                            containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] !bg-gray-12 dark:!bg-dark-2"
-                                            inputClassName="!text-center"
+                                            containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-gray-12 dark:!bg-dark-2"
+                                            inputClassName="!text-center w-full"
                                             onValueChange={({ value }) => onChangeVolume(value)}
                                             autoFocus
                                             inputMode="decimal"
@@ -405,7 +406,7 @@ const CloseOrderModalMobile = ({
                                                 allowNegative={false}
                                                 thousandSeparator={true}
                                                 containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-gray-12 dark:!bg-dark-2"
-                                                inputClassName="!text-left"
+                                                inputClassName="!text-left w-full"
                                                 placeholder={getLabel(type)}
                                                 onValueChange={({ value }) => setPrice(value)}
                                                 disabled={type === FuturesOrderTypes.Market}
@@ -457,12 +458,12 @@ const CloseOrderModalMobile = ({
                                             {configSymbol?.quoteAsset}
                                         </span>
                                         <div
-                                            className="px-2"
+                                            className="px-2 text-txtSecondary dark:text-txtSecondary-dark"
                                             data-tip={t('futures:mobile:adjust_margin:tooltip_pending_close_volume')}
                                             data-for="pending-vol"
                                             id="tooltip-pending-vol"
                                         >
-                                            <img src={getS3Url('/images/icon/ic_help.png')} height={16} width={16} />
+                                            <InfoOutlined color='currentColor' size={12} />
                                         </div>
                                     </div>
                                     <div className="flex items-center">

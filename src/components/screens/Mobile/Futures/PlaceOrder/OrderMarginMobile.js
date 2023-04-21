@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'next-i18next';
 import { emitWebViewEvent, formatCurrency, formatNumber, getS3Url } from 'redux/actions/utils';
 import { useDispatch } from 'react-redux';
+import AddCircleOutline from 'components/svg/AddCircleOutline';
 
 const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset, decimal }) => {
     const { t } = useTranslation();
@@ -15,8 +16,8 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset, decimal
     const Available = () => {
         return (
             <div className="flex items-center flex-wrap">
-                {formatNumber(availableAsset * 100000000 ?? 0, 0)}&nbsp;&nbsp;
-                <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} />
+                {formatNumber(availableAsset * 100000000 ?? 0, 0)}
+                <AddCircleOutline color="currentColor" size={16} className="text-txtSecondary dark:text-txtSecondary-dark ml-1 flex-shrink-0" onClick={openTransferModal}/>
             </div>
         )
     }
@@ -24,10 +25,9 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset, decimal
         <div className="flex flex-col h-full justify-around">
             <div className="flex justify-between text-xs font-medium ">
                 <div className="mr-1 text-txtSecondary dark:text-txtSecondary-dark min-w-[50px]">{t('futures:mobile:available')}</div>
-                <div className="flex items-end justify-end text-right" style={{ wordBreak: 'break-word' }}>
+                <div className="flex items-center justify-end text-right" style={{ wordBreak: 'break-word' }}>
                     {formatNumber(availableAsset ?? 0, decimal)}
-                    {/*{onMobile && <> &nbsp;&nbsp;<img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} /></>}*/}
-                    <> &nbsp;&nbsp;<img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} /></>
+                    <AddCircleOutline color="currentColor" size={16} className="text-txtSecondary dark:text-txtSecondary-dark ml-1 flex-shrink-0" onClick={openTransferModal}/>
                 </div>
             </div>
             <div className="flex justify-between text-xs font-medium ">

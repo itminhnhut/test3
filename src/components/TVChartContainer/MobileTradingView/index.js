@@ -34,6 +34,7 @@ import debounce from 'lodash/debounce';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useContext } from 'react';
+import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 
 export class MobileTradingView extends React.PureComponent {
     state = {
@@ -614,7 +615,7 @@ export class MobileTradingView extends React.PureComponent {
                         <IconLoading color={colors.green[2]} />
                     </div>
                     {this.props.showTimeFrame &&
-                        <div className="w-full border-b border-divider dark:border-divider-dark py-2 dragHandleArea z-10">
+                        <div className="w-full border-b border-divider/70 dark:border-divider-dark py-2 dragHandleArea z-10">
                             <ChartOptions
                                 pair={this.props.symbol}
                                 pairConfig={this.props.pairConfig}
@@ -739,12 +740,12 @@ const Funding = ({ symbol }) => {
     return (
         <>
             {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}
-            <div className="flex items-center px-4 pt-3 pb-4 space-x-6 border-b-4 border-divider dark:border-divider-dark">
+            <div className="flex items-center px-4 pt-3 pb-4 space-x-6 border-b-4 border-divider/70 dark:border-divider-dark/50">
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
                     <div className='flex items-center space-x-1' onClick={() => setShowModal(true)}>
                         <span className="text-txtSecondary dark:text-txtSecondary-dark">Funding:</span>
                         <div>
-                            <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
+                            <QuestionMarkIcon size={12} color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" />
                         </div>
                     </div>
                     <div>{formatFundingRate(marketWatch[symbol]?.fundingRate * 100)}</div>
@@ -756,7 +757,7 @@ const Funding = ({ symbol }) => {
                         />
                         <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:countdown')}:</span>
                         <div className="w-3 h-3">
-                            <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
+                            <QuestionMarkIcon size={12} color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" />
                         </div>
                     </div>
                     <div>
@@ -794,8 +795,8 @@ const ModalFundingRate = ({ onClose, t }) => {
             {t('futures:funding_rate_des')} <span onClick={onDetail} className="text-teal font-semibold">{t('common:read_more')}</span>
         </div>
         <div className="flex items-center space-x-4 pt-8 text-center">
-            <div onClick={onClose} className="w-full bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 rounded-md px-5 py-3">{t('common:close')}</div>
-            <div onClick={onRedirect} className="w-full bg-bgBtnPrimary text-txtBtnPrimary rounded-md px-5 py-3">{t('futures:funding_history')}</div>
+            <div onClick={onClose} className="w-full font-semibold bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 rounded-md px-5 py-3">{t('common:close')}</div>
+            <div onClick={onRedirect} className="w-full font-semibold bg-bgBtnPrimary text-txtBtnPrimary rounded-md px-5 py-3">{t('futures:funding_history')}</div>
         </div>
     </Modal>
 }

@@ -310,7 +310,7 @@ const ExternalWithdrawal = (props) => {
                                 {currentCurr?.assetName}
                             </span>
                         </div>
-                        <SortIcon size={14}/>
+                        <SortIcon className="text-gray-1 dark:text-gray-7" size={14} color="currentColor" activeColor='currentColor' />
                     </div>
                     <div className="flex justify-between">
                         <span className="text-onus-secondary text-xs uppercase">

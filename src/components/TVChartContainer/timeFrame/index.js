@@ -40,10 +40,10 @@ export const CandleChart = (
 
 export const CandleChartOnus = (
     <svg width="14" height="22" viewBox="0 0 14 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11.457 21L11.457 3.5" stroke="#8492A7" stroke-width="1.02225" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M2.54297 21L2.54297 0.999999" stroke="#8492A7" stroke-width="1.02225" stroke-linecap="round" stroke-linejoin="round" />
-        <rect x="0.511127" y="4.5121" width="4.06892" height="12.9777" rx="0.76669" fill="#1B222D" stroke="#8492A7" stroke-width="1.02225" />
-        <rect x="9.42128" y="8.51308" width="4.06892" height="8.97775" rx="0.76669" fill="#1B222D" stroke="#8492A7" stroke-width="1.02225" />
+        <path d="M11.457 21L11.457 3.5" stroke="#8492A7" strokeWidth="1.02225" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M2.54297 21L2.54297 0.999999" stroke="#8492A7" strokeWidth="1.02225" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="0.511127" y="4.5121" width="4.06892" height="12.9777" rx="0.76669" fill="#1B222D" stroke="#8492A7" strokeWidth="1.02225" />
+        <rect x="9.42128" y="8.51308" width="4.06892" height="8.97775" rx="0.76669" fill="#1B222D" stroke="#8492A7" strokeWidth="1.02225" />
     </svg>
 );
 
@@ -330,7 +330,7 @@ export default class TimeFrame extends Component {
                                                             close();
                                                         }}
                                                         key={index}
-                                                        className={`h-8 px-2 flex content-start items-center cursor-pointer w-full text-xs text-center rounded-sm 
+                                                        className={`h-8 px-2 flex content-start items-center cursor-pointer w-full text-xs text-center rounded-sm
                                                                 text-txtSecondary dark:text-txtSecondary-dark
                                                                 dark:hover:bg-hover-dark
                                                                 ${isActive ? 'bg-gray-6 dark:text-white dark:bg-transparent font-semibold' : ''}

@@ -28,7 +28,6 @@ export default function NaoProposals({ listProposal, assetNao }) {
                 url: API_USER_POOL,
                 options: { method: "GET" },
             });
-            console.log({ useVoteRes });
             setDataUserVote(useVoteRes ?? []);
         } catch (error) {
             console.log(error);

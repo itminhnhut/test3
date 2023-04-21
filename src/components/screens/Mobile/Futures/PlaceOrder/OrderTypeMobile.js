@@ -40,7 +40,7 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
                             <div className="w-full text-left">
                                 {getTypesLabel(type)}
                             </div>
-                            <SortIcon size={20} color={colors.onus.grey} activeColor={colors.onus.grey} />
+                            <SortIcon size={20} color="currentColor" activeColor="currentColor" className="text-gray-1 dark:text-gray-7"/>
                             {/* <ChevronDown color={colors.gray[1]} size={16} className="ml-1" /> */}
                         </div>
                     </Popover.Button>
@@ -69,6 +69,7 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
                                                         o === type,
                                                 }
                                             )}
+                                            key={o}
                                         >
                                             {getTypesLabel(o)}
                                         </div>

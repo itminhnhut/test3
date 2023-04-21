@@ -89,7 +89,7 @@ export const Thumb = styled.div`
     height: ${({ onusMode, naoMode }) => (naoMode ? '32px' : onusMode ? '20px' : '16px')};
     /* clip-path:${({ onusMode }) => (onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)')}; */
     border-radius: ${({ onusMode }) => (onusMode ? '50%' : '50%')};
-    border: ${({ onusMode, naoMode }) => (onusMode && !naoMode ? '4px solid #47cc85' : 'none')};
+    border: ${({ onusMode, naoMode }) => (onusMode && !naoMode ? `4px solid ${colors.green[1]}` : 'none')};
     background: ${({ isZero, isDark, bgColorActive, naoMode }) =>
         naoMode ? colors.teal : bgColorActive ? bgColorActive : colors.teal};
     user-select: none;

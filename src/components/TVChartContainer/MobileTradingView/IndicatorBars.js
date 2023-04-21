@@ -62,7 +62,7 @@ const IndicatorBars = ({
     return (
         <div
             className={classnames(`h-[38px] flex items-center justify-between px-4`, {
-                'border-t border-divider dark:border-divider-dark': !fullChart,
+                'border-t border-divider/70 dark:border-divider-dark/50': !fullChart,
                 'border-b': isDetail
             })}
         >
@@ -79,7 +79,7 @@ const IndicatorBars = ({
                         {item.label}
                     </div>
                 ))}
-                <div className="bg-onus-line w-[2px] h-4" />
+                <div className="bg-divider dark:bg-divider-dark w-[2px] h-4" />
                 {subIndicators.map((item) => (
                     <div
                         key={item.value}

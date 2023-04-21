@@ -136,7 +136,7 @@ function Day({day, range, setRange}) {
         className={classNames('text-center text-txtPrimary dark:text-txtPrimary-dark text-sm h-full py-1', {
             '!text-txtTabInactive dark:!text-txtTabInactive-dark': disabled,
             'text-green-2': isSameDay(day, now),
-            'bg-green-2/[.2]': inRange,
+            'bg-green-2/10': inRange,
             'bg-bgBtnPrimary rounded-full !text-txtBtnPrimary': isSelected,
             'rounded-l-full !bg-bgBtnPrimary !text-txtBtnPrimary': isStart,
             'rounded-r-full !bg-bgBtnPrimary !text-txtBtnPrimary': isEnd,

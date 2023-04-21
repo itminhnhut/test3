@@ -109,8 +109,8 @@ const OrderVolumeMobileModal = (props) => {
                     decimalScale={decimal}
                     allowNegative={false}
                     thousandSeparator={true}
-                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] !bg-gray-12 dark:!bg-dark-2'
-                    inputClassName="!text-center"
+                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-full !bg-gray-12 dark:!bg-dark-2'
+                    inputClassName="!text-center !ml-0"
                     onValueChange={({ value }) => setVolume(value)}
                     validator={getValidator}
                     disabled={!available}
@@ -175,7 +175,7 @@ const OrderVolumeMobileModal = (props) => {
             </div>
             {!available &&
                 <div className='mt-2.5 flex items-center'>
-                    <SvgWarning size={12} fill={colors.red2} />
+                    <SvgWarning size={12} fill={colors.red[2]} />
                     <div className='pl-2.5 font-medium text-xs text-red'>
                         {t('futures:mobile:balance_insufficient')}
                     </div>

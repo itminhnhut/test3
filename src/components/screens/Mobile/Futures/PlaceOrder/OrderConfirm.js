@@ -72,7 +72,7 @@ const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled, 
             </div>
             <div className="mt-6 flex items-center" onClick={onHandleHidden}>
                 <CheckBox onusMode={true} active={hidden}
-                    boxContainerClassName={`rounded-[2px] ${hidden ? '' : 'border-none !bg-gray-12 dark:!bg-dark-2'}`} />
+                    boxContainerClassName={`rounded-[2px] ${hidden ? '' : '!bg-gray-12 dark:!bg-dark-2'}`} />
                 <span className="ml-3 whitespace-nowrap text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs">
                     {t('futures:mobile:not_show_this_message')}
                 </span>

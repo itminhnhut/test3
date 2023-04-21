@@ -17,6 +17,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard/lib/Component';
 import TableNoData from 'components/common/table.old/TableNoData';
 import { TransactionCategory } from '../../../../../redux/actions/const';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
+import CopyComponent from 'components/common/V2/ButtonV2/CopyComponent';
 
 const categories = [
     'all',// "All",
@@ -252,12 +253,12 @@ function TabTransactionsHistory({
                     {range.start && range.end ?
                         <>
                             <span>{format(range.start, 'dd/M/yyyy')}</span>
-                            <span className="px-1">-></span>
+                            <span className="px-1">-{'>'}</span>
                             <span>{format(range.end, 'dd/M/yyyy')}</span>
                         </> :
                         t('futures:mobile:transaction_histories:time')}
                 </span>
-                <ChevronDown size={12} color={colors.onus.grey}/>
+                <ChevronDown size={12} color="currentColor"/>
             </div>
             <div
                 className={classNames('flex items-center p-2 -mr-2', {
@@ -266,8 +267,8 @@ function TabTransactionsHistory({
                 onClick={() => setVisibleCategoryPicker(true)}>
                 <span className="mr-1">{t(`futures:mobile:transaction_histories:categories:${category}`)}</span>
                 {visibleCategoryPicker ?
-                    <ChevronUp size={12} color={colors.teal}/> :
-                    <ChevronDown size={12} color={colors.onus.grey}/>}
+                    <ChevronUp size={12} color="currentColor"/> :
+                    <ChevronDown size={12} color="currentColor"/>}
             </div>
         </div>
         <div
@@ -387,23 +388,32 @@ const TransactionDetail = ({
                 <span className="text-txtSecondary dark:text-txtSecondary-dark mr-2 whitespace-nowrap">
                     {t('futures:mobile:transaction_histories:id')}
                 </span>
-                <div className="flex flex-1 min-w-0 items-center">
-                    <div className="flex-1 min-w-0 overflow-hidden text-right"
-                         style={{ textOverflow: 'ellipsis' }}>{transaction?._id}</div>
-                    <CopyToClipboard text={transaction?._id}>
-                        <Copy className="ml-2" size={14} color={colors.onus.grey}/>
-                    </CopyToClipboard>
-                </div>
+                <CopyComponent
+                    text={transaction?._id}
+                    size={14}
+                    className="flex-nowrap min-w-0"
+                    color="currentColor"
+                    copyClass="text-txtSecondary dark:text-txtSecondary-dark flex-shrink-0"
+                    checkedClass="flex-shrink-0"
+                    textClass="block truncate"
+                />
             </div>
             <div className="flex justify-between text-sm leading-[1.375rem]">
                 <span
-                    className="text-txtSecondary dark:text-txtSecondary-dark">{transaction?.category === 612 ? t('futures:mobile:transaction_histories:note') : t('futures:mobile:transaction_histories:order_id')}</span>
-                <div className="flex flex-1 min-w-0 items-center">
-                    <div className="flex-1 min-w-0 overflow-hidden text-right pl-4">{orderId}</div>
-                    {transaction?.category !== 612 && <CopyToClipboard text={orderId}>
-                        <Copy className="ml-2" size={14} color={colors.onus.grey}/>
-                    </CopyToClipboard>}
-                </div>
+                    className="text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap mr-2">{transaction?.category === 612 ? t('futures:mobile:transaction_histories:note') : t('futures:mobile:transaction_histories:order_id')}</span>
+                {transaction?.category !== 612 ? (
+                    <CopyComponent
+                        text={orderId}
+                        size={14}
+                        className="flex-nowrap min-w-0"
+                        color="currentColor"
+                        copyClass="text-txtSecondary dark:text-txtSecondary-dark flex-shrink-0"
+                        checkedClass="flex-shrink-0"
+                        textClass="block truncate"
+                    />
+                ) : (
+                    <div className='block truncate min-w-0'>{orderId}</div>
+                )}
             </div>
             <div className="flex justify-between text-sm">
                 <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:transaction_histories:time')}</span>

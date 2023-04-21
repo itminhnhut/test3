@@ -320,7 +320,7 @@ const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
             <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs leading-4'>
                 {title}
             </span>
-            <SortIcon direction={sortDirection} />
+            <SortIcon className="text-gray-1 dark:text-gray-7" color="currentColor" activeColor="currentColor" direction={sortDirection} />
         </div>
     )
 }

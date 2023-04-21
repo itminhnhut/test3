@@ -152,7 +152,7 @@ const TabOrders = memo(({
         switch (isClosingOrders.isClosing) {
             case 'false':
                 button = (<Button
-                    className='bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 !h-[32px]'
+                    className='border border-divider dark:border-divider-dark !rounded-md !bg-transparent text-gray-15 dark:text-gray-7 !h-[32px]'
                     onClick={() => handleCloseAll()}
                 >
                     {tab === FUTURES_RECORD_CODE.position ? t('futures:mobile.close_all_positions.title') : t('futures:mobile.close_all_positions.title_pending')}
@@ -160,16 +160,16 @@ const TabOrders = memo(({
                 break;
             case 'true':
                 button = (<Button
-                    className='bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 !h-[32px]'
+                    className='border border-divider dark:border-divider-dark !rounded-md !bg-transparent text-gray-15 dark:text-gray-7 !h-[32px]'
                 >
-                    <Spinner className='w-4 h-4' color='#0068FF' />
+                    <Spinner className='w-4 h-4' color={colors.teal} />
                     <div className='w-[8px]'></div>
                     {t('futures:mobile.close_all_positions.processing')}
                 </Button>);
                 break;
             case 'done':
                 button = (<Button
-                    className='bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 !h-[32px]'
+                    className='border border-divider dark:border-divider-dark !rounded-md !bg-transparent text-gray-15 dark:text-gray-7 !h-[32px]'
                 >
                     {doneIcon}
                     <div className='w-[10px]'></div>
@@ -244,7 +244,7 @@ const TabOrders = memo(({
                 className='flex items-center px-4 pb-4 text-sm font-medium cursor-pointer select-none'
                 onClick={() => setHideOther(!hideOther)}
             >
-                <CheckBox onusMode={true} active={hideOther} boxContainerClassName='rounded-[2px]' />
+                <CheckBox onusMode={true} active={hideOther} boxContainerClassName='rounded-[2px] !bg-transparent' />
                 <span className='ml-3 text-xs font-medium whitespace-nowrap text-txtSecondary dark:text-txtSecondary-dark'>
                     {t('futures:hide_other_symbols')}
                 </span>

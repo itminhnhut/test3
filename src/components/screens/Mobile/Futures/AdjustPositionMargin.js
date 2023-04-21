@@ -19,6 +19,7 @@ import Modal from "components/common/ReModal";
 import { reFetchOrderListInterval } from 'redux/actions/futures';
 import { find } from 'lodash'
 import { createSelector } from 'reselect';
+import colors from 'styles/colors';
 
 const getPairConfig = createSelector(
     [
@@ -283,8 +284,8 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                     {errorProfit && (
                         <div className="mt-6 leading-3">
                             <div className="flex items-start">
-                                <WarningCircle className="flex-none mr-2" />
-                                <span className="text-xs text-[#FF9F1A]">{errorProfit}</span>
+                                <WarningCircle color={colors.yellow[2]} className="flex-none mr-2" />
+                                <span className="text-xs text-yellow-2">{errorProfit}</span>
                             </div>
                         </div>
                     )}

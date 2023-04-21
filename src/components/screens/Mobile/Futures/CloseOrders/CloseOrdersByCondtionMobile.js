@@ -202,7 +202,7 @@ const CloseOrdersByCondtionMobile = memo(({
                 <div>
                     {types.map((closeType, index) => (
                         <div
-                            className={`h-12 rounded-md mt-2 bg-gray-13 dark:bg-dark-4 flex items-center w-full py-3 px-4 justify-between ${closeType.type === type && '!border-teal border'}`}
+                            className={`h-12 rounded-md mt-2 bg-gray-13 dark:bg-dark-4 flex items-center w-full py-3 px-4 justify-between border ${closeType.type === type ? 'border-teal' : 'border-transparent'}`}
                             onClick={() => setType(closeType.type)}>
                             <div className="font-normal text-base leading-6">
                                 {closeType.value}
@@ -251,7 +251,7 @@ const CloseOrdersByCondtionMobile = memo(({
                             {t('futures:mobile.close_all_positions.position_list')}
                         </div>
                         <div>
-                            <Switcher addClass={`!w-[24px] !h-[24px] top-[0px] left-[0px] ${indicatorColorClass}`} wrapperClass="!h-[24px] !w-[48px]" onusMode onChange={() => {
+                            <Switcher addClass={`!w-[22px] !h-[22px] ${indicatorColorClass}`} wrapperClass="!h-[24px] !w-[48px]" onusMode onChange={() => {
                                 setShowPositionList(!showPositionList)
                             }} active={showPositionList} />
                         </div>

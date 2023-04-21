@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import classnames from 'classnames'
 import { PlusCircle } from 'react-feather';
 import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
+import InfoOutlined from "components/svg/InfoOutlined";
 
 
 const CurrencyPopup = (props) => {
@@ -85,7 +86,7 @@ const CurrencyPopup = (props) => {
                         "flex items-center justify-between w-full border bg-gray-13 dark:bg-dark-4 rounded-md px-4 py-[7px]",
                         {
                             'border-teal': hoverItemsChose === item.assetCode,
-                            'border-divider dark:border-divider-dark': hoverItemsChose !== item.assetCode,
+                            'border-transparent': hoverItemsChose !== item.assetCode,
                         }
                     )}
                 >
@@ -212,12 +213,12 @@ const CurrencyPopup = (props) => {
                     </h4>
                     <div
                         className="flex items-center justify-center rounded-full
-                        w-4 h-4 cursor-pointer"
+                        w-4 h-4 cursor-pointer text-txtSecondary dark:text-txtSecondary-dark"
                         data-tip=""
                         data-for="header-tooltip"
                         id="header-tooltip-id"
                     >
-                        <img src={getS3Url("/images/screen/futures/logoguide.png")} />
+                        <InfoOutlined size={16} color="currentColor" />
                     </div>
                     <Tooltip
                         id="header-tooltip"

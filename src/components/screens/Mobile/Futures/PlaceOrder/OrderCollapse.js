@@ -8,6 +8,7 @@ import TradingLabel from 'components/trade/TradingLabel';
 import { useSelector } from 'react-redux';
 import { placeFuturesOrder } from 'redux/actions/futures';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
+import AddCircleOutline from 'components/svg/AddCircleOutline';
 
 const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth, marginAndValue, availableAsset, quoteQty, isError }) => {
     const { t } = useTranslation();
@@ -85,7 +86,7 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
                     />
                     <TradingLabel
                         label={t('futures:mobile:available')}
-                        value={<div className="flex items-center">{formatNumber(availableAsset ?? 0, 0)}&nbsp;&nbsp;<img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openDeposit} /></div>}
+                        value={<div className="flex items-center">{formatNumber(availableAsset ?? 0, 0)}<AddCircleOutline color="currentColor" size={16} className="text-txtSecondary dark:text-txtSecondary-dark ml-1 flex-shrink-0" onClick={openDeposit}/></div>}
                         containerClassName={`text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]`}
                     />
                 </div>

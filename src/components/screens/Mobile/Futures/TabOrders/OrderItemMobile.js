@@ -15,6 +15,8 @@ import { useSelector } from 'react-redux';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import classnames from 'classnames'
 import SortIcon from 'components/screens/Mobile/SortIcon';
+import AddCircleOutline from 'components/svg/AddCircleOutline';
+import SvgShare from 'components/svg/Share';
 
 const OrderItemMobile = ({
     order,
@@ -212,13 +214,13 @@ const OrderItemMobile = ({
         return (
             <div className="flex items-center justify-end space-x-1" onClick={() => visible && actions('modal', 'edit-margin')}>
                 <span>{t('futures:margin')}</span>
-                {visible && <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />}
+                {visible && <AddCircleOutline color="currentColor" size={12} className="text-txtSecondary dark:text-txtSecondary-dark flex-shrink-0" />}
             </div>
         )
     }
 
     const renderStatus = (row) => {
-        const bg = row?.reason_close_code === 5 ? 'text-green-2' : orderStatus.cancelled ? 'text-txtSecondary dark:text-txtSecondary-dark' : 'text-yellow-2 bg-yellow-2/[0.15]'
+        const bg = row?.reason_close_code === 5 ? 'text-green-2 !bg-green-2/[0.15]' : orderStatus.cancelled ? 'text-txtSecondary dark:text-txtSecondary-dark' : 'text-yellow-2 !bg-yellow-2/[0.15]'
         const text = row?.reason_close_code === 5 ? 'adjust_margin:order_completed' : orderStatus.cancelled ? 'cancelled_order' : 'pending_order'
         return (
             <div
@@ -243,9 +245,15 @@ const OrderItemMobile = ({
                     <div className="bg-gray-1 dark:bg-gray-7 h-[2px] w-[2px] rounded-[50%] mx-1"></div>
                     <div>{formatTime(order?.opened_at || order?.created_at, 'HH:mm:ss')}</div>
                 </div>
-                {isShortcut && !isTabHistory &&
-                    (collapse !== order?.displaying_id ? <ChevronDown size={24} color={colors.onus.grey} /> : <ChevronUp size={24} color={colors.onus.grey} />)
-                }
+                {isShortcut && !isTabHistory && (
+                    <div className='text-gray-1 dark:text-gray-7'>
+                        {collapse !== order?.displaying_id ? (
+                            <ChevronDown size={24} color="currentColor" />
+                        ) : (
+                            <ChevronUp size={24} color="currentColor" />
+                        )}
+                    </div>
+                )}
             </div>
             <div onClick={() => actions('expand')}
                 className="flex items-center justify-between">
@@ -254,13 +262,11 @@ const OrderItemMobile = ({
                         <div
                             className="font-semibold leading-[1.375rem] mr-[6px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
                         <div
-                            className="text-txtPrimary dark:text-txtPrimary-dark bg-gray-12 dark:bg-dark-2 text-xs font-medium leading-5 px-[7px] rounded-[3px]">
+                            className="text-txtSecondary dark:text-txtPrimary-dark bg-gray-12 dark:bg-dark-2 text-xs font-medium leading-5 px-[7px] rounded-[3px]">
                             {order?.leverage}x
                         </div>
                         {canShare ?
-                            <img className="ml-3"
-                                onClick={() => actions('modal', 'share')}
-                                src={getS3Url('/images/icon/ic_share_onus.png')} height={20} width={20} />
+                            <SvgShare color="currentColor" onClick={() => actions('modal', 'share')} className="ml-3 flex-shrink-0" size={20} />
                             : null
                         }
                     </div>
@@ -414,7 +420,7 @@ export const OrderItem = (props) => {
                 {dropdown ?
                     <div className="flex items-center space-x-1 justify-end">
                         <Label>{label} </Label>
-                        <SortIcon size={16} color={colors.onus.grey} activeColor={colors.onus.grey} />
+                        <SortIcon className="text-gray-1 dark:text-gray-7" size={12} color="currentColor" activeColor="currentColor" />
                         {/* <ChevronDown size={12} color={colors.onus.grey} /> */}
                     </div>
                     :

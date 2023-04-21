@@ -58,12 +58,12 @@ const Guideline = ({pair, start, setStart, isFullScreen}) => {
                 selector: '[data-tut="order-sl"]',
                 content: (props) => <Content {...props} onClose={onClose}/>,
                 highlightedSelectors: ['[data-tut="order-tp"]'],
-                position: !isFullScreen ? [15, 0] : ''
+                position: !isFullScreen ? [15, 0] : 'top'
             },
             {
                 selector: '[data-tut="order-adjust-btn"]',
                 content: (props) => <Content {...props} onClose={onClose}/>,
-                position: !isFullScreen ? [15, 0] : ''
+                position: !isFullScreen ? [15, 0] : 'top'
             },
             {
                 selector: '[data-tut="order-button"]',
@@ -101,7 +101,7 @@ const Guideline = ({pair, start, setStart, isFullScreen}) => {
             showNavigation={false}
             showButtons={false}
             showNumber={false}
-            scrollDuration="300"
+            scrollDuration={300}
             ref={refGuide}
             onAfterOpen={disableBodyScroll}
             onBeforeClose={enableBodyScroll}

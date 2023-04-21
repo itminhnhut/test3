@@ -505,7 +505,7 @@ const EditSLTPVndcMobile = ({
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center mr-2'>
                         <label className="text-txtPrimary dark:text-txtPrimary-dark font-semibold whitespace-nowrap mr-2">{t('futures:stop_loss')}</label>
-                        <Switcher onusMode addClass={`w-[22px] h-[22px] ${indicatorColorClass}`} wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
+                        <Switcher onusMode addClass={`!w-[22px] !h-[22px] ${indicatorColorClass}`} wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
                             active={show.sl} onChange={() => onSwitch('sl')} />
                     </div>
                     {show.sl && <div className="text-xs flex items-center ">
@@ -574,7 +574,7 @@ const EditSLTPVndcMobile = ({
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center mr-2'>
                         <label className="text-txtPrimary dark:text-txtPrimary-dark font-semibold whitespace-nowrap mr-2">{t('futures:take_profit')}</label>
-                        <Switcher onusMode addClass={`w-[22px] h-[22px] ${indicatorColorClass}`} wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
+                        <Switcher onusMode addClass={`!w-[22px] !h-[22px] ${indicatorColorClass}`} wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
                             active={show.tp} onChange={() => onSwitch('tp')} />
                     </div>
                     {show.tp && <div className="text-xs flex items-center">

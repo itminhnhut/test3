@@ -116,7 +116,7 @@ const OrderBalance = ({
         </div>
     }
     return (
-        <div className="sticky top-[42px] border-b border-divider dark:border-divider-dark bg-bgPrimary dark:bg-bgPrimary-dark z-[10] flex flex-wrap px-4 pt-4">
+        <div className="sticky top-[42px] bg-bgPrimary dark:bg-bgPrimary-dark z-[10] flex flex-wrap px-4 pt-4">
             <div className="bg-gray-13 dark:bg-dark-4 rounded-[6px] w-full text-xs py-[9px] flex items-center">
                 <div className="flex flex-col items-center w-1/3 border-r border-divider dark:border-divider-dark">
                     <div className="font-normal text-txtSecondary dark:text-txtSecondary-dark pb-[2px]">{t('futures:mobile:balance')}</div>

@@ -17,6 +17,7 @@ import CurrencyPopup from 'components/screens/Mobile/Futures/CurrencyPopup';
 import ModifyOrder from './ModifyOrder';
 import CloseOrderModalMobile from './CloseOrderModalMobile';
 import AdjustPositionMargin from './AdjustPositionMargin';
+import AddCircleOutline from 'components/svg/AddCircleOutline';
 
 const INITIAL_STATE = {
     socketStatus: false,
@@ -228,7 +229,7 @@ const OrderOpenDetail = ({
         return (
             <div className="flex items-center justify-end space-x-1" onClick={() => visible && setShowEditMargin(true)}>
                 <span>{t('futures:margin')}</span>
-                {visible && <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />}
+                {visible && <AddCircleOutline color="currentColor" size={12} className="text-txtSecondary dark:text-txtSecondary-dark flex-shrink-0"/>}
             </div>
         )
     }
@@ -401,7 +402,7 @@ const OrderOpenDetail = ({
                     <div className="w-full">
                         <Button
                             title={t('futures:mobile:adjust_margin:add_volume')}
-                            className="!h-[36px] !bg-gray-12 dark:!bg-dark-2 !text-txtSecondary dark:!text-txtSecondary-dark !font-semibold"
+                            className="!h-[36px] !bg-gray-12 dark:!bg-dark-2 !text-txtPrimary dark:!text-txtSecondary-dark !font-semibold"
                             componentType="button"
                             type="primary"
                             onClick={() => setShowAddVol(true)}
@@ -412,7 +413,7 @@ const OrderOpenDetail = ({
                     <div className="w-full">
                         <Button
                             title={t(`futures:tp_sl:${isModify ? 'modify' : 'add'}_tpsl`)}
-                            className="!h-[36px] !bg-gray-12 dark:!bg-dark-2 !text-txtSecondary dark:!text-txtSecondary-dark !font-semibold"
+                            className="!h-[36px] !bg-gray-12 dark:!bg-dark-2 !text-txtPrimary dark:!text-txtSecondary-dark !font-semibold"
                             componentType="button"
                             type="primary"
                             onClick={onOpenModify}
@@ -422,7 +423,7 @@ const OrderOpenDetail = ({
                 <div className="w-full">
                     <Button
                         title={t(`common:close`)}
-                        className="!h-[36px] !bg-gray-12 dark:!bg-dark-2 !text-txtSecondary dark:!text-txtSecondary-dark !font-semibold"
+                        className="!h-[36px] !bg-gray-12 dark:!bg-dark-2 !text-txtPrimary dark:!text-txtSecondary-dark !font-semibold"
                         componentType="button"
                         type="primary"
                         onClick={() => onActions()}

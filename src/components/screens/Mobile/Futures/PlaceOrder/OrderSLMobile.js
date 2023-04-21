@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TradingInput from '../../../../trade/TradingInput';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
+import AddCircleOutline from 'components/svg/AddCircleOutline';
 
 const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, validator, context, isAuth, show }) => {
     const { t } = useTranslation();
@@ -41,7 +42,7 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, validator, context, 
                             onMouseDown={() => setIsFocus(true)}
                             onMouseLeave={() => setIsFocus(false)}
                             onClick={onChangeTpSL} >
-                            <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
+                            <AddCircleOutline color="currentColor" size={16} className="text-txtSecondary dark:text-txtSecondary-dark flex-shrink-0"/>
                         </div>
                     </div>)
                 }

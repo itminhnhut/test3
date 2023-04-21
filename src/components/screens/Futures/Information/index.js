@@ -10,6 +10,7 @@ import { createSelector } from 'reselect';
 import { useRouter } from 'next/router'
 import colors from 'styles/colors';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 
 const getPairPrice = createSelector(
     [
@@ -224,7 +225,7 @@ export default function OrderInformation({ pair }) {
     }
 
     return (
-        <div className={'py-4 px-4'}>
+        <div className={'py-4 px-4 overflow-y-auto h-[calc(100%-70px)]'}>
             <p className="text-lg my-4 leading-6 font-semibold">
                 {t('futures:trading_rules')}
             </p>
@@ -294,13 +295,13 @@ export default function OrderInformation({ pair }) {
                                     <div className="flex items-center space-x-1">
                                         <Label className=""> Funding
                                             <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
-                                                <img src={getS3Url('/images/icon/ic_help.png')} className="min-w-[14px] min-h-[14px] max-w-[14px] max-h-[14px]" height={14} width={14} />
+                                                <QuestionMarkIcon color="currentColor" size={14} />
                                             </div>
                                         </Label>
                                         <span className="text-gray-1 dark:text-txtSecondary-dark">/</span>
                                         <Label className="">{t('futures:countdown')}
                                             <div className="flex px-2" data-tip="" data-for={'countdown-tooltip'} >
-                                                <img src={getS3Url('/images/icon/ic_help.png')} className="min-w-[14px] min-h-[14px] max-w-[14px] max-h-[14px]" height={14} width={14} />
+                                                <QuestionMarkIcon color="currentColor" size={14} />
                                             </div>
                                         </Label>
                                     </div>
@@ -310,7 +311,7 @@ export default function OrderInformation({ pair }) {
                                         <Label className="">
                                             {t('futures:' + title)}
                                             <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
-                                                <img src={getS3Url('/images/icon/ic_help.png')} className="min-w-[14px] min-h-[14px] max-w-[14px] max-h-[14px]" height={14} width={14} />
+                                                <QuestionMarkIcon color="currentColor" size={14} />
                                             </div>
                                         </Label>
                                         <Span className="">{renderContent(title)}</Span>

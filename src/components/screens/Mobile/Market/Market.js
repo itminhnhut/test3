@@ -264,7 +264,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
         return listItem.map((item) => (
             <div
                 key={item.symbol}
-                className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-gray-12 dark:bg-dark-2' : ''}`}
+                className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-hover dark:bg-hover-dark' : ''}`}
                 onClick={() => {
                     router.push(`/mobile/futures/${item.symbol}`);
                 }}
@@ -333,15 +333,15 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                                     <span className="mt-0.5">
                                         <IconStarFilled
                                             size={16}
-                                            color={'#F3BA2F'}
+                                            color={colors.yellow[2]}
                                         />
                                     </span>
                                 )}
                                 <span
                                     className={cn(
-                                        `text-sm pb-3 relative font-semibold`,
+                                        `text-sm pb-3 relative font-medium`,
                                         {
-                                            'tab-active text-txtPrimary dark:text-txtPrimary-dark': t === tab.active,
+                                            'tab-active !font-semibold text-txtPrimary dark:text-txtPrimary-dark': t === tab.active,
                                             'ml-2': t === TABS.FAVOURITE
                                         }
                                     )}
@@ -360,7 +360,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                             className={classNames(
                                 'min-h-[2rem] flex items-center justify-center px-3 rounded text-sm font-medium',
                                 { 'bg-bgTabActive text-txtBtnPrimary': TAGS[tab.active][tag] === tab.tagActive },
-                                { 'bg-gray-12 dark:bg-dark-2': TAGS[tab.active][tag] !== tab.tagActive }
+                                { 'bg-gray-12 dark:bg-dark-2 text-txtPrimary dark:text-txtSecondary-dark': TAGS[tab.active][tag] !== tab.tagActive }
                             )}
                             onClick={() => {
                                 setTab({
@@ -384,7 +384,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                                 sort.field === 'symbol' && sort.direction
                             }
                         />
-                        <span className='text-xs text-gray-1'>/</span>
+                        <span className='text-xs text-txtSecondary dark:text-txtSecondary-dark'>/</span>
                         <TitleHeadList
                             title={t('futures:volume')}
                             onClick={changeSort('volume24h')}
@@ -474,7 +474,7 @@ const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
             onClick={onClick}
         >
             <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs leading-4'>{title}</span>
-            <SortIcon color={colors.onus.grey} activeColor={colors.teal} direction={sortDirection} />
+            <SortIcon color="currentColor" activeColor={colors.teal} direction={sortDirection} className="text-gray-1 dark:text-gray-7" />
         </div>
     )
 }

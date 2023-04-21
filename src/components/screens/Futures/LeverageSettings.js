@@ -223,7 +223,7 @@ const FuturesLeverageSettings = ({
                 )}
                 <div className="mt-2.5 flex">
                     <div className="pt-1">
-                        <WarningCircle size={16} fill={colors.yellow[2]} className="mt-[-2px]" />
+                        <WarningCircle size={16} color={colors.yellow[2]} className="mt-[-2px]" />
                     </div>
                     <div className={`pl-2.5 font-medium text-xs text-yellow-2 `}>{t('futures:leverage:description')}</div>
                 </div>
