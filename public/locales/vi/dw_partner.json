@@ -148,7 +148,7 @@
         "invalid_phone": "Số điện thoại không đúng định dạng",
         "phone_existed": "Số điện thoại đã tồn tại",
         "missing_phone": "Trường thông tin bắt buộc",
-        "not_found_order": "Không tìm thấy lệnh #{displayingId} hoặc đang được xử lý, vui lòng tải lại hoặc liên hệ hỗ trợ",
+        "not_found_order": "Không tìm thấy lệnh #{{displayingId}} hoặc đang được xử lý, vui lòng tải lại hoặc liên hệ hỗ trợ",
         "invalid_otp": "Mã OTP không hợp lệ. Vui lòng thử lại."
     },
     "filter": {

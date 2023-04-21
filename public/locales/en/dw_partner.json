@@ -146,7 +146,7 @@
         "invalid_phone": "Invalid phone",
         "phone_existed": "Phone already exists",
         "missing_phone": "This field is required",
-        "not_found_order": "Order #{displayingId} not found or being processed, please reload or contact support.",
+        "not_found_order": "Order #{{displayingId}} not found or being processed, please reload or contact support.",
         "invalid_otp": "OTP is invalid. Please try again."
     },
     "filter": {
