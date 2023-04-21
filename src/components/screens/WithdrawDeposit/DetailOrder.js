@@ -152,35 +152,25 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         const myStatus = state.orderDetail[`${mode}Status`];
         const theirStatus = state.orderDetail[`${isPartner ? MODE.USER : MODE.PARTNER}Status`];
         const orderStatus = state.orderDetail?.status;
+        const isPartnerAccepted = state.orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.ACCEPTED;
 
-        // status WATING_CONFIRM for BUY, SELL side
-        if (orderStatus === PartnerOrderStatus.WATING_CONFIRM) {
-            if (isPartner) {
-                secondaryBtn = {
-                    function: () => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, state.orderDetail),
-                    text: t('common:deny')
-                };
-                primaryBtn = {
-                    function: () => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, state.orderDetail),
-                    text: t('common:confirm')
-                };
-            } else {
-                primaryBtn = {
-                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                    text: t('common:cancel_order')
-                };
-            }
-        }
-        // status !== WAITING_CONFIRM
-        else {
-            ({
-                [SIDE.BUY]: {
-                    render: () => {
-                        // status PENDING
-                        if (orderStatus === PartnerOrderStatus.PENDING) {
-                            // partner logic
-                            if (isPartner) {
-                                // user PENDING
+        ({
+            [SIDE.BUY]: {
+                render: () => {
+                    if (orderStatus === PartnerOrderStatus.PENDING) {
+                        // partner logic
+                        if (isPartner) {
+                            if (!isPartnerAccepted) {
+                                secondaryBtn = {
+                                    function: () => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, state.orderDetail),
+                                    text: t('common:deny')
+                                };
+                                primaryBtn = {
+                                    function: () => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, state.orderDetail),
+                                    text: t('common:confirm')
+                                };
+                            } else {
+                                //user chua chuyen tien
                                 if (theirStatus === PartnerPersonStatus.PENDING) {
                                     primaryBtn = {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
@@ -200,10 +190,17 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     );
                                 }
                             }
-                            // user logic
-                            else {
+                        }
+                        // user logic
+                        else {
+                            if (!isPartnerAccepted) {
+                                primaryBtn = {
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
+                                    text: t('common:cancel_order')
+                                };
+                            } else {
                                 if (theirStatus === PartnerPersonStatus.PENDING) {
-                                    // user PENDING
+                                    // user chua chuyen tien
                                     if (myStatus === PartnerPersonStatus.PENDING) {
                                         primaryBtn = {
                                             function: () =>
@@ -215,33 +212,43 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 }
                             }
                         }
-                        // status PENDING, DISPUTED
-                        if (orderStatus === PartnerOrderStatus.DISPUTED || orderStatus === PartnerOrderStatus.PENDING) {
-                            // neu user da chuyen tien -> se luon hien button upload proof
-                            if (myStatus === PartnerPersonStatus.TRANSFERRED) {
-                                primaryBtn = {
-                                    function: () => setState({ isShowUploadImg: true }),
-                                    text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
-                                };
-                            }
-                        }
-
-                        // resolve DISPUTED button for PARTNER mode
-                        if (orderStatus === PartnerOrderStatus.DISPUTED && isPartner) {
+                    }
+                    // order status is PENDING or DISPUTED
+                    if (orderStatus === PartnerOrderStatus.DISPUTED || orderStatus === PartnerOrderStatus.PENDING) {
+                        // neu user da chuyen tien -> se luon hien button upload proof
+                        if (myStatus === PartnerPersonStatus.TRANSFERRED) {
                             primaryBtn = {
-                                function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.RESOLVE_DISPUTE, state.orderDetail),
-                                text: t('dw_partner:complete_dispute')
+                                function: () => setState({ isShowUploadImg: true }),
+                                text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
                             };
                         }
                     }
-                },
-                [SIDE.SELL]: {
-                    render: () => {
-                        // status PENDING
-                        if (orderStatus === PartnerOrderStatus.PENDING) {
-                            //partner logic
-                            if (isPartner) {
-                                //partner PENDING
+
+                    // resolve dispute button for partner mode
+                    if (orderStatus === PartnerOrderStatus.DISPUTED && isPartner) {
+                        primaryBtn = {
+                            function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.RESOLVE_DISPUTE, state.orderDetail),
+                            text: t('dw_partner:complete_dispute')
+                        };
+                    }
+                }
+            },
+            [SIDE.SELL]: {
+                render: () => {
+                    if (orderStatus === PartnerOrderStatus.PENDING) {
+                        //partner logic
+                        if (isPartner) {
+                            if (!isPartnerAccepted) {
+                                secondaryBtn = {
+                                    function: () => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, state.orderDetail),
+                                    text: t('common:deny')
+                                };
+                                primaryBtn = {
+                                    function: () => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, state.orderDetail),
+                                    text: t('common:confirm')
+                                };
+                            } else {
+                                //partner chua chuyen tien
                                 if (myStatus === PartnerPersonStatus.PENDING) {
                                     primaryBtn = {
                                         function: () =>
@@ -251,6 +258,13 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
 
                                     return;
                                 }
+                            }
+                        } else {
+                            if (!isPartnerAccepted) {
+                                primaryBtn = {
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
+                                    text: t('common:cancel_order')
+                                };
                             } else {
                                 // hiện "tôi đã nhận tiền" khi partner chưa chuyển tiền
                                 if (theirStatus === PartnerPersonStatus.PENDING) {
@@ -277,28 +291,28 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 }
                             }
                         }
-                        // order status PENDING, DISPUTED
-                        if (orderStatus === PartnerOrderStatus.DISPUTED || orderStatus === PartnerOrderStatus.PENDING) {
-                            // neu partner da chuyen tien -> se luon hien button upload proof
-                            if (isPartner && myStatus === PartnerPersonStatus.TRANSFERRED) {
-                                primaryBtn = {
-                                    function: () => setState({ isShowUploadImg: true }),
-                                    text: state.orderDetail?.partnerUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
-                                };
-                            }
-                        }
-
-                        // resolve DISPUTED button for USER mode
-                        if (orderStatus === PartnerOrderStatus.DISPUTED && !isPartner) {
+                    }
+                    // order status is PENDING, DISPUTED
+                    if (orderStatus === PartnerOrderStatus.DISPUTED || orderStatus === PartnerOrderStatus.PENDING) {
+                        // neu partner da chuyen tien -> se luon hien button upload proof
+                        if (isPartner && myStatus === PartnerPersonStatus.TRANSFERRED) {
                             primaryBtn = {
-                                function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.RESOLVE_DISPUTE, state.orderDetail),
-                                text: t('dw_partner:complete_dispute')
+                                function: () => setState({ isShowUploadImg: true }),
+                                text: state.orderDetail?.partnerUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
                             };
                         }
                     }
+
+                    // resolve dispute button for user mode
+                    if (orderStatus === PartnerOrderStatus.DISPUTED && !isPartner) {
+                        primaryBtn = {
+                            function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.RESOLVE_DISPUTE, state.orderDetail),
+                            text: t('dw_partner:complete_dispute')
+                        };
+                    }
                 }
-            }[side.toUpperCase()].render());
-        }
+            }
+        }[side.toUpperCase()].render());
 
         return (
             <div className="flex gap-x-4">
@@ -376,7 +390,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6">
                         <DarkNote title={t('wallet:note')} />
                         <div className="txtSecond-2 mt-2">
-                            {status?.status === PartnerOrderStatus.WATING_CONFIRM ? (
+                            {status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? (
                                 t('dw_partner:note_waiting_confirm')
                             ) : (
                                 <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />

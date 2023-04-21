@@ -907,8 +907,7 @@ export const PartnerOrderStatus = {
     PENDING: 0,
     SUCCESS: 1,
     REJECTED: 2,
-    DISPUTED: 3,
-    WATING_CONFIRM: 4
+    DISPUTED: 3
 };
 
 export const PartnerPersonStatus = {

@@ -71,14 +71,14 @@ const OrderCard = memo(({ orderDetail, assetConfig, t, router, onProcessOrder })
                     <div className="txtSecond-2 mb-3">{t('common:status')}</div>
                     <div className="flex -m-1 flex-wrap items-center">
                         <div className="p-1">
-                            {orderDetail?.status === PartnerOrderStatus.WATING_CONFIRM ? (
+                            {orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && orderDetail?.status === PartnerOrderStatus.PENDING ? (
                                 <TagV2 type={TYPES.DEFAULT}>{t('dw_partner:wait_confirmation')}</TagV2>
                             ) : (
                                 <OrderStatusTag className="!ml-0" status={orderDetail?.status} />
                             )}
                         </div>
 
-                        {orderDetail?.timeExpire && (
+                        {orderDetail?.status === PartnerOrderStatus.PENDING && orderDetail?.timeExpire && (
                             <div className="p-1 w-[100px]">
                                 <CountdownClock countdownTime={orderDetail?.countdownTime} onComplete={() => {}} timeExpire={orderDetail?.timeExpire} />
                             </div>
@@ -138,7 +138,7 @@ const OpenOrderTable = () => {
             page: 0,
             mode: 'partner',
             pageSize: LIMIT_ROW,
-            status: `${PartnerOrderStatus.PENDING},${PartnerOrderStatus.WATING_CONFIRM}`,
+            status: PartnerOrderStatus.PENDING,
             sortBy: null,
             sortType: null
         },
