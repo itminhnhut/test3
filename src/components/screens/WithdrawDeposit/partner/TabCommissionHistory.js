@@ -29,7 +29,6 @@ const customTime = (input) => {
     const startTimeLocale = moment(input).tz(timezone);
     const startTimeLocaleTimestamp = startTimeLocale.valueOf();
 
-    console.log("startTimeLocaleTimestamp: ",startTimeLocaleTimestamp);
     return startTimeLocaleTimestamp;
 };
 

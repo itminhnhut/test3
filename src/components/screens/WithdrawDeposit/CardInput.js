@@ -9,12 +9,14 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Skeletor from 'components/common/Skeletor';
 import { useRouter } from 'next/router';
 import useFetchApi from 'hooks/useFetchApi';
-import { API_GET_ORDER_PRICE, API_CHECK_LIMIT_WITHDRAW } from 'redux/actions/apis';
+import { API_GET_ORDER_PRICE, API_CHECK_LIMIT_WITHDRAW, API_GET_ME } from 'redux/actions/apis';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { PATHS } from 'constants/paths';
 import { useTranslation } from 'next-i18next';
 import useMakeOrder from './hooks/useMakeOrder';
 import useGetPartner from './hooks/useGetPartner';
+import DWAddPhoneNumber from 'components/common/DWAddPhoneNumber';
+import FetchApi from 'utils/fetch-api';
 
 const ModalOtp = dynamic(() => import('./components/ModalOtp'));
 const RecommendAmount = dynamic(() => import('./components/RecommendAmount'));
@@ -23,7 +25,9 @@ const CardInput = () => {
     const { t } = useTranslation();
     const { input, partner, partnerBank, accountBank, loadingPartner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
+    const auth = useSelector((state) => state.auth.user) || null;
 
+    const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
     const router = useRouter();
 
     const [state, set] = useState({
@@ -44,9 +48,9 @@ const CardInput = () => {
     }, [minimumAllowed]);
 
     const { data: limitWithdraw, loading: loadingLimitWithdraw } = useFetchApi(
-        { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: assetId } },
-        Boolean(side) && Boolean(assetId),
-        [side, assetId]
+        { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: 72 } },
+        Boolean(side),
+        [side]
     );
 
     const {
@@ -66,6 +70,9 @@ const CardInput = () => {
 
     const onMaxHandler = () => {
         let max = maximumAllowed;
+        if (rate && max > limitWithdraw?.remain / rate) {
+            max = limitWithdraw?.remain / rate;
+        }
         if (availableAsset < max) {
             max = availableAsset;
         }
@@ -104,7 +111,7 @@ const CardInput = () => {
                     amount: formatBalanceFiat(minimumAllowed, assetCode),
                     asset: assetCode
                 });
-            } else if (side === 'SELL' && +state.amount > limitWithdraw?.remain) {
+            } else if (side === SIDE.SELL && +state.amount > limitWithdraw?.remain / rate) {
                 isValid = false;
                 msg = t('dw_partner:error.reach_limit_withdraw', {
                     asset: assetCode
@@ -113,11 +120,38 @@ const CardInput = () => {
         }
 
         return { isValid, msg, isError: !isValid };
-    }, [orderConfig, state.amount, availableAsset, minimumAllowed, maximumAllowed, assetCode, hasRendered, limitWithdraw]);
+    }, [orderConfig, state.amount, availableAsset, minimumAllowed, maximumAllowed, assetCode, hasRendered, limitWithdraw, rate]);
 
     const handleFocusInput = () => {
         if (!hasRendered) {
             setHasRendered(true);
+        }
+    };
+
+    const handleSubmitOrder = () => {
+        setState({ loadingConfirm: true });
+        try {
+            FetchApi({
+                url: API_GET_ME,
+                options: {
+                    method: 'GET'
+                },
+                params: {
+                    resetCache: true
+                }
+            })
+                .then(({ status, data }) => {
+                    if (status === 'ok') {
+                        !data?.phone ? setIsOpenModalAddPhone(true) : onMakeOrderHandler();
+                    }
+                })
+                .finally(() => setState({ loadingConfirm: false }));
+        } catch (error) {
+            console.error('ERROR WHEN HANDLE SUBMIT ORDER: ', error);
+            toast({
+                text: 'System error, please try again in a few minutes',
+                type: 'error'
+            });
         }
     };
 
@@ -181,7 +215,7 @@ const CardInput = () => {
                                 onClick={() => {
                                     router.push(
                                         {
-                                            pathname: PATHS.WITHDRAW_DEPOSIT.DEFAULT,
+                                            pathname: PATHS.WITHDRAW_DEPOSIT.PARTNER,
                                             query: { side, assetId: +assetId === 72 ? 22 : 72 }
                                         },
                                         undefined,
@@ -234,9 +268,9 @@ const CardInput = () => {
                                     ) : !limitWithdraw ? (
                                         '--'
                                     ) : (
-                                        formatBalanceFiat(limitWithdraw?.limit, assetCode)
+                                        formatBalanceFiat(limitWithdraw?.limit, 'VNDC')
                                     )}
-                                    <span className="ml-1">{assetCode}</span>
+                                    <span className="ml-1">{'VNDC'}</span>
                                 </div>
                             </div>
                             <div className="flex items-center justify-between ">
@@ -247,9 +281,9 @@ const CardInput = () => {
                                     ) : !limitWithdraw ? (
                                         '--'
                                     ) : (
-                                        formatBalanceFiat(limitWithdraw?.remain, assetCode)
+                                        formatBalanceFiat(limitWithdraw?.remain, 'VNDC')
                                     )}{' '}
-                                    <span className="ml-1">{assetCode}</span>
+                                    <span className="ml-1">{'VNDC'}</span>
                                 </div>
                             </div>
                         </>
@@ -275,19 +309,21 @@ const CardInput = () => {
                 </div>
                 <ButtonV2
                     loading={state.loadingConfirm || loadingPartner}
-                    onClick={() => onMakeOrderHandler()}
+                    onClick={handleSubmitOrder}
                     disabled={
                         !partner ||
                         loadingPartner ||
                         !validator?.isValid ||
                         (!partnerBank && side === SIDE.BUY) ||
-                        (side === SIDE.SELL && (+state.amount > availableAsset || +state.amount > limitWithdraw?.remain || !accountBank))
+                        (side === SIDE.SELL && (+state.amount > availableAsset || !accountBank))
                     }
                     className="disabled:cursor-default"
                 >
                     {t(`common:${side.toLowerCase()}`) + ` ${assetCode}`}
                 </ButtonV2>
             </Card>
+
+            <DWAddPhoneNumber isVisible={isOpenModalAddPhone} onBackdropCb={() => setIsOpenModalAddPhone(false)} />
 
             <ModalOtp
                 onConfirm={(otp) => onMakeOrderHandler(otp)}

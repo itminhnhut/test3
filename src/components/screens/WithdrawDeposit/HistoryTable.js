@@ -7,13 +7,14 @@ import { getAssetCode, formatTime, formatNumber, formatNanNumber } from 'redux/a
 import Axios from 'axios';
 import { TABS, data } from './constants';
 import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
-import { ApiStatus } from 'redux/actions/const';
+import { ApiStatus, PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import OrderStatusTag from 'components/common/OrderStatusTag';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import Skeletor from 'components/common/Skeletor';
 import { find } from 'lodash';
 
@@ -36,7 +37,7 @@ const getColumns = (t, user, side, configs) => [
         align: 'left',
         width: 148,
         render: (v) => {
-            const assetConfig = find(configs, { id: v });
+            const assetConfig = find(configs, { id: +v });
 
             return assetConfig ? (
                 <div className="flex gap-2 items-center">
@@ -86,7 +87,15 @@ const getColumns = (t, user, side, configs) => [
         title: <span className="mr-[10px]">{t('common:status')}</span>,
         align: 'right',
         width: 185,
-        render: (v) => <OrderStatusTag status={v} icon={false} />
+        render: (v, item) => {
+            return item?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && v === PartnerOrderStatus.PENDING ? (
+                <TagV2 type={TYPES.DEFAULT} className="ml-auto">
+                    <span className="text-center">{t('dw_partner:wait_confirmation')}</span>
+                </TagV2>
+            ) : (
+                <OrderStatusTag status={v} icon={false} />
+            );
+        }
     }
 ];
 
@@ -105,6 +114,7 @@ const HistoryTable = () => {
     const [curSort, setCurSort] = useState({});
     const user = useSelector((state) => state.auth.user) || null;
     const { side } = router.query;
+    const configs = useSelector((state) => state.utils?.assetConfig);
 
     const [loadingDataTable, setLoadingDataTable] = useState(false);
 
