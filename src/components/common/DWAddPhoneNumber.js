@@ -137,7 +137,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                 params: { phone: toRegionPhone(phoneNumber), code: code?.phone }
             });
             if (response?.status === ApiStatus.SUCCESS) setIsShowAlert(true);
-            else toast({ text: t('dw_partner:error.invalid_otp'), type: 'error', duration: 2000 });
+            else toast({ text: t('dw_partner:error.invalid_otp'), type: 'warning', duration: 1500 });
             return response;
         } catch (error) {
             console.error('ERROR WHEN SUBMIT OTP CODE: ', error);
