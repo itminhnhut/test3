@@ -46,13 +46,13 @@ const AlertModal = forwardRef((props, ref) => {
     const getImage = (type) => {
         switch (type) {
             case 'success':
-                return '/images/icon/ic_success.png';
+                return '/images/icon/ic_success_outlined.png';
             case 'error':
-                return '/images/icon/ic_error.png';
+                return '/images/icon/ic_error_outlined.png';
             case 'warning':
                 return '/images/icon/ic_warning_triangle.png';
             case 'expired':
-                return '/images/icon/ic_expired.png';
+                return '/images/icon/ic_expired_outlined.png';
             default:
                 return '/images/icon/success.png';
         }

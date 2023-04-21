@@ -241,7 +241,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                             </div>
                         }
                         <div className="mt-6 flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs p-4 border border-divider dark:border-divider-dark rounded-md">
-                            <img src={getS3Url('/images/nao/ic_warning.png')} className="mr-3" width={24} height={22} alt="" />
+                            <img src={getS3Url('/images/nao/ic_error_triangle.png')} className="mr-3" width={24} height={22} alt="" />
                             {t(`nao:pool:description_${isLock ? 'lock' : 'unlock'}`)}
                         </div>
                         <ButtonNao onClick={onSave} className={`py-3 mt-8 font-semibold ${!Number(amount) || !validator()?.isValid ? 'opacity-30' : ''}`}>

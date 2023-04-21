@@ -15,7 +15,7 @@ const ExpiredModal = ({ onClose }) => {
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
             containerClassName={`px-[24px] w-[342px] h-[458px] py-[32px] top-[50%] flex flex-col items-center justify-between`}>
             <div>
-                <img src={getS3Url("/images/icon/ic_expired.png")} width={120} height={168} />
+                <img src={getS3Url("/images/icon/ic_expired_outlined.png")} width={120} height={168} />
             </div>
             <div className="mt-4">
                 <div className="text-center">
