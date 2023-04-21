@@ -10,8 +10,7 @@ export const REPORT_ABLE_TIME = 5 * 60 * 1000;
 
 export const DisputedType = {
     REJECTED: 1,
-    REPORT: 2,
-    RESOLVE_DISPUTE: 3
+    REPORT: 2
 };
 
 export const MODE = {
@@ -55,17 +54,16 @@ export const TABS = [
     },
     {
         key: 1,
-        localized: 'common:processing',
-        status: PartnerOrderStatus.PENDING,
-        type: TYPES.WARNING
-    },
-    {
-        key: 2,
         localized: 'transaction-history:completed',
         status: PartnerOrderStatus.SUCCESS,
         type: TYPES.SUCCESS
     },
-
+    {
+        key: 2,
+        localized: 'common:processing',
+        status: PartnerOrderStatus.PENDING,
+        type: TYPES.WARNING
+    },
     {
         key: 3,
         localized: 'common:denined',
@@ -80,6 +78,11 @@ export const TABS = [
     }
 ];
 
+export const MODAL_TYPE = {
+    CONFIRM: 'confirm',
+    AFTER_CONFIRM: 'afterConfirm'
+};
+
 export const ICONS = {
     INFO: <BxsInfoCircle size={80} color="currentColor" />,
     SUCCESS: <CheckCircleIcon size={80} color="currentColor" />,
@@ -89,19 +92,6 @@ export const ICONS = {
 };
 
 export const ORDER_TYPES = {
-    ACCEPT_ORDER: {
-        icon: ICONS['INFO'],
-        title: (t, mode = MODE.USER) => t('common:confirm'),
-        description: ({ mode = MODE.USER, t }) => t(`dw_partner:transfer_confirm_description.${mode}`),
-        showConfirm: true
-    },
-    RESOLVE_DISPUTE: {
-        icon: ICONS['INFO'],
-        title: (t, mode = MODE.USER) => t('dw_partner:resolve_dispute_title'),
-        description: ({ mode = MODE.USER, t }) => t(`dw_partner:resolve_dispute_description`),
-        showConfirm: true
-    },
-
     CONFIRM_TRANSFERRED: {
         icon: ICONS['INFO'],
         title: (t, mode = MODE.USER) => t('common:confirm'),
@@ -124,17 +114,11 @@ export const ORDER_TYPES = {
         title: (t, mode = MODE.USER) => t('common:success'),
         description: ({ displayingId, amount, asset, side, t }) =>
             t('dw_partner:cancel_order_success', { orderId: displayingId, amount, asset, side: t(`common:${side.toLowerCase()}`) }),
-        showConfirm: ({ router, t, assetId, side, mode, resetModalState }) => {
+        showConfirm: ({ router, t, assetId, side, mode }) => {
             return mode === MODE.PARTNER ? (
                 <></>
             ) : (
-                <ButtonV2
-                    onClick={() => {
-                        router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`);
-                        resetModalState();
-                    }}
-                    className="transition-all mt-10"
-                >
+                <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
                     {t('dw_partner:create_new_transaction')}
                 </ButtonV2>
             );
@@ -184,12 +168,6 @@ export const ORDER_TYPES = {
         icon: ICONS['ERROR'],
         title: () => 'Không thể thực hiện',
         description: ({ errMsg }) => errMsg,
-        showConfirm: false
-    },
-    ERROR_NOT_FOUND_ORDER: {
-        icon: ICONS['ERROR'],
-        title: (t) => t('common:error'),
-        description: ({ displayingId, t }) => t('dw_partner:error.not_found_order', { displayingId }),
         showConfirm: false
     }
 };

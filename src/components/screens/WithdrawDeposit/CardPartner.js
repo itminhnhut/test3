@@ -12,6 +12,7 @@ import Card from './components/common/Card';
 import { useTranslation } from 'next-i18next';
 import sortBy from 'lodash/sortBy';
 import { PATHS } from 'constants/paths';
+
 const ModalBankDefault = dynamic(() => import('./components/ModalBankDefault'), { ssr: false });
 const PartnerInfo = dynamic(() => import('./components/PartnerInfo'), { ssr: false });
 const BankInfo = dynamic(() => import('./components/BankInfo'), { ssr: false });
@@ -64,7 +65,6 @@ const CardPartner = () => {
         <>
             <Card className=" ">
                 <div className="txtSecond-3 mb-4">{t('dw_partner:payment_infor')}</div>
-
                 <div className="space-y-4">
                     {side === SIDE.SELL && (
                         <BankInfo

@@ -1,125 +1,139 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
-import { CountdownClock } from '../components/common/CircleCountdown';
+import React, { useEffect, useRef, useState } from 'react';
+import TableV2 from 'components/common/V2/TableV2';
+import Countdown from 'react-countdown';
+import CircleCountdown from '../components/common/CircleCountdown';
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import { formatTime, formatBalanceFiat } from 'redux/actions/utils';
+import { getAssetCode, formatTime, formatBalance } from 'redux/actions/utils';
+import AssetLogo from 'components/wallet/AssetLogo';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import TagV2 from 'components/common/V2/TagV2';
 import TabV2 from 'components/common/V2/TabV2';
-import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import FetchApi from 'utils/fetch-api';
-import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
-import { ApiStatus, PartnerAcceptStatus, PartnerOrderStatus, UserSocketEvent } from 'redux/actions/const';
-import { DisputedType, MODE } from '../constants';
+import { API_GET_HISTORY_DW_PARTNERS, API_GET_OPENING_ORDER } from 'redux/actions/apis';
+import { ApiStatus, PartnerOrderStatus, PartnerPersonStatus, UserSocketEvent } from 'redux/actions/const';
+import { MODAL_TYPE, MODE, TranferreredType } from '../constants';
 import useMarkOrder from '../hooks/useMarkOrder';
 import { ModalConfirm } from '../DetailOrder';
 import { useSelector } from 'react-redux';
 import { useBoolean } from 'react-use';
 import axios from 'axios';
-import TagV2, { TYPES } from 'components/common/V2/TagV2';
-import OrderStatusTag from 'components/common/OrderStatusTag';
-import Card from '../components/common/Card';
-import { find } from 'lodash';
-import { ChevronLeft, ChevronRight } from 'react-feather';
-import NoData from 'components/common/V2/TableV2/NoData';
-import Skeletor from 'components/common/Skeletor';
-import { LANGUAGE_TAG } from 'hooks/useLanguage';
-import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
-const LIMIT_ROW = 5;
-
-const OrderCard = memo(({ orderDetail, assetConfig, t, router, onProcessOrder }) => {
-    const assetCode = find(assetConfig, { id: orderDetail?.baseAssetId })?.assetCode;
-    return (
-        <Card className="mb-12 border !border-divider dark:border-0 bg-white dark:bg-dark-4">
-            <div className="flex items-center justify-between mb-6">
-                <div className="txtPri-3">
-                    {t(`dw_partner:${orderDetail?.side?.toLowerCase()}_asset_from_partners.partner`, {
-                        asset: assetCode
-                    })}
-                </div>{' '}
-                <div className="flex items-center gap-4">
-                    {orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.ACCEPTED ? (
-                        <ButtonV2
-                            onClick={() => router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + orderDetail?.displayingId)}
-                            variants="text"
-                            className="!py-0 !w-auto items-center"
-                        >
-                            <span className="font-semibold">Tiếp tục xử lý giao dịch</span>
-                            <ChevronRight color="currentColor" size={16} />
-                        </ButtonV2>
-                    ) : (
-                        <>
-                            <ButtonV2 className="!w-auto !h-9 px-4 py-3" onClick={() => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, orderDetail)}>
-                                {t('common:confirm')}
-                            </ButtonV2>
-                            <ButtonV2
-                                className="!w-auto px-4 py-3 !h-9"
-                                variants="secondary"
-                                onClick={() => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, orderDetail)}
-                            >
-                                {t('common:deny')}
-                            </ButtonV2>
-                        </>
-                    )}
+const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
+    {
+        key: 'timeExpire',
+        dataIndex: 'timeExpire',
+        title: t('common:status'),
+        align: 'left',
+        width: 107,
+        render: (row, item) => <CircleCountdown countdownTime={item?.countdownTime} onComplete={toggleRefetch} size={34} textSize={10} timeExpire={row} />
+    },
+    {
+        key: 'displayingId',
+        dataIndex: 'displayingId',
+        title: t('common:transaction_id'),
+        align: 'left',
+        width: 124,
+        render: (row) => <TextCopyable text={row} />
+    },
+    {
+        key: 'baseAssetId',
+        dataIndex: 'baseAssetId',
+        title: t('common:asset'),
+        align: 'left',
+        width: 148,
+        render: (row) => {
+            const assetCode = getAssetCode(row);
+            return (
+                <div className="flex gap-2 items-center">
+                    <AssetLogo assetCode={assetCode} size={32} useNextImg /> <div>{assetCode}</div>
                 </div>
-            </div>
-
-            <div className="flex flex-wrap -m-2 justify-between ">
-                <div className="p-2 w-full xxs:w-1/2 lg:!w-auto">
-                    <div className="txtSecond-2 mb-3">{t('common:status')}</div>
-                    <div className="flex -m-1 flex-wrap items-center">
-                        <div className="p-1">
-                            {orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && orderDetail?.status === PartnerOrderStatus.PENDING ? (
-                                <TagV2 type={TYPES.DEFAULT}>{t('dw_partner:wait_confirmation')}</TagV2>
-                            ) : (
-                                <OrderStatusTag className="!ml-0" status={orderDetail?.status} />
-                            )}
-                        </div>
-
-                        {orderDetail?.status === PartnerOrderStatus.PENDING && orderDetail?.timeExpire && (
-                            <div className="p-1 w-[100px]">
-                                <CountdownClock countdownTime={orderDetail?.countdownTime} onComplete={() => {}} timeExpire={orderDetail?.timeExpire} />
-                            </div>
-                        )}
-                    </div>
+            );
+        }
+    },
+    {
+        key: 'createdAt',
+        dataIndex: 'createdAt',
+        title: t('common:time'),
+        align: 'left',
+        width: 196,
+        render: (row) => {
+            return formatTime(row, 'HH:mm:ss dd/MM/yyyy');
+        }
+    },
+    {
+        key: 'baseQty',
+        dataIndex: 'baseQty',
+        title: t('common:amount'),
+        align: 'right',
+        width: 152,
+        render: (row, item) => {
+            return `${item.side === SIDE.SELL ? '+' : '-'}` + formatBalance(row);
+        }
+    },
+    {
+        key: 'user',
+        dataIndex: 'userMetadata',
+        title: t('dw_partner:user'),
+        align: 'left',
+        width: 165,
+        render: (row) => {
+            return (
+                <div>
+                    <div className="">{row?.name}</div>
+                    <div className="text-sm dark:text-txtSecondary-dark text-txtSecondary">{row?.code}</div>
                 </div>
-                <div className="border-divider hidden lg:block  dark:border-divider-dark border-r" />
+            );
+        }
+    },
+    // {
+    //     key: 'partner',
+    //     dataIndex: 'partnerMetadata',
+    //     title: t('common:to'),
+    //     align: 'left',
+    //     width: 165,
+    //     render: (row) => {
+    //         return (
+    //             <div>
+    //                 <div className="">{row?.name}</div>
+    //                 <div className="text-sm dark:text-txtSecondary-dark text-txtSecondary">{row?.code}</div>
+    //             </div>
+    //         );
+    //     }
+    // },
+    {
+        key: 'action',
+        dataIndex: '',
+        title: '',
+        align: 'left',
+        width: 190,
+        render: (order, item) => {
+            const side = item.side;
+            const btnText = side === SIDE.BUY ? t('dw_partner:received_fiat') : t('common:confirm');
+            const btnDisabled =
+                side === SIDE.BUY ? order?.userStatus !== PartnerPersonStatus.TRANSFERRED : order?.partnerStatus !== PartnerPersonStatus?.PENDING;
+            return (
+                <ButtonV2
+                    disabled={btnDisabled}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        return order.side === SIDE.BUY
+                            ? onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TAKE, order)
+                            : onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TRANSFERRED, order);
+                    }}
+                    // variants="secondary"
+                >
+                    {btnText}
+                </ButtonV2>
+            );
+        }
+    }
+];
 
-                <div className="p-2 w-full  lg:!w-auto xxs:w-1/2  flex flex-col lg:!items-start xxs:items-end ">
-                    <div className="txtSecond-2 mb-3 ">{t('dw_partner:user')}</div>
-                    <div className="flex space-x-1 items-center flex-wrap lg:!justify-start xxs:justify-end ">
-                        <div className="capitalize txtPri-1">{orderDetail?.userMetadata?.name?.toLowerCase()}</div>
-                        <div className="txtSecond-2">({orderDetail?.userMetadata?.code})</div>
-                    </div>
-                </div>
-                <div className="border-divider hidden lg:block dark:border-divider-dark border-r" />
-                <div className="flex gap-6 p-2 w-full xxs:w-1/2 lg:!w-auto">
-                    <div className="">
-                        <div className="txtSecond-2 mb-3">{t('common:transaction_id')}</div>
-                        <TextCopyable className="gap-x-1 txtPri-1" text={orderDetail?.displayingId} />
-                    </div>
-                    <div className="">
-                        <div className="txtSecond-2 mb-3 ">{t('common:time')}</div>
-                        <div className="txtPri-1">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
-                    </div>
-                </div>
-
-                <div className="border-divider hidden lg:block dark:border-divider-dark border-r" />
-
-                <div className="p-2 w-full xxs:w-1/2 lg:!w-auto">
-                    <div>
-                        <div className="txtSecond-2 xxs:text-right mb-3">{t('dw_partner:amount')}</div>
-                        <div className="mt-3 txtPri-3 xxs:text-right font-semibold">
-                            {`${orderDetail?.side === SIDE.SELL ? '+' : '-'}${formatBalanceFiat(orderDetail?.baseQty, 'VNDC')}`}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </Card>
-    );
-});
+const LIMIT_ROW = 10;
 
 const OpenOrderTable = () => {
     const {
@@ -127,8 +141,6 @@ const OpenOrderTable = () => {
         i18n: { language }
     } = useTranslation();
     const userSocket = useSelector((state) => state.socket.userSocket);
-    const assetConfig = useSelector((state) => state.utils.assetConfig);
-    const { modal: modalProps } = useSelector((state) => state.withdrawDeposit);
 
     const router = useRouter();
     const [state, set] = useState({
@@ -147,34 +159,52 @@ const OpenOrderTable = () => {
     });
     const [refetch, toggleRefetch] = useBoolean();
 
+    const [modalProps, setModalProps] = useState({
+        [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
+        [MODAL_TYPE.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
+    });
+
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
     const dataRef = useRef([]);
     const currentSideRef = useRef(null);
     dataRef.current = [...state.data];
     currentSideRef.current = state.params.side;
+    const setModalPropsWithKey = (key, props) =>
+        setModalProps((prev) => ({
+            ...prev,
+            [key]: {
+                ...prev[key],
+                ...props
+            }
+        }));
 
-    const { onMarkWithStatus, onProcessOrder, setModalState } = useMarkOrder({
+    const { onMarkWithStatus } = useMarkOrder({
+        setModalPropsWithKey,
         mode: MODE.PARTNER,
-        toggleRefetch: () => {}
+        toggleRefetch: () => toggleRefetch()
     });
 
     useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (newOrder) => {
-                const existedOrder = dataRef.current.find((order) => order.displayingId === newOrder.displayingId);
-                // if newOrder is not in the current data sets -> refetch table
-                if (!existedOrder && newOrder?.side === currentSideRef.current) {
-                    toggleRefetch();
+                if (dataRef.current.length) {
+                    const existedOrder = dataRef.current.find((order) => order.displayingId === newOrder.displayingId);
+                    // if newOrder is not in the current data sets -> refetch table
+                    if (!existedOrder && newOrder?.side === currentSideRef.current) {
+                        toggleRefetch();
+                        return;
+                    }
+
+                    // else replace the the existed obj with the newOrder obj
+                    const newOrderList = [...dataRef.current]
+                        .map((order) => (order.displayingId === newOrder.displayingId ? newOrder : order))
+                        .filter((order) => order.status === PartnerOrderStatus.PENDING);
+                    setState({ data: newOrderList });
+                    dataRef.current = newOrderList;
                     return;
                 }
 
-                // else replace the the existed obj with the newOrder obj
-                const newOrderList = [...dataRef.current]
-                    .map((order) => (order.displayingId === newOrder.displayingId ? newOrder : order))
-                    .filter((order) => order.status === PartnerOrderStatus.PENDING);
-                setState({ data: newOrderList });
-                dataRef.current = newOrderList;
-                return;
+                toggleRefetch();
             });
         }
         return () => {
@@ -224,28 +254,35 @@ const OpenOrderTable = () => {
         };
     }, [state.params, refetch]);
 
+    const customSort = (tableSorted) => {
+        const output = {};
+
+        for (const key in tableSorted) {
+            if (tableSorted.hasOwnProperty(key)) {
+                output.sortBy = key;
+                output.sortType = tableSorted[key] ? 1 : -1;
+            }
+        }
+        setState({
+            params: {
+                ...state.params,
+                ...output
+            }
+        });
+    };
+
     return (
         <>
-            {/* CONFIRM */}
             <ModalConfirm
                 mode={MODE.PARTNER}
                 modalProps={modalProps[MODAL_TYPE.CONFIRM]}
-                onClose={() => setModalState(MODAL_TYPE.CONFIRM, { visible: false })}
-            />
-            {/* CONFIRM */}
-
-            {/* AFTER_CONFIRM */}
+                onClose={() => setModalPropsWithKey(MODAL_TYPE.CONFIRM, { visible: false })}
+            />{' '}
             <ModalConfirm
                 mode={MODE.PARTNER}
                 modalProps={modalProps[MODAL_TYPE.AFTER_CONFIRM]}
-                onClose={() =>
-                    setModalState(MODAL_TYPE.AFTER_CONFIRM, {
-                        visible: false
-                    })
-                }
-            />
-            {/* AFTER_CONFIRM */}
-
+                onClose={() => setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, { visible: false })}
+            />{' '}
             <div>
                 <div className="mb-6">
                     <TabV2
@@ -258,6 +295,7 @@ const OpenOrderTable = () => {
                                     side: key
                                 }
                             });
+                            // setFirstLoad(true);
                         }}
                         tabs={[
                             {
@@ -271,53 +309,39 @@ const OpenOrderTable = () => {
                         ]}
                     />
                 </div>
-                <div className="space-y-6 ">
-                    {state.loading ? (
-                        [...Array(LIMIT_ROW).keys()].map((row) => (
-                            <Skeletor key={row} containerClassName="!block" className="!rounded-xl" width="100%" height={170} />
-                        ))
-                    ) : state.data.length ? (
-                        state.data.map((order, i) => (
-                            <OrderCard onProcessOrder={onProcessOrder} router={router} assetConfig={assetConfig} key={i} orderDetail={order} t={t} />
-                        ))
-                    ) : (
-                        <NoData />
-                    )}
-                </div>
-                {state.loading || !state.data.length ? null : (
-                    <div className="w-full flex items-center justify-center select-none gap-8 mt-8">
-                        <TextButton
-                            disabled={state.params.page <= 0}
-                            className={`!text-base w-auto gap-2`}
-                            onClick={() =>
-                                setState({
-                                    params: {
-                                        ...state.params,
-                                        page: state.params.page - 1
-                                    }
-                                })
-                            }
-                        >
-                            <ChevronLeft size={16} />
-                            {language === LANGUAGE_TAG.VI ? 'Trước đó' : 'Previous'}
-                        </TextButton>
-                        <TextButton
-                            disabled={!state.hasNext}
-                            className={`!text-base w-auto gap-2`}
-                            onClick={() =>
-                                setState({
-                                    params: {
-                                        ...state.params,
-                                        page: state.params.page + 1
-                                    }
-                                })
-                            }
-                        >
-                            {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'}
-                            <ChevronRight size={16} />
-                        </TextButton>
-                    </div>
-                )}
+                <TableV2
+                    sort={state.data.length > 1 ? ['baseQty'] : []}
+                    limit={LIMIT_ROW}
+                    skip={0}
+                    useRowHover
+                    data={state.data}
+                    columns={getColumns({ t, onMarkWithStatus, toggleRefetch })}
+                    rowKey={(item) => item?.key}
+                    scroll={{ x: true }}
+                    loading={state.loading}
+                    onRowClick={(transaction) => router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + transaction?.displayingId)}
+                    height={404}
+                    className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg pt-4"
+                    tableStyle={{
+                        fontSize: '16px',
+                        padding: '16px',
+                        headerFontStyle: { 'font-size': `14px !important` }
+                    }}
+                    pagingPrevNext={{
+                        page: state.params.page,
+                        hasNext: state.hasNext,
+                        onChangeNextPrev: (e) =>
+                            setState({
+                                params: {
+                                    ...state.params,
+                                    page: state.params.page + e
+                                }
+                            }),
+                        language
+                    }}
+                    emptyTextContent={t('dw_partner:no_pending_transactions')}
+                    customSort={customSort}
+                />
             </div>
         </>
     );

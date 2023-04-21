@@ -887,14 +887,11 @@ export const ApiResultCreateOrder = {
     INVALID_OTP: 'INVALID_OTP',
     TOO_MUCH_REQUEST: 'TOO_MUCH_REQUEST',
     NOT_FOUND_PARTNER: 'NOT_FOUND_PARTNER',
-    NOT_ENOUGH_MONEY: 'NOT_ENOUGH_MONEY',
-    INVALID_AMOUNT: 'INVALID_AMOUNT',
-    EXCEEDING_PERMITTED_LIMIT: 'EXCEEDING_PERMITTED_LIMIT',
-    NOT_FOUND_ORDER: 'NOT_FOUND_ORDER'
+    NOT_ENOUGH_MONEY: 'NOT_ENOUGH_MONEY'
 };
 
 export const DEFAULT_PARTNER_MIN = {
-    [SIDE.SELL]: 100e3,
+    [SIDE.SELL]:100e3,
     [SIDE.BUY]: 100e3
 };
 
@@ -914,12 +911,6 @@ export const PartnerPersonStatus = {
     PENDING: 0,
     TRANSFERRED: 1,
     DISPUTED: 2
-};
-
-export const PartnerAcceptStatus = {
-    PENDING: PartnerPersonStatus.PENDING,
-    ACCEPTED: PartnerPersonStatus.TRANSFERRED,
-    DENIED: PartnerPersonStatus.DISPUTED
 };
 
 export const PartnerReasonDisputed = {

@@ -12,13 +12,13 @@ import { CalendarFillIcon, ContactIcon } from 'components/svg/SvgIcon';
 import { useRouter } from 'next/router';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
-const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) => {
+const ProfileHeader = ({ t, partner, bankDefault, banks, language, loadingBankDefault }) => {
     const router = useRouter();
     return (
         <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
             <div className="py-6 flex -m-3 flex-wrap items-center justify-center md:justify-between ">
                 <div className="flex p-3 md:flex-grow items-center">
-                    <img className="rounded-full object-cover h-20 w-20" src={partner?.avatar} width={80} height={80} />
+                    <img className="rounded-full object-cover" src={partner?.avatar} width={80} height={80} />
                     <div className="ml-6">
                         <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px] mb-3">{partner?.name}</div>
                         <div className="flex items-center text-txtSecondary dark:text-txtSecondary-dark ">
@@ -39,8 +39,8 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                         className="p-4 bg-gray-12 dark:bg-dark-2 rounded-md w-full cursor-pointer flex items-center justify-between"
                     >
                         <InfoCard
-                            loading={loading}
-                            imgSize={loading || bankDefault ? 52 : 24}
+                            loading={loadingBankDefault}
+                            imgSize={loadingBankDefault || bankDefault ? 40 : 24}
                             content={{
                                 mainContent: !bankDefault ? t('dw_partner:payment_method') : <div className="max-w-[280px]">{bankDefault?.bankName}</div>,
                                 subContent: bankDefault && (

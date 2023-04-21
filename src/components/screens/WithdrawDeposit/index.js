@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Header from './components/common/Header';
 import CardInput from './CardInput';
 import CardPartner from './CardPartner';
@@ -6,7 +6,6 @@ import HistoryTable from './HistoryTable';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import { useSelector } from 'react-redux';
 import NeedLoginV2 from 'components/common/NeedLoginV2';
-import DWAddPhoneNumber from 'components/common/DWAddPhoneNumber';
 
 const WithdrawDeposit = () => {
     return (

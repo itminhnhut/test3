@@ -41,28 +41,16 @@
     "partner": "Đối tác",
     "no_partner": "Không tìm thấy đối tác",
     "user": "Người dùng",
-    "wait_confirmation": "Chờ xác nhận",
     "appeal": "Khiếu nại",
     "upload_proof": "Gửi bằng chứng (không bắt buộc)",
     "upload_proof_again": "Gửi lại bằng chứng",
     "notes": "<li>Kiểm tra đúng thông tin tên tài khoản, số tài khoản và nội dung chuyển khoản</li><li>Chuyển đủ và đúng số lượng, không làm tròn, không bớt số lẻ</li><li>Hoàn tất chuyển khoản trong vòng 10 phút sau khi ấn \"Tôi đã chuyển khoản\" để không bị huỷ lệnh</li>",
-    "note_waiting_confirm": "Chỉ tiến hành thanh toán khi giao dịch được đối tác xác nhận",
-    "note_complete_dispute": "Giao dịch đang trong trạng thái khiếu nại. Bằng việc ấn \"Hoàn tất\", bạn tự động xử lý khiếu nại và chuyển trạng thái thành Thành công",
-    "complete_dispute": "Hoàn tất",
-    "resolve_dispute_title": "Xử lý khiếu nại",
-    "resolve_dispute_description": "Bằng việc ấn \"Xác nhận\", bạn đã nhận đủ số tiền từ người dùng/đối tác. Trạng thái giao dịch sẽ được cập nhật thành Thành Công",
     "beneficiary": "Người thụ hưởng",
     "download": "Tải xuống",
     "payment_infor": "Thông tin thanh toán",
     "bank": "Ngân hàng",
     "no_bank": "Không tìm thấy ngân hàng",
     "transfer_description": "Nội dung chuyển khoản",
-    "rating_modal": {
-        "title": "Đánh giá đối tác",
-        "description": "Bạn có hài lòng khi giao dịch với đối tác này không?",
-        "submit": "Gửi đánh giá",
-        "rated_success": "Xin cảm ơn, đánh giá của bạn đã được chúng tôi ghi nhận để nâng cao chất lượng dịch vụ mỗi ngày."
-    },
 
     "transfer_confirm_description": {
         "user": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiển cho đối tác, vui lòng kiểm tra kĩ số tiền và nội dung chuyển khoản trước khi thực hiện.",
@@ -85,11 +73,7 @@
     "set_as_default": "Đặt làm mặc định",
     "disputed_success": "Bạn đã khiếu nại thành công giao dịch #{{orderId}}",
     "dw_title": "Nạp/Rút",
-    "deposit_withdraw_guide": {
-        "crypto": "Hướng dẫn nạp/rút tài sản",
-        "partner_buy": "Hướng dẫn nạp qua đối tác",
-        "partner_sell": "Hướng dẫn rút qua đối tác"
-    },
+    "deposit_withdraw_guide": "Hướng dẫn nạp/rút tài sản",
     "submit": "Gửi lên",
     "reselected": "Gửi lại bằng chứng",
     "total_dw": "Khối lượng",
@@ -128,14 +112,6 @@
     "placeholder": {
         "enter_txid": "Nhập mã giao dịch"
     },
-    "add_phone": "Thêm số điện thoại",
-    "add_phone_description": "Để bắt đầu giao dịch qua ĐTNR, vui lòng cung cấp số điện thoại của bạn.",
-    "phone": "Số điện thoại",
-    "phone_placeholder": "Vui lòng nhập số điện thoại của bạn",
-    "otp_code_send_to_phone": "Vui lòng nhập 6 kí tự đã được gửi đến số điện thoại của bạn.",
-    "add_phone_success": "Chúc mừng! Bạn đã xác minh số điện thoại thành công. Giờ đây, bạn đã có thể mở giao dịch qua ĐTNR.",
-    "resend_otp_success": "Một mã OTP mới đã được gửi đến số điện thoại của bạn.",
-
     "error": {
         "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
         "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",
@@ -143,13 +119,7 @@
         "reach_limit_withdraw": "Số lượng bán {{asset}} trong ngày đã vượt giới hạn tối đa còn lại",
         "not_found_partner": "Đối tác không khả dụng",
         "not_enough_money": "Số dư khả dụng của đối tác không đủ để nhận lệnh này, vui lòng chọn đối tác khác.",
-        "max_greater_min": "Số lượng tối đa phải lớn hơn số lượng tối thiểu",
-        "exceeding_limit": "Không thể tạo quá 2 lệnh nạp và 2 lệnh rút qua Đối tác Nạp Rút, vui lòng hoàn tất các giao dịch đã tạo trước khi tạo lệnh mới.",
-        "invalid_phone": "Số điện thoại không đúng định dạng",
-        "phone_existed": "Số điện thoại đã tồn tại",
-        "missing_phone": "Trường thông tin bắt buộc",
-        "not_found_order": "Không tìm thấy lệnh #{{displayingId}} hoặc đang được xử lý, vui lòng tải lại hoặc liên hệ hỗ trợ",
-        "invalid_otp": "Mã OTP không hợp lệ. Vui lòng thử lại."
+        "max_greater_min": "Số lượng tối đa phải lớn hơn số lượng tối thiểu"
     },
     "filter": {
         "a_day": "1 ngày",

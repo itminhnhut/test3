@@ -1,27 +1,27 @@
 import axios from 'axios';
-import { find } from 'lodash';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DEFAULT_PARTNER_MAX, DEFAULT_PARTNER_MIN } from 'redux/actions/const';
-import { roundByExactDigit } from 'redux/actions/utils';
+import { getAssetCode } from 'redux/actions/utils';
 import { getPartner, setAllowedAmount, setInput, setLoadingPartner, setPartner } from 'redux/actions/withdrawDeposit';
 
 const useGetPartner = ({ assetId, side, amount, rate }) => {
     const { input, loadingPartner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
-    const configs = useSelector((state) => state.utils.assetConfig);
+
     const dispatch = useDispatch();
 
-    const assetConfig = find(configs, { id: +assetId });
+    const assetCode = getAssetCode(+assetId);
+
     useEffect(() => {
-        if (rate && assetConfig) {
+        if (rate && assetCode) {
             dispatch(
                 setAllowedAmount({
-                    min: assetConfig?.assetCode === 'VNDC' ? DEFAULT_PARTNER_MIN[side] : 5,
-                    max: roundByExactDigit(DEFAULT_PARTNER_MAX[side] / rate, assetConfig?.assetDigit)
+                    min: Math.ceil(DEFAULT_PARTNER_MIN[side] / rate, assetCode),
+                    max: Math.floor(DEFAULT_PARTNER_MAX[side] / rate, assetCode)
                 })
             );
         }
-    }, [rate, side, assetConfig]);
+    }, [rate, side, assetCode]);
 
     useEffect(() => {
         let timeout = setTimeout(() => {

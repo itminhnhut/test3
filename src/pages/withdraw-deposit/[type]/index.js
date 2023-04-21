@@ -45,17 +45,7 @@ export const getServerSideProps = async (context) => {
     return {
         ...(redirectUrl ? { redirect: { destination: redirectUrl, permanent: false } } : {}),
         props: {
-            ...(await serverSideTranslations(context.locale, [
-                'common',
-                'navbar',
-                'modal',
-                'wallet',
-                'payment-method',
-                'dw_partner',
-                'transaction-history',
-                'reference',
-                'verification'
-            ])),
+            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'payment-method', 'dw_partner', 'transaction-history'])),
             type,
             side,
             assetId

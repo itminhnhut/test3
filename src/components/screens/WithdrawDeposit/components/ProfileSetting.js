@@ -9,7 +9,7 @@ import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
 import classNames from 'classnames';
 
-const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
+const ProfileSetting = ({ partner, t, loadingPartner, refetchPartner }) => {
     const [modal, setModal] = useState({
         isOpen: false,
         side: null
@@ -28,22 +28,19 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
             const orderConfig = partner?.orderConfig?.[side?.toLowerCase()];
 
             if (editResponse && editResponse.status === ApiStatus.SUCCESS) {
-                // toggle activate per side
+                refetchPartner();
                 if (min === orderConfig?.min && max === orderConfig?.max) {
                     toast({
                         text: t(`dw_partner:${isDeactivateSide ? 'de' : ''}activated_side`, { side: t(`common:${side?.toLowerCase()}`) }),
                         type: 'success'
                     });
-                }
-                // setting limit min max per side
-                else {
+                } else {
                     toast({
                         text: t('common:success'),
                         type: 'success'
                     });
                 }
                 onCloseModal();
-                setPartner(editResponse?.data);
             } else {
                 toast({ text: t('common:feedback_sent_failed'), type: 'warning' });
             }
