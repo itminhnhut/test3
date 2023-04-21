@@ -102,8 +102,11 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                 if (status !== ApiStatus.SUCCESS) {
                     if (message === 'PHONE_EXSITED') setHelperText(setHelperText(t('dw_partner:error.phone_existed')));
                 } else {
+                    // set OTP if not in remaining
+                    if(data?.success){
+                        setOtpInfo(data)
+                    }
                     // Open modal OTP code
-                    setOtpInfo(data);
                     setCurAction(actionModal.VERIFY_OTP);
                 }
             })
