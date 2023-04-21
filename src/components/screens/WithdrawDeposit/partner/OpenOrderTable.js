@@ -273,13 +273,9 @@ const OpenOrderTable = () => {
                 </div>
                 <div className="space-y-6 ">
                     {state.loading ? (
-                        <>
-                            <Skeletor width="100%" height={170} className="mb-6" />
-                            <Skeletor width="100%" height={170} className="mb-6" />
-                            <Skeletor width="100%" height={170} className="mb-6" />
-                            <Skeletor width="100%" height={170} className="mb-6" />
-                            <Skeletor width="100%" height={170} />
-                        </>
+                        [...Array(LIMIT_ROW).keys()].map((row) => (
+                            <Skeletor key={row} containerClassName="!block" className="!rounded-xl" width="100%" height={170} />
+                        ))
                     ) : state.data.length ? (
                         state.data.map((order, i) => (
                             <OrderCard onProcessOrder={onProcessOrder} router={router} assetConfig={assetConfig} key={i} orderDetail={order} t={t} />
