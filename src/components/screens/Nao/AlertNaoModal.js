@@ -49,7 +49,7 @@ const AlertModal = memo(forwardRef((props, ref) => {
             case 'error':
                 return '/images/icon/ic_error_outlined.png';
             case 'warning':
-                return '/images/icon/ic_error_triangle.png';
+                return '/images/icon/ic_warning_triangle.png';
             case 'expired':
                 return '/images/icon/ic_expired_outlined.png';
             default:
