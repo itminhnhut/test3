@@ -39,7 +39,8 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                                 displayingId: id,
                                 side,
                                 asset: assetCode,
-                                amount
+                                amount,
+                                assetId
                             };
                             isReject = true;
                             break;
