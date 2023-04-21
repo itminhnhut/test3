@@ -189,7 +189,7 @@ export const ORDER_TYPES = {
     ERROR_NOT_FOUND_ORDER: {
         icon: ICONS['ERROR'],
         title: (t) => t('common:error'),
-        description: ({ displayingId }) => t('dw_partner:error.not_found_order', { displayingId }),
+        description: ({ displayingId, t }) => t('dw_partner:error.not_found_order', { displayingId }),
         showConfirm: false
     }
 };
