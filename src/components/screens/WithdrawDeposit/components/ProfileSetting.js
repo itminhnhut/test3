@@ -91,7 +91,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                 // setting limit min max per side
                 else {
                     toast({
-                        text: t('common:success'),
+                        text: t('dw_partner:change_side_limit', { side: t(`common:${side?.toLowerCase()}`), assetCode: ALLOWED_ASSET[+assetId] }),
                         type: 'success'
                     });
                 }

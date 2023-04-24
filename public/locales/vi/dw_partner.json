@@ -124,6 +124,7 @@
     "sell_order_limit": "Giới hạn lệnh Bán {{assetCode}}",
     "activated_side": "Đã kích hoạt giao dịch {{side}} {{assetCode}}",
     "deactivated_side": "Đã vô hiệu hoá giao dịch {{side}} {{assetCode}}",
+    "change_side_limit":"Giới hạn giao dịch {{side}} {{assetCode}} đã được thay đổi",
     "commission": "Hoa hồng",
     "fiat_currency": "Tiền pháp định",
     "placeholder": {

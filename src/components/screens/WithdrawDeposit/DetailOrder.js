@@ -163,11 +163,11 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (!isPartnerAccepted) {
                                 secondaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('common:deny')
+                                    text: t('common:reject')
                                 };
                                 primaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, state.orderDetail),
-                                    text: t('common:confirm')
+                                    text: t('common:accept')
                                 };
                             } else {
                                 //user chua chuyen tien
@@ -241,11 +241,11 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (!isPartnerAccepted) {
                                 secondaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('common:deny')
+                                    text: t('common:reject')
                                 };
                                 primaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, state.orderDetail),
-                                    text: t('common:confirm')
+                                    text: t('common:accept')
                                 };
                             } else {
                                 //partner chua chuyen tien
