@@ -38,7 +38,7 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                     <div className="md:min-w-[460px] p-3">
                         <div
                             onClick={() => router.push(PATHS.ACCOUNT?.PAYMENT_METHOD || '/')}
-                            className="p-4 bg-gray-12 dark:bg-dark-2 rounded-md w-full cursor-pointer flex items-center justify-between"
+                            className="p-4 bg-gray-12 dark:bg-dark-2 rounded-xl w-full cursor-pointer flex items-center justify-between"
                         >
                             <InfoCard
                                 loading={loading}
