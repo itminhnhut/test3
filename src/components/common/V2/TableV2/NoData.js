@@ -93,47 +93,55 @@ export const NoDataLightIcon = ({ size }) => {
     );
 };
 
-export const NoDataDarkIcon = ({ size }) => (
-    <svg width={size ?? 124} height={size ?? 124} viewBox="0 0 168 168" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="m140.01 130.891-127.62 7.137-3.11-73.459-.475-11.926v-.27a2.286 2.286 0 0 1 0-.253l-.404-8.89c-.04-.91.285-1.8.904-2.472a3.471 3.471 0 0 1 2.4-1.114l53.645-2.216a3.485 3.485 0 0 1 2.496.923 3.438 3.438 0 0 1 1.097 2.41l.255 5.993 37.075-1.527v12.686h30.995l.282 8.942 2.46 64.036z"
-            fill="#E2E8F0"
-        />
-        <path
-            d="m159.513 69.552-19.108 65.126a3.024 3.024 0 0 1-1.116 1.482 3.06 3.06 0 0 1-1.775.56l-54.005 1.989-2.38.087-44.72 1.641-20.33.75a3.348 3.348 0 0 1-2.397-.73 3.3 3.3 0 0 1-1.205-2.184v-.253l20.594-63.452.606-1.858a3.065 3.065 0 0 1 1.11-1.43 3.099 3.099 0 0 1 1.728-.56h.879l100.155-3.83 18.766-.706c2.1-.122 3.682 1.623 3.198 3.368z"
-            fill="url(#ky4xxhhbvaDarkNoData01)"
-        />
-        <path
-            d="M137.27 57.912h-30.996V45.184l26.963-1.108a3.453 3.453 0 0 1 2.485.89 3.39 3.39 0 0 1 1.109 2.381l.096 2.312.106 2.295.228 5.653.009.305z"
-            fill="url(#ot2ez301nbDarkNoData02)"
-        />
-        <path
-            d="M159.577 26.801v31.111H137.27v-.305l-.228-5.653-.106-2.295-.096-2.312a3.39 3.39 0 0 0-1.109-2.381 3.43 3.43 0 0 0-2.485-.89l-26.972 1.108V26.8h53.303z"
-            fill="#E2E8F0"
-        />
-        <path d="M139.043 30.814h-26.444v.768h26.444v-.768zM131.084 34.121h-18.485v.768h18.485v-.768zM131.084 37.428h-18.485v.768h18.485v-.768z" fill="#fff" />
-        <defs>
-            <linearGradient id="ky4xxhhbvaDarkNoData01" x1="81.945" y1="122.473" x2="101.632" y2="29.207" gradientUnits="userSpaceOnUse">
-                <stop offset=".01" stop-color="#9FA4AB" />
-                <stop offset=".26" stop-color="#9FA4AB" />
-                <stop offset=".35" stop-color="#A2A7AE" stop-opacity=".96" />
-                <stop offset=".46" stop-color="#ABAFB6" stop-opacity=".86" />
-                <stop offset=".6" stop-color="#BABDC2" stop-opacity=".7" />
-                <stop offset=".74" stop-color="#CFD1D4" stop-opacity=".47" />
-                <stop offset=".89" stop-color="#E9EAEB" stop-opacity=".18" />
-                <stop offset=".98" stop-color="#F9F9F9" stop-opacity="0" />
-            </linearGradient>
-            <linearGradient id="ot2ez301nbDarkNoData02" x1="94.976" y1="50.994" x2="146.389" y2="50.994" gradientUnits="userSpaceOnUse">
-                <stop offset=".01" stop-color="#9FA4AB" />
-                <stop offset=".19" stop-color="#9FA4AB" />
-                <stop offset=".33" stop-color="#A5AAB0" />
-                <stop offset=".52" stop-color="#B6BABF" />
-                <stop offset=".74" stop-color="#D2D4D7" />
-                <stop offset=".98" stop-color="#F9F9F9" />
-            </linearGradient>
-        </defs>
-    </svg>
-);
+export const NoDataDarkIcon = ({ size }) => {
+    const id_01 = 'ky4xxhhbva' + Math.floor(Math.random() * 10000000000);
+    const id_02 = 'ot2ez301nb' + Math.floor(Math.random() * 10000000000);
+
+    return (
+        <svg width={size ?? 124} height={size ?? 124} viewBox="0 0 168 168" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="m140.01 130.891-127.62 7.137-3.11-73.459-.475-11.926v-.27a2.286 2.286 0 0 1 0-.253l-.404-8.89c-.04-.91.285-1.8.904-2.472a3.471 3.471 0 0 1 2.4-1.114l53.645-2.216a3.485 3.485 0 0 1 2.496.923 3.438 3.438 0 0 1 1.097 2.41l.255 5.993 37.075-1.527v12.686h30.995l.282 8.942 2.46 64.036z"
+                fill="#E2E8F0"
+            />
+            <path
+                d="m159.513 69.552-19.108 65.126a3.024 3.024 0 0 1-1.116 1.482 3.06 3.06 0 0 1-1.775.56l-54.005 1.989-2.38.087-44.72 1.641-20.33.75a3.348 3.348 0 0 1-2.397-.73 3.3 3.3 0 0 1-1.205-2.184v-.253l20.594-63.452.606-1.858a3.065 3.065 0 0 1 1.11-1.43 3.099 3.099 0 0 1 1.728-.56h.879l100.155-3.83 18.766-.706c2.1-.122 3.682 1.623 3.198 3.368z"
+                fill={`url(#${id_01})`}
+            />
+            <path
+                d="M137.27 57.912h-30.996V45.184l26.963-1.108a3.453 3.453 0 0 1 2.485.89 3.39 3.39 0 0 1 1.109 2.381l.096 2.312.106 2.295.228 5.653.009.305z"
+                fill={`url(#${id_02})`}
+            />
+            <path
+                d="M159.577 26.801v31.111H137.27v-.305l-.228-5.653-.106-2.295-.096-2.312a3.39 3.39 0 0 0-1.109-2.381 3.43 3.43 0 0 0-2.485-.89l-26.972 1.108V26.8h53.303z"
+                fill="#E2E8F0"
+            />
+            <path
+                d="M139.043 30.814h-26.444v.768h26.444v-.768zM131.084 34.121h-18.485v.768h18.485v-.768zM131.084 37.428h-18.485v.768h18.485v-.768z"
+                fill="#fff"
+            />
+            <defs>
+                <linearGradient id={id_01} x1="81.945" y1="122.473" x2="101.632" y2="29.207" gradientUnits="userSpaceOnUse">
+                    <stop offset=".01" stop-color="#9FA4AB" />
+                    <stop offset=".26" stop-color="#9FA4AB" />
+                    <stop offset=".35" stop-color="#A2A7AE" stop-opacity=".96" />
+                    <stop offset=".46" stop-color="#ABAFB6" stop-opacity=".86" />
+                    <stop offset=".6" stop-color="#BABDC2" stop-opacity=".7" />
+                    <stop offset=".74" stop-color="#CFD1D4" stop-opacity=".47" />
+                    <stop offset=".89" stop-color="#E9EAEB" stop-opacity=".18" />
+                    <stop offset=".98" stop-color="#F9F9F9" stop-opacity="0" />
+                </linearGradient>
+                <linearGradient id={id_02} x1="94.976" y1="50.994" x2="146.389" y2="50.994" gradientUnits="userSpaceOnUse">
+                    <stop offset=".01" stop-color="#9FA4AB" />
+                    <stop offset=".19" stop-color="#9FA4AB" />
+                    <stop offset=".33" stop-color="#A5AAB0" />
+                    <stop offset=".52" stop-color="#B6BABF" />
+                    <stop offset=".74" stop-color="#D2D4D7" />
+                    <stop offset=".98" stop-color="#F9F9F9" />
+                </linearGradient>
+            </defs>
+        </svg>
+    );
+};
 
 const NotFoundDarkIcon = () => (
     <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
