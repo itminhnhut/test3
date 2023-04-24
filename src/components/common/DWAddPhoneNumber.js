@@ -54,8 +54,11 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
 
     const [otpInfo, setOtpInfo] = useState(null);
     const [loadingResend, setLoadingResend] = useState(false);
+    const [isConfirmPhoneYet, setIsConfirmPhoneYet] = useState(false);
 
     const handleChangePhoneNumber = (value = '') => {
+        if (value.length > 10) return;
+
         onValidatePhoneNumber(value);
         setPhoneNumber(value);
     };
@@ -63,12 +66,17 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
     const onValidatePhoneNumber = (value) => {
         try {
             if (!value) {
+                setIsConfirmPhoneYet(false);
                 setHelperText(t('dw_partner:error.missing_phone'));
                 return;
             }
 
+            if (value) setHelperText('');
+
             if (phoneNumberPattern.test(value)) {
                 setIsValidating(true);
+                setHelperText('');
+
                 FetchApi({
                     url: API_CHECK_PHONE_NUMBER_DUPLICATE,
                     options: {
@@ -78,12 +86,18 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                 })
                     .then(({ data, status, message }) => {
                         if (status !== ApiStatus.SUCCESS) setHelperText(t('dw_partner:error.phone_existed'));
-                        else setHelperText('');
+                        else {
+                            onSubmitPhoneNumber();
+                            // setHelperText('');
+                        }
                     })
                     .finally(() => {
                         setIsValidating(false);
+                        setIsConfirmPhoneYet(true);
                     });
-            } else setHelperText(t('dw_partner:error.invalid_phone'));
+            } else if (isConfirmPhoneYet) {
+                setHelperText(t('dw_partner:error.invalid_phone'));
+            }
         } catch (e) {
             console.log(e);
         }
@@ -137,7 +151,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                 params: { phone: toRegionPhone(phoneNumber), code: code?.phone }
             });
             if (response?.status === ApiStatus.SUCCESS) setIsShowAlert(true);
-            else toast({ text: t('dw_partner:error.invalid_otp'), type: 'error', duration: 2000 });
+            else toast({ text: t('dw_partner:error.invalid_otp'), type: 'warning', duration: 1500 });
             return response;
         } catch (error) {
             console.error('ERROR WHEN SUBMIT OTP CODE: ', error);
@@ -164,7 +178,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                         <h1 className="!text-2xl txtPri-3">{t('dw_partner:add_phone')}</h1>
                         <div className="mt-4 mb-6">{t('dw_partner:add_phone_description')}</div>
                         <InputV2
-                            onHitEnterButton={() => (!helperText && !isValidating ? onSubmitPhoneNumber(false) : null)}
+                            // onHitEnterButton={() => (!helperText && !isValidating ? onSubmitPhoneNumber(false) : null)}
                             className="!pb-10"
                             value={phoneNumber}
                             onChange={handleChangePhoneNumber}

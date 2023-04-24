@@ -106,6 +106,7 @@ const HistoryTable = () => {
     } = useTranslation();
     const router = useRouter();
 
+    const configs = useSelector((state) => state.utils?.assetConfig);
     const [currentPage, setCurrentPage] = useState(0);
     const [activeTab, setActiveTab] = useState(TABS[0].key);
     const [dataTable, setDataTable] = useState([]);
@@ -113,7 +114,6 @@ const HistoryTable = () => {
     const [curSort, setCurSort] = useState({});
     const user = useSelector((state) => state.auth.user) || null;
     const { side } = router.query;
-    const configs = useSelector((state) => state.utils?.assetConfig);
 
     const [loadingDataTable, setLoadingDataTable] = useState(false);
 
