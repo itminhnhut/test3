@@ -16,7 +16,7 @@ import { PATHS } from 'constants/paths';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import Skeletor from 'components/common/Skeletor';
-import { find } from 'lodash';
+import { find, isNumber } from 'lodash';
 
 const LIMIT_ROW = 10;
 
@@ -73,7 +73,7 @@ const getColumns = (t, user, side, configs) => [
         dataIndex: 'partnerMetadata',
         title: t('dw_partner:partner'),
         align: 'left',
-        width: 189,
+        width: 230,
         render: (v) => (
             <>
                 <div className="txtPri-2 mb-1">{v?.name}</div>
@@ -89,11 +89,11 @@ const getColumns = (t, user, side, configs) => [
         width: 185,
         render: (v, item) => {
             return item?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && v === PartnerOrderStatus.PENDING ? (
-                <TagV2 type={TYPES.DEFAULT} className="ml-auto !bg-divider dark:!bg-divider-dark">
+                <TagV2 type={TYPES.DEFAULT} className="ml-auto !bg-transparent">
                     <span className="text-center">{t('dw_partner:wait_confirmation')}</span>
                 </TagV2>
             ) : (
-                <OrderStatusTag status={v} icon={false} />
+                <OrderStatusTag status={v} icon={false} hasBg={false} />
             );
         }
     }
@@ -129,6 +129,7 @@ const HistoryTable = () => {
                     mode: 'user',
                     side,
                     status: activeTab === 0 ? null : TABS[activeTab]?.status,
+                    partnerAcceptStatus: TABS[activeTab]?.partnerAcceptStatus,
                     ...curSort
                 }
             })

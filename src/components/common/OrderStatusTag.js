@@ -7,7 +7,7 @@ import { BxsErrorAltIcon, CancelCircleFillIcon } from 'components/svg/SvgIcon';
 import Skeletor from './Skeletor';
 import { isNull, isUndefined } from 'lodash';
 
-const OrderStatusTag = ({ icon = true, className, status }) => {
+const OrderStatusTag = ({ icon = true, className, status, hasBg = true }) => {
     // if(!status) return null;
     const { t } = useTranslation();
 
@@ -45,7 +45,7 @@ const OrderStatusTag = ({ icon = true, className, status }) => {
     }
 
     return (
-        <TagV2 icon={icon} className={`ml-auto ${className}`} type={type}>
+        <TagV2 icon={icon} className={`ml-auto ${className} ${!hasBg && '!bg-transparent'}`} type={type}>
             {label}
         </TagV2>
     );
