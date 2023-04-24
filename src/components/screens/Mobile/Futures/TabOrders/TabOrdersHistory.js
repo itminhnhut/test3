@@ -178,7 +178,7 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, tab, active, onShowDetail,
                     {active && hasMore.current && <div
                         className='flex items-center justify-center text-center h-12 text-sm font-semibold mb-4'
                         onClick={onNext}
-                    >{loadMore ? <IconLoading color={colors.onus.white} /> : <span>{t('futures:load_more')}</span>}
+                    >{loadMore ? <IconLoading color="currentColor"/> : <span>{t('futures:load_more')}</span>}
                     </div>}
                 </div>
             </div>

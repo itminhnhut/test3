@@ -454,7 +454,17 @@ module.exports = {
             },
             transitionProperty: {
                 height: 'height'
-            }
+            },
+            fill: {
+                fillPrimary: {
+                    DEFAULT: commonColors.white,
+                    dark: commonColors.dark.dark,
+                },
+                fillSecondary: {
+                    DEFAULT: commonColors.gray[12],
+                    dark: commonColors.dark[2],
+                },
+            },
         }
     },
     variants: {

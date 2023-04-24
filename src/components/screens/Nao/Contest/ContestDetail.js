@@ -557,7 +557,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                     {isPending.person && (
                         <div className="px-4 w-full mt-8 flex space-x-4">
                             <ButtonNao onClick={onAccept} disabled={disabled} className="!rounded-md font-semibold w-full">
-                                {disabled && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:confirm_accept')}
+                                {disabled && <IconLoading className="!m-0" color="currentColor" />} {t('nao:contest:confirm_accept')}
                             </ButtonNao>
                         </div>
                     )}

@@ -241,7 +241,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                             />
                             <div className="flex items-center" onClick={handleSetMaxAmount}>
                                 <span className="px-4 py-2 text-teal font-semibold">{t('futures:mobile:adjust_margin:max')}</span>
-                                <div className="h-full leading-[2.75rem] bg-gray-11 dark:bg-dark-1 w-16 text-txtSecondary dark:text-txtSecondary-dark font-medium rounded-r-md text-center">
+                                <div className="h-full leading-[2.75rem] bg-gray-11/50 dark:bg-dark-1/50 w-16 text-txtSecondary dark:text-txtSecondary-dark font-medium rounded-r-md text-center">
                                     {assetConfig?.assetCode}
                                 </div>
                             </div>
@@ -291,7 +291,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                     )}
                     <div
                         className={classNames('flex justify-center items-center bg-bgBtnPrimary align-middle h-12 text-txtBtnPrimary rounded-md font-bold mt-6', {
-                            '!bg-gray-12 dark:!bg-dark-2 text-txtPrimary dark:text-txtBtnPrimary-dark opacity-30': !!error || !+amount || !!errorProfit
+                            '!bg-gray-12 dark:!bg-dark-2 text-txtDisabled dark:text-txtDisabled-dark': !!error || !+amount || !!errorProfit
                         })}
                         onClick={() => {
                             if (!error && !errorProfit && !!+amount && !submitting) {
@@ -299,7 +299,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                             }
                         }}
                     >
-                        {submitting ? <IconLoading color="#FFFFFF" /> : <span>{t('futures:mobile:adjust_margin:confirm_btn')}</span>}
+                        {submitting ? <IconLoading color="currentColor" /> : <span>{t('futures:mobile:adjust_margin:confirm_btn')}</span>}
                     </div>
                 </div>
             </div>

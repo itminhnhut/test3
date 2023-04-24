@@ -17,7 +17,7 @@ const Button = memo((props) => {
     } = props
 
     const disabledStyle = useMemo(() => {
-        if (type === 'disabled' || disabled)
+        if ((type === 'disabled' || disabled) && !onusMode)
             return '!pointer-events-none !bg-gray-2 !dark:bg-darkBlue-3'
         return ''
     }, [type, disabled])
@@ -31,7 +31,7 @@ const Button = memo((props) => {
                     target={target}
                     className={`mal-button ${
                         type === 'primary'
-                            ? `${onusMode ? 'bg-bgBtnPrimary text-txtBtnPrimary': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
+                            ? `${onusMode ? 'bg-bgBtnPrimary text-txtBtnPrimary active:bg-bgBtnV2-pressed': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
                             : `${onusMode ? 'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
                     } ${disabledStyle} ${className}`}
                 >
@@ -46,10 +46,10 @@ const Button = memo((props) => {
                     style={{ ...style, background: color }}
                     className={`mal-button ${
                         type === 'primary'
-                            ? `${onusMode ? 'bg-bgBtnPrimary text-txtBtnPrimary': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
+                            ? `${onusMode ? 'bg-bgBtnPrimary text-txtBtnPrimary active:bg-bgBtnV2-pressed': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
                             : `${onusMode ? 'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
                     } ${disabledStyle} ${className}
-                    ${disabled && onusMode ? '!bg-bgBtnPrimary opacity-30' : ''}
+                    ${disabled && onusMode ? '!bg-gray-12 dark:!bg-dark-2 !text-txtDisabled dark:!text-txtDisabled-dark' : ''}
                     `}
                     onClick={() => onClick && !disabled && onClick()}
                 >

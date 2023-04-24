@@ -106,7 +106,7 @@ const OrderButtonMobile = ({
         }
     };
 
-    const classNameError = disabled || (isAuth && isError) ? 'opacity-[0.3] cursor-not-allowed' : '';
+    const classNameError = disabled || (isAuth && isError) ? 'cursor-not-allowed !bg-gray-12 dark:!bg-dark-2 !text-txtDisabled dark:!text-txtDisabled-dark' : '';
     const title =
         type === FuturesOrderTypes.Limit
             ? t('futures:mobile:limit')
@@ -143,7 +143,7 @@ const OrderButtonMobile = ({
             <div
                 onClick={onHandleSave}
                 className={`${
-                    isBuy ? 'bg-green-2' : 'bg-red-2'
+                    isBuy ? 'bg-green-2 active:bg-bgBtnV2-pressed' : 'bg-red-2 active:bg-red-1'
                 } text-white text-sm h-[56px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}
             >
                 <div className="font-semibold text-center">

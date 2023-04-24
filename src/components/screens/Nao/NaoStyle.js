@@ -59,7 +59,7 @@ export const ButtonNao = styled.div.attrs(({ disabled, variant, active = true })
         'bg-bgBtnPrimary text-txtBtnPrimary': active && (!variant || variant === ButtonNaoVariants.PRIMARY), // default theme is primary
         'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': variant === ButtonNaoVariants.SECONDARY || active === false,
         'bg-red-2 text-white': variant === ButtonNaoVariants.DANGER,
-        'opacity-30': disabled
+        'bg-gray-12 dark:bg-dark-2 text-txtDisabled dark:text-txtDisabled-dark': disabled
     })
 }))``;
 

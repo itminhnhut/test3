@@ -287,7 +287,7 @@ function TabTransactionsHistory({
                             {data.hasNext && <div
                                 className="flex items-center justify-center text-center h-12 text-sm font-semibold mb-4"
                                 onClick={() => fetchData(true)}
-                            >{loadMore ? <IconLoading color={colors.onus.white}/> :
+                            >{loadMore ? <IconLoading color="currentColor" /> :
                                 <span>{t('futures:load_more')}</span>}
                             </div>}
                         </>

@@ -487,7 +487,7 @@ const CloseOrderModalMobile = ({
                         onusMode={true}
                         title={
                             <div className="flex items-center justify-center">
-                                {loading ? <IconLoading color="#FFFFFF" className="!m-0" /> : t('futures:leverage:confirm')}
+                                {loading ? <IconLoading color="currentColor" className="!m-0" /> : t('futures:leverage:confirm')}
                             </div>
                         }
                         componentType="button"

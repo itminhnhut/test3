@@ -159,11 +159,11 @@ const ChartOptions = ({
                         <IconHelper/>
                     </div>
                 } */}
-                <div className="" onClick={fullChart ? handleOpenIndicatorModal : resetComponent}>
+                <div className="text-txtSecondary dark:text-txtSecondary-dark" onClick={fullChart ? handleOpenIndicatorModal : resetComponent}>
                     {!fullChart ?
-                        <IconRefresh />
+                        <IconRefresh color='currentColor' />
                         :
-                        <SvgActivity color={colors.onus.grey} />
+                        <SvgActivity color="currentColor" />
                     }
                 </div>
                 <FavouriteButton pair={pair} pairConfig={pairConfig} />
@@ -284,7 +284,7 @@ export const MenuTime = ({
                                                 }
                                             )}
                                         >
-                                            <Svg>{item?.icon}</Svg>
+                                            <Svg className={`!fill-fillSecondary dark:!fill-fillSecondary-dark`} >{item?.icon}</Svg>
                                             {item[displayValue]}
                                         </div>
                                     );
@@ -299,12 +299,12 @@ export const MenuTime = ({
 };
 
 const Svg = styled.div.attrs({
-    className: ''
+    className: `fill-fillPrimary dark:fill-fillPrimary-dark`
 })`
   svg {
     height: 20px;
     width: 20px;
-    fill: ${colors.onus.grey}
+    fill: inherit;
   }
 `;
 
@@ -320,8 +320,8 @@ const FavouriteButton = ({ pairConfig }) => {
         dispatch(getFuturesFavoritePairs());
     };
 
-    return <div className="cursor-pointer flex items-center " onClick={handleSetFavorite}>
-        <IconStarOnus stroke={isFavorite ? colors.yellow[2] : colors.onus.grey}
+    return <div className="cursor-pointer flex items-center text-txtSecondary dark:text-txtSecondary-dark" onClick={handleSetFavorite}>
+        <IconStarOnus stroke={isFavorite ? colors.yellow[2] : 'currentColor'}
             color={isFavorite ? colors.yellow[2] : ''} />
     </div>;
 };

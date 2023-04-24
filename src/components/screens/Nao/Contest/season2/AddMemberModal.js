@@ -109,7 +109,7 @@ const AddMemberModal = ({ onClose, contest_id }) => {
             <div className='flex items-center space-x-4 mt-6'>
                 <ButtonNao onClick={() => onClose()} variant={ButtonNaoVariants.SECONDARY} className="w-full !rounded-md">{t('common:close')}</ButtonNao>
                 <ButtonNao onClick={onAddMember} disabled={disabled} className="w-full !rounded-md">
-                    {loading && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:add_member')}
+                    {loading && <IconLoading className="!m-0" color="currentColor" />} {t('nao:contest:add_member')}
                 </ButtonNao>
             </div>
         </Modal>
