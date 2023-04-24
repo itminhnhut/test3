@@ -50,9 +50,8 @@ const NoData = ({ text, loading = false, isSearch = false, className = '', isAut
 export default NoData;
 
 export const NoDataLightIcon = ({ size }) => {
-    const tempId = Date.now();
-    const tempId_01 = 'ls10512bha' + tempId;
-    const tempId_02 = 'xhrnpzl8nb' + tempId;
+    const tempId_01 = 'ky4xxhhbva' + Math.floor(Math.random() * 10000000000);
+    const tempId_02 = 'ot2ez301nb' + Math.floor(Math.random() * 10000000000);
 
     return (
         <svg width={size ?? 124} height={size ?? 124} viewBox="0 0 168 168" fill="none" xmlns="http://www.w3.org/2000/svg">
