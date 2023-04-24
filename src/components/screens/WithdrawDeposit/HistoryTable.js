@@ -72,8 +72,8 @@ const getColumns = (t, user, side, configs) => [
         key: 'partnerMetadata',
         dataIndex: 'partnerMetadata',
         title: t('dw_partner:partner'),
-        align: 'left',
-        width: 230,
+        align: 'right',
+        width: 240,
         render: (v) => (
             <>
                 <div className="txtPri-2 mb-1">{v?.name}</div>
@@ -86,7 +86,7 @@ const getColumns = (t, user, side, configs) => [
         dataIndex: 'status',
         title: <span className="mr-[10px]">{t('common:status')}</span>,
         align: 'right',
-        width: 185,
+        width: 183,
         render: (v, item) => {
             return item?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && v === PartnerOrderStatus.PENDING ? (
                 <TagV2 type={TYPES.DEFAULT} className="ml-auto !bg-transparent">
