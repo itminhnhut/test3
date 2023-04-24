@@ -2,6 +2,7 @@ import React, { useRef, useState, Fragment, useMemo, useEffect, useCallback } fr
 import colors from 'styles/colors';
 import vi from 'date-fns/locale/vi';
 import en from 'date-fns/locale/en-US';
+import { useSelector } from 'react-redux';
 import { DateRangePicker, Calendar } from 'react-date-range';
 import { ChevronRight, ChevronLeft, X } from 'react-feather';
 import { Transition } from '@headlessui/react';
@@ -14,7 +15,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import styled from 'styled-components';
 
-const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text }) => {
+const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0' }) => {
     const [showPicker, setShowPicker] = useState(false);
     const wrapperRef = useRef(null);
 
@@ -22,7 +23,13 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
         t,
         i18n: { language }
     } = useTranslation();
+
+    const { user: auth } = useSelector((state) => state.auth) || null;
+
     const [theme] = useDarkMode();
+
+    // Handle custom
+    const [date, setDate] = useState();
 
     const handleOutside = () => {
         if (showPicker) {
@@ -36,12 +43,11 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
     useOutsideClick(wrapperRef, handleOutside);
     const Component = !isCalendar ? DateRangePicker : Calendar;
 
-    // Handle custom
-    const [date, setDate] = useState({
-        startDate: null,
-        endDate: null,
-        key: 'selection'
-    });
+    useEffect(() => {
+        if (!initDate?.startDate && !initDate?.endDate) {
+            setDate({ ...initDate, ...(!initDate?.key && { key: 'selection' }) });
+        }
+    }, [initDate]);
 
     const onDatesChange = (e) => {
         if (isCalendar) {
@@ -49,9 +55,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
             handleOutside();
         } else {
             setDate({
-                startDate: new Date(e?.selection?.startDate ?? null).getTime(),
-                endDate: new Date(e?.selection?.endDate ?? null).getTime(),
-                key: 'selection'
+                ...(e?.selection || {})
             });
         }
     };
@@ -80,33 +84,16 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
 
     const issetValue = isCalendar ? date : date?.startDate || date?.endDate;
 
-    useEffect(() => {
-        if (!date?.endDate && date?.startDate) {
-            setDate({
-                ...date,
-                startDate: null,
-                endDate: date.startDate
-            });
-        }
-    }, [date.startDate]);
-
     const clearInputData = () => {
-        setDate({
-            selection: {
-                startDate: null,
-                endDate: new Date(),
-                key: date['key']
-            }
-        });
-        if (!showPicker)
-            onChange({
-                selection: {
-                    startDate: null,
-                    endDate: new Date(),
-                    key: date['key']
-                }
-            });
+        const selection = {
+            startDate: null,
+            endDate: null,
+            key: date?.key || 'selector'
+        };
+        setDate({ ...selection });
+        if (!showPicker) onChange({ ...selection });
     };
+
     // Handle X Close button
     const flag = useRef(false);
 
@@ -115,8 +102,9 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
             case 'clear':
                 flag.current = true;
 
-                if (isCalendar) onDatesChange(null);
-                else {
+                if (isCalendar) {
+                    onDatesChange(null);
+                } else {
                     clearInputData();
                 }
                 break;
@@ -135,7 +123,9 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
     return (
         <div className={classNames('relative', wrapperClassname)} ref={wrapperRef}>
             {text ? (
-                <div onClick={() => setShowPicker(!showPicker)}>{text}</div>
+                <div className={classNames({ 'cursor-not-allowed': !auth })} onClick={() => auth && setShowPicker(!showPicker)}>
+                    {text}
+                </div>
             ) : (
                 <div
                     className={classNames(
@@ -147,7 +137,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                     onClick={() => onHandleClick('show_modal')}
                 >
                     <div className="flex flex-1 items-center justify-between">
-                        <div className="px-2 leading-5">
+                        <div className={classNames('px-2 leading-5', { 'dark:text-gray-7 text-gray-1': !date?.startDate && !date?.endDate })}>
                             {isCalendar && (date ? formatTime(date, 'dd/MM/yyyy') : 'DD/MM/YYYY')}
                             {!isCalendar &&
                                 (date?.startDate ? formatTime(date?.startDate, 'dd/MM/yyyy') : 'DD/MM/YYYY') +
@@ -156,7 +146,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                         </div>
                         {issetValue ? (
                             <div className="" onClick={() => onHandleClick('clear')}>
-                                <X size={16} />
+                                <X size={16} color={colorX} />
                             </div>
                         ) : (
                             <CalendarIcon color={theme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
@@ -181,11 +171,11 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                         'absolute left-1/2 z-20 !w-auto -translate-x-1/2': position === 'center'
                     })}
                 >
-                    <DatePickerWrapper noDatePicked={date.startDate === date.endDate} isDark={theme === THEME_MODE.DARK}>
+                    <DatePickerWrapper noDatePicked={date?.startDate === date?.endDate} isDark={theme === THEME_MODE.DARK}>
                         <Component
                             className={classNames(`h-full px-[10px] ${isCalendar ? 'single-select' : ''} w-full`)}
                             date={date}
-                            ranges={!isCalendar ? [{ ...date, endDate: !date?.startDate && !date?.endDate ? new Date(0) : date?.endDate }] : []}
+                            ranges={!isCalendar ? [{ ...date, endDate: !date?.startDate && !date?.endDate ? new Date() : date?.endDate }] : []}
                             months={month ?? 1}
                             onChange={onDatesChange}
                             // moveRangeOnFirstSelection={isCalendar}

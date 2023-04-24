@@ -19,7 +19,8 @@ const ModalV2 = ({
     customHeader,
     closeButton = true,
     btnCloseclassName = '',
-    loading = false
+    loading = false,
+    animateModal = true
 }) => {
     const wrapperRef = useRef(null);
     const container = useRef(null);
@@ -64,8 +65,8 @@ const ModalV2 = ({
             >
                 <div
                     className={classnames('h-full relative ease-in transition-all flex', {
-                        'translate-y-full duration-200': !isVisible || !mount,
-                        'translate-y-0 duration-200': isVisible && mount,
+                        'translate-y-full duration-200': animateModal && (!isVisible || !mount),
+                        'translate-y-0 duration-200': animateModal && isVisible && mount,
                         'flex-col justify-end': isMobile && width && width < 820
                     })}
                 >

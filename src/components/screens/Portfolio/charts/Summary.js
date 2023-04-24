@@ -191,7 +191,7 @@ const Summary = (props) => {
                             </div>
                         </div>
                         <div className='w-full'>
-                            <div className='font-semibold text-4xl leading-10'>
+                            <div className='font-semibold text-5xl leading-10'>
                                 100%  <span className='font-medium text-lg leading-10 text-gray-2'>({section1Data.buy} lệnh mua và {section1Data.sell} lệnh bán)</span>
                             </div>
                             <div className='flex w-full bg-[#F2F4F7] h-4 rounded transition-all my-6'>

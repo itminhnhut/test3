@@ -67,7 +67,7 @@ const PaginationWrapper = styled.div`
     .rc-pagination-item,
     .rc-pagination-prev button,
     .rc-pagination-next button {
-        border: none;
+        border: none !important;
         background-color: transparent;
 
         a {
@@ -132,14 +132,14 @@ const PaginationWrapper = styled.div`
 const NamiV2PaginationWrapper = styled.div`
     .rc-pagination-item-link,
     .rc-pagination-item {
-        height: 36px;
-        width: 36px;
-        border-radius: 100px;
+        height: 36px !important;
+        width: 36px !important;
+        border-radius: 100px !important;
         display: flex;
         align-content: center;
         justify-content: center;
         align-items: center;
-        border: none;
+        border: none !important;
         background-color: transparent;
         margin-right: 16px;
     }

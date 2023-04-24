@@ -11,17 +11,11 @@ const ItemWithCopy = ({ label, value }) => {
     return (
         <div className="text-sm font-medium flex items-center justify-between leading-none">
             <span>{label}</span>
-            {value
-                ? (
-                    <CopyToClipboard
-                        text={value}
-                        className="cursor-pointer text-sm text-teal-700 font-semibold"
-                        onCopy={() => setCopied(true)}
-                    >
-                        <span>{copied ? t('referral:copied') : t('referral:copy')}</span>
-                    </CopyToClipboard>
-                )
-                : null}
+            {value ? (
+                <CopyToClipboard text={value} className="cursor-pointer text-sm text-teal-700 font-semibold" onCopy={() => setCopied(true)}>
+                    <span>{copied ? t('referral:copied') : t('referral:copy')}</span>
+                </CopyToClipboard>
+            ) : null}
         </div>
     );
 };
@@ -32,11 +26,11 @@ const DetailDepositBank = ({ order, onClose }) => {
         const { data, status } = await fetchAPI({
             url: '/api/v1/deposit/bank_deposit_transferred',
             options: {
-                method: 'PUT',
+                method: 'PUT'
             },
             params: {
-                ...order,
-            },
+                ...order
+            }
         });
         if (status === ApiStatus.SUCCESS) {
             setOrderStatus(StatusBankTransfer.DepositedWaitingForConfirmation);
@@ -46,61 +40,32 @@ const DetailDepositBank = ({ order, onClose }) => {
         <>
             <div className="card">
                 <div className="card-header !py-5 !px-8">
-                    <div className="text-sm text-black-600">
-                        { t('wallet:transfer_detail') }
-                    </div>
+                    <div className="text-sm text-black-600">{t('dw_partner:transfer_description')}</div>
                 </div>
                 <div className="card-body !pt-3 !pb-12 !px-8">
                     <div className="form-group">
-                        <label className="text-black-500">
-                            { t('wallet:bank_name') }
-                        </label>
-                        <div className="text-sm font-medium">
-                            {order?.metadata?.bank_details?.bank_name}
-                        </div>
+                        <label className="text-black-500">{t('dw_partner:bank')}</label>
+                        <div className="text-sm font-medium">{order?.metadata?.bank_details?.bank_name}</div>
                     </div>
                     <div className="form-group">
-                        <label className="text-black-500">
-                            { t('wallet:account_holder') }
-                        </label>
-                        <div className="text-sm font-medium">
-                            {order?.metadata?.bank_details?.account_name}
-                        </div>
+                        <label className="text-black-500">{t('payment-method:account_number')}</label>
+                        <div className="text-sm font-medium">{order?.metadata?.bank_details?.account_name}</div>
                     </div>
                     <div className="form-group">
-                        <label className="text-black-500">
-                            { t('wallet:account_number') }
-                        </label>
-                        <ItemWithCopy
-                            label={order?.metadata?.bank_details?.account_number}
-                            value={order?.metadata?.bank_details?.account_number}
-                        />
+                        <label className="text-black-500">{t('wallet:account_number')}</label>
+                        <ItemWithCopy label={order?.metadata?.bank_details?.account_number} value={order?.metadata?.bank_details?.account_number} />
                     </div>
                     <div className="form-group">
-                        <label className="text-black-500">
-                            { t('wallet:amount_transferred') }
-                        </label>
-                        <ItemWithCopy
-                            label={`${formatPrice(order?.amount, 0)} VNDC`}
-                            value={order?.amount}
-                        />
+                        <label className="text-black-500">{t('wallet:amount_transferred')}</label>
+                        <ItemWithCopy label={`${formatPrice(order?.amount, 0)} VNDC`} value={order?.amount} />
                     </div>
                     <div className="form-group">
-                        <label className="text-black-500">
-                            { t('wallet:transaction_detail') }
-                        </label>
-                        <ItemWithCopy
-                            label={order?.metadata?.contentSend}
-                            value={order?.metadata?.contentSend}
-                        />
+                        <label className="text-black-500">{t('wallet:transaction_detail')}</label>
+                        <ItemWithCopy label={order?.metadata?.contentSend} value={order?.metadata?.contentSend} />
                     </div>
                     <div className="rounded border border-black-200 bg-black-100 p-3 text-xs mt-5">
-                        <div className="font-semibold text-sm mb-2">
-                            { t('wallet:note') }
-                        </div>
-                        <div className="text-black-600">
-                            { t('wallet:transfer_note') }
-                        </div>
+                        <div className="font-semibold text-sm mb-2">{t('wallet:note')}</div>
+                        <div className="text-black-600">{t('wallet:transfer_note')}</div>
                     </div>
                     <div className="mt-5">
                         <button
@@ -109,25 +74,17 @@ const DetailDepositBank = ({ order, onClose }) => {
                             onClick={putOrder}
                             disabled={orderStatus === StatusBankTransfer.DepositedWaitingForConfirmation}
                         >
-                            { t('wallet:transfer_already') }
+                            {t('wallet:transfer_already')}
                         </button>
                     </div>
                     <div className="mt-5">
-                        <button
-                            className="btn btn-secondary w-full"
-                            type="button"
-                            onClick={() => onClose(orderStatus !== order.status)}
-                        >
-                            { t('wallet:back') }
+                        <button className="btn btn-secondary w-full" type="button" onClick={() => onClose(orderStatus !== order.status)}>
+                            {t('wallet:back')}
                         </button>
                     </div>
-                    {
-                        orderStatus === StatusBankTransfer.DepositedWaitingForConfirmation && (
-                            <div className="mt-5 text-black-500 text-xs">
-                                { t('wallet:if_not') }
-                            </div>
-                        )
-                    }
+                    {orderStatus === StatusBankTransfer.DepositedWaitingForConfirmation && (
+                        <div className="mt-5 text-black-500 text-xs">{t('wallet:if_not')}</div>
+                    )}
                     <p className="mt-4 text-xs text-[#52535C]">{t('wallet:if_not')}</p>
                 </div>
             </div>

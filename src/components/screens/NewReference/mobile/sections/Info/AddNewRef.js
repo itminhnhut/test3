@@ -246,7 +246,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, refreshData, defaultRef
                     <div className={classNames('flex flex-col gap-4')}>
                         <div>
                             <p className="text-2xl font-semibold mb-6 mt-4">{t('reference:referral.add_new_referral')}</p>
-                            <div className="mt-4 mb-2">
+                            <div className="mb-2">
                                 <p className="text-sm text-txtSecondary dark:text-txtSecondary-dark mb-3">{t('reference:referral.commission_rate')}</p>
                                 <Slider axis="x" x={percent} xmax={totalRate} onChange={onPercentChange} />
                             </div>
