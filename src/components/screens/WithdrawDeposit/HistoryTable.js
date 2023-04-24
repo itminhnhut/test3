@@ -86,11 +86,11 @@ const getColumns = (t, user, side, configs) => [
         dataIndex: 'status',
         title: <span className="mr-[10px]">{t('common:status')}</span>,
         align: 'right',
-        width: 183,
+        width: 207,
         render: (v, item) => {
             return item?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && v === PartnerOrderStatus.PENDING ? (
                 <TagV2 type={TYPES.DEFAULT} className="ml-auto !bg-transparent">
-                    <span className="text-center">{t('dw_partner:wait_confirmation')}</span>
+                    <span className="text-center !text-base">{t('dw_partner:wait_confirmation')}</span>
                 </TagV2>
             ) : (
                 <OrderStatusTag status={v} icon={false} hasBg={false} />

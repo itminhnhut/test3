@@ -45,7 +45,7 @@ const OrderStatusTag = ({ icon = true, className, status, hasBg = true }) => {
     }
 
     return (
-        <TagV2 icon={icon} className={`ml-auto ${className} ${!hasBg && '!bg-transparent'}`} type={type}>
+        <TagV2 icon={icon} className={`ml-auto ${className} ${!hasBg && '!bg-transparent'}`} type={type} labelClassname={!hasBg && '!text-base'}>
             {label}
         </TagV2>
     );
