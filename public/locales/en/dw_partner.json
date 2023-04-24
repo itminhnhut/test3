@@ -118,6 +118,7 @@
     "buy_transaction": "Buy Transaction",
     "sell_transaction": "Sell Transaction",
     "order_vol_limit": "Order Volume Limit:",
+    "buy_sell_title":"Buy/Sell in {{assetCode}}",
     "buy_order_limit": "Buy {{assetCode}} Order Limit",
     "sell_order_limit": "Sell {{assetCode}} Order Limit",
     "activated_side": "{{side}} {{assetCode}} transaction has been activated",

@@ -119,6 +119,7 @@
     "buy_transaction": "Giao dịch mua",
     "sell_transaction": "Giao dịch bán",
     "order_vol_limit": "Giới hạn khối lượng lệnh:",
+    "buy_sell_title":"Mua/bán bằng {{assetCode}}",
     "buy_order_limit ": "Giới hạn lệnh Mua {{assetCode}}",
     "sell_order_limit": "Giới hạn lệnh Bán {{assetCode}}",
     "activated_side": "Đã kích hoạt giao dịch {{side}} {{assetCode}}",

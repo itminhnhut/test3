@@ -13,7 +13,7 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
         min: '',
         max: ''
     });
-    const { t } = useTranslation();
+    const { t } = useTranslation(['dw_partner', 'common']);
     const orderConfig = useMemo(
         () => partner?.orderConfig?.[(side?.toLowerCase() || SIDE.BUY) + (assetId === ALLOWED_ASSET_ID['VNDC'] ? '' : 'Usdt')],
         [partner?.orderConfig, side, assetId]
@@ -96,7 +96,7 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
     );
 
     const onConfirmHandler = async () => {
-        +amount.min === partner?.orderConfig?.[side?.toLowerCase()]?.min && +amount.max === partner?.orderConfig?.[side?.toLowerCase()]?.max
+        +amount.min === orderConfig?.min && +amount.max === orderConfig?.max
             ? onClose()
             : await onConfirm({ side: side?.toLowerCase(), min: +amount.min, max: +amount.max, assetId });
     };
@@ -116,7 +116,7 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
                 }}
             >
                 <div className="text-2xl font-semibold mb-6">
-                    {side && assetId && t(`dw_partner:${side?.toLowerCase()}_order_limit`, { assetCode: assetId && ALLOWED_ASSET[+assetId] })}
+                    {side && assetId && t(`dw_partner:${side?.toLowerCase()}_order_limit`, { assetCode: ALLOWED_ASSET[+assetId] })}
                 </div>
                 <div className="space-y-4">
                     {['min', 'max'].map((key) => (

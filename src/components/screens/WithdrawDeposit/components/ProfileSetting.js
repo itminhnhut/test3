@@ -165,7 +165,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
         <div className="mt-20">
             <div className="flex flex-wrap -m-3 items-center">
                 <div className="p-3 w-full md:w-1/2">
-                    <div className="mb-8 txtPri-3 font-semibold">Giao dịch theo VNDC</div>
+                    <div className="mb-8 txtPri-3 font-semibold">{t('dw_partner:buy_sell_title', { assetCode: 'VNDC' })}</div>
                     <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
                         {editDWConfig({
                             side: SIDE.BUY,
@@ -185,7 +185,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                     </div>
                 </div>
                 <div className="p-3 w-full md:w-1/2">
-                    <div className="mb-8 txtPri-3 font-semibold">Giao dịch theo USDT</div>
+                    <div className="mb-8 txtPri-3 font-semibold">{t('dw_partner:buy_sell_title', { assetCode: 'USDT' })}</div>
                     <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
                         {editDWConfig({
                             side: SIDE.BUY,
