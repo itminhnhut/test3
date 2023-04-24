@@ -26,13 +26,14 @@ import NoData from 'components/common/V2/TableV2/NoData';
 import Skeletor from 'components/common/Skeletor';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
+import classNames from 'classnames';
 
 const LIMIT_ROW = 5;
 
 const OrderCard = memo(({ orderDetail, assetConfig, t, router, onProcessOrder }) => {
     const assetCode = find(assetConfig, { id: orderDetail?.baseAssetId })?.assetCode;
     return (
-        <Card className="mb-12 border !border-divider dark:border-0 bg-white dark:bg-dark-4">
+        <Card className={classNames('border-0 bg-white dark:bg-dark-4', {})}>
             <div className="flex items-center justify-between mb-6">
                 <div className="txtPri-3">
                     {t(`dw_partner:${orderDetail?.side?.toLowerCase()}_asset_from_partners.partner`, {
@@ -42,7 +43,7 @@ const OrderCard = memo(({ orderDetail, assetConfig, t, router, onProcessOrder })
                 <div className="flex items-center gap-4">
                     {orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.ACCEPTED ? (
                         <ButtonV2
-                            onClick={() => router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + orderDetail?.displayingId)}
+                            onClick={() => router.push(`${PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS}/${orderDetail?.displayingId}`)}
                             variants="text"
                             className="!py-0 !w-auto items-center"
                         >
@@ -65,14 +66,15 @@ const OrderCard = memo(({ orderDetail, assetConfig, t, router, onProcessOrder })
                     )}
                 </div>
             </div>
-
             <div className="flex flex-wrap -m-2 justify-between ">
                 <div className="p-2 w-full xxs:w-1/2 lg:!w-auto">
                     <div className="txtSecond-2 mb-3">{t('common:status')}</div>
                     <div className="flex -m-1 flex-wrap items-center">
                         <div className="p-1">
                             {orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && orderDetail?.status === PartnerOrderStatus.PENDING ? (
-                                <TagV2 type={TYPES.DEFAULT}>{t('dw_partner:wait_confirmation')}</TagV2>
+                                <TagV2 type={TYPES.DEFAULT} className="!bg-divider dark:!bg-divider-dark">
+                                    {t('dw_partner:wait_confirmation')}
+                                </TagV2>
                             ) : (
                                 <OrderStatusTag className="!ml-0" status={orderDetail?.status} />
                             )}
