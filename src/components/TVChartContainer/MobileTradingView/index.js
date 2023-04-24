@@ -742,7 +742,7 @@ const Funding = ({ symbol }) => {
             {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}
             <div className="flex items-center px-4 pt-3 pb-4 space-x-6 border-b-4 border-divider/70 dark:border-divider-dark/50">
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
-                    <div className='flex items-center space-x-1' onClick={() => setShowModal(true)}>
+                    <div className="flex items-center space-x-1" onClick={() => setShowModal(true)}>
                         <span className="text-txtSecondary dark:text-txtSecondary-dark">Funding:</span>
                         <div>
                             <QuestionMarkIcon size={12} color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" />
@@ -751,9 +751,22 @@ const Funding = ({ symbol }) => {
                     <div>{formatFundingRate(marketWatch[symbol]?.fundingRate * 100)}</div>
                 </div>
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
-                    <div className='flex items-center space-x-1' data-tip={t('common:countdown_tooltip')} data-for="tooltip-countdown">
-                        <Tooltip id={'tooltip-countdown'} place="top" effect="solid" backgroundColor={colors.darkBlue4}
-                            className={`!opacity-100 max-w-[300px] !rounded-lg`} isV3
+                    <div className="flex items-center space-x-1" data-tip={t('common:countdown_tooltip')} data-for="tooltip-countdown">
+                        <Tooltip
+                            id={'tooltip-countdown'}
+                            place="top"
+                            effect="solid"
+                            backgroundColor={colors.darkBlue4}
+                            className={`!opacity-100 max-w-[300px] !rounded-lg`}
+                            isV3
+                            overridePosition={({ left, top }, currentEvent, currentTarget, node) => {
+                                const d = document.documentElement;
+                                left = Math.min(d.clientWidth - 16 - node.clientWidth, left);
+                                top = Math.min(d.clientHeight - node.clientHeight, top);
+                                left = Math.max(0, left);
+                                top = Math.max(0, top);
+                                return { top, left };
+                            }}
                         />
                         <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:countdown')}:</span>
                         <div className="w-3 h-3">
@@ -762,16 +775,21 @@ const Funding = ({ symbol }) => {
                     </div>
                     <div>
                         <Countdown
-                            now={() => timesync ? timesync.now() : Date.now()}
-                            date={marketWatch[symbol]?.fundingTime} renderer={({ hours, minutes, seconds }) => {
-                                return <span>{hours}:{minutes}:{seconds}</span>
-                            }} />
+                            now={() => (timesync ? timesync.now() : Date.now())}
+                            date={marketWatch[symbol]?.fundingTime}
+                            renderer={({ hours, minutes, seconds }) => {
+                                return (
+                                    <span>
+                                        {hours}:{minutes}:{seconds}
+                                    </span>
+                                );
+                            }}
+                        />
                     </div>
                 </div>
             </div>
         </>
-
-    )
+    );
 }
 
 const ModalFundingRate = ({ onClose, t }) => {
