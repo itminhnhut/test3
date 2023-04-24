@@ -312,7 +312,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     }
                 }
             }
-        }[side.toUpperCase()].render());
+        })[side.toUpperCase()].render();
 
         return (
             <div className="flex gap-x-4">
@@ -422,6 +422,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
 
             {state.orderDetail && (
                 <ModalQr
+                    orderId={state?.orderDetail?._id}
                     isVisible={state.isShowQr}
                     onClose={() => setState({ isShowQr: false })}
                     bank={state.orderDetail?.transferMetadata}
