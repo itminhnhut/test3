@@ -895,6 +895,22 @@ const StarPurpleIcon = ({ size, color = '#FFC632', ...props }) => (
     </svg>
 );
 
+const MoneyIcon = ({ size, color = 'currentColor', ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <g clip-path="url(#qeqr7ytgha)">
+            <path
+                d="M7.999 1.332a6.67 6.67 0 0 0-6.667 6.667 6.67 6.67 0 0 0 6.667 6.666A6.67 6.67 0 0 0 14.665 8 6.67 6.67 0 0 0 8 1.332zm.94 10.727v1.273h-1.78v-1.287c-1.14-.24-2.107-.973-2.18-2.266h1.306c.067.7.547 1.246 1.767 1.246 1.307 0 1.6-.653 1.6-1.06 0-.553-.293-1.073-1.78-1.426-1.653-.4-2.787-1.08-2.787-2.447 0-1.147.927-1.893 2.074-2.14V2.665h1.78v1.3c1.24.3 1.86 1.24 1.9 2.26H9.532c-.033-.74-.427-1.246-1.48-1.246-1 0-1.6.453-1.6 1.093 0 .56.433.927 1.78 1.273 1.347.347 2.787.927 2.787 2.607-.007 1.22-.92 1.887-2.08 2.107z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="qeqr7ytgha">
+                <path fill="#fff" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -957,5 +973,6 @@ export {
     OrderIcon,
     BxsTimeIcon,
     StarPurpleIcon,
-    TimerIcon
+    TimerIcon,
+    MoneyIcon
 };

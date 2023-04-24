@@ -253,7 +253,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     primaryBtn = {
                                         function: () =>
                                             onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
-                                        text: t('common:confirm')
+                                        text: t('dw_partner:transfer_already')
                                     };
 
                                     return;

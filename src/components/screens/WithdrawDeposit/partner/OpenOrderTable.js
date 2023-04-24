@@ -283,7 +283,9 @@ const OpenOrderTable = () => {
                             <OrderCard onProcessOrder={onProcessOrder} router={router} assetConfig={assetConfig} key={i} orderDetail={order} t={t} />
                         ))
                     ) : (
-                        <NoData />
+                        <div className="mt-[60px]">
+                            <NoData />
+                        </div>
                     )}
                 </div>
                 {state.loading || !state.data.length ? null : (

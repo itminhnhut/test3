@@ -226,7 +226,8 @@ const HistoryOrders = () => {
                     params: {
                         ...state.params,
                         from: startDate,
-                        to: endDate
+                        to: endDate,
+                        partnerAcceptStatus: 1 // partner accepted only
                     },
                     cancelToken: source.token
                 });

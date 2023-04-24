@@ -153,13 +153,13 @@ export const ratingOrder = async ({ displayingId, rating }) => {
     return res.data;
 };
 
-export const editPartnerConfig = async ({ side, min, max, status }) => {
+export const editPartnerConfig = async ({ side, min, max, status, assetId }) => {
     const res = await Axios.post(API_SET_PARTNER_ORDER_CONFIG, {
         side,
         min,
         max,
         status,
-        assetId: 72
+        assetId
     });
 
     return res.data;
