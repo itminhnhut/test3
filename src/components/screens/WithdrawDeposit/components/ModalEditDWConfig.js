@@ -131,7 +131,7 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
                             <label htmlFor={key} className="flex items-center  mb-2 justify-between">
                                 <div className="txtSecond-3 ">{t(`common:${key}`)}</div>
                                 <div className="flex  items-center space-x-1">
-                                    <span className="txtSecond-3">Giá trị {ALLOWED_ASSET[+assetId]} tương ứng:</span>
+                                    <span className="txtSecond-3">{ALLOWED_ASSET[+assetId]}:</span>
 
                                     <span className="font-semibold text-sm max-w-[200px] truncate">
                                         {side && assetId && formatBalanceFiat(amount[key] / rate?.[side]?.[assetId], ALLOWED_ASSET[+assetId])}{' '}

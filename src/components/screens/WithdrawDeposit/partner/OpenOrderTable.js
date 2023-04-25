@@ -155,7 +155,7 @@ const OpenOrderTable = () => {
     dataRef.current = [...state.data];
     currentSideRef.current = state.params.side;
 
-    const { onMarkWithStatus, onProcessOrder, setModalState } = useMarkOrder({
+    const { onProcessOrder, setModalState } = useMarkOrder({
         mode: MODE.PARTNER,
         toggleRefetch: () => {}
     });
