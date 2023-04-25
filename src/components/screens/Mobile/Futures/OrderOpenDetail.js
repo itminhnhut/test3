@@ -373,7 +373,7 @@ const OrderOpenDetail = ({
                 />
                 <OrderItem
                     label={renderMargin()}
-                    className="py-[2px] space-y-[2px] text-right mb-2"
+                    className="py-[2px] space-y-[2px] text-right mb-2 w-auto ml-auto"
                     value={order?.margin ? formatNumber(order?.margin, decimalSymbol, 0, false) : '-'}
                 />
                 <OrderItem
@@ -391,7 +391,7 @@ const OrderOpenDetail = ({
                 <OrderItem
                     dropdown
                     label={t('common:fee')}
-                    className="py-[2px] space-y-[2px] text-right"
+                    className="py-[2px] space-y-[2px] text-right w-auto ml-auto"
                     value={renderFee(order)}
                     onClick={onModifyFee}
                 />

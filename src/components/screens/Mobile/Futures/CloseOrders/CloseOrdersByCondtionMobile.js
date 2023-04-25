@@ -235,7 +235,7 @@ const CloseOrdersByCondtionMobile = memo(({
                 <div className="w-full leading-6 font-semibold tracking-[-0.02em] !text-[20px] mb-3">
                     <div>{type.includes('PAIR') ? t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) }) : t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })}</div>
                 </div>
-                <div className='w-full max-h-[calc(100%-108px)] overflow-y-auto'>
+                <div className='w-full h-[calc(100%-108px)] overflow-y-auto'>
                     {state?.orders && renderCloseInfo()}
                     <div className="mt-3 flex w-full">
                         <div className="w-[22px]">
@@ -298,11 +298,11 @@ const CloseOrdersByCondtionMobile = memo(({
                             {t('futures:mobile.close_all_positions.estimated_pnl')}
                         </div>
                         {!totalPnL.includes('-') ? (
-                            <div className='text-green-2'>
+                            <div className='text-green-2 font-semibold'>
                                 {totalPnL ? '+' : '-'}{totalPnL} {state?.orders?.length > 0 ? pair && totalPnL && pair.includes('VNDC') ? 'VNDC' : 'USDT' : ''}
                             </div>
                         ) : (
-                            <div className='text-red-2'>
+                            <div className='text-red-2 font-semibold'>
                                 {totalPnL} {state?.orders?.length > 0 ? pair && totalPnL && pair.includes('VNDC') ? 'VNDC' : 'USDT' : ''}
                             </div>
                         )}
@@ -313,7 +313,7 @@ const CloseOrdersByCondtionMobile = memo(({
                         <div className='text-txtSecondary dark:text-txtSecondary-dark'>
                             {t('futures:mobile.close_all_positions.estimated_time')}
                         </div>
-                        <div>
+                        <div className='font-semibold'>
                             {state?.orders?.length * 0.5}s
                         </div>
                     </div>
@@ -324,7 +324,7 @@ const CloseOrdersByCondtionMobile = memo(({
                         <div className='text-txtSecondary dark:text-txtSecondary-dark'>
                             {t('futures:mobile.close_all_positions.estimated_orders')}
                         </div>
-                        <div>
+                        <div className='font-semibold'>
                             {state?.orders?.length} {state?.orders?.length > 1 ? t('futures:mobile.close_all_positions.orders') : t('futures:mobile.close_all_positions.order')}
                         </div>
                     </div>

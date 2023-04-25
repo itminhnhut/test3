@@ -100,7 +100,7 @@ const TradingInput = ({
                                 <div
                                     className={classNames('px-2 py-1.5 sm:px-6 sm:py-[10px] rounded-md  dark:bg-hover-dark text-xs sm:text-sm', {
                                         'bg-darkBlue text-white dark:text-gray-4': !onusMode,
-                                        'bg-dark dark:bg-dark-1 text-white dark:text-gray-4': onusMode
+                                        'bg-gray-15 dark:bg-dark-2 text-white dark:text-gray-4': onusMode
                                     })}
                                 >
                                     {validator?.msg}
@@ -108,7 +108,7 @@ const TradingInput = ({
                                 <div
                                     className={classNames('w-[8px] h-[6px] dark:bg-hover-dark', {
                                         'bg-darkBlue text-white dark:text-gray-4': !onusMode,
-                                        'bg-dark dark:bg-dark-1': onusMode
+                                        'bg-gray-15 dark:bg-dark-2 text-white dark:text-gray-4': onusMode
                                     })}
                                     style={{
                                         clipPath: 'polygon(50% 100%, 0 0, 100% 0)'

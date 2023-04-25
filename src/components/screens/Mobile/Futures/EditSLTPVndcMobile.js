@@ -380,26 +380,26 @@ const EditSLTPVndcMobile = ({
 
                 />
             );
-            // label.push(
-            //     <div className='relative' key={`inputSlider_label_${i}`}>
-            //         <span
-            //             onClick={() => {
-            //                 onSetValuePercent(i * size, key)
-            //             }}
-            //             className={classNames(
-            //                 'block absolute text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
-            //                 {
-            //                     'left-1/2 -translate-x-1/2 ml-[3px]': i > 0 && i < dotStep.current,
-            //                     '-left-1/2 translate-x-[-80%]': i === dotStep.current,
-            //                     '!text-txtPrimary dark:text-txtPrimary-dark': Number(i * size) === Number(data[key] > 0 ? percent[key] : 50) && onusMode,
-            //                 }
-            //             )}
-            //         >
-            //             {getLabelPercent(i * size, key)}
-            //             {'%'}
-            //         </span>
-            //     </div>
-            // )
+            label.push(
+                <div className='relative' key={`inputSlider_label_${i}`}>
+                    <span
+                        onClick={() => {
+                            onSetValuePercent(i * size, key)
+                        }}
+                        className={classNames(
+                            'block absolute text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
+                            {
+                                'left-1/2 -translate-x-1/2 ml-[3px]': i > 0 && i < dotStep.current,
+                                '-left-1/2 translate-x-[-80%]': i === dotStep.current,
+                                '!text-txtPrimary dark:text-txtPrimary-dark font-semibold': Number(i * size) === Number(data[key] > 0 ? percent[key] : 50) && onusMode,
+                            }
+                        )}
+                    >
+                        {getLabelPercent(i * size, key)}
+                        {'%'}
+                    </span>
+                </div>
+            )
         }
         return {
             dot,
@@ -564,7 +564,7 @@ const EditSLTPVndcMobile = ({
                         BgColorLine={isDark ? colors.dark[2] : colors.gray[12]}
                         xStart={50}
                         positionLabel="top"
-                        customPercentLabel={customPercentLabel}
+                        // customPercentLabel={customPercentLabel}
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'sl')}
                         onChange={({ x }) => onChangePercent(x, 100, 'sl')}
                     />
@@ -629,7 +629,7 @@ const EditSLTPVndcMobile = ({
                         BgColorLine={isDark ? colors.dark[2] : colors.gray[12]}
                         xStart={50}
                         positionLabel="top"
-                        customPercentLabel={customPercentLabel}
+                        // customPercentLabel={customPercentLabel}
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'tp')}
                         onChange={({ x }) => onChangePercent(x, 100, 'tp')}
                     />

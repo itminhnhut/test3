@@ -813,8 +813,8 @@ const ModalFundingRate = ({ onClose, t }) => {
             {t('futures:funding_rate_des')} <span onClick={onDetail} className="text-teal font-semibold">{t('common:read_more')}</span>
         </div>
         <div className="flex items-center space-x-4 pt-8 text-center">
-            <div onClick={onClose} className="w-full font-semibold bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 rounded-md px-5 py-3">{t('common:close')}</div>
-            <div onClick={onRedirect} className="w-full font-semibold bg-bgBtnPrimary text-txtBtnPrimary rounded-md px-5 py-3">{t('futures:funding_history')}</div>
+            <div onClick={onClose} className="w-full font-semibold bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 rounded-md px-2 py-3">{t('common:close')}</div>
+            <div onClick={onRedirect} className="w-full font-semibold bg-bgBtnPrimary text-txtBtnPrimary rounded-md px-2 py-3">{t('futures:funding_history')}</div>
         </div>
     </Modal>
 }

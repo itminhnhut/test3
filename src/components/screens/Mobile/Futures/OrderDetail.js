@@ -523,9 +523,10 @@ const OrderDetail = ({
                     <CopyText
                         color="currentColor"
                         copyClass="text-txtSecondary dark:text-txtSecondary-dark"
-                        size={16}
+                        size={14}
                         text={order?.displaying_id}
                         CustomCopyIcon={Copy}
+                        textClass="text-sm"
                     />
                 </Row>
                 <Row>
@@ -918,7 +919,7 @@ const OrderDetail = ({
                         keyValue="value"
                         displayValue="text"
                         options={listTimeFrame}
-                        classNameButton="pl-2 py-2"
+                        classNameButton="pl-2 pb-2 !items-start"
                         classNamePanel="rounded-md right-0"
                         label={<div
                             className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium">{resolutionLabel}</div>}

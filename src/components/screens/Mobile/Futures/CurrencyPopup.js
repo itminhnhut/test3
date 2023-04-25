@@ -224,17 +224,15 @@ const CurrencyPopup = (props) => {
                         id="header-tooltip"
                         place="bottom"
                         effect="solid"
-                        arrowColor="transparent"
                         backgroundColor="bg-darkBlue-4"
-                        className="!ml-[136px] !mt-1 !p-2 !opacity-100 !rounded-lg !bg-gray-15 dark:!bg-dark-2 after:!left-3"
+                        className="!ml-[8.5rem] !mt-1 !p-2 !mr-4 !opacity-100 !rounded-lg after:!left-3"
                         overridePosition={(e) => ({
                             left: 0,
                             top: e.top,
                         })}
-                        arrowColor={isDark ? colors.dark[2] : colors.dark[1]}
-                        isV3
+                        arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                     >
-                        <div className="font-medium w-[186px] text-xs leading-[18px] text-white dark:text-txtPrimary-dark">
+                        <div className="font-medium text-xs leading-[18px] text-white dark:text-txtPrimary-dark">
                             {t('futures:mobile:tooltip_popup')}
                         </div>
                     </Tooltip>

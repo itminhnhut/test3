@@ -241,15 +241,16 @@ export default function OrderInformation({ pair }) {
                             'divide-y border-divider dark:border-divider-dark': !(index === ITEMS_WITH_TOOLTIPS.length - 1)
                         })}
                     >
-                        <div className="py-[13px] flex  w-full w-100">
+                        <div className="py-[13px] flex w-full">
                             {title === 'funding_countdown' ?
                                 <>
-                                    <Tooltip id={'funding_countdown'} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                        className={`!mx-7 !px-3 !py-5 max-w-[300px] !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg after:!border-none`}
+                                    <Tooltip id={'funding_countdown'} place="top" effect="solid"
+                                        className={`!mx-7 !px-3 !py-5 max-w-[300px] !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg`}
                                         overridePosition={(e) => ({
                                             left: 0,
                                             top: e.top
                                         })}
+                                        arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                                     >
                                         <div>
                                             <label
@@ -258,12 +259,13 @@ export default function OrderInformation({ pair }) {
                                                 className="mt-3 text-3 font-normal text-white dark:text-txtPrimary-dark leading-[18px]">{t('futures:funding_rate_des')}</div>
                                         </div>
                                     </Tooltip>
-                                    <Tooltip id={'countdown-tooltip'} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                        className={`!mx-7 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 max-w-[300px] !opacity-100 !rounded-lg after:!border-none`}
+                                    <Tooltip id={'countdown-tooltip'} place="top" effect="solid"
+                                        className={`!mx-7 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 max-w-[300px] !opacity-100 !rounded-lg`}
                                         overridePosition={(e) => ({
                                             left: e.left - 50,
                                             top: e.top
                                         })}
+                                        arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                                     >
                                         <div>
                                             <label
@@ -274,7 +276,7 @@ export default function OrderInformation({ pair }) {
                                     </Tooltip>
                                 </>
                                 :
-                                <Tooltip id={title} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                                <Tooltip id={title} place="top" effect="solid"
                                     className={`!mx-7 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg`}
                                     overridePosition={(e) => ({
                                         left: 0,

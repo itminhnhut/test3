@@ -32,6 +32,7 @@ const Tooltip = ({ children, arrowColor, isV3 = false, className = '', ...restPr
                 effect="solid"
                 {...restProps}
                 afterShow={() => ref?.current?.updatePosition()}
+                isCapture
             >
                 {children}
             </ReactTooltip>

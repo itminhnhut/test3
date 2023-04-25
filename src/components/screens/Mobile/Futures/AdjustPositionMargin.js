@@ -239,8 +239,8 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                                 placeholder={t('futures:mobile:adjust_margin:amount_placeholder')}
                                 // onFocus={scrollFocusInput}
                             />
-                            <div className="flex items-center" onClick={handleSetMaxAmount}>
-                                <span className="px-4 py-2 text-teal font-semibold">{t('futures:mobile:adjust_margin:max')}</span>
+                            <div className="flex items-center">
+                                <span className="px-4 py-2 text-teal font-semibold" onClick={handleSetMaxAmount}>{t('futures:mobile:adjust_margin:max')}</span>
                                 <div className="h-full leading-[2.75rem] bg-gray-11/50 dark:bg-dark-1/50 w-16 text-txtSecondary dark:text-txtSecondary-dark font-medium rounded-r-md text-center">
                                     {assetConfig?.assetCode}
                                 </div>
@@ -310,18 +310,17 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
 export default AdjustPositionMargin
 
 const ErrorToolTip = ({ children, message }) => {
-    return <div className='relative'>
-        <div className={classNames('absolute -top-1 -translate-y-full z-50 flex flex-col items-center', {
-            hidden: !message
-        })}>
-            <div className='px-2 py-1.5 rounded-md bg-darkBlue-4 text-xs'>
-                {message}
-            </div>
+    return (
+        <div className="relative">
             <div
-                className='w-[8px] h-[6px] bg-darkBlue-4'
-                style={{ clipPath: 'polygon(50% 100%, 0 0, 100% 0)' }}
-            />
+                className={classNames('absolute -top-1 -translate-y-full z-50 flex flex-col items-center', {
+                    hidden: !message
+                })}
+            >
+                <div className="px-2 py-1.5 rounded-md bg-gray-15 dark:bg-dark-2 text-white dark:text-gray-4 text-xs">{message}</div>
+                <div className="w-[8px] h-[6px] bg-gray-15 dark:bg-dark-2" style={{ clipPath: 'polygon(50% 100%, 0 0, 100% 0)' }} />
+            </div>
+            {children}
         </div>
-        {children}
-    </div>
+    );
 }

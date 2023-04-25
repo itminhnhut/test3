@@ -434,8 +434,7 @@ const CloseOrderModalMobile = ({
                                         left: 0,
                                         top: e.top
                                     })}
-                                    arrowColor={isDark ? colors.dark[2] : colors.dark[1]}
-                                    isV3
+                                    arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                                 ></Tooltip>
                                 <div className="mt-8 flex flex-col space-y-2 text-xs">
                                     <div className="flex items-center">

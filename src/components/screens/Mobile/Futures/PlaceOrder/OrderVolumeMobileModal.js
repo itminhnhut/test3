@@ -71,10 +71,10 @@ const OrderVolumeMobileModal = (props) => {
     }
 
     useEffect(() => {
-        if (firstTime.current) {
-            setPercent(volume * 100 / maxQuoteQty);
-            firstTime.current = false;
-        }
+        setPercent(volume * 100 / maxQuoteQty);
+        // if (firstTime.current) {
+        //     firstTime.current = false;
+        // }
     }, [volume, maxQuoteQty])
 
     const onRedirect = () => {

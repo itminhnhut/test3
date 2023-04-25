@@ -331,7 +331,7 @@ const OrderItemMobile = ({
                         />
                         <OrderItem
                             label={isTabHistory ? t('futures:mobile:reason_close') : renderMargin()}
-                            className="py-[2px] space-y-[2px] text-right mb-2"
+                            className="py-[2px] space-y-[2px] text-right mb-2 w-auto ml-auto"
                             value={isTabHistory ? renderReasonClose(order) : order?.margin ? formatNumber(order?.margin, decimalSymbol, 0, false) : '-'}
                         />
                         <OrderItem
@@ -349,7 +349,7 @@ const OrderItemMobile = ({
                         <OrderItem
                             dropdown={!isTabHistory}
                             label={isTabHistory ? t(`futures:order_table:close_price`) : t('common:fee')}
-                            className="py-[2px] space-y-[2px] text-right"
+                            className="py-[2px] space-y-[2px] text-right w-auto ml-auto"
                             value={renderFee(order)}
                             onClick={() => !isTabHistory && actions('modal', 'edit-fee')}
                         />
@@ -410,26 +410,26 @@ const Button = styled.div.attrs({
 export const OrderItem = (props) => {
     const { label, value, className = '', valueClassName = '', dropdown, onClick, center, fullWidth } = props;
     return (
-        <Row onClick={onClick} className={classnames(
-            {
+        <Row
+            className={classnames({
                 'px-3 xxs:px-5 sm:!px-[10%] whitespace-nowrap': center,
                 '!w-full': fullWidth
-            }
-        )}>
-            <div className={`${className}`} >
-                {dropdown ?
+            })}
+        >
+            <div className={`${className}`} onClick={onClick}>
+                {dropdown ? (
                     <div className="flex items-center space-x-1 justify-end">
                         <Label>{label} </Label>
                         <SortIcon className="text-gray-1 dark:text-gray-7" size={12} color="currentColor" activeColor="currentColor" />
                         {/* <ChevronDown size={12} color={colors.onus.grey} /> */}
                     </div>
-                    :
+                ) : (
                     <Label>{label} </Label>
-                }
+                )}
                 <div className={`leading-[1.25rem] text-xs font-medium ${valueClassName}`}>{value}</div>
             </div>
         </Row>
-    )
+    );
 }
 
 export default OrderItemMobile;

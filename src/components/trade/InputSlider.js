@@ -305,7 +305,7 @@ const Slider = ({
                                 'left-1/2 -translate-x-1/2': i > 0 && i !== _dots,
                                 '-left-1/2 translate-x-[-80%] pr-1': i === _dots
                             },
-                            { '!font-normal': onusMode, '!text-txtPrimary dark:!text-txtPrimary-dark font-semibold': Number(labelX) === Number(x) && onusMode },
+                            { 'font-normal': onusMode, '!text-txtPrimary dark:!text-txtPrimary-dark !font-semibold': Number(labelX) === Number(x) && onusMode },
                             { 'dark:!text-white !text-txtPrimary font-semibold': Number(labelX) === Number(x) && !onusMode }
                         )}
                     >
@@ -320,7 +320,7 @@ const Slider = ({
     };
 
     return (
-        <>
+        <div className='px-2'>
             {useLabel && positionLabel === 'top' && (
                 <>
                     <div className="relative w-full flex items-center justify-between">
@@ -373,7 +373,7 @@ const Slider = ({
                     <div className="h-[12px] w-full" />
                 </>
             )}
-        </>
+        </div>
     );
 };
 
