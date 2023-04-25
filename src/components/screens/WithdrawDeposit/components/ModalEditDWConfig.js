@@ -13,7 +13,7 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
         min: '',
         max: ''
     });
-    const { t } = useTranslation(['dw_partner', 'common']);
+    const { t } = useTranslation();
     const orderConfig = useMemo(
         () => partner?.orderConfig?.[(side?.toLowerCase() || SIDE.BUY) + (assetId === ALLOWED_ASSET_ID['VNDC'] ? '' : 'Usdt')],
         [partner?.orderConfig, side, assetId]
