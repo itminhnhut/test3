@@ -448,16 +448,16 @@ export const USER_CP = [
         child_lv1: []
     },
 
-    // {
-    //     key: 3,
-    //     title: 'partner',
-    //     localized: 'partner',
-    //     isPartner: true,
-    //     // hide: true,
-    //     isNew: true,
-    //     url: PATHS?.PARNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
-    //     child_lv1: []
-    // }
+    {
+        key: 3,
+        title: 'partner',
+        localized: 'partner',
+        isPartner: true,
+        // hide: true,
+        isNew: true,
+        url: PATHS?.PARNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
+        child_lv1: []
+    }
     // {
     //     key: 1,
     //     title: 'Security',
