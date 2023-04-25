@@ -163,11 +163,11 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (!isPartnerAccepted) {
                                 secondaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('common:deny')
+                                    text: t('common:reject')
                                 };
                                 primaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, state.orderDetail),
-                                    text: t('common:confirm')
+                                    text: t('common:accept')
                                 };
                             } else {
                                 //user chua chuyen tien
@@ -241,11 +241,11 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (!isPartnerAccepted) {
                                 secondaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('common:deny')
+                                    text: t('common:reject')
                                 };
                                 primaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, state.orderDetail),
-                                    text: t('common:confirm')
+                                    text: t('common:accept')
                                 };
                             } else {
                                 //partner chua chuyen tien
@@ -253,7 +253,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     primaryBtn = {
                                         function: () =>
                                             onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
-                                        text: t('common:confirm')
+                                        text: t('dw_partner:transfer_already')
                                     };
 
                                     return;
@@ -312,7 +312,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     }
                 }
             }
-        }[side.toUpperCase()].render());
+        })[side.toUpperCase()].render();
 
         return (
             <div className="flex gap-x-4">
@@ -422,6 +422,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
 
             {state.orderDetail && (
                 <ModalQr
+                    orderId={state?.orderDetail?._id}
                     isVisible={state.isShowQr}
                     onClose={() => setState({ isShowQr: false })}
                     bank={state.orderDetail?.transferMetadata}

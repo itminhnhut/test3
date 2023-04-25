@@ -131,7 +131,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                             {!orderDetail ? (
                                                 <Skeletor width="100px" />
                                             ) : (
-                                                <TextCopyable className="gap-x-1 txtPri-1 " text={orderDetail?.transferMetadata?.note} />
+                                                <TextCopyable className="gap-x-1 txtPri-1 text-right" text={orderDetail?.transferMetadata?.note} />
                                             )}
                                         </div>
                                         <div className="flex items-center justify-between">
@@ -147,7 +147,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                             {!orderDetail ? (
                                                 <Skeletor width="100px" />
                                             ) : (
-                                                <TextCopyable className="gap-x-1 txtPri-1  " text={orderDetail?.transferMetadata?.accountNumber} />
+                                                <TextCopyable className="gap-x-1 txtPri-1  text-right" text={orderDetail?.transferMetadata?.accountNumber} />
                                             )}
                                         </div>
                                         <div className="flex items-center justify-between">
@@ -155,7 +155,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                             {!orderDetail ? (
                                                 <Skeletor width="100px" />
                                             ) : (
-                                                <TextCopyable className="gap-x-1 txtPri-1 " text={orderDetail?.transferMetadata?.accountName} />
+                                                <TextCopyable className="gap-x-1 txtPri-1 text-right" text={orderDetail?.transferMetadata?.accountName} />
                                             )}
                                         </div>
                                         <div className="flex items-center justify-between">
@@ -164,7 +164,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                                 <Skeletor width="100px" />
                                             ) : (
                                                 <TextCopyable
-                                                    className="gap-x-1  txtPri-1 "
+                                                    className="gap-x-1 txtPri-1 text-right"
                                                     showingText={`${formatBalance(orderDetail?.quoteQty, 0)} VND`}
                                                     text={orderDetail?.quoteQty}
                                                 />

@@ -47,20 +47,20 @@ const OrderCard = memo(({ orderDetail, assetConfig, t, router, onProcessOrder })
                             variants="text"
                             className="!py-0 !w-auto items-center"
                         >
-                            <span className="font-semibold">Tiếp tục xử lý giao dịch</span>
+                            <span className="font-semibold">{t('dw_partner:transaction_detail')}</span>
                             <ChevronRight color="currentColor" size={16} />
                         </ButtonV2>
                     ) : (
                         <>
                             <ButtonV2 className="!w-auto !h-9 px-4 py-3" onClick={() => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, orderDetail)}>
-                                {t('common:confirm')}
+                                {t('common:accept')}
                             </ButtonV2>
                             <ButtonV2
                                 className="!w-auto px-4 py-3 !h-9"
                                 variants="secondary"
                                 onClick={() => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, orderDetail)}
                             >
-                                {t('common:deny')}
+                                {t('common:reject')}
                             </ButtonV2>
                         </>
                     )}
@@ -283,10 +283,12 @@ const OpenOrderTable = () => {
                             <OrderCard onProcessOrder={onProcessOrder} router={router} assetConfig={assetConfig} key={i} orderDetail={order} t={t} />
                         ))
                     ) : (
-                        <NoData />
+                        <div className="mt-[60px]">
+                            <NoData />
+                        </div>
                     )}
                 </div>
-                {state.loading || !state.data.length ? null : (
+                {state.loading || state.data.length < LIMIT_ROW ? null : (
                     <div className="w-full flex items-center justify-center select-none gap-8 mt-8">
                         <TextButton
                             disabled={state.params.page <= 0}

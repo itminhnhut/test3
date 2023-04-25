@@ -16,8 +16,8 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
 
     return (
         <Card className="mb-12 border !border-divider dark:border-0 bg-white dark:bg-dark-4">
-            <div className="flex flex-wrap -m-3 justify-between">
-                <div className="w-1/2 md:w-1/3 p-3  ">
+            <div className="flex flex-wrap justify-between">
+                <div className="w-1/2 md:w-1/3 ">
                     <div className="txtSecond-2 mb-3">{t('common:status')}</div>
                     <div className="flex -m-1 flex-wrap items-center">
                         <div className="p-1">
@@ -43,13 +43,13 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                         )}
                     </div>
                 </div>
-                <div className="flex gap-12 justify-between md:justify-center order-3 md:order-2 w-full md:w-1/3 p-3 md:border-l md:border-r border-divider dark:border-divider-dark">
+                <div className="flex mt-6 md:mt-0 gap-12 justify-between md:justify-center order-3 md:order-2 w-full md:w-1/3 md:border-l md:border-r border-divider dark:border-divider-dark">
                     <div className="">
                         <div className="txtSecond-2 mb-3">{t('common:transaction_id')}</div>
                         {!orderDetail ? <Skeletor width="100px" /> : <TextCopyable className="gap-x-1 txtPri-1" text={orderDetail?.displayingId} />}
                     </div>
                     <div className="">
-                        <div className="txtSecond-2 mb-3 ">{t('common:time')}</div>
+                        <div className="txtSecond-2 mb-3 text-right md:text-left">{t('common:time')}</div>
                         {!orderDetail ? (
                             <Skeletor width="100px" />
                         ) : (
@@ -57,7 +57,7 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                         )}
                     </div>
                 </div>
-                <div className="w-1/2 order-2 md:order-3 md:w-1/3 p-3 flex justify-end">
+                <div className="w-1/2  order-2 md:order-3 md:w-1/3 flex justify-end">
                     <div>
                         <div className="txtSecond-2 text-right mb-3">{t('dw_partner:amount')}</div>
                         <div className="mt-3 txtPri-3 font-semibold">
