@@ -13,7 +13,11 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
         min: '',
         max: ''
     });
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+
     const orderConfig = useMemo(
         () => partner?.orderConfig?.[(side?.toLowerCase() || SIDE.BUY) + (assetId === ALLOWED_ASSET_ID['VNDC'] ? '' : 'Usdt')],
         [partner?.orderConfig, side, assetId]
@@ -116,7 +120,10 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
                 }}
             >
                 <div className="text-2xl font-semibold mb-6">
-                    {side && assetId && t(`dw_partner:${side?.toLowerCase()}_order_limit`, { assetCode: ALLOWED_ASSET[+assetId] })}
+                    {side &&
+                        side === SIDE.BUY &&
+                        (language === 'en' ? `Buy ${ALLOWED_ASSET[+assetId]} Order Limit` : `Giới hạn lệnh Mua ${ALLOWED_ASSET[+assetId]}`)}
+                    {side && side === SIDE.SELL && t(`dw_partner:sell_order_limit`, { assetCode: ALLOWED_ASSET[+assetId] })}
                 </div>
                 <div className="space-y-4">
                     {['min', 'max'].map((key) => (
@@ -146,7 +153,7 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
                                 decimalScale={0}
                                 allowedDecimalSeparators={[',', '.']}
                                 clearAble
-                                placeHolder={`${t(`common:${key}`)} ${formatNumber(key === 'min' ? orderConfig?.partnerMin : orderConfig?.partnerMax, 0)} `}
+                                placeholder={`${t(`common:${key}`)} ${formatNumber(key === 'min' ? orderConfig?.partnerMin : orderConfig?.partnerMax, 0)} `}
                                 errorEmpty
                                 renderTail={<div className="text-txtSecondary dark:text-txtSecondary-dark">VND</div>}
                             />
