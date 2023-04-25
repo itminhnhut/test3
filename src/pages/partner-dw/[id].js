@@ -41,7 +41,7 @@ const PartnerDepositWithdraw = ({ id }) => {
                 <div className="min-h-[50vh] flex w-full justify-center items-center">
                     <Spinner size={50} color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
                 </div>
-            ) : user && user.partner_type > 0 ? (
+            ) : user && user.partner_type === 2 ? (
                 <PartnerWD>
                     {id === PARTNER_WD_TABS.OPEN_ORDER && <OpenOrderTable />}
                     {id === PARTNER_WD_TABS.STATS && <TabStatistic />}
