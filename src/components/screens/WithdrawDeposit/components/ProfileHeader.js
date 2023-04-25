@@ -22,7 +22,9 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                     <div className="flex p-3 md:flex-grow items-center">
                         <img className="rounded-full object-cover w-14 h-14 md:h-20 md:w-20" src={partner?.avatar} />
                         <div className="ml-6">
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px] truncate max-w-[260px] mb-3">{partner?.name}</div>
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px] truncate max-w-[260px] mb-3">
+                                {partner?.name}
+                            </div>
                             <div className="flex items-center text-txtSecondary dark:text-txtSecondary-dark ">
                                 <div className="flex items-center">
                                     <CalendarFillIcon color="currentColor" size={16} />
@@ -62,13 +64,9 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                                     imgSrc: bankDefault && bankDefault?.bankLogo
                                 }}
                                 endIcon={
-                                    banks &&
-                                    banks?.length > 1 && (
-                                        <div className="ml-6 text-txtPrimary dark:text-txtPrimary-dark">
-                                            <BxChevronDown size={24} color="currentColor" />
-                                            {/* <ChevronRight color="currentColor" size={24} /> */}
-                                        </div>
-                                    )
+                                    <div className="ml-6 text-txtPrimary dark:text-txtPrimary-dark">
+                                        <BxChevronDown size={24} color="currentColor" />
+                                    </div>
                                 }
                                 endIconPosition="center"
                             />
