@@ -108,16 +108,14 @@ const TransferInternalModule = ({ width, pair }) => {
     const isDark = currentTheme === THEME_MODE.DARK;
     useOutsideClick(fromAssetListRef, () => state.openAssetList?.from && setState({ openAssetList: { from: false }, search: '' }));
 
+    const config = useMemo(() => {
+        return find(assetConfig, { assetCode: state?.fromAsset });
+    }, [assetConfig, state.fromAsset]);
+
+    console.log('config: ', config);
     // AVAILABEL ASSET
     const availabelAsset = useMemo(() => {
-        console.log(wallets, find(assetConfig));
-        // find(configs, { id: assetId });
-        return null;
-        if (!config || !wallets) return { fromAsset: 0, toAsset: 0 };
-        return {
-            fromAsset: wallets?.[config?.fromAssetId]?.value - wallets?.[config?.fromAssetId]?.locked_value,
-            toAsset: wallets?.[config?.toAssetId]?.value - wallets?.[config?.toAssetId]?.locked_value
-        };
+        return wallets?.[config?.id]?.value;
     }, [wallets]);
 
     const user = null;
@@ -125,7 +123,7 @@ const TransferInternalModule = ({ width, pair }) => {
     return (
         <>
             <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
-                <div className="relative min-w-[350px] max-w-[508px] rounded-xl">
+                <div className="relative min-w-[488px] max-w-[508px] rounded-xl">
                     <div className="flex flex-col justify-center items-center">
                         <span className="text-[32px] leading-[38px] font-semibold">Transfer internal</span>
                     </div>
@@ -137,7 +135,7 @@ const TransferInternalModule = ({ width, pair }) => {
                                     <span>{t('common:from')}</span>
                                     <div className="flex gap-2 items-center">
                                         <span>
-                                            {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)}
+                                            {t('common:available_balance')}: {formatWallet(availabelAsset)}
                                         </span>
                                         <button
                                             onClick={(e) => {
@@ -150,8 +148,52 @@ const TransferInternalModule = ({ width, pair }) => {
                                         </button>
                                     </div>
                                 </div>
-                                {/* {renderFromInput()}
-                                {renderFromAssetList()} */}
+
+                                <div className="flex items-center justify-between bg-transparent font-semibold text-base">
+                                    <div className="flex items-center justify-between">
+                                        <NumberFormat
+                                            thousandSeparator
+                                            allowNegative={false}
+                                            getInputRef={fromAssetRef}
+                                            className="w-full text-left txtPri-3 placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
+                                            value={state.fromAmount}
+                                            onFocus={() => setState({ focus: 'from', inputHighlighted: 'from' })}
+                                            onBlur={() => setState({ inputHighlighted: null })}
+                                            onValueChange={({ value }) => setState({ fromAmount: value })}
+                                            placeholder="0.0000"
+                                            decimalScale={getDecimalScale(+config.filters?.[0].stepSize)}
+                                        />
+
+                                        <button
+                                            className={`border-r border-r-divider dark:border-r-divider-dark mr-3 pr-3 ${
+                                                !!state.fromAmount ? 'visible' : 'invisible'
+                                            }`}
+                                        >
+                                            <CloseIcon onClick={() => setState({ fromAmount: '' })} size={width >= 768 ? 20 : 16} className="cursor-pointer" />
+                                        </button>
+                                    </div>
+                                    <div className="relative flex items-center justify-end">
+                                        <div
+                                            className="uppercase cursor-pointer hover:opacity-50 text-teal"
+                                            onClick={() => onMaximumQty('from', availabelAsset?.fromAsset)}
+                                        >
+                                            max
+                                        </div>
+                                        <div className="mx-3 w-[1px] bg-divider dark:bg-divider-dark h-6" />
+                                        <div
+                                            className="flex items-center cursor-pointer select-none"
+                                            onClick={() => setState({ openAssetList: { from: !state.openAssetList?.from } })}
+                                        >
+                                            <AssetLogo assetCode={state.fromAsset} size={24} />
+                                            <span className="mx-2 uppercase">{state.fromAsset}</span>
+                                            <span className={`transition-transform duration-50 ${state.openAssetList?.from && 'rotate-180'}`}>
+                                                <ArrowDropDownIcon size={16} />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* {renderFromAssetList()} */}
                             </Input>
                             {/* {renderHelperTextFrom()} */}
 
