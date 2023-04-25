@@ -68,9 +68,24 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
 
     const assetCode = getAssetCode(state.orderDetail?.baseAssetId);
 
+    const refetchOrderDetailHandler = (data) => {
+        toggleRefetch();
+        if (mode === MODE.USER && data?.status === PartnerOrderStatus.SUCCESS && !data?.reasonDisputedCode) {
+            if (data?.side === SIDE.BUY) {
+                setState({
+                    isShowRating: true
+                });
+            } else {
+                setState({
+                    needRating: true
+                });
+            }
+        }
+    };
+
     const { onMarkWithStatus, onProcessOrder, setModalState } = useMarkOrder({
         mode,
-        toggleRefetch
+        toggleRefetch: refetchOrderDetailHandler
     });
 
     useEffect(() => {
@@ -380,10 +395,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     side={side}
                     setModalQr={() => setState({ isShowQr: true })}
                     status={status}
-                    refetchOrderDetail={() => {
-                        toggleRefetch();
-                        setIsRefetchOrderDetailAfterCountdown(true);
-                    }}
                 />
                 {/* Lưu ý */}
                 {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (

@@ -100,7 +100,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                         }
                     }
 
-                    toggleRefetch();
+                    toggleRefetch(data.data);
                 } else {
                     setModalState(MODAL_TYPE.CONFIRM, {
                         loading: false,

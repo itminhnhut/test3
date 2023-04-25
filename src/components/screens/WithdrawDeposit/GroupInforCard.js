@@ -48,7 +48,7 @@ const RENDER_INFORMATION = [
     }
 ];
 
-const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refetchOrderDetail, mode = MODE.USER }) => {
+const GroupInforCard = ({ orderDetail, side, setModalQr, status, mode = MODE.USER }) => {
     const otherMode = mode === MODE.PARTNER ? MODE.USER : MODE.PARTNER;
     const totalOrder = orderDetail?.partnerMetadata?.analyticMetadata?.count || 0;
     const {
