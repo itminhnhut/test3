@@ -11,7 +11,7 @@ import { EXCHANGE_ACTION } from 'pages/wallet';
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAsync, useDebounce } from 'react-use';
 import { Trans, useTranslation } from 'next-i18next';
-import { find, orderBy, uniqBy } from 'lodash';
+import { find, orderBy, result, uniqBy } from 'lodash';
 import {
     formatPrice,
     formatSwapRate,
@@ -22,7 +22,8 @@ import {
     walletLinkBuilder,
     safeToFixed,
     dwLinkBuilder,
-    getS3Url
+    getS3Url,
+    formatNumber
 } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { ApiStatus } from 'redux/actions/const';
@@ -61,43 +62,27 @@ const fromAssetRef = createRef();
 const TransferInternalModule = ({ width, pair }) => {
     // Init State
     const [state, set] = useState({
-        init: false,
-        loading: false,
         swapConfigs: null,
-        estRate: null,
-        loadingEstRate: false,
-        shouldRefreshRate: false,
-        preOrder: null,
-        loadingPreOrder: false,
-        processingOrder: false,
-        invoiceId: null,
         fromAsset: DEFAULT_PAIR.fromAsset,
         fromAmount: null,
         fromAssetList: null,
-        toAsset: DEFAULT_PAIR.toAsset,
-        toAmount: null,
-        toAssetList: null,
         fromErrors: {},
-        toErrors: {},
         focus: 'from',
         search: '',
         inputHighlighted: null,
-        changeEstRatePosition: false,
         openAssetList: {},
-        openModal: false,
-        resultSwap: null
-        //... Add new state here
+        // State for to User
+        searchUser: '',
+        toUser: {}
     });
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     // Get state from Rdx
     const wallets = useSelector((state) => state.wallet.SPOT);
-    const auth = useSelector((state) => state.auth?.user);
     const assetConfig = useSelector((state) => state.utils.assetConfig);
 
     // Refs
     const fromAssetListRef = useRef();
-    const fromAssetBtnRef = useRef();
 
     // Use Hooks
     const {
@@ -108,16 +93,103 @@ const TransferInternalModule = ({ width, pair }) => {
     const isDark = currentTheme === THEME_MODE.DARK;
     useOutsideClick(fromAssetListRef, () => state.openAssetList?.from && setState({ openAssetList: { from: false }, search: '' }));
 
-    const config = useMemo(() => {
-        return find(assetConfig, { assetCode: state?.fromAsset });
-    }, [assetConfig, state.fromAsset]);
+    // const config = useMemo(() => {
+    //     return find(assetConfig, { assetCode: state?.fromAsset });
+    // }, [assetConfig, state.fromAsset]);
+
+    useEffect(() => {
+        let result = [];
+        result = orderBy(result, ['available', 'fromAsset'], ['desc', 'asc']);
+
+        setState({ fromAssetList: result });
+    }, [state.search, wallets]);
 
     // AVAILABEL ASSET
     const availabelAsset = useMemo(() => {
-        return wallets?.[config?.id]?.value;
-    }, [wallets]);
+        return wallets?.[find(assetConfig, { assetCode: state?.fromAsset })?.id]?.value;
+    }, [wallets, assetConfig, state?.fromAsset]);
 
-    const user = null;
+    useEffect(() => {
+        let tempFromAssetList = Object.keys(wallets)
+            ?.map((key) => {
+                const curAssetWalletData = wallets[key];
+                return {
+                    // assetId: key,
+                    ...find(assetConfig, { id: +key }),
+                    available: curAssetWalletData.value - curAssetWalletData.locked_value,
+                    ...curAssetWalletData
+                };
+            })
+            .filter((item) => item?.assetCode?.toLowerCase()?.includes(state.search?.toLowerCase()));
+
+        tempFromAssetList = orderBy(tempFromAssetList, ['available', 'assetCode'], ['desc', 'asc']);
+
+        setState({
+            fromAssetList: tempFromAssetList
+        });
+    }, [wallets, assetConfig, state.search]);
+
+    const renderFromAssetList = useCallback(() => {
+        if (!state.openAssetList?.from || !state.fromAssetList) return null;
+
+        const assetItems = [];
+        const data = state.fromAssetList;
+
+        for (let i = 0; i < data?.length; ++i) {
+            const { assetCode: fromAsset, available, assetName, assetDigit } = data?.[i];
+
+            assetItems.push(
+                <AssetItem
+                    key={`asset_item___${i}`}
+                    isChoosed={state.fromAsset === fromAsset}
+                    onClick={() => onClickFromAsset(fromAsset)}
+                    isDisabled={!available}
+                >
+                    <div className={`flex items-center  `}>
+                        <div className={`${!available && 'opacity-20'} w-5 h-5`}>
+                            <AssetLogo assetCode={fromAsset} size={20} />
+                        </div>
+                        <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
+                            <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{fromAsset}</span>
+                            <span className="text-xs leading-4 text-left">{assetName}</span>
+                        </p>
+                    </div>
+                    <div> {available ? formatNumber(available, assetDigit) : '0.0000'}</div>
+                </AssetItem>
+            );
+        }
+
+        return (
+            <AssetList ref={fromAssetListRef}>
+                <div className="px-4">
+                    <SearchBoxV2
+                        value={state.search}
+                        onChange={(value) => {
+                            setState({ search: value });
+                        }}
+                        width
+                    />
+                </div>
+                <ul className="mt-6 max-h-[332px] overflow-y-auto">
+                    {assetItems?.length ? (
+                        assetItems
+                    ) : (
+                        <div className="flex items-center justify-center h-[332px]">
+                            <NoData isSearch={!!state.search} />
+                        </div>
+                    )}
+                </ul>
+            </AssetList>
+        );
+    }, [state.fromAsset, state.fromAssetList, state.openAssetList, state.search, language]);
+
+    const onClickFromAsset = (fromAsset) => {
+        setState({ fromAsset, search: '', fromErrors: {}, openAssetList: {} });
+    };
+
+    const onSearchToUser = () => {
+        // Call api search user here
+    };
 
     return (
         <>
@@ -136,15 +208,6 @@ const TransferInternalModule = ({ width, pair }) => {
                                         <span>
                                             {t('common:available_balance')}: {formatWallet(availabelAsset)}
                                         </span>
-                                        <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                handleDepositIconBtn();
-                                            }}
-                                        >
-                                            <SvgAddCircle size={13.3} color={colors.teal} className="cursor-pointer" />
-                                        </button>
                                     </div>
                                 </div>
 
@@ -159,7 +222,7 @@ const TransferInternalModule = ({ width, pair }) => {
                                             onFocus={() => setState({ focus: 'from', inputHighlighted: 'from' })}
                                             onBlur={() => setState({ inputHighlighted: null })}
                                             onValueChange={({ value }) => setState({ fromAmount: value })}
-                                            placeholder="0.0000"
+                                            placeholder={(0).toFixed(4)}
                                             decimalScale={4}
                                         />
 
@@ -172,12 +235,12 @@ const TransferInternalModule = ({ width, pair }) => {
                                         </button>
                                     </div>
                                     <div className="relative flex items-center justify-end">
-                                        <div
-                                            className="cursor-pointer hover:opacity-50 text-teal"
+                                        {/* <div
+                                            className="uppercase cursor-pointer hover:opacity-50 text-teal"
                                             onClick={() => onMaximumQty('from', availabelAsset?.fromAsset)}
                                         >
                                             MAX
-                                        </div>
+                                        </div> */}
                                         <div className="mx-3 w-[1px] bg-divider dark:bg-divider-dark h-6" />
                                         <div
                                             className="flex items-center cursor-pointer select-none"
@@ -191,14 +254,14 @@ const TransferInternalModule = ({ width, pair }) => {
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* {renderFromAssetList()} */}
+                                {renderFromAssetList()}
                             </Input>
                             {/* {renderHelperTextFrom()} */}
 
                             <InputV2
-                                value={''}
-                                onChange={(value) => {}}
+                                onHitEnterButton={onSearchToUser}
+                                value={state.searchUser}
+                                onChange={(value) => setState({ searchUser: value })}
                                 placeholder={t('common:to')}
                                 suffix={<Search color={colors.darkBlue5} size={16} />}
                                 className="pb-0 w-full "
@@ -211,14 +274,13 @@ const TransferInternalModule = ({ width, pair }) => {
                                 className="rounded-xl bg-cover bg-center dark:shadow-popover "
                             >
                                 <div className="w-full border p-6 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
-                                    {user?.avatar ? (
-                                        <img src={user?.avatar} alt="avatar_user" className="rounded-full w-12 h-12 bg-cover" />
+                                    {state?.toUser?.avatar ? (
+                                        <img src={state?.toUser?.avatar} alt="avatar_user" className="rounded-full w-12 h-12 bg-cover" />
                                     ) : (
-                                        // <Image width={48} height={48} objectFit="cover" src={user?.avatar} alt="avatar_user" className="rounded-full" />
                                         <BxsUserCircle size={48} />
                                     )}
                                     <div>
-                                        <div className="txtPri-1 pl-[1px]">{user?.name ?? '_'}</div>
+                                        <div className="txtPri-1 pl-[1px]">{state?.toUser?.name ?? '_'}</div>
                                         <div className="mt-1">{t('payment-method:owner_account')}</div>
                                     </div>
                                 </div>
