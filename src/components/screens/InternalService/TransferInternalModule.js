@@ -74,10 +74,18 @@ const TransferInternalModule = ({ width, pair }) => {
         search: '',
         inputHighlighted: null,
         openAssetList: {},
+
         // State for to User
         searchUser: '',
-        toUser: [],
-        errorToUser: ""
+        listUserFounded: [],
+        toUser: null,
+        errorToUser: '',
+
+        // State for noti
+        contentNoti: '',
+
+        // State for Modal preview
+        isOpenModalPreview: false
     });
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
@@ -87,6 +95,7 @@ const TransferInternalModule = ({ width, pair }) => {
 
     // Refs
     const fromAssetListRef = useRef();
+    const toUserListRef = useRef();
 
     // Use Hooks
     const {
@@ -96,10 +105,7 @@ const TransferInternalModule = ({ width, pair }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
     useOutsideClick(fromAssetListRef, () => state.openAssetList?.from && setState({ openAssetList: { from: false }, search: '' }));
-
-    // const config = useMemo(() => {
-    //     return find(assetConfig, { assetCode: state?.fromAsset });
-    // }, [assetConfig, state.fromAsset]);
+    useOutsideClick(toUserListRef, () => state.openAssetList?.to && setState({ openAssetList: { to: false } }));
 
     useEffect(() => {
         let result = [];
@@ -107,11 +113,6 @@ const TransferInternalModule = ({ width, pair }) => {
 
         setState({ fromAssetList: result });
     }, [state.search, wallets]);
-
-    // AVAILABEL ASSET
-    const availabelAsset = useMemo(() => {
-        return wallets?.[find(assetConfig, { assetCode: state?.fromAsset })?.id]?.value;
-    }, [wallets, assetConfig, state?.fromAsset]);
 
     useEffect(() => {
         let tempFromAssetList = Object.keys(wallets)
@@ -136,33 +137,6 @@ const TransferInternalModule = ({ width, pair }) => {
     const renderFromAssetList = useCallback(() => {
         if (!state.openAssetList?.from || !state.fromAssetList) return null;
 
-        const assetItems = [];
-        const data = state.fromAssetList;
-
-        for (let i = 0; i < data?.length; ++i) {
-            const { assetCode: fromAsset, available, assetName, assetDigit } = data?.[i];
-
-            assetItems.push(
-                <AssetItem
-                    key={`asset_item___${i}`}
-                    isChoosed={state.fromAsset === fromAsset}
-                    onClick={() => onClickFromAsset(fromAsset)}
-                    isDisabled={!available}
-                >
-                    <div className={`flex items-center  `}>
-                        <div className={`${!available && 'opacity-20'} w-5 h-5`}>
-                            <AssetLogo assetCode={fromAsset} size={20} />
-                        </div>
-                        <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
-                            <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{fromAsset}</span>
-                            <span className="text-xs leading-4 text-left">{assetName}</span>
-                        </p>
-                    </div>
-                    <div> {available ? formatNumber(available, assetDigit) : '0.0000'}</div>
-                </AssetItem>
-            );
-        }
-
         return (
             <AssetList ref={fromAssetListRef}>
                 <div className="px-4">
@@ -175,8 +149,26 @@ const TransferInternalModule = ({ width, pair }) => {
                     />
                 </div>
                 <ul className="mt-6 max-h-[332px] overflow-y-auto">
-                    {assetItems?.length ? (
-                        assetItems
+                    {state.fromAssetList?.length ? (
+                        state.fromAssetList.map(({ id, assetCode: fromAsset, available, assetName, assetDigit }) => (
+                            <AssetItem
+                                key={`asset_item___${id}`}
+                                isChoosed={state.fromAsset === fromAsset}
+                                onClick={() => onClickFromAsset(fromAsset)}
+                                isDisabled={!available}
+                            >
+                                <div className={`flex items-center  `}>
+                                    <div className={`${!available && 'opacity-20'} w-5 h-5`}>
+                                        <AssetLogo assetCode={fromAsset} size={20} />
+                                    </div>
+                                    <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
+                                        <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{fromAsset}</span>
+                                        <span className="text-xs leading-4 text-left">{assetName}</span>
+                                    </p>
+                                </div>
+                                <div> {available ? formatNumber(available, assetDigit) : '0.0000'}</div>
+                            </AssetItem>
+                        ))
                     ) : (
                         <div className="flex items-center justify-center h-[332px]">
                             <NoData isSearch={!!state.search} />
@@ -192,27 +184,72 @@ const TransferInternalModule = ({ width, pair }) => {
     };
 
     const onSearchToUser = async () => {
-        setState({errorToUser: '', toUser: []})
+        setState({ errorToUser: '', toUser: null, listUserFounded: [] });
 
         // Call api search user here
-        const {status, data} = await fetchAPI({
-            url: API_INTERNAL_FIND_USER ,
+        const { status, data } = await fetchAPI({
+            url: API_INTERNAL_FIND_USER,
             options: { method: 'GET' },
             params: {
                 searchContent: state.searchUser
             }
         });
 
-        if(status === ApiStatus.SUCCESS){
-            if(data?.length === 0) {
-                setState({errorToUser: 'Not user found!'})
+        if (status === ApiStatus.SUCCESS) {
+            if (data?.length === 0) {
+                setState({ errorToUser: 'User not found!' });
             } else {
-                setState({toUser: data})
+                setState({ listUserFounded: data, openAssetList: { to: !state.openAssetList?.to } });
             }
         } else {
-            setState({errorToUser: "Server error"})
+            setState({ errorToUser: 'Server error' });
         }
     };
+
+    const renderListSearchToUser = useCallback(() => {
+        if (!state.openAssetList?.to || !state.listUserFounded) return null;
+
+        return (
+            <AssetList ref={toUserListRef} className="w-full">
+                <ul className="mt-6 max-h-[332px] overflow-y-auto">
+                    {state.listUserFounded?.length ? (
+                        state.listUserFounded.map((userFounded) => (
+                            <AssetItem
+                                key={`user_item_${userFounded?.id}`}
+                                // isChoosed={state.toUser.?.id === userFounded}
+                                onClick={() => setState({ toUser: userFounded, errorToUser: '', openAssetList: {} })}
+
+                                // isDisabled={}
+                            >
+                                <div className={`flex items-center gap-x-3 w-full`}>
+                                    {/* <Image src={item.logo} width={40} height={40} alt={item?.bank_key} className="rounded-full" /> */}
+                                    {userFounded?.avatar ? (
+                                        <img src={userFounded.avatar} alt="avatar_user" className="rounded-full w-10 h-10 bg-cover" />
+                                    ) : (
+                                        <BxsUserCircle size={40} />
+                                    )}
+                                    <div className="w-full">
+                                        <div className="flex justify-between w-full text-base text-txtPrimary dark:text-txtPrimary-dark font-semibold">
+                                            {userFounded?.code}
+                                            <div>
+                                                <span className="txtSecond-1 !text-base">ID: </span>
+                                                {userFounded?.id}
+                                            </div>
+                                        </div>
+                                        <div className="mt-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">{userFounded?.email}</div>
+                                    </div>
+                                </div>
+                            </AssetItem>
+                        ))
+                    ) : (
+                        <div className="flex items-center justify-center h-[332px]">
+                            <NoData isSearch={!!state.search} />
+                        </div>
+                    )}
+                </ul>
+            </AssetList>
+        );
+    }, [state.listUserFounded, state.openAssetList]);
 
     return (
         <>
@@ -229,7 +266,8 @@ const TransferInternalModule = ({ width, pair }) => {
                                     <span>{t('common:from')}</span>
                                     <div className="flex gap-2 items-center">
                                         <span>
-                                            {t('common:available_balance')}: {formatWallet(availabelAsset)}
+                                            {t('common:available_balance')}:{' '}
+                                            {formatWallet(find(state.fromAssetList, { assetCode: state.fromAsset })?.available)}
                                         </span>
                                     </div>
                                 </div>
@@ -281,48 +319,121 @@ const TransferInternalModule = ({ width, pair }) => {
                             </Input>
                             {/* {renderHelperTextFrom()} */}
 
-                            <InputV2
-                                onHitEnterButton={onSearchToUser}
-                                value={state.searchUser}
-                                onChange={(value) => setState({ searchUser: value })}
-                                placeholder={t('common:to')}
-                                suffix={<Search color={colors.darkBlue5} size={16} />}
-                                className="pb-0 w-full"
-                                error={state.errorToUser}
-                                // classNameDivInner=" !bg-white !dark:bg-dark-2"
-                            />
+                            <div className="relative">
+                                <InputV2
+                                    onHitEnterButton={onSearchToUser}
+                                    value={state.searchUser}
+                                    onChange={(value) => (value ? setState({ searchUser: value }) : setState({ searchUser: value, toUser: null }))}
+                                    placeholder={t('common:to')}
+                                    suffix={<Search color={colors.darkBlue5} size={16} />}
+                                    className="pb-0 w-full"
+                                    error={state.errorToUser}
+                                    classNameInput="!text-lg"
+                                    onBlur={() => setState({ errorToUser: '' })}
+                                />
+                                {renderListSearchToUser()}
+                            </div>
                             <div
                                 style={{
                                     backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${isDark ? 'dark' : 'light'}.png`)})`
                                 }}
                                 className="rounded-xl bg-cover bg-center dark:shadow-popover "
                             >
-                                <div className="w-full border p-6 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
+                                <div className="w-full border p-4 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
                                     {state?.toUser?.avatar ? (
-                                        <img src={state?.toUser?.avatar} alt="avatar_user" className="rounded-full w-12 h-12 bg-cover" />
+                                        <img src={state.toUser.avatar} alt="avatar_user" className="rounded-full w-12 h-12 bg-cover" />
                                     ) : (
-                                        <BxsUserCircle size={48} />
+                                        <BxsUserCircle size={50} />
                                     )}
-                                    <div>
-                                        <div className="txtPri-1 pl-[1px]">{state?.toUser?.name ?? '_'}</div>
-                                        <div className="mt-1">{t('payment-method:owner_account')}</div>
+                                    <div className="w-full">
+                                        <div className="txtPri-1 pl-[1px] flex items-center justify-between w-full">
+                                            {state?.toUser?.code ?? 'NAMI code'}
+                                            <div>
+                                                <span className="txtSecond-1 !text-base">ID: </span>
+                                                {state?.toUser?.id ?? '???'}
+                                            </div>
+                                        </div>
+                                        <div className="mt-1 txtSecond-2 items-center flex justify-between w-full">
+                                            {state?.toUser?.email ?? 'Email'}
+                                            <div className="txtPri-1">
+                                                <span className="txtSecond-1 !text-base">Username: </span>
+                                                {state?.toUser?.username ?? state?.toUser?.name ?? '???'}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <InputV2 value={''} onChange={(value) => {}} placeholder={'Content notification'} className="pb-0 w-full " />
+                            <InputV2
+                                value={state?.contentNoti}
+                                onChange={(value) => setState({ contentNoti: value })}
+                                placeholder={'Content notification'}
+                                className="pb-0 w-full"
+                                classNameInput="!text-lg"
+                            />
                         </div>
 
-                        {/*SWAP BUTTON*/}
-                        <ButtonV2 disabled={false} onClick={() => {}} className="mt-8">
+                        {/*TRANSFER BUTTON*/}
+                        <ButtonV2 disabled={!state?.fromAmount || !state?.toUser} onClick={() => setState({ isOpenModalPreview: true })} className="mt-8">
                             {t(`futures:mobile.close_all_positions.preview`)}
                         </ButtonV2>
-                        {/*END:SWAP BUTTON*/}
                     </div>
                 </div>
             </div>
-            {/* {renderPreOrderModal()}
-            {renderAlertNotification()} */}
+            <ModalV2
+                loading={false}
+                className="!max-w-[488px]"
+                isVisible={state.isOpenModalPreview}
+                onBackdropCb={() => setState({ isOpenModalPreview: false })}
+                btnCloseclassName="bg-white dark:bg-dark"
+            >
+                <div className="my-6 text-left font-semibold text-[24px] leading-[30px] text-dark-2 dark:text-gray-4 hover:bg-transparent">
+                    Xác nhận giao dịch
+                </div>
+                <div className="flex flex-col items-start justify-between gap-2">
+                    <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">Số lượng chuyển:</span>
+                    <div className="w-full rounded-md bg-gray-10 dark:bg-dark-2 px-3 py-2 flex justify-between text-base items-center leading-6">
+                        <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{formatPrice(state?.fromAmount)} </span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{state?.fromAsset}</span>
+                    </div>
+                </div>
+
+                <div className="flex flex-col mt-4 items-start justify-between gap-2">
+                    <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">Người nhận:</span>
+                    <div className="w-full rounded-md bg-gray-10 dark:bg-dark-2 px-3 py-2 flex flex-col gap-y-4 text-base items-center leading-6">
+                        <InforTransfer
+                            label="Avatar"
+                            content={
+                                state.toUser?.avatar ? (
+                                    <img src={state.toUser.avatar} alt="avatar_user" className="rounded-full w-8 h-8 bg-cover" />
+                                ) : (
+                                    <BxsUserCircle size={32} />
+                                )
+                            }
+                        />
+                        <InforTransfer label="UID" content={state.toUser?.id ?? '--'} />
+                        <InforTransfer label="Nami ID" content={state.toUser?.code ?? '--'} />
+                        <InforTransfer label="Email" content={state.toUser?.email ?? '--'} />
+                        <InforTransfer label="Name" content={state.toUser?.name ?? '--'} />
+                        <InforTransfer label="Username" content={state.toUser?.username ?? '--'} />
+                    </div>
+                </div>
+
+                {state?.contentNoti && (
+                    <div className="flex flex-col mt-4 items-start justify-between gap-2">
+                        <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">Nội dung Thông báo:</span>
+                        <div className="w-full rounded-md bg-gray-10 dark:bg-dark-2 px-3 py-2 flex justify-between text-base items-center leading-6">
+                            <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{state?.contentNoti}</span>
+                        </div>
+                    </div>
+                )}
+                <div className="mt-10 w-full flex flex-row items-center justify-between">
+                    <ButtonV2 loading={false} onClick={() => {}}>
+                        {t('common:confirm')}
+                    </ButtonV2>
+                </div>
+            </ModalV2>
+            {/* {renderAlertNotification()} */}
         </>
     );
 };
@@ -346,5 +457,12 @@ const AssetItem = styled.li.attrs(({ key, className, isChoosed, onClick }) => ({
     key: key,
     onClick: onClick
 }))``;
+
+const InforTransfer = ({ label, content }) => (
+    <div className="w-full flex justify-between items-center">
+        <span className="text-txtSecondary dark:text-txtSecondary-dark">{label}</span>
+        <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{content}</span>
+    </div>
+);
 
 export default TransferInternalModule;
