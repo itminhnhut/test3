@@ -47,6 +47,9 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 import InputV2 from 'components/common/V2/InputV2';
 import { Search } from 'react-feather';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import axios from 'axios';
+import merge from 'lodash/merge';
+import { API_INTERNAL_FIND_USER } from 'redux/actions/apis';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
@@ -73,7 +76,8 @@ const TransferInternalModule = ({ width, pair }) => {
         openAssetList: {},
         // State for to User
         searchUser: '',
-        toUser: {}
+        toUser: [],
+        errorToUser: ""
     });
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
@@ -187,8 +191,27 @@ const TransferInternalModule = ({ width, pair }) => {
         setState({ fromAsset, search: '', fromErrors: {}, openAssetList: {} });
     };
 
-    const onSearchToUser = () => {
+    const onSearchToUser = async () => {
+        setState({errorToUser: '', toUser: []})
+
         // Call api search user here
+        const {status, data} = await fetchAPI({
+            url: API_INTERNAL_FIND_USER ,
+            options: { method: 'GET' },
+            params: {
+                searchContent: state.searchUser
+            }
+        });
+
+        if(status === ApiStatus.SUCCESS){
+            if(data?.length === 0) {
+                setState({errorToUser: 'Not user found!'})
+            } else {
+                setState({toUser: data})
+            }
+        } else {
+            setState({errorToUser: "Server error"})
+        }
     };
 
     return (
@@ -264,7 +287,8 @@ const TransferInternalModule = ({ width, pair }) => {
                                 onChange={(value) => setState({ searchUser: value })}
                                 placeholder={t('common:to')}
                                 suffix={<Search color={colors.darkBlue5} size={16} />}
-                                className="pb-0 w-full "
+                                className="pb-0 w-full"
+                                error={state.errorToUser}
                                 // classNameDivInner=" !bg-white !dark:bg-dark-2"
                             />
                             <div
