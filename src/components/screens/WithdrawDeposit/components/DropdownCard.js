@@ -52,6 +52,7 @@ const DropdownCard = ({
                             content={selected.content}
                             emptyContent={selected.emptyContent}
                             imgSize={imgSize}
+                            showDropdownIcon={showDropdownIcon}
                             endIcon={
                                 loadingList ? (
                                     <Spinner size={20} color="currentColor" />
