@@ -33,6 +33,7 @@ const InputV2 = ({
     type = 'text',
     disabled = false,
     classNameInput = '',
+    classNameDivInner = '',
     ...restProps
 }) => {
     const { t } = useTranslation();
@@ -72,7 +73,8 @@ const InputV2 = ({
                     {
                         '!border-red': !!error,
                         'text-txtDisabled dark:text-txtDisabled-dark select-none': disabled
-                    }
+                    },
+                    classNameDivInner
                 )}
             >
                 {prefix ? prefix : null}
