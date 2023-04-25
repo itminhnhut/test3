@@ -112,7 +112,6 @@ const TransferInternalModule = ({ width, pair }) => {
         return find(assetConfig, { assetCode: state?.fromAsset });
     }, [assetConfig, state.fromAsset]);
 
-    console.log('config: ', config);
     // AVAILABEL ASSET
     const availabelAsset = useMemo(() => {
         return wallets?.[config?.id]?.value;
@@ -161,7 +160,7 @@ const TransferInternalModule = ({ width, pair }) => {
                                             onBlur={() => setState({ inputHighlighted: null })}
                                             onValueChange={({ value }) => setState({ fromAmount: value })}
                                             placeholder="0.0000"
-                                            decimalScale={getDecimalScale(+config.filters?.[0].stepSize)}
+                                            decimalScale={4}
                                         />
 
                                         <button
@@ -174,10 +173,10 @@ const TransferInternalModule = ({ width, pair }) => {
                                     </div>
                                     <div className="relative flex items-center justify-end">
                                         <div
-                                            className="uppercase cursor-pointer hover:opacity-50 text-teal"
+                                            className="cursor-pointer hover:opacity-50 text-teal"
                                             onClick={() => onMaximumQty('from', availabelAsset?.fromAsset)}
                                         >
-                                            max
+                                            MAX
                                         </div>
                                         <div className="mx-3 w-[1px] bg-divider dark:bg-divider-dark h-6" />
                                         <div
