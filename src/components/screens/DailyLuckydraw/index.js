@@ -16,7 +16,7 @@ import { X } from 'react-feather';
 import colors from 'styles/colors';
 import { useSelector } from 'react-redux';
 import useUpdateEffect from 'hooks/useUpdateEffect';
-
+const maxWidth = 480;
 const DailyLuckydraw = memo(({ visible, onClose }) => {
     const {
         t,
@@ -133,9 +133,9 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
 
     const offset = useMemo(() => {
         if (typeof window === 'undefined') return 0;
-        const width = document.body.clientWidth >= 390 ? 390 : document.body.clientWidth;
-        return width / 4 - 16;
-    }, [dataSource]);
+        const width = document.body.clientWidth >= maxWidth ? maxWidth : document.body.clientWidth;
+        return width / 4 - (isModal ? 32 : 16);
+    }, [dataSource, isModal]);
 
     const renderItem = (rs, idx, count, reverse, length) => {
         return (
@@ -168,7 +168,12 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                                     })}
                                 />
                                 {!isModal && (
-                                    <div className={classNames('w-5 h-5 rounded-full absolute left-1/2 -translate-x-1/2 z-50', {})}>
+                                    <div
+                                        className={classNames('w-5 h-5 rounded-full absolute left-1/2 -translate-x-1/2 z-50', {
+                                            '-ml-2': idx === length - 1 && !isModal,
+                                            'ml-2': idx === 0 && reverse && !isModal
+                                        })}
+                                    >
                                         {idx === 0 && !reverse ? <StartIconDaily /> : <StepActive />}
                                     </div>
                                 )}
@@ -247,7 +252,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
             <>
                 <span className="text-xl md:text-2xl text-teal font-semibold md:text-white">{t('common:luckydraw:take_reward')}</span>
                 {!loading && (
-                    <span className="text-txtSecondary text-sm sm:text-base">
+                    <span className="text-txtSecondary-dark text-sm sm:text-base">
                         {!isAuth
                             ? t('common:luckydraw:login_trade')
                             : t(`common:luckydraw:${claimedAll ? 'reward_desc_trading_over' : can_receive.current ? 'reward_desc' : 'reward_desc_trading'}`, {
@@ -294,7 +299,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
             <div className={classNames('space-y-4', { '!space-y-3 pb-12 px-4 fixed bottom-0 w-full z-10 bg-dark': !isModal })}>
                 <div>
                     {last_updated_at.current && (
-                        <div className={classNames('text-center text-xs mt-3 text-txtSecondary flex flex-col')}>
+                        <div className={classNames('text-center text-xs mt-3 text-txtSecondary-dark flex flex-col')}>
                             <span>{t('common:luckydraw:updated_vol')}</span>
                             <span>
                                 {t('common:luckydraw:last_updated_time')}:&nbsp;&nbsp;
@@ -335,11 +340,11 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                 <MaldivesLayout hideInApp>
                     <Background>
                         <BackgroundImage className="pt-11 px-4">
-                            <img className="h-6 mt-6" src="/images/screen/futures/luckdraw/ic_logo_nami.png" />
+                            <img className="h-6 mt-6" src={getS3Url('/images/screen/futures/luckdraw/ic_logo_nami.png')} />
                             <div className="mt-10 space-y-3 flex flex-col max-w-[230px] sm:max-w-[500px]">{renderTextReward()}</div>
                         </BackgroundImage>
                         <div className="py-8">{renderTextVol()}</div>
-                        <div className={`max-w-[390px] px-4 space-y-6 top-[375px] absolute left-1/2 -translate-x-1/2  w-full pb-[10rem] bg-dark`}>
+                        <div style={{ maxWidth }} className={`px-4 space-y-6 top-[375px] absolute left-1/2 -translate-x-1/2  w-full pb-[10rem] bg-dark`}>
                             {renderReward()}
                         </div>
                         {renderButton()}
@@ -356,12 +361,12 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward }) => {
     return (
         <Modal className="!max-w-[448px]" isMobile isVisible={visible} onBackdropCb={onClose}>
             <div className="flex flex-col items-center pb-6 sm:pb-0">
-                <img className="w-[124px] h-[124px]" src="/images/screen/futures/luckdraw/bg_gift_claimed.png" />
-                <div className="flex items-center text-sm text-txtSecondary mt-6">
+                <img className="w-[124px] h-[124px]" src={getS3Url('/images/screen/futures/luckdraw/bg_gift_claimed.png')} />
+                <div className="flex items-center text-sm text-txtSecondary dark:text-txtSecondary-dark mt-6">
                     <span>ID: #{ticket?.ticket_code}</span>&nbsp;
                     <span className="w-0.5 h-0.5 rounded-full bg-darkBlue-5" />
                     &nbsp;
-                    <span>{formatTime(ticket?.time, 'yyyy-MM-dd HH:mm')}</span>
+                    <span>{formatTime(ticket?.time, 'HH:mm:ss dd/MM/yyyy')}</span>
                 </div>
                 <div className="font-semibold text-xl space-y-3 mt-4 flex flex-col text-center">
                     <span className="">{t('common:luckydraw:claim_success')}</span>
@@ -381,7 +386,7 @@ const Background = styled.div.attrs({
 const BackgroundImage = styled.div.attrs(({ isModal }) => ({
     className: classNames('', { 'relative h-[272px]': !isModal })
 }))`
-    background-image: ${({ isModal }) => `url(/images/screen/futures/luckdraw/bg_lucky${isModal ? '' : '_mb'}.png)`};
+    background-image: ${({ isModal }) => `url(${getS3Url(`/images/screen/futures/luckdraw/bg_lucky${isModal ? '' : '_mb'}.png`)})`};
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
