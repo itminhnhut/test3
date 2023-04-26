@@ -272,8 +272,8 @@ const TransferInternalModule = ({ width, pair }) => {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between bg-transparent font-semibold text-base">
-                                    <div className="flex items-center justify-between">
+                                <div className="flex items-center justify-between bg-transparent font-semibold text-base w-full">
+                                    <div className="flex items-center justify-between w-full">
                                         <NumberFormat
                                             thousandSeparator
                                             allowNegative={false}
@@ -295,24 +295,15 @@ const TransferInternalModule = ({ width, pair }) => {
                                             <CloseIcon onClick={() => setState({ fromAmount: '' })} size={width >= 768 ? 20 : 16} className="cursor-pointer" />
                                         </button>
                                     </div>
-                                    <div className="relative flex items-center justify-end">
-                                        {/* <div
-                                            className="uppercase cursor-pointer hover:opacity-50 text-teal"
-                                            onClick={() => onMaximumQty('from', availabelAsset?.fromAsset)}
-                                        >
-                                            MAX
-                                        </div> */}
-                                        <div className="mx-3 w-[1px] bg-divider dark:bg-divider-dark h-6" />
-                                        <div
-                                            className="flex items-center cursor-pointer select-none"
-                                            onClick={() => setState({ openAssetList: { from: !state.openAssetList?.from } })}
-                                        >
-                                            <AssetLogo assetCode={state.fromAsset} size={24} />
-                                            <span className="mx-2 uppercase">{state.fromAsset}</span>
-                                            <span className={`transition-transform duration-50 ${state.openAssetList?.from && 'rotate-180'}`}>
-                                                <ArrowDropDownIcon size={16} />
-                                            </span>
-                                        </div>
+                                    <div
+                                        className="flex items-center cursor-pointer select-none"
+                                        onClick={() => setState({ openAssetList: { from: !state.openAssetList?.from } })}
+                                    >
+                                        <AssetLogo assetCode={state.fromAsset} size={24} />
+                                        <span className="mx-2 uppercase">{state.fromAsset}</span>
+                                        <span className={`transition-transform duration-50 ${state.openAssetList?.from && 'rotate-180'}`}>
+                                            <ArrowDropDownIcon size={16} />
+                                        </span>
                                     </div>
                                 </div>
                                 {renderFromAssetList()}
