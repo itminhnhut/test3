@@ -464,6 +464,14 @@ export const USER_CP = [
         isNew: true,
         url: PATHS?.PARNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
         child_lv1: []
+    },
+    {
+        key: 6,
+        title: 'daily_reward',
+        localized: 'daily_reward',
+        isNew: true,
+        // url: '/luckydraw/nami',
+        child_lv1: []
     }
     // {
     //     key: 1,

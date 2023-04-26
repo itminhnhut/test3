@@ -378,8 +378,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
         USER_CP.map((item) => {
             if (item.hide) return null;
-            if (item.isPartner && partner_type !== 2) return null;
-            const Icon = NavbarIcons?.[item.localized === 'referral' ? 'profile_referral' : item.localized];
+            if (item.isPartner && partner_type === 0) return null;
             items.push(
                 item.url ? (
                     <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
