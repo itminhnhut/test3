@@ -86,7 +86,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
     const claim = debounce(async () => {
         if (!can_receive.current || !isAuth) {
             if (router.query?.web) {
-                router.push('/');
+                isAuth ? router.push('/') : window.open(getLoginUrl('sso'), '_self');
                 return;
             }
             if (isModal) {
@@ -321,7 +321,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
     const claimedAll = useMemo(() => {
         return dataSource.length > 0 ? metadata.current > dataSource?.[dataSource.length - 1]?.vol_condition && !can_receive.current : false;
     }, [dataSource, showClaim]);
-    console.log(router.query.web);
+
     return (
         <>
             <ModalClaim visible={showClaim} onClose={() => setShowClaim(false)} ticket={dataSource?.[active]} total_reward={total_reward.current} />
