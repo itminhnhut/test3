@@ -84,7 +84,8 @@ const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimu
                 content: selectedPartner && {
                     mainContent: selectedPartner?.name?.toLowerCase(),
                     subContent: <PartnerSubcontent partner={selectedPartner} language={language} t={t} />,
-                    imgSrc: selectedPartner?.avatar
+                    imgSrc: selectedPartner?.avatar,
+                    contentClass:'overflow-x-auto overflow-y-hidden pb-1'
                 },
                 item: (partner) =>
                     selectedPartner && (

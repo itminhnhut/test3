@@ -177,7 +177,7 @@ const CardInput = () => {
                         )}
                     </div>
                     <div className="flex -m-1">
-                        <div className="flex-1 p-1">
+                        <div className="w-3/4 xsm:flex-1 p-1">
                             <TradingInputV2
                                 id="TradingInputV2"
                                 value={loadingRate ? '' : state.amount}

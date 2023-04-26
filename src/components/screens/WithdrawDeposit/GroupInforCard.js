@@ -84,7 +84,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, mode = MODE.USE
                                         {!orderDetail ? (
                                             <Skeletor circle width={80} height={80} />
                                         ) : (
-                                            <img src={orderDetail?.[`${otherMode}Metadata`]?.avatar || DefaultAvatar} className="mb-6 w-20 h-20 rounded-full" />
+                                            <img src={orderDetail?.[`${otherMode}Metadata`]?.avatar || DefaultAvatar} className="mb-6 object-cover w-20 h-20 rounded-full" />
                                         )}
 
                                         <div className="txtPri-1 capitalize font-semibold mb-3">
@@ -102,7 +102,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, mode = MODE.USE
                                                     !orderDetail ? (
                                                         <Skeletor width={100} height={25} />
                                                     ) : renderData ? (
-                                                        <TagV2 key={item.key} type={TYPES.DEFAULT} icon={false} className="dark:!bg-divider-dark">
+                                                        <TagV2 key={item.key} type={TYPES.DEFAULT} icon={false} className=" dark:!bg-divider-dark">
                                                             <div className="flex space-x-2 items-center">
                                                                 {item.icon}
                                                                 <div>{renderData}</div>

@@ -53,14 +53,14 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                         {!orderDetail ? (
                             <Skeletor width="100px" />
                         ) : (
-                            <div className="txtPri-1">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
+                            <div className="txtPri-1 text-right md:text-left">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
                         )}
                     </div>
                 </div>
                 <div className="w-1/2  order-2 md:order-3 md:w-1/3 flex justify-end">
                     <div>
                         <div className="txtSecond-2 text-right mb-3">{t('dw_partner:amount')}</div>
-                        <div className="mt-3 txtPri-3 font-semibold">
+                        <div className="mt-3 txtPri-3 font-semibold text-right ">
                             {!orderDetail ? (
                                 <Skeletor width="200px" height="30px" />
                             ) : (
