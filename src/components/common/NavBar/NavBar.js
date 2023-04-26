@@ -19,7 +19,7 @@ import colors from 'styles/colors';
 import { buildLogoutUrl } from 'src/utils';
 import { useWindowSize } from 'utils/customHooks';
 import { PATHS } from 'constants/paths';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 import classNames from 'classnames';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import LanguageSetting from './LanguageSetting';
@@ -336,7 +336,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     const onClickItemControl = (item) => {
         switch (item?.title) {
             case 'daily_reward':
-                setShowDailyLucky(true);
+                width > 992 ? setShowDailyLucky(true) : router.push('/luckydraw/nami');
                 break;
             default:
                 break;
@@ -519,7 +519,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                 onChangeSpotState={onChangeSpotState}
             />
 
-            <DailyLuckydraw visible={showDailyLucky} onClose={() => setShowDailyLucky(false)} />
+            {width > 992 && <DailyLuckydraw visible={showDailyLucky} onClose={() => setShowDailyLucky(false)} />}
 
             {isFromFrame && (
                 <div

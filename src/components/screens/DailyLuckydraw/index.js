@@ -16,8 +16,22 @@ import { X } from 'react-feather';
 import colors from 'styles/colors';
 import { useSelector } from 'react-redux';
 import useUpdateEffect from 'hooks/useUpdateEffect';
+import { useRouter } from 'next/router';
 const maxWidth = 480;
+
+const initTickets = [
+    { vol_condition: 0, value: 0, start: true },
+    { vol_condition: 10000000, time: '2023-04-26T14:40:00.157+00:00', ticket_code: null, value: 1000, can_receive: false },
+    { vol_condition: 20000000, time: '2023-04-26T14:40:00.157+00:00', ticket_code: 'abc123', value: 2000, can_receive: false },
+    { vol_condition: 50000000, time: '2023-04-26T14:40:00.157+00:00', ticket_code: 'abc123', value: 5000, can_receive: false },
+    { vol_condition: 100000000, time: '2023-04-26T14:40:00.157+00:00', ticket_code: 'abc123', value: 10000, can_receive: false },
+    { vol_condition: 200000000, time: '2023-04-26T14:40:00.157+00:00', ticket_code: 'abc123', value: 20000, can_receive: false },
+    { vol_condition: 500000000, time: '2023-04-26T14:40:00.157+00:00', ticket_code: 'abc123', value: 50000, can_receive: false },
+    { vol_condition: 1000000000, time: '2023-04-26T14:40:00.157+00:00', ticket_code: 'abc123', value: 100000, can_receive: false }
+];
+
 const DailyLuckydraw = memo(({ visible, onClose }) => {
+    const router = useRouter();
     const {
         t,
         i18n: { language }
@@ -28,11 +42,11 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
     const isModal = width >= 820;
     const [showClaim, setShowClaim] = useState(false);
     const metadata = useRef(0);
-    const [dataSource, setDataSource] = useState([]);
+    const [dataSource, setDataSource] = useState(initTickets);
     const can_receive = useRef(false);
     const total_reward = useRef(0);
     const last_updated_at = useRef(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const getIcon = (act) => {
         const size = isModal ? 36 : xs ? 14 : 20;
@@ -43,37 +57,16 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
         }
     };
 
-    const initTickets = useMemo(() => {
-        let rs = [];
-        for (let i = 0; i < 8; i++) {
-            rs.push({
-                can_receive: false,
-                ticket_code: null,
-                time: null,
-                start: i === 0,
-                value: 0,
-                vol_condition: 0
-            });
-        }
-        return rs;
-    }, []);
-
     useEffect(() => {
-        getTickets();
+        if (isAuth) getTickets();
     }, [isAuth]);
 
     useUpdateEffect(() => {
         if (visible) getTickets();
     }, [visible]);
 
-    const timer = useRef(null);
     const getTickets = async () => {
-        clearTimeout(timer.current);
         try {
-            if (!isAuth) {
-                setDataSource(initTickets);
-                return;
-            }
             const { data } = await fetchApi({
                 url: API_GET_TICKET_DETAIL
             });
@@ -87,14 +80,15 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
         } catch (e) {
             console.log(e);
         } finally {
-            timer.current = setTimeout(() => {
-                setLoading(false);
-            }, 800);
         }
     };
 
     const claim = debounce(async () => {
         if (!can_receive.current || !isAuth) {
+            if (router.query?.web) {
+                router.push('/');
+                return;
+            }
             if (isModal) {
                 isAuth ? onClose && onClose() : window.open(getLoginUrl('sso'), '_self');
                 return;
@@ -159,7 +153,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                                                 ? offset - (idx === 0 && !reverse ? 20 : 40) + percent * offset
                                                 : `calc(100% + ${isModal ? '0px' : '16px'})`
                                     }}
-                                    className={classNames(`h-[3px] transition absolute z-10 bg-teal ticket_line_act`, {
+                                    className={classNames(`h-[3px] transition absolute z-[1] bg-teal ticket_line_act`, {
                                         'rounded-l-xl': idx === 0 && !reverse,
                                         'rounded-r-xl': (active === count || idx === length - 1) && !reverse,
                                         'right-0 rounded-l-xl': active === count && reverse,
@@ -169,7 +163,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                                 />
                                 {!isModal && (
                                     <div
-                                        className={classNames('w-5 h-5 rounded-full absolute left-1/2 -translate-x-1/2 z-50', {
+                                        className={classNames('w-5 h-5 rounded-full absolute left-1/2 -translate-x-1/2 z-[2]', {
                                             '-ml-2': idx === length - 1 && !isModal,
                                             'ml-2': idx === 0 && reverse && !isModal
                                         })}
@@ -181,7 +175,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                         ) : (
                             <div
                                 className={classNames(
-                                    'w-5 h-5 rounded-full absolute left-1/2 -translate-x-1/2 text-[10px] font-semibold flex items-center justify-center z-10',
+                                    'w-5 h-5 rounded-full absolute left-1/2 -translate-x-1/2 text-[10px] font-semibold flex items-center justify-center z-[1]',
                                     {
                                         'border border-dark-2 text-dark-2 bg-[#000200]': active < count,
                                         '-ml-2': idx === length - 1 && !isModal,
@@ -197,7 +191,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                 <Ticket
                     style={{ width: offset }}
                     active={rs.start || active >= count}
-                    className={classNames('relative m-auto py-4', { '!py-2': xs, '!mt-7 ': !isModal, '-top-1/2 translate-y-2 z-50': isModal })}
+                    className={classNames('relative m-auto py-4', { '!py-2': xs, '!mt-7 ': !isModal, '-top-1/2 translate-y-2 z-[2]': isModal })}
                 >
                     <div className={isModal ? 'absolute top-[-18px]' : ''}>{getIcon(active >= count || rs.start)}</div>
                     <span
@@ -280,7 +274,11 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                         top: e.top - (isModal ? 12 : 12)
                     })}
                 />
-                <div className="px-6 md:px-3 py-[10px] text-sm bg-teal/10 w-max rounded-full space-x-3 m-auto mb-10 sm:mb-12">
+                <div
+                    className={classNames('px-6 md:px-3 py-[10px] text-sm bg-teal/10 w-max rounded-full space-x-3 m-auto sm:mb-12', {
+                        'mb-10': !router.query?.web
+                    })}
+                >
                     <span
                         data-for="volume_tooltip"
                         data-tip={t('common:luckydraw:volume_tooltip')}
@@ -296,7 +294,12 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
 
     const renderButton = () => {
         return (
-            <div className={classNames('space-y-4', { '!space-y-3 pb-12 px-4 fixed bottom-0 w-full z-10 bg-dark': !isModal })}>
+            <div
+                className={classNames('space-y-4', {
+                    '!space-y-3 pb-12 px-4 w-full z-[1] bg-dark bottom-0 fixed': !isModal && !router.query?.web,
+                    'px-4': router.query?.web
+                })}
+            >
                 <div>
                     {last_updated_at.current && (
                         <div className={classNames('text-center text-xs mt-3 text-txtSecondary-dark flex flex-col')}>
@@ -318,7 +321,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
     const claimedAll = useMemo(() => {
         return dataSource.length > 0 ? metadata.current > dataSource?.[dataSource.length - 1]?.vol_condition && !can_receive.current : false;
     }, [dataSource, showClaim]);
-
+    console.log(router.query.web);
     return (
         <>
             <ModalClaim visible={showClaim} onClose={() => setShowClaim(false)} ticket={dataSource?.[active]} total_reward={total_reward.current} />
@@ -337,14 +340,20 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                     </BackgroundImage>
                 </Modal>
             ) : (
-                <MaldivesLayout hideInApp>
+                <MaldivesLayout hideInApp={!router.query?.web}>
                     <Background>
                         <BackgroundImage className="pt-11 px-4">
                             <img className="h-6 mt-6" src={getS3Url('/images/screen/futures/luckdraw/ic_logo_nami.png')} />
                             <div className="mt-10 space-y-3 flex flex-col max-w-[230px] sm:max-w-[500px]">{renderTextReward()}</div>
                         </BackgroundImage>
                         <div className="py-8">{renderTextVol()}</div>
-                        <div style={{ maxWidth }} className={`px-4 space-y-6 top-[375px] absolute left-1/2 -translate-x-1/2  w-full pb-[10rem] bg-dark`}>
+                        <div
+                            style={{ maxWidth }}
+                            className={classNames(`px-4 space-y-6 top-[375px] w-full bg-dark`, {
+                                'absolute pb-[10rem] left-1/2 -translate-x-1/2 ': !router.query?.web,
+                                'mb-8': router.query?.web
+                            })}
+                        >
                             {renderReward()}
                         </div>
                         {renderButton()}

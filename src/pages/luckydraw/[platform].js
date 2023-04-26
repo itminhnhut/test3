@@ -14,7 +14,7 @@ const Platform = ({ platform }) => {
 export const getServerSideProps = async ({ locale, params }) => ({
     props: {
         platform: params?.platform,
-        ...(await serverSideTranslations(locale, ['common', 'nao']))
+        ...(await serverSideTranslations(locale, ['common', 'nao', 'navbar']))
     }
 });
 export default Platform;
