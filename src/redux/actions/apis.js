@@ -319,3 +319,5 @@ export const API_CHECK_LIMIT_WITHDRAW = API_V3_PREFIX + 'spot/partner_order_limi
 
 // internal
 export const API_INTERNAL_FIND_USER = API_V3_PREFIX + 'spot/internal-find-user';
+export const API_INTERNAL_TRANSFER= API_V3_PREFIX + 'spot/internal-transfer';
+export const API_INTERNAL_TRANSFER_HISTORY = API_V3_PREFIX + 'spot/internal-transfer-history';

@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic';
 import { getS3Url } from 'redux/actions/utils';
 import Image from 'next/image';
 import TransferInternalModule from 'components/screens/InternalService/TransferInternalModule';
+import TransferInternalHistory from 'components/screens/InternalService/TransferInternalHistory';
 
 const MaldivesLayout = dynamic(() => import('components/common/layouts/MaldivesLayout'), { ssr: false });
 // const LayoutMobile = dynamic(() => import('components/common/layouts/LayoutMobile'), { ssr: false });
@@ -39,7 +40,7 @@ const TransferInternal = () => {
                     <div className="m-auto flex justify-center">
                         <TransferInternalModule width={width} pair={pair} />
                     </div>
-                    {/* <SwapHistory width={width} /> */}
+                    <TransferInternalHistory width={width} />
                 </div>
             </div>
         </MaldivesLayout>
@@ -49,7 +50,7 @@ const TransferInternal = () => {
 export async function getStaticProps({ locale }) {
     return {
         props: {
-            ...(await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'convert', 'error', 'futures']))
+            ...(await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'convert', 'error', 'futures', 'transaction-history']))
         }
     };
 }

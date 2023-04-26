@@ -49,7 +49,9 @@ import { Search } from 'react-feather';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import axios from 'axios';
 import merge from 'lodash/merge';
-import { API_INTERNAL_FIND_USER } from 'redux/actions/apis';
+import { API_INTERNAL_FIND_USER, API_INTERNAL_TRANSFER } from 'redux/actions/apis';
+import TextArea from 'components/common/V2/InputV2/TextArea';
+import toast from 'utils/toast';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
@@ -82,11 +84,15 @@ const TransferInternalModule = ({ width, pair }) => {
         errorToUser: '',
 
         // State for noti
-        contentNoti: '',
+        contentNotiVi: '',
+        contentNotiEn: '',
 
         // State for Modal preview
-        isOpenModalPreview: false
+        isOpenModalPreview: false,
+        loadingTransfer: false
     });
+
+    const auth = useSelector((state) => state.auth.user) || null;
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     // Get state from Rdx
@@ -251,6 +257,45 @@ const TransferInternalModule = ({ width, pair }) => {
         );
     }, [state.listUserFounded, state.openAssetList]);
 
+    useEffect(() => {
+        if(!state.toUser) return;
+        if(state?.toUser?.code === auth.code)
+            setState({errorToUser: "Không thể tự chuyển cho chính mình!", toUser: null})
+    }, [state.toUser])
+
+    const handleConfirmTransfer = () => {
+        setState({loadingTransfer: true})
+        fetchAPI({
+            url: API_INTERNAL_TRANSFER,
+            options: {
+                method: 'POST'
+            },
+            params: {
+                assetCode: state.fromAsset,
+                amount: state.fromAmount,
+                toUserId: state.toUser.id,
+                noteVi: state.contentNotiVi,
+                noteEn: state.contentNotiEn
+            }
+        })
+            .then((res) => {
+                if (res.status === ApiStatus.SUCCESS) {
+                    toast({ text: "Chuyển thành công", type: 'success' });
+                    // fetchListUserBank();
+                } else {
+                    console.log("___error: ", res);
+                    toast({ text: "Có lỗi", type: 'error' });
+                }
+            })
+            .catch((e) => {
+                toast({ text: t('error:COMMON_ERROR'), type: 'error' });
+            })
+            .finally(() => {
+                setState({loadingTransfer: false})
+            });
+    }
+
+
     return (
         <>
             <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
@@ -355,9 +400,19 @@ const TransferInternalModule = ({ width, pair }) => {
                                 </div>
                             </div>
 
-                            <InputV2
-                                value={state?.contentNoti}
-                                onChange={(value) => setState({ contentNoti: value })}
+                            <TextArea
+                                label="Nội dung thông báo(Tiếng Việt)"
+                                value={state?.contentNotiVi}
+                                onChange={(value) => setState({ contentNotiVi: value })}
+                                placeholder={'Content notification'}
+                                className="pb-0 w-full"
+                                classNameInput="!text-lg"
+                            />
+
+                            <TextArea
+                                label="Nội dung thông báo(Tiếng Anh)"
+                                value={state?.contentNotiEn}
+                                onChange={(value) => setState({ contentNotiEn: value })}
                                 placeholder={'Content notification'}
                                 className="pb-0 w-full"
                                 classNameInput="!text-lg"
@@ -410,16 +465,24 @@ const TransferInternalModule = ({ width, pair }) => {
                     </div>
                 </div>
 
-                {state?.contentNoti && (
+                {state?.contentNotiVi && (
                     <div className="flex flex-col mt-4 items-start justify-between gap-2">
-                        <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">Nội dung Thông báo:</span>
+                        <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">Nội dung Thông báo (Tiếng Việt):</span>
                         <div className="w-full rounded-md bg-gray-10 dark:bg-dark-2 px-3 py-2 flex justify-between text-base items-center leading-6">
-                            <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{state?.contentNoti}</span>
+                            <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{state?.contentNotiVi}</span>
+                        </div>
+                    </div>
+                )}
+                {state?.contentNotiEn && (
+                    <div className="flex flex-col mt-4 items-start justify-between gap-2">
+                        <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">Nội dung Thông báo (Tiếng Anh):</span>
+                        <div className="w-full rounded-md bg-gray-10 dark:bg-dark-2 px-3 py-2 flex justify-between text-base items-center leading-6">
+                            <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{state?.contentNotiEn}</span>
                         </div>
                     </div>
                 )}
                 <div className="mt-10 w-full flex flex-row items-center justify-between">
-                    <ButtonV2 loading={false} onClick={() => {}}>
+                    <ButtonV2 loading={state.loadingTransfer} onClick={handleConfirmTransfer}>
                         {t('common:confirm')}
                     </ButtonV2>
                 </div>
