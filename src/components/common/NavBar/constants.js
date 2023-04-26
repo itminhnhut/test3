@@ -178,6 +178,14 @@ export const MOBILE_NAV_DATA = [
     //     ]
     // },
     {
+        key: 'daily_reward',
+        title: 'daily_reward',
+        localized: 'user.daily_reward',
+        isNew: true,
+        url: '/luckydraw/nami?web=true',
+        child_lv1: []
+    },
+    {
         key: 1,
         title: 'Market',
         localized: 'market',
@@ -452,7 +460,7 @@ export const USER_CP = [
         title: 'daily_reward',
         localized: 'daily_reward',
         isNew: true,
-        // url: '/account/reward-center',
+        // url: '/luckydraw/nami',
         child_lv1: []
     }
     // {
