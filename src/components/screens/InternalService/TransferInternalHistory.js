@@ -1,27 +1,22 @@
 import { useState, useMemo } from 'react';
 import { useAsync } from 'react-use';
-import { API_GET_SWAP_HISTORY, API_INTERNAL_TRANSFER_HISTORY } from 'redux/actions/apis';
+import { API_INTERNAL_TRANSFER_HISTORY } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import { ApiStatus } from 'redux/actions/const';
 import { formatPrice, formatTime, getAssetCode, getLoginUrl, getS3Url, shortHashAddress } from 'redux/actions/utils';
-import { RETABLE_SORTBY } from 'src/components/common/ReTable';
 import fetchApi from '../../../utils/fetch-api';
-import Skeletor from 'src/components/common/Skeletor';
 import { useSelector } from 'react-redux';
 import TableV2 from 'components/common/V2/TableV2';
-import { SwapIcon } from 'components/svg/SvgIcon';
-import Link from 'next/link';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { find } from 'lodash';
-
-const columnsConfig = ['_id', 'asset', 'created_at', 'amount', 'status'];
 
 const TransferInternalHistory = ({ width }) => {
     const [state, set] = useState({
         page: 0,
         pageSize: LIMIT_ROW,
         loading: false,
-        histories: null
+        histories: null,
+        hasNext: false
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const auth = useSelector((state) => state.auth?.user);
@@ -37,7 +32,7 @@ const TransferInternalHistory = ({ width }) => {
         try {
             const {
                 status,
-                data: { orders: histories }
+                data: { orders: histories , hasNext}
             } = await fetchApi({
                 url: API_INTERNAL_TRANSFER_HISTORY,
                 options: { method: 'GET' },
@@ -45,7 +40,7 @@ const TransferInternalHistory = ({ width }) => {
             });
 
             if (status === ApiStatus.SUCCESS && histories) {
-                setState({ histories });
+                setState({ histories , hasNext});
             }
         } catch (e) {
             console.log(`Can't get swap history `, e);
@@ -124,7 +119,7 @@ const TransferInternalHistory = ({ width }) => {
 
     return (
         <div className="m-auto mt-20">
-            <div className="text-[24px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark text-left">{t('convert:history')}</div>
+            <div className="text-[24px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark text-left">Lịch sử giao dịch</div>
             {auth ? (
                 <div className="mt-8 pt-4 bg-white dark:bg-dark dark:border dark:border-divider-dark rounded-xl">
                     <TableV2
@@ -139,7 +134,7 @@ const TransferInternalHistory = ({ width }) => {
                         isSearch={!!state.search}
                         pagingClassName="border-none"
                         height={350}
-                        pagingPrevNext={{ page: state.page, hasNext: state.histories?.length, onChangeNextPrev: onChangePagination, language }}
+                        pagingPrevNext={{ page: state.page, hasNext: state.hasNext, onChangeNextPrev: onChangePagination, language }}
                         tableStyle={{ fontSize: '16px', padding: '16px' }}
                     />
                 </div>

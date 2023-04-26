@@ -2,65 +2,33 @@ import NumberFormat from 'react-number-format';
 import AssetLogo from 'src/components/wallet/AssetLogo';
 import fetchAPI from 'utils/fetch-api';
 import colors from 'styles/colors';
-import * as Error from '../../../redux/actions/apiError';
-import Skeletor from 'src/components/common/Skeletor';
 import useOutsideClick from 'hooks/useOutsideClick';
-import { WalletType } from 'redux/actions/const';
-import { EXCHANGE_ACTION } from 'pages/wallet';
 
-import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useAsync, useDebounce } from 'react-use';
-import { Trans, useTranslation } from 'next-i18next';
-import { find, orderBy, result, uniqBy } from 'lodash';
-import {
-    formatPrice,
-    formatSwapRate,
-    formatWallet,
-    getDecimalScale,
-    getLoginUrl,
-    countDecimals,
-    walletLinkBuilder,
-    safeToFixed,
-    dwLinkBuilder,
-    getS3Url,
-    formatNumber
-} from 'redux/actions/utils';
+import { createRef, useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'next-i18next';
+import { find, orderBy, throttle } from 'lodash';
+import { formatPrice, formatWallet, getS3Url, formatNumber } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { ApiStatus } from 'redux/actions/const';
-import { PATHS } from 'constants/paths';
-import { roundToDown } from 'round-to';
-import router from 'next/router';
 import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
-import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 // import SVG
-import SvgAddCircle from 'components/svg/SvgAddCircle';
-import SwapWarning from 'components/svg/SwapWarning';
 import { CloseIcon, SyncAltIcon, ArrowDropDownIcon, BxsUserCircle } from 'components/svg/SvgIcon';
 import NoData from 'components/common/V2/TableV2/NoData';
 import styled from 'styled-components';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
-import { TYPE_DW } from '../WithdrawDeposit/constants';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
 import InputV2 from 'components/common/V2/InputV2';
 import { Search } from 'react-feather';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import axios from 'axios';
-import merge from 'lodash/merge';
 import { API_INTERNAL_FIND_USER, API_INTERNAL_TRANSFER } from 'redux/actions/apis';
 import TextArea from 'components/common/V2/InputV2/TextArea';
 import toast from 'utils/toast';
-
-const FEE_RATE = 0 / 100;
-const DEBOUNCE_TIMEOUT = 500;
 
 const DEFAULT_PAIR = {
     fromAsset: 'VNDC',
     toAsset: 'USDT'
 };
-const REJECT_PREORDER = ['BROKER_ERROR', 'PRICE_CHANGED', 'INVALID_SWAP_REQUEST_ID', 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET'];
 
 const fromAssetRef = createRef();
 
@@ -189,7 +157,13 @@ const TransferInternalModule = ({ width, pair }) => {
         setState({ fromAsset, search: '', fromErrors: {}, openAssetList: {} });
     };
 
-    const onSearchToUser = async () => {
+    useEffect(() => {
+        if (!state.searchUser) return setState({ errorToUser: '', toUser: null, listUserFounded: [], openAssetList: { to: false } });
+        handleSearchToUser();
+    }, [state.searchUser]);
+
+    const handleSearchToUser = throttle(async () => {
+        if (!state.searchUser) return;
         setState({ errorToUser: '', toUser: null, listUserFounded: [] });
 
         // Call api search user here
@@ -205,12 +179,12 @@ const TransferInternalModule = ({ width, pair }) => {
             if (data?.length === 0) {
                 setState({ errorToUser: 'User not found!' });
             } else {
-                setState({ listUserFounded: data, openAssetList: { to: !state.openAssetList?.to } });
+                setState({ listUserFounded: data, openAssetList: { to: true } });
             }
         } else {
             setState({ errorToUser: 'Server error' });
         }
-    };
+    }, 200);
 
     const renderListSearchToUser = useCallback(() => {
         if (!state.openAssetList?.to || !state.listUserFounded) return null;
@@ -228,9 +202,18 @@ const TransferInternalModule = ({ width, pair }) => {
                                 // isDisabled={}
                             >
                                 <div className={`flex items-center gap-x-3 w-full`}>
+                                    {console.log(userFounded)}
                                     {/* <Image src={item.logo} width={40} height={40} alt={item?.bank_key} className="rounded-full" /> */}
                                     {userFounded?.avatar ? (
-                                        <img src={userFounded.avatar} alt="avatar_user" className="rounded-full w-10 h-10 bg-cover" />
+                                        <img
+                                            src={
+                                                userFounded?.avatar?.includes?.('https://') || userFounded?.avatar?.includes?.('http://')
+                                                    ? userFounded.avatar
+                                                    : getS3Url(userFounded?.avatar)
+                                            }
+                                            alt="avatar_user"
+                                            className="rounded-full w-10 h-10 bg-cover"
+                                        />
                                     ) : (
                                         <BxsUserCircle size={40} />
                                     )}
@@ -258,13 +241,12 @@ const TransferInternalModule = ({ width, pair }) => {
     }, [state.listUserFounded, state.openAssetList]);
 
     useEffect(() => {
-        if(!state.toUser) return;
-        if(state?.toUser?.code === auth.code)
-            setState({errorToUser: "Không thể tự chuyển cho chính mình!", toUser: null})
-    }, [state.toUser])
+        if (!state.toUser) return;
+        if (state?.toUser?.code === auth.code) setState({ errorToUser: 'Không thể tự chuyển cho chính mình!', toUser: null });
+    }, [state.toUser]);
 
     const handleConfirmTransfer = () => {
-        setState({loadingTransfer: true})
+        setState({ loadingTransfer: true });
         fetchAPI({
             url: API_INTERNAL_TRANSFER,
             options: {
@@ -280,32 +262,31 @@ const TransferInternalModule = ({ width, pair }) => {
         })
             .then((res) => {
                 if (res.status === ApiStatus.SUCCESS) {
-                    toast({ text: "Chuyển thành công", type: 'success' });
+                    toast({ text: 'Chuyển thành công', type: 'success' });
                     // fetchListUserBank();
                 } else {
-                    console.log("___error: ", res);
-                    toast({ text: "Có lỗi", type: 'error' });
+                    console.log('___error: ', res);
+                    toast({ text: 'Có lỗi', type: 'error' });
                 }
             })
             .catch((e) => {
                 toast({ text: t('error:COMMON_ERROR'), type: 'error' });
             })
             .finally(() => {
-                setState({loadingTransfer: false})
+                setState({ loadingTransfer: false });
             });
-    }
-
+    };
 
     return (
         <>
             <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
                 <div className="relative min-w-[488px] max-w-[508px] rounded-xl">
                     <div className="flex flex-col justify-center items-center">
-                        <span className="text-[32px] leading-[38px] font-semibold">Transfer internal</span>
+                        <span className="text-[32px] leading-[38px] font-semibold">Transfer Internal</span>
                     </div>
                     <div className="mt-8 p-6 rounded-xl shadow-card_light dark:border dark:border-divider-dark dark:bg-dark bg-white">
                         {/*INPUT WRAPPER*/}
-                        <div className="relative flex flex-col gap-y-4">
+                        <div className="relative flex flex-col gap-y-6">
                             <Input isFocus={state.inputHighlighted === 'from'}>
                                 <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
                                     <span>{t('common:from')}</span>
@@ -357,7 +338,8 @@ const TransferInternalModule = ({ width, pair }) => {
 
                             <div className="relative">
                                 <InputV2
-                                    onHitEnterButton={onSearchToUser}
+                                    onFocus={handleSearchToUser}
+                                    onHitEnterButton={handleSearchToUser}
                                     value={state.searchUser}
                                     onChange={(value) => (value ? setState({ searchUser: value }) : setState({ searchUser: value, toUser: null }))}
                                     placeholder={t('common:to')}
@@ -373,49 +355,43 @@ const TransferInternalModule = ({ width, pair }) => {
                                 style={{
                                     backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${isDark ? 'dark' : 'light'}.png`)})`
                                 }}
-                                className="rounded-xl bg-cover bg-center dark:shadow-popover "
+                                className="rounded-xl bg-cover bg-center dark:shadow-popover"
                             >
                                 <div className="w-full border p-4 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
                                     {state?.toUser?.avatar ? (
-                                        <img src={state.toUser.avatar} alt="avatar_user" className="rounded-full w-12 h-12 bg-cover" />
+                                        <img src={state.toUser.avatar} alt="avatar_user" className="rounded-full w-16 h-16 bg-cover" />
                                     ) : (
-                                        <BxsUserCircle size={50} />
+                                        <BxsUserCircle size={64} />
                                     )}
                                     <div className="w-full">
                                         <div className="txtPri-1 pl-[1px] flex items-center justify-between w-full">
-                                            {state?.toUser?.code ?? 'NAMI code'}
-                                            <div>
-                                                <span className="txtSecond-1 !text-base">ID: </span>
-                                                {state?.toUser?.id ?? '???'}
-                                            </div>
+                                            <span className="txtSecond-1 !text-base">ID: </span>
+                                            {state?.toUser?.id ?? '???'}
                                         </div>
-                                        <div className="mt-1 txtSecond-2 items-center flex justify-between w-full">
-                                            {state?.toUser?.email ?? 'Email'}
-                                            <div className="txtPri-1">
-                                                <span className="txtSecond-1 !text-base">Username: </span>
-                                                {state?.toUser?.username ?? state?.toUser?.name ?? '???'}
-                                            </div>
+                                        <div className="mt-1 txtPri-1 items-center flex justify-between w-full">
+                                            <span className="txtSecond-1 !text-base">Nami ID: </span>
+                                            {state?.toUser?.code ?? '???'}
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <TextArea
-                                label="Nội dung thông báo(Tiếng Việt)"
+                                label="Nội dung thông báo (Tiếng Việt)"
                                 value={state?.contentNotiVi}
                                 onChange={(value) => setState({ contentNotiVi: value })}
                                 placeholder={'Content notification'}
                                 className="pb-0 w-full"
-                                classNameInput="!text-lg"
+                                classNameInput="!text-lg h-24"
                             />
 
                             <TextArea
-                                label="Nội dung thông báo(Tiếng Anh)"
+                                label="Nội dung thông báo (Tiếng Anh)"
                                 value={state?.contentNotiEn}
                                 onChange={(value) => setState({ contentNotiEn: value })}
                                 placeholder={'Content notification'}
                                 className="pb-0 w-full"
-                                classNameInput="!text-lg"
+                                classNameInput="!text-lg h-24"
                             />
                         </div>
 

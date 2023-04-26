@@ -34,7 +34,7 @@ const TextArea = ({
     disabled = false,
     classNameInput = '',
     classNameDivInner = '',
-    rows = 5,
+    rows = 7,
     ...restProps
 }) => {
     const { t } = useTranslation();
