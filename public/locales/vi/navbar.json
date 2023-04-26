@@ -33,7 +33,8 @@
             "api_mng": "Quản lý API",
             "logout": "Đăng xuất",
             "partner": "Đối tác",
-            "payment_method": "Phương thức thanh toán"
+            "payment_method": "Phương thức thanh toán",
+            "daily_reward": "Thưởng giao dịch hàng ngày"
         }
     },
     "submenu": {

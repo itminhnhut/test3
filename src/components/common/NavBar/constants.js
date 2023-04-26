@@ -447,7 +447,14 @@ export const USER_CP = [
         url: '/reference',
         child_lv1: []
     },
-
+    {
+        key: 6,
+        title: 'daily_reward',
+        localized: 'daily_reward',
+        isNew: true,
+        // url: '/account/reward-center',
+        child_lv1: []
+    }
     // {
     //     key: 3,
     //     title: 'partner',

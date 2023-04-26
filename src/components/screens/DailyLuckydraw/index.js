@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useMemo, memo } from 'react';
 import styled from 'styled-components';
 import { useWindowSize } from 'utils/customHooks';
-import classnames from 'classnames';
-import { emitWebViewEvent, getS3Url, formatCurrency, formatNumber, formatTime, getLoginUrl } from 'redux/actions/utils';
 import classNames from 'classnames';
+import { emitWebViewEvent, getS3Url, formatCurrency, formatNumber, formatTime, getLoginUrl } from 'redux/actions/utils';
 import { ActiveIconNami, InActiveIconNami, StepActive, StartIconDaily } from 'components/screens/Nao/Luckydraw/LuckyIcon';
 import { useTranslation } from 'next-i18next';
 import { API_GET_TICKET_DETAIL, API_CLAIM_TICKET } from 'redux/actions/apis';
@@ -16,8 +15,9 @@ import debounce from 'lodash/debounce';
 import { X } from 'react-feather';
 import colors from 'styles/colors';
 import { useSelector } from 'react-redux';
+import useUpdateEffect from 'hooks/useUpdateEffect';
 
-const Luckydraw = ({ visible, onClose }) => {
+const DailyLuckydraw = memo(({ visible, onClose }) => {
     const {
         t,
         i18n: { language }
@@ -60,7 +60,11 @@ const Luckydraw = ({ visible, onClose }) => {
 
     useEffect(() => {
         getTickets();
-    }, [isAuth, visible]);
+    }, [isAuth]);
+
+    useUpdateEffect(() => {
+        if (visible) getTickets();
+    }, [visible]);
 
     const timer = useRef(null);
     const getTickets = async () => {
@@ -197,7 +201,7 @@ const Luckydraw = ({ visible, onClose }) => {
                             '!text-xs': xs
                         })}
                     >
-                        {rs.start ? t('nao:luckydraw:start') : !loading ? `+${formatNumber(rs.value)}` : '-'}
+                        {rs.start ? t('common:luckydraw:start') : !loading ? `+${formatNumber(rs.value)}` : '-'}
                     </span>
                     <span className={classNames('text-xs text-txtSecondary', { '!text-txtDisabled-dark': active < count, '!text-[10x]': xs })}>
                         {!loading ? formatCurrency(rs.vol_condition, 0, language === 'vi') : '-'}
@@ -241,12 +245,12 @@ const Luckydraw = ({ visible, onClose }) => {
     const renderTextReward = () => {
         return (
             <>
-                <span className="text-xl md:text-2xl text-teal font-semibold md:text-white">{t('nao:luckydraw:take_reward')}</span>
+                <span className="text-xl md:text-2xl text-teal font-semibold md:text-white">{t('common:luckydraw:take_reward')}</span>
                 {!loading && (
                     <span className="text-txtSecondary text-sm sm:text-base">
                         {!isAuth
-                            ? t('nao:luckydraw:login_trade')
-                            : t(`nao:luckydraw:${claimedAll ? 'reward_desc_trading_over' : can_receive.current ? 'reward_desc' : 'reward_desc_trading'}`, {
+                            ? t('common:luckydraw:login_trade')
+                            : t(`common:luckydraw:${claimedAll ? 'reward_desc_trading_over' : can_receive.current ? 'reward_desc' : 'reward_desc_trading'}`, {
                                   vol: formatNumber(dataSource?.[active + 1]?.vol_condition - metadata.current) + ' VNDC',
                                   value: formatNumber(dataSource?.[active + 1]?.value || 0) + ' VNDC'
                               })}
@@ -258,12 +262,30 @@ const Luckydraw = ({ visible, onClose }) => {
 
     const renderTextVol = () => {
         return (
-            <div className="px-6 md:px-3 py-[10px] text-sm bg-teal/10 w-max rounded-full space-x-3 m-auto mb-10 sm:mb-12">
-                <span data-for="volume_tooltip" data-tip={t('nao:luckydraw:volume_tooltip')} className="text-white border-dashed border-b border-divider">
-                    {t('nao:luckydraw:vol_trade')}
-                </span>
-                <span className="text-teal font-semibold">{formatNumber(metadata.current)} VNDC</span>
-            </div>
+            <>
+                <Tooltip
+                    id={'volume_tooltip'}
+                    place="top"
+                    effect="solid"
+                    isV3
+                    className="max-w-[300px] !bg-dark-1"
+                    arrowColor="transparent"
+                    overridePosition={(e) => ({
+                        left: isModal ? e.left : 32,
+                        top: e.top - (isModal ? 12 : 12)
+                    })}
+                />
+                <div className="px-6 md:px-3 py-[10px] text-sm bg-teal/10 w-max rounded-full space-x-3 m-auto mb-10 sm:mb-12">
+                    <span
+                        data-for="volume_tooltip"
+                        data-tip={t('common:luckydraw:volume_tooltip')}
+                        className="text-white border-dashed border-b border-divider cursor-pointer"
+                    >
+                        {t('common:luckydraw:vol_trade')}
+                    </span>
+                    <span className="text-teal font-semibold">{formatNumber(metadata.current)} VNDC</span>
+                </div>
+            </>
         );
     };
 
@@ -273,16 +295,16 @@ const Luckydraw = ({ visible, onClose }) => {
                 <div>
                     {last_updated_at.current && (
                         <div className={classNames('text-center text-xs mt-3 text-txtSecondary flex flex-col')}>
-                            <span>{t('nao:luckydraw:updated_vol')}</span>
+                            <span>{t('common:luckydraw:updated_vol')}</span>
                             <span>
-                                {t('nao:contest:last_updated_time')}:&nbsp;&nbsp;
+                                {t('common:luckydraw:last_updated_time')}:&nbsp;&nbsp;
                                 {last_updated_at.current ? formatTime(last_updated_at.current, 'yyyy-MM-dd HH:mm:ss') : '-'}
                             </span>
                         </div>
                     )}
                 </div>
                 <Button onClick={() => !loading && claim()}>
-                    {isAuth ? t(`nao:luckydraw:${can_receive.current ? 'claim_now' : 'back_to_trading'}`) : t('common:global_btn:login')}
+                    {isAuth ? t(`common:luckydraw:${can_receive.current ? 'claim_now' : 'back_to_trading'}`) : t('common:global_btn:login')}
                 </Button>
             </div>
         );
@@ -296,35 +318,21 @@ const Luckydraw = ({ visible, onClose }) => {
         <>
             <ModalClaim visible={showClaim} onClose={() => setShowClaim(false)} ticket={dataSource?.[active]} total_reward={total_reward.current} />
             {isModal ? (
-                <MaldivesLayout>
-                    <Modal wrapClassName="!p-0" className="!max-w-[884px]" isVisible={visible} onBackdropCb={onClose} customHeader={() => {}}>
-                        <BackgroundImage isModal={isModal} className="p-8">
-                            <div className="flex justify-end">
-                                <X color="#fff" onClick={onClose} size={24} className="cursor-pointer" />
-                            </div>
-                            <div className="mt-6 max-w-[444px] text-center">
-                                <div className="flex flex-col space-y-3 mb-8">{renderTextReward()}</div>
-                                {renderTextVol()}
-                                <div className="space-y-[43px] relative top-8 mb-9">{renderReward()}</div>
-                                {renderButton()}
-                            </div>
-                        </BackgroundImage>
-                    </Modal>
-                </MaldivesLayout>
+                <Modal wrapClassName="!p-0" className="!max-w-[884px]" isVisible={visible} onBackdropCb={onClose} customHeader={() => {}}>
+                    <BackgroundImage isModal={isModal} className="p-8">
+                        <div className="flex justify-end">
+                            <X color="#fff" onClick={onClose} size={24} className="cursor-pointer" />
+                        </div>
+                        <div className="mt-6 max-w-[444px] text-center">
+                            <div className="flex flex-col space-y-3 mb-8">{renderTextReward()}</div>
+                            {renderTextVol()}
+                            <div className="space-y-[43px] relative top-8 mb-9">{renderReward()}</div>
+                            {renderButton()}
+                        </div>
+                    </BackgroundImage>
+                </Modal>
             ) : (
                 <MaldivesLayout hideInApp>
-                    <Tooltip
-                        id={'volume_tooltip'}
-                        place="top"
-                        effect="solid"
-                        isV3
-                        className="max-w-[300px]"
-                        arrowColor="transparent"
-                        overridePosition={(e) => ({
-                            left: e.left + 32,
-                            top: e.top - 12
-                        })}
-                    />
                     <Background>
                         <BackgroundImage className="pt-11 px-4">
                             <img className="h-6 mt-6" src="/images/screen/futures/luckdraw/ic_logo_nami.png" />
@@ -340,7 +348,7 @@ const Luckydraw = ({ visible, onClose }) => {
             )}
         </>
     );
-};
+});
 
 const ModalClaim = ({ onClose, visible, ticket, total_reward }) => {
     const { t } = useTranslation();
@@ -356,7 +364,7 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward }) => {
                     <span>{formatTime(ticket?.time, 'yyyy-MM-dd HH:mm')}</span>
                 </div>
                 <div className="font-semibold text-xl space-y-3 mt-4 flex flex-col text-center">
-                    <span className="">{t('nao:luckydraw:claim_success')}</span>
+                    <span className="">{t('common:luckydraw:claim_success')}</span>
                     <span className="text-teal">{formatNumber(total_reward)} VNDC</span>
                 </div>
             </div>
@@ -371,7 +379,7 @@ const Background = styled.div.attrs({
 `;
 
 const BackgroundImage = styled.div.attrs(({ isModal }) => ({
-    className: classnames('', { 'relative h-[272px]': !isModal })
+    className: classNames('', { 'relative h-[272px]': !isModal })
 }))`
     background-image: ${({ isModal }) => `url(/images/screen/futures/luckdraw/bg_lucky${isModal ? '' : '_mb'}.png)`};
     background-repeat: no-repeat;
@@ -396,4 +404,4 @@ const Ticket = styled.div.attrs({
     flex-grow: 1;
 `;
 
-export default Luckydraw;
+export default DailyLuckydraw;
