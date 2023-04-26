@@ -35,26 +35,25 @@ const TabCommissionHistory = dynamic(() => import('components/screens/WithdrawDe
 const PartnerDepositWithdraw = ({ id }) => {
     const { user, loadingUser } = useSelector((state) => state.auth);
     const [currentTheme] = useDarkMode();
-    return <Custom404 /> 
-    // (
-        // <MaldivesLayout>
-        //     {loadingUser ? (
-        //         <div className="min-h-[50vh] flex w-full justify-center items-center">
-        //             <Spinner size={50} color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
-        //         </div>
-        //     ) : user && user.partner_type > 0 ? (
-        //         <PartnerWD>
-        //             {id === PARTNER_WD_TABS.OPEN_ORDER && <OpenOrderTable />}
-        //             {id === PARTNER_WD_TABS.STATS && <TabStatistic />}
-        //             {id === PARTNER_WD_TABS.HISTORY_ORDER && <HistoryOrders />}
-        //             {id === PARTNER_WD_TABS.PROFILE && <PartnerProfile />}
-        //             {id === PARTNER_WD_TABS.HISTORY_REFERRAL && <TabCommissionHistory />}
-        //         </PartnerWD>
-        //     ) : (
-        //         <div className="text-3xl font-semibold text-center">Please login on partner account!</div>
-        //     )}
-        // </MaldivesLayout>
-    // );
+    return (
+        <MaldivesLayout>
+            {loadingUser ? (
+                <div className="min-h-[50vh] flex w-full justify-center items-center">
+                    <Spinner size={50} color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
+                </div>
+            ) : user && user.partner_type > 0 ? (
+                <PartnerWD>
+                    {id === PARTNER_WD_TABS.OPEN_ORDER && <OpenOrderTable />}
+                    {id === PARTNER_WD_TABS.STATS && <TabStatistic />}
+                    {id === PARTNER_WD_TABS.HISTORY_ORDER && <HistoryOrders />}
+                    {id === PARTNER_WD_TABS.PROFILE && <PartnerProfile />}
+                    {id === PARTNER_WD_TABS.HISTORY_REFERRAL && <TabCommissionHistory />}
+                </PartnerWD>
+            ) : (
+                <div className="text-3xl font-semibold text-center">Please login on partner account!</div>
+            )}
+        </MaldivesLayout>
+    );
 };
 
 export default PartnerDepositWithdraw;
@@ -88,7 +87,8 @@ export const getServerSideProps = async (context) => {
                 'reference',
                 'transaction-history',
                 'futures',
-                'table','404'
+                'table',
+                '404'
             ])),
             id
         }
