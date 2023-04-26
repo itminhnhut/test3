@@ -245,14 +245,16 @@
         "reward_desc": "Giao dịch đủ Khối lượng mỗi ngày để nhận thưởng theo các mốc tương ứng",
         "today_trading": "Khối lượng giao dịch hôm nay:",
         "claim_now": "Nhận thưởng ngay",
-        "claim_success": "Chức mừng, bạn đã nhận được",
+        "claim_success": "Chức mừng bạn đã nhận được",
         "volume_tooltip": "KLGD ngày bao gồm cả VNDC và USDT Futures và sẽ được tự động cài đặt lại vào 0h sáng mỗi ngày",
         "start": "Bắt đầu",
         "back_to_trading": "Tiếp tục giao dịch",
         "reward_desc_trading": "KLGD hôm nay chưa đủ để nhận thưởng mốc kế tiếp, vui lòng giao dịch thêm mức khối lượng là {{vol}} để nhận {{value}}.",
         "reward_desc_trading_over": "Chúc mừng bạn đã nhận đầy đủ các mốc thưởng ngày hôm nay. Chúc bạn giao dịch hiệu quả và thành công!",
         "updated_vol": "Cập nhật 20 phút/lần",
-        "last_updated_time": "Lần cập nhật gần nhất"
+        "last_updated_time": "Lần cập nhật gần nhất",
+        "take_reward": "Nhận thưởng",
+        "login_trade": "Đăng nhập và bắt đầu giao dịch Futures ngay để nhận thưởng hàng ngày hấp dẫn từ Nami Exchange"
     },
     "year_summary": {
         "title": "Tổng kết dự án NAO Futures {{year}}",

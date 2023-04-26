@@ -252,7 +252,9 @@
         "reward_desc_trading": "Trading volume is not enough to claim next reward, please trade an additional volume of {{vol}} for {{value}} bonus.",
         "reward_desc_trading_over": "Congratulations on getting all your bonus milestones today. Wishing you efficient and successful trading!",
         "updated_vol": "Updated every 20 minutes",
-        "last_updated_time": "Last Updated"
+        "last_updated_time": "Last Updated",
+        "take_reward": "Take Reward",
+        "login_trade": "Log in and start trading Futures now to receive attractive daily rewards from Nami Exchange"
     },
     "year_summary": {
         "title": "NAO Futures {{year}} Year in Review",
