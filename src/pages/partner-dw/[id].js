@@ -8,6 +8,11 @@ import { useSelector } from 'react-redux';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
 import Custom404 from 'pages/404';
+import Image from 'next/dist/client/image';
+import Link from 'next/dist/client/link';
+import Button from 'components/common/V2/ButtonV2/Button';
+import { useTranslation } from 'next-i18next';
+import Error404 from 'components/common/404';
 
 const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partner/PartnerWD'), {
     ssr: false
@@ -36,9 +41,7 @@ const PartnerProfile = dynamic(() => import('components/screens/WithdrawDeposit/
 const PartnerDepositWithdraw = ({ id }) => {
     const { user, loadingUser } = useSelector((state) => state.auth);
     const [currentTheme] = useDarkMode();
-    return (!loadingUser && !user) || (user && user.partner_type !== 2) ? (
-        <Custom404 />
-    ) : (
+    return (
         <MaldivesLayout>
             {loadingUser ? (
                 <div className="min-h-[50vh] flex w-full justify-center items-center">
@@ -52,7 +55,9 @@ const PartnerDepositWithdraw = ({ id }) => {
                     {id === PARTNER_WD_TABS.PROFILE && <PartnerProfile />}
                     {id === PARTNER_WD_TABS.HISTORY_REFERRAL && <TabCommissionHistory />}
                 </PartnerWD>
-            ) : null}
+            ) : (
+                <Error404 />
+            )}
         </MaldivesLayout>
     );
 };
