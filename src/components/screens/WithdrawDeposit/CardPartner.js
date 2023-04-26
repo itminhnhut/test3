@@ -78,6 +78,8 @@ const CardPartner = () => {
                             showTooltip={false}
                             t={t}
                             showDropdownIcon={true}
+                            // dropdown must be show when modalbank is visible
+                            mustBeShow={visibleModalBank}
                         />
                     )}
 
