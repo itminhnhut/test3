@@ -329,3 +329,8 @@ export const API_GET_COMMISSION_HISTORY_PARTNER = API_V3_PREFIX + 'wallet/histor
 export const API_CHECK_PHONE_NUMBER_DUPLICATE = API_PREFIX + 'user/check_phone_duplicate';
 export const API_SET_PHONE_REQUEST = API_PREFIX + 'user/set_phone_request';
 export const API_SET_PHONE_VERIFY = API_PREFIX + 'user/set_phone_verify';
+
+// internal
+export const API_INTERNAL_FIND_USER = API_V3_PREFIX + 'spot/internal-find-user';
+export const API_INTERNAL_TRANSFER= API_V3_PREFIX + 'spot/internal-transfer';
+export const API_INTERNAL_TRANSFER_HISTORY = API_V3_PREFIX + 'spot/internal-transfer-history';
