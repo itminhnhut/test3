@@ -91,13 +91,13 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
                         case PartnerOrderLog.DISPUTED:
                             contentLog = 'dispute';
                             contentObj = {
-                                name: side === SIDE.BUY && mode === MODE.USER ? orderDetail?.partnerMetadata?.name : orderDetail?.userMetadata?.name
+                                name: side === SIDE.BUY ? orderDetail?.partnerMetadata?.name : orderDetail?.userMetadata?.name
                             };
                             break;
                         case PartnerOrderLog.COMPLETED_DISPUTE:
                             contentLog = 'resolve_dispute';
                             contentObj = {
-                                name: side === SIDE.BUY && mode === MODE.USER ? orderDetail?.partnerMetadata?.name : orderDetail?.userMetadata?.name
+                                name: side === SIDE.BUY ? orderDetail?.partnerMetadata?.name : orderDetail?.userMetadata?.name
                             };
                             break;
                         case PartnerOrderLog.TIMEOUT_NOT_ACCEPT:
