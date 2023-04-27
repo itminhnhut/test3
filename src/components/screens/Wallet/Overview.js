@@ -68,16 +68,10 @@ const OverviewWallet = (props) => {
             const key = `overview__spot_${i}`;
             items.push(
                 <button
-                    onClick={() =>
-                        onHandleClick(
-                            'deposit_exchange',
-                            dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, allAssets[i]?.assetCode)
-                            // walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
-                            //     type: 'crypto',
-                            //     asset: allAssets[i]?.assetCode
-                            // })
-                        )
-                    }
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, allAssets[i]?.assetCode));
+                    }}
                     className="mr-3"
                 >
                     <AssetLogo assetCode={allAssets[i]?.assetCode} size={30} />
@@ -262,7 +256,7 @@ const OverviewWallet = (props) => {
                 style={{
                     backgroundImage: `url(${getS3Url(`/images/screen/wallet/overview_background${currentTheme === THEME_MODE.DARK ? '_dark' : ''}.png`)})`
                 }}
-                addClass={`mt-8 p-4 md:p-8 bg-cover 
+                addClass={`mt-8 p-4 md:p-8 bg-cover
             ${currentTheme === THEME_MODE.DARK ? ' border border-divider-dark' : '  shadow-card_light backdrop-blur-[60px] bg-[#ffffff66] border-none'}`}
             >
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between tracking-normal">
