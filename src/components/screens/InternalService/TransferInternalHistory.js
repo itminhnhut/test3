@@ -121,7 +121,7 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                 title: t('transaction-history:status'),
                 align: 'right',
                 width: 150,
-                render: (row) =>  <OrderStatusTag status={row?._id ? PartnerOrderStatus.SUCCESS : PartnerOrderStatus.PENDING } />
+                render: (row) =>  <OrderStatusTag status={PartnerOrderStatus.SUCCESS} />
             }
         ],
         [t, language, assetConfig]
