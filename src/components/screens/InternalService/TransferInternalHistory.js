@@ -1,16 +1,24 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useAsync } from 'react-use';
 import { API_INTERNAL_TRANSFER_HISTORY } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
-import { ApiStatus } from 'redux/actions/const';
+import { ApiStatus, PartnerOrderStatus } from 'redux/actions/const';
 import { formatPrice, formatTime, getAssetCode, getLoginUrl, getS3Url, shortHashAddress } from 'redux/actions/utils';
 import fetchApi from '../../../utils/fetch-api';
 import { useSelector } from 'react-redux';
 import TableV2 from 'components/common/V2/TableV2';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { find } from 'lodash';
+import { find, isArray } from 'lodash';
+import Skeletor from 'components/common/Skeletor';
+import OrderStatusTag from 'components/common/OrderStatusTag';
 
-const TransferInternalHistory = ({ width }) => {
+const addNewRecord = (arr = [], newItem = {}) => {
+    arr.pop();      // Remove last item
+    arr.unshift({...newItem, _id: 0});
+    return arr
+}
+
+const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
     const [state, set] = useState({
         page: 0,
         pageSize: LIMIT_ROW,
@@ -26,13 +34,20 @@ const TransferInternalHistory = ({ width }) => {
         i18n: { language }
     } = useTranslation(['convert', 'common']);
 
+    useEffect(() => {
+        if (newOrder && state.page === 0) {
+            setState({ histories: addNewRecord(state.histories ?? [], newOrder) });
+        }
+    }, [newOrder]);
+
     useAsync(async () => {
         if (!auth) return;
+        setNewOrder(null);
         setState({ loading: true, histories: null });
         try {
             const {
                 status,
-                data: { orders: histories , hasNext}
+                data: { orders: histories, hasNext }
             } = await fetchApi({
                 url: API_INTERNAL_TRANSFER_HISTORY,
                 options: { method: 'GET' },
@@ -40,7 +55,7 @@ const TransferInternalHistory = ({ width }) => {
             });
 
             if (status === ApiStatus.SUCCESS && histories) {
-                setState({ histories , hasNext});
+                setState({ histories, hasNext });
             }
         } catch (e) {
             console.log(`Can't get swap history `, e);
@@ -52,6 +67,7 @@ const TransferInternalHistory = ({ width }) => {
     const onChangePagination = (delta) => {
         setState({ page: state.page + delta });
     };
+
     const columns = useMemo(
         () => [
             {
@@ -60,7 +76,7 @@ const TransferInternalHistory = ({ width }) => {
                 title: 'ID',
                 align: 'left',
                 width: 203,
-                render: (row) => <div title={row}>{shortHashAddress(row, 8, 6)}</div>
+                render: (row) => row === 0 ? <Skeletor width={150}/> : <div title={row}>{shortHashAddress(row, 8, 6)}</div>
             },
             {
                 key: 'asset',
@@ -72,7 +88,7 @@ const TransferInternalHistory = ({ width }) => {
                     const assetCode = find(assetConfig, { id: +row })?.assetCode;
                     return (
                         <div className="flex items-center font-semibold">
-                            {row && <AssetLogo useNextImg={true} assetId={row} size={32} />}
+                            {row && <AssetLogo assetId={row} size={32} />}
                             <div className="ml-2">{assetCode}</div>
                         </div>
                     );
@@ -103,15 +119,9 @@ const TransferInternalHistory = ({ width }) => {
             {
                 key: 'status',
                 title: t('transaction-history:status'),
-                align: 'left',
+                align: 'right',
                 width: 150,
-                render: () => (
-                    <div className="w-full flex">
-                        <div className="px-4 py-1 rounded-[80px] bg-teal/10 text-green-2 dark:text-teal w-fit text-sm font-normal">
-                            {t('transaction-history:completed')}
-                        </div>
-                    </div>
-                )
+                render: (row) =>  <OrderStatusTag status={row?._id ? PartnerOrderStatus.SUCCESS : PartnerOrderStatus.PENDING } />
             }
         ],
         [t, language, assetConfig]

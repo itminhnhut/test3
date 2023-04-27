@@ -24,6 +24,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { API_INTERNAL_FIND_USER, API_INTERNAL_TRANSFER } from 'redux/actions/apis';
 import TextArea from 'components/common/V2/InputV2/TextArea';
 import toast from 'utils/toast';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const DEFAULT_PAIR = {
     fromAsset: 'VNDC',
@@ -32,7 +33,7 @@ const DEFAULT_PAIR = {
 
 const fromAssetRef = createRef();
 
-const TransferInternalModule = ({ width, pair }) => {
+const TransferInternalModule = ({ width, pair, setNewOrder }) => {
     // Init State
     const [state, set] = useState({
         swapConfigs: null,
@@ -57,7 +58,8 @@ const TransferInternalModule = ({ width, pair }) => {
 
         // State for Modal preview
         isOpenModalPreview: false,
-        loadingTransfer: false
+        loadingTransfer: false,
+        resultTransfer: null
     });
 
     const auth = useSelector((state) => state.auth.user) || null;
@@ -202,8 +204,6 @@ const TransferInternalModule = ({ width, pair }) => {
                                 // isDisabled={}
                             >
                                 <div className={`flex items-center gap-x-3 w-full`}>
-                                    {console.log(userFounded)}
-                                    {/* <Image src={item.logo} width={40} height={40} alt={item?.bank_key} className="rounded-full" /> */}
                                     {userFounded?.avatar ? (
                                         <img
                                             src={
@@ -246,7 +246,7 @@ const TransferInternalModule = ({ width, pair }) => {
     }, [state.toUser]);
 
     const handleConfirmTransfer = () => {
-        setState({ loadingTransfer: true });
+        setState({ loadingTransfer: true, resultTransfer: null });
         fetchAPI({
             url: API_INTERNAL_TRANSFER,
             options: {
@@ -262,15 +262,29 @@ const TransferInternalModule = ({ width, pair }) => {
         })
             .then((res) => {
                 if (res.status === ApiStatus.SUCCESS) {
-                    toast({ text: 'Chuyển thành công', type: 'success' });
-                    // fetchListUserBank();
+                    setState({
+                        resultTransfer: {
+                            type: 'success',
+                            msg: 'Chuyển thành công'
+                        }
+                    });
+                    setNewOrder(res.data);
                 } else {
-                    console.log('___error: ', res);
-                    toast({ text: 'Có lỗi', type: 'error' });
+                    setState({
+                        resultTransfer: {
+                            type: 'error',
+                            msg: (res?.status && res?.status !== 'error') ?  t(`error:${res.status}`) : t('error:COMMON_ERROR')
+                        }
+                    });
                 }
             })
             .catch((e) => {
-                toast({ text: t('error:COMMON_ERROR'), type: 'error' });
+                setState({
+                    resultTransfer: {
+                        type: 'error',
+                        msg: t('error:COMMON_ERROR')
+                    }
+                });
             })
             .finally(() => {
                 setState({ loadingTransfer: false });
@@ -380,7 +394,7 @@ const TransferInternalModule = ({ width, pair }) => {
                                 label="Nội dung thông báo (Tiếng Việt)"
                                 value={state?.contentNotiVi}
                                 onChange={(value) => setState({ contentNotiVi: value })}
-                                placeholder={'Content notification'}
+                                placeholder={"Nhập nội dung (không bắt buộc)"}
                                 className="pb-0 w-full"
                                 classNameInput="!text-lg h-24"
                             />
@@ -389,7 +403,7 @@ const TransferInternalModule = ({ width, pair }) => {
                                 label="Nội dung thông báo (Tiếng Anh)"
                                 value={state?.contentNotiEn}
                                 onChange={(value) => setState({ contentNotiEn: value })}
-                                placeholder={'Content notification'}
+                                placeholder={"Nhập nội dung (không bắt buộc)"}
                                 className="pb-0 w-full"
                                 classNameInput="!text-lg h-24"
                             />
@@ -463,7 +477,15 @@ const TransferInternalModule = ({ width, pair }) => {
                     </ButtonV2>
                 </div>
             </ModalV2>
-            {/* {renderAlertNotification()} */}
+            <AlertModalV2
+                key="modal_error"
+                isVisible={!!state.resultTransfer}
+                onClose={() => setState({ resultTransfer: null })}
+                type={state.resultTransfer?.type}
+                title={state.resultTransfer?.msg}
+                buttonClassName="hidden"
+                // message={state.resultErr}
+            />
         </>
     );
 };

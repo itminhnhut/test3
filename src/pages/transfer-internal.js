@@ -33,14 +33,16 @@ const TransferInternal = () => {
         }
     }, [router]);
 
+    const [newOrder, setNewOrder] = useState(null)
+
     return (
         <MaldivesLayout>
             <div className="bg-gray-13 dark:bg-dark text-txtPrimary dark:text-txtPrimary-dark px-4 flex justify-center">
                 <div className={`max-w-screen-v3 2xl:max-w-screen-xxl m-auto w-full h-full pt-20 pb-[120px]`}>
                     <div className="m-auto flex justify-center">
-                        <TransferInternalModule width={width} pair={pair} />
+                        <TransferInternalModule width={width} pair={pair} setNewOrder={setNewOrder}/>
                     </div>
-                    <TransferInternalHistory width={width} />
+                    <TransferInternalHistory width={width} newOrder={newOrder} setNewOrder={setNewOrder}/>
                 </div>
             </div>
         </MaldivesLayout>
