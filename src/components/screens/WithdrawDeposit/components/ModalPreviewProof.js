@@ -38,12 +38,7 @@ const ModalPreviewProof = ({ t, isVisible, onClose, orderDetail, mode }) => {
         }
     };
 
-    const proofSrc =
-        mode === MODE.USER && orderDetail?.side === SIDE.BUY
-            ? orderDetail?.userUploadImage
-            : mode === MODE.PARTNER && orderDetail?.side === SIDE.SELL
-            ? orderDetail?.partnerUploadImage
-            : '';
+    const proofSrc = orderDetail?.side === SIDE.BUY ? orderDetail?.userUploadImage : orderDetail?.partnerUploadImage;
 
     return (
         <ModalDownLoadImg
