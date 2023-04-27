@@ -207,6 +207,9 @@ module.exports = {
                 border_light: 'rgba(126, 229, 174, 0.1)',
                 ...commonColors.green
             },
+            purple: {
+                ...commonColors.purple
+            },
             yellow: {
                 DEFAULT: '#FFD965',
                 100: '#FFC632',

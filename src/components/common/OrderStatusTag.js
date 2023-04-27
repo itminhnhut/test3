@@ -14,6 +14,7 @@ const OrderStatusTag = ({ icon = true, className, status }) => {
     const { PENDING, SUCCESS, REJECTED, DISPUTED } = PartnerOrderStatus;
     let type = '';
     let label = '';
+
     switch (status) {
         case PENDING:
             type = TYPES.WARNING;

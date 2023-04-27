@@ -159,7 +159,6 @@ export const NAV_DATA = [
 ];
 
 export const MOBILE_NAV_DATA = [
-    
     // {
     //     key: 10,
     //     title: 'Profile',
@@ -274,7 +273,7 @@ export const MOBILE_NAV_DATA = [
                 url: '/swap',
                 child_lv2: []
             },
-             {
+            {
                 key: 7,
                 title: 'Classic',
                 localized: 'classic',
@@ -431,21 +430,12 @@ export const USER_CP = [
         child_lv1: []
     },
     {
-        key: 1,
-        title: 'Security',
-        localized: 'security',
-        hide: true,
+        key: 5,
+        title: 'payment_method',
+        localized: 'payment_method',
+        // hide: true,
         isNew: true,
-        url: '/',
-        child_lv1: []
-    },
-    {
-        key: 2,
-        title: 'Identify',
-        localized: 'identify',
-        hide: true,
-        isNew: true,
-        url: '/',
+        url: PATHS.ACCOUNT?.PAYMENT_METHOD || '/',
         child_lv1: []
     },
     {
@@ -457,24 +447,54 @@ export const USER_CP = [
         url: '/reference',
         child_lv1: []
     },
-    {
-        key: 3,
-        title: 'RewardCenter',
-        localized: 'reward_center',
-        hide: true,
-        isNew: true,
-        url: '/account/reward-center',
-        child_lv1: []
-    },
-    {
-        key: 5,
-        title: 'TaskCenter',
-        localized: 'task_center',
-        hide: true,
-        isNew: true,
-        url: '/',
-        child_lv1: []
-    },
+
+    // {
+    //     key: 3,
+    //     title: 'partner',
+    //     localized: 'partner',
+    //     isPartner: true,
+    //     // hide: true,
+    //     isNew: true,
+    //     url: PATHS?.PARNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
+    //     child_lv1: []
+    // }
+    // {
+    //     key: 1,
+    //     title: 'Security',
+    //     localized: 'security',
+    //     hide: true,
+    //     isNew: true,
+    //     url: '/',
+    //     child_lv1: []
+    // },
+    // {
+    //     key: 2,
+    //     title: 'Identify',
+    //     localized: 'identify',
+    //     hide: true,
+    //     isNew: true,
+    //     url: '/',
+    //     child_lv1: []
+    // },
+
+    // {
+    //     key: 3,
+    //     title: 'RewardCenter',
+    //     localized: 'reward_center',
+    //     hide: true,
+    //     isNew: true,
+    //     url: '/account/reward-center',
+    //     child_lv1: []
+    // },
+    // {
+    //     key: 5,
+    //     title: 'TaskCenter',
+    //     localized: 'task_center',
+    //     hide: true,
+    //     isNew: true,
+    //     url: '/',
+    //     child_lv1: []
+    // }
     // {
     //     key: 6,
     //     title: 'APIManagement',
@@ -484,5 +504,4 @@ export const USER_CP = [
     //     url: getV1Url('/settings/api-management'),
     //     child_lv1: []
     // }
-
 ];

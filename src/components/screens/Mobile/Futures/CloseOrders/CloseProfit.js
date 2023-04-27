@@ -6,6 +6,7 @@ import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { getProfitVndc, renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
+import { IconArrowOnus } from 'components/common/Icons';
 
 const CloseProfit = ({ length, order, initPairPrice, doShow, calculatePnL, isMobile, isTabHistory, onusMode = false, decimal = 0, mode, index }) => {
     const [pairPrice, setPairPrice] = useState(null);
@@ -50,7 +51,7 @@ const CloseProfit = ({ length, order, initPairPrice, doShow, calculatePnL, isMob
     useEffect(() => { calculatePnL({ [`${order.displaying_id}`]: profit }) }, [pairPrice])
 
     return (
-        <div className={`${index != length - 1 && 'border-b items-center h-[66px]'} border-divider dark:border-divider-dark flex w-full h-[50px] items-end`}>
+        <div className={`${index != length - 1 && 'border-b'} border-divider dark:border-divider-dark flex w-full h-[66px] items-center`}>
             <div className="w-full">
                 <div className="flex w-full justify-between">
                     <div className="font-semibold text-sm leading-[22px]">
@@ -84,12 +85,12 @@ const CloseProfit = ({ length, order, initPairPrice, doShow, calculatePnL, isMob
                     </div>
 
                     {profit > 0 ?
-                        (<div className="text-green-2 font-medium text-xs leading-[18px] w-full text-right">
-                            ▴ {percent}%
+                        (<div className="text-green-2 font-medium text-xs leading-[18px] w-full text-right justify-end flex items-center">
+                            <IconArrowOnus className={`w-[7px] mr-[2px]`} color='currentColor'/> {percent}%
                         </div>)
                         :
-                        (<div className="text-red-2 font-medium text-xs leading-[18px] w-full text-right">
-                            ▾ {percent}%
+                        (<div className="text-red-2 font-medium text-xs leading-[18px] w-full text-right justify-end flex items-center">
+                            <IconArrowOnus className={`w-[7px] mr-[2px] rotate-180`} color='currentColor' /> {percent}%
                         </div>)
                     }
                 </div>

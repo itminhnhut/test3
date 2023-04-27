@@ -113,18 +113,25 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                 <BackgroundImage className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
                     <img src={getS3Url("/images/nao/ic_nao_large.png")} alt="" width="55" height="55" />
                 </BackgroundImage>
-                <TextLiner className="!text-lg leading-6 !w-full mb-3 !pb-0 pt-8 !normal-case !text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:pool:staking_token')}</TextLiner>
+                <TextLiner className="!text-xl leading-6 !w-full mb-3 !pb-0 pt-8 !normal-case !text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:pool:staking_token')}</TextLiner>
                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm px-[26px]">{t('nao:pool:revenue_share_from_trade')}</div>
             </CardNao>
             <CardNao stroke="1.5" className="pt-9 pb-8 !bg-none border border-divider dark:border-divider-dark">
                 <div className="flex items-center justify-between pb-4">
-                    <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark uppercase">{t('nao:pool:est_apy')}</div>
+                    <div className="text-sm font-semibold text-txtSecondary dark:text-txtSecondary-dark uppercase">{t('nao:pool:est_apy')}</div>
                     <div className="text-lg font-semibold">{formatNumber(dataSource?.apy ?? 0, 2)}%</div>
                 </div>
                 <div >
                     <label className={`text-teal text-sm ${language !== 'vi' ? 'capitalize' : ''}`}>{t('nao:pool:staked_title')}</label>
                     <div className="h-[44px] flex items-center rounded-lg bg-gray-12 dark:bg-dark-2 ">
-                        <div onClick={() => onShowLockModal(true)}>
+                        <div className={`cursor-pointer mx-3 w-4 h-4 flex items-center justify-center rounded-md text-txtSecondary dark:text-txtSecondary-dark`}>
+                            <Minus
+                                size={16}
+                                color="currentColor"
+                                onClick={() => onShowLockModal(true)}
+                            />
+                        </div>
+                        <div className='flex-1' onClick={() => onShowLockModal(true)}>
                             <TradingInput
                                 onusMode={true}
                                 label=""
@@ -133,29 +140,19 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                 containerClassName={`px-2.5 flex-grow text-sm font-medium border-none !bg-gray-12 dark:!bg-dark-2 h-[44px]`}
                                 inputClassName="!text-center w-full"
                                 allowedDecimalSeparators={[',', '.']}
-                                renderHead={() => (
-                                    <div className={`cursor-pointer w-4 h-4 flex items-center justify-center rounded-md text-txtSecondary dark:text-txtSecondary-dark`}>
-                                        <Minus
-                                            size={16}
-                                            className={`cursor-pointer`}
-                                            color="currentColor"
-                                        />
-                                    </div>
-                                )}
-                                renderTail={() => (
-                                    <div className={`cursor-pointer w-4 h-4 flex items-center justify-center rounded-md text-txtSecondary dark:text-txtSecondary-dark`}>
-                                        <Plus
-                                            size={16}
-                                            color="currentColor"
-                                        />
-                                     </div>
-                                )}
                                 readOnly
+                            />
+                        </div>
+                        <div className={`cursor-pointer mx-3 w-4 h-4 flex items-center justify-center rounded-md text-txtSecondary dark:text-txtSecondary-dark`}>
+                            <Plus
+                                size={16}
+                                color="currentColor"
+                                onClick={() => onShowLockModal(true)}
                             />
                         </div>
                     </div>
                     <div className='flex justify-between mt-2'>
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">{t('nao:pool:equivalent')}</div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs">{t('nao:pool:equivalent')}</div>
                         <span className="text-txtPrimary dark:text-txtPrimary-dark text-sm font-semibold">${formatNumber((dataSource?.availableStakedVNDC ?? 0) * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
                     </div>
                     {dataSource?.isNewUser &&
@@ -166,15 +163,23 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                     <hr className="!opacity-100 !my-6 border-divider dark:border-divider-dark" />
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
-                            <div className="mr-3 font-semibold border-b border-gray-15 dark:border-gray-4 border-dashed" data-tip={t('nao:pool:tooltip_auto')} data-for="tooltip-auto">
+                            <Tooltip
+                                id="tooltip-auto"
+                                place='top'
+                                effect="solid"
+                            />
+                            <div
+                                className="mr-3 font-semibold border-b border-gray-15 dark:border-gray-4 border-dashed text-sm"
+                                data-tip={t('nao:pool:tooltip_auto')}
+                                data-for="tooltip-auto"
+                            >
                                 {t('nao:pool:auto')}
                             </div>
-                            <Tooltip id="tooltip-auto" />
                             {/* <div data-tip={t('nao:pool:tooltip_auto')} data-for="tooltip-auto" >
                                 <QuestionMarkIcon size={20} />
                             </div> */}
                         </div>
-                        <div className="text-teal flex items-end space-x-1" onClick={() => setHidden(!hidden)}>
+                        <div className="text-teal flex items-end space-x-1 text-sm" onClick={() => setHidden(!hidden)}>
                             <div className="font-semibold">{t(`nao:pool:${!hidden ? 'hide' : 'show'}`)}</div>
                             <ArrowDropDownIcon size={20} isFilled color="currentColor" className={`transition-all ${hidden ? '' : 'rotate-180'}`} />
                         </div>
@@ -183,15 +188,15 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                         <div className="mt-4">
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium text-sm leading-6">{t('nao:pool:total_available_staked')}</div>
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm leading-6">{t('nao:pool:total_available_staked')}</div>
                                     <div className="font-semibold text-sm text-right">{formatNumber(staked, assetNao?.assetDigit ?? 8)} NAO</div>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium text-sm leading-6">{t('nao:pool:total_users')}</div>
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm leading-6">{t('nao:pool:total_users')}</div>
                                     <div className="font-semibold text-sm text-right">{t('nao:pool:users', { value: formatNumber(dataSource?.totalUser, 0) })}</div>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium text-sm leading-6">{t('nao:pool:lock_duration')}</div>
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm leading-6">{t('nao:pool:lock_duration')}</div>
                                     <div className="font-semibold text-sm text-right">{dataSource?.duration ?? 7} {t('nao:pool:days')}</div>
                                 </div>
                             </div>

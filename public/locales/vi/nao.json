@@ -13,6 +13,7 @@
     "circulating_supply": "Tổng lưu hành",
     "distributed_today": "Phân phối hôm nay",
     "coming_soon": "Sắp ra mắt",
+    "note": "Lưu ý",
     "onus_performance": {
         "title": "Thống kê về NAO Futures",
         "description": "Các thông tin cập nhật về sản phẩm NAO Futures",
@@ -63,8 +64,9 @@
         "est_revenue": "Doanh thu ước tính",
         "lock_duration": "Thời gian khóa",
         "time_to_get_back": "Thời gian nhận lại NAO",
+        "instant_get_back": "Ngay lập tức sau khi rút",
         "not_show_message": "Không hiện lại thông báo này",
-        "description_lock": "Lượng NAO này sẽ được khóa 7 ngày kể từ khi rút khỏi pool.",
+        "description_lock": "Pool quản trị NAO đã ngưng tiếp nhận trên ONUS từ 16:00 ngày 24/4 và sẽ được mở lại tại Nami Exchange vào tháng 5.",
         "description_unlock": "Bạn sẽ nhận được NAO sau 7 ngày kể từ thời điểm đăng ký rút. Lưu ý lượng NAO này sẽ không được chia sẻ lợi nhuận từ Pool.",
         "lock_overview": "Chi tiết",
         "duration": "Thời gian",

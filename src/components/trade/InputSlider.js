@@ -354,7 +354,7 @@ const Slider = ({
                         naoMode={naoMode}
                         className={naoMode ? '!flex justify-center items-center' : ''}
                     >
-                        {naoMode && <img src={getS3Url('/images/nao/ic_nao.png')} width={22} height={22} alt="" />}
+                        {/* {naoMode && <img src={getS3Url('/images/nao/ic_nao.png')} width={22} height={22} alt="" />} */}
                         {customPercentLabel
                             ? customPercentLabel(pos)
                             : showPercentLabel && (

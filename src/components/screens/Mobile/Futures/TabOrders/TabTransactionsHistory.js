@@ -280,7 +280,7 @@ function TabTransactionsHistory({
                         <TableNoData
                             isMobile
                             title={t('futures:order_table:no_transaction_history')}
-                            className="h-[calc(100vh-5.25rem)]"
+                            className="h-[calc(100vh-5.25rem)] !justify-start mt-20"
                         /> :
                         <>
                             {_renderListItem()}

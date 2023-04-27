@@ -59,6 +59,7 @@ const OrderButtonMobile = ({
         const requestId = Math.floor(Date.now() / 2000);
         setDisabled(true);
         const params = {
+            product: 2,
             symbol: pairConfig?.symbol,
             type: getType(type),
             side: side,

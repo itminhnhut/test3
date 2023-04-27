@@ -18,6 +18,7 @@ import ModifyOrder from './ModifyOrder';
 import CloseOrderModalMobile from './CloseOrderModalMobile';
 import AdjustPositionMargin from './AdjustPositionMargin';
 import AddCircleOutline from 'components/svg/AddCircleOutline';
+import SvgShare from 'components/svg/Share';
 
 const INITIAL_STATE = {
     socketStatus: false,
@@ -308,9 +309,7 @@ const OrderOpenDetail = ({
                             {order?.leverage}x
                         </div>
                         {canShare ?
-                            <img className="ml-2"
-                                onClick={openShare} src={getS3Url('/images/icon/ic_share_onus.png')} height={20}
-                                width={20} />
+                            <SvgShare color="currentColor" onClick={openShare} className="ml-2 flex-shrink-0" size={20} />
                             : null
                         }
                     </div>

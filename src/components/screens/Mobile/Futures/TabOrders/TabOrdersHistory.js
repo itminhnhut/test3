@@ -156,7 +156,7 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, tab, active, onShowDetail,
     if (loading && isLoading.current) return (<div className="min-h-screen px-[10px]">{getLoading()}</div>)
     if (dataSource.length <= 0 && !loading) return <TableNoData isMobile
         title={t('futures:order_table:no_history_order')}
-        className="h-full min-h-screen" />
+        className="h-full min-h-[300px] !justify-start mt-20" />
 
     return (
         <div className="min-h-screen">

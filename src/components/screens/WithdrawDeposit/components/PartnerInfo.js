@@ -14,7 +14,7 @@ export const PartnerSubcontent = ({ partner, t, language }) => {
     const totalOrder = partner?.analyticMetadata?.count || 0;
     return (
         <div className="flex items-center space-x-4 text-txtSecondary dark:text-txtSecondary-dark">
-            <span>{formatPhoneNumber(partner?.phone)}</span>
+            {/* <span>{formatPhoneNumber(partner?.phone)}</span> */}
             <div className="flex space-x-1 items-center">
                 <OrderIcon size={16} />
                 <span>

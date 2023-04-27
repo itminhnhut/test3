@@ -223,7 +223,7 @@ const TabOpenOrders = ({
         return <TableNoData
             isMobile
             title={t('futures:order_table:no_opening_order')}
-            className="h-full min-h-[300px]" />;
+            className="h-full min-h-[300px] !justify-start mt-20" />;
     }
 
     return (

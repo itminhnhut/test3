@@ -10,6 +10,7 @@ import { getS3Url, formatNumber } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import _ from 'lodash';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-gray-15 dark:text-gray-7'
@@ -78,14 +79,18 @@ export const Progressbar = styled.div.attrs(({ height = 6 }) => ({
 `;
 
 export const Tooltip = ({ id, arrowColor, backgroundColor, className, children, place = 'top' }) => {
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
+    const defaultTooltipBg = isDark ? colors.dark[1] : colors.gray[15];
+
     return (
         <CTooltip
             id={id}
             place={place}
             effect="solid"
-            className={classNames(`!opacity-100 !rounded-lg max-w-[250px] sm:max-w sm:w-full ${className} `, { '!-mt-5 ': place === 'top' })}
-            arrowColor={arrowColor ?? colors.nao.tooltip2}
-            backgroundColor={backgroundColor ?? colors.nao.tooltip2}
+            className={classNames(`!opacity-100 !rounded-lg max-w-[250px] sm:max-w sm:w-full !bg-gray-15 dark:!bg-dark-1 text-white dark:text-gray-4 ${className} `, { '!-mt-5 ': place === 'top' })}
+            arrowColor={arrowColor ?? defaultTooltipBg}
+            backgroundColor={backgroundColor ?? defaultTooltipBg}
         >
             {children}
         </CTooltip>

@@ -317,7 +317,7 @@ const TabContent = styled.div.attrs(({ active }) => ({
 
 export const LoginOrder = () => {
     const { t } = useTranslation();
-    return (<div className='flex flex-col items-center justify-center h-full text-sm py-[10px] min-h-[300px]'>
+    return (<div className='flex flex-col items-center h-full text-sm mt-20 min-h-[300px]'>
         <div className="w-[200px] py-[0.75rem]">
             <img src="/images/nao/login.png" alt="lg-img" className='w-[132px] block m-auto py-[0.75rem]' />
             <div className='text-center' >{t('futures:mobile:login_medium')}</div>

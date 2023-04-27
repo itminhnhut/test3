@@ -12,6 +12,7 @@ import AlertNaoV2Modal from 'components/screens/Nao/AlertNaoV2Modal';
 export const AlertContext = createContext(null);
 import vi from 'date-fns/locale/vi'
 import en from 'date-fns/locale/en-US'
+import useApp from 'hooks/useApp';
 vi.localize = {
     day: (n) => days[n]['vi'],
     month: (n) => months[n]['vi'],
@@ -116,6 +117,7 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
     const alert = useRef(null);
     const alertV2 = useRef(null);
     const { width } = useWindowSize();
+    const isApp = useApp();
 
     useEffect(() => {
         document.body.classList.add('disabled-zoom');
@@ -147,7 +149,7 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
             </Head>
-            <div className="bg-bgPrimary dark:bg-bgPrimary-dark text-txtPrimary dark:text-txtPrimary-dark min-h-full font-inter">
+            <div className="bg-bgPrimary dark:bg-bgPrimary-dark text-txtPrimary dark:text-txtPrimary-dark min-h-full font-SF-Pro">
 
                 <AlertContext.Provider value={{
                     alert: alert.current,

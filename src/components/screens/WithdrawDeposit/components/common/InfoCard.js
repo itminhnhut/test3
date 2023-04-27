@@ -9,13 +9,13 @@ import { useTranslation } from 'next-i18next';
 const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
     return (
         <div className="flex items-center space-x-3">
-            <div style={{ width: imgSize, height: imgSize }}>
+            <div style={{ minWidth: imgSize, maxWidth: imgSize, minHeight: imgSize, maxHeight: imgSize, width: '100%', height: '100%' }}>
                 {image ?? <Image className="rounded-full" src={imageSrc || DefaultAvatar} width={imgSize} height={imgSize} objectFit="cover" />}
             </div>
 
             <div>
-                <div className="txtPri-1 mb-2 text-left capitalize line-clamp-2">{mainContent}</div>
-                <div className="txtSecond-3">{subContent}</div>
+                {mainContent && <div className="txtPri-1 mb-2 text-left capitalize line-clamp-2">{mainContent}</div>}
+                {subContent && <div className="txtSecond-3">{subContent}</div>}
             </div>
         </div>
     );
@@ -34,6 +34,7 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading, em
             {loading ? (
                 <CardContent
                     image={<Skeletor width={imgSize} height={imgSize} circle />}
+                    imgSize={imgSize}
                     mainContent={<Skeletor width="200px" height="20" />}
                     subContent={<Skeletor width="150px" height="10px" />}
                 />
@@ -44,12 +45,19 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading, em
                             <BxsUserIcon size={24} color="currentColor" />
                         </div>
                     }
-                    mainContent={emptyContent?.mainContent || t('dw_partner:partner')}
+                    imgSize={56}
+                    mainContent={emptyContent?.mainContent}
                     subContent={emptyContent?.subContent || t('dw_partner:no_partner')}
                 />
             ) : (
                 <>
-                    <CardContent imgSize={imgSize} imageSrc={content?.imgSrc} mainContent={content.mainContent} subContent={content.subContent} />
+                    <CardContent
+                        imgSize={imgSize}
+                        image={content?.icon}
+                        imageSrc={content?.imgSrc}
+                        mainContent={content.mainContent}
+                        subContent={content.subContent}
+                    />
                     {endIcon}
                 </>
             )}

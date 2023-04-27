@@ -11,7 +11,7 @@ const Tooltip = ({ children, arrowColor, isV3 = false, className = '', ...restPr
     const isDark = currentTheme === THEME_MODE.DARK;
 
     const arrow = useMemo(() => {
-        const color = isV3 ? (isDark ? colors.dark[1] : colors.darkBlue) : isDark ? colors.dark[2] : colors.darkBlue;
+        const color = isV3 ? (isDark ? colors.dark[1] : colors.dark.dark) : isDark ? colors.dark[2] : colors.darkBlue;
         return arrowColor ? arrowColor : color;
     }, [arrowColor, isV3, currentTheme]);
 
