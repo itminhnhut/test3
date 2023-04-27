@@ -100,7 +100,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, mode = MODE.USE
                                                 });
                                                 return item.mode.includes(mode) ? (
                                                     !orderDetail ? (
-                                                        <Skeletor width={100} height={25} />
+                                                        <Skeletor key={item.key} width={100} height={25} />
                                                     ) : renderData ? (
                                                         <TagV2 key={item.key} type={TYPES.DEFAULT} icon={false} className=" dark:!bg-divider-dark">
                                                             <div className="flex space-x-2 items-center">

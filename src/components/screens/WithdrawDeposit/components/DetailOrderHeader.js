@@ -45,7 +45,7 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                 </div>
                 <div className="flex mt-6 md:mt-0 gap-12 justify-between md:justify-center order-3 md:order-2 w-full md:w-1/3 md:border-l md:border-r border-divider dark:border-divider-dark">
                     <div className="">
-                        <div className="txtSecond-2 mb-3">{t('common:transaction_id')}</div>
+                        <div className="txtSecond-2 mb-3">{t('dw_partner:order_id')}</div>
                         {!orderDetail ? <Skeletor width="100px" /> : <TextCopyable className="gap-x-1 txtPri-1" text={orderDetail?.displayingId} />}
                     </div>
                     <div className="">

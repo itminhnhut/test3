@@ -397,6 +397,7 @@
     "deny": "Deny",
     "accept":"Accept",
     "reject":"Reject",
+    "proof":"Proof",
     "download_view": {
         "title": "Download the application now",
         "desc": "Over 600 trading pairs with leverage up to x125"

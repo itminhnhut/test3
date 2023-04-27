@@ -297,7 +297,7 @@ const OpenOrderTable = () => {
                         ))
                     ) : (
                         <div className="mt-[60px]">
-                            <NoData />
+                            <NoData text={t('dw_partner:no_pending_transactions')} />
                         </div>
                     )}
                 </div>

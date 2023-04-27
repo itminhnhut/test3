@@ -53,7 +53,6 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
                 {logs.map((log, logIndex, orginArr) => {
                     let contentLog = '',
                         contentObj = {},
-                        contentDoneOrder = '',
                         viewProof = null;
                     const isReject = log.status === PartnerOrderStatusLog.DISPUTED || log.status === PartnerOrderStatusLog.REJECTED;
                     const isCurrent = logIndex === orginArr.length - 1;
@@ -63,15 +62,13 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
                             break;
                         case PartnerOrderLog.ACCEPTED:
                             contentLog = 'accept';
-                            contentObj = { name: orderDetail?.partnerMetadata?.name };
                             break;
                         case PartnerOrderLog.REJECTED:
-                            contentLog = 'cancel';
-                            contentObj = { name: orderDetail?.partnerMetadata?.name };
+                            contentLog = 'reject';
                             break;
                         case PartnerOrderLog.CANCELED:
                             contentLog = 'cancel';
-                            contentObj = { name: orderDetail?.userMetadata?.name };
+
                             break;
                         case PartnerOrderLog.TRANSFERRED_FIAT:
                             contentLog = 'transferred';
@@ -91,45 +88,49 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
                         case PartnerOrderLog.DISPUTED:
                             contentLog = 'dispute';
                             contentObj = {
-                                name: side === SIDE.BUY ? orderDetail?.partnerMetadata?.name : orderDetail?.userMetadata?.name
+                                mode: t(`dw_partner:${side === SIDE.BUY ? MODE.PARTNER : MODE.USER}`).toLowerCase()
                             };
                             break;
                         case PartnerOrderLog.COMPLETED_DISPUTE:
                             contentLog = 'resolve_dispute';
                             contentObj = {
-                                name: side === SIDE.BUY ? orderDetail?.partnerMetadata?.name : orderDetail?.userMetadata?.name
+                                mode: t(`dw_partner:${side === SIDE.BUY ? MODE.PARTNER : MODE.USER}`).toLowerCase()
                             };
                             break;
                         case PartnerOrderLog.TIMEOUT_NOT_ACCEPT:
                             contentLog = 'timeout_not_accept';
                             break;
                         case PartnerOrderLog.TIMEOUT_NOT_RECEIVE:
+                            contentLog = 'timeout_not_receive';
+                            contentObj = {
+                                mode: t(`dw_partner:${side === SIDE.BUY ? MODE.PARTNER : MODE.USER}`).toLowerCase()
+                            };
+                            break;
                         case PartnerOrderLog.TIMEOUT_NOT_TRANSFER:
-                            contentLog = 'timeout_not_receive_transfer';
+                            contentLog = 'timeout_not_transfer';
+                            contentObj = {
+                                mode: t(`dw_partner:${side === SIDE.BUY ? MODE.USER : MODE.PARTNER}`).toLowerCase()
+                            };
+                            break;
+                        case PartnerOrderLog.SYSTEM_UPDATE_DISPUTE:
+                            contentLog = 'system_dispute';
+                            break;
+                        case PartnerOrderLog.SYSTEM_UPDATE_REJECT:
+                            contentLog = 'system_reject';
+                            break;
+                        case PartnerOrderLog.SYSTEM_UPDATE_SUCCESS:
+                            contentLog = 'system_success';
                             break;
                         default:
                             break;
                     }
 
-                    switch (log.status) {
-                        case PartnerOrderStatusLog.DISPUTED:
-                            contentDoneOrder = 'system_dispute';
-                            break;
-                        case PartnerOrderStatusLog.REJECTED:
-                            contentDoneOrder = 'system_reject';
-                            break;
-                        case PartnerOrderStatusLog.SUCCESS:
-                            contentDoneOrder = 'system_success';
-                            break;
-                        default:
-                            break;
-                    }
                     return (
-                        <>
+                        <React.Fragment key={logIndex}>
                             <Row
-                                key={log.type}
+                                isReject={isReject}
                                 className={classNames('relative txtSecond-2', {
-                                    '!text-txtPrimary dark:!text-txtPrimary-dark': isCurrent && !contentDoneOrder
+                                    '!text-txtPrimary dark:!text-txtPrimary-dark': isCurrent
                                 })}
                             >
                                 <Line />
@@ -137,7 +138,7 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
                                 <div className="ml-6 space-y-2 md:space-y-0 flex-wrap flex justify-between items-center">
                                     <div
                                         className={classNames('w-full space-y-2 md:space-y-0 flex-wrap md:w-auto flex items-center', {
-                                            'font-semibold': isCurrent && !contentDoneOrder
+                                            'font-semibold': isCurrent
                                         })}
                                     >
                                         <span>{t(`dw_partner:logs.${contentLog}`, contentObj)}</span>
@@ -146,29 +147,7 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
                                     <span className="md:text-right md:w-auto w-full">{formatTime(log.time, 'HH:mm:ss dd/MM/yyyy')}</span>
                                 </div>
                             </Row>
-                            {contentDoneOrder ? (
-                                <Row
-                                    key={log.type}
-                                    isReject={isReject}
-                                    className={classNames('relative txtSecond-2', {
-                                        '!text-txtPrimary dark:!text-txtPrimary-dark': isCurrent
-                                    })}
-                                >
-                                    <Line />
-                                    <Dot />
-                                    <div className="ml-6 space-y-2 md:space-y-0 flex-wrap flex justify-between items-center">
-                                        <div
-                                            className={classNames('w-full md:w-auto flex items-center', {
-                                                'font-semibold': isCurrent
-                                            })}
-                                        >
-                                            <span>{t(`dw_partner:logs.${contentDoneOrder}`)}</span>
-                                        </div>
-                                        <span className="md:text-right md:w-auto w-full">{formatTime(log.time, 'HH:mm:ss dd/MM/yyyy')}</span>
-                                    </div>
-                                </Row>
-                            ) : null}
-                        </>
+                        </React.Fragment>
                     );
                 })}
             </div>
