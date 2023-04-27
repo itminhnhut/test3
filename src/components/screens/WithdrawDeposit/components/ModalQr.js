@@ -13,7 +13,7 @@ import { API_GET_BANK_AVAILABLE } from 'redux/actions/apis';
 // const getImageQrUrl = ({ bankCode: BANK_ID, accountNumber: ACCOUNT_NO, TEMPLATE = 'qr_only', amount: AMOUNT, note: DESCRIPTION, accountName: ACCOUNT_NAME }) =>
 //     `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-${TEMPLATE}.png?amount=${AMOUNT}&addInfo=${DESCRIPTION}&accountName=${ACCOUNT_NAME}`;
 
-const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount, t }) => {
+const ModalQr = ({ isVisible, onClose, bank, className, t, orderId }) => {
     const [currentTheme] = useDarkMode();
 
     const [downloading, setDownloading] = useState(false);
@@ -24,7 +24,7 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount, t }) 
     const downloadCode = () => {
         setDownloading(true);
         try {
-            const canvas = document.getElementById('react-qrcode-logo');
+            const canvas = document.getElementById(`react-qrcode-logo-${orderId}`);
             if (canvas) {
                 const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
                 let downloadLink = document.createElement('a');
@@ -68,7 +68,7 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount, t }) 
             >
                 <div className="p-1 rounded-md bg-white relative">
                     <QRCode
-                        // id={bank?.QR || 'QrCodeCanvasId'}
+                        id={`react-qrcode-logo-${orderId}`}
                         // value="00020101021238530010A0000007270123000697043301091990012920208QRIBFTTA5303704540750000005802VN62300826CK 844LEP NGUYEN DUC TRUNG63042373"
                         value={bank?.QR}
                         size={140}

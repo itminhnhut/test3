@@ -7,15 +7,16 @@ import { getAssetCode, formatTime, formatNumber, formatNanNumber } from 'redux/a
 import Axios from 'axios';
 import { TABS, data } from './constants';
 import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
-import { ApiStatus } from 'redux/actions/const';
+import { ApiStatus, PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import OrderStatusTag from 'components/common/OrderStatusTag';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import Skeletor from 'components/common/Skeletor';
-import { find } from 'lodash';
+import { find, isNumber } from 'lodash';
 
 const LIMIT_ROW = 10;
 
@@ -36,7 +37,7 @@ const getColumns = (t, user, side, configs) => [
         align: 'left',
         width: 148,
         render: (v) => {
-            const assetConfig = find(configs, { id: v });
+            const assetConfig = find(configs, { id: +v });
 
             return assetConfig ? (
                 <div className="flex gap-2 items-center">
@@ -72,7 +73,7 @@ const getColumns = (t, user, side, configs) => [
         dataIndex: 'partnerMetadata',
         title: t('dw_partner:partner'),
         align: 'right',
-        width: 189,
+        width: 240,
         render: (v) => (
             <>
                 <div className="txtPri-2 mb-1">{v?.name}</div>
@@ -85,8 +86,16 @@ const getColumns = (t, user, side, configs) => [
         dataIndex: 'status',
         title: <span className="mr-[10px]">{t('common:status')}</span>,
         align: 'right',
-        width: 185,
-        render: (v) => <OrderStatusTag status={v} icon={false} />
+        width: 207,
+        render: (v, item) => {
+            return item?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && v === PartnerOrderStatus.PENDING ? (
+                <TagV2 type={TYPES.DEFAULT} className="ml-auto !bg-transparent">
+                    <span className="text-center !text-base">{t('dw_partner:wait_confirmation')}</span>
+                </TagV2>
+            ) : (
+                <OrderStatusTag status={v} icon={false} hasBg={false} />
+            );
+        }
     }
 ];
 
@@ -98,7 +107,6 @@ const HistoryTable = () => {
     const router = useRouter();
 
     const configs = useSelector((state) => state.utils?.assetConfig);
-
     const [currentPage, setCurrentPage] = useState(0);
     const [activeTab, setActiveTab] = useState(TABS[0].key);
     const [dataTable, setDataTable] = useState([]);
@@ -121,6 +129,7 @@ const HistoryTable = () => {
                     mode: 'user',
                     side,
                     status: activeTab === 0 ? null : TABS[activeTab]?.status,
+                    partnerAcceptStatus: TABS[activeTab]?.partnerAcceptStatus,
                     ...curSort
                 }
             })
