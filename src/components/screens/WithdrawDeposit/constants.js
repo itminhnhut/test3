@@ -4,6 +4,7 @@ import { BxsInfoCircle, TimeLapseIcon, BxsErrorIcon, CancelIcon, CheckCircleIcon
 import { PATHS } from 'constants/paths';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { Trans } from 'next-i18next';
 
 // time in seconds
 export const REPORT_ABLE_TIME = 5 * 60 * 1000;
@@ -129,8 +130,16 @@ export const ORDER_TYPES = {
     CANCEL_SUCCESS: {
         icon: ICONS['SUCCESS'],
         title: (t, mode = MODE.USER) => t('common:success'),
-        description: ({ displayingId, amount, asset, side, t }) =>
-            t('dw_partner:cancel_order_success', { orderId: displayingId, amount, asset, side: t(`common:${side.toLowerCase()}`) }),
+        description: ({ displayingId, amount, asset, side, t }) => (
+            <Trans i18nKey="dw_partner:cancel_order_success">
+                {{ orderId: displayingId }}
+                {{ side: t(`common:${side.toLowerCase()}`) }}
+                <span className="text-txtPrimary dark:text-txtPrimary-dark">
+                    {{ amount }} {{ asset }}
+                </span>
+            </Trans>
+        ),
+
         showConfirm: ({ router, t, assetId, side, mode, resetModalState }) => {
             return mode === MODE.PARTNER ? (
                 <></>
@@ -158,18 +167,25 @@ export const ORDER_TYPES = {
         title: (t, mode = MODE.USER) => t('dw_partner:cancel_transaction'),
         description: ({ side, token, mode = MODE.USER, id, amount, t }) => {
             if (side === 'BUY')
-                return t('dw_partner:cancel_order_buy_description', {
-                    orderId: id,
-                    amount: amount,
-                    asset: token,
-                    note: mode === MODE.USER ? t('dw_partner:cancel_order_note') : ''
-                });
-            return t('dw_partner:cancel_order_sell_description', {
-                orderId: id,
-                amount: amount,
-                asset: token,
-                note: mode === MODE.PARTNER ? t('dw_partner:cancel_order_note') : ''
-            });
+                return (
+                    <Trans i18nKey="dw_partner:cancel_order_buy_description">
+                        {{ orderId: id }}
+                        {{ note: mode === MODE.USER ? t('dw_partner:cancel_order_note') : '' }}
+                        <span className="text-txtPrimary dark:text-txtPrimary-dark">
+                            {{ amount }} {{ asset: token }}
+                        </span>
+                    </Trans>
+                );
+
+            return (
+                <Trans i18nKey="dw_partner:cancel_order_sell_description">
+                    {{ orderId: id }}
+                    {{ note: mode === MODE.PARTNER ? t('dw_partner:cancel_order_note') : '' }}
+                    <span className="text-txtPrimary dark:text-txtPrimary-dark">
+                        {{ amount }} {{ asset: token }}
+                    </span>
+                </Trans>
+            );
         },
         showConfirm: true
     },
@@ -185,6 +201,12 @@ export const ORDER_TYPES = {
         icon: ICONS['ERROR'],
         title: (t) => t('common:failure'),
         description: ({ side, token, t }) => t('dw_partner:error.reach_limit_withdraw', { asset: token }),
+        showConfirm: false
+    },
+    ERROR_EXCEEDING_LIMIT: {
+        icon: ICONS['ERROR'],
+        title: (t) => t('common:failure'),
+        description: ({ t }) => t('dw_partner:error.exceeding_limit'),
         showConfirm: false
     },
     ERROR: {

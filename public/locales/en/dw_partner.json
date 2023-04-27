@@ -53,6 +53,8 @@
     "resolve_dispute_description": "By pressing \"Confirm\", you have received the full amount from the user/partner. Order status will be updated to Success",
     "beneficiary": "Beneficiary",
     "download": "Download",
+    "save_img": "Save",
+
     "payment_infor": "Payment Information",
     "bank": "Bank",
     "no_bank": "No bank found",
@@ -72,11 +74,11 @@
         "partner": "When you click the confirm button, you will received the money from the user, please carefully check the amount received and the content of the transfer before making."
     },
     "confirm_transfer_success": "You have confirmed payment successfully.",
-    "cancel_order_buy_description": "Are you sure you want to cancel Buy transaction #{{orderId}} of {{amount}} {{asset}}? {{note}}",
+    "cancel_order_buy_description": "Are you sure you want to cancel Buy transaction #{{orderId}} of <2>{{amount}} {{asset}}</2>? {{note}}",
     "cancel_order_note": "Note: Your money will not be reimbursed when canceling transaction after completing the transfer.",
-    "cancel_order_sell_description": "Are you sure you want to cancel Sell transaction #{{orderId}} of {{amount}} {{asset}}? {{note}}",
+    "cancel_order_sell_description": "Are you sure you want to cancel Sell transaction #{{orderId}} of <2>{{amount}} {{asset}}</2>? {{note}}",
     "cancel_transaction": "Cancel transaction",
-    "cancel_order_success": "Order #{{orderId}} to {{side}} {{amount}} {{asset}} has been cancelled successfully.",
+    "cancel_order_success": "Order #{{orderId}} to {{side}} <2>{{amount}} {{asset}}</2> has been cancelled successfully.",
     "create_new_transaction": "Create New Order",
     "appeal_description": "Complaint will change the status of Order #{{orderId}} to the status of Disputing, the user is required to provide proofs related to the transaction such as pictures, messages,...",
     "enter_amount": "Enter amount",
@@ -118,12 +120,12 @@
     "buy_transaction": "Buy Transaction",
     "sell_transaction": "Sell Transaction",
     "order_vol_limit": "Order Volume Limit:",
-    "buy_sell_title":"Buy/Sell in {{assetCode}}",
+    "buy_sell_title": "Buy/Sell in {{assetCode}}",
     "buy_order_limit": "Buy {{assetCode}} Order Limit",
     "sell_order_limit": "Sell {{assetCode}} Order Limit",
     "activated_side": "{{side}} {{assetCode}} transaction has been activated",
     "deactivated_side": "{{side}} {{assetCode}} transaction has been deactivated",
-    "change_side_limit":"Transaction {{side}} {{assetCode}} order limit is changed",
+    "change_side_limit": "Transaction {{side}} {{assetCode}} order limit is changed",
     "commission": "Commission",
     "fiat_currency": "Fiat Currency",
     "placeholder": {
@@ -156,5 +158,24 @@
         "a_week": "1 week",
         "a_month": "1 month",
         "custom": "Custom"
+    },
+    "logs": {
+        "created": "New order is created",
+        "accept": "Order is accepted by {{name}}",
+        "reject": "Order is rejected by {{name}}",
+        "transferred": "Order is marked \"I have transferred\"",
+        "uploaded_proof": "Order is updated the proof of transfer",
+        "view_proof": "View the proof",
+        "received_fiat": "Order is marked \"I have received Fiat\"",
+        "cancel": "Order is canceled by {{name}}",
+        "dispute": "Order is disputed by {{name}}",
+        "resolve_dispute": "Order is succeeded in resolving the dispute by {{name}}",
+        "timeout_not_accept": "Order is rejected due to overdue time to accept",
+        "timeout_not_receive_transfer": "Order is rejected due to no confirmation",
+        "system_resolved_dispute_to_success": "Order is resolved the dispute to the status: Success",
+        "system_resolved_dispute_to_rejected": "Order is resolved the dispute to the status: Rejected",
+        "system_success": "Order is updated to the status: Success",
+        "system_reject": "Order is updated to the status: Rejected",
+        "system_dispute": "Order is updated to the status: Disputed"
     }
 }

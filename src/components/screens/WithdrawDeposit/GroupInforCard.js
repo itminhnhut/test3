@@ -24,28 +24,28 @@ const RENDER_INFORMATION = [
         mode: [MODE.PARTNER, MODE.USER],
         render: ({ data }) => (data ? formatPhoneNumber(data) : null)
     },
-    {
-        key: 'code',
-        icon: <BxsUserCircle color="currentColor" size={16} />,
-        mode: [MODE.PARTNER],
-        render: ({ data }) => data || null
-    },
-    {
-        key: 'analyticMetadata.count',
-        icon: <OrderIcon color="currentColor" size={16} />,
-        mode: [MODE.USER],
-        render: ({ t, totalOrder, language }) => (
-            <>
-                {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 1 ? 's' : ''}`}
-            </>
-        )
-    },
-    {
-        key: 'analyticMetadata.avgTime',
-        icon: <TimerIcon color="currentColor" size={16} />,
-        mode: [MODE.USER],
-        render: ({ t, data, totalOrder }) => (totalOrder > 0 ? formatTimePartner(t, data) : null)
-    }
+    // {
+    //     key: 'code',
+    //     icon: <BxsUserCircle color="currentColor" size={16} />,
+    //     mode: [MODE.PARTNER],
+    //     render: ({ data }) => data || null
+    // },
+    // {
+    //     key: 'analyticMetadata.count',
+    //     icon: <OrderIcon color="currentColor" size={16} />,
+    //     mode: [MODE.USER],
+    //     render: ({ t, totalOrder, language }) => (
+    //         <>
+    //             {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 1 ? 's' : ''}`}
+    //         </>
+    //     )
+    // },
+    // {
+    //     key: 'analyticMetadata.avgTime',
+    //     icon: <TimerIcon color="currentColor" size={16} />,
+    //     mode: [MODE.USER],
+    //     render: ({ t, data, totalOrder }) => (totalOrder > 0 ? formatTimePartner(t, data) : null)
+    // }
 ];
 
 const GroupInforCard = ({ orderDetail, side, setModalQr, status, mode = MODE.USER }) => {

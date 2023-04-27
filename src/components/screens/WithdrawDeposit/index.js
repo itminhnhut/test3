@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import Header from './components/common/Header';
+import React from 'react';
 import CardInput from './CardInput';
 import CardPartner from './CardPartner';
 import HistoryTable from './HistoryTable';
-import ModalNeedKyc from 'components/common/ModalNeedKyc';
-import { useSelector } from 'react-redux';
-import NeedLoginV2 from 'components/common/NeedLoginV2';
-import DWAddPhoneNumber from 'components/common/DWAddPhoneNumber';
 
 const WithdrawDeposit = () => {
+    console.log('aaaaaabb')
     return (
         <div>
-            {/* <Header /> */}
             <div className="mb-20">
                 <div className="flex -m-3 flex-wrap">
                     <div className="w-full md:w-1/2 flex p-3">
