@@ -523,7 +523,7 @@ const OrderDetail = ({
                     <CopyText
                         color="currentColor"
                         copyClass="text-txtSecondary dark:text-txtSecondary-dark"
-                        textClass="text-sm"
+                        textClass="text-sm font-medium"
                         size={14}
                         text={order?.displaying_id}
                         CustomCopyIcon={Copy}
@@ -582,7 +582,7 @@ const OrderDetail = ({
                     <CopyText
                         color="currentColor"
                         copyClass="text-txtSecondary dark:text-txtSecondary-dark"
-                        textClass="text-sm"
+                        textClass="text-sm font-medium"
                         size={16}
                         text={order?.displaying_id}
                         CustomCopyIcon={Copy}
@@ -663,7 +663,7 @@ const OrderDetail = ({
                     <CopyText
                         color="currentColor"
                         copyClass="text-txtSecondary dark:text-txtSecondary-dark"
-                        textClass="text-sm"
+                        textClass="text-sm font-medium"
                         size={16}
                         text={order?.displaying_id}
                         CustomCopyIcon={Copy}

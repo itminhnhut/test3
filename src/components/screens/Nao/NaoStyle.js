@@ -13,7 +13,7 @@ import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/No
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 export const TextLiner = styled.div.attrs({
-    className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-gray-15 dark:text-gray-7'
+    className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-txtPrimary dark:text-txtPrimary-dark'
 })`
     background: ${({ liner }) => liner && colors.teal};
     -webkit-background-clip: ${({ liner }) => liner && `text`};
@@ -78,7 +78,7 @@ export const Progressbar = styled.div.attrs(({ height = 6 }) => ({
     height: ${({ height }) => `${height || 6}px`};
 `;
 
-export const Tooltip = ({ id, arrowColor, backgroundColor, className, children, place = 'top' }) => {
+export const Tooltip = ({ id, arrowColor, backgroundColor, className, children, place = 'top', ...restProps }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
     const defaultTooltipBg = isDark ? colors.dark[1] : colors.gray[15];
@@ -88,9 +88,10 @@ export const Tooltip = ({ id, arrowColor, backgroundColor, className, children, 
             id={id}
             place={place}
             effect="solid"
-            className={classNames(`!opacity-100 !rounded-lg max-w-[250px] sm:max-w sm:w-full !bg-gray-15 dark:!bg-dark-1 text-white dark:text-gray-4 ${className} `, { '!-mt-5 ': place === 'top' })}
+            className={classNames(`!opacity-100 !rounded-lg max-w-[250px] sm:max-w sm:w-full !bg-gray-15 dark:!bg-dark-1 text-white dark:text-gray-4 ${className}`)}
             arrowColor={arrowColor ?? defaultTooltipBg}
             backgroundColor={backgroundColor ?? defaultTooltipBg}
+            {...restProps}
         >
             {children}
         </CTooltip>

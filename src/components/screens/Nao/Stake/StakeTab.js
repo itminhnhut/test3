@@ -167,6 +167,17 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                 id="tooltip-auto"
                                 place='top'
                                 effect="solid"
+                                className="w-full sm_only:!max-w-[calc(100%-2rem)] sm_only:!mx-4 sm_only:after:!left-8 sm_only:after:translate-x-[-50%]"
+                                overridePosition={({top, left}) => {
+                                    if (window?.innerWidth < 640) { // 640 is the breakpoint of small devices
+                                        return {
+                                            top,
+                                            left: 0
+                                        };
+                                    }
+
+                                    return { top, left };
+                                }}
                             />
                             <div
                                 className="mr-3 font-semibold border-b border-gray-15 dark:border-gray-4 border-dashed text-sm"

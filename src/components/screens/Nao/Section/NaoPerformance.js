@@ -210,10 +210,10 @@ const NaoPerformance = memo(() => {
         <section id="nao_performance" className="pt-10 sm:pt-20">
             <div className="flex items-center flex-wrap justify-between gap-5">
                 <div>
-                    <TextLiner liner={width < 992} className="">
+                    <TextLiner className="">
                         {t('nao:onus_performance:title')}
                     </TextLiner>
-                    <span className="text-sm sm:text-[1rem] text-grey-1 dark:text-gray-7">{t('nao:onus_performance:description')}</span>
+                    <span className="text-sm sm:text-[1rem] text-txtSecondary dark:text-txtSecondary-dark">{t('nao:onus_performance:description')}</span>
                 </div>
                 <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
                     <RangePopover
@@ -254,7 +254,7 @@ const NaoPerformance = memo(() => {
                         <div className="text-gray-15 dark:text-gray-7 text-[1.375rem] font-semibold pb-2 leading-8">
                             {dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}
                         </div>
-                        <span className="text-sm text-grey-1 dark:text-gray-7">
+                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark">
                             {dataSource
                                 ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3)
                                 : '-'}{' '}
@@ -267,7 +267,7 @@ const NaoPerformance = memo(() => {
                         <div className="text-gray-15 dark:text-gray-7 text-[1.375rem] font-semibold pb-2 leading-8">
                             {dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}
                         </div>
-                        <span className="text-sm text-grey-1 dark:text-gray-7">
+                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark">
                             {dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}
                         </span>
                     </div>
@@ -318,12 +318,12 @@ const NaoPerformance = memo(() => {
                     </div>
                     <div className="pt-4">
                         <div className="text-gray-15 dark:text-gray-7 text-[1.375rem] font-semibold pb-2 leading-8">{feeFilter.total}</div>
-                        <span className="text-sm text-grey-1 dark:text-gray-7">{feeFilter.ratio}%</span>
+                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{feeFilter.ratio}%</span>
                     </div>
                 </CardNao>
             </div>
             {dataSource?.lastTimeUpdate && (
-                <div className="mt-6 text-sm text-grey-1 dark:text-gray-7 font-medium leading-6">
+                <div className="mt-6 text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium leading-6">
                     {t('nao:contest:last_updated_time_dashboard', { minute: 5 })}: {formatTime(new Date(dataSource?.lastTimeUpdate))}
                 </div>
             )}

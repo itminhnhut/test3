@@ -113,17 +113,18 @@ const StakeOrders = ({ assetConfig }) => {
                                         {idx !== 0 && <Divider className="w-full !my-4" />}
                                         <div className="">
                                             <div className="flex items-center justify-between">
-                                                <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold leading-6">
+                                                <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-sm">
                                                     {t(`nao:pool:${item?.type === 1 ? 'lock2' : 'unlock'}`)} NAO
                                                 </div>
                                                 <div className="flex items-center space-x-2">
-                                                    <div className="text-lg font-semibold leading-7">
-                                                        {formatNumber(item?.amount, assetConfig[447]?.assetDigit ?? 2)}
+                                                    <div className="text-sm font-semibold">
+                                                        {formatNumber(item?.amount, assetConfig[447]?.assetDigit ?? 2)}{' '}
+                                                        NAO
                                                     </div>
-                                                    <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
+                                                    {/* <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" /> */}
                                                 </div>
                                             </div>
-                                            <div className="flex items-center justify-between leading-6 text-sm pt-2">
+                                            <div className="flex items-center justify-between text-xs pt-2">
                                                 <div className="text-txtSecondary dark:text-txtSecondary-dark">
                                                     {formatTime(item?.createdAt, 'dd/MM/yyyy HH:mm:ss')}
                                                 </div>

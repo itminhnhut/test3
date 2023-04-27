@@ -256,13 +256,13 @@ const CloseOrdersByCondtionMobile = memo(({
                             }} active={showPositionList} />
                         </div>
                     </div>
-                    {state?.orders?.length && <div className="w-full -mt-3"
+                    {state?.orders?.length ? <div className="w-full -mt-3"
                         style={{ display: `${showPositionList ? 'block' : 'none'}` }}
                         ref={listInnerRef}
                         // onScroll={onScroll}
                     >
                         {renderPositionList()}
-                    </div>}
+                    </div> : <></>}
                     {/* {state?.orders?.length > 5 && <div className='text-teal w-full flex justify-center h-4 items-end'>
                         {showPositionList && isMore && IsMoreIcon}
                     </div>} */}

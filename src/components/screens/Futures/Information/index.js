@@ -244,8 +244,8 @@ export default function OrderInformation({ pair }) {
                         <div className="py-[13px] flex w-full">
                             {title === 'funding_countdown' ?
                                 <>
-                                    <Tooltip id={'funding_countdown'} place="top" effect="solid"
-                                        className={`!mx-7 !px-3 !py-5 max-w-[300px] !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg`}
+                                    <Tooltip id={'funding_countdown'} place="bottom" effect="solid"
+                                        className={`!mx-7 !px-3 !py-5 w-[calc(100%-3.5rem)] !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg after:!left-10`}
                                         overridePosition={(e) => ({
                                             left: 0,
                                             top: e.top
@@ -259,7 +259,7 @@ export default function OrderInformation({ pair }) {
                                                 className="mt-3 text-3 font-normal text-white dark:text-txtPrimary-dark leading-[18px]">{t('futures:funding_rate_des')}</div>
                                         </div>
                                     </Tooltip>
-                                    <Tooltip id={'countdown-tooltip'} place="top" effect="solid"
+                                    <Tooltip id={'countdown-tooltip'} place="bottom" effect="solid"
                                         className={`!mx-7 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 max-w-[300px] !opacity-100 !rounded-lg`}
                                         overridePosition={(e) => ({
                                             left: e.left - 50,

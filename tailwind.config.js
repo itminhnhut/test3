@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const colors = require('tailwindcss/colors');
+const defaultTheme = require('tailwindcss/defaultTheme');
 const colors2 = require('./src/styles/colors');
 // Common colors
 const commonColors = {
@@ -247,7 +248,8 @@ module.exports = {
                 mb: '820px',
                 xxs: '360px',
                 xsm: '320px',
-                xs: '319px'
+                xs: '319px',
+                sm_only: { max: defaultTheme.screens.sm },
             },
             spacing: {
                 128: '32rem',

@@ -218,7 +218,20 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                         </div>
                         {isLock && (
                             <div className="mt-8">
-                                <Tooltip id="tooltip-profit-est" />
+                                <Tooltip
+                                    id="tooltip-profit-est"
+                                    className="w-full sm_only:!max-w-[calc(100%-2rem)] sm_only:!mx-4 sm_only:after:!left-10 sm_only:after:translate-x-[-50%]"
+                                    overridePosition={({top, left}) => {
+                                        if (window?.innerWidth < 640) { // 640 is the breakpoint of small devices
+                                            return {
+                                                top,
+                                                left: 0
+                                            };
+                                        }
+
+                                        return { top, left };
+                                    }}
+                                />
                                 <label className="text-sm text-txtPrimary dark:text-txtPrimary-dark leading-6 font-semibold">
                                     {t('nao:pool:lock_overview')}
                                 </label>

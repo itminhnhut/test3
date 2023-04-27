@@ -187,12 +187,11 @@ const PerformanceTab = ({
         );
     };
 
-
     return (
         !dataSource?.isNewUser ?
             <>
                 <div>
-                    <TextLiner className="pb-1 text-txtPrimary dark:text-txtPrimary-dark">{t('nao:pool:per_overview')}</TextLiner>
+                    <TextLiner className="pb-1 !text-xl text-txtPrimary dark:text-txtPrimary-dark">{t('nao:pool:per_overview')}</TextLiner>
                     <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">{t('nao:pool:per_description')}</div>
                     <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end mt-6 mb-8">
                         <RangePopover
@@ -251,20 +250,36 @@ const PerformanceTab = ({
                         <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium leading-6 ">{t('nao:pool:total_revenue')}</label>
                         <div className="flex items-center mt-4">
                             <div
-                                className="text-[22px] font-semibold leading-8 mr-2">≈ {formatNumber(data.totalProfit, 0)} VNDC
+                                className="text-xl font-semibold mr-2">≈ {formatNumber(data.totalProfit, 0)} VNDC
                             </div>
                         </div>
-                        <div className="text-xs mr-2">{t('nao:pool:equivalent')} ${formatNumber(data.totalProfit, 2)} </div>
+                        <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">{t('nao:pool:equivalent')} ${formatNumber(data.totalProfit, 2)} </div>
 
                         <hr className='border-divider dark:border-divider-dark my-4' />
 
-                        <Tooltip id="tooltip-est-this-week"/>
-                        <div className="space-x-2 flex items-center">
-                            <label
-                                className="text-txtPrimary dark:text-txtPrimary-dark font-medium leading-6 ">{t('nao:pool:per_est_revenue')}</label>
-                            <div data-tip={t('nao:pool:tooltip_est_this_week')} data-for="tooltip-est-this-week">
-                                <QuestionMarkIcon size={20} />
-                            </div>
+                        <Tooltip
+                            id="tooltip-est-this-week"
+                            className="!max-w-[300px] sm_only:!mx-4 sm_only:after:!left-12"
+                            overridePosition={({top, left}) => {
+                                if (window?.innerWidth < 640) { // 640 is the breakpoint of small devices
+                                    return {
+                                        top,
+                                        left: 0
+                                    };
+                                }
+
+                                return { top, left };
+                            }}
+                        />
+                        <label
+                            className="text-txtPrimary dark:text-txtPrimary-dark font-medium leading-6 w-fit border-b border-gray-15 dark:border-gray-4 border-dashed"
+                            data-tip={t('nao:pool:tooltip_est_this_week')}
+                            data-for="tooltip-est-this-week"
+                        >
+                            {t('nao:pool:per_est_revenue')}
+                        </label>
+                        <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                            {t('nao:pool:equivalent')} ${formatNumber(data.estimateUSD, 2)}
                         </div>
                         <div className="mt-4">
                             <div className="w-full my-2">
@@ -342,8 +357,13 @@ const PerformanceTab = ({
                 </div>
             </>
             : <>
-                <div className="relative flex flex-col justify-center items-center mt-20">
-                    {isDark ? <NoDataDarkIcon /> : <NoDataLightIcon /> }
+                <div className="relative flex flex-col justify-center items-center mt-14">
+                    <div className="block dark:hidden">
+                        <NoDataLightIcon />
+                    </div>
+                    <div className="hidden dark:block">
+                        <NoDataDarkIcon />
+                    </div>
                     <div className="text-center mt-6">
                         <TextLiner
                             className="!text-lg !w-full !pb-0 !normal-case">{t('nao:pool:you_not_staked')}</TextLiner>
