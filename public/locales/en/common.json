@@ -393,6 +393,7 @@
     "disputing": "Disputing",
     "denined": "Denied",
     "processing": "Processing",
+    "deny": "Deny",
     "download_view": {
         "title": "Download the application now",
         "desc": "Over 600 trading pairs with leverage up to x125"

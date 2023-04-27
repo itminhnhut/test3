@@ -24,7 +24,7 @@ body {
     -webkit-tap-highlight-color: transparent !important;
 
     a {
-        color:inherit;
+        color: inherit;
     }
     a:hover,
     a:active,
@@ -153,7 +153,7 @@ body {
     .mal-container {
         // @apply container;
         // padding:0 16px;
-        margin:auto;
+        margin: auto;
 
         @media (min-width: 1024px) {
             max-width: 900px;
@@ -184,38 +184,63 @@ body {
         text-txtPrimary dark:text-txtPrimary-dark;
     }
 
-    .txtPri-1 { // [size, leading]: [14px, 20px] -> [16px, 24px],
+    .txtPri-1 {
+        // [size, leading]: [14px, 20px] -> [16px, 24px],
         @apply font-semibold text-sm md:text-base
         text-gray-15 dark:text-gray-4 tracking-normal;
     }
 
-    .txtPri-2 {// [size, leading]: [14px, 28px] -> [16px, 24px],
+    .txtPri-2 {
+        // [size, leading]: [14px, 28px] -> [16px, 24px],
         @apply font-normal text-[14px] leading-[28px] md:text-[16px] md:leading-[24px]
         text-gray-15 dark:text-gray-4 tracking-normal;
     }
 
-    .txtPri-3 {// [size, leading]: [20px, 32px] -> [24px, 30px],
+    .txtPri-3 {
+        // [size, leading]: [20px, 32px] -> [24px, 30px],
         @apply font-semibold text-[20px] leading-[32px] md:text-[24px] md:leading-[30px]
         text-gray-15 dark:text-gray-4 tracking-normal;
     }
 
-    .txtPri-4 {// [size, leading]: [20px, 28px] -> [32px, 38px],
+    .txtPri-4 {
+        // [size, leading]: [20px, 28px] -> [32px, 38px],
         @apply font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px]
         text-gray-15 dark:text-gray-4 tracking-normal;
     }
 
-    .txtSecond-1 { // [size, leading]: [12px, 16px] -> [16px, 24px], #768394 -> #8694b2
+    .txtPri-5 {
+        // [size, leading]: [20px, 26px],
+        @apply font-semibold text-[18px] leading-[26px]
+        text-gray-15 dark:text-gray-4 tracking-normal;
+    }
+
+    .txtPri-6 {
+        // [size, leading]: [32px, 38px],
+        @apply font-semibold text-[32px] leading-[38px]
+        text-gray-15 dark:text-gray-4 tracking-normal;
+    }
+
+    .txtSecond-1 {
+        // [size, leading]: [12px, 16px] -> [16px, 24px], #768394 -> #8694b2
         @apply font-normal text-[12px] leading-[16px] md:text-base
         text-gray-1 dark:text-gray-7 tracking-normal;
     }
 
-    .txtSecond-2 { // [size, leading]: [14px, 20px] -> [16px, 24px], #768394 -> #8694b2
+    .txtSecond-2 {
+        // [size, leading]: [14px, 20px] -> [16px, 24px], #768394 -> #8694b2
         @apply font-normal text-sm md:text-base
         text-gray-1 dark:text-gray-7 tracking-normal;
     }
 
-    .txtSecond-3 { // [size, leading]: [14px, 20px], #768394 -> #8694b2
+    .txtSecond-3 {
+        // [size, leading]: [14px, 20px], #768394 -> #8694b2
         @apply font-normal text-[14px] leading-[20px]
+        text-gray-1 dark:text-gray-7 tracking-normal;
+    }
+
+    .txtSecond-4 {
+        // [size, leading]: [16px, 24px], #768394 -> #8694b2
+        @apply font-normal text-base
         text-gray-1 dark:text-gray-7 tracking-normal;
     }
 
@@ -447,7 +472,6 @@ input[type='number'] {
     @apply px-5 xl:px-20 2xl:px-0 2xl:max-w-screen-xl mx-auto w-full lg:px-10;
 }
 
-
 .terms-page,
 .policies-page {
     ul {
@@ -629,7 +653,6 @@ input[type='number'] {
     opacity: 0;
     transition: all 0.2s ease;
     z-index: 9999999998;
-
 }
 
 .mal-overlay__active {
@@ -1017,40 +1040,30 @@ input:-webkit-autofill {
     }
 }
 
-
 .nami-underline-dotted {
     @apply underline cursor-pointer;
     text-decoration-style: dotted;
     text-decoration-color: #8694b2;
-    text-underline-offset: .25rem;
+    text-underline-offset: 0.25rem;
 }
 
 .nami-light-shadow {
     box-shadow: 0 6px 20px 0 rgba(31, 47, 70, 0.1);
 }
 
-
 .tooltip-arrow-bottom {
     @apply dark:bg-darkBlue-6 bg-gray-11 text-txtPrimary dark:text-txtPrimary-dark relative;
 }
 .tooltip-arrow-bottom:after {
-
     @apply dark:border-darkBlue-6 border-black-300;
-    --size:8px;
-    content: "";
+    --size: 8px;
+    content: '';
     position: absolute;
     left: 50%;
-    transform:translateX(-50%);
-    bottom:calc(var(--size) * -1);
-    border-width:calc(var(--size) / 2 );
-    border-right-color:  transparent !important;
-    border-bottom-color:  transparent !important;
-    border-left-color:transparent !important;
+    transform: translateX(-50%);
+    bottom: calc(var(--size) * -1);
+    border-width: calc(var(--size) / 2);
+    border-right-color: transparent !important;
+    border-bottom-color: transparent !important;
+    border-left-color: transparent !important;
 }
-
-
-
-
-
-
-

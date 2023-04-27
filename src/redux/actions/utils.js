@@ -41,6 +41,7 @@ import { log } from 'utils';
 import { cloneDeep } from 'lodash';
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 import { SIDE as SIDE_DW } from 'redux/reducers/withdrawDeposit';
+import moment from 'moment-timezone';
 import usePrevious from 'hooks/usePrevious';
 import classNames from 'classnames';
 
@@ -212,9 +213,8 @@ export function formatTime(value, f = 'yyyy-MM-dd HH:mm') {
 }
 
 export function formatTimePartner(t, value) {
-    return !value
-        ? ''
-        : value >= 60 * 60 * 1000 // 1 hour
+    if (!value) return '';
+    return value >= 60 * 60 * 1000 // 1 hour
         ? `${formatTime(value, 'h:mm')} ${t('common:hour')}`
         : value >= 60 * 1000 // 1 minute
         ? `${formatTime(value, 'm')} ${t('common:minute')}`
@@ -290,8 +290,9 @@ export function formatSpotPrice(price = 0, symbol = '') {
 }
 
 export const formatPhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) return;
     let phone = phoneNumber?.toString();
-    if (phone.length !== 10) return phoneNumber;
+    if (phone?.length !== 10) return phoneNumber;
     return phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
 };
 
@@ -494,6 +495,15 @@ export const getAssetId = (assetCode) => {
 export const getAssetFromCode = (assetCode) => {
     const configs = store().getState()?.utils?.assetConfig || null;
     const assetConfig = find(configs, { assetCode });
+    if (assetConfig) {
+        return assetConfig;
+    }
+    return null;
+};
+
+export const getAssetFromId = (assetId) => {
+    const configs = store().getState()?.utils?.assetConfig || null;
+    const assetConfig = find(configs, { id: assetId });
     if (assetConfig) {
         return assetConfig;
     }
@@ -1390,6 +1400,13 @@ export const LastPrice = memo(({ price, className, style }) => {
 });
 
 export function formatNanNumber(value, digits = 0) {
-    const formatedNumber = formatPrice(value, digits);
+    const formatedNumber = formatNumber(value, digits);
     return `${formatedNumber === 'NaN' ? 0 : formatedNumber}`;
 }
+
+export const convertDateToMs = (date = 0, type = 'startOf') => {
+    if (type === 'startOf') {
+        return moment.utc(moment(+date).startOf('day')).unix() * 1000;
+    }
+    return moment.utc(moment(+date).endOf('day')).unix() * 1000;
+};
