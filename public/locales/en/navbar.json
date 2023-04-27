@@ -57,7 +57,8 @@
         "staking_description": "Staking NAMI to receive bonus interest up to 50%/year",
         "farming": "Farming",
         "farming_description": "Farming NAMI and get many potential tokens",
-        "referral": "Referral Report",
+        "referral": "Referral",
+        "profile_referral": "Referral",
         "referral_description": "Receive up to 20% commission from friends' trades",
         "transfer": "Transfer",
         "transfer_description": "",
@@ -76,7 +77,11 @@
         "task_center": "Task Center",
         "api_mng": "API Management",
         "logout": "Log Out",
-        "user": "User Control"
+        "user": "User Control",
+        "profile": "Personal Information",
+        "partner": "Partner",
+        "payment_method": "Payment Method",
+        "daily_reward": "Daily Trading Reward"
     },
     "menu_grid": {
         "deposit": "Deposit",

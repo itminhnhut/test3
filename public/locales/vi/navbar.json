@@ -58,6 +58,7 @@
         "farming": "Farming",
         "farming_description": "Farm NAMI và nhận nhiều token tiềm năng",
         "referral": "Báo cáo hoa hồng",
+        "profile_referral": "Giới thiệu",
         "referral_description": "Nhận hoa hồng lên tới 20% từ giao dịch của bạn bè",
         "transfer": "Chuyển đổi",
         "transfer_description": "Chuyển đổi nhanh từ ví Exchange sang ví Futures chỉ với một lần chạm",
@@ -76,7 +77,11 @@
         "task_center": "Trung tâm nhiệm vụ",
         "api_mng": "Quản lý API",
         "logout": "Đăng xuất",
-        "user": "Quản lý người dùng"
+        "user": "Quản lý người dùng",
+        "profile": "Thông tin cá nhân",
+        "partner": "Đối tác",
+        "payment_method": "Phương thức thanh toán",
+        "daily_reward": "Thưởng giao dịch hàng ngày"
     },
     "menu_grid": {
         "deposit": "Nạp",
