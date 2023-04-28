@@ -327,7 +327,7 @@ const HistoryOrders = () => {
                         }),
                     language
                 }}
-                emptyTextContent={t('common:no_data')}
+                emptyTextContent={t('dw_partner:no_order_history')}
                 customSort={customSort}
             />
         </div>

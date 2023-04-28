@@ -166,6 +166,17 @@ export const ORDER_TYPES = {
         icon: ICONS['WARNING'],
         title: (t, mode = MODE.USER) => t('dw_partner:cancel_transaction'),
         description: ({ side, token, mode = MODE.USER, id, amount, t }) => {
+            if (mode === MODE.PARTNER) {
+                return (
+                    <Trans i18nKey="dw_partner:partner_reject_order_buy_transaction">
+                        {{ orderId: id }}
+                        {{ side: t(`common:${side.toLowerCase()}`) }}
+                        <span className="text-txtPrimary dark:text-txtPrimary-dark">
+                            {{ amount }} {{ asset: token }}
+                        </span>
+                    </Trans>
+                );
+            }
             if (side === 'BUY')
                 return (
                     <Trans i18nKey="dw_partner:cancel_order_buy_description">

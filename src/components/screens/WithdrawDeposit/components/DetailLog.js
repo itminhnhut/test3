@@ -48,7 +48,7 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
     const side = orderDetail?.side || '';
     return logs && logs.length ? (
         <div className="mt-12">
-            <div className="text-[18px] font-semibold mb-6">Lịch sử thay đổi</div>
+            <div className="text-[18px] font-semibold mb-6">{t('common:global_label.history')}</div>
             <div className="dark:bg-darkBlue-3 border-divider border dark:border-0 bg-bgPrimary rounded-xl p-6 space-y-4 ">
                 {logs.map((log, logIndex, orginArr) => {
                     let contentLog = '',
