@@ -99,7 +99,7 @@
     "transaction_history": "Order History",
     "commission_history": "Commission History",
     "achievement": "Achievement",
-    "no_pending_transactions": "No pending order",
+    "no_pending_transactions": "No open orders",
     "report_commission": "Dashboard",
     "total_commissions": "Total commission",
     "commission_rate": "Rate",
