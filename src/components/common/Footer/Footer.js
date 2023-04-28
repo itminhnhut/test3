@@ -44,9 +44,7 @@ const Footer = memo(() => {
                     </div>
                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
-                <div style={{ fontSize: 12 }} className="font-medium text-gray-1 dark:text-gray-2">
-                    Copyright © 2020 Nami Foundation. All rights reserved.
-                </div>
+                <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">Copyright © 2020 Nami Foundation. All rights reserved.</div>
             </div>
         ),
         [t, language, currentTheme]
@@ -55,7 +53,7 @@ const Footer = memo(() => {
     const DesktopNotAuthSocial = useCallback(
         () => (
             <>
-                <div className="flex justify-between items-center mb-6">
+                <div className="flex justify-between items-center">
                     <div className="">
                         {/*  */}
                         <Image
@@ -69,38 +67,38 @@ const Footer = memo(() => {
                     <SocialsLink language={language} />
                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
-                <hr className="border-divider dark:border-divider-dark mb-6" />
-                <div className="font-medium text-gray-2 mt-6 text-center text-sm">Copyright © 2020 Nami Foundation. All rights reserved.</div>
+                <hr className="border-divider dark:border-divider-dark my-6" />
+                <div className="text-txtSecondary dark:text-txtSecondary-dark text-center text-sm">Copyright © 2020 Nami Foundation. All rights reserved.</div>
             </>
         ),
         [t, language, currentTheme]
     );
-    
+
     if (isApp) return null;
     return (
         <section className="mal-footer border-t border-divider dark:border-divider-dark">
             <div className={`${width >= 1200 ? 'mal-footer___desktop ' : ''}  mal-footer__wrapper  mal-container`}>
                 <PocketFooter currentTheme={currentTheme} t={t} language={language} auth={auth} width={width} active={state.active} parentState={setState} />
                 {!auth ? (
-                    <div>
-                        <hr className="border-divider dark:border-divider-dark mb-6" />
+                    <>
+                        <hr className="border-divider dark:border-divider-dark my-6" />
 
                         {width >= 1200 ? <DesktopNotAuthSocial /> : <MobileCopyright />}
-                    </div>
+                    </>
                 ) : (
                     <>
-                        <hr className="border-divider dark:border-divider-dark" />
+                        <hr className="border-divider dark:border-divider-dark my-6" />
                         {width > 1200 ? (
                             <>
-                                <div className="flex justify-between items-center mt-10 mb-6">
-                                    <div className="font-medium text-gray-1 dark:text-txtSecondary-dark text-sm text-center">
+                                <div className="flex justify-between items-center">
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-center text-sm">
                                         Copyright © 2020 Nami Foundation. All rights reserved.
                                     </div>
                                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                                 </div>{' '}
                             </>
                         ) : (
-                            <div className="mt-6">
+                            <div className="">
                                 <MobileCopyright />
                             </div>
                         )}
