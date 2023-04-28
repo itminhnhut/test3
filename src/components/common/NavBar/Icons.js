@@ -15,7 +15,8 @@ import {
     BxsDonateHeart as profile_referral,
     BxsGift as daily_reward,
     BxsLogoutCircle as logout,
-    PartnerIcon as partner
+    PartnerIcon as partner,
+    FutureInsurance as nami_insurance
 } from '../../svg/SvgIcon';
 
 export default {
@@ -35,5 +36,6 @@ export default {
     daily_reward,
     logout,
     partner,
-    payment_method
+    payment_method,
+    nami_insurance
 };

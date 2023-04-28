@@ -189,8 +189,8 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
                 child_lv1.map((child) => {
                     itemsLevel1.push(
-                        <Link href={child.url} key={`${child.title}_${child.key}`}>
-                            <a className="mal-navbar__link__group___item___childen__lv1___item">
+                        <Link  href={child.url} key={`${child.title}_${child.key}`}>
+                            <a target={child?.notSameOrigin ? '_blank' : '_self'} className="mal-navbar__link__group___item___childen__lv1___item">
                                 {t(`navbar:submenu.${child.localized}`)} {child.isNew && <div className="mal-dot__newest" />}
                             </a>
                         </Link>

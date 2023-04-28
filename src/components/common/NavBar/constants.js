@@ -49,7 +49,7 @@ export const NAV_DATA = [
                 child_lv1: []
             },
             {
-                key: 7,
+                key: 2,
                 title: 'Swap',
                 localized: 'swap',
                 isNew: false,
@@ -58,13 +58,22 @@ export const NAV_DATA = [
             },
 
             {
-                key: 6,
+                key: 3,
                 title: 'Referral',
                 localized: 'referral',
                 isNew: false,
                 url: '/reference',
                 child_lv2: []
-            }
+            },
+            // {
+            //     key: 4,
+            //     title: 'Nami Insurance',
+            //     localized: 'nami_insurance',
+            //     isNew: false,
+            //     notSameOrigin: true,
+            //     url: 'https://namiinsurance.io/',
+            //     child_lv2: []
+            // }
         ]
     },
     {
@@ -252,6 +261,15 @@ export const MOBILE_NAV_DATA = [
                 localized: 'referral',
                 isNew: false,
                 url: '/reference',
+                child_lv2: []
+            },
+            {
+                key: 7,
+                title: 'Nami Insurance',
+                localized: 'nami_insurance',
+                isNew: false,
+                notSameOrigin: true,
+                url: 'https://namiinsurance.io/',
                 child_lv2: []
             }
         ]

@@ -64,7 +64,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
             if (child_lv1 && child_lv1.length) {
                 const itemsLevel1 = [];
                 child_lv1.forEach((item) => {
-                    const { localized } = item;
+                    const { localized,notSameOrigin } = item;
                     const Icon = NavbarIcons?.[localized];
                     if (localized === 'partner' && !isPartner) return;
                     itemsLevel1.push(
@@ -72,6 +72,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                             <a
                                 className="mal-pocket-navbar__drawer__navlink__group___item__lv1__item mal-pocket-nabar__item___hover  !px-12"
                                 onClick={() => onClose()}
+                                target={notSameOrigin ? '_blank' : '_self'}
                             >
                                 <div className="text-txtSecondary dark:text-txtSecondary-dark">{Icon ? <Icon size={24} /> : getIcon(localized)}</div>
                                 <span className="ml-3 font-medium text-sm text-txtPrimary  dark:text-txtPrimary-dark">

@@ -39,6 +39,7 @@
     },
     "submenu": {
         "convert": "Nami Swap",
+        "nami_insurance":"Nami Insurance",
         "convert_description": "Trade cryptocurrencies in one click",
         "spot": "Spot Trading",
         "spot_description": "Trading quickly with {{pairsLength}} tokens listed with high liquidity",

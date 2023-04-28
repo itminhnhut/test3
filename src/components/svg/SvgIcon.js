@@ -1,5 +1,19 @@
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
+const FutureInsurance = ({ size }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <path d="M12.231 2.4 5.6 6.261V9.27l6.631-3.956 6.625 3.956V6.261l-6.625-3.86z" fill={'#EB2B3D'} />
+        <path
+            d="M18.884 10.322v2.534a8.718 8.718 0 0 1-3.928 7.214c-.678.48-2.71 1.53-2.71 1.53l-2.648-1.483c.928-.325 1.815-.76 2.641-1.294l.258-.162a8.568 8.568 0 0 0 3.712-7.072V9.02l2.675 1.301z"
+            fill={'#EB2B3D'}
+        />
+        <path
+            d="M11.73 18.457c-.823.53-1.702.966-2.622 1.301l-.528-.42a8.576 8.576 0 0 1-2.98-6.503v-2.242l2.71-1.572v2.561a8.582 8.582 0 0 0 3.42 6.875z"
+            fill={'#EB2B3D'}
+        />
+    </svg>
+);
+
 const ArrowDownIcon = ({ className = '', color = '#8694B3' }) => (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#clip0_295_61062)">
@@ -912,6 +926,7 @@ const MoneyIcon = ({ size, color = 'currentColor', ...props }) => (
 );
 
 export {
+    FutureInsurance,
     ArrowDownIcon,
     TrendIcon,
     SeeIcon,

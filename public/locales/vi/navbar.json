@@ -39,6 +39,7 @@
     },
     "submenu": {
         "convert": "Nami Swap",
+        "nami_insurance":"Nami Insurance",
         "convert_description": "Giao dịch crypto chỉ với một lần click",
         "spot": "Giao dịch Spot",
         "spot_description": "Giao dịch {{pairsLength}} token được niêm yết với thanh khoản cao",
