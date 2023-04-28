@@ -178,9 +178,9 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                             </div>
 
                             <div className="flex flex-row justify-center items-center user__button py-4 mx-4 relative">
-                                <div className="rounded-md w-full h-full left-0 absolute z-[-1]">
+                                <div className="rounded-xl w-full h-full left-0 absolute z-[-1]">
                                     <Image
-                                        className="rounded-md"
+                                        className="rounded-xl"
                                         layout="fill"
                                         src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)}
                                     />

@@ -362,29 +362,55 @@ const FutureAdvanceIcon = ({ size, ...props }) => (
     </svg>
 );
 
-const SuccessfulTransactionIcon = ({ size = 36, ...props }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
-        <path
-            d="M11.9501 14.6654V12.7252C10.8714 12.6763 9.87446 12.2198 9.13901 11.4209C7.60272 9.72523 7.60272 7.14916 9.13901 5.46983C9.85812 4.67092 10.8714 4.2144 11.9501 4.16549V1.83398H1.80078V22.1001H3.81103C4.07252 20.0621 5.0368 18.1871 6.55674 16.785C8.02765 15.4317 9.95618 14.6817 11.9501 14.6654Z"
-            fill="url(#paint0_linear_395_205101)"
-        />
-        <path d="M20.5132 22.1334C19.9412 17.8616 16.2803 14.666 11.9656 14.666V22.1007H3.41797V22.1334H20.5132Z" fill="#E2E8F0" />
-        <path d="M11.95 14.666C7.63531 14.6823 3.97437 17.8616 3.40234 22.1334H11.9663L11.95 14.666Z" fill="#0C0E14" />
-        <path d="M16.2312 8.43772C16.2312 6.07361 14.319 4.16602 11.9492 4.16602V12.7257C14.319 12.7094 16.2312 10.8018 16.2312 8.43772Z" fill="#E2E8F0" />
-        <path d="M7.66797 8.43772C7.66797 10.8018 9.58016 12.7094 11.95 12.7257V4.16602C9.58016 4.16602 7.66797 6.07361 7.66797 8.43772Z" fill="#0C0E14" />
-        <path d="M22.1965 22.1817H17.6367V20.16H20.17V17.6328H22.1965V22.1817Z" fill="#47ED95" />
-        <path d="M6.36062 22.1817H1.80078V17.6328H3.82738V20.16H6.36062V22.1817Z" fill="#47ED95" />
-        <path d="M3.82738 6.38355H1.80078V1.81836H6.36062V3.84008H3.82738V6.38355Z" fill="#47ED95" />
-        <path d="M22.1965 6.38355H20.17V3.84008H17.6367V1.81836H22.1965V6.38355Z" fill="#47ED95" />
-        <defs>
-            <linearGradient id="paint0_linear_395_205101" x1="4.64917" y1="8.69963" x2="25.1992" y2="13.4996" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#BDFEE7" />
-                <stop offset="0.891338" stopColor="#60F1A6" stopOpacity="0.93" />
-                <stop offset="1" stopColor="#47ED95" />
-            </linearGradient>
-        </defs>
-    </svg>
-);
+const SuccessfulTransactionIcon = ({ size = 36, ...props }) => {
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
+    return isDark ? (
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
+            <path
+                d="M11.9501 14.6654V12.7252C10.8714 12.6763 9.87446 12.2198 9.13901 11.4209C7.60272 9.72523 7.60272 7.14916 9.13901 5.46983C9.85812 4.67092 10.8714 4.2144 11.9501 4.16549V1.83398H1.80078V22.1001H3.81103C4.07252 20.0621 5.0368 18.1871 6.55674 16.785C8.02765 15.4317 9.95618 14.6817 11.9501 14.6654Z"
+                fill="url(#paint0_linear_395_205101)"
+            />
+            <path d="M20.5132 22.1334C19.9412 17.8616 16.2803 14.666 11.9656 14.666V22.1007H3.41797V22.1334H20.5132Z" fill="#E2E8F0" />
+            <path d="M11.95 14.666C7.63531 14.6823 3.97437 17.8616 3.40234 22.1334H11.9663L11.95 14.666Z" fill="#0C0E14" />
+            <path d="M16.2312 8.43772C16.2312 6.07361 14.319 4.16602 11.9492 4.16602V12.7257C14.319 12.7094 16.2312 10.8018 16.2312 8.43772Z" fill="#E2E8F0" />
+            <path d="M7.66797 8.43772C7.66797 10.8018 9.58016 12.7094 11.95 12.7257V4.16602C9.58016 4.16602 7.66797 6.07361 7.66797 8.43772Z" fill="#0C0E14" />
+            <path d="M22.1965 22.1817H17.6367V20.16H20.17V17.6328H22.1965V22.1817Z" fill="#47ED95" />
+            <path d="M6.36062 22.1817H1.80078V17.6328H3.82738V20.16H6.36062V22.1817Z" fill="#47ED95" />
+            <path d="M3.82738 6.38355H1.80078V1.81836H6.36062V3.84008H3.82738V6.38355Z" fill="#47ED95" />
+            <path d="M22.1965 6.38355H20.17V3.84008H17.6367V1.81836H22.1965V6.38355Z" fill="#47ED95" />
+            <defs>
+                <linearGradient id="paint0_linear_395_205101" x1="4.64917" y1="8.69963" x2="25.1992" y2="13.4996" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#BDFEE7" />
+                    <stop offset="0.891338" stopColor="#60F1A6" stopOpacity="0.93" />
+                    <stop offset="1" stopColor="#47ED95" />
+                </linearGradient>
+            </defs>
+        </svg>
+    ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
+            <path
+                d="M11.95 14.665v-1.94a4.036 4.036 0 0 1-2.811-1.304 4.418 4.418 0 0 1 0-5.951 4.005 4.005 0 0 1 2.811-1.305V1.834H1.8V22.1h2.011a8.726 8.726 0 0 1 2.746-5.315 8.066 8.066 0 0 1 5.393-2.12z"
+                fill="url(#6xmltrwi7a)"
+            />
+            <path
+                d="M20.513 22.133c-.572-4.271-4.233-7.467-8.547-7.467v7.435H3.418v.032h17.095zM16.231 8.438a4.27 4.27 0 0 0-4.282-4.272v8.56c2.37-.017 4.282-1.924 4.282-4.288z"
+                fill="#7EE6AE"
+            />
+            <path
+                d="M22.197 22.182h-4.56V20.16h2.533v-2.527h2.026v4.549zM6.36 22.182H1.8v-4.55h2.027v2.528h2.534v2.022zM3.827 6.384H1.801V1.818h4.56V3.84H3.827v2.544zM22.197 6.384H20.17V3.84h-2.533V1.818h4.56v4.566z"
+                fill="#30BF73"
+            />
+            <defs>
+                <linearGradient id="6xmltrwi7a" x1="4.649" y1="8.7" x2="25.199" y2="13.5" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#BDFEE7" />
+                    <stop offset=".891" stop-color="#60F1A6" stop-opacity=".93" />
+                    <stop offset="1" stop-color="#47ED95" />
+                </linearGradient>
+            </defs>
+        </svg>
+    );
+};
 
 const AddCircleIcon = ({ color = '#768394', ...props }) => (
     <svg {...props} width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
