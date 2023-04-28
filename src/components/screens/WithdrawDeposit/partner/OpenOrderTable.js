@@ -104,7 +104,7 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
                 <div className="border-divider hidden lg:block dark:border-divider-dark border-r" />
                 <div className="flex gap-6 p-2 w-full xxs:w-1/2 lg:!w-auto">
                     <div className="">
-                        <div className="txtSecond-2 mb-3">{t('common:transaction_id')}</div>
+                        <div className="txtSecond-2 mb-3">{t('dw_partner:order_id')}</div>
                         <TextCopyable className="gap-x-1 txtPri-1" text={orderDetail?.displayingId} />
                     </div>
                     <div className="">

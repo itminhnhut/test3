@@ -74,7 +74,7 @@
         "partner": "When you click the confirm button, you will received the money from the user, please carefully check the amount received and the content of the transfer before making."
     },
     "confirm_transfer_success": "You have confirmed payment successfully.",
-    "partner_reject_order_buy_transaction":"Are you sure you want to reject {{side}} order #{{orderId}} of <2>{{amount}} {{asset}}</2>?",
+    "partner_reject_order_transaction":"Are you sure you want to reject {{side}} order #{{orderId}} of <2>{{amount}} {{asset}}</2>?",
     "cancel_order_buy_description":"Are you sure you want to cancel Buy order #{{orderId}} of <2>{{amount}} {{asset}}</2>? {{note}}",
     "cancel_order_note": "Note: Your money will not be reimbursed when canceling order after completing the transfer.",
     "cancel_order_sell_description": "Are you sure you want to cancel Sell order #{{orderId}} of <2>{{amount}} {{asset}}</2>? {{note}}",

@@ -66,12 +66,12 @@
     },
 
     "transfer_confirm_description": {
-        "user": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiển cho đối tác, vui lòng kiểm tra kĩ số tiền và nội dung chuyển khoản trước khi thực hiện.",
-        "partner": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiển cho người dùng, vui lòng kiểm tra kỹ số tiền và nội dung chuyển khoản trước khi thực hiện."
+        "user": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiền cho đối tác, vui lòng kiểm tra kĩ số tiền và nội dung chuyển khoản trước khi thực hiện.",
+        "partner": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiền cho người dùng, vui lòng kiểm tra kỹ số tiền và nội dung chuyển khoản trước khi thực hiện."
     },
     "take_money_confirm_description": {
-        "user": "Khi ấn vào nút xác nhận, bạn đã nhận tiển từ đối tác, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện.",
-        "partner": "Khi ấn vào nút xác nhận, bạn đã nhận tiển từ người dùng, vui lòng kiểm tra kỹ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện."
+        "user": "Khi ấn vào nút xác nhận, bạn đã nhận tiền từ đối tác, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện.",
+        "partner": "Khi ấn vào nút xác nhận, bạn đã nhận tiền từ người dùng, vui lòng kiểm tra kỹ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện."
     },
     "confirm_transfer_success": "Bạn vừa xác nhận thanh toán thành công.",
     "partner_reject_order_transaction":"Bạn có chắc chắc muốn từ chối lệnh {{side}} #{{orderId}} với khối lượng <2>{{amount}} {{asset}}</2>?",
@@ -131,7 +131,7 @@
     "commission": "Hoa hồng",
     "fiat_currency": "Tiền pháp định",
     "placeholder": {
-        "enter_txid": "Nhập mã giao dịch"
+        "enter_txid": "Nhập mã lệnh"
     },
     "order_id":"Mã lệnh",
     "add_phone": "Thêm số điện thoại",

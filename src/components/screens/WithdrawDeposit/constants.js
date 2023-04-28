@@ -168,7 +168,7 @@ export const ORDER_TYPES = {
         description: ({ side, token, mode = MODE.USER, id, amount, t }) => {
             if (mode === MODE.PARTNER) {
                 return (
-                    <Trans i18nKey="dw_partner:partner_reject_order_buy_transaction">
+                    <Trans i18nKey="dw_partner:partner_reject_order_transaction">
                         {{ orderId: id }}
                         {{ side: t(`common:${side.toLowerCase()}`) }}
                         <span className="text-txtPrimary dark:text-txtPrimary-dark">
