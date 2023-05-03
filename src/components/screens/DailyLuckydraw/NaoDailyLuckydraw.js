@@ -295,7 +295,9 @@ const Luckydraw = ({ platform }) => {
                                 '!text-xs': xs
                             })}
                         >
-                            <span>{t('common:luckydraw:today_trading')}</span>
+                            <span className={classNames('', { 'text-darkBlue-5': platform === 'nami', 'text-nao-text2': platform === 'frame' })}>
+                                {t('common:luckydraw:today_trading')}
+                            </span>
                             <div data-for="volume_tooltip" data-tip={t('common:luckydraw:volume_tooltip')}>
                                 <TooltipNami />
                             </div>
