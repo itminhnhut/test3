@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IconLoading } from 'components/common/Icons';
 import { getTradingViewTimezone, getS3Url, formatFundingRate } from 'redux/actions/utils';
-import Countdown from 'react-countdown-now'
+import Countdown from 'react-countdown-now';
 import colors from '../../../styles/colors';
 import { widget } from '../../TradingView/charting_library/charting_library.min';
 import Datafeed from '../api';
@@ -9,16 +9,13 @@ import { ChartMode } from 'redux/actions/const';
 import { VndcFutureOrderType } from '../../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import ChartOptions from 'components/TVChartContainer/MobileTradingView/ChartOptions';
 import classNames from 'classnames';
-import IndicatorBars, {
-    mainIndicators,
-    subIndicators
-} from 'components/TVChartContainer/MobileTradingView/IndicatorBars';
+import IndicatorBars, { mainIndicators, subIndicators } from 'components/TVChartContainer/MobileTradingView/IndicatorBars';
 import { find, set } from 'lodash';
 import Modal from 'components/common/ReModal';
 import { useTranslation } from 'next-i18next';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 import Tooltip from 'components/common/Tooltip';
-import { AlertContext } from "components/common/layouts/LayoutMobile";
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
 
 const CONTAINER_ID = 'nami-mobile-tv';
 const CHART_VERSION = '1.0.8';
@@ -26,7 +23,7 @@ const ChartStatus = {
     NOT_LOADED: 1,
     LOADED: 2,
     RECONNECTING: 3,
-    UNABLE_TO_CONNECT: 4,
+    UNABLE_TO_CONNECT: 4
 };
 import { formatPrice } from 'src/redux/actions/utils';
 import axios from 'axios';
@@ -55,7 +52,7 @@ export class MobileTradingView extends React.PureComponent {
     timer = null;
     firstTime = true;
     oldOrdersList = [];
-    drawnHighLowArrows = {}
+    drawnHighLowArrows = {};
 
     containerId = `${this.props.containerId || CONTAINER_ID}-${this.props.symbol}`;
 
@@ -68,14 +65,10 @@ export class MobileTradingView extends React.PureComponent {
     componentDidMount() {
         if (this.props?.refChart) this.props?.refChart(this);
         this.initWidget(this.props.symbol, this.props.fullChart);
-
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (
-            this.props.symbol !== prevProps.symbol ||
-            this.props.chartSize !== prevProps.chartSize
-        ) {
+        if (this.props.symbol !== prevProps.symbol || this.props.chartSize !== prevProps.chartSize) {
             this.widget.remove();
             this.oldOrdersList = [];
             this.initWidget(this.props.symbol);
@@ -83,18 +76,14 @@ export class MobileTradingView extends React.PureComponent {
 
         if (prevProps.theme !== this.props.theme) {
             const newTheme = this.props.theme === 'dark' ? 'Dark' : 'Light';
-            if (
-                this.state.chartStatus === ChartStatus.LOADED &&
-                newTheme !== this.theme &&
-                this.widget
-            ) {
+            if (this.state.chartStatus === ChartStatus.LOADED && newTheme !== this.theme && this.widget) {
                 this.widget.changeTheme(newTheme);
                 const isDark = this.props.theme === 'dark';
                 this.widget.applyOverrides({
                     'scalesProperties.lineColor': '#202C4C',
                     'paneProperties.background': colors.onus.bg,
                     'paneProperties.vertGridProperties.color': colors.onus.bg,
-                    'paneProperties.horzGridProperties.color': colors.onus.bg,
+                    'paneProperties.horzGridProperties.color': colors.onus.bg
                 });
                 this.theme = newTheme;
             }
@@ -104,13 +93,12 @@ export class MobileTradingView extends React.PureComponent {
             this.handleActiveTime(this.props.initTimeFrame);
         }
 
-        if ((prevProps.ordersList !== this.props.ordersList) && !this.firstTime) {
+        if (prevProps.ordersList !== this.props.ordersList && !this.firstTime) {
             this.rawOrders();
         }
         if (prevProps.fullChart !== this.props.fullChart) {
             this.initWidget(this.props.symbol, this.props.fullChart);
         }
-
     }
 
     componentWillUnmount() {
@@ -123,29 +111,25 @@ export class MobileTradingView extends React.PureComponent {
 
     handleActiveTime = (value) => {
         if (this?.widget) {
-            this.widget.setSymbol(this.props.symbol, value, () => {
-            });
+            this.widget.setSymbol(this.props.symbol, value, () => {});
             this.setState({ interval: value });
         }
     };
 
     handleChangeChartType = (type) => {
         if (this?.widget) {
-            this.widget.chart()
-                .setChartType(type);
+            this.widget.chart().setChartType(type);
             this.setState({ priceChartType: type });
         }
     };
 
-    createIndicator = (name, cb) => this.widget.activeChart()
-        .createStudy(name, false, false, undefined, cb);
+    createIndicator = (name, cb) => this.widget.activeChart().createStudy(name, false, false, undefined, cb);
 
     handleChangeIndicator = (type) => (value) => {
         const indicatorStateKey = type === 'main' ? 'mainIndicator' : 'subIndicator';
         const studyId = this.state[indicatorStateKey]?.id;
         if (studyId) {
-            this.widget.activeChart()
-                .removeEntity(studyId);
+            this.widget.activeChart().removeEntity(studyId);
         }
         if (value) {
             this.createIndicator(value, (id) => {
@@ -186,13 +170,11 @@ export class MobileTradingView extends React.PureComponent {
 
         // Sync resolution to local component state
         setTimeout(() => {
-            const interval = this.widget.activeChart()
-                .resolution();
+            const interval = this.widget.activeChart().resolution();
             this.setState({
                 ...this.state,
                 interval,
-                priceChartType: this.widget.activeChart()
-                    .chartType(),
+                priceChartType: this.widget.activeChart().chartType()
             });
             if (this.props.onIntervalChange) {
                 this.props.onIntervalChange(interval);
@@ -233,8 +215,7 @@ export class MobileTradingView extends React.PureComponent {
     async newOrder(displayingId, order) {
         const isMatched = !(order.status === 0 || (order.status === 2 && order.openPrice == null));
         try {
-            const color = this.getOrderType(order)
-                .startsWith('BUY') ? colors.onus.green : colors.onus.red;
+            const color = this.getOrderType(order).startsWith('BUY') ? colors.onus.green : colors.onus.red;
             const colorSl = colors.onus.red;
             const colorTp = colors.onus.green;
             const line = this.widget
@@ -331,10 +312,10 @@ export class MobileTradingView extends React.PureComponent {
     }
 
     rawOrders = async () => {
-        const _ordersList = this.props.ordersList.filter(order => order?.symbol === this.props.symbol);
+        const _ordersList = this.props.ordersList.filter((order) => order?.symbol === this.props.symbol);
         const edited = localStorage.getItem('edited_id');
         if (edited) {
-            const itemEdited = _ordersList.find(order => String(order?.displaying_id) === edited);
+            const itemEdited = _ordersList.find((order) => String(order?.displaying_id) === edited);
             if (itemEdited) {
                 if (this.drawnOrder.hasOwnProperty(itemEdited?.displaying_id)) {
                     this.drawnOrder[itemEdited?.displaying_id].remove();
@@ -356,16 +337,19 @@ export class MobileTradingView extends React.PureComponent {
                 localStorage.removeItem('edited_id');
             }
         }
-        const newDataOrders = _ordersList.filter(order => {
+        const newDataOrders = _ordersList.filter((order) => {
             if (this.props.renderProfit) return true;
-            return (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && !this.oldOrdersList.find(id => order.displaying_id === id);
+            return (
+                (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) &&
+                !this.oldOrdersList.find((id) => order.displaying_id === id)
+            );
         });
         if (newDataOrders.length > 0) {
             newDataOrders.forEach((order) => {
                 this.newOrder(order.displaying_id, order);
             });
         } else {
-            const removeOrders = this.oldOrdersList.filter(id => !_ordersList.find(order => order.displaying_id === id));
+            const removeOrders = this.oldOrdersList.filter((id) => !_ordersList.find((order) => order.displaying_id === id));
             removeOrders.forEach((id) => {
                 if (this.drawnOrder.hasOwnProperty(id)) {
                     this.drawnOrder[id].remove();
@@ -385,7 +369,9 @@ export class MobileTradingView extends React.PureComponent {
                 }
             });
         }
-        this.oldOrdersList = this.props?.ordersList.map(order => (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && order.displaying_id);
+        this.oldOrdersList = this.props?.ordersList.map(
+            (order) => (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && order.displaying_id
+        );
     };
 
     initWidget = (symbol, isFullChart = false) => {
@@ -422,10 +408,10 @@ export class MobileTradingView extends React.PureComponent {
             'source_selection_markers',
             'popup_hints',
             'header_widget',
-            'axis_pressed_mouse_move_scale',
+            'axis_pressed_mouse_move_scale'
         ];
         if (!isFullChart) {
-            _disabled_features.push('left_toolbar')
+            _disabled_features.push('left_toolbar');
         }
         const widgetOptions = {
             symbol,
@@ -436,17 +422,14 @@ export class MobileTradingView extends React.PureComponent {
             library_path: this.props.libraryPath,
             locale: 'en',
             disabled_features: _disabled_features,
-            enabled_features: [
-                'move_logo_to_main_pane',
-                'edit_buttons_in_legend',
-            ],
+            enabled_features: ['move_logo_to_main_pane', 'edit_buttons_in_legend'],
             charts_storage_url: this.props.chartsStorageUrl,
             charts_storage_api_version: this.props.chartsStorageApiVersion,
             client_id: this.props.clientId,
             user_id: this.props.userId,
             fullscreen: this.props.fullscreen,
             autosize: true,
-            loading_screen: { backgroundColor: colors.onus.bg, },
+            loading_screen: { backgroundColor: colors.onus.bg },
             studies_overrides: {
                 'volume.volume.color.0': colors.onus.red,
                 'volume.volume.color.1': colors.onus.green,
@@ -461,13 +444,13 @@ export class MobileTradingView extends React.PureComponent {
                 'macd.histogram.color': '#00ffff',
                 'macd.macd.color': '#e9a55d',
                 'macd.signal.color': '#f263f3',
-                'relative strength index.plot.color': '#00ffff',
+                'relative strength index.plot.color': '#00ffff'
             },
             timezone: getTradingViewTimezone(),
             overrides: {
                 'scalesProperties.fontSize': 10,
                 editorFontsList: ['Inter', 'Sans'],
-                'volumePaneSize': 'tiny'
+                volumePaneSize: 'tiny'
             },
             custom_css_url: '/library/trading_view/custom_mobile_chart.css?version=5'
         };
@@ -478,7 +461,6 @@ export class MobileTradingView extends React.PureComponent {
         // eslint-disable-next-line new-cap
         this.widget = new widget(widgetOptions);
         this.widget.onChartReady(() => {
-
             // Load saved chart
             this.loadSavedChart();
             this.syncIndicators();
@@ -499,42 +481,46 @@ export class MobileTradingView extends React.PureComponent {
                 'mainSeriesProperties.hollowCandleStyle.borderColor': colors.onus.green,
                 'mainSeriesProperties.hollowCandleStyle.borderDownColor': colors.onus.red,
 
-                'volumePaneSize': 'tiny'
+                volumePaneSize: 'tiny'
             });
             this.setState({ chartStatus: ChartStatus.LOADED });
             // if (this.props.isVndcFutures) {
             if (this.timer) clearTimeout(this.timer);
             this.timer = setTimeout(() => {
                 this.rawOrders();
-                this.drawHighLowArrows()
+                this.drawHighLowArrows();
                 this.firstTime = false;
-                this.widget.chart().onVisibleRangeChanged().subscribe({}, () => {
-                    this.drawHighLowArrows()
-                })
+                this.widget
+                    .chart()
+                    .onVisibleRangeChanged()
+                    .subscribe({}, () => {
+                        this.drawHighLowArrows();
+                    });
             }, 2000);
             // }
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
             this.intervalSaveChart = setInterval(this.saveChart, 5000);
         });
-
     };
 
     drawHighLowArrows = debounce(async () => {
-        this.drawnHighLowArrows?.highArrow?.remove()
-        this.drawnHighLowArrows?.lowArrow?.remove()
-        delete this.drawnHighLowArrows?.highArrow
-        delete this.drawnHighLowArrows?.lowArrow
+        this.drawnHighLowArrows?.highArrow?.remove();
+        this.drawnHighLowArrows?.lowArrow?.remove();
+        delete this.drawnHighLowArrows?.highArrow;
+        delete this.drawnHighLowArrows?.lowArrow;
 
-        const { from, to } = this.widget.chart().getVisibleRange()
+        const { from, to } = this.widget.chart().getVisibleRange();
         const { data } = await this.widget.chart().exportData({
             from,
             to
-        })
+        });
         if (data && data.length) {
-            const high = data.reduce((prev, current) => (prev[2] > current[2]) ? prev : current)
-            const low = data.reduce((prev, current) => (prev[3] < current[3]) ? prev : current)
-            const base = this.props.symbol.includes('VNDC') ? this.props.symbol.replace('VNDC', '') : this.props.symbol.replace('USDT', '')
-            const highArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
+            const high = data.reduce((prev, current) => (prev[2] > current[2] ? prev : current));
+            const low = data.reduce((prev, current) => (prev[3] < current[3] ? prev : current));
+            const base = this.props.symbol.includes('VNDC') ? this.props.symbol.replace('VNDC', '') : this.props.symbol.replace('USDT', '');
+            const highArrow = this.widget
+                .chart()
+                .createExecutionShape({ disableUndo: false })
                 .setPrice(high[2])
                 .setTime(high[0])
                 .setDirection('sell')
@@ -542,8 +528,10 @@ export class MobileTradingView extends React.PureComponent {
                 .setTooltip(formatPrice(high[2], this.props.exchangeConfig, base).toString())
                 .setArrowColor('rgb(187,187,187)')
                 .setTextColor(colors.onus.grey)
-                .setArrowHeight(7)
-            const lowArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
+                .setArrowHeight(7);
+            const lowArrow = this.widget
+                .chart()
+                .createExecutionShape({ disableUndo: false })
                 .setPrice(low[3])
                 .setTime(low[0])
                 .setDirection('buy')
@@ -551,11 +539,11 @@ export class MobileTradingView extends React.PureComponent {
                 .setTooltip(formatPrice(low[3], this.props.exchangeConfig, base).toString())
                 .setArrowColor('rgb(187,187,187)')
                 .setTextColor(colors.onus.grey)
-                .setArrowHeight(7)
+                .setArrowHeight(7);
 
             this.drawnHighLowArrows = { highArrow, lowArrow };
         }
-    }, 100)
+    }, 100);
 
     getInterval(resolution) {
         if (resolution.includes('D') || resolution.includes('W') || resolution.includes('M')) {
@@ -572,19 +560,17 @@ export class MobileTradingView extends React.PureComponent {
     }
 
     syncIndicators = () => {
-        const currentStudies = this.widget.activeChart()
-            .getAllStudies();
+        const currentStudies = this.widget.activeChart().getAllStudies();
         this.setState({
             ...this.state,
-            mainIndicator: find(currentStudies, s => !!find(mainIndicators, { value: s.name })),
-            subIndicator: find(currentStudies, s => !!find(subIndicators, { value: s.name })),
+            mainIndicator: find(currentStudies, (s) => !!find(mainIndicators, { value: s.name })),
+            subIndicator: find(currentStudies, (s) => !!find(subIndicators, { value: s.name }))
         });
     };
 
     handleOpenIndicatorModal = () => {
         if (this?.widget) {
-            this.widget.chart()
-                .executeActionById('insertIndicator');
+            this.widget.chart().executeActionById('insertIndicator');
         }
     };
 
@@ -595,23 +581,20 @@ export class MobileTradingView extends React.PureComponent {
 
     setFullChart = (data) => {
         if (this.props.setFullChart) this.props.setFullChart(data);
-    }
+    };
 
     render() {
         return (
             <>
-                <div
-                    className="relative flex flex-grow flex-col h-full bg-onus"
-                    id="chart-container"
-                >
+                <div className="relative flex flex-grow flex-col h-full bg-onus" id="chart-container">
                     <div
                         className={classNames(`absolute w-full h-full flex justify-center items-center`, {
-                            'hidden': this.state.chartStatus === ChartStatus.LOADED
+                            hidden: this.state.chartStatus === ChartStatus.LOADED
                         })}
                     >
                         <IconLoading color={colors.onus.green} />
                     </div>
-                    {this.props.showTimeFrame &&
+                    {this.props.showTimeFrame && (
                         <div className="w-full border-b border-onus-line py-2 dragHandleArea z-10">
                             <ChartOptions
                                 pair={this.props.symbol}
@@ -630,15 +613,10 @@ export class MobileTradingView extends React.PureComponent {
                                 handleOpenIndicatorModal={this.handleOpenIndicatorModal}
                             />
                         </div>
-                    }
-                    <div
-                        id={this.containerId}
-                        className={`h-full pr-2 ${this.props.classNameChart}`}
-                        style={this.props.styleChart}
-                    />
+                    )}
+                    <div id={this.containerId} className={`h-full pr-2 ${this.props.classNameChart}`} style={this.props.styleChart} />
                     <div>
-                        {
-                            this.state.chartStatus === ChartStatus.LOADED &&
+                        {this.state.chartStatus === ChartStatus.LOADED && (
                             <IndicatorBars
                                 handleOpenIndicatorModal={this.handleOpenIndicatorModal}
                                 setMainIndicator={this.handleChangeIndicator('main')}
@@ -650,11 +628,9 @@ export class MobileTradingView extends React.PureComponent {
                                 setFullChart={this.setFullChart}
                                 isDetail={this.props.isDetail}
                             />
-                        }
+                        )}
                     </div>
-                    {!this.props.isDetail &&
-                        <Funding symbol={this.props.symbol} />
-                    }
+                    {!this.props.isDetail && <Funding symbol={this.props.symbol} />}
                     {/*<div className="!w-32 cheat-watermark">*/}
                     {/*    <NamiExchangeSvg color={colors.gray[4]}/>*/}
                     {/*</div>*/}
@@ -665,60 +641,63 @@ export class MobileTradingView extends React.PureComponent {
 }
 
 const Funding = ({ symbol }) => {
-    const { t } = useTranslation()
-    const [showModal, setShowModal] = React.useState(false)
-    const timesync = useSelector(state => state.utils.timesync)
+    const { t } = useTranslation();
+    const [showModal, setShowModal] = React.useState(false);
+    const timesync = useSelector((state) => state.utils.timesync);
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const context = useContext(AlertContext);
 
     useEffect(() => {
-        const localKey = `notShowFundingWarning:${symbol}`
-        const notShowFundingWarning = localStorage.getItem(localKey)
-        if (notShowFundingWarning?.length  ) {
-            if(Number(notShowFundingWarning) >= Date.now()){
-                return
-            }else{
-                localStorage.removeItem(localKey)
+        const localKey = `notShowFundingWarning:${symbol}`;
+        const notShowFundingWarning = localStorage.getItem(localKey);
+        if (notShowFundingWarning?.length) {
+            if (Number(notShowFundingWarning) >= Date.now()) {
+                return;
+            } else {
+                localStorage.removeItem(localKey);
             }
         }
-        const showWarningRate = Math.abs(marketWatch?.[symbol]?.fundingRate * 100) >= 0.5
-        const showWarningTime = ((marketWatch?.[symbol]?.fundingTime - Date.now()) / 60000) <= 15
+        const showWarningRate = Math.abs(marketWatch?.[symbol]?.fundingRate * 100) >= 0.5;
+        const showWarningTime = (marketWatch?.[symbol]?.fundingTime - Date.now()) / 60000 <= 15;
 
-        const showWarning = showWarningRate && showWarningTime
+        const showWarning = showWarningRate && showWarningTime;
         if (showWarning) {
             context.alert.show(
-                "warning",
-                t("futures:funding_history_tab:funding_warning"),
-                t("futures:funding_history_tab:funding_warning_content"),
+                'warning',
+                t('futures:funding_history_tab:funding_warning'),
+                t('futures:funding_history_tab:funding_warning_content'),
                 null,
-                () => { localStorage.setItem(localKey, (Date.now() + 900000).toString()) },
+                () => {
+                    localStorage.setItem(localKey, (Date.now() + 900000).toString());
+                },
                 null,
                 {
                     hideCloseButton: true,
-                    confirmTitle: t("futures:funding_history_tab:funding_warning_accept"),
+                    confirmTitle: t('futures:funding_history_tab:funding_warning_accept'),
                     textClassname: '!text-left !text-white overflow-y-auto !max-h-[300px] yes-scrollbar',
                     noUseOutside: true
-                });
+                }
+            );
         }
-    }, [symbol])
+    }, [symbol]);
 
     useEffect(() => {
-        const localKey = `notShowNetworkError`
-        const notShowNetworkError = localStorage.getItem(localKey)
-        if (notShowNetworkError?.length  ) {
-            if(Number(notShowNetworkError) >= Date.now()){
-                return
-            }else{
-                localStorage.removeItem(localKey)
+        const localKey = `notShowNetworkError`;
+        const notShowNetworkError = localStorage.getItem(localKey);
+        if (notShowNetworkError?.length) {
+            if (Number(notShowNetworkError) >= Date.now()) {
+                return;
+            } else {
+                localStorage.removeItem(localKey);
             }
         }
 
-        const showWarning = true
+        const showWarning = true;
         if (showWarning) {
             context.alert.show(
-                "warning",
-                t("futures:funding_history_tab:funding_warning"),
-                t("futures:funding_history_tab:network_warning_content"),
+                'warning',
+                t('futures:funding_history_tab:funding_warning'),
+                t('futures:funding_history_tab:network_warning_content'),
                 null,
                 () => {
                     localStorage.setItem(localKey, (Date.now() + 12 * 60 * 60 * 1000).toString());
@@ -726,20 +705,20 @@ const Funding = ({ symbol }) => {
                 null,
                 {
                     hideCloseButton: true,
-                    confirmTitle: t("futures:funding_history_tab:funding_warning_accept"),
+                    confirmTitle: t('futures:funding_history_tab:funding_warning_accept'),
                     textClassname: '!text-left !text-white overflow-y-auto !max-h-[300px] yes-scrollbar',
                     noUseOutside: true
-                });
+                }
+            );
         }
-    }, [])
-
+    }, []);
 
     return (
         <>
             {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}
             <div className="flex items-center px-4 pt-3 pb-4 space-x-6 border-b-4 border-onus-line">
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
-                    <div className='flex items-center space-x-1' onClick={() => setShowModal(true)}>
+                    <div className="flex items-center space-x-1" onClick={() => setShowModal(true)}>
                         <span className="text-onus-textSecondary">Funding:</span>
                         <div>
                             <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
@@ -748,8 +727,12 @@ const Funding = ({ symbol }) => {
                     <div>{formatFundingRate(marketWatch[symbol]?.fundingRate * 100)}</div>
                 </div>
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
-                    <div className='flex items-center space-x-1' data-tip={t('common:countdown_tooltip')} data-for="tooltip-countdown">
-                        <Tooltip id={'tooltip-countdown'} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                    <div className="flex items-center space-x-1" data-tip={t('common:countdown_tooltip')} data-for="tooltip-countdown">
+                        <Tooltip
+                            id={'tooltip-countdown'}
+                            place="top"
+                            effect="solid"
+                            backgroundColor="bg-darkBlue-4"
                             className={`!bg-onus-bg2 !opacity-100 max-w-[300px] !rounded-lg after:!border-t-onus-bg2`}
                         />
                         <span className="text-onus-textSecondary">{t('futures:countdown')}:</span>
@@ -759,44 +742,58 @@ const Funding = ({ symbol }) => {
                     </div>
                     <div>
                         <Countdown
-                            now={() => timesync ? timesync.now() : Date.now()}
-                            date={marketWatch[symbol]?.fundingTime} renderer={({ hours, minutes, seconds }) => {
-                                return <span>{hours}:{minutes}:{seconds}</span>
-                            }} />
+                            now={() => (timesync ? timesync.now() : Date.now())}
+                            date={marketWatch[symbol]?.fundingTime}
+                            renderer={({ hours, minutes, seconds }) => {
+                                return (
+                                    <span>
+                                        {hours}:{minutes}:{seconds}
+                                    </span>
+                                );
+                            }}
+                        />
                     </div>
                 </div>
             </div>
         </>
-
-    )
-}
+    );
+};
 
 const ModalFundingRate = ({ onClose, t }) => {
-    const router = useRouter()
+    const router = useRouter();
 
     const onRedirect = () => {
-        router.push(`/${router.locale}/futures/funding-history?theme=dark&source=frame`)
-    }
+        router.push(`/${router.locale}/futures/funding-history?theme=dark&source=frame`);
+    };
 
     const onDetail = () => {
-        const url = router.locale === 'en'
-            ? '/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures?theme=dark&source=frame'
-            : '/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures?theme=dark&source=frame'
-        router.push(url)
-    }
+        const url =
+            router.locale === 'en'
+                ? '/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures?theme=dark&source=frame'
+                : '/vi/support/announcement/thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures?theme=dark&source=frame';
+        router.push(url);
+    };
 
-    return <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
-    >
-        <div className="text-2xl font-semibold text-center">{t('futures:funding_rate')}</div>
-        <div className="text-sm pt-4 text-center text-onus-grey">
-            {t('futures:funding_rate_des')} <span onClick={onDetail} className="text-onus-base font-semibold">{t('common:read_more')}</span>
-        </div>
-        <div className="flex items-center space-x-4 pt-8 text-center">
-            <div onClick={onClose} className="w-full bg-onus-bg2 rounded-md px-5 py-3">{t('common:close')}</div>
-            <div onClick={onRedirect} className="w-full bg-onus-base rounded-md px-5 py-3">{t('futures:funding_history')}</div>
-        </div>
-    </Modal>
-}
+    return (
+        <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}>
+            <div className="text-2xl font-semibold text-center">{t('futures:funding_rate')}</div>
+            <div className="text-sm pt-4 text-center text-onus-grey">
+                {t('futures:funding_rate_des')}{' '}
+                <span onClick={onDetail} className="text-onus-base font-semibold">
+                    {t('common:read_more')}
+                </span>
+            </div>
+            <div className="flex items-center space-x-4 pt-8 text-center">
+                <div onClick={onClose} className="w-full bg-onus-bg2 rounded-md px-5 py-3">
+                    {t('common:close')}
+                </div>
+                <div onClick={onRedirect} className="w-full bg-onus-base rounded-md px-5 py-3">
+                    {t('futures:funding_history')}
+                </div>
+            </div>
+        </Modal>
+    );
+};
 
 MobileTradingView.defaultProps = {
     symbol: 'BTCUSDT',
@@ -822,6 +819,6 @@ MobileTradingView.defaultProps = {
         'volume.volume ma.linewidth': 5,
         'volume.volume ma.visible': true,
         'bollinger bands.median.color': '#33FF88',
-        'bollinger bands.upper.linewidth': 7,
-    },
+        'bollinger bands.upper.linewidth': 7
+    }
 };
