@@ -38,7 +38,7 @@ const getPairConfig = createSelector(
 
 const getAvailable = createSelector(
     [
-        state => state.wallet?.FUTURES,
+        state => state.wallet?.NAO_FUTURES,
         (utils, params) => params
     ],
     (wallet, params) => {

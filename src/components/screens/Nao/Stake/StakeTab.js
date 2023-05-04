@@ -14,8 +14,8 @@ import { useTranslation } from 'next-i18next';
 import { requestNao } from 'redux/actions/nao';
 import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
 
-const getBalance = createSelector([(state) => state.wallet?.FUTURES, (wallet, params) => params], (wallet, params) => {
-    return wallet[params]?.value - wallet[params]?.locked_value;
+const getBalance = createSelector([(state) => state.wallet?.NAO_FUTURES, (wallet, params) => params], (wallet, params) => {
+    return wallet ? wallet[params]?.value - wallet[params]?.locked_value : 0;
 });
 
 const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {

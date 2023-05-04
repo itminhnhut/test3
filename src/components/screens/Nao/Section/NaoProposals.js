@@ -45,7 +45,7 @@ export default function NaoProposals({ listProposal, assetNao }) {
     return (
         <section id="nao_proposal" className="pt-10 sm:pt-20">
             <div className="flex items-center flex-wrap justify-between gap-4">
-                <div>
+                <div className="space-y-2 flex flex-col">
                     <TextLiner className="normal-case">
                         {t("nao:vote:title")}
                         {/* Proposals */}
@@ -77,7 +77,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
     const statusText = t(`nao:vote:status:${status.toLowerCase()}`);
     return (
         <CardNao
-            className="mt-6 p-6 !sm:min-h-0 !min-h-0 cursor-pointer"
+            className="mt-4 sm:mt-6 p-6 !sm:min-h-0 !min-h-0 cursor-pointer"
             onClick={() => {
                 router.push(`/nao/vote/${_id}`);
             }}
@@ -85,7 +85,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
             <div className="grid grid-cols-3 gap-4">
                 <div className="lg:col-span-2 col-span-3 flex flex-row gap-1 flex-1 items-center">
                     {status === "Processing" && (
-                        <SvgProgress className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />
+                        <SvgProgress className="md:w-6 md:h-6 w-[14px] h-[14px] flex-shrink-0" />
                     )}
                     {status === "Executed" && (
                         <CheckCircle className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />
@@ -94,7 +94,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         <CrossCircle fill="blue" className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />
                     )}
                     {status === "Canceled" && (
-                        <SvgCancelCircle className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />
+                        <SvgCancelCircle className="md:w-6 md:h-6 w-[14px] h-[14px] flex-shrink-0" />
                     )}
 
                     <span className="text-txtPrimary dark:text-txtPrimary-dark font-medium sm:text-lg ml-2">

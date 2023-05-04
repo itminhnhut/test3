@@ -21,7 +21,7 @@ const OrderBalance = ({
 
     const [state, set] = useState();
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-    const wallets = useSelector(state => state.wallet.FUTURES);
+    const wallets = useSelector(state => state.wallet?.NAO_FUTURES);
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
     const futuresMarketWatch = useSelector((state) => state?.futures?.marketWatch) || null;
 
@@ -42,22 +42,21 @@ const OrderBalance = ({
 
 
     const balance = useMemo(() => {
-        if (!wallets || !assetConfig) return;
         let value = 0;
-        if (Array.isArray(assetConfig) && assetConfig?.length) {
-            const futures = assetConfig.filter(o => o?.assetCode === quoteAsset);
+        if (Array.isArray(assetConfig) && assetConfig?.length && wallets) {
+            const futures = assetConfig.filter((o) => o?.assetCode === quoteAsset);
             const dataFilter = {
                 ...futures[0],
-                wallet: wallets?.[futures[0].id],
+                wallet: wallets?.[futures[0].id]
             };
-            value = Math.max(dataFilter?.wallet?.value, 0)
+            value = Math.max(dataFilter?.wallet?.value, 0);
             if (+value < 0 || Math.abs(+value) < 1e-4 || isNil(value) || !value) value = 0;
             return {
                 value,
                 item: dataFilter
             };
         }
-        return value;
+        return { value };
     }, [wallets, assetConfig, pairConfig]);
 
     const totalProfit = useMemo(() => {

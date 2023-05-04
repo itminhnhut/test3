@@ -209,14 +209,14 @@ const Drawer = ({
                         <div className="flex flex-col w-full pt-10">
                             <hr className="border-t border-divider dark:border-divider-dark my-1" />
                             <div className="flex items-center py-4">
-                                <img alt="" src={getS3Url('/images/nao/ic_nami.png')} height="32" width="32" />
+                                <img alt="" src={getS3Url('/images/logo/nami_hawaii.png')} height="24" width="24" />
                                 <div className="text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold ml-2">{t('nao:nao_token:get_buy_now')}</div>
                             </div>
-                            <div className="flex justify-between items-center w-full">
+                            <div className="flex justify-between items-center w-full space-x-3">
                                 <button
                                     type="BUTTON"
                                     onClick={() => onDownload('app_store')}
-                                    className="flex bg-gray-12 dark:bg-dark-2 rounded-md px-3 py-2 text-left"
+                                    className="flex bg-gray-12 dark:bg-dark-2 rounded-md px-3 py-2 text-left w-full"
                                 >
                                     <AppleIcon color="currentColor" />
                                     <div className="font-SF-Pro">
@@ -227,7 +227,7 @@ const Drawer = ({
                                 <button
                                     type="BUTTON"
                                     onClick={() => onDownload('google_play')}
-                                    className="flex bg-gray-12 dark:bg-dark-2 rounded-md px-3 py-2 text-left"
+                                    className="flex bg-gray-12 dark:bg-dark-2 rounded-md px-3 py-2 text-left w-full"
                                 >
                                     <GooglePlayIcon />
                                     <div className="font-SF-Pro">

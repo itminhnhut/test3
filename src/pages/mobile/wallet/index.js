@@ -98,7 +98,7 @@ const ExternalWithdrawal = (props) => {
 
     // map state from redux
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
-    const futuresBalances = useSelector((state) => state.wallet.FUTURES) || {};
+    const futuresBalances = useSelector((state) => state.wallet?.NAO_FUTURES) || {};
 
     const alertContext = useContext(AlertContext);
 

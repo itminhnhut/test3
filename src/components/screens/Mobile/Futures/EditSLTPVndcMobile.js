@@ -58,7 +58,6 @@ const EditSLTPVndcMobile = ({
     const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
     const futuresConfigs = useSelector(state => state.futures.pairConfigs);
     const assetConfig = useSelector(state => state.utils.assetConfig)
-    const wallets = useSelector((state) => state.wallet?.FUTURES);
     const symbol = order?.symbol;
     const pairConfig = find(futuresConfigs, { symbol });
     const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');

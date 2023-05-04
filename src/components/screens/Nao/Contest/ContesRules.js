@@ -47,7 +47,7 @@ const ContesRules = ({
                         date={CONTEST_TIME.START} // countdown 60s
                         renderer={({ formatted: { days, hours, minutes, seconds } }) => (
                             <div
-                                className={classNames('text-lg sm:text-2xl flex', classNameCountdown)}
+                                className={classNames('text-sm sm:text-base flex', classNameCountdown)}
                                 dangerouslySetInnerHTML={{
                                     __html: t('nao:contest:date', {
                                         days,
@@ -71,7 +71,7 @@ const ContesRules = ({
                         date={CONTEST_TIME.END} // countdown 60s
                         renderer={({ formatted: { days, hours, minutes, seconds } }) => (
                             <div
-                                className={classNames('text-lg sm:text-2xl flex', classNameCountdown)}
+                                className={classNames('text-sm sm:text-base flex', classNameCountdown)}
                                 dangerouslySetInnerHTML={{
                                     __html: t('nao:contest:date', {
                                         days,
@@ -88,7 +88,7 @@ const ContesRules = ({
         } else {
             return (
                 <>
-                    <div className="text-lg sm:text-2xl flex">{t('nao:contest:ended')}</div>
+                    <div className="text-sm sm:text-base flex">{t('nao:contest:ended')}</div>
                 </>
             );
         }
@@ -117,22 +117,22 @@ const ContesRules = ({
     }, [seasons]);
 
     return (
-        <section className="contest_rules py-[3.375rem] w-full flex flex-col mb:flex-row mb:justify-between">
+        <section className="contest_rules py-6 sm:py-[3.375rem] w-full flex flex-col mb:flex-row mb:justify-between">
             <div className="text-center mb:text-left flex flex-col flex-wrap mb:block">
-                <div className="font-semibold mb:leading-[0px] text-lg mb:text-2xl text-teal">{t('nao:contest:tournament')}</div>
-                <div className="font-semibold text-lg sm:text-[44px] leading-[58px] pt-4">
+                <div className="font-semibold text-xl mb:text-2xl text-teal">{t('nao:contest:tournament')}</div>
+                <div className="font-semibold text-xl sm:text-[44px] sm:leading-[58px] pt-3 sm:pt-4">
                     <div>{title?.[language]}</div>
                     <div>{title_champion?.[language]}</div>
                 </div>
 
-                <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm sm:text-mb pt-4 mb:pt-6 leading-9">
+                <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm sm:text-base pt-6 sm:pt-8">
                     {t('nao:contest:description')}
                     <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
-                <div className="w-full  rounded-[6px] bg-gray-13 dark:bg-dark-4  py-1 mt-4 mb:my-2 flex flex-row items-center justify-center">
-                    {renderCountDown('!text-sm !font-normal leading-6 !mr-2', '!text-[16px] !font-semibold !leading-8')}
+                <div className="w-full rounded-md bg-gray-13 dark:bg-dark-4 py-3 mt-8 mb:mt-4 flex flex-row items-center justify-center">
+                    {renderCountDown('!text-sm !font-normal !mr-2', '!text-base !font-semibold ')}
                 </div>
-                <div className="flex flex-row mt-9 mb:mt-12 justify-center mb:justify-start w-full">
+                <div className="flex flex-row mt-3 mb:mt-7 justify-center mb:justify-start w-full">
                     {inHome ? (
                         <ButtonNao onClick={() => router.push('/contest')} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3" primary>
                             {t('nao:contest:ranking')}
@@ -156,7 +156,7 @@ const ContesRules = ({
                     />
                 ) : (
                     <Image
-                        src={getS3Url('/images/nao/contest/ic_contest_info.webp')}
+                        src={('/images/nao/contest/ic_contest_info.webp')}
                         width="300px"
                         height="292px"
                         title={title_champion?.[language]}
@@ -209,7 +209,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className="absolute top-12 min-w-[90vw] overflow-hidden sm:min-w-max translate-x-[calc(50%-70px)] sm:translate-x-0 right-1/2 sm:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full">
+                        <Popover.Panel className="absolute top-12 min-w-[90vw] overflow-hidden sm:min-w-max translate-x-[calc(50%-47px)] sm:translate-x-0 right-1/2 sm:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full">
                             <div className="py-1 shadow-onlyLight font-medium text-sm flex flex-col rounded-xl border border-divider dark:border-divider-dark text-left overflow-y-auto max-h-[300px]">
                                 {seasonsFilter.map((item, index) => (
                                     <div

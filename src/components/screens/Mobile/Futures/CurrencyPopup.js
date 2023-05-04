@@ -23,7 +23,7 @@ const CurrencyPopup = (props) => {
     const [feesFor, setFees] = useState([]);
     const [checkBox, setCheckBox] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const avlbAsset = useSelector((state) => state.wallet?.FUTURES);
+    const avlbAsset = useSelector((state) => state.wallet?.NAO_FUTURES);
     const { t } = useTranslation();
     const [disabledButton, setdDisabledButton] = useState(false);
     const assetId = useRef(null);

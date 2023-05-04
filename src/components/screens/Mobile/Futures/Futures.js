@@ -41,7 +41,7 @@ const FuturesMobile = () => {
     const timestamp = useSelector((state) => state.heath.timestamp);
     const router = useRouter();
     const [side, setSide] = useState(VndcFutureOrderType.Side.BUY);
-    const avlbAsset = useSelector((state) => state.wallet?.FUTURES);
+    const avlbAsset = useSelector((state) => state.wallet?.NAO_FUTURES);
     const [availableAsset, setAvailableAsset] = useState(null);
     const [collapse, setCollapse] = useState(false);
     const [scrollSnap, setScrollSnap] = useState(false);

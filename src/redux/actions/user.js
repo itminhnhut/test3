@@ -1153,3 +1153,19 @@ export const getVip = () => async (dispatch) => {
         }
     } catch (error) {}
 };
+
+export function getBalance(type, walletType) {
+    return async (dispatch) => {
+        try {
+            const { data } = await Axios.get(API_GET_USER_BALANCE_V2, { params: { type } });
+
+            if (data && data.status === ApiStatus.SUCCESS) {
+                dispatch({
+                    type: types.UPDATE_WALLET,
+                    walletType: walletType,
+                    payload: data.data
+                });
+            }
+        } catch (e) {}
+    };
+}

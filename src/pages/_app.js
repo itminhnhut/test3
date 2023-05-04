@@ -15,7 +15,7 @@ import { getWallet, setTheme } from 'redux/actions/user';
 import Head from 'src/components/common/Head';
 import Tracking from 'src/components/common/Tracking';
 import initPublicSocket from 'src/redux/actions/publicSocket';
-import { getMe, getUserFuturesBalance, getVip, getUserPartnersBalance } from 'src/redux/actions/user';
+import { getMe, getUserFuturesBalance, getVip, getUserPartnersBalance, getBalance } from 'src/redux/actions/user';
 import initUserSocket from 'src/redux/actions/userSocket';
 import { useStore } from 'src/redux/store';
 import 'src/styles/app.scss';
@@ -23,7 +23,7 @@ import * as ga from 'src/utils/ga';
 import { indexingArticles } from 'utils';
 import { isMobile } from 'react-device-detect';
 import { getCookie, setCookie } from 'cookies-next';
-
+import { WalletType } from 'src/redux/actions/const';
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {
 //         case 'FCP':
@@ -191,6 +191,7 @@ const App = ({ Component, pageProps }) => {
                 }
                 store.dispatch(getUserFuturesBalance());
                 store.dispatch(getUserPartnersBalance());
+                store.dispatch(getBalance(9, WalletType.NAO_FUTURES));
             }
         }
     });

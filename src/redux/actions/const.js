@@ -473,7 +473,8 @@ export const WalletType = {
     POOL: 'POOL',
     BROKER: 'BROKER',
     EARN: 'EARN',
-    ONUS: 'ONUS'
+    ONUS: 'ONUS',
+    NAO_FUTURES: 'NAO_FUTURES'
 };
 
 export const EarnWalletType = {
@@ -891,7 +892,7 @@ export const ApiResultCreateOrder = {
 };
 
 export const DEFAULT_PARTNER_MIN = {
-    [SIDE.SELL]:100e3,
+    [SIDE.SELL]: 100e3,
     [SIDE.BUY]: 100e3
 };
 
