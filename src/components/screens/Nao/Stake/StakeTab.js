@@ -8,14 +8,11 @@ import StateLockModal from './StateLockModal';
 import { useRef } from 'react';
 import fetchApi from 'utils/fetch-api';
 import { API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
-import { ApiStatus } from 'redux/actions/const';
 import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
 import { useTranslation } from 'next-i18next';
 import { requestNao } from 'redux/actions/nao';
-import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
-import TradingInput from 'components/trade/TradingInput';
 
 const getBalance = createSelector([(state) => state.wallet?.FUTURES, (wallet, params) => params], (wallet, params) => {
     return wallet[params]?.value - wallet[params]?.locked_value;
@@ -119,7 +116,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                 </TextLiner>
                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm px-[26px]">{t('nao:pool:revenue_share_from_trade')}</div>
             </CardNao>
-            <CardNao stroke="1.5" className="py-6 px-4 !bg-none">
+            <CardNao stroke="1.5" className="py-6 px-4 !bg-none border border-divider dark:border-none">
                 <div className="flex items-center justify-between pb-4">
                     <div className="text-sm font-semibold text-txtSecondary dark:text-txtSecondary-dark uppercase">{t('nao:pool:est_apy')}</div>
                     <div className="text-lg font-semibold">{formatNumber(dataSource?.apy ?? 0, 2)}%</div>

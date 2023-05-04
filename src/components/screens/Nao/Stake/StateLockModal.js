@@ -13,7 +13,7 @@ import { ApiStatus } from 'redux/actions/const';
 import TradingInput from 'components/trade/TradingInput';
 import { useTranslation } from 'next-i18next';
 import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
-import Modal from 'components/common/ReModal';
+import ModalV2 from 'components/common/V2/ModalV2';
 import CheckBox from 'components/common/CheckBox';
 import { useEffect } from 'react';
 import { addDays } from 'date-fns';
@@ -98,7 +98,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                     }
                 );
             } else {
-                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
+                context.alert.show('error', t('common:failed'), t(`error:${status || 'UNKNOWN'}`));
             }
         } catch (e) {
             console.log(e);
@@ -127,18 +127,17 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     // console.log(overview)
     return (
         <Portal portalId="PORTAL_MODAL">
-            {showAlert && (
-                <AlertModal
-                    onConfirm={onSave}
-                    onClose={() => setShowAlert(false)}
-                    t={t}
-                    isLock={isLock}
-                    amount={amount}
-                    decimal={assetNao?.assetDigit ?? 8}
-                    data={data}
-                    loading={loading}
-                />
-            )}
+            <AlertModal
+                visible={showAlert}
+                onConfirm={onSave}
+                onClose={() => setShowAlert(false)}
+                t={t}
+                isLock={isLock}
+                amount={amount}
+                decimal={assetNao?.assetDigit ?? 8}
+                data={data}
+                loading={loading}
+            />
             <div
                 className={classNames(
                     'flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-bgPrimary dark:bg-bgPrimary-dark disabled-zoom',
@@ -267,7 +266,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     );
 };
 
-const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, loading }) => {
+const AlertModal = ({ visible, onConfirm, onClose, t, isLock, amount, decimal, data, loading }) => {
     const [checked, setChecked] = useState(false);
 
     const onHandleChecked = () => {
@@ -290,9 +289,9 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, load
     }, [data]);
 
     return (
-        <Modal onusMode={true} isVisible={true} onBackdropCb={onClose} onusClassName="!pt-[48px] !pb-[50px]">
+        <ModalV2 isMobile isVisible={visible} onBackdropCb={onClose} wrapClassName="pb-12">
             <label className="text-[20px] font-semibold leading-6">{t(`nao:pool:confirm_${isLock ? 'lock' : 'unlock'}`)}</label>
-            <div className="text-sm mt-6 divide-y divide-divider dark:divide-divider-dark">
+            <div className="text-sm mt-8 bg-gray-13 dark:bg-dark-4 p-4 rounded-xl">
                 <div className="flex items-center justify-between pb-3">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t(`nao:pool:amount_${isLock ? 'lock' : 'unlock'}`)}</label>
                     <span>{formatNumber(amount, decimal)} NAO</span>
@@ -315,18 +314,10 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, load
                     {t('nao:pool:not_show_message')}
                 </span>
             </div> */}
-            <div className="flex items-center space-x-2 font-semibold mt-6">
-                <div onClick={onClose} className="h-[50px] w-full flex items-center justify-center bg-gray-12 dark:bg-dark-2 rounded-md">
-                    {t('nao:cancel')}
-                </div>
-                <div
-                    onClick={onConfirm}
-                    className={`h-[50px] w-full flex items-center justify-center bg-bgBtnPrimary rounded-md ${loading ? 'opacity-30' : ''}`}
-                >
-                    {t('common:confirm')}
-                </div>
-            </div>
-        </Modal>
+            <ButtonNao onClick={onConfirm} className={`h-11 mt-8 w-full flex items-center justify-center rounded-md`}>
+                {t('common:confirm')}
+            </ButtonNao>
+        </ModalV2>
     );
 };
 

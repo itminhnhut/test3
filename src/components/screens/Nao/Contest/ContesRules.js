@@ -148,7 +148,7 @@ const ContesRules = ({
             <div className="mt-9 mb:mt-0 text-center">
                 {season === seasonConfig ? (
                     <Image
-                        src={'/images/contest/bg-contest.png'}
+                        src={getS3Url('/images/contest/bg-contest.png')}
                         width="568px"
                         height="369px"
                         title={title_champion?.[language]}
@@ -156,7 +156,7 @@ const ContesRules = ({
                     />
                 ) : (
                     <Image
-                        src={'/images/nao/contest/ic_contest_info.webp'}
+                        src={getS3Url('/images/nao/contest/ic_contest_info.webp')}
                         width="300px"
                         height="292px"
                         title={title_champion?.[language]}
