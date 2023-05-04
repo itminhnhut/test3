@@ -81,7 +81,8 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
                         case PartnerOrderLog.UPLOADED:
                             contentLog = 'uploaded_proof';
                             viewProof =
-                                (lastIndexUploadType === logIndex && mode === MODE.USER && side === SIDE.SELL) || (mode === MODE.PARTNER && side === SIDE.BUY) ? (
+                                lastIndexUploadType === logIndex &&
+                                ((mode === MODE.USER && side === SIDE.SELL) || (mode === MODE.PARTNER && side === SIDE.BUY)) ? (
                                     <div
                                         onClick={onShowProof}
                                         className="hover:opacity-70 cursor-pointer text-dominant font-semibold flex items-center space-x-2"
