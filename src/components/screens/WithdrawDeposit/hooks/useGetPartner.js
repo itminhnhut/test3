@@ -52,7 +52,7 @@ const useGetPartner = ({ assetId, side, amount, rate }) => {
                     params: { quantity: !input ? 0 : +input, assetId, side },
                     cancelToken: source.token,
                     callbackFn: () => {
-                        if (mounted && !loadingPartner) {
+                        if (mounted) {
                             dispatch(setLoadingPartner(true));
                             return;
                         }
