@@ -123,7 +123,8 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         }
         if (Object.keys(sortBy)?.length) {
             const _s = Object.entries(sortBy)[0];
-            data = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
+            // nếu sortby = true/false thì sort tăng/giảm, không thì đưa về init
+            if (_s[1] !== undefined) data = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
         }
         return data;
     }, [dataTable, sortBy, mode, deboundSearch, curTab, favoritePairs, pairConfigs]);
