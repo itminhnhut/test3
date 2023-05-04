@@ -70,7 +70,7 @@ const filterFeeAsset = [
         id: WalletCurrency.USDT,
         label: 'USDT',
         ratio: '0.06'
-    },
+    }
 ];
 
 const NaoPerformance = memo(() => {
@@ -89,7 +89,7 @@ const NaoPerformance = memo(() => {
     const [fee, setFee] = useState(WalletCurrency.VNDC);
     const [referencePrice, setReferencePrice] = useState({});
 
-    const assetConfig = useSelector(state => state.utils.assetConfig);
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
 
     // const [getQueryByName , updateQuery] = useAddQuery('date')
 
@@ -137,15 +137,17 @@ const NaoPerformance = memo(() => {
                 params: {
                     base: 'VNDC,USDT',
                     quote: 'USD'
-                },
+                }
             });
             if (data) {
-                setReferencePrice(data.reduce((acm, current) => {
-                    return {
-                        ...acm,
-                        [`${current.base}/${current.quote}`]: current.price,
-                    };
-                }, {}));
+                setReferencePrice(
+                    data.reduce((acm, current) => {
+                        return {
+                            ...acm,
+                            [`${current.base}/${current.quote}`]: current.price
+                        };
+                    }, {})
+                );
             }
         } catch (e) {
             console.log(e);
@@ -157,26 +159,25 @@ const NaoPerformance = memo(() => {
         if (!dataSource?.feeRevenue) return [];
         const assets = [];
         let first = true;
-        return Object.keys(dataSource?.feeRevenue)
-            .reduce((newItem, item) => {
-                const asset = assetConfig.find(rs => rs.id === Number(item));
-                if (asset) {
-                    assets.push({
-                        id: asset.id,
-                        assetCode: asset?.assetCode,
-                        assetDigit: asset?.assetDigit,
-                        value: dataSource.feeRevenue[item],
-                    });
-                }
-                return assets;
-            }, []);
+        return Object.keys(dataSource?.feeRevenue).reduce((newItem, item) => {
+            const asset = assetConfig.find((rs) => rs.id === Number(item));
+            if (asset) {
+                assets.push({
+                    id: asset.id,
+                    assetCode: asset?.assetCode,
+                    assetDigit: asset?.assetDigit,
+                    value: dataSource.feeRevenue[item]
+                });
+            }
+            return assets;
+        }, []);
     }, [dataSource, assetConfig]);
 
     const feeFilter = useMemo(() => {
-        const _fee = assets.find(rs => rs.id === fee);
+        const _fee = assets.find((rs) => rs.id === fee);
         return {
             total: _fee ? formatNumber(_fee?.value, _fee?.assetDigit) + ' ' + _fee?.assetCode : '-',
-            ratio: filterFeeAsset.find(rs => rs.id === fee)?.ratio ?? '0.06'
+            ratio: filterFeeAsset.find((rs) => rs.id === fee)?.ratio ?? '0.06'
         };
     }, [fee, assets]);
 
@@ -192,7 +193,7 @@ const NaoPerformance = memo(() => {
         router.push({
             pathname: router.pathname,
             query: {
-                date: dateValue,
+                date: dateValue
             }
         }, undefined, {
             shallow: true,
@@ -275,14 +276,14 @@ const NaoPerformance = memo(() => {
                         </span>
                     </div>
                 </CardNao>
-                <CardNao noBg className='bg-bgPrimary dark:bg-bgPrimary-dark'>
+                <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark">
                     <div className="flex items-center justify-between">
                         <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">{t('nao:onus_performance:total_fee')}</label>
                         <Popover className="relative flex">
                             {({ open, close }) => (
                                 <>
                                     <Popover.Button>
-                                        <div className="text-base px-2 py-[0.375rem] bg-gray-12 dark:bg-dark-2 rounded-lg flex items-center justify-between text-txtPrimary dark:text-txtPrimary-dark min-w-[72px]">
+                                        <div className="px-2 py-[6px] bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between text-gray-15 dark:text-white min-w-[72px] space-x-1">
                                             {filterFeeAsset.find((a) => a.id === fee)?.label || '--'}
                                             <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
                                         </div>
@@ -296,8 +297,8 @@ const NaoPerformance = memo(() => {
                                         leaveFrom="opacity-100 translate-y-0"
                                         leaveTo="opacity-0 translate-y-1"
                                     >
-                                        <Popover.Panel className="absolute top-8 right-0 z-50 bg-bgPrimary dark:bg-dark-4 rounded-md mt-1 border border-divider dark:border-divider-dark">
-                                            <div className="min-w-[6.375rem] sm:min-w-[8rem] sm:py-3 shadow-onlyLight text-sm sm:text-base flex flex-col text-txtPrimary dark:text-txtPrimary-dark">
+                                        <Popover.Panel className="absolute top-8 mt-3 right-0 z-5 bg-white dark:bg-dark-4 rounded-md border border-divider dark:border-divider-dark">
+                                            <div className="py-[2] min-w-[72px] shadow-onlyLight text-sm flex flex-col">
                                                 {assets.map((item, index) => (
                                                     <span
                                                         onClick={() => {
@@ -305,12 +306,10 @@ const NaoPerformance = memo(() => {
                                                             close();
                                                         }}
                                                         key={index}
-                                                        className={`py-3 my-1 px-4 cursor-pointer hover:bg-hover-1 dark:hover:bg-hover-dark ${
-                                                            item?.id === fee ? 'flex items-center justify-between' : ''
-                                                        }`}
+                                                        className={`px-4 py-3 cursor-pointer hover:bg-hover-1 dark:hover:bg-hover-dark flex items-center space-x-4`}
                                                     >
-                                                        {item?.assetCode}
-                                                        {item?.id === fee && <CheckCircle color='currentColor' size={16} />}
+                                                        <span>{item?.assetCode}</span>
+                                                        {item?.id === fee && <CheckCircle color="currentColor" size={16} />}
                                                     </span>
                                                 ))}
                                             </div>
@@ -335,12 +334,7 @@ const NaoPerformance = memo(() => {
     );
 });
 
-export const RangePopover = ({
-    language,
-    active = {},
-    onChange,
-    popoverClassName = '',
-}) => {
+export const RangePopover = ({ language, active = {}, onChange, popoverClassName = '' }) => {
     const popOverClasses = classNames('relative flex', popoverClassName);
     return <Popover className={popOverClasses}>
         {({
@@ -401,8 +395,8 @@ export const RangePopover = ({
 const Days = styled.div.attrs({
     className: 'px-4 py-2 rounded-[6px] cursor-pointer text-txtPrimary dark:text-txtPrimary-dark text-sm bg-gray-12 dark:bg-dark-2 select-none text-center'
 })`
-  background: ${({ active }) => active ? colors.teal : ''};
-  font-weight: ${({ active }) => active ? '600' : '400'}
+    background: ${({ active }) => (active ? colors.teal : '')};
+    font-weight: ${({ active }) => (active ? '600' : '400')};
 `;
 
 export default NaoPerformance;

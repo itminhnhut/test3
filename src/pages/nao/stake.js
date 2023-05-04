@@ -8,7 +8,7 @@ import colors from 'styles/colors';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
 import Portal from 'components/hoc/Portal';
-import { X, ArrowLeft } from 'react-feather';
+import { X, ChevronLeft } from 'react-feather';
 import classNames from 'classnames';
 import StakeTab from 'components/screens/Nao/Stake/StakeTab';
 import PerformanceTab from 'components/screens/Nao/Stake/PerformanceTab';
@@ -19,51 +19,47 @@ import { API_POOL_USER_INFO } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { useRouter } from 'next/router'; 'next/router'
+import { useRouter } from 'next/router';
+('next/router');
 import { useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
 
-const getAssetNao = createSelector(
-    [
-        state => state.utils.assetConfig,
-        (utils, params) => params
-    ],
-    (assets, params) => {
-        return assets.find(rs => rs.assetCode === params);
-    }
-);
+const getAssetNao = createSelector([(state) => state.utils.assetConfig, (utils, params) => params], (assets, params) => {
+    return assets.find((rs) => rs.assetCode === params);
+});
 
 const Stake = () => {
     const { width, height } = useWindowSize();
-    const [visible, setVisible] = useState(false);
-    const [currentLocale, onChangeLang] = useLanguage();
-    const { t, i18n: { language } } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const [tab, setTab] = useState(0);
     const [dataSource, setDataSource] = useState(null);
-    const assetNao = useSelector(state => getAssetNao(state, 'NAO'));
+    const assetNao = useSelector((state) => getAssetNao(state, 'NAO'));
     const refStake = useRef(null);
     const router = useRouter();
 
     useEffect(() => {
         getStake();
-    }, [])
+    }, []);
 
     const getStake = async () => {
         try {
             const { data } = await fetchApi({
-                url: API_POOL_USER_INFO,
+                url: API_POOL_USER_INFO
             });
             if (data) {
-                setDataSource(data)
+                setDataSource(data);
             }
         } catch (e) {
-            console.log(e)
+            console.log(e);
         } finally {
         }
-    }
+    };
 
     const onShowLock = () => {
-        refStake.current.showLock(true)
-    }
+        refStake.current.showLock(true);
+    };
 
     return (
         <LayoutNaoToken isHeader={false}>
@@ -86,23 +82,23 @@ const Stake = () => {
                         </div>
                     }
                 </div> */}
-                    <div className="flex items-center justify-center py-4">
-                        <div className="absolute left-5">
-                            <ArrowLeft onClick={() => router.back()} />
-                        </div>
-                        <label className="text-[20px] font-semibold leading-[50px]">{t('nao:governance_pool')}</label>
+                    <div className="flex items-center px-4 pb-4 pt-6 space-x-2">
+                        <ChevronLeft size={20} onClick={() => router.back()} />
+                        <label onClick={() => router.back()} className="font-semibold">
+                            {t('nao:governance_pool')}
+                        </label>
                     </div>
                     <Tabs tab={tab}>
-                        <TabItem onClick={() => setTab(0)} active={tab === 0}>
+                        <TabItem className="py-[14px]" onClick={() => setTab(0)} active={tab === 0}>
                             {t('nao:pool:stake_nao')}
                         </TabItem>
-                        <TabItem onClick={() => setTab(1)} active={tab === 1}>
+                        <TabItem className="py-[14px]" onClick={() => setTab(1)} active={tab === 1}>
                             {t('nao:pool:performance')}
                         </TabItem>
                     </Tabs>
                 </div>
             </div>
-            <div className="h-full w-full px-4 py-6">
+            <div className="h-full w-full px-4 py-12">
                 <div className={tab !== 0 ? 'hidden' : ''}>
                     <StakeTab ref={refStake} assetNao={assetNao} dataSource={dataSource} getStake={getStake} />
                 </div>
@@ -116,33 +112,33 @@ const Stake = () => {
 
 const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) => {
     const wrapperRef = useRef(null);
-    const timer = useRef(null)
+    const timer = useRef(null);
     const handleOutside = () => {
         if (visible && onClose) {
-            onClose()
+            onClose();
         }
-    }
+    };
 
     useEffect(() => {
         if (visible) {
-            document.body.classList.add('overflow-hidden')
+            document.body.classList.add('overflow-hidden');
         } else {
-            clearTimeout(timer.current)
+            clearTimeout(timer.current);
             timer.current = setTimeout(() => {
-                document.body.classList.remove('overflow-hidden')
+                document.body.classList.remove('overflow-hidden');
             }, 300);
         }
-    }, [visible])
+    }, [visible]);
 
     useOutsideAlerter(wrapperRef, handleOutside.bind(this));
 
     const _scrollToView = (el) => {
-        document.body.classList.remove('overflow-hidden')
-        if (scrollToView) scrollToView(el)
-    }
+        document.body.classList.remove('overflow-hidden');
+        if (scrollToView) scrollToView(el);
+    };
 
     return (
-        <Portal portalId='PORTAL_MODAL'>
+        <Portal portalId="PORTAL_MODAL">
             <div
                 className={classNames(
                     'flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-black-800/[0.6] dark:bg-black-800/[0.8] overflow-hidden',
@@ -150,48 +146,51 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
                     { invisible: !visible },
                     { visible: visible },
                     { 'translate-x-full': !visible },
-                    { 'translate-x-0': visible },
+                    { 'translate-x-0': visible }
                 )}
             >
-                <div ref={wrapperRef} className='flex-1 w-[284px] min-h-0 bg-bgPrimary dark:bg-bgPrimary-dark'>
+                <div ref={wrapperRef} className="flex-1 w-[284px] min-h-0 bg-bgPrimary dark:bg-bgPrimary-dark">
                     <div className="pt-[35px] px-5 flex justify-end">
-                        <img className="cursor-pointer select-none" onClick={onClose} src={getS3Url('/images/nao/ic_close.png')} height='18' width='18' alt="" />
+                        <img
+                            className="cursor-pointer select-none"
+                            onClick={onClose}
+                            src={getS3Url('/images/nao/ic_close.png')}
+                            height="18"
+                            width="18"
+                            alt=""
+                        />
                     </div>
-                    <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)]">
-                    </div>
+                    <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)]"></div>
                 </div>
-
             </div>
         </Portal>
-    )
-}
+    );
+};
 
 const Tabs = styled.div.attrs({
     className: 'relative flex items-center border-b-2 border-divider dark:border-divider-dark'
 })`
-  &:after{
-        content: "";
-        position:absolute;
-        bottom:-2px;
-        height:2px;
-        background-color:${() => colors.teal};
-        transform:${({ tab }) => `translate(${tab * 100}%,0)`};
-        width:50%;
+    &:after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        height: 2px;
+        background-color: ${() => colors.teal};
+        transform: ${({ tab }) => `translate(${tab * 100}%,0)`};
+        width: 50%;
         transition: all 0.2s;
     }
-`
+`;
 
 const TabItem = styled.div.attrs(({ active }) => ({
-    className: `pb-3 w-full flex items-center justify-center text-sm leading-6 ${active ? 'text-txtPrimary dark:text-txtPrimary-dark font-semibold' : 'text-txtSecondary dark:text-txtSecondary-dark'}`
-}))`
-
-`
+    className: `pb-3 w-full flex items-center justify-center text-sm leading-6 ${
+        active ? 'text-txtPrimary dark:text-txtPrimary-dark font-semibold' : 'text-txtSecondary dark:text-txtSecondary-dark'
+    }`
+}))``;
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, [
-            'common', 'nao', 'error'
-        ])),
-    },
-})
+        ...(await serverSideTranslations(locale, ['common', 'nao', 'error']))
+    }
+});
 export default Stake;
