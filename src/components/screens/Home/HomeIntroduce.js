@@ -164,7 +164,7 @@ const HomeIntroduce = ({ trendData, t }) => {
                 <video
                     loop
                     muted
-                    className="hidden  lg:block pointer-events-none "
+                    className="hidden lg:block pointer-events-none h-full "
                     poster={getS3Url('/images/screen/homepage/banner_graphics_fit.webp')}
                     preload="none"
                     playsInline

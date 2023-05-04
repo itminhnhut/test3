@@ -167,6 +167,9 @@ const HomeMarketTrend = ({ trendData }) => {
                                         <span>{pair?.b}</span>
                                         <span>/{pair?.q}</span>
                                     </div>
+                                    {pair.leverage && (
+                                        <div className="ml-2 text-xs font-semibold bg-gray-11 dark:bg-dark-2 p-1 rounded-[3px] ">{pair.leverage?.max}x</div>
+                                    )}
                                 </div>
                             </div>
                             <div className="homepage-markettrend__market_table__row__col2">

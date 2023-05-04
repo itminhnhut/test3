@@ -76,7 +76,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
         };
     }, [id, assetConfig]);
 
-    const isMoneyUseOutofDigit = detailTx?.result?.money_use && Math.abs(+detailTx?.result?.money_use) < Math.pow(1, assetData?.assetDigit || 0 * -1);
+    const isMoneyUseOutofDigit = detailTx?.result?.money_use && Math.abs(+detailTx?.result?.money_use) < Math.pow(10, (assetData?.assetDigit || 0) * -1);
 
     return (
         <ModalV2
@@ -150,8 +150,6 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             </>
                                         )}
                                     </div>
-                                ) : detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE ? (
-                                    <AssetLogo useNextImg={true} size={80} assetCode={'NAMI'} />
                                 ) : (
                                     <AssetLogo useNextImg={true} size={80} assetId={detailTx?.result?.currency || detailTx?.additionalData?.assetId} />
                                 )}
@@ -290,7 +288,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
 
                                         formatKeyData = (
                                             <div>
-                                                {customFormatBalance(+fee, assetData?.digit || 0)} {assetData?.assetCode}{' '}
+                                                {customFormatBalance(+fee, assetData?.assetDigit || 0)} {assetData?.assetCode}{' '}
                                             </div>
                                         );
                                         break;

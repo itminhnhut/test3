@@ -7,11 +7,6 @@ import Spinner from 'components/svg/Spinner';
 import { useSelector } from 'react-redux';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
-import Custom404 from 'pages/404';
-import Image from 'next/dist/client/image';
-import Link from 'next/dist/client/link';
-import Button from 'components/common/V2/ButtonV2/Button';
-import { useTranslation } from 'next-i18next';
 import Error404 from 'components/common/404';
 
 const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partner/PartnerWD'), {
@@ -81,7 +76,7 @@ export const getServerSideProps = async (context) => {
           };
 
     return {
-        ...redirectObj,
+        // ...redirectObj,
         props: {
             ...(await serverSideTranslations(context.locale, [
                 'common',

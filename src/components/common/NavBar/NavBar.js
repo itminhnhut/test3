@@ -19,7 +19,7 @@ import colors from 'styles/colors';
 import { buildLogoutUrl } from 'src/utils';
 import { useWindowSize } from 'utils/customHooks';
 import { PATHS } from 'constants/paths';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 import classNames from 'classnames';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import LanguageSetting from './LanguageSetting';
@@ -34,7 +34,7 @@ import Button from '../V2/ButtonV2/Button';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-
+const DailyLuckydraw = dynamic(() => import('components/screens/DailyLuckydraw'));
 // ** Dynamic
 const NotificationList = dynamic(() => import('src/components/notification/NotificationList'), { ssr: false });
 const PocketNavDrawer = dynamic(() => import('src/components/common/NavBar/PocketNavDrawer'), {
@@ -67,6 +67,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     const { width } = useWindowSize();
     const { t } = useTranslation(['navbar', 'common', 'profile']);
     const [isFromFrame, setIsFromFrame] = useState(false);
+    const [showDailyLucky, setShowDailyLucky] = useState(false);
 
     // * Memmoized Variable
     const navTheme = useMemo(() => {
@@ -332,6 +333,32 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
         );
     }, [name, currentTheme, navTheme.color]);
 
+    const onClickItemControl = (item) => {
+        switch (item?.title) {
+            case 'daily_reward':
+                width > 992 ? setShowDailyLucky(true) : router.push('/luckydraw/nami');
+                break;
+            default:
+                break;
+        }
+    };
+
+    const renderItemUserControl = (item) => {
+        const Icon = NavbarIcons?.[item.localized === 'referral' ? 'profile_referral' : item.localized];
+        return (
+            <a onClick={() => !item?.url && onClickItemControl(item)} className="mal-navbar__dropdown___item rounded-xl justify-between !text-base">
+                <div className="flex items-center font-normal">
+                    <div className="dark:text-txtSecondary-dark text-txtSecondary">
+                        <Icon color="currentColor" size={24} />
+                    </div>
+
+                    {t(`navbar:menu.user.${item.localized}`)}
+                </div>
+                <ChevronRight className="!mr-0" size={16} />
+            </a>
+        );
+    };
+
     const renderUserControl = useCallback(() => {
         const { avatar, code, kyc_status, partner_type } = auth;
         const isNotVerified = kyc_status === KYC_STATUS.NO_KYC;
@@ -354,18 +381,13 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
             if (item.isPartner && partner_type !== 2) return null;
             const Icon = NavbarIcons?.[item.localized === 'referral' ? 'profile_referral' : item.localized];
             items.push(
-                <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
-                    <a className="mal-navbar__dropdown___item rounded-xl justify-between !text-base">
-                        <div className="flex items-center font-normal">
-                            <div className="dark:text-txtSecondary-dark text-txtSecondary">
-                                <Icon color="currentColor" size={24} />
-                            </div>
-
-                            {t(`navbar:menu.user.${item.localized}`)}
-                        </div>
-                        <ChevronRight className="!mr-0" size={16} />
-                    </a>
-                </Link>
+                item.url ? (
+                    <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
+                        {renderItemUserControl(item)}
+                    </Link>
+                ) : (
+                    renderItemUserControl(item)
+                )
             );
         });
 
@@ -375,7 +397,13 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">
-                                <img width={48} height={48} className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover" src={avatar || DefaultAvatar} alt="avatar_user" />
+                                <img
+                                    width={48}
+                                    height={48}
+                                    className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover"
+                                    src={avatar || DefaultAvatar}
+                                    alt="avatar_user"
+                                />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username"> {auth?.username || auth?.name || auth?.email}</div>
@@ -491,6 +519,8 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                 resetDefault={resetDefault}
                 onChangeSpotState={onChangeSpotState}
             />
+
+            {width > 992 && <DailyLuckydraw visible={showDailyLucky} onClose={() => setShowDailyLucky(false)} />}
 
             {isFromFrame && (
                 <div

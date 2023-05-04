@@ -203,7 +203,7 @@ const Luckydraw = ({ platform }) => {
             const dataFilter = dataSource.slice(i * size, (i + 1) * size);
             const reverse = i % 2 !== 0;
             result.push(
-                <div className={`grid grid-cols-4 relative`}>
+                <div key={i} className={`grid grid-cols-4 relative`}>
                     {!reverse && (
                         <div
                             className={classNames('flex items-center justify-center absolute right-0 -bottom-10 w-[10px] h-[calc(100%+5px)] rounded-xl ', {

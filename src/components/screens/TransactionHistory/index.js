@@ -205,7 +205,7 @@ const TransactionHistory = ({ id }) => {
                 render: (_row, item) => {
                     const config = assetConfig?.find((e) => e?.id === item?.currency);
                     const amount = item?.amount || item?.money_use || item?.value;
-                    const isOutofDigitAmount = Math.abs(+amount) < Math.pow(1, config?.assetDigit || 0 * -1);
+                    const isOutofDigitAmount = Math.abs(+amount) < Math.pow(10, (config?.assetDigit || 0) * -1);
                     return <div>{!isOutofDigitAmount ? `${amount > 0 ? '+' : ''}${customFormatBalance(amount, config?.assetDigit ?? 0, true)}` : '--'}</div>;
                 }
             },
