@@ -10,22 +10,31 @@ import Skeletor from 'components/common/Skeletor';
 import { useRouter } from 'next/router';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_ORDER_PRICE, API_CHECK_LIMIT_WITHDRAW, API_GET_ME } from 'redux/actions/apis';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
 import { PATHS } from 'constants/paths';
 import { useTranslation } from 'next-i18next';
 import useMakeOrder from './hooks/useMakeOrder';
 import useGetPartner from './hooks/useGetPartner';
-import DWAddPhoneNumber from 'components/common/DWAddPhoneNumber';
 import FetchApi from 'utils/fetch-api';
+import { ModalConfirm } from './DetailOrder';
+import { MODE } from './constants';
 
 const ModalOtp = dynamic(() => import('./components/ModalOtp'));
-const RecommendAmount = dynamic(() => import('./components/RecommendAmount'));
+const DWAddPhoneNumber = dynamic(() => import('components/common/DWAddPhoneNumber'));
 
 const CardInput = () => {
     const { t } = useTranslation();
-    const { input, partner, partnerBank, accountBank, loadingPartner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
+    const {
+        input,
+        partner,
+        partnerBank,
+        accountBank,
+        loadingPartner,
+        maximumAllowed,
+        minimumAllowed,
+        modal: modalProps
+    } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
-    const auth = useSelector((state) => state.auth.user) || null;
 
     const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
     const router = useRouter();
@@ -37,6 +46,7 @@ const CardInput = () => {
         otpExpireTime: null
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
+
     const { side, assetId } = router.query;
     const assetCode = getAssetCode(+assetId);
     const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
@@ -60,7 +70,7 @@ const CardInput = () => {
     } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
     useGetPartner({ assetId, side, amount: state.amount, rate });
-    const { onMakeOrderHandler } = useMakeOrder({ setState, input });
+    const { onMakeOrderHandler, setModalState } = useMakeOrder({ setState, input });
 
     const availableAsset = useMemo(
         () => getExactBalanceFiat(wallets?.[+assetId]?.value - wallets?.[+assetId]?.locked_value, assetCode),
@@ -177,7 +187,7 @@ const CardInput = () => {
                         )}
                     </div>
                     <div className="flex -m-1">
-                        <div className="flex-1 p-1">
+                        <div className="w-3/4 xsm:flex-1 p-1">
                             <TradingInputV2
                                 id="TradingInputV2"
                                 value={loadingRate ? '' : state.amount}
@@ -263,13 +273,7 @@ const CardInput = () => {
                             <div className="flex items-center justify-between ">
                                 <div className="txtSecond-2">{t('dw_partner:daily_limit')}</div>
                                 <div className="txtPri-1 flex items-center">
-                                    {loadingLimitWithdraw ? (
-                                        <Skeletor width="50px" />
-                                    ) : !limitWithdraw ? (
-                                        '--'
-                                    ) : (
-                                        formatBalanceFiat(limitWithdraw?.limit, 'VNDC')
-                                    )}
+                                    {loadingLimitWithdraw ? <Skeletor width="50px" /> : !limitWithdraw ? '--' : formatBalanceFiat(limitWithdraw?.limit, 'VNDC')}
                                     <span className="ml-1">{'VNDC'}</span>
                                 </div>
                             </div>
@@ -333,6 +337,15 @@ const CardInput = () => {
                     setState({ showOtp: false });
                 }}
                 loading={state.loadingConfirm}
+            />
+            <ModalConfirm
+                mode={MODE.USER}
+                modalProps={modalProps[MODAL_TYPE.AFTER_CONFIRM]}
+                onClose={() => {
+                    setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                        visible: false
+                    });
+                }}
             />
         </>
     );

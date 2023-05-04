@@ -21,12 +21,13 @@ const DropdownCard = ({
     onSelect,
     additionalActions,
     showDropdownIcon = true,
-    placeholder
+    placeholder,
+    mustBeShow = false
 }) => {
     const cardRef = useRef(null);
     const [isVisible, setVisible] = useState(false);
     useClickAway(cardRef, () => {
-        if (isVisible) {
+        if (isVisible && !mustBeShow) {
             setVisible(false);
             setSearch('');
         }
@@ -88,6 +89,7 @@ const DropdownCard = ({
                                             onSelect(item);
                                         }
                                         setVisible(false);
+
                                         setSearch('');
                                     }
                                 }}

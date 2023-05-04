@@ -57,7 +57,7 @@ const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimu
     const dispatch = useDispatch();
     const [search, setSearch] = useState('');
 
-    const conditionToFetch = minimumAllowed > 0 && maximumAllowed > 0 && +quantity >= minimumAllowed && +quantity <= maximumAllowed;
+    const conditionToFetch = selectedPartner && minimumAllowed > 0 && maximumAllowed > 0 && +quantity >= minimumAllowed && +quantity <= maximumAllowed;
 
     const {
         data: partners,
@@ -75,7 +75,7 @@ const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimu
             data={partners && filterSearch(partners, ['name', 'phone'], search)}
             search={search}
             setSearch={setSearch}
-            showDropdownIcon={partners && partners?.length > 1}
+            showDropdownIcon={Boolean(selectedPartner) && partners && partners?.length > 1}
             onSelect={(partner) => {
                 dispatch(setPartner(partner));
             }}
@@ -84,7 +84,8 @@ const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimu
                 content: selectedPartner && {
                     mainContent: selectedPartner?.name?.toLowerCase(),
                     subContent: <PartnerSubcontent partner={selectedPartner} language={language} t={t} />,
-                    imgSrc: selectedPartner?.avatar
+                    imgSrc: selectedPartner?.avatar,
+                    contentClass: 'overflow-x-auto overflow-y-hidden pb-1'
                 },
                 item: (partner) =>
                     selectedPartner && (

@@ -6,9 +6,9 @@ import Skeletor from 'components/common/Skeletor';
 import { BxsUserIcon } from 'components/svg/SvgIcon';
 import { useTranslation } from 'next-i18next';
 
-const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
+const CardContent = ({ contentClass, image, imageSrc, imgSize, mainContent, subContent }) => {
     return (
-        <div className="flex items-center space-x-3">
+        <div className={classNames('flex items-center space-x-3', contentClass)}>
             <div style={{ minWidth: imgSize, maxWidth: imgSize, minHeight: imgSize, maxHeight: imgSize, width: '100%', height: '100%' }}>
                 {image ?? <Image className="rounded-full" src={imageSrc || DefaultAvatar} width={imgSize} height={imgSize} objectFit="cover" />}
             </div>
@@ -60,6 +60,7 @@ const InfoCard = ({ imgSize = 52, content, endIcon, endIconPosition, loading, em
                         imageSrc={content?.imgSrc}
                         mainContent={content.mainContent}
                         subContent={content.subContent}
+                        contentClass={content.contentClass}
                     />
                     {endIcon}
                 </>

@@ -916,6 +916,32 @@ export const PartnerPersonStatus = {
     DISPUTED: 2
 };
 
+export const PartnerOrderLog = {
+    CREATED: 0,
+    CANCELED: 1,
+    REJECTED: 2,
+    ACCEPTED: 3,
+    TRANSFERRED_FIAT: 4,
+    RECEIVED_FIAT: 5,
+    UPLOADED: 6,
+    DISPUTED: 7,
+    COMPLETED_DISPUTE: 8,
+    TIMEOUT_NOT_ACCEPT: 9,
+    TIMEOUT_NOT_TRANSFER: 10,
+    TIMEOUT_NOT_RECEIVE: 11,
+    SYSTEM_UPDATE_SUCCESS: 12,
+    SYSTEM_UPDATE_REJECT: 13,
+    SYSTEM_UPDATE_DISPUTE: 14
+};
+
+export const PartnerOrderStatusLog = {
+    PENDING: 0,
+    PROCESSING: 1,
+    SUCCESS: 2,
+    REJECTED: 3,
+    DISPUTED: 4
+};
+
 export const PartnerAcceptStatus = {
     PENDING: PartnerPersonStatus.PENDING,
     ACCEPTED: PartnerPersonStatus.TRANSFERRED,
