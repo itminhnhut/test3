@@ -422,6 +422,7 @@ module.exports = {
                 'tx-history-detail': "url('/images/screen/transaction-history/detail_bg-light.png')",
                 'tx-history-detail-dark': "url('/images/screen/transaction-history/detail_bg-dark.png')",
                 'progress-gradient': `linear-gradient(101.26deg,${commonColors.lightTeal} -5.29%,${commonColors.teal} 100%)`,
+                'nao-stake-mb': "url('/images/nao/bg-light-stake-mb.webp')",
                 'nao-corner': "url('/images/nao/bg-corner-light.webp')",
                 'nao-corner-mb': "url('/images/nao/bg-corner-light-mb.webp')",
                 'nao-corner-dark': "url('/images/nao/bg-corner.webp')",

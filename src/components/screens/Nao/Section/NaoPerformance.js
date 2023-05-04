@@ -119,7 +119,8 @@ const NaoPerformance = memo(() => {
                 options: { method: 'GET' },
                 params: {
                     range: filter.day,
-                    marginCurrency: filter.marginCurrency
+                    marginCurrency: filter.marginCurrency,
+                    userCategory: 2
                 },
             });
             setDataSource(!(data?.error || data?.status) ? data : null);
@@ -193,6 +194,8 @@ const NaoPerformance = memo(() => {
             query: {
                 date: dateValue,
             }
+        }, undefined, {
+            shallow: true,
         });
     };
 
@@ -207,13 +210,13 @@ const NaoPerformance = memo(() => {
     };
 
     return (
-        <section id="nao_performance" className="pt-10 sm:pt-20">
+        <section id="nao_performance" className="pt-10 sm:pt-20 text-sm sm:text-base">
             <div className="flex items-center flex-wrap justify-between gap-5">
                 <div>
                     <TextLiner className="">
                         {t('nao:onus_performance:title')}
                     </TextLiner>
-                    <span className="text-sm sm:text-[1rem] text-txtSecondary dark:text-txtSecondary-dark">{t('nao:onus_performance:description')}</span>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:onus_performance:description')}</span>
                 </div>
                 <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
                     <RangePopover
@@ -227,8 +230,8 @@ const NaoPerformance = memo(() => {
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
-                                { '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
+                                'flex flex-col justify-center h-full px-4 rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                { '!border-teal bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
                         >
@@ -249,12 +252,12 @@ const NaoPerformance = memo(() => {
             </div>
             <div className="pt-5 sm:pt-6 flex items-center flex-wrap gap-5">
                 <CardNao className="rounded-lg">
-                    <label className="text-txtSecondary dark:text-txtSecondary-dark font-medium sm:text-lg">{t('nao:onus_performance:total_volume')}</label>
+                    <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">{t('nao:onus_performance:total_volume')}</label>
                     <div className="pt-4">
-                        <div className="text-gray-15 dark:text-gray-7 text-[1.375rem] font-semibold pb-2 leading-8">
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark text-xl sm:text-2xl font-semibold pb-2">
                             {dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}
                         </div>
-                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
                             {dataSource
                                 ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3)
                                 : '-'}{' '}
@@ -262,24 +265,24 @@ const NaoPerformance = memo(() => {
                     </div>
                 </CardNao>
                 <CardNao className="rounded-lg">
-                    <label className="text-txtSecondary dark:text-txtSecondary-dark font-medium sm:text-lg">{t('nao:onus_performance:total_orders')}</label>
+                    <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">{t('nao:onus_performance:total_orders')}</label>
                     <div className="pt-4">
-                        <div className="text-gray-15 dark:text-gray-7 text-[1.375rem] font-semibold pb-2 leading-8">
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark text-xl sm:text-2xl font-semibold pb-2">
                             {dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}
                         </div>
-                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
                             {dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}
                         </span>
                     </div>
                 </CardNao>
                 <CardNao noBg className='bg-bgPrimary dark:bg-bgPrimary-dark'>
                     <div className="flex items-center justify-between">
-                        <label className="text-txtSecondary dark:text-txtSecondary-dark font-medium sm:text-lg">{t('nao:onus_performance:total_fee')}</label>
+                        <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">{t('nao:onus_performance:total_fee')}</label>
                         <Popover className="relative flex">
                             {({ open, close }) => (
                                 <>
                                     <Popover.Button>
-                                        <div className="text-sm px-2 py-1 bg-gray-12 dark:bg-dark-2 rounded-lg flex items-center justify-between text-gray-15 dark:text-gray-7 min-w-[72px]">
+                                        <div className="text-base px-2 py-[0.375rem] bg-gray-12 dark:bg-dark-2 rounded-lg flex items-center justify-between text-txtPrimary dark:text-txtPrimary-dark min-w-[72px]">
                                             {filterFeeAsset.find((a) => a.id === fee)?.label || '--'}
                                             <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
                                         </div>
@@ -293,8 +296,8 @@ const NaoPerformance = memo(() => {
                                         leaveFrom="opacity-100 translate-y-0"
                                         leaveTo="opacity-0 translate-y-1"
                                     >
-                                        <Popover.Panel className="absolute top-8 left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-md mt-1">
-                                            <div className="px-2 py-[2] min-w-[72px] shadow-onlyLight font-medium text-xs flex flex-col">
+                                        <Popover.Panel className="absolute top-8 right-0 z-50 bg-bgPrimary dark:bg-dark-4 rounded-md mt-1 border border-divider dark:border-divider-dark">
+                                            <div className="min-w-[6.375rem] sm:min-w-[8rem] sm:py-3 shadow-onlyLight text-sm sm:text-base flex flex-col text-txtPrimary dark:text-txtPrimary-dark">
                                                 {assets.map((item, index) => (
                                                     <span
                                                         onClick={() => {
@@ -302,11 +305,12 @@ const NaoPerformance = memo(() => {
                                                             close();
                                                         }}
                                                         key={index}
-                                                        className={`py-[1px] my-[2px] cursor-pointer ${
-                                                            item?.assetCode === fee ? 'text-gray-15 dark:text-gray-7' : 'text-txtSecondary dark:text-txtSecondary-dark'
+                                                        className={`py-3 my-1 px-4 cursor-pointer hover:bg-hover-1 dark:hover:bg-hover-dark ${
+                                                            item?.id === fee ? 'flex items-center justify-between' : ''
                                                         }`}
                                                     >
                                                         {item?.assetCode}
+                                                        {item?.id === fee && <CheckCircle color='currentColor' size={16} />}
                                                     </span>
                                                 ))}
                                             </div>
@@ -317,13 +321,13 @@ const NaoPerformance = memo(() => {
                         </Popover>
                     </div>
                     <div className="pt-4">
-                        <div className="text-gray-15 dark:text-gray-7 text-[1.375rem] font-semibold pb-2 leading-8">{feeFilter.total}</div>
-                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{feeFilter.ratio}%</span>
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark text-xl sm:text-2xl font-semibold pb-2">{feeFilter.total}</div>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{feeFilter.ratio}%</span>
                     </div>
                 </CardNao>
             </div>
             {dataSource?.lastTimeUpdate && (
-                <div className="mt-6 text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium leading-6">
+                <div className="text-xs sm:text-sm mt-3 sm:mt-4 text-txtSecondary dark:text-txtSecondary-dark">
                     {t('nao:contest:last_updated_time_dashboard', { minute: 5 })}: {formatTime(new Date(dataSource?.lastTimeUpdate))}
                 </div>
             )}
@@ -345,8 +349,14 @@ export const RangePopover = ({
         }) => (
             <>
                 <Popover.Button>
-                    <div className="pl-4 pr-2 h-10 flex justify-center items-center text-txtPrimary dark:text-txtPrimary-dark">
-                        <SvgFilter size={24} color="currentColor" className="" />
+                    <div className="h-10 flex justify-center items-center">
+                        <div className="sm:hidden">
+                            <SvgFilter size={24} color="currentColor" className="text-txtPrimary dark:text-txtPrimary-dark" />
+                        </div>
+                        <div className="hidden sm:flex px-4 py-3 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtSecondary dark:text-txtSecondary-dark rounded-md !font-SF-Pro !text-base">
+                            {active[language]}
+                            <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
+                        </div>
                     </div>
                 </Popover.Button>
                 <Transition
@@ -359,8 +369,8 @@ export const RangePopover = ({
                     leaveTo="opacity-0 translate-y-1"
                 >
                     <Popover.Panel
-                        className="absolute min-w-[8rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-bgPrimary dark:bg-dark-4 border-divider dark:border-divider-dark rounded-xl mt-3">
-                        <div className="font-medium text-xs flex flex-col">
+                        className="absolute min-w-[8rem] sm:min-w-[10rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-bgPrimary dark:bg-dark-4 border border-divider dark:border-divider-dark rounded-md mt-3">
+                        <div className="text-sm sm:text-base flex flex-col text-txtPrimary dark:text-txtPrimary-dark sm:py-3">
                             {days.map((day, index) => {
                                 const isActive = active.value === day.value;
                                 return (
@@ -371,11 +381,12 @@ export const RangePopover = ({
                                             close();
                                         }}
                                         className={classNames(
-                                            'flex justify-between items-center py-2 px-4 cursor-pointer leading-6',
-                                            'first:rounded-t-xl last:rounded-b-xl hover:bg-hover-1 dark:hover:bg-hover-dark'
-                                        )}>
+                                            'flex justify-between items-center py-3 my-1 px-4 cursor-pointer',
+                                            'first:rounded-t-md last:rounded-b-md hover:bg-hover-1 dark:hover:bg-hover-dark',
+                                        )}
+                                    >
                                         <span>{day[language]}</span>
-                                        {isActive && <CheckCircle color='currentColor' size={16} />}
+                                        {isActive && <CheckCircle color="currentColor" size={16} />}
                                     </div>
                                 );
                             })}
@@ -388,7 +399,7 @@ export const RangePopover = ({
 };
 
 const Days = styled.div.attrs({
-    className: 'px-4 py-2 rounded-[6px] cursor-pointer text-gray-15 dark:text-gray-7 text-sm bg-gray-12 dark:bg-dark-2 select-none text-center'
+    className: 'px-4 py-2 rounded-[6px] cursor-pointer text-txtPrimary dark:text-txtPrimary-dark text-sm bg-gray-12 dark:bg-dark-2 select-none text-center'
 })`
   background: ${({ active }) => active ? colors.teal : ''};
   font-weight: ${({ active }) => active ? '600' : '400'}

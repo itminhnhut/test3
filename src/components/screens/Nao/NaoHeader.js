@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import SvgCross from "components/svg/Cross";
 import { AppleIcon, GooglePlayIcon } from 'components/svg/SvgIcon';
 import Image from "next/image";
+import useApp from "hooks/useApp";
 const category = [
     {
         label: "Whitepaper",
@@ -36,6 +37,7 @@ const category = [
 ];
 
 const NaoHeader = memo(({ onDownload }) => {
+    const isApp = useApp();
     const [currentLocale, onChangeLang] = useLanguage();
     const {
         t,
@@ -111,18 +113,18 @@ const NaoHeader = memo(({ onDownload }) => {
                 )}
                 {width <= 820 && (
                     <>
-                        <ButtonNao
+                        {isApp && <ButtonNao
                             onClick={() => router.push("/nao/stake")}
                             className="!rounded-md h-10 px-6"
                         >
                             Stake NAO
-                        </ButtonNao>
+                        </ButtonNao>}
                         <div
                             className="relative"
                             onClick={() => setVisible(true)}
                         >
                             <SvgMenu
-                                size={25}
+                                size={24}
                                 className={"cursor-pointer select-none"}
                                 color="currentColor"
                             />

@@ -109,7 +109,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                     assetNao={assetNao} data={dataSource}
                     balance={isLock.current ? balance : (dataSource?.availableStaked ?? 0)}
                 />}
-            <CardNao className="text-center mt-10" bgCorner>
+            <CardNao className="text-center mt-10" bgStake>
                 <BackgroundImage className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
                     <img src={getS3Url("/images/nao/ic_nao_large.png")} alt="" width="55" height="55" />
                 </BackgroundImage>
@@ -128,7 +128,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                             <Minus
                                 size={16}
                                 color="currentColor"
-                                onClick={() => onShowLockModal(true)}
+                                onClick={() => onShowLockModal(false)}
                             />
                         </div>
                         <div className='flex-1' onClick={() => onShowLockModal(true)}>

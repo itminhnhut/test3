@@ -27,7 +27,7 @@
         "description": "Staking into the Governance Pool to share revenue from trading fees and vote on project proposals.",
         "nao_staked": "NAO Staked",
         "participants": "Participants",
-        "participants_today": "<span class='font-semibold'>+{{value}}</span> participants today",
+        "participants_today": "<span class='font-semibold text-txtPrimary dark:text-txtPrimary-dark'>+{{value}}</span> participants today",
         "estimated_revenue_share": "Pool revenue this week",
         "revenue_history": "Revenue shares history",
         "stake_nao": "Stake NAO",

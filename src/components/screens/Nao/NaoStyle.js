@@ -13,7 +13,7 @@ import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/No
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 export const TextLiner = styled.div.attrs({
-    className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-txtPrimary dark:text-txtPrimary-dark'
+    className: 'text-xl sm:text-2xl font-semibold w-max text-txtPrimary dark:text-txtPrimary-dark'
 })`
     background: ${({ liner }) => liner && colors.teal};
     -webkit-background-clip: ${({ liner }) => liner && `text`};
@@ -22,14 +22,15 @@ export const TextLiner = styled.div.attrs({
     text-fill-color: ${({ liner }) => liner && `transparent`};
 `;
 
-export const CardNao = styled.div.attrs(({ noBg, customHeight, bgCorner }) => ({
+export const CardNao = styled.div.attrs(({ noBg, customHeight, bgCorner, bgStake }) => ({
     className: classNames(
         `p-6 sm:px-10 sm:py-9 rounded-xl min-w-full sm:min-w-[372px] ${
             customHeight ? customHeight : 'sm:min-h-[180px]'
         } flex flex-col justify-between flex-1 relative`,
         // { 'border-dashed border-[0.5px] border-[#7686B1]': noBg },
-        { 'bg-white dark:bg-darkBlue-3': !noBg && !bgCorner },
-        { 'bg-nao-corner-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full': !noBg && bgCorner }
+        { 'bg-white dark:bg-darkBlue-3': !noBg && !bgCorner && !bgStake },
+        { 'bg-nao-corner-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full': !noBg && bgCorner && !bgStake },
+        { 'bg-nao-stake-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full': !noBg && !bgCorner && bgStake }
     )
 }))`
     background-image: ${({ noBg, stroke = 0.8 }) =>

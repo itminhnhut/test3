@@ -19,13 +19,13 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                 <BackgroundImage>
                     <img src={getS3Url('/images/nao/ic_nao_large.png')} className="w-[62px] h-[62px] sm:w-[80px] sm:h-[80px]" alt="" />
                 </BackgroundImage>
-                <div className="flex flex-col justify-between leading-10">
+                <div className="flex flex-col justify-between font-semibold">
                     <div>
-                        <div className="text-2xl sm:text-[2.25rem] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('nao:project_info')}</div>
-                        <div className="text-lg sm:text-[1.25rem] flex items-center pt-1 flex-wrap">
-                            <label className="text-green-3 dark:text-teal uppercase text-[1.25re] font-semibold">NAO</label>
+                        <div className="text-2xl sm:text-5xl">{t('nao:project_info')}</div>
+                        <div className="sm:text-lg flex items-center pt-1 flex-wrap">
+                            <label className="text-green-3 dark:text-teal uppercase">NAO</label>
                             <span className="mx-2">•</span>
-                            <div className="font-light text-txtPrimary dark:text-txtPrimary-dark capitalize">Nami frame futures</div>
+                            <div className="capitalize">Nami frame futures</div>
                         </div>
                     </div>
                 </div>
@@ -34,27 +34,27 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                 <div className="bg-nao-corner-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full w-full h-full absolute z-0 left-0 top-0"></div>
                 <div className="relative z-10 flex sm:flex-none flex-col sm:flex-row">
                     <div className="flex flex-col w-full">
-                        <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium sm:text-lg pb-2 leading-7">{t('nao:circulating_supply')}</label>
-                        <div className="">
+                        <label className="font-semibold sm:text-lg pb-2 leading-7">{t('nao:circulating_supply')}</label>
+                        <div className="text-sm sm:text-base">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center mr-8">
                                     <span className="font-semibold mr-1 leading-7">22,250,000</span>
                                     <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                                 </div>
-                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">100,000,000</div>
+                                <div className="text-txtSecondary dark:text-txtSecondary-dark">100,000,000</div>
                             </div>
                             <div className="my-2">
                                 <div className="w-full bg-gray-11 dark:bg-dark-1 rounded-lg">
                                     <Progressbar percent={(22250000 / 100000000) * 100} />
                                 </div>
                             </div>
-                            <div className="text-xs font-medium leading-6">{(22250000 / 100000000) * 100}%</div>
+                            <div className="text-xs leading-6">{(22250000 / 100000000) * 100}%</div>
                         </div>
                     </div>
-                    <div className="h-[1px] mx-0 sm:h-auto sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-6 my-6 sm:my-0"></div>
-                    <div className="flex flex-col justify-between gap-3 w-full">
-                        <div className="flex items-center justify-between text-sm space-x-10">
-                            <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('nao:holders_wallet')}</label>
+                    <div className="h-[1px] mx-0 my-4 sm:h-auto sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-7 sm:my-0"></div>
+                    <div className="flex flex-col justify-between gap-3 w-full text-sm sm:text-base">
+                        <div className="flex items-center justify-between space-x-10">
+                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:holders_wallet')}</label>
                             <div className="flex items-center space-x-2">
                                 {ammData ? (
                                     <div className="font-semibold">{formatNumber(holders_wallet, assetNao?.assetDigit ?? 8)}</div>
@@ -64,8 +64,8 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                             </div>
                         </div>
-                        <div className="flex items-center justify-between text-sm space-x-10">
-                            <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('nao:liq_pools')}</label>
+                        <div className="flex items-center justify-between space-x-10">
+                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:liq_pools')}</label>
                             <div className="flex items-center space-x-2">
                                 {ammData ? (
                                     <div className="font-semibold">{formatNumber(ammData, assetNao?.assetDigit ?? 8)}</div>
@@ -75,8 +75,8 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                             </div>
                         </div>
-                        <div className="flex items-center justify-between text-sm space-x-10">
-                            <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('nao:governance_pool')}</label>
+                        <div className="flex items-center justify-between space-x-10">
+                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:governance_pool')}</label>
                             <div className="flex items-center space-x-2">
                                 <div className="font-semibold">{formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8)}</div>
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
