@@ -221,7 +221,12 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className="absolute top-12 min-w-[90vw] overflow-hidden sm:min-w-max sm:translate-x-0 -right-6 sm:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full">
+                        <Popover.Panel
+                            style={{
+                                transform: `translateX(calc(-50% - ${offset / 3}px))`
+                            }}
+                            className="absolute top-12 min-w-[90vw] overflow-hidden sm:min-w-max sm:!translate-x-0 left-1/2 sm:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full"
+                        >
                             <div className="py-1 shadow-onlyLight font-medium text-sm flex flex-col rounded-xl border border-divider dark:border-divider-dark text-left overflow-y-auto max-h-[400px] sm:max-h-[300px]">
                                 {seasonsFilter.map((item, index) => (
                                     <div

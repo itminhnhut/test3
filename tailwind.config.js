@@ -51,7 +51,7 @@ module.exports = {
             xs: [
                 '.75rem',
                 {
-                    lineHeight: '1.125rem'
+                    lineHeight: '1rem'
                 }
             ], // Caption 12px
             sm: [

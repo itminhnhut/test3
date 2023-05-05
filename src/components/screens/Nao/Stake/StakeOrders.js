@@ -66,15 +66,15 @@ const StakeOrders = ({ assetConfig }) => {
         }
         const title = status === 0 ? t('nao:pool:fail') : status === 1 ? t('nao:pool:unlock_status', { value: formatDate(minutes) }) : t('common:success');
         const color = status === 0 ? 'text-red-2' : status === 1 ? 'text-yellow-2' : 'text-teal';
-        return <div className={`font-medium ${color}`}>{title}</div>
+        return <div className={`${color}`}>{title}</div>
     }
 
     const loader = () => {
         const rs = [];
         for (let i = 0; i <= 5; i++) {
             rs.push(<Fragment key={i}>
-                {i !== 0 && <Divider className="w-full !my-4" />}
-                <div className="">
+                {/* {i !== 0 && <Divider className="w-full !my-4" />} */}
+                <div className="py-3">
                     <div className="flex items-center justify-between">
                         <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold leading-6">
                             <Skeletor width={100} height={10} />
@@ -110,8 +110,8 @@ const StakeOrders = ({ assetConfig }) => {
                             {dataSource.map((item, idx) => {
                                 return (
                                     <Fragment key={idx}>
-                                        {idx !== 0 && <Divider className="w-full !my-4" />}
-                                        <div className="">
+                                        {/* {idx !== 0 && <Divider className="w-full !my-4" />} */}
+                                        <div className="py-3">
                                             <div className="flex items-center justify-between">
                                                 <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-sm">
                                                     {t(`nao:pool:${item?.type === 1 ? 'lock2' : 'unlock'}`)} NAO

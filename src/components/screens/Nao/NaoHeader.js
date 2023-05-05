@@ -76,7 +76,7 @@ const NaoHeader = memo(({ onDownload }) => {
     }, [router, el.current]);
 
     return (
-        <div className="nao_header flex justify-between items-center h-[90px] relative z-10">
+        <div className="nao_header flex justify-between items-center pt-10 sm:py-6 relative z-10">
             <Drawer
                 visible={visible}
                 onClose={() => setVisible(false)}

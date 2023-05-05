@@ -201,7 +201,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         </button>
                     </div>
                 </div>
-                <CardNao className="mt-6 !p-4 rounded-xl border border-divider dark:border-divider-dark">
+                <CardNao className="mt-6 !p-4 rounded-xl border border-divider dark:border-none">
                     <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium leading-6 ">{t('nao:pool:total_staked')}</label>
                     <div className="mt-4">
                         <div className="flex items-center justify-between">
@@ -221,12 +221,12 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         <div className="text-xs font-medium leading-6">{formatNumber(data.percent || 10, assetNao?.assetDigit ?? 8)}%</div>
                     </div>
                 </CardNao>
-                <CardNao className="mt-6 !p-4 rounded-xl border border-divider dark:border-divider-dark">
+                <CardNao className="mt-6 !p-4 rounded-xl border border-divider dark:border-none">
                     <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium leading-6 ">{t('nao:pool:total_revenue')}</label>
                     <div className="flex items-center mt-4">
                         <div className="text-xl font-semibold mr-2">≈ {formatNumber(data.totalProfit, 0)} VNDC</div>
                     </div>
-                    <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                    <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark pt-0.5">
                         {t('nao:pool:equivalent')} ${formatNumber(data.totalProfit, 2)}{' '}
                     </div>
 
@@ -254,23 +254,23 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     >
                         {t('nao:pool:per_est_revenue')}
                     </label>
-                    <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                    <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark pt-2">
                         {t('nao:pool:equivalent')} ${formatNumber(data.estimateUSD, 2)}
                     </div>
-                    <div className="mt-4">
-                        <div className="w-full my-2">
+                    <div className="mt-4 flex flex-col space-y-4">
+                        <div className="w-full py-0.5">
                             <EstimateInterest assetId={447} logoPath="/images/nao/ic_nao.png" />
                         </div>
-                        <div className="w-full my-2">
+                        <div className="w-full py-0.5">
                             <EstimateInterest assetId={72} logoPath="/images/nao/ic_vndc.png" />
                         </div>
-                        <div className="w-full my-2">
+                        <div className="w-full py-0.5">
                             <EstimateInterest assetId={1} logoPath={`/images/coins/64/${1}.png`} />
                         </div>
-                        <div className="w-full my-2">
+                        <div className="w-full py-0.5">
                             <EstimateInterest assetId={86} logoPath={'/images/nao/ic_onus.png'} />
                         </div>
-                        <div className="w-full my-2">
+                        <div className="w-full py-0.5">
                             <EstimateInterest assetId={22} logoPath={`/images/coins/64/${22}.png`} />
                         </div>
                     </div>
@@ -299,20 +299,20 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                                     {t('nao:pool:week', { value: listHitory.length - index })} {formatTime(item.fromTime, 'dd/MM/yyyy')} -{' '}
                                                     {formatTime(item.toTime, 'dd/MM/yyyy')}
                                                 </div>
-                                                <div className="mt-1">
-                                                    <div className="w-full my-2">
+                                                <div className="mt-1 flex flex-col space-y-4">
+                                                    <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={447} logoPath="/images/nao/ic_nao.png" />
                                                     </div>
-                                                    <div className="w-full my-2">
+                                                    <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={72} logoPath="/images/nao/ic_vndc.png" />
                                                     </div>
-                                                    <div className="w-full my-2">
+                                                    <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={1} logoPath={`/images/coins/64/${1}.png`} />
                                                     </div>
-                                                    <div className="w-full my-2">
+                                                    <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={86} logoPath={'/images/nao/ic_onus.png'} />
                                                     </div>
-                                                    <div className="w-full my-2">
+                                                    <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={22} logoPath={`/images/coins/64/${22}.png`} />
                                                     </div>
                                                 </div>

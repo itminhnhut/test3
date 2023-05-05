@@ -160,8 +160,8 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                             </ButtonNao>
                         </div>
                     )}
-                    <hr className="!opacity-100 !my-6 border-divider dark:border-divider-dark" />
-                    <div className="flex items-center justify-between">
+                    <hr className="!opacity-100 !my-4 border-divider dark:border-divider-dark" />
+                    <div className="flex items-center justify-between py-2">
                         <div className="flex items-center">
                             <Tooltip
                                 id="tooltip-auto"
@@ -197,7 +197,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                         </div>
                     </div>
                     {!hidden && (
-                        <div className="mt-4">
+                        <div className="mt-6">
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm leading-6">

@@ -19,14 +19,13 @@ import { API_FUTURES_CAMPAIGN_STATUS } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { PromotionStatus } from 'components/screens/Mobile/Futures/onboardingType';
 import AnnouncementPopup from 'components/screens/Mobile/AnnouncementPopup';
-import ContestModal from './ContestModal'
-
+import ContestModal from './ContestModal';
 
 const INITIAL_STATE = {
     loading: false,
     pair: null,
     isVndcFutures: false,
-    socketStatus: false,
+    socketStatus: false
 };
 
 const FuturesMobile = () => {
@@ -47,32 +46,23 @@ const FuturesMobile = () => {
     const [scrollSnap, setScrollSnap] = useState(false);
     const [forceRender, setForceRender] = useState(false);
     const [showOnBoardingModal, setShowOnBoardingModal] = useState(false);
-    const assetConfig = useSelector(state => state?.utils?.assetConfig);
+    const assetConfig = useSelector((state) => state?.utils?.assetConfig);
     const campaign = useRef(null);
 
-    const pairConfig = useMemo(
-        () => allPairConfigs?.find((o) => o.pair === state.pair),
-        [allPairConfigs, state.pair]
-    );
+    const pairConfig = useMemo(() => allPairConfigs?.find((o) => o.pair === state.pair), [allPairConfigs, state.pair]);
 
     const asset = useMemo(() => {
-        return assetConfig.find(rs => rs.id === pairConfig?.quoteAssetId);
+        return assetConfig.find((rs) => rs.id === pairConfig?.quoteAssetId);
     }, [assetConfig, pairConfig]);
 
     useEffect(() => {
         if (!router?.query?.pair) return;
         const pairConfig = allPairConfigs?.find((o) => o.pair === router?.query?.pair);
         if (!pairConfig && allPairConfigs?.length > 0) {
-            const newPair = allPairConfigs?.find(o => o.pair === FUTURES_DEFAULT_SYMBOL)?.pair || allPairConfigs[0].pair;
-            router.push(
-                `/mobile${PATHS.FUTURES_V2.DEFAULT}/${newPair}`,
-                undefined,
-                { shallow: true }
-            );
+            const newPair = allPairConfigs?.find((o) => o.pair === FUTURES_DEFAULT_SYMBOL)?.pair || allPairConfigs[0].pair;
+            router.push(`/mobile${PATHS.FUTURES_V2.DEFAULT}/${newPair}`, undefined, { shallow: true });
         }
     }, [router?.query?.pair, allPairConfigs]);
-
-
 
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
 
@@ -80,26 +70,19 @@ const FuturesMobile = () => {
     useEffect(() => {
         if (router?.query?.pair) {
             setState({ pair: router.query.pair });
-            localStorage.setItem(
-                LOCAL_STORAGE_KEY.PreviousFuturesPair,
-                router.query.pair
-            );
+            localStorage.setItem(LOCAL_STORAGE_KEY.PreviousFuturesPair, router.query.pair);
             dispatch(updateSymbolView({ symbol: router.query.pair }));
         }
     }, [router]);
 
     const getCampaignStatus = async () => {
         try {
-            const {
-                status,
-                data,
-                message
-            } = await fetchApi({
+            const { status, data, message } = await fetchApi({
                 url: API_FUTURES_CAMPAIGN_STATUS,
-                options: { method: 'GET' },
+                options: { method: 'GET' }
             });
             if (status === ApiStatus.SUCCESS) {
-                campaign.current = data.filter(rs => rs.status === PromotionStatus.PENDING);
+                campaign.current = data.filter((rs) => rs.status === PromotionStatus.PENDING);
                 if (Array.isArray(campaign.current) && campaign.current.length > 0) {
                     setShowOnBoardingModal(true);
                 }
@@ -110,15 +93,10 @@ const FuturesMobile = () => {
         }
     };
     const subscribeFuturesSocket = (pair) => {
-
         if (!publicSocket) {
             setState({ socketStatus: !!publicSocket });
         } else {
-            if (
-                !state.prevPair ||
-                state.prevPair !== pair ||
-                !!publicSocket !== state.socketStatus
-            ) {
+            if (!state.prevPair || state.prevPair !== pair || !!publicSocket !== state.socketStatus) {
                 publicSocket.emit('subscribe:futures:ticker', pair);
                 // publicSocket.emit('subscribe:futures:mini_ticker', 'all');
                 setState({
@@ -176,9 +154,9 @@ const FuturesMobile = () => {
     }, [userSocket]);
 
     const decimals = useMemo(() => {
-        const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
-        const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
-        const decimalScaleQtyMarket = pairConfig?.filters.find(rs => rs.filterType === 'MARKET_LOT_SIZE');
+        const decimalScalePrice = pairConfig?.filters.find((rs) => rs.filterType === 'PRICE_FILTER');
+        const decimalScaleQtyLimit = pairConfig?.filters.find((rs) => rs.filterType === 'LOT_SIZE');
+        const decimalScaleQtyMarket = pairConfig?.filters.find((rs) => rs.filterType === 'MARKET_LOT_SIZE');
         return {
             decimalScalePrice: countDecimals(decimalScalePrice?.tickSize),
             decimalScaleQtyLimit: countDecimals(decimalScaleQtyLimit?.stepSize),
@@ -293,16 +271,16 @@ const FuturesMobile = () => {
     );
 };
 const Container = styled.div`
-  scroll-snap-type: y mandatory;
-  overflow-y: scroll;
-  height: calc(var(--vh, 1vh) * 100);
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    height: calc(var(--vh, 1vh) * 100);
 `;
 
 const Section = styled.div`
-  width: 100%;
-  height: unset;
-${'' /* height:calc(var(--vh, 1vh) * 100); */}
-${'' /* scroll-snap-align:start */}
+    width: 100%;
+    height: unset;
+    ${'' /* height:calc(var(--vh, 1vh) * 100); */}
+    ${'' /* scroll-snap-align:start */}
 `;
 
 export default FuturesMobile;

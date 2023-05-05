@@ -291,20 +291,22 @@ const AlertModal = ({ visible, onConfirm, onClose, t, isLock, amount, decimal, d
     return (
         <ModalV2 isMobile isVisible={visible} onBackdropCb={onClose} wrapClassName="pb-12">
             <label className="text-[20px] font-semibold leading-6">{t(`nao:pool:confirm_${isLock ? 'lock' : 'unlock'}`)}</label>
-            <div className="text-sm mt-8 bg-gray-13 dark:bg-dark-4 p-4 rounded-xl">
-                <div className="flex items-center justify-between pb-3">
+            <div className="text-sm mt-8 bg-gray-13 dark:bg-dark-4 p-4 rounded-xl flex flex-col space-y-3">
+                <div className="flex items-center justify-between">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t(`nao:pool:amount_${isLock ? 'lock' : 'unlock'}`)}</label>
-                    <span>{formatNumber(amount, decimal)} NAO</span>
+                    <span className="font-semibold">{formatNumber(amount, decimal)} NAO</span>
                 </div>
                 {/* <div className="flex items-center justify-between py-3">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:pool:est_revenue')}</label>
                     <span>{formatNumber(revenue, decimal)} NAO</span>
                 </div> */}
-                <div className="flex items-center justify-between pt-3">
+                <div className="flex items-center justify-between">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark">
                         {isLock ? t('nao:pool:lock_duration') : t('nao:pool:time_to_get_back')}
                     </label>
-                    <span>{isLock ? `${data?.duration ?? 7} ${t('nao:pool:days')}` : formatTime(timeTogetBack, 'HH:mm:ss dd/MM/yyyy')} </span>
+                    <span className="font-semibold">
+                        {isLock ? `${data?.duration ?? 7} ${t('nao:pool:days')}` : formatTime(timeTogetBack, 'HH:mm:ss dd/MM/yyyy')}{' '}
+                    </span>
                 </div>
             </div>
             {/* <div className="flex items-center mt-6" onClick={onHandleChecked}>

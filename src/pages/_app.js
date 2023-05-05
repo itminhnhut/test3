@@ -191,7 +191,7 @@ const App = ({ Component, pageProps }) => {
                 }
                 store.dispatch(getUserFuturesBalance());
                 store.dispatch(getUserPartnersBalance());
-                store.dispatch(getBalance(9, WalletType.NAO_FUTURES));
+                store.dispatch(getBalance(9, WalletType.NAO_FUTURES)); // wallet NAO FUTURES
             }
         }
     });

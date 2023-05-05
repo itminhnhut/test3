@@ -14,7 +14,7 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
     }, [dataSource, ammData])
 
     return (
-        <section id="nao_info" className="flex items-center justify-between pt-10 sm:pt-20 flex-wrap gap-8">
+        <section id="nao_info" className="flex items-center justify-between pt-12 sm:pt-20 flex-wrap gap-8">
             <div className="flex items-center">
                 <BackgroundImage>
                     <img src={getS3Url('/images/nao/ic_nao_large.png')} className="w-[62px] h-[62px] sm:w-[80px] sm:h-[80px]" alt="" />
