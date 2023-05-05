@@ -1,24 +1,18 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {  useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { ChevronLeft, ChevronRight } from 'react-feather';
 import { find, isNumber } from 'lodash';
-import { countDecimals, eToNumber, formatWallet, shortHashAddress, formatNumber, dwLinkBuilder } from 'redux/actions/utils';
+import { countDecimals, eToNumber, shortHashAddress, formatNumber } from 'redux/actions/utils';
 import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper';
-import { PATHS } from 'constants/paths';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OtpInput from 'react-otp-input';
 import ModalV2 from 'components/common/V2/ModalV2';
 import styled from 'styled-components';
 import colors from 'styles/colors';
-import useWindowFocus from 'hooks/useWindowFocus';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { AddressInput, AmountInput, ErrorMessage, Information, MemoInput, NetworkInput } from 'components/screens/Wallet/Exchange/Withdraw';
+import { AddressInput, AmountInput, Information, MemoInput, NetworkInput } from 'components/screens/Wallet/Exchange/Withdraw';
 import WithdrawHistory from 'components/screens/Wallet/Exchange/Withdraw/WithdrawHistory';
 import classNames from 'classnames';
-import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import { roundToDown } from 'round-to';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import toast from 'utils/toast';
@@ -51,7 +45,7 @@ const errorMessageMapper = (t, error) => {
 };
 
 // Other error show modal
-const errorShowOnlyMessage = [WITHDRAW_RESULT.MissingOtp, WITHDRAW_RESULT.InvalidOtp];
+// const errorShowOnlyMessage = [WITHDRAW_RESULT.MissingOtp, WITHDRAW_RESULT.InvalidOtp];
 
 const PHASE_CONFIRM = {
     INFO: 1,
@@ -154,7 +148,7 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
                     phase === PHASE_CONFIRM.INFO && (
                         <>
                             <div className="text-center mb-4">
-                                <p className="text-xl font-semibold">{t('wallet:withdraw_confirmation')}</p>
+                                <p className="text-2xl font-semibold">{t('wallet:withdraw_confirmation')}</p>
                             </div>
                             <div className="space-y-2">
                                 {[
@@ -340,8 +334,6 @@ const CryptoWithdraw = ({ assetId }) => {
         t,
         i18n: { language }
     } = useTranslation();
-    const router = useRouter();
-    const focused = useWindowFocus();
 
     const selectedAsset = useMemo(() => find(paymentConfigs, { assetCode: assetId }), [paymentConfigs, assetId]);
     const assetBalance = useMemo(() => walletAssets[selectedAsset?.assetId], [walletAssets, selectedAsset]);
@@ -442,11 +434,6 @@ const CryptoWithdraw = ({ assetId }) => {
         return () => clearInterval(interval);
     }, [resendTimeOut]);
 
-    // Handle check KYC:
-    const isOpenModalKyc = useMemo(() => {
-        return auth ? auth?.kyc_status !== 2 : false;
-    }, [auth]);
-
     return (
         <div>
             <div
@@ -469,14 +456,6 @@ const CryptoWithdraw = ({ assetId }) => {
 
                 <AddressInput t={t} value={state.address} onChange={(address) => setState({ address })} isValid={state.validator?.address} />
 
-                <NetworkInput
-                    t={t}
-                    networkList={selectedAsset?.networkList}
-                    selected={state.selectedNetwork}
-                    onChange={(network) => setState({ selectedNetwork: network })}
-                    currentTheme={currentTheme}
-                />
-
                 {state?.selectedNetwork?.memoRegex && (
                     <MemoInput
                         t={t}
@@ -485,6 +464,14 @@ const CryptoWithdraw = ({ assetId }) => {
                         errorMessage={state.validator.memo ? '' : t('wallet:errors.invalid_memo')}
                     />
                 )}
+
+                <NetworkInput
+                    t={t}
+                    networkList={selectedAsset?.networkList}
+                    selected={state.selectedNetwork}
+                    onChange={(network) => setState({ selectedNetwork: network })}
+                    currentTheme={currentTheme}
+                />
 
                 <Information
                     className="!mt-6"
