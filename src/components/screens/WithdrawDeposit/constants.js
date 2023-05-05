@@ -146,7 +146,10 @@ export const ORDER_TYPES = {
             ) : (
                 <ButtonV2
                     onClick={() => {
-                        router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`);
+                        router.push({
+                            pathname: PATHS.WITHDRAW_DEPOSIT.PARTNER,
+                            query: { side, assetId }
+                        });
                         resetModalState();
                     }}
                     className="transition-all mt-10"

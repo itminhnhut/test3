@@ -24,7 +24,7 @@ const getColumns = (t, user, side, configs) => [
     {
         key: 'displayingId',
         dataIndex: 'displayingId',
-        title: t('common:transaction_id'),
+        title: t('dw_partner:order_id'),
         align: 'left',
         width: 150,
         fixed: 'left',
