@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
-import PopupModal from 'src/components/screens/NewReference/PopupModal';
-import { formatTime } from 'redux/actions/utils';
-import { NoData } from '../..';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
-import { useEffect } from 'react';
+
 import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_FRIENDS_BY_REF } from 'redux/actions/apis';
-import { useRef } from 'react';
+
 import { IconLoading } from 'components/common/Icons';
-import colors from 'styles/colors';
 import ModalV2 from 'components/common/V2/ModalV2';
 import InputV2 from 'components/common/V2/InputV2';
+import PopupModal from 'src/components/screens/NewReference/PopupModal';
 
+import { NoData } from '../../index';
+
+import { formatTime } from 'redux/actions/utils';
+import { useDebounce } from 'react-use';
 import { Search } from 'react-feather';
 import classNames from 'classnames';
+import colors from 'styles/colors';
 
 const LIMIT = 10;
 const PAGE = 0;
@@ -24,6 +26,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(false);
     const [friendList, setFriendList] = useState([]);
+    const [debounceSearch, setDebounceSearch] = useState('');
 
     const hasNext = useRef(false);
 
@@ -41,7 +44,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                 method: 'GET'
             },
             params: {
-                code: search,
+                code: debounceSearch,
                 limit: LIMIT,
                 page
             }
@@ -54,17 +57,24 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
             }
             setLoading(false);
         });
-    }, 300);
+    }, 500);
 
     useEffect(() => {
         handleListFriend();
-    }, [code, search, page]);
+    }, [code, debounceSearch, page]);
+
+    useDebounce(
+        () => {
+            setDebounceSearch(search);
+            setFriendList([]);
+        },
+        500,
+        [search]
+    );
 
     const handleChangeSearch = (value) => {
         setSearch(value);
     };
-
-    console.log('hasNext', hasNext);
 
     return isDesktop ? (
         <ModalV2 isVisible={isShow} onBackdropCb={doClose} className="w-[30rem]">
