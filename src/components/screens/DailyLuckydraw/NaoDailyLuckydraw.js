@@ -187,7 +187,7 @@ const Luckydraw = ({ platform }) => {
                             'text-darkBlue-5': active < count && platform === 'nami'
                         })}
                     >
-                        {!rs.value ? t('nao:luckydraw:start') : `+${formatNumber(rs.value)}`}
+                        {!rs.value ? t('common:luckydraw:start') : `+${formatNumber(rs.value)}`}
                     </div>
                 </div>
             </div>
@@ -275,10 +275,10 @@ const Luckydraw = ({ platform }) => {
                                 xs ? (language === 'en' ? 'text-lg' : 'text-xl') : language === 'en' ? 'text-[2rem] leading-10' : 'text-2xl leading-8'
                             } ${platform === 'nami' ? 'italic' : ''}`}
                         >
-                            {t('nao:luckydraw:reward_title')}
+                            {t('common:luckydraw:reward_title')}
                         </div>
                         <div className={classNames('text-sm leading-5 font-medium mt-2', { '!text-xs': xs })}>
-                            {t(`nao:luckydraw:${claimedAll ? 'reward_desc_trading_over' : can_receive.current ? 'reward_desc' : 'reward_desc_trading'}`, {
+                            {t(`common:luckydraw:${claimedAll ? 'reward_desc_trading_over' : can_receive.current ? 'reward_desc' : 'reward_desc_trading'}`, {
                                 vol: formatNumber(dataSource?.[active + 1]?.vol_condition - metadata.current) + ' VNDC',
                                 value: formatNumber(dataSource?.[active + 1]?.value || 0) + ' VNDC'
                             })}
@@ -295,8 +295,10 @@ const Luckydraw = ({ platform }) => {
                                 '!text-xs': xs
                             })}
                         >
-                            <span>{t('nao:luckydraw:today_trading')}</span>
-                            <div data-for="volume_tooltip" data-tip={t('nao:luckydraw:volume_tooltip')}>
+                            <span className={classNames('', { 'text-darkBlue-5': platform === 'nami', 'text-nao-text2': platform === 'frame' })}>
+                                {t('common:luckydraw:today_trading')}
+                            </span>
+                            <div data-for="volume_tooltip" data-tip={t('common:luckydraw:volume_tooltip')}>
                                 <TooltipNami />
                             </div>
                         </div>
@@ -333,7 +335,7 @@ const Luckydraw = ({ platform }) => {
                             })}
                             onClick={() => claim()}
                         >
-                            {t(`nao:luckydraw:${can_receive.current ? 'claim_now' : 'back_to_trading'}`)}
+                            {t(`common:luckydraw:${can_receive.current ? 'claim_now' : 'back_to_trading'}`)}
                         </div>
                     </div>
                 </BackgroundImage>
@@ -372,7 +374,7 @@ const ModalClaim = ({ onClose, visible, platform, getImage, ticket, total_reward
                             &nbsp;
                             <span>{formatTime(ticket?.time, 'yyyy-MM-dd HH:mm')}</span>
                         </div>
-                        <div className="text-lg leading-6 mt-3">{t('nao:luckydraw:claim_success')}</div>
+                        <div className="text-lg leading-6 mt-3">{t('common:luckydraw:claim_success')}</div>
                         <div className="text-[2rem] leading-10 mt-2 font-semibold">{formatNumber(total_reward)} VNDC</div>
                     </div>
                     <div
