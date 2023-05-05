@@ -43,7 +43,7 @@ function TagV2({ type = TYPES.DEFAULT, children, className = '', icon = true, la
         <span
             className={classnames(
                 className,
-                `flex items-center leading-7 rounded-full w-fit px-3 md:px-4 py-1 select-none ${
+                `flex items-center leading-7 rounded-full min-w-[fit-content] w-fit px-3 md:px-4 py-1 select-none ${
                     style && style?.backgroundColor ? style.backgroundColor : 'bg-gray-11 dark:bg-divider-dark/[0.5]'
                 }`
             )}

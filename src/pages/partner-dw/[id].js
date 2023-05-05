@@ -3,14 +3,11 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import dynamic from 'next/dynamic';
 import { PARTNER_WD_TABS, PATHS } from 'constants/paths';
-import { API_PARTNER_REGISTER } from 'redux/actions/apis';
-import useFetchApi from 'hooks/useFetchApi';
 import Spinner from 'components/svg/Spinner';
 import { useSelector } from 'react-redux';
-import PartnerProfile from 'components/screens/WithdrawDeposit/partner/Profile';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
-import Custom404 from 'pages/404';
+import Error404 from 'components/common/404';
 
 const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partner/PartnerWD'), {
     ssr: false
@@ -32,6 +29,10 @@ const TabCommissionHistory = dynamic(() => import('components/screens/WithdrawDe
     ssr: false
 });
 
+const PartnerProfile = dynamic(() => import('components/screens/WithdrawDeposit/partner/Profile'), {
+    ssr: false
+});
+
 const PartnerDepositWithdraw = ({ id }) => {
     const { user, loadingUser } = useSelector((state) => state.auth);
     const [currentTheme] = useDarkMode();
@@ -50,7 +51,7 @@ const PartnerDepositWithdraw = ({ id }) => {
                     {id === PARTNER_WD_TABS.HISTORY_REFERRAL && <TabCommissionHistory />}
                 </PartnerWD>
             ) : (
-                <div className="text-3xl font-semibold text-center">Please login on partner account!</div>
+                <Error404 />
             )}
         </MaldivesLayout>
     );

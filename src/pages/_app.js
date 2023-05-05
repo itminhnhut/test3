@@ -23,7 +23,6 @@ import * as ga from 'src/utils/ga';
 import { indexingArticles } from 'utils';
 import { isMobile } from 'react-device-detect';
 import { getCookie, setCookie } from 'cookies-next';
-
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {
 //         case 'FCP':

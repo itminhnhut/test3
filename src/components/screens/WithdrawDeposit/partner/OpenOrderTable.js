@@ -30,7 +30,7 @@ import classNames from 'classnames';
 
 const LIMIT_ROW = 5;
 
-const OrderCard = memo(({ orderDetail, assetConfig, t, router, onProcessOrder }) => {
+const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, router, onProcessOrder }) => {
     const assetCode = find(assetConfig, { id: orderDetail?.baseAssetId })?.assetCode;
     return (
         <Card className={classNames('border-0 bg-white dark:bg-dark-4', {})}>
@@ -52,12 +52,17 @@ const OrderCard = memo(({ orderDetail, assetConfig, t, router, onProcessOrder })
                         </ButtonV2>
                     ) : (
                         <>
-                            <ButtonV2 className="!w-auto !h-9 px-4 py-3" onClick={() => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, orderDetail)}>
+                            <ButtonV2
+                                loading={loadingProcessOrder}
+                                className="!w-auto !h-9 px-4 py-3"
+                                onClick={() => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, orderDetail)}
+                            >
                                 {t('common:accept')}
                             </ButtonV2>
                             <ButtonV2
-                                className="!w-auto px-4 py-3 !h-9"
+                                className="!w-auto px-4 py-3 !h-9 disabled:!cursor-auto"
                                 variants="secondary"
+                                disabled={loadingProcessOrder}
                                 onClick={() => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, orderDetail)}
                             >
                                 {t('common:reject')}
@@ -99,7 +104,7 @@ const OrderCard = memo(({ orderDetail, assetConfig, t, router, onProcessOrder })
                 <div className="border-divider hidden lg:block dark:border-divider-dark border-r" />
                 <div className="flex gap-6 p-2 w-full xxs:w-1/2 lg:!w-auto">
                     <div className="">
-                        <div className="txtSecond-2 mb-3">{t('common:transaction_id')}</div>
+                        <div className="txtSecond-2 mb-3">{t('dw_partner:order_id')}</div>
                         <TextCopyable className="gap-x-1 txtPri-1" text={orderDetail?.displayingId} />
                     </div>
                     <div className="">
@@ -155,7 +160,7 @@ const OpenOrderTable = () => {
     dataRef.current = [...state.data];
     currentSideRef.current = state.params.side;
 
-    const { onMarkWithStatus, onProcessOrder, setModalState } = useMarkOrder({
+    const { onProcessOrder, setModalState } = useMarkOrder({
         mode: MODE.PARTNER,
         toggleRefetch: () => {}
     });
@@ -280,11 +285,19 @@ const OpenOrderTable = () => {
                         ))
                     ) : state.data.length ? (
                         state.data.map((order, i) => (
-                            <OrderCard onProcessOrder={onProcessOrder} router={router} assetConfig={assetConfig} key={i} orderDetail={order} t={t} />
+                            <OrderCard
+                                loadingProcessOrder={modalProps[MODAL_TYPE.CONFIRM].loading}
+                                onProcessOrder={onProcessOrder}
+                                router={router}
+                                assetConfig={assetConfig}
+                                key={i}
+                                orderDetail={order}
+                                t={t}
+                            />
                         ))
                     ) : (
                         <div className="mt-[60px]">
-                            <NoData />
+                            <NoData text={t('dw_partner:no_pending_transactions')} />
                         </div>
                     )}
                 </div>

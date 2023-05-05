@@ -19,6 +19,21 @@ const phoneNumberPattern = /^\d{10}$/;
 
 const toRegionPhone = (phoneNumber) => (phoneNumber ? '+84' + phoneNumber.slice(1) : '');
 
+function formatPhoneNumberCustom(input) {
+    // Remove all non-numeric characters from the input
+    const numericInput = input.replace(/\D/g, '');
+
+    // Split the numeric input into parts based on its length
+    if (numericInput.length > 7) {
+        return numericInput.slice(0, 4) + ' ' + numericInput.slice(4, 7) + ' ' + numericInput.slice(7);
+    } else if (numericInput.length > 4) {
+        return numericInput.slice(0, 4) + ' ' + numericInput.slice(4);
+    } else {
+        // Return the original input if it's not a valid phone number length
+        return input;
+    }
+}
+
 const actionModal = {
     PHONE_INPUT: 1,
     VERIFY_OTP: 2
@@ -57,6 +72,8 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
     const [isConfirmPhoneYet, setIsConfirmPhoneYet] = useState(false);
 
     const handleChangePhoneNumber = (value = '') => {
+        value = value.replace(/\s/g, '');
+
         if (value.length > 10) return;
 
         onValidatePhoneNumber(value);
@@ -180,15 +197,19 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                         <InputV2
                             // onHitEnterButton={() => (!helperText && !isValidating ? onSubmitPhoneNumber(false) : null)}
                             className="!pb-10"
-                            value={phoneNumber}
+                            value={formatPhoneNumberCustom(phoneNumber)}
                             onChange={handleChangePhoneNumber}
                             label={t('dw_partner:phone')}
                             placeholder={t('dw_partner:phone_placeholder')}
                             allowClear={true}
                             error={helperText}
-                            type="number"
+                            type="text"
                         />
-                        <ButtonV2 disabled={!!helperText || isValidating || !phoneNumber} loading={isValidating} onClick={() => onSubmitPhoneNumber(false)}>
+                        <ButtonV2
+                            disabled={isConfirmPhoneYet === false || !!helperText || isValidating || !phoneNumber}
+                            loading={isValidating}
+                            onClick={() => onSubmitPhoneNumber(false)}
+                        >
                             {t('common:confirm')}
                         </ButtonV2>
                     </>
