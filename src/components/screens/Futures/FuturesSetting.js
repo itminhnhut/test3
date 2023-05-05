@@ -81,7 +81,7 @@ const FuturesSetting = (props) => {
         <Popover className="relative h-full">
             {({ open }) => (
                 <>
-                    <Popover.Button className={`h-full  flex items-center ${open ? '' : 'text-opacity-90'} hover:text-teal text-txtSecondary dark:text-txtSecondary-dark group ${className}`}>
+                    <Popover.Button className={`h-full  flex items-center ${open ? '' : 'text-opacity-90'} dark:hover:text-teal hover:text-teal text-txtSecondary dark:text-txtSecondary-dark group ${className}`}>
                         <NavbarSettingIcon size={24} />
                     </Popover.Button>
                     <Transition
