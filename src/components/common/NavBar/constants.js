@@ -263,15 +263,15 @@ export const MOBILE_NAV_DATA = [
                 url: '/reference',
                 child_lv2: []
             },
-            {
-                key: 7,
-                title: 'Nami Insurance',
-                localized: 'nami_insurance',
-                isNew: false,
-                notSameOrigin: true,
-                url: 'https://namiinsurance.io/',
-                child_lv2: []
-            }
+            // {
+            //     key: 7,
+            //     title: 'Nami Insurance',
+            //     localized: 'nami_insurance',
+            //     isNew: false,
+            //     notSameOrigin: true,
+            //     url: 'https://namiinsurance.io/',
+            //     child_lv2: []
+            // }
         ]
     },
     {
