@@ -33,7 +33,8 @@
             "api_mng": "API Management",
             "logout": "Log Out",
             "partner": "Partner",
-            "payment_method": "Payment Method"
+            "payment_method": "Payment Method",
+            "daily_reward": "Daily Trading Reward"
         }
     },
     "submenu": {

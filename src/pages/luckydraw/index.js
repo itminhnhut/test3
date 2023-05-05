@@ -1,5 +1,5 @@
 import React from 'react';
-import Luckydraw from 'components/screens/Nao/Luckydraw/Luckydraw2';
+import Luckydraw from 'components/screens/DailyLuckydraw/NaoDailyLuckydraw';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 const index = () => {
     return <Luckydraw platform={'frame'} />;

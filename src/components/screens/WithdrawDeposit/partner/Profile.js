@@ -8,6 +8,8 @@ import { API_DEFAULT_BANK_USER, API_GET_PARTNER_PROFILE, API_GET_USER_BANK_ACCOU
 import ProfileHeader from '../components/ProfileHeader';
 import ProfileSetting from '../components/ProfileSetting';
 import { useBoolean } from 'react-use';
+import FetchApi from 'utils/fetch-api';
+import { ApiStatus } from 'redux/actions/const';
 
 const Profile = () => {
     const {
@@ -15,23 +17,54 @@ const Profile = () => {
         i18n: { language }
     } = useTranslation();
 
-    const [refetch, toggleRefetch] = useBoolean(false);
-    const [bankDefault, setBankDefault] = useState(null);
+    const [state, set] = useState({
+        partner: null,
+        banks: [],
+        defaultBank: null,
+        loading: false
+    });
 
-    const { data: partner, loading: loadingPartner } = useFetchApi({ url: API_GET_PARTNER_PROFILE }, true, [refetch]);
-
-    const { data: banks, loading: loadingBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT });
+    const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
     useEffect(() => {
-        if (!loadingBanks && banks && banks.length) {
-            setBankDefault(banks.find((bank) => bank.isDefault));
-        }
-    }, [banks, loadingBanks]);
+        (async () => {
+            let partner,
+                banks = [];
+            try {
+                setState({ loading: true });
+                const [partnerRes, banksRes] = await Promise.allSettled([
+                    FetchApi({ url: API_GET_PARTNER_PROFILE }),
+                    FetchApi({ url: API_GET_USER_BANK_ACCOUNT })
+                ]);
+
+                if (partnerRes.status === 'fulfilled' && partnerRes.value?.status === ApiStatus.SUCCESS) {
+                    partner = partnerRes.value?.data;
+                }
+                if (banksRes.status === 'fulfilled' && banksRes.value?.status === ApiStatus.SUCCESS) {
+                    banks = banksRes.value?.data;
+                }
+
+                setState({
+                    partner,
+                    banks,
+                    defaultBank: banks && banks?.length && banks.find((bank) => bank.isDefault),
+                    loading: false
+                });
+
+                return;
+            } catch (error) {
+                console.log('error: API_GET_PARTNER_PROFILE', error);
+                setState({
+                    loading: false
+                });
+            }
+        })();
+    }, []);
 
     return (
         <div>
-            <ProfileHeader t={t} partner={partner} loadingPartner={loadingPartner} banks={banks} bankDefault={bankDefault} loadingBankDefault={loadingBanks} />
-            <ProfileSetting t={t} partner={partner} loadingPartner={loadingPartner} refetchPartner={toggleRefetch} />
+            <ProfileHeader t={t} partner={state.partner} language={language} loading={state.loading} banks={state.banks} bankDefault={state.defaultBank} />
+            <ProfileSetting t={t} partner={state.partner} loading={state.loading} setPartner={(partner) => setState({ partner })} />
         </div>
     );
 };

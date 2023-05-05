@@ -43,7 +43,6 @@ export const BankInfo = ({
                     </div>
                 </>
             }
-            imgSize={40}
             data={banks && filterSearch(banks, ['bankName', 'bankKey', 'accountNumber'], search)}
             search={search}
             setSearch={setSearch}
@@ -84,7 +83,6 @@ export const BankInfo = ({
                             }}
                             endIcon={item._id === selectedBank?._id && <CheckCircle size={16} color="currentColor " />}
                             endIconPosition="center"
-                            imgSize={40}
                         />
                     );
                 }

@@ -64,6 +64,7 @@ module.exports = {
 
     BROKER_ERROR: { status: 400, code: 6104, message: 'BROKER_ERROR' },
     INSTRUMENT_NOT_LISTED_FOR_TRADING_YET: { status: 400, code: 6105, message: 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET' },
+    NAO_IS_MAINTAINED: { code: 3006, status: "NAO_IS_MAINTAINED", message: 'Trading pairs not yet supported' },
 
     NOT_ENOUGH_FEE_ASSET: { status: 400, code: 6106, message: 'NOT_ENOUGH_FEE_ASSET' },
     STOP_LIMIT_INVALID_STOP_PRICE: { status: 400, code: 6107, message: 'STOP_LIMIT_INVALID_STOP_PRICE' },
