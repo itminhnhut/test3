@@ -7,7 +7,7 @@ import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import colors from 'styles/colors';
 import Switch from 'components/common/V2/SwitchV2';
-import { SettingIcon } from 'components/svg/SvgIcon';
+import { SettingIcon,NavbarSettingIcon } from 'components/svg/SvgIcon';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
 const FuturesSetting = (props) => {
@@ -81,8 +81,8 @@ const FuturesSetting = (props) => {
         <Popover className="relative">
             {({ open }) => (
                 <>
-                    <Popover.Button className={`h-full flex items-center ${open ? '' : 'text-opacity-90'} text-white group ${className}`}>
-                        <SettingIcon size={20} color={currentTheme === 'dark' ? colors.darkBlue5 : colors.gray[1]} />
+                    <Popover.Button className={`h-full flex items-center ${open ? '' : 'text-opacity-90'} text-txtSecondary dark:text-txtSecondary-dark group ${className}`}>
+                        <NavbarSettingIcon size={24} />
                     </Popover.Button>
                     <Transition
                         as={Fragment}
@@ -93,7 +93,7 @@ const FuturesSetting = (props) => {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className="absolute right-0 top-12 z-10">
+                        <Popover.Panel className="absolute right-0 top-[52px] z-10">
                             <div className="p-4 w-[295px] border border-t-0 dark:border-divider-dark rounded-b-lg shadow-md bg-bgPrimary dark:bg-darkBlue-3 divide-solid divide-divider dark:divide-divider-dark divide-y">
                                 <div className="mb-6 flex justify-between">
                                     <span className="text-sm sm:text-base text-txtPrimary dark:text-txtPrimary-dark font-semibold">
