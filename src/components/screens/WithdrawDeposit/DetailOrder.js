@@ -22,8 +22,7 @@ import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import DarkNote from 'components/common/DarkNote';
 import DetailOrderHeader from './components/DetailOrderHeader';
 import Skeletor from 'components/common/Skeletor';
-import OrderStatusTag from 'components/common/OrderStatusTag';
-import ModalRating from './components/ModalRating';
+import DetailLog from './components/DetailLog';
 
 export const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
@@ -32,7 +31,9 @@ export const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, 
 const GroupInforCard = dynamic(() => import('./GroupInforCard'), { ssr: false });
 const ModalQr = dynamic(() => import('./components/ModalQr'), { ssr: false });
 const ModalOrder = dynamic(() => import('./components/ModalOrder'));
+const ModalRating = dynamic(() => import('./components/ModalRating', { ssr: false }));
 const ModalUploadImage = dynamic(() => import('./components/ModalUploadImage', { ssr: false }));
+const ModalPreviewProof = dynamic(() => import('./components/ModalPreviewProof', { ssr: false }));
 
 const DetailOrder = ({ id, mode = MODE.USER }) => {
     const { t } = useTranslation();
@@ -48,7 +49,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         isShowUploadImg: false,
         firstLoad: true,
         isShowRating: false,
-        needRating: false
+        needRating: false,
+        isShowProof: false
     });
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
@@ -68,9 +70,24 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
 
     const assetCode = getAssetCode(state.orderDetail?.baseAssetId);
 
+    const refetchOrderDetailHandler = (data) => {
+        toggleRefetch();
+        if (mode === MODE.USER && data?.status === PartnerOrderStatus.SUCCESS && !data?.reasonDisputedCode) {
+            if (data?.side === SIDE.BUY) {
+                setState({
+                    isShowRating: true
+                });
+            } else {
+                setState({
+                    needRating: true
+                });
+            }
+        }
+    };
+
     const { onMarkWithStatus, onProcessOrder, setModalState } = useMarkOrder({
         mode,
-        toggleRefetch
+        toggleRefetch: refetchOrderDetailHandler
     });
 
     useEffect(() => {
@@ -380,14 +397,10 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     side={side}
                     setModalQr={() => setState({ isShowQr: true })}
                     status={status}
-                    refetchOrderDetail={() => {
-                        toggleRefetch();
-                        setIsRefetchOrderDetailAfterCountdown(true);
-                    }}
                 />
                 {/* Lưu ý */}
                 {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
-                    <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6">
+                    <div className="w-full rounded-md border border-divider dark:border-0 dark:bg-darkBlue-3 py-4 px-6">
                         <DarkNote title={t('wallet:note')} />
                         <div className="txtSecond-2 mt-2">
                             {status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? (
@@ -400,11 +413,13 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 )}
                 {((side === SIDE.SELL && mode === MODE.USER) || (side === SIDE.BUY && mode === MODE.PARTNER)) &&
                     status?.status === PartnerOrderStatus.DISPUTED && (
-                        <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6">
+                        <div className="w-full rounded-md border border-divider dark:border-0 dark:bg-darkBlue-3 py-4 px-6">
                             <DarkNote title={t('wallet:note')} />
                             <div className="txtSecond-2 mt-2">{t('dw_partner:note_complete_dispute')}</div>
                         </div>
                     )}
+
+                <DetailLog orderDetail={state.orderDetail} mode={mode} onShowProof={() => setState({ isShowProof: true })} />
 
                 {/* Actions */}
 
@@ -468,6 +483,13 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
             />
             <ModalLoading isVisible={isRefetchOrderDetailAfterCountdown} onBackdropCb={() => setIsRefetchOrderDetailAfterCountdown(false)} />
             <ModalRating isVisible={state.isShowRating} onClose={() => setState({ isShowRating: false })} orderDetail={state.orderDetail} />
+            <ModalPreviewProof
+                mode={mode}
+                orderDetail={state.orderDetail}
+                t={t}
+                isVisible={state.isShowProof}
+                onClose={() => setState({ isShowProof: false })}
+            />
         </div>
     );
 };

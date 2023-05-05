@@ -18,7 +18,7 @@ const ErrorTriangle = ({ size = 16 }) => {
     );
 };
 
-const InputV2 = ({
+const TextArea = ({
     className,
     label,
     value,
@@ -34,6 +34,7 @@ const InputV2 = ({
     disabled = false,
     classNameInput = '',
     classNameDivInner = '',
+    rows = 7,
     ...restProps
 }) => {
     const { t } = useTranslation();
@@ -65,7 +66,7 @@ const InputV2 = ({
 
     return (
         <div className={classNames('relative pb-6', className)}>
-            {label ? <p className="text-gray-1 dark:text-gray-7 pb-2 text-sm">{label}</p> : null}
+            {label ? <p className="text-txtSecondary pb-2">{label}</p> : null}
             <div
                 className={classNames(
                     'bg-gray-10 dark:bg-dark-2 border border-transparent rounded-md flex items-center gap-2 p-[0.6875rem] transition',
@@ -78,10 +79,11 @@ const InputV2 = ({
                 )}
             >
                 {prefix ? prefix : null}
-                <input
+                <textarea
+                    // cols={40}
                     ref={inputRef}
                     className={classNames(
-                        'flex-1 text-sm sm:text-base !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark text-txtPrimary dark:text-txtPrimary-dark',
+                        'flex-1 text-sm sm:text-base !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark text-txtPrimary dark:text-txtPrimary-dark border-none outline-none bg-transparent',
                         classNameInput
                     )}
                     type={type}
@@ -91,7 +93,7 @@ const InputV2 = ({
                     onChange={onInputChange}
                     onKeyPress={onHitEnterButton ? handleHitEnterButton : null}
                     {...restProps}
-                />
+                ></textarea>
                 <div className="flex items-center divide-x divide-divider dark:divide-divider-dark space-x-2">
                     <X
                         className={classNames('transition', allowClear && !!value ? 'opacity-1 cursor-pointer' : 'opacity-0')}
@@ -123,4 +125,4 @@ const InputV2 = ({
     );
 };
 
-export default InputV2;
+export default TextArea;

@@ -38,7 +38,7 @@ const getColumns = ({ t, configs }) => [
     {
         key: 'displayingId',
         dataIndex: 'displayingId',
-        title: t('common:transaction_id'),
+        title: t('dw_partner:order_id'),
         align: 'left',
         width: 135,
         render: (row) => <TextCopyable text={row} />
@@ -286,7 +286,7 @@ const HistoryOrders = () => {
     return (
         <div className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg ">
             <div className="mx-6 my-8">
-                <div className="text-2xl font-semibold mb-8">{t('common:transaction_history')}</div>
+                <div className="text-2xl font-semibold mb-8">{t('dw_partner:transaction_history')}</div>
                 <FilterButton
                     language={language}
                     t={t}
@@ -327,7 +327,7 @@ const HistoryOrders = () => {
                         }),
                     language
                 }}
-                emptyTextContent={t('common:no_data')}
+                emptyTextContent={t('dw_partner:no_order_history')}
                 customSort={customSort}
             />
         </div>
