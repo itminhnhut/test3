@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from 'react';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
 
 import Image from 'next/image';
 
@@ -156,7 +156,7 @@ const ContesRules = ({
                     />
                 ) : (
                     <Image
-                        src={('/images/nao/contest/ic_contest_info.webp')}
+                        src={'/images/nao/contest/ic_contest_info.webp'}
                         width="300px"
                         height="292px"
                         title={title_champion?.[language]}
@@ -169,24 +169,32 @@ const ContesRules = ({
 };
 
 const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
+    const [offset, setOffset] = useState(0);
     const progress = (item) => {
         const now = new Date().getTime();
         const start = new Date(item?.start).getTime();
         const end = new Date(item?.end).getTime();
         if (now < start && now < end) {
-            return <div className="text-yellow-2 bg-yellow-2/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-[80px]">{t('nao:coming_soon_2')}</div>;
+            return <div className="text-yellow-2 bg-yellow-2/[0.1] px-2 py-1 !pl-3 sm:!pl-2  rounded-r-[80px] sm:rounded-[80px]">{t('nao:coming_soon_2')}</div>;
         } else if (now > start && now < end) {
             return (
-                <div className="flex items-center space-x-1 bg-teal/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-[80px] w-max">
+                <div className="flex items-center space-x-1 bg-teal/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-r-[80px] sm:rounded-[80px] w-max">
                     <img src={getS3Url('/images/nao/ic_nao_large.png')} width={16} height={16} />
                     <div className="text-teal ">{t('nao:going_on')}</div>
                 </div>
             );
         } else {
-            return <div className="text-gray-7 bg-gray-7/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-[80px]">{t('nao:ended')}</div>;
+            return <div className="text-gray-7 bg-gray-7/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-r-[80px] sm:rounded-[80px]">{t('nao:ended')}</div>;
         }
     };
 
+    useEffect(() => {
+        setTimeout(() => {
+            setOffset(document.querySelector('.tournaments').clientWidth);
+        }, 500);
+    }, [seasonsFilter]);
+
+    console.log(offset);
     return (
         <Popover className="relative flex">
             {({ open, close }) => (
@@ -194,10 +202,14 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                     <Popover.Button>
                         <ButtonNao
                             variant={ButtonNaoVariants.SECONDARY}
-                            className="px-[18px] text-sm font-semibold w-max !rounded-md flex items-center space-x-2"
+                            className="px-[18px] text-sm font-semibold w-max !rounded-md flex items-center space-x-2 tournaments"
                         >
                             <span>{t('nao:contest:tournaments')}</span>
-                            <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
+                            <ArrowDropDownIcon
+                                size={16}
+                                color="currentColor"
+                                className={`transition-all text-txtSecondary dark:text-txtSecondary-dark  ${open ? 'rotate-180' : ''}`}
+                            />
                         </ButtonNao>
                     </Popover.Button>
                     <Transition
@@ -209,8 +221,8 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className="absolute top-12 min-w-[90vw] overflow-hidden sm:min-w-max translate-x-[calc(50%-47px)] sm:translate-x-0 right-1/2 sm:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full">
-                            <div className="py-1 shadow-onlyLight font-medium text-sm flex flex-col rounded-xl border border-divider dark:border-divider-dark text-left overflow-y-auto max-h-[300px]">
+                        <Popover.Panel className="absolute top-12 min-w-[90vw] overflow-hidden sm:min-w-max sm:translate-x-0 -right-6 sm:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full">
+                            <div className="py-1 shadow-onlyLight font-medium text-sm flex flex-col rounded-xl border border-divider dark:border-divider-dark text-left overflow-y-auto max-h-[400px] sm:max-h-[300px]">
                                 {seasonsFilter.map((item, index) => (
                                     <div
                                         onClick={() => {

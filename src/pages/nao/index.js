@@ -107,7 +107,7 @@ const NaoDashboard = () => {
                         <NaoPool dataSource={dataSource} assetNao={assetNao} />
                         <NaoProposals listProposal={listProposal} assetNao={assetNao} />
 
-                        <section id="nao_pool" className="pb-20 pt-10 sm:pt-20 sm:pb-[320px]">
+                        <section id="nao_pool" className="pb-20 pt-12 sm:pt-20 sm:pb-[320px]">
                             <SectionNao noBg className="px-6 sm:px-10 rounded-xl min-w-full sm:min-w-[372px] flex flex-col justify-between flex-1 relative bg-bgPrimary dark:bg-bgPrimary-dark">
                                 <ContesRules season={current?.season ?? 1} seasons={seasons} {...current} inHome={true} />
                             </SectionNao>

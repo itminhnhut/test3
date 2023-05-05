@@ -216,7 +216,7 @@ const Drawer = ({
                                 <button
                                     type="BUTTON"
                                     onClick={() => onDownload('app_store')}
-                                    className="flex bg-gray-12 dark:bg-dark-2 rounded-md px-3 py-2 text-left w-full"
+                                    className="flex bg-gray-12 dark:bg-dark-2 rounded-md px-3 py-2 text-left w-full whitespace-nowrap"
                                 >
                                     <AppleIcon color="currentColor" />
                                     <div className="font-SF-Pro">
@@ -227,7 +227,7 @@ const Drawer = ({
                                 <button
                                     type="BUTTON"
                                     onClick={() => onDownload('google_play')}
-                                    className="flex bg-gray-12 dark:bg-dark-2 rounded-md px-3 py-2 text-left w-full"
+                                    className="flex bg-gray-12 dark:bg-dark-2 rounded-md px-3 py-2 text-left w-full whitespace-nowrap"
                                 >
                                     <GooglePlayIcon />
                                     <div className="font-SF-Pro">

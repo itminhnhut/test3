@@ -1,22 +1,18 @@
 import React, { useRef, useState, useEffect, useMemo, memo } from 'react';
-import { TextLiner, CardNao, Divider, ButtonNao, Tooltip, SectionNao, Horizontal } from 'components/screens/Nao/NaoStyle';
-import SwiperCore, { Navigation } from 'swiper';
+import { TextLiner, CardNao, Tooltip } from 'components/screens/Nao/NaoStyle';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.min.css';
 import { useWindowSize } from 'utils/customHooks';
-import styled from 'styled-components';
 import { getS3Url, formatNumber, formatTime } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_POOL_INFO, API_GET_REFERENCE_CURRENCY, API_POOL_SHARE_HISTORIES } from 'redux/actions/apis';
 import { ApiStatus, ThemeMode } from 'redux/actions/const';
-import TableNoData from 'components/common/table.old/TableNoData';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import AssetLogo from 'components/wallet/AssetLogo';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
-import colors from 'styles/colors';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import classNames from 'classnames';
 
@@ -256,7 +252,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
             </div>
         </div>
     );
-    console.log('sliderRef.current', sliderRef.current?.swiper?.allowSlidePrev, sliderRef.current?.swiper?.allowSlideNext);
+
     return (
         <section id="nao_pool" className="pt-12 sm:pt-20 text-sm sm:text-base">
             <div className="flex items-center flex-wrap justify-between gap-4">
@@ -291,7 +287,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         ></div>
                     </div>
                 </CardNao>
-                <CardNao className="sm:!min-w-[50%] sm:!p-10 sm:min-h-[344px] !justify-start">
+                <CardNao className="sm:!min-w-[50%] sm:!p-10 sm:min-h-[344px] !justify-start !mt-2 sm:!mt-0">
                     <Tooltip id="tooltip-revenue-history" />
                     <div className="flex-col flex">
                         <div className="space-x-3 flex items-center ">
