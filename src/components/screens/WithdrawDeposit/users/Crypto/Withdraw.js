@@ -19,6 +19,7 @@ import toast from 'utils/toast';
 import { CopyIcon } from 'components/svg/SvgIcon';
 import Countdown from 'react-countdown-now';
 import CustomOtpInput from '../../components/CustomOtpInput';
+import { MODE_OTP } from 'constants/constants';
 
 const errorMessageMapper = (t, error) => {
     switch (error) {
@@ -55,7 +56,7 @@ const PHASE_CONFIRM = {
 };
 
 const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, address, memo, amount, assetDigit, assetCode, currentTheme, closeModal }) => {
-    const [phase, setPhase] = useState(PHASE_CONFIRM.OTP);
+    const [phase, setPhase] = useState(PHASE_CONFIRM.INFO);
     const [loading, setLoading] = useState(false);
     const [loadingResend, setLoadingResend] = useState(false)
     const [showAlert, setShowAlert] = useState(false);
@@ -114,7 +115,7 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
     const onConfirmOTP = async (otp) => {
         try {
             setLoading(true);
-            const { data, status } = await postData(otp);
+            const { data, status } = await postData(otp?.phone);
             if (status === 'ok') {
                 setShowAlert(true);
                 if (onClose) onClose();
@@ -130,14 +131,6 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
         }
     };
 
-    const onPaste = async () => {
-        const pasteCode = await navigator.clipboard.readText();
-        setOtp({
-            ...otp,
-            email: pasteCode
-        });
-    };
-
     return (
         <>
             <AlertModalV2
@@ -148,8 +141,8 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
                 message={t('wallet:withdraw_prompt:desc_success')}
             />
             <ModalV2
-                isVisible={true}
-                // isVisible={open}
+                // isVisible={true}
+                isVisible={open}
                 className="!max-w-[488px]"
                 onBackdropCb={onClose}
             >
@@ -222,7 +215,7 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
                             onConfirm={(otp) => onConfirmOTP(otp)}
                             loadingResend={loadingResend}
                             onResend={onConfirmInfo}
-                            modeOtp="email"
+                            modeOtp={MODE_OTP.PHONE}
                         />
                         // <div className="space-y-6">
                         //     {/* <p className="text-xl font-semibold">
