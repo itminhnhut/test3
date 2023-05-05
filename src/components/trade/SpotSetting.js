@@ -82,7 +82,7 @@ const SpotSetting = (props) => {
             {({ open, close }) => (
                 <>
                     <Popover.Button className={`h-full hover:text-teal dark:hover:text-teal text-txtSecondary dark:text-txtSecondary-dark flex items-center ${open ? '' : 'text-opacity-90'} group`}>
-                        <NavbarSettingIcon size={24} />
+                        <SettingIcon size={24} />
                     </Popover.Button>
                     <Transition
                         as={Fragment}
