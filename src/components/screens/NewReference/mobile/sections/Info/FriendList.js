@@ -9,7 +9,7 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import InputV2 from 'components/common/V2/InputV2';
 import PopupModal from 'src/components/screens/NewReference/PopupModal';
 
-import { NoData } from '../../index';
+import { NoData } from 'components/screens/NewReference/mobile';
 
 import { formatTime } from 'redux/actions/utils';
 import { useDebounce } from 'react-use';
