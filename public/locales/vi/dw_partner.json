@@ -103,6 +103,7 @@
     "report_commission": "Báo cáo hoa hồng",
     "total_commissions": "Tổng hoa hồng",
     "commission_rate": "Tỷ lệ hoa hồng",
+    "commission_rate_description":"Tỷ lệ nhận Hoa hồng = Số lệnh phát sinh hoa hồng / Tổng số lệnh đã hoàn tất x 100%",
     "total_volume": "Tổng khối lượng",
     "notice_chart_details": "Nhấn vào từng cột để xem chi tiết",
     "buy_volume": "Khối lượng mua",

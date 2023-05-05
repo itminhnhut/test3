@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import CardWrapper from 'components/common/CardWrapper';
-import { convertDateToMs, formatAbbreviateNumber, formatNanNumber, formatPercentage, getS3Url} from 'redux/actions/utils';
+import { convertDateToMs, formatAbbreviateNumber, formatNanNumber, formatPercentage, getS3Url } from 'redux/actions/utils';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_REPORT_PARTNER } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
 import FilterTimeTab from 'components/common/FilterTimeTab';
+import Tooltip from 'components/common/Tooltip';
 
 const SessionGeneral = () => {
     const { t } = useTranslation();
@@ -55,7 +56,13 @@ const SessionGeneral = () => {
 
                         {/* bottom */}
                         <div>
-                            <h1 className="txtSecond-3">{t('dw_partner:commission_rate')}</h1>
+                            <Tooltip place="top" effect="solid" isV3 id="commission-rate-description">
+                                <div className="max-w-[300px] py-2 text-sm z-50">{t('dw_partner:commission_rate_description')}</div>
+                            </Tooltip>
+                            <div data-tip="" className="inline-block" data-for="commission-rate-description" id="commission-rate-description">
+                                <h1 className="txtSecond-3 nami-underline-dotted">{t('dw_partner:commission_rate')}</h1>{' '}
+                            </div>
+
                             <div className="pt-4 txtPri-5">{loading ? <Skeletor width="100px" /> : `${formatPercentage(data?.commissionRate * 100, 2)}%`}</div>
                         </div>
                     </div>

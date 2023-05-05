@@ -46,16 +46,18 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
     const { t } = useTranslation();
     const logs = orderDetail?.logMetadata || [];
     const side = orderDetail?.side || '';
+    const lastIndexUploadType = logs.map((log) => log.type).lastIndexOf(PartnerOrderLog.UPLOADED);
+
     return logs && logs.length ? (
         <div className="mt-12">
             <div className="text-[18px] font-semibold mb-6">{t('common:global_label.history')}</div>
             <div className="dark:bg-darkBlue-3 border-divider border dark:border-0 bg-bgPrimary rounded-xl p-6 space-y-4 ">
-                {logs.map((log, logIndex, orginArr) => {
+                {logs.map((log, logIndex, originArr) => {
                     let contentLog = '',
                         contentObj = {},
                         viewProof = null;
                     const isReject = log.status === PartnerOrderStatusLog.DISPUTED || log.status === PartnerOrderStatusLog.REJECTED;
-                    const isCurrent = logIndex === orginArr.length - 1;
+                    const isCurrent = logIndex === originArr.length - 1;
                     switch (log.type) {
                         case PartnerOrderLog.CREATED:
                             contentLog = 'created';
@@ -78,12 +80,17 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
                             break;
                         case PartnerOrderLog.UPLOADED:
                             contentLog = 'uploaded_proof';
-                            viewProof = (
-                                <div onClick={onShowProof} className="hover:opacity-70 cursor-pointer text-dominant font-semibold flex items-center space-x-2">
-                                    <BxsImage />
-                                    <span>{t('dw_partner:logs.view_proof')}</span>
-                                </div>
-                            );
+                            viewProof =
+                                lastIndexUploadType === logIndex &&
+                                ((mode === MODE.USER && side === SIDE.SELL) || (mode === MODE.PARTNER && side === SIDE.BUY)) ? (
+                                    <div
+                                        onClick={onShowProof}
+                                        className="hover:opacity-70 cursor-pointer text-dominant font-semibold flex items-center space-x-2"
+                                    >
+                                        <BxsImage />
+                                        <span>{t('dw_partner:logs.view_proof')}</span>
+                                    </div>
+                                ) : null;
                             break;
                         case PartnerOrderLog.DISPUTED:
                             contentLog = 'dispute';
