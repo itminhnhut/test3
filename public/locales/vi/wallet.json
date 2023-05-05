@@ -179,7 +179,8 @@
         "memo_1": "Gửi {{ tokenName }} kèm MEMO tới địa chỉ ví này, token sẽ được cộng vào tài khoản của bạn sau khi có {{ block }} block xác thực.",
         "memo_2": "Giao dịch dạng multi-send không được hỗ trợ, chỉ gửi {{ tokenName }} đến địa chỉ này. Gửi các token khác có thể dẫn đến mất mát.",
         "memo_tips": "Cần cả 2 trường MEMO và Địa chỉ để nạp thành công {{ tokenName }}. Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu.",
-        "memo_wdl_tips": "Trong một số trường hợp, cần có thêm trường thông tin Memo để có thể rút tiền thành công. Nami sẽ không chịu bất kỳ trách nhiệm nào nếu như việc rút tiền của bạn không thành công do thiếu thông tin Memo, vui lòng kiểm tra kỹ trước khi xác nhận rút."
+        "memo_wdl_tips": "Trong một số trường hợp, cần có thêm trường thông tin Memo để có thể rút tiền thành công. Nami sẽ không chịu bất kỳ trách nhiệm nào nếu như việc rút tiền của bạn không thành công do thiếu thông tin Memo, vui lòng kiểm tra kỹ trước khi xác nhận rút.",
+        "memo_tooltip": "Mạng bạn đang lựa chọn hỗ trợ MEMO. Việc điền thiếu hoặc sai MEMO có thể làm mất tài sản của bạn, Nami sẽ không chịu trách nhiệm với các sự cố sinh ra bởi thiếu MEMO."
     },
     "convert_small": "Chuyển số dư nhỏ thành {{ asset }}",
     "convert_small_mobile": "Chuyển đổi sang {{ asset }}",

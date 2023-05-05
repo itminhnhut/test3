@@ -428,63 +428,19 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
     };
 
     const ResultModal = useMemo(() => {
-        const Icon = result?.success ? <SuccessIcon color={isDesktop ? '#00c8bc' : undefined} /> : <ErrorIcon />;
+        // const Icon = result?.success ? <SuccessIcon color={isDesktop ? '#00c8bc' : undefined} /> : <ErrorIcon />;
         const title = result?.success ? t('reference:referral.success') : t('reference:referral.error');
 
-        return isDesktop ? (
-            <Modal center isVisible containerClassName="!px-6 !py-8 top-[50%] max-w-[350px]">
-                <div className="w-full flex justify-center items-center flex-col text-center">
-                    {Icon}
-                    <div className="text-sm font-medium mt-6">
-                        <div dangerouslySetInnerHTML={{ __html: result?.message }} />
-                    </div>
-                    <div className="w-full flex justify-center text-teal font-medium mt-4 cursor-pointer" onClick={() => window?.fcWidget?.open()}>
-                        {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
-                    </div>
-                    <div
-                        className="w-full h-11 flex justify-center items-center bg-teal text-white font-semibold text-sm rounded-md mt-6"
-                        onClick={() => {
-                            setResult({
-                                ...result,
-                                isShow: false
-                            });
-                            if (result?.success) onClose();
-                        }}
-                    >
-                        {t('common:confirm')}
-                    </div>
-                </div>
-            </Modal>
-        ) : (
-            <PopupModal
+        return (
+            <AlertModalV2
+                isMobile={true}
+                type={result.success ? 'success' : 'error'}
                 isVisible={result.isShow}
-                onBackdropCb={() =>
-                    setResult({
-                        ...result,
-                        isShow: false
-                    })
-                }
-                // useAboveAll
-                isMobile
-                bgClassName="!z-[400]"
-                containerClassName="!z-[401]"
-            >
-                <div className="w-full flex justify-center items-center flex-col text-center px-2">
-                    <div className="mt-6">{Icon}</div>
-                    <div className="text-gray-6 text-[20px] leading-8 font-semibold mt-6">{title}</div>
-                    <div className="text-sm font-medium mt-3 text-gray-7">
-                        <div dangerouslySetInnerHTML={{ __html: result.message }} />
-                    </div>
-                    {result?.isSucess ? null : (
-                        <div
-                            className="w-full flex justify-center text-txtTextBtn font-semibold mt-6 cursor-pointer"
-                            onClick={() => emitWebViewEvent('chat_with_support')}
-                        >
-                            {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
-                        </div>
-                    )}
-                </div>
-            </PopupModal>
+                onClose={() => setResult((prev) => ({ ...prev, isShow: false }))}
+                message={result?.message}
+                buttonClassName="dark:text-green-2 text-green-3"
+                title={title ?? ''}
+            />
         );
     }, [result]);
 
@@ -494,7 +450,8 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
 
     return (
         <>
-            {result.isShow ? ResultModal : null}
+            {/* {result.isShow ? ResultModal : null} */}
+            {ResultModal}
             <ModalV2
                 isVisible={isShow}
                 onBackdropCb={onClose}

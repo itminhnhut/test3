@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useMemo, useRef, useState } from 'react';
 import { isFunction, keyBy } from 'lodash';
 import useOutsideClick from 'hooks/useOutsideClick';
-import { formatNumber, formatWallet } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber, formatWallet } from 'redux/actions/utils';
 import NumberFormat from 'react-number-format';
 import AssetLogo from 'components/wallet/AssetLogo';
 import ChevronDown from 'components/svg/ChevronDown';
@@ -17,6 +17,9 @@ import CheckCircle from 'components/svg/CheckCircle';
 import { PATHS } from 'constants/paths';
 import { roundToDown } from 'round-to';
 import { useTranslation } from 'next-i18next';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+import Tooltip from 'components/common/Tooltip';
 
 export const ErrorMessage = ({ message, show }) => {
     return (
@@ -58,7 +61,7 @@ export const AmountInput = ({
     const mapAssetConfig = useMemo(() => keyBy(assetConfigs, 'id'), [assetConfigs]);
 
     const assetOptions = useMemo(() => {
-        return paymentConfigs
+        const listAssetAvailable = paymentConfigs
             .filter((c) => c.assetCode?.includes(search.toUpperCase()))
             .map((config) => {
                 const wallet = spotWallets[config.assetId] || {
@@ -71,6 +74,8 @@ export const AmountInput = ({
                     availableValue: wallet.value - wallet.locked_value
                 };
             });
+
+        return _.orderBy(listAssetAvailable, 'availableValue', 'desc');
     }, [paymentConfigs, spotWallets, search]);
     const ref = useRef(null);
 
@@ -151,7 +156,7 @@ export const AmountInput = ({
                                     key={asset._id}
                                     onClick={() => {
                                         router
-                                            .push(withdrawLinkBuilder(asset.assetCode), null, {
+                                            .push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL, asset?.assetCode), null, {
                                                 scroll: false
                                             })
                                             .finally(() => {
@@ -202,7 +207,7 @@ export const AddressInput = ({ t, value, onChange, isValid }) => {
                         <input
                             ref={refInput}
                             type="text"
-                            className="w-full"
+                            className="w-full font-semibold"
                             placeholder={t('wallet:receive_address_placeholder')}
                             value={value}
                             onChange={(e) => onChange(e.target.value)}
@@ -298,11 +303,40 @@ export const NetworkInput = ({ t, selected = {}, onChange, networkList = [], cur
 };
 
 export const MemoInput = ({ t, value, onChange, errorMessage }) => {
+    const refInputMemo = useRef();
+    const paste = () => {
+        navigator.clipboard.readText().then((text) => {
+            if (onChange) {
+                onChange(text);
+                refInputMemo.current?.focus();
+            }
+        });
+    };
+
     return (
         <div>
-            <div className="bg-gray-13 dark:bg-darkBlue-3 px-4 py-5 rounded-xl">
-                <p className="text-txtSecondary dark:text-txtSecondary-dark mb-4">Memo ({t('common:optional')})</p>
-                <input className="w-full" placeholder={t('wallet:receiver_memo')} value={value} onChange={(e) => onChange(e.target.value)} type="text" />
+            <div className="bg-gray-13 dark:bg-darkBlue-3 p-4 rounded-xl">
+                <Tooltip isV3={true} id={'tooltip-memo'} place="top" effect="solid" className="w-[400px]">
+                    <div className="text-center px-6 py-3 text-tiny">{t('wallet:notes.memo_tooltip')}</div>
+                </Tooltip>
+                <div className="py-0.5 border-b border-dashed border-darkBlue-5 cursor-pointer w-auto inline-block" data-for="tooltip-memo" data-tip="">
+                    <span className="text-base text-txtSecondary dark:text-txtSecondary-dark ">MEMO</span>
+                </div>
+                <div className="flex font-semibold py-1 mt-2">
+                    <div className="flex-1">
+                        <input
+                            ref={refInputMemo}
+                            type="text"
+                            className="w-full font-semibold"
+                            placeholder={t('wallet:receiver_memo')}
+                            value={value}
+                            onChange={(e) => onChange(e.target.value)}
+                        />
+                    </div>
+                    <div className="text-teal cursor-pointer ml-6" onClick={paste}>
+                        {t('common:paste')}
+                    </div>
+                </div>
             </div>
             <ErrorMessage message={errorMessage} show={!!errorMessage && !!value} />
         </div>

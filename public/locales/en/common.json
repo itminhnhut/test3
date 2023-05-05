@@ -167,7 +167,7 @@
     "error_code": "Code",
     "error": "Error",
     "scan": "Scan",
-    "important_notes": "Important notes",
+    "important_note": "Important note",
     "common_status": {
         "finished": "Finished",
         "cancelled": "Cancelled"
@@ -395,9 +395,9 @@
     "denined": "Denied",
     "processing": "Processing",
     "deny": "Deny",
-    "accept":"Accept",
-    "reject":"Reject",
-    "proof":"Proof",
+    "accept": "Accept",
+    "reject": "Reject",
+    "proof": "Proof",
     "download_view": {
         "title": "Download the application now",
         "desc": "Over 600 trading pairs with leverage up to x125"

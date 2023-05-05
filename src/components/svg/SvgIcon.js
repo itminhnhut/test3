@@ -985,6 +985,23 @@ const SaveAlt = ({ size = 24, color = 'currentColor' }) => (
     </svg>
 );
 
+const NotInterestedIcon = ({size}) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E';
+
+    return (
+    <svg width={size || 80} height={size || 80} viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#k3bfy9rdta)">
+            <path d="M40 73.333C58.4 73.333 73.333 58.4 73.333 40S58.4 6.666 40 6.666 6.667 21.6 6.667 40C6.667 58.4 21.6 73.333 40 73.333zm0-60c14.733 0 26.667 11.934 26.667 26.667 0 6.166-2.1 11.833-5.634 16.333L23.667 18.967A26.341 26.341 0 0 1 40 13.333zM18.967 23.666l37.366 37.367A26.341 26.341 0 0 1 40 66.666c-14.733 0-26.667-11.933-26.667-26.666 0-6.167 2.1-11.834 5.634-16.334z" fill={defaultColor}/>
+        </g>
+        <defs>
+            <clipPath id="k3bfy9rdta">
+                <path fill="#fff" d="M0 0h80v80H0z"/>
+            </clipPath>
+        </defs>
+    </svg>
+)}
+
 export {
     FutureInsurance,
     ArrowDownIcon,
@@ -1052,5 +1069,6 @@ export {
     TimerIcon,
     MoneyIcon,
     BxsImage,
-    SaveAlt
+    SaveAlt,
+    NotInterestedIcon
 };
