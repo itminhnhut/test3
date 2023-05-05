@@ -194,7 +194,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
         }, 500);
     }, [seasonsFilter]);
 
-    console.log(offset);
+
     return (
         <Popover className="relative flex">
             {({ open, close }) => (

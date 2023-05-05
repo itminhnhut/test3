@@ -221,7 +221,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         <div className="text-xs font-medium leading-6">{formatNumber(data.percent || 10, assetNao?.assetDigit ?? 8)}%</div>
                     </div>
                 </CardNao>
-                <CardNao className="mt-6 !p-4 rounded-xl border border-divider dark:border-none">
+                <CardNao className="mt-4 !p-4 rounded-xl border border-divider dark:border-none">
                     <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium leading-6 ">{t('nao:pool:total_revenue')}</label>
                     <div className="flex items-center mt-4">
                         <div className="text-xl font-semibold mr-2">≈ {formatNumber(data.totalProfit, 0)} VNDC</div>
@@ -276,7 +276,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     </div>
                 </CardNao>
             </div>
-            <div className="mt-10">
+            <div className="mt-12">
                 <TextLiner className="pb-1">{t('common:transaction_history')}</TextLiner>
                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">{t('nao:pool:history_description')}</div>
                 <Tabs tab={tab} className='divide-x divide-divider dark:divide-divider-dark'>
@@ -291,10 +291,10 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     {tab === 0 && (
                         <>
                             {listHitory.length > 0 ? (
-                                <div className="grid sm:grid-cols-2 gap-4">
+                                <div className="grid sm:grid-cols-2 gap-3">
                                     {listHitory.map((item, index) => {
                                         return (
-                                            <CardNao key={index} className="rounded-xl border border-divider dark:border-divider-dark">
+                                            <CardNao key={index} className="rounded-xl border border-divider dark:border-none">
                                                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
                                                     {t('nao:pool:week', { value: listHitory.length - index })} {formatTime(item.fromTime, 'dd/MM/yyyy')} -{' '}
                                                     {formatTime(item.toTime, 'dd/MM/yyyy')}
@@ -359,7 +359,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
 
 const Tabs = styled.div.attrs({
     className:
-        'bg-bgPrimary dark:bg-bgPrimary-dark rounded mt-5 mb-7 flex items-center justify-between text-sm relative border border-divider dark:border-divider-dark after:bg-gray-12 dark:after:bg-dark-2'
+        'bg-bgPrimary dark:bg-bgPrimary-dark rounded my-6 flex items-center justify-between text-sm relative border border-divider dark:border-divider-dark after:bg-gray-12 dark:after:bg-dark-2'
 })`
     &:after {
         content: '';

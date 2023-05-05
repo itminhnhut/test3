@@ -95,6 +95,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
     };
 
     const staked = dataSource?.totalStaked ?? 0;
+
     return (
         <div className="flex flex-wrap gap-6">
             {showLockModal && (
@@ -181,7 +182,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                 }}
                             />
                             <div
-                                className="mr-3 font-semibold border-b border-gray-15 dark:border-gray-4 border-dashed text-sm"
+                                className="mr-3 font-semibold border-b border-gray-1 dark:border-gray-7 border-dashed text-sm"
                                 data-tip={t('nao:pool:tooltip_auto')}
                                 data-for="tooltip-auto"
                             >
@@ -221,13 +222,13 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                             <div className="mt-5 space-x-2 flex items-center font-semibold text-txtPrimary dark:text-txtSecondary-dark">
                                 <div
                                     onClick={() => onRedirect('whitepaper')}
-                                    className="w-full py-2 px-5 bg-gray-12 dark:bg-dark-2 flex justify-center items-center text-xs rounded-md"
+                                    className="w-full py-3 px-5 bg-gray-12 dark:bg-dark-2 flex justify-center items-center text-sm font-semibold rounded-md"
                                 >
                                     <div>Whitepaper</div>
                                 </div>
                                 <div
                                     onClick={() => onRedirect('contract')}
-                                    className="w-full py-2 px-5 bg-gray-12 dark:bg-dark-2 flex justify-center items-center text-xs rounded-md"
+                                    className="w-full py-3 px-5 bg-gray-12 dark:bg-dark-2 flex justify-center items-center text-sm font-semibold rounded-md"
                                 >
                                     <div>Smart contract</div>
                                 </div>

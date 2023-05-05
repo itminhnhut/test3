@@ -109,10 +109,10 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
 
     const validator = () => {
         if (amount > balance) {
-            return { msg: `${t('nao:maximum_amount')} ${formatNumber(balance, assetNao?.assetDigit)}`, isValid: false };
+            return { msg: `${t('nao:maximum_amount')} ${formatNumber(balance, assetNao?.assetDigit)} NAO`, isValid: false };
         }
         if (amount < 1000 && isLock) {
-            return { msg: `${t('nao:minimum_amount')} ${formatNumber(1000)}`, isValid: false };
+            return { msg: `${t('nao:minimum_amount')} ${formatNumber(1000)} NAO`, isValid: false };
         }
         return { isValid: true };
     };
@@ -159,7 +159,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                             thousandSeparator
                             allowNegative={false}
                             labelClassName="hidden"
-                            className={`flex-grow text-txtSecondary dark:text-txtSecondary-dark w-full !text-sm`}
+                            className={`flex-grow text-txtPrimary dark:text-txtSecondary-dark w-full !text-sm`}
                             containerClassName={`w-full dark:bg-dark-2 text-sm`}
                             value={amount}
                             decimalScale={assetNao?.assetDigit}

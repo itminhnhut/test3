@@ -105,6 +105,7 @@ const StakeOrders = ({ assetConfig }) => {
                             dataLength={dataSource.length}
                             next={getStakeOrders}
                             hasMore={hasNext.current}
+                            className='flex flex-col space-y-2'
                             // {...scrollSnap ? { height: 'calc(100vh - 42px)' } : { scrollableTarget: "futures-mobile" }}
                         >
                             {dataSource.map((item, idx) => {

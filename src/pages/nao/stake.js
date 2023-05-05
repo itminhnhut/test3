@@ -98,7 +98,7 @@ const Stake = () => {
                     </Tabs>
                 </div>
             </div>
-            <div className="h-full w-full px-4 py-12">
+            <div className={`h-full w-full px-4 ${!tab ? 'py-12' : 'py-6'}`}>
                 <div className={tab !== 0 ? 'hidden' : ''}>
                     <StakeTab ref={refStake} assetNao={assetNao} dataSource={dataSource} getStake={getStake} />
                 </div>
