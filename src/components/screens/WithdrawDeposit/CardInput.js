@@ -314,7 +314,13 @@ const CardInput = () => {
                 <ButtonV2
                     loading={state.loadingConfirm || loadingPartner}
                     onClick={handleSubmitOrder}
-                    disabled={!partner || loadingPartner || validator?.isError || (!partnerBank && side === SIDE.BUY) || (side === SIDE.SELL && !accountBank)}
+                    disabled={
+                        !partner ||
+                        loadingPartner ||
+                        validator?.isError ||
+                        (!partnerBank && side === SIDE.BUY) ||
+                        (side === SIDE.SELL && (+state.amount > availableAsset || +state.amount > limitWithdraw?.remain / rate || !accountBank))
+                    }
                     className="disabled:cursor-default"
                 >
                     {t(`common:${side.toLowerCase()}`) + ` ${assetCode}`}
