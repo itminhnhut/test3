@@ -55,7 +55,7 @@ const PHASE_CONFIRM = {
     RESULT: 3
 };
 
-const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, address, memo, amount, assetDigit, assetCode, currentTheme, closeModal }) => {
+const ModalConfirm = ({  selectedAsset, selectedNetwork, open, address, memo, amount, assetDigit, assetCode, currentTheme, closeModal }) => {
     const [phase, setPhase] = useState(PHASE_CONFIRM.INFO);
     const [loading, setLoading] = useState(false);
     const [loadingResend, setLoadingResend] = useState(false)
@@ -93,7 +93,7 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
         if (remaining_time.current.timer > Date.now()) {
             setPhase(PHASE_CONFIRM.OTP);
         } else {
-            await postData().then((rs) => {
+            await postData(null).then((rs) => {
                 if (rs?.data?.remaining_time) {
                     remaining_time.current = {
                         timer: Date.now() + rs?.data?.remaining_time,
@@ -115,13 +115,16 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
     const onConfirmOTP = async (otp) => {
         try {
             setLoading(true);
-            const { data, status } = await postData(otp?.phone);
-            if (status === 'ok') {
+            const response = await postData(otp?.email ?? "000000");
+
+            if (response?.status === 'ok') {
                 setShowAlert(true);
                 if (onClose) onClose();
             } else {
                 toast({ text: t('dw_partner:error.invalid_otp'), type: 'warning', duration: 1500 });
             }
+
+            return response;
         } catch (error) {
         } finally {
             setLoading(false);
@@ -138,7 +141,6 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
                 message={t('wallet:withdraw_prompt:desc_success')}
             />
             <ModalV2
-                // isVisible={true}
                 isVisible={open}
                 className="!max-w-[488px]"
                 onBackdropCb={onClose}
@@ -207,84 +209,12 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
                     // OTP PHASE
                     phase === PHASE_CONFIRM.OTP && (
                         <CustomOtpInput
-                            otpExpireTime={expired}
+                            otpExpireTime={remaining_time.current.timer}
                             loading={loading}
                             onConfirm={(otp) => onConfirmOTP(otp)}
                             loadingResend={loadingResend}
                             onResend={onConfirmInfo}
-                            modeOtp={MODE_OTP.PHONE}
                         />
-                        // <div className="space-y-6">
-                        //     {/* <p className="text-xl font-semibold">
-                        //         {t('common:verify')} {otpModes.includes('tfa') ? '2FA' : ''}
-                        //     </p> */}
-                        //     <div className={classNames('hidden', { '!block': otpModes.includes('email') })}>
-                        //         <div className="text-xl font-semibold mb-4">{t('common:email_authentication')}</div>
-                        //         <span className="text-txtSecondary dark:text-txtSecondary"> {t('wallet:withdraw_prompt.email_description')}</span>
-                        //         <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
-                        //             <OtpInput
-                        //                 value={otp?.email}
-                        //                 onChange={(value) =>
-                        //                     setOtp({
-                        //                         ...otp,
-                        //                         email: value
-                        //                     })
-                        //                 }
-                        //                 numInputs={6}
-                        //                 placeholder="------"
-                        //                 isInputNum
-                        //             />
-                        //         </OtpWrapper>
-                        //     </div>
-                        //     <div className={classNames('hidden', { '!block': otpModes.includes('tfa') })}>
-                        //         <div className="text-xl font-semibold mb-4">{t('common:tfa_authentication')}</div>
-                        //         <div className="text-txtSecondary dark:text-txtSecondary">{t('wallet:withdraw_prompt.google_description')}</div>
-                        //         <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
-                        //             <OtpInput
-                        //                 value={otp?.tfa}
-                        //                 onChange={(value) =>
-                        //                     setOtp({
-                        //                         ...otp,
-                        //                         tfa: value
-                        //                     })
-                        //                 }
-                        //                 numInputs={6}
-                        //                 placeholder="------"
-                        //                 isInputNum
-                        //             />
-                        //         </OtpWrapper>
-                        //     </div>
-                        //     <div className="flex items-center justify-between">
-                        //         <div className="space-x-2">
-                        //             <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:do_not_receive_email')}</span>
-                        //             {expired ? (
-                        //                 <span onClick={onConfirmInfo} className="text-teal font-semibold cursor-pointer">
-                        //                     {t('wallet:resend', { value: `${remaining_time.current.value / 1000}s` })}
-                        //                 </span>
-                        //             ) : (
-                        //                 <Countdown
-                        //                     now={() => Date.now()}
-                        //                     date={remaining_time.current.timer}
-                        //                     renderer={({ minutes, seconds }) => {
-                        //                         return (
-                        //                             <span className="font-semibold text-teal">
-                        //                                 {minutes}:{seconds}
-                        //                             </span>
-                        //                         );
-                        //                     }}
-                        //                     onComplete={() => setExpired(true)}
-                        //                 />
-                        //             )}
-                        //         </div>
-                        //         <div onClick={onPaste} className="flex items-center space-x-2 text-teal font-semibold cursor-pointer">
-                        //             <CopyIcon size={16} color={colors.teal} />
-                        //             <span>{t('common:paste')}</span>
-                        //         </div>
-                        //     </div>
-                        //     <ButtonV2 disabled={String(otp.email || otp.tfa).length < 6} className="!mt-10" onClick={onConfirmOTP} loading={loading}>
-                        //         {t('common:confirm')}
-                        //     </ButtonV2>
-                        // </div>
                     )
                 }
                 {/* {

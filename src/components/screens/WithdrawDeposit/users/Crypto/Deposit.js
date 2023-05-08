@@ -627,7 +627,7 @@ const CryptoDeposit = ({ assetId }) => {
             {
                 key: 'txId',
                 dataIndex: 'txId',
-                title: 'TxHash',
+                title: 'ID',
                 align: 'left',
                 render: (txHash) => {
                     return txHash ? shortHashAddress(txHash, 6, 6) : '--';
@@ -819,7 +819,7 @@ const CryptoDeposit = ({ assetId }) => {
             value: null
         },
         {
-            label: t('common:success'),
+            label: t('dw_partner:complete'),
             value: DepWdlStatus.Success
         },
         {
@@ -827,7 +827,7 @@ const CryptoDeposit = ({ assetId }) => {
             value: DepWdlStatus.Pending
         },
         {
-            label: t('common:declined'),
+            label: t('common:denined'),
             value: DepWdlStatus.Declined
         }
     ];
@@ -890,7 +890,7 @@ const CryptoDeposit = ({ assetId }) => {
                     </div>
                 </div>
 
-                <div className="text-2xl font-semibold mt-20">{t('wallet:dep_history')}</div>
+                <div className="text-2xl font-semibold mt-20">{t('common:global_label.history')}</div>
                 <div className="space-x-3 flex items-center my-6">
                     {listStatus.map((rs, i) => (
                         <div
