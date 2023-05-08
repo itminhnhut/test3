@@ -40,6 +40,7 @@ import DarkNote from 'components/common/DarkNote';
 import { TYPE_DW } from '../../constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { orderBy } from 'lodash';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const INITIAL_STATE = {
     loadingConfigs: false,
@@ -80,8 +81,8 @@ const CryptoSelect = ({ t, selected }) => {
     const router = useRouter();
 
     const items = useMemo(() => {
-        const listAssetAvailable =  paymentConfigs
-            .filter((c) =>  c.assetCode?.includes(search.toUpperCase()))
+        const listAssetAvailable = paymentConfigs
+            .filter((c) => c.assetCode?.includes(search.toUpperCase()))
             .map((config) => {
                 const wallet = spotWallets[config.assetId] || {
                     value: 0,
@@ -94,7 +95,7 @@ const CryptoSelect = ({ t, selected }) => {
                 };
             });
 
-            return orderBy(listAssetAvailable, "assetCode", 'asc')
+        return orderBy(listAssetAvailable, 'assetCode', 'asc');
     }, [paymentConfigs, spotWallets, search]);
 
     useOutsideClick(refContent, () => setOpen(!open));
@@ -134,14 +135,9 @@ const CryptoSelect = ({ t, selected }) => {
                                 <div
                                     key={c._id}
                                     onClick={() => {
-                                        router
-                                            .push(
-                                                dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, c?.assetCode),
-                                                null,
-                                                { scroll: false }
-                                            ).finally(() => {
-                                                setOpen(false);
-                                            });
+                                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, c?.assetCode), null, { scroll: false }).finally(() => {
+                                            setOpen(false);
+                                        });
                                     }}
                                     className={classNames(
                                         'flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-hover dark:hover:bg-hover-dark',
@@ -194,7 +190,9 @@ const NetworkSelect = ({ t, selected, onSelect, networkList = [] }) => {
                         })}
                     >
                         <span className="font-semibold">{selected?.network || '--'}</span>
-                        <span className="ml-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">{selected?.name  ? selected.name : (selected?.network && '--')}</span>
+                        <span className="ml-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">
+                            {selected?.name ? selected.name : selected?.network && '--'}
+                        </span>
                     </div>
                     <ChevronDown className={open ? 'rotate-0' : ''} size={16} color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue} />
                 </div>
@@ -388,11 +386,12 @@ const CryptoDeposit = ({ assetId }) => {
         if (!state.address) {
             return (
                 <div className="flex flex-col items-center justify-center">
-                    <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:address_not_available')}</div>
+                    <div className="text-base font-medium text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:address_not_available')}</div>
                     <ButtonV2
-                        className='w-[160px] !py-2 mt-3 !text-sm !h-[36px]'
-                        onClick={() => getDepositTokenAddress(true, state.selectedAsset?.assetId, state.selectedNetwork?.network)} >
-                            {t('wallet:reveal_address')}
+                        className="w-[160px] !py-2 mt-3 !text-sm !h-[36px]"
+                        onClick={() => getDepositTokenAddress(true, state.selectedAsset?.assetId, state.selectedNetwork?.network)}
+                    >
+                        {t('wallet:reveal_address')}
                     </ButtonV2>
                 </div>
             );
@@ -458,7 +457,7 @@ const CryptoDeposit = ({ assetId }) => {
                                 : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'
                         }
                     >
-                        {state.isCopying?.memo ? <Check size={24} /> : <Copy size={24} />}
+                        {state.isCopying?.memo ? <Check size={24} color={colors.teal} /> : <Copy size={24} />}
                     </span>
                 </CopyToClipboard>
             </div>
@@ -485,11 +484,9 @@ const CryptoDeposit = ({ assetId }) => {
         }
 
         return (
-            <>
-                <div className="p-[9px] bg-white rounded-lg mb-1" style={{width: qrSize}}>
-                    <QRCodeSVG value={state.address?.address} size="100%" bgColor={colors.white} />
-                </div>
-            </>
+            <div className="p-[9px] bg-white rounded-lg mb-1" style={{ width: qrSize }}>
+                <QRCodeSVG value={state.address?.address} size="100%" bgColor={colors.white} />
+            </div>
         );
     }, [state.address, state.loadingAddress, currentTheme, qrSize]);
 
@@ -591,8 +588,9 @@ const CryptoDeposit = ({ assetId }) => {
         if (language === LANGUAGE_TAG.VI) {
             msg = (
                 <>
-                    Cần cả 2 trường thông tin <span className="text-dominant font-medium">MEMO</span> và <span className="text-dominant font-medium">Địa chỉ</span> để nạp
-                    thành công {state.selectedAsset?.assetCode}.<br /> Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu.
+                    Cần cả 2 trường thông tin <span className="text-dominant font-medium">MEMO</span> và{' '}
+                    <span className="text-dominant font-medium">Địa chỉ</span> để nạp thành công {state.selectedAsset?.assetCode}.<br /> Nami sẽ không xử lý các
+                    lệnh nạp thiếu thông tin yêu cầu.
                 </>
             );
         } else {
@@ -607,15 +605,15 @@ const CryptoDeposit = ({ assetId }) => {
         }
 
         return (
-            <ModalV2 isVisible={state.openModal?.memoNotice} className="w-[320px]">
-                <div className="text-center text-sm font-medium w-full">
-                    <div className="my-2 text-center font-bold text-[18px]">{t('common:important_note')}</div>
-                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{msg}</div>
-                    <div className="mt-4 w-full flex flex-row items-center justify-between">
-                        <Button title={t('common:confirm')} type="primary" componentType="button" className="!py-2" onClick={closeModal} />
-                    </div>
-                </div>
-            </ModalV2>
+            <AlertModalV2
+                type="warning"
+                isVisible={state.openModal?.memoNotice}
+                title={t('common:important_note')}
+                message={msg}
+                className="w-[320px]"
+                isButton={false}
+                onClose={closeModal}
+            />
         );
     }, [state.selectedNetwork, state.selectedAsset?.assetCode, state.openModal?.memoNotice, language]);
 
@@ -673,7 +671,7 @@ const CryptoDeposit = ({ assetId }) => {
                 align: 'right',
                 render: (amount, item) => {
                     const config = mapAssetConfig[item?.assetId] || {};
-                    return formatNumber(amount, config?.assetDigit)
+                    return formatNumber(amount, config?.assetDigit);
                 }
             },
             {
@@ -870,16 +868,25 @@ const CryptoDeposit = ({ assetId }) => {
                         <div className="flex items-center !mt-6 gap-x-1">
                             <span className="text-txtSecondary dark:text-txtSecondary-dark"> {t('wallet:expected_unlock')}:</span>
                             <span className="font-semibold">
-                                {`${Math.max(state.selectedNetwork?.minConfirm, state.selectedNetwork?.unLockConfirm) || 0} ${t('wallet:network_confirmation')}`}
+                                {`${Math.max(state.selectedNetwork?.minConfirm, state.selectedNetwork?.unLockConfirm) || 0} ${t(
+                                    'wallet:network_confirmation'
+                                )}`}
                             </span>
                         </div>
                     </div>
                     {/* Right columns: QR code for address */}
                     <div>
-                        <div className="flex items-start justify-center flex-1 mt-12">{renderQrAddress()}</div>
-                        <MCard addClass="!p-6 mt-[100px] border-transparent">
-                            {renderNotes()}
-                        </MCard>
+                        <div
+                            className={`flex items-start justify-center flex-1
+                            ${
+                                !state.address?.address || !(!state.selectedNetwork?.memoRegex || !state.address?.addressTag)
+                                    ? 'mt-12 mb-[100px]'
+                                    : 'mt-0 mb-12'
+                            }`}
+                        >
+                            {renderQrAddress()}
+                        </div>
+                        <MCard addClass="!p-6 border-transparent">{renderNotes()}</MCard>
                     </div>
                 </div>
 

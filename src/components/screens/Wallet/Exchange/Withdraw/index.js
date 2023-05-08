@@ -62,7 +62,7 @@ export const AmountInput = ({
 
     const assetOptions = useMemo(() => {
         const listAssetAvailable = paymentConfigs
-            .filter((c) => c.assetCode?.includes(search.toUpperCase()))
+            .filter((c) => c.assetCode?.includes(search.trim().toUpperCase()))
             .map((config) => {
                 const wallet = spotWallets[config.assetId] || {
                     value: 0,
@@ -75,7 +75,7 @@ export const AmountInput = ({
                 };
             });
 
-        return _.orderBy(listAssetAvailable, 'availableValue', 'desc');
+        return  _.orderBy(listAssetAvailable, ['availableValue', 'assetCode'], ['desc', 'asc']);
     }, [paymentConfigs, spotWallets, search]);
     const ref = useRef(null);
 
@@ -207,7 +207,7 @@ export const AddressInput = ({ t, value, onChange, isValid }) => {
                         <input
                             ref={refInput}
                             type="text"
-                            className="w-full font-semibold"
+                            className="w-full font-semibold placeholder-shown:font-normal"
                             placeholder={t('wallet:receive_address_placeholder')}
                             value={value}
                             onChange={(e) => onChange(e.target.value)}
