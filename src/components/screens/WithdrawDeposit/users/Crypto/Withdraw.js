@@ -442,7 +442,7 @@ const CryptoWithdraw = ({ assetId }) => {
                 currentTheme={currentTheme}
             />
             <div>
-                <div className="text-2xl font-semibold mb-6 mt-20">{t('wallet:withdraw_history')}</div>
+                <div className="text-2xl font-semibold mb-6 mt-20">{t('common:global_label.history')}</div>
                 <WithdrawHistory />
             </div>
         </div>

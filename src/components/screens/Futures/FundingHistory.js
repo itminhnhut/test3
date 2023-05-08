@@ -67,8 +67,8 @@ export default function FundingHistory(props) {
                         <a
                             href={
                                 language === 'en'
-                                    ? 'https://nami.exchange/en/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures'
-                                    : 'https://nami.exchange/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures'
+                                    ? 'https://nami.exchange/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-nao-futures'
+                                    : 'https://nami.exchange/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures'
                             }
                             className={'cursor-pointer flex text-sm sm:text-base font-semibold text-teal'}
                             target="_blank"

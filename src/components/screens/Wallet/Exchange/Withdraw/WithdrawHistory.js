@@ -55,7 +55,7 @@ export default function () {
         {
             key: 'txId',
             dataIndex: 'txId',
-            title: 'TxHash',
+            title: 'ID',
             align: 'left',
             width: 220,
             render: (txHash) => {
@@ -129,7 +129,7 @@ export default function () {
                     ),
                     [DepWdlStatus.Pending]: (
                         <TagV2 icon={false} className="ml-auto" type="warning">
-                            {t('common:pending')}
+                            {t('common:processing')}
                         </TagV2>
                     ),
                     [DepWdlStatus.Declined]: (
@@ -167,7 +167,7 @@ export default function () {
             value: DepWdlStatus.Success
         },
         {
-            label: t('common:pending'),
+            label: t('common:processing'),
             value: DepWdlStatus.Pending
         },
         {

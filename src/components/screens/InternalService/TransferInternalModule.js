@@ -6,7 +6,7 @@ import useOutsideClick from 'hooks/useOutsideClick';
 
 import { createRef, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { find, orderBy, throttle } from 'lodash';
+import { find, orderBy } from 'lodash';
 import { formatPrice, formatWallet, getS3Url, formatNumber } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { ApiStatus } from 'redux/actions/const';
@@ -14,7 +14,7 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 // import SVG
-import { CloseIcon, SyncAltIcon, ArrowDropDownIcon, BxsUserCircle } from 'components/svg/SvgIcon';
+import { CloseIcon, ArrowDropDownIcon, BxsUserCircle } from 'components/svg/SvgIcon';
 import NoData from 'components/common/V2/TableV2/NoData';
 import styled from 'styled-components';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
@@ -23,7 +23,6 @@ import { Search } from 'react-feather';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { API_INTERNAL_FIND_USER, API_INTERNAL_TRANSFER } from 'redux/actions/apis';
 import TextArea from 'components/common/V2/InputV2/TextArea';
-import toast from 'utils/toast';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const DEFAULT_PAIR = {
@@ -161,10 +160,12 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
 
     useEffect(() => {
         if (!state.searchUser) return setState({ errorToUser: '', toUser: null, listUserFounded: [], openAssetList: { to: false } });
-        handleSearchToUser();
+
+        const fetchSearchUser = setTimeout(handleSearchToUser, 500);
+        return () => clearTimeout(fetchSearchUser);
     }, [state.searchUser]);
 
-    const handleSearchToUser = throttle(async () => {
+    const handleSearchToUser = async () => {
         if (!state.searchUser) return;
         setState({ errorToUser: '', toUser: null, listUserFounded: [] });
 
@@ -186,7 +187,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
         } else {
             setState({ errorToUser: 'Server error' });
         }
-    }, 200);
+    };
 
     const renderListSearchToUser = useCallback(() => {
         if (!state.openAssetList?.to || !state.listUserFounded) return null;
@@ -256,8 +257,8 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                 assetCode: state.fromAsset,
                 amount: state.fromAmount,
                 toUserId: state.toUser.id,
-                noteVi: state.contentNotiVi,
-                noteEn: state.contentNotiEn
+                noteVi: state.contentNotiVi ?? '',
+                noteEn: state.contentNotiEn ?? ''
             }
         })
             .then((res) => {
@@ -273,7 +274,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                     setState({
                         resultTransfer: {
                             type: 'error',
-                            msg: (res?.status && res?.status !== 'error') ?  t(`error:${res.status}`) : t('error:COMMON_ERROR')
+                            msg: res?.status && res?.status !== 'error' ? t(`error:${res.status}`) : t('error:COMMON_ERROR')
                         }
                     });
                 }
@@ -289,6 +290,37 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
             .finally(() => {
                 setState({ loadingTransfer: false });
             });
+    };
+
+    const handleCloseAlert = () => {
+        const isClear = state?.resultTransfer?.type === 'success';
+        setState({ resultTransfer: null });
+
+        if (isClear)
+            setTimeout(
+                setState({
+                    fromAmount: '',
+                    fromErrors: {},
+                    search: '',
+                    openAssetList: {},
+
+                    // State for to User
+                    searchUser: '',
+                    listUserFounded: [],
+                    toUser: null,
+                    errorToUser: '',
+
+                    // State for noti
+                    contentNotiVi: '',
+                    contentNotiEn: '',
+
+                    // State for Modal preview
+                    isOpenModalPreview: false,
+                    loadingTransfer: false,
+                    resultTransfer: null
+                }),
+                500
+            );
     };
 
     return (
@@ -394,7 +426,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                                 label="Nội dung thông báo (Tiếng Việt)"
                                 value={state?.contentNotiVi}
                                 onChange={(value) => setState({ contentNotiVi: value })}
-                                placeholder={"Nhập nội dung (không bắt buộc)"}
+                                placeholder={'Nhập nội dung (không bắt buộc)'}
                                 className="pb-0 w-full"
                                 classNameInput="!text-lg h-24"
                             />
@@ -403,7 +435,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                                 label="Nội dung thông báo (Tiếng Anh)"
                                 value={state?.contentNotiEn}
                                 onChange={(value) => setState({ contentNotiEn: value })}
-                                placeholder={"Nhập nội dung (không bắt buộc)"}
+                                placeholder={'Nhập nội dung (không bắt buộc)'}
                                 className="pb-0 w-full"
                                 classNameInput="!text-lg h-24"
                             />
@@ -480,7 +512,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
             <AlertModalV2
                 key="modal_error"
                 isVisible={!!state.resultTransfer}
-                onClose={() => setState({ resultTransfer: null })}
+                onClose={handleCloseAlert}
                 type={state.resultTransfer?.type}
                 title={state.resultTransfer?.msg}
                 buttonClassName="hidden"
