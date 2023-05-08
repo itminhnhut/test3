@@ -61,7 +61,7 @@
         "time_to_get_back": "Thời gian nhận lại NAO",
         "instant_get_back": "Ngay lập tức sau khi rút",
         "not_show_message": "Không hiện lại thông báo này",
-        "description_lock": "Pool quản trị NAO đã ngưng tiếp nhận trên ONUS từ 16:00 ngày 24/4 và sẽ được mở lại tại Nami Exchange vào tháng 5.",
+        "description_lock": "Pool quản trị NAO đã ngưng tiếp nhận trên ONUS từ 16:00 ngày 01/5 và sẽ được mở lại tại Nami Exchange vào tháng 5.",
         "description_unlock": "Bạn sẽ nhận được NAO sau 7 ngày kể từ thời điểm đăng ký rút. Lưu ý lượng NAO này sẽ không được chia sẻ lợi nhuận từ Pool.",
         "lock_overview": "Chi tiết",
         "duration": "Thời gian",
