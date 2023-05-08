@@ -698,7 +698,7 @@ const CryptoDeposit = ({ assetId }) => {
                         ),
                         [DepWdlStatus.Pending]: (
                             <TagV2 icon={false} className="ml-auto" type="warning">
-                                {t('common:pending')}
+                                {t('common:processing')}
                             </TagV2>
                         ),
                         [DepWdlStatus.Declined]: (
@@ -823,7 +823,7 @@ const CryptoDeposit = ({ assetId }) => {
             value: DepWdlStatus.Success
         },
         {
-            label: t('common:pending'),
+            label: t('common:processing'),
             value: DepWdlStatus.Pending
         },
         {
