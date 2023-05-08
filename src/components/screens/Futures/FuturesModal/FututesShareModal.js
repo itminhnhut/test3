@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 import Button from 'components/common/V2/ButtonV2/Button';
 import styled from 'styled-components';
 import { formatTime, TypeTable, getS3Url, formatNumber } from 'redux/actions/utils';
-import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
+import { getShareModalData } from 'components/screens/Nao_futures/Futures/TabOrders/ShareFutureMobile';
 import ChevronDown from 'components/svg/ChevronDown';
 import colors from 'styles/colors';
 import QRCode from 'qrcode.react';

@@ -446,7 +446,7 @@ const Contest = (props) => {
                     <NaoHeader onDownload={onDownload} />
                 </div>
                 <div className="nao_section">
-                    <div className="px-4">
+                    <div className="px-4 sm_only:pt-6">
                         <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
                     </div>
                     <div className="bg-gray-12 dark:bg-bgPrimary-dark rounded-t-3xl px-4">

@@ -87,6 +87,7 @@ const PaginationWrapper = styled.div`
     .rc-pagination-next button {
         color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.darkBlue)};
         border-radius: 50%;
+        height: 100%;
     }
 
     .rc-pagination-item-active a,

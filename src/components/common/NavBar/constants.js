@@ -237,7 +237,7 @@ export const MOBILE_NAV_DATA = [
             //     title: 'Futures Mobile',
             //     localized: 'mobile_futures',
             //     isNew: false,
-            //     url: 'https://test.nami.exchange/mobile/futures',
+            //     url: 'https://test.nami.exchange/nao_futures/futures',
             //     child_lv2: []
             // },
             // {

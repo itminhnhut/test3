@@ -32,6 +32,8 @@ const ContesRules = ({
     } = useTranslation();
     const router = useRouter();
     const renderCountDown = (classNameContainer, classNameCountdown) => {
+        start = Date.now() - 86400000;
+        end = Date.now() + 86400000;
         const CONTEST_TIME = {
             START: new Date(start).getTime(),
             END: new Date(end).getTime()
@@ -40,7 +42,7 @@ const ContesRules = ({
         if (now < CONTEST_TIME.START) {
             return (
                 <>
-                    <div className={classNames('font-light text-sm sm:text-[1rem] text-txtPrimary dark:text-txtPrimary-dark', classNameContainer)}>
+                    <div className={classNames('font-light text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
                         {t('nao:contest:start_in')}
                     </div>
                     <Countdown
@@ -64,7 +66,7 @@ const ContesRules = ({
         } else if (now >= CONTEST_TIME.START && now < CONTEST_TIME.END) {
             return (
                 <>
-                    <div className={classNames('font-light text-sm sm:text-[1rem] text-txtPrimary dark:text-txtPrimary-dark', classNameContainer)}>
+                    <div className={classNames('font-light text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
                         {t('nao:contest:end_in')}
                     </div>
                     <Countdown
@@ -120,25 +122,25 @@ const ContesRules = ({
         <section className="contest_rules py-6 sm:py-[3.375rem] w-full flex flex-col mb:flex-row mb:justify-between">
             <div className="text-center mb:text-left flex flex-col flex-wrap mb:block">
                 <div className="font-semibold text-xl mb:text-2xl text-teal">{t('nao:contest:tournament')}</div>
-                <div className="font-semibold text-xl sm:text-[44px] sm:leading-[58px] pt-3 sm:pt-4">
+                <div className="font-semibold text-xl sm:text-6xl pt-3 sm:pt-4">
                     <div>{title?.[language]}</div>
                     <div>{title_champion?.[language]}</div>
                 </div>
 
-                <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm sm:text-base pt-6 sm:pt-8">
+                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base pt-6 sm:pt-8">
                     {t('nao:contest:description')}
                     <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
-                <div className="w-full rounded-md bg-gray-13 dark:bg-dark-4 py-3 mt-8 mb:mt-4 flex flex-row items-center justify-center">
-                    {renderCountDown('!text-sm !font-normal !mr-2', '!text-base !font-semibold ')}
+                <div className="sm_only:!w-full w-fit sm:px-4 rounded-md bg-gray-13 dark:bg-dark-4 py-3 mt-8 mb:mt-4 flex flex-row items-center justify-center">
+                    {renderCountDown('!font-normal mr-3', '!font-semibold')}
                 </div>
                 <div className="flex flex-row mt-3 mb:mt-7 justify-center mb:justify-start w-full">
                     {inHome ? (
-                        <ButtonNao onClick={() => router.push('/contest')} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3" primary>
+                        <ButtonNao onClick={() => router.push('/contest')} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3 sm_only:flex-1" primary>
                             {t('nao:contest:ranking')}
                         </ButtonNao>
                     ) : (
-                        <ButtonNao onClick={onRedirect} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3">
+                        <ButtonNao onClick={onRedirect} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3 sm_only:flex-1">
                             {t('nao:contest:detail_rules')}
                         </ButtonNao>
                     )}
@@ -196,7 +198,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
 
 
     return (
-        <Popover className="relative flex">
+        <Popover className="relative flex sm_only:flex-1">
             {({ open, close }) => (
                 <>
                     <Popover.Button>

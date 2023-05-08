@@ -10,7 +10,7 @@ import { getMarketWatch, getFuturesMarketWatch } from 'redux/actions/market';
 import { compact, uniqBy, find, filter, sortBy } from 'lodash';
 import { useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
-import LoadingPage from 'components/screens/Mobile/LoadingPage';
+import LoadingPage from 'components/screens/Nao_futures/LoadingPage';
 import { SkeletonHomeIntroduce } from 'components/screens/Home/Skeleton';
 import { getS3Url } from 'redux/actions/utils';
 import { getExchange24hPercentageChange } from 'src/redux/actions/utils';

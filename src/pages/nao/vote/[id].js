@@ -25,7 +25,7 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import SvgCancelCircle from "src/components/svg/CancelCircle";
 import SvgTimeIC from "src/components/svg/TimeIC";
-import LoadingPage from "components/screens/Mobile/LoadingPage";
+import LoadingPage from "components/screens/Nao_futures/LoadingPage";
 
 const getAssetNao = createSelector(
     [(state) => state.utils.assetConfig, (utils, params) => params],

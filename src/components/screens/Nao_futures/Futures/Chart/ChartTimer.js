@@ -2,10 +2,11 @@ import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { roundTo } from 'round-to';
 import classNames from 'classnames';
+import { listTimeFrame } from 'components/KlineChart/kline.service';
 import { Popover, Transition } from '@headlessui/react';
 import ModelMarketMobile from 'components/screens/Nao_futures/Market/ModelMarket';
-import { AreaChart, BarsChart, BaseLineChart, CandleChartOnus, LineChart } from '../timeFrame';
-import { IconStarOnus, IconRefresh } from 'components/common/Icons';
+import { AreaChart, CandleChart, LineChart } from 'components/TVChartContainer/timeFrame';
+import { IconStar, IconStarFilled } from 'components/common/Icons';
 import colors from 'styles/colors';
 import { PublicSocketEvent, TRADING_MODE } from 'redux/actions/const';
 import { favoriteAction } from 'redux/actions/user';
@@ -13,173 +14,102 @@ import { getFuturesFavoritePairs } from 'redux/actions/futures';
 import { useDispatch, useSelector } from 'react-redux';
 import Guideline from 'components/screens/Nao_futures/Futures/Guideline';
 import styled from 'styled-components';
-import useWindowSize from 'hooks/useWindowSize';
 import Emitter from 'redux/actions/emitter';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
-import SvgActivity from 'components/svg/Activity';
-import { X } from 'react-feather';
-const listChartType = [
+
+const candleList = [
     {
-        text: 'Bar',
-        value: 0,
-        icon: BarsChart
-    },
-    {
+        value: 'candle_solid',
         text: 'Candle',
-        value: 1,
-        icon: CandleChartOnus
+        icon: CandleChart
     },
+    // { value: 'candle_stroke', text: 'Stroke', icon: AreaChart },
+    // { value: 'candle_up_stroke', text: 'Up Stroke', icon: AreaChart },
+    // { value: 'candle_down_stroke', text: 'Down Stroke', icon: AreaChart },
     {
-        text: 'Line',
-        value: 2,
+        value: 'ohlc',
+        text: 'Bar',
         icon: LineChart
     },
     {
+        value: 'area',
         text: 'Area',
-        value: 3,
         icon: AreaChart
-    },
-    {
-        text: 'Base Line',
-        value: 10,
-        icon: BaseLineChart
-    },
+    }
 ];
-
-export const listTimeFrame = [
-    {
-        value: '1',
-        text: '1m'
-    },
-    {
-        value: '5',
-        text: '5m'
-    },
-    {
-        value: '15',
-        text: '15m'
-    },
-    {
-        value: '30',
-        text: '30m'
-    },
-    {
-        value: '60',
-        text: '1h'
-    },
-    {
-        value: '240',
-        text: '4h'
-    },
-    {
-        value: '1D',
-        text: '1D'
-    },
-    {
-        value: '1W',
-        text: '1W'
-    },
-    {
-        value: '1M',
-        text: '1M'
-    },
-];
-
-const ChartOptions = ({
+const ChartTimer = ({
     pairConfig,
     pair,
     isVndcFutures,
     resolution,
     setResolution,
-    chartType,
-    setChartType,
+    candle,
+    setCandle,
     className = '',
     isFullScreen,
     showSymbol = true,
     showIconGuide = true,
-    pairParent,
-    fullChart,
-    setFullChart,
-    resetComponent,
-    handleOpenIndicatorModal
+    pairParent
 }) => {
-    const { width } = useWindowSize();
-    const xs = width < 390;
-    // if (!pairConfig) return null;
+
+    if (!pairConfig) return null;
     const [showModelMarket, setShowModelMarket] = useState(false);
     const [start, setStart] = useState(false);
 
-    const labelCandle = listChartType.find(item => item.value === chartType) || '';
+    const labelCandle = candleList.find(item => item.value === candle);
 
     const resolutionLabel = useMemo(() => {
-        return listTimeFrame.find(item => item.value == resolution)?.text;
+        return listTimeFrame.find(item => item.value === resolution)?.text;
     }, [resolution]);
 
     return (
         <div className={`${className} chart-timer flex items-center justify-between px-4`}>
-            <Guideline pair={pair} start={start} setStart={setStart} isFullScreen={isFullScreen} />
+            <Guideline pair={pair} start={start} setStart={setStart} isFullScreen={isFullScreen}/>
             <div className="flex items-center">
                 {showSymbol &&
-                    <div className="flex items-center flex-wrap gap-2">
+                    <div className="flex items-center flex-wrap">
                         <div className="flex items-center cursor-pointer" data-tut="order-symbol"
-                            onClick={() => setShowModelMarket(true)}>
-                            {!xs && <img className="mr-2 min-w-[24px] min-h-[24px]"
-                                src={getS3Url(`/images/coins/64/${pairConfig?.baseAssetId}.png`)} height={24}
-                                width={24} />}
+                             onClick={() => setShowModelMarket(true)}>
+                            <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16}/>
                             <div
-                                className="font-semibold text-txtPrimary dark:text-txtPrimary-dark ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
+                                className="px-2 font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
                         </div>
-                        <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
+                        <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures}/>
+                    </div>
+                }
+                {showIconGuide &&
+                    <div className="px-2" onClick={() => setStart(true)}>
+                        <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24}/>
                     </div>
                 }
             </div>
 
-            <div className={`flex items-center space-x-${xs ? '2' : '4'} py-2`}>
+            <div className="flex items-center">
                 <MenuTime
                     value={resolution}
                     onChange={setResolution}
                     keyValue="value"
                     displayValue="text"
                     options={listTimeFrame}
-                    classNamePanel="rounded-md"
+                    classNameButton="px-2 py-2"
                     label={<div
-                        className="text-[0.9375rem] text-txtSecondary dark:text-txtSecondary-dark leading-[1.25rem]">{resolutionLabel}</div>}
+                        className="text-sm text-gray-1 dark:text-txtSecondary-dark font-medium">{resolutionLabel}</div>}
                 />
                 <MenuTime
-                    value={chartType}
-                    onChange={setChartType}
+                    value={candle}
+                    onChange={setCandle}
                     keyValue="value"
                     displayValue="text"
-                    options={listChartType}
-                    classNamePanel="rounded-md left-[-20px]"
+                    options={candleList}
+                    classNameButton="px-2 py-2"
+                    // classNamePanel="right-[-10px]"
                     label={<Svg>{labelCandle.icon}</Svg>}
                 />
-                {/* {showIconGuide &&
-                    <div className="" onClick={() => setStart(true)}>
-                        <IconHelper/>
-                    </div>
-                } */}
-                <div className="text-txtSecondary dark:text-txtSecondary-dark" onClick={fullChart ? handleOpenIndicatorModal : resetComponent}>
-                    {!fullChart ?
-                        <IconRefresh color='currentColor' />
-                        :
-                        <SvgActivity color="currentColor" />
-                    }
-                </div>
-                <FavouriteButton pair={pair} pairConfig={pairConfig} />
-                {fullChart &&
-                    <X
-                        size={20}
-                        onClick={() => setFullChart(false)}
-                        className='cursor-pointer !ml-10'
-                    />
-                }
+                <FavouriteButton pair={pair} pairConfig={pairConfig}/>
             </div>
             <ModelMarketMobile
-                pairConfig={pairConfig}
                 visible={showModelMarket}
                 onClose={() => setShowModelMarket(false)}
-                pair={pair}
             />
         </div>
     );
@@ -201,30 +131,30 @@ const Change24h = ({
         if (!pairConfig) return;
         // ? Subscribe publicSocket
         // ? Get Pair Ticker
-        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig.symbol, async (data) => {
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol, async (data) => {
             const _pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
             if (pairConfig.symbol === _pairPrice?.symbol && _pairPrice?.lastPrice > 0) {
                 setPairPrice(_pairPrice);
             }
         });
         return () => {
-            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig.symbol);
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol);
         };
     }, [pairConfig]);
 
     return (
         <div className="flex items-center">
             <div
-                className={classNames('pr-2 min-w-[5rem] text-green-2 font-medium',
+                className={classNames('pl-2 text-teal font-medium text-sm',
                     {
-                        '!text-red-2':
+                        '!text-red':
                             pairPrice?.priceChangePercent < 0,
                     })}
             >
                 {pairPrice?.priceChangePercent < 0 ? '' : '+'}
                 {formatNumber(
                     roundTo(
-                        pairPrice?.priceChangePercent * 100 || 0,
+                        pairPrice?.priceChangePercent * (isVndcFutures ? 100 : 1) || 0,
                         2
                     ),
                     2,
@@ -238,7 +168,7 @@ const Change24h = ({
 
 };
 
-export const MenuTime = ({
+const MenuTime = ({
     value,
     onChange,
     options,
@@ -255,7 +185,7 @@ export const MenuTime = ({
                 close
             }) => (
                 <>
-                    <Popover.Button className={`items-center flex ${classNameButton} text-txtSecondary-dark`}>
+                    <Popover.Button className={`flex ${classNameButton} text-gray-1 dark:text-txtSecondary-dark`}>
                         {label}
                     </Popover.Button>
                     <Transition
@@ -267,24 +197,24 @@ export const MenuTime = ({
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className={`absolute z-50 bg-gray-12 dark:bg-dark-2 ${classNamePanel}`}>
+                        <Popover.Panel className={`absolute z-50 bg-white dark:bg-bgPrimary-dark ${classNamePanel}`}>
                             <div
                                 className="overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
-                                {options?.map((item, index) => {
+                                {options?.map(item => {
                                     return (
-                                        <div key={index} onClick={() => {
+                                        <div onClick={() => {
                                             onChange(item[keyValue]);
                                             close();
                                         }}
-                                            className={classNames(
-                                                'pb-2 w-max text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
-                                                {
-                                                    '!text-txtPrimary dark:!text-txtPrimary-dark':
-                                                        item[keyValue] === value,
-                                                }
-                                            )}
+                                             className={classNames(
+                                                 'pb-2 w-max text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
+                                                 {
+                                                     '!text-txtPrimary dark:!text-txtPrimary-dark':
+                                                         item[keyValue] === value,
+                                                 }
+                                             )}
                                         >
-                                            <Svg className={`!fill-fillSecondary dark:!fill-fillSecondary-dark`} >{item?.icon}</Svg>
+                                            <Svg>{item?.icon}</Svg>
                                             {item[displayValue]}
                                         </div>
                                     );
@@ -299,12 +229,11 @@ export const MenuTime = ({
 };
 
 const Svg = styled.div.attrs({
-    className: `fill-fillPrimary dark:fill-fillPrimary-dark`
+    className: ''
 })`
   svg {
-    height: 20px;
-    width: 20px;
-    fill: inherit;
+    height: 24px;
+    width: 24px
   }
 `;
 
@@ -320,10 +249,10 @@ const FavouriteButton = ({ pairConfig }) => {
         dispatch(getFuturesFavoritePairs());
     };
 
-    return <div className="cursor-pointer flex items-center text-txtSecondary dark:text-txtSecondary-dark" onClick={handleSetFavorite}>
-        <IconStarOnus stroke={isFavorite ? colors.yellow[2] : 'currentColor'}
-            color={isFavorite ? colors.yellow[2] : ''} />
+    return <div className="px-2 py-2 cursor-pointer" onClick={handleSetFavorite}>
+        {isFavorite ? <IconStarFilled size={16} color={colors.yellow[2]}/> :
+            <IconStar color="#718096" strokeWidth={0.5} size={18}/>}
     </div>;
 };
 
-export default ChartOptions;
+export default ChartTimer;
