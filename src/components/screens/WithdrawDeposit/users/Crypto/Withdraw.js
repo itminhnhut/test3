@@ -115,7 +115,7 @@ const ModalConfirm = ({  selectedAsset, selectedNetwork, open, address, memo, am
     const onConfirmOTP = async (otp) => {
         try {
             setLoading(true);
-            const response = await postData(otp?.email ?? "000000");
+            const response = await postData({email: otp?.email ?? "000000"});
 
             if (response?.status === 'ok') {
                 setShowAlert(true);
@@ -197,7 +197,7 @@ const ModalConfirm = ({  selectedAsset, selectedNetwork, open, address, memo, am
                                 <ButtonV2 variants="secondary" onClick={onClose}>
                                     {t('common:cancel')}
                                 </ButtonV2>
-                                <ButtonV2 loading={loading} onClick={onConfirmInfo}>
+                                <ButtonV2 disabled={loadingResend} loading={loadingResend} onClick={onConfirmInfo}>
                                     {t('common:continue')}
                                 </ButtonV2>
                             </div>
