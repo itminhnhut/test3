@@ -368,17 +368,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     return (
         <div className="w-full h-full pt-20 pb-[120px] px-4">
             <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full">
-                <div className="flex justify-between items-start mb-6">
-                    {!side ? (
-                        <Skeletor width="200px" />
-                    ) : (
-                        <h2 className="text-2xl font-semibold">
-                            {t(`dw_partner:${side?.toLowerCase()}_asset_from_partners.${mode}`, {
-                                asset: assetCode
-                            })}
-                        </h2>
-                    )}
-                </div>
                 <DetailOrderHeader
                     status={status}
                     refetchOrderDetail={() => {

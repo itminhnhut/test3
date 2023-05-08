@@ -14,7 +14,7 @@ const useGetPartner = ({ assetId, side, amount, rate }) => {
 
     const assetConfig = find(configs, { id: +assetId });
     useEffect(() => {
-        if (rate && assetConfig?.assetCode && assetConfig?.assetDigit) {
+        if (rate && assetConfig) {
             dispatch(
                 setAllowedAmount({
                     min: assetConfig?.assetCode === 'VNDC' ? DEFAULT_PARTNER_MIN[side] : 5,
@@ -22,7 +22,7 @@ const useGetPartner = ({ assetId, side, amount, rate }) => {
                 })
             );
         }
-    }, [rate, side, assetConfig?.assetCode, assetConfig?.assetDigit]);
+    }, [rate, side, assetConfig, assetConfig]);
 
     useEffect(() => {
         let timeout = setTimeout(() => {

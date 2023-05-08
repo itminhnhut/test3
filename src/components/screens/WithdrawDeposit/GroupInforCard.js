@@ -57,7 +57,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, mode = MODE.USE
     } = useTranslation();
 
     return (
-        <div>
+        <div className="mb-12">
             <h1 className="text-[18px] font-semibold mb-6">{t('dw_partner:transaction_bank_receipt')}</h1>
             {/* Không hiển thị thông tin lệnh đôi với màn USER - BUY khi đối tác chưa accept */}
             {mode === MODE.USER &&
