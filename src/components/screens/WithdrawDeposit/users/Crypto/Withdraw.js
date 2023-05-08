@@ -120,10 +120,7 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
                 setShowAlert(true);
                 if (onClose) onClose();
             } else {
-                toast({
-                    text: errorMessageMapper(t, data),
-                    type: 'error'
-                });
+                toast({ text: t('dw_partner:error.invalid_otp'), type: 'warning', duration: 1500 });
             }
         } catch (error) {
         } finally {

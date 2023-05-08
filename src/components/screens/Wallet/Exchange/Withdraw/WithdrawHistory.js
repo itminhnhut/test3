@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { keyBy, range } from 'lodash';
 import AssetLogo from 'components/wallet/AssetLogo';
 import format from 'date-fns/format';
-import { formatWallet, shortHashAddress } from 'redux/actions/utils';
+import { formatNumber, formatWallet, shortHashAddress } from 'redux/actions/utils';
 import TagV2 from 'components/common/V2/TagV2';
 import { useTranslation } from 'next-i18next';
 import Skeletor from 'components/common/Skeletor';
@@ -94,7 +94,10 @@ export default function () {
             dataIndex: 'amount',
             title: t('common:amount'),
             align: 'right',
-            render: (amount) => formatWallet(amount)
+            render: (amount, item) => {
+                const config = mapAssetConfig[item?.assetId] || {};
+                return formatNumber(amount, config?.assetDigit);
+            }
         },
         {
             key: 'withdraw_to',
