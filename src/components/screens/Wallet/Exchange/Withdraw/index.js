@@ -114,7 +114,7 @@ export const AmountInput = ({
                         </div>
                         {+amount < max && (
                             <div className="cursor-pointer text-teal uppercase font-semibold" onClick={() => internalAmountChange(max)}>
-                                {t('common:max')}
+                                MAX
                             </div>
                         )}
                     </div>
@@ -201,7 +201,7 @@ export const AddressInput = ({ t, value, onChange, isValid }) => {
     return (
         <div>
             <div className="bg-gray-13 dark:bg-darkBlue-3 px-4 py-5 rounded-xl">
-                <p className="text-txtSecondary dark:text-txtSecondary-dark mb-4">{t('common:address_wallet')}</p>
+                <p className="text-txtSecondary dark:text-txtSecondary-dark mb-4">{t('wallet:receive_address')}</p>
                 <div className="flex font-semibold">
                     <div className="flex-1">
                         <input
@@ -327,7 +327,7 @@ export const MemoInput = ({ t, value, onChange, errorMessage }) => {
                         <input
                             ref={refInputMemo}
                             type="text"
-                            className="w-full font-semibold"
+                            className="w-full font-semibold placeholder-shown:font-normal"
                             placeholder={t('wallet:receiver_memo')}
                             value={value}
                             onChange={(e) => onChange(e.target.value)}

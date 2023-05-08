@@ -80,11 +80,15 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
     const onConfirmHandler = async (otp) => {
         try {
             const response = await onConfirm(otp);
+            // Lưu ý: Hàm onConfirm cần trả về Response
             if (response?.status === ApiResultCreateOrder.INVALID_OTP || response.status !== ApiStatus.SUCCESS) {
                 onFocusFirstInput();
                 setState({ otp: INITAL_OTP_STATE, isError: true });
             }
-        } catch (error) {}
+        } catch (error) {
+            onFocusFirstInput();
+            setState({ otp: INITAL_OTP_STATE, isError: true });
+        }
     };
 
     const doPaste = async (mode) => {
@@ -123,9 +127,10 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
                             {mode === 'email' ? t('dw_partner:email_verification_code') : t('dw_partner:verify_2fa')}
                         </div>
                     )}
+
                     <div ref={mode === MODE_OTP.TFA ? parentTfaRef : undefined}>
                         <OtpInput
-                            key={mode}
+                            key={'otp_' + mode}
                             ref={mode !== MODE_OTP.TFA ? otpInputRef : undefined}
                             value={state.otp?.[mode]}
                             onChange={(val) => onChangeHandler(val, mode)}
