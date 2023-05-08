@@ -15,18 +15,22 @@ import InputV2 from 'components/common/V2/InputV2';
 import { Search } from 'react-feather';
 import classNames from 'classnames';
 
+const LIMIT = 10;
+const PAGE = 0;
+
 const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
     const { t } = useTranslation();
-    const [friendList, setFriendList] = useState([]);
-    const [more, setMore] = useState(10);
-    const [loading, setLoading] = useState(false);
-    const hasNext = useRef(false);
+    const [page, setPage] = useState(PAGE);
     const [search, setSearch] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [friendList, setFriendList] = useState([]);
+
+    const hasNext = useRef(false);
 
     const doClose = () => {
         setFriendList([]);
         onClose();
-        setMore(10);
+        setPage(PAGE);
     };
 
     const handleListFriend = _.throttle(async () => {
@@ -38,12 +42,13 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
             },
             params: {
                 code: search,
-                limit: more
+                limit: LIMIT,
+                page
             }
         }).then(({ data, status }) => {
             if (status === 'ok') {
                 hasNext.current = data.hasNext;
-                setFriendList(data.results);
+                setFriendList((prev) => [...prev, ...data.results]);
             } else {
                 setFriendList([]);
             }
@@ -53,11 +58,13 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
 
     useEffect(() => {
         handleListFriend();
-    }, [more, code, search]);
+    }, [code, search, page]);
 
     const handleChangeSearch = (value) => {
         setSearch(value);
     };
+
+    console.log('hasNext', hasNext);
 
     return isDesktop ? (
         <ModalV2 isVisible={isShow} onBackdropCb={doClose} className="w-[30rem]">
@@ -97,7 +104,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                             {hasNext.current ? (
                                 <div
                                     className="mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer"
-                                    onClick={() => setMore(99999999999)}
+                                    onClick={() => setPage((prev) => prev + 1)}
                                 >
                                     {t('reference:referral.show_more')}
                                 </div>
@@ -141,7 +148,10 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                         })}
                     </div>
                     {hasNext.current ? (
-                        <div className="mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer" onClick={() => setMore(99999999999)}>
+                        <div
+                            className="mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer"
+                            onClick={() => setPage((prev) => prev + 1)}
+                        >
                             {t('reference:referral.show_more')}
                         </div>
                     ) : null}

@@ -3,7 +3,7 @@ import { useAsync } from 'react-use';
 import { API_INTERNAL_TRANSFER_HISTORY } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import { ApiStatus, PartnerOrderStatus } from 'redux/actions/const';
-import { formatPrice, formatTime, getAssetCode, getLoginUrl, getS3Url, shortHashAddress } from 'redux/actions/utils';
+import { formatPrice, formatTime, getLoginUrl, getS3Url, shortHashAddress } from 'redux/actions/utils';
 import fetchApi from '../../../utils/fetch-api';
 import { useSelector } from 'react-redux';
 import TableV2 from 'components/common/V2/TableV2';
@@ -11,12 +11,13 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import { find, isArray } from 'lodash';
 import Skeletor from 'components/common/Skeletor';
 import OrderStatusTag from 'components/common/OrderStatusTag';
+import Tooltip from 'components/common/Tooltip';
 
 const addNewRecord = (arr = [], newItem = {}) => {
-    arr.pop();      // Remove last item
-    arr.unshift({...newItem, _id: 0});
-    return arr
-}
+    arr.pop(); // Remove last item
+    arr.unshift({ ...newItem, _id: 0 });
+    return arr;
+};
 
 const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
     const [state, set] = useState({
@@ -58,7 +59,7 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                 setState({ histories, hasNext });
             }
         } catch (e) {
-            console.log(`Can't get swap history `, e);
+            console.log(`Can't get transfer-internal history `, e);
         } finally {
             setState({ loading: false });
         }
@@ -76,7 +77,7 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                 title: 'ID',
                 align: 'left',
                 width: 203,
-                render: (row) => row === 0 ? <Skeletor width={150}/> : <div title={row}>{shortHashAddress(row, 8, 6)}</div>
+                render: (row) => (row === 0 ? <Skeletor width={150} /> : <div title={row}>{shortHashAddress(row, 8, 6)}</div>)
             },
             {
                 key: 'asset',
@@ -120,8 +121,35 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                 key: 'status',
                 title: t('transaction-history:status'),
                 align: 'right',
-                width: 150,
-                render: (row) =>  <OrderStatusTag status={PartnerOrderStatus.SUCCESS} />
+                width: 170,
+                render: () => <OrderStatusTag status={PartnerOrderStatus.SUCCESS} />
+            },
+            {
+                key: 'metadata.noti',
+                dataIndex: ['metadata', 'noti'],
+                title: t('navbar:noti'),
+                align: 'right',
+                width: 200,
+                render: (v, item) => {
+                    return (
+                        <div data-tip="" data-for={'tooltip-' + item._id}>
+                            {shortHashAddress(language === 'vi' ? v?.vi : v?.en, 18, 0)}
+                            <Tooltip offset={{ top: 18 }} id={'tooltip-' + item._id} place="top" effect="solid" className={`max-w-[400px]`} isV3>
+                                <div className="w-full">
+                                    <div className="mb-2 text-white dark:text-txtSecondary-dark text-left text-xs">
+                                        Thông báo tiếng Việt:
+                                    </div>
+                                    <div className='text-left mb-6'>{v?.vi}</div>
+
+                                    <div className="mb-2 text-white dark:text-txtSecondary-dark text-left text-xs">
+                                        Content noti English:
+                                    </div>
+                                    <div className='text-left'>{v?.en}</div>
+                                </div>
+                            </Tooltip>
+                        </div>
+                    );
+                }
             }
         ],
         [t, language, assetConfig]

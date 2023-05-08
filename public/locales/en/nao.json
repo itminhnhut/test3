@@ -61,7 +61,7 @@
         "time_to_get_back": "Time to receive NAO",
         "instant_get_back": "Immediately after withdrawal",
         "not_show_message": "Don't show this message",
-        "description_lock": "The NAO Governance pool has been deposit-closed on ONUS since 2023-04-24 16:00 (UTC+7) and will be reopened at Nami Exchange in May.",
+        "description_lock": "The NAO Governance pool has been deposit-closed on ONUS since 2023-05-01 16:00 (UTC+7) and will be reopened at Nami Exchange in May.",
         "description_unlock": "NAO staked will be locked and can only be claimed 7 days after unstaking, those NAO will not receive any revenue shares",
         "lock_overview": "Details",
         "duration": "Duration",
