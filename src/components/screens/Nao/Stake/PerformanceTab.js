@@ -248,7 +248,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         }}
                     />
                     <label
-                        className="text-txtPrimary dark:text-txtPrimary-dark font-medium leading-6 w-fit border-b border-gray-15 dark:border-gray-4 border-dashed"
+                        className="text-txtPrimary dark:text-txtPrimary-dark font-medium leading-6 w-fit border-b border-gray-1 dark:border-gray-7 border-dashed"
                         data-tip={t('nao:pool:tooltip_est_this_week')}
                         data-for="tooltip-est-this-week"
                     >
