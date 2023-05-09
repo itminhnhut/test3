@@ -16,7 +16,7 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
 
     return (
         <div className="mb-12">
-            <div className="flex justify-between items-start mb-6">
+            <div className="flex mb-6">
                 {!side ? (
                     <Skeletor width="200px" />
                 ) : (
@@ -26,6 +26,31 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                         })}
                     </h2>
                 )}
+                <div className="ml-6">
+                    <div className="flex -m-1 flex-wrap items-center">
+                        <div className="p-1">
+                            {!orderDetail ? (
+                                <Skeletor width="150px" />
+                            ) : status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? (
+                                <TagV2 type={TYPES.DEFAULT} className="!bg-divider dark:!bg-divider-dark">
+                                    {t('dw_partner:wait_confirmation')}
+                                </TagV2>
+                            ) : (
+                                <OrderStatusTag className="!ml-0" status={status?.status} />
+                            )}
+                        </div>
+
+                        {status?.status === PartnerOrderStatus.PENDING && orderDetail?.timeExpire && (
+                            <div className="p-1">
+                                <CountdownClock
+                                    countdownTime={orderDetail?.countdownTime}
+                                    onComplete={() => refetchOrderDetail()}
+                                    timeExpire={orderDetail?.timeExpire}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
 
             <Card className="border !border-divider dark:border-0 bg-white dark:bg-dark-4">

@@ -24,12 +24,12 @@ const RENDER_INFORMATION = [
         mode: [MODE.PARTNER, MODE.USER],
         render: ({ data }) => (data ? formatPhoneNumber(data) : null)
     },
-    // {
-    //     key: 'code',
-    //     icon: <BxsUserCircle color="currentColor" size={16} />,
-    //     mode: [MODE.PARTNER],
-    //     render: ({ data }) => data || null
-    // },
+    {
+        key: 'code',
+        icon: <BxsUserCircle color="currentColor" size={16} />,
+        mode: [MODE.PARTNER],
+        render: ({ data }) => data || null
+    },
     // {
     //     key: 'analyticMetadata.count',
     //     icon: <OrderIcon color="currentColor" size={16} />,
