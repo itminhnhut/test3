@@ -16,7 +16,8 @@ const AlertModalV2 = ({
     onConfirm,
     notes,
     loading = false,
-    buttonClassName = ''
+    buttonClassName = '',
+    isButton = true
 }) => {
     const { t } = useTranslation();
     const getIcon = () => {
@@ -44,7 +45,7 @@ const AlertModalV2 = ({
                 {message && <span className="text-gray-1 dark:text-gray-7 text-center">{message}</span>}
                 {children}
                 {notes && <span className="mt-2 dark:text-gray-1 text-center text-xs">{notes}</span>}
-                <div className="mt-10 space-y-3 w-full">
+                {isButton && <div className="mt-10 space-y-3 w-full">
                     {!customButton && textButton && (
                         <Button className={buttonClassName} onClick={onConfirm}>
                             <span>{textButton}</span>
@@ -57,7 +58,7 @@ const AlertModalV2 = ({
                             {t('common:chat_with_support')}
                         </TextButton>
                     )}
-                </div>
+                </div>}
             </div>
         </ModalV2>
     );

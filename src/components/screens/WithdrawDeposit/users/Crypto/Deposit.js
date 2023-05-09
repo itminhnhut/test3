@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { dwLinkBuilder, formatTime, formatWallet, getS3Url, shortHashAddress } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber, formatTime, formatWallet, getS3Url, shortHashAddress } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Check, ChevronLeft, ChevronRight, Search, Slash, X } from 'react-feather';
@@ -10,6 +10,7 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { find, get, isFunction, keyBy } from 'lodash';
 import { useSelector } from 'react-redux';
 import { PATHS } from 'constants/paths';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 import useOutsideClick from 'hooks/useOutsideClick';
 import useWindowFocus from 'hooks/useWindowFocus';
@@ -33,6 +34,13 @@ import format from 'date-fns/format';
 import TagV2 from 'components/common/V2/TagV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Copy from 'components/svg/Copy';
+import { NotInterestedIcon } from 'components/svg/SvgIcon';
+import MCard from 'components/common/MCard';
+import DarkNote from 'components/common/DarkNote';
+import { TYPE_DW } from '../../constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { orderBy } from 'lodash';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const INITIAL_STATE = {
     loadingConfigs: false,
@@ -73,7 +81,7 @@ const CryptoSelect = ({ t, selected }) => {
     const router = useRouter();
 
     const items = useMemo(() => {
-        return paymentConfigs
+        const listAssetAvailable = paymentConfigs
             .filter((c) => c.assetCode?.includes(search.toUpperCase()))
             .map((config) => {
                 const wallet = spotWallets[config.assetId] || {
@@ -86,13 +94,15 @@ const CryptoSelect = ({ t, selected }) => {
                     availableValue: wallet.value - wallet.locked_value
                 };
             });
+
+        return orderBy(listAssetAvailable, 'assetCode', 'asc');
     }, [paymentConfigs, spotWallets, search]);
 
     useOutsideClick(refContent, () => setOpen(!open));
 
     return (
         <div className="relative">
-            <div className="bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer select-none" onClick={() => setOpen(true)}>
+            <div className="bg-gray-13 dark:bg-darkBlue-3 rounded-xl p-4 cursor-pointer select-none" onClick={() => setOpen(true)}>
                 <p className="text-txtSecondary dark:text-txtSecondary-dark mb-2 leading-6">{t('wallet:crypto_select')}</p>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
@@ -125,13 +135,9 @@ const CryptoSelect = ({ t, selected }) => {
                                 <div
                                     key={c._id}
                                     onClick={() => {
-                                        router
-                                            .push(depositLinkBuilder(c.assetCode), null, {
-                                                scroll: false
-                                            })
-                                            .finally(() => {
-                                                setOpen(false);
-                                            });
+                                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, c?.assetCode), null, { scroll: false }).finally(() => {
+                                            setOpen(false);
+                                        });
                                     }}
                                     className={classNames(
                                         'flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-hover dark:hover:bg-hover-dark',
@@ -175,7 +181,7 @@ const NetworkSelect = ({ t, selected, onSelect, networkList = [] }) => {
 
     return (
         <div className="relative">
-            <div className="bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer select-none" onClick={() => setOpen(true)}>
+            <div className="bg-gray-13 dark:bg-darkBlue-3 rounded-xl p-4 cursor-pointer select-none" onClick={() => setOpen(true)}>
                 <p className="text-txtSecondary dark:text-txtSecondary-dark mb-2 leading-6">{t('wallet:network')}</p>
                 <div className="flex items-center justify-between">
                     <div
@@ -184,7 +190,9 @@ const NetworkSelect = ({ t, selected, onSelect, networkList = [] }) => {
                         })}
                     >
                         <span className="font-semibold">{selected?.network || '--'}</span>
-                        <span className="ml-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">{selected?.name  ? selected.name : (selected?.network && '--')}</span>
+                        <span className="ml-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">
+                            {selected?.name ? selected.name : selected?.network && '--'}
+                        </span>
                     </div>
                     <ChevronDown className={open ? 'rotate-0' : ''} size={16} color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue} />
                 </div>
@@ -253,7 +261,7 @@ const CryptoDeposit = ({ assetId }) => {
     const mapAssetConfig = useMemo(() => keyBy(assetConfig, 'id'), [assetConfig]);
 
     const qrSize = useMemo(() => {
-        if (width >= 768) return 160;
+        if (width >= 768) return 180;
         return 110;
     }, [state.address, width]);
 
@@ -272,7 +280,8 @@ const CryptoDeposit = ({ assetId }) => {
                 params: {
                     assetId,
                     network,
-                    shouldCreate
+                    shouldCreate,
+                    version: 2
                 }
             });
             if (data && data?.status === 'ok') {
@@ -363,7 +372,7 @@ const CryptoDeposit = ({ assetId }) => {
     const renderAddressInput = useCallback(() => {
         if (!state.selectedNetwork?.depositEnable) {
             return (
-                <div className="flex flex-col items-center justify-center py-3">
+                <div className="flex flex-col items-center justify-center">
                     <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">
                         {t('wallet:errors.network_not_support_dep', {
                             asset: state.selectedNetwork?.coin,
@@ -376,22 +385,21 @@ const CryptoDeposit = ({ assetId }) => {
 
         if (!state.address) {
             return (
-                <div className="flex flex-col items-center justify-center py-3">
-                    <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:address_not_available')}</div>
-                    <div
-                        className="bg-dominant px-3 py-1.5 rounded-lg text-sm font-medium text-white mt-3 cursor-pointer
-                                     hover:opacity-80"
+                <div className="flex flex-col items-center justify-center">
+                    <div className="text-base font-medium text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:address_not_available')}</div>
+                    <ButtonV2
+                        className="w-[160px] !py-2 mt-3 !text-sm !h-[36px]"
                         onClick={() => getDepositTokenAddress(true, state.selectedAsset?.assetId, state.selectedNetwork?.network)}
                     >
                         {t('wallet:reveal_address')}
-                    </div>
+                    </ButtonV2>
                 </div>
             );
         }
 
         if (!state.address?.address && state.errors?.addressNotFound) {
             return (
-                <div className="flex flex-col items-center justify-center py-3">
+                <div className="flex flex-col items-center justify-center">
                     <div className="text-sm font-medium text-red text-center">{t('wallet:errors.address_not_found')}</div>
                 </div>
             );
@@ -449,7 +457,7 @@ const CryptoDeposit = ({ assetId }) => {
                                 : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'
                         }
                     >
-                        {state.isCopying?.memo ? <Check size={24} /> : <Copy size={24} />}
+                        {state.isCopying?.memo ? <Check size={24} color={colors.teal} /> : <Copy size={24} />}
                     </span>
                 </CopyToClipboard>
             </div>
@@ -466,21 +474,19 @@ const CryptoDeposit = ({ assetId }) => {
                 <div
                     className="flex items-center justify-center"
                     style={{
-                        width: qrSize,
-                        height: qrSize
+                        width: 80,
+                        height: 80
                     }}
                 >
-                    <Slash size={(qrSize * 30) / 100} />
+                    <NotInterestedIcon />
                 </div>
             );
         }
 
         return (
-            <>
-                <div className="p-2 w-[200px] bg-white rounded-lg">
-                    <QRCodeSVG value={state.address?.address} size="100%" bgColor={colors.white} />
-                </div>
-            </>
+            <div className="p-[9px] bg-white rounded-lg mb-1" style={{ width: qrSize }}>
+                <QRCodeSVG value={state.address?.address} size="100%" bgColor={colors.white} />
+            </div>
         );
     }, [state.address, state.loadingAddress, currentTheme, qrSize]);
 
@@ -545,7 +551,7 @@ const CryptoDeposit = ({ assetId }) => {
         return (
             <>
                 <div className="relative flex items-center justify-between mb-4">
-                    <span className="font-semibold">{t('common:important_notes')}</span>
+                    <DarkNote title={t('common:important_note')} />
                     <div>
                         <Tooltip isV3 id="wrongthings" place="left" effect="solid">
                             <div className="w-[320px]">{noteObj.runItBackNotes}</div>
@@ -582,8 +588,9 @@ const CryptoDeposit = ({ assetId }) => {
         if (language === LANGUAGE_TAG.VI) {
             msg = (
                 <>
-                    Cần cả 2 trường <span className="text-dominant font-medium">MEMO</span> và <span className="text-dominant font-medium">Địa chỉ</span> để nạp
-                    thành công {state.selectedAsset?.assetCode}.<br /> Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu.
+                    Cần cả 2 trường thông tin <span className="text-dominant font-medium">MEMO</span> và{' '}
+                    <span className="text-dominant font-medium">Địa chỉ</span> để nạp thành công {state.selectedAsset?.assetCode}.<br /> Nami sẽ không xử lý các
+                    lệnh nạp thiếu thông tin yêu cầu.
                 </>
             );
         } else {
@@ -592,21 +599,21 @@ const CryptoDeposit = ({ assetId }) => {
                     Both a <span className="text-dominant font-medium">MEMO</span> and an <span className="text-dominant font-medium">Address</span> are
                     required to successfully deposit your {state.selectedAsset?.assetCode}.
                     <br />
-                    NamiExchange will not handle any deposit which lacks information.
+                    Nami Exchange will not handle any deposit which lacks information.
                 </>
             );
         }
 
         return (
-            <ModalV2 isVisible={state.openModal?.memoNotice} className="w-[320px]">
-                <div className="text-center text-sm font-medium w-full">
-                    <div className="my-2 text-center font-bold text-[18px]">{t('common:important_notes')}</div>
-                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{msg}</div>
-                    <div className="mt-4 w-full flex flex-row items-center justify-between">
-                        <Button title={t('common:confirm')} type="primary" componentType="button" className="!py-2" onClick={closeModal} />
-                    </div>
-                </div>
-            </ModalV2>
+            <AlertModalV2
+                type="warning"
+                isVisible={state.openModal?.memoNotice}
+                title={t('common:important_note')}
+                message={msg}
+                className="w-[320px]"
+                isButton={false}
+                onClose={closeModal}
+            />
         );
     }, [state.selectedNetwork, state.selectedAsset?.assetCode, state.openModal?.memoNotice, language]);
 
@@ -620,7 +627,7 @@ const CryptoDeposit = ({ assetId }) => {
             {
                 key: 'txId',
                 dataIndex: 'txId',
-                title: 'TxHash',
+                title: 'ID',
                 align: 'left',
                 render: (txHash) => {
                     return txHash ? shortHashAddress(txHash, 6, 6) : '--';
@@ -662,7 +669,10 @@ const CryptoDeposit = ({ assetId }) => {
                 dataIndex: 'amount',
                 title: t('common:amount'),
                 align: 'right',
-                render: (amount) => formatWallet(amount)
+                render: (amount, item) => {
+                    const config = mapAssetConfig[item?.assetId] || {};
+                    return formatNumber(amount, config?.assetDigit);
+                }
             },
             {
                 key: 'address',
@@ -688,7 +698,7 @@ const CryptoDeposit = ({ assetId }) => {
                         ),
                         [DepWdlStatus.Pending]: (
                             <TagV2 icon={false} className="ml-auto" type="warning">
-                                {t('common:pending')}
+                                {t('common:processing')}
                             </TagV2>
                         ),
                         [DepWdlStatus.Declined]: (
@@ -809,15 +819,15 @@ const CryptoDeposit = ({ assetId }) => {
             value: null
         },
         {
-            label: t('common:success'),
+            label: t('dw_partner:complete'),
             value: DepWdlStatus.Success
         },
         {
-            label: t('common:pending'),
+            label: t('common:processing'),
             value: DepWdlStatus.Pending
         },
         {
-            label: t('common:declined'),
+            label: t('common:denined'),
             value: DepWdlStatus.Declined
         }
     ];
@@ -844,40 +854,43 @@ const CryptoDeposit = ({ assetId }) => {
                             }}
                         />
 
-                        <div className="relative bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer">
+                        <div className="relative bg-gray-13 dark:bg-darkBlue-3 rounded-xl p-4 cursor-pointer">
                             <p className="mb-2 text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:deposit_address')}</p>
                             {renderAddressInput()}
                         </div>
                         {state.address?.addressTag && state.selectedNetwork?.memoRegex && (
-                            <div className="relative bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer">
+                            <div className="relative bg-darkBlue-3 rounded-xl p-4 cursor-pointer">
                                 <p className="mb-2 dark:text-txtSecondary-dark">Memo</p>
                                 {renderMemoInput()}
                             </div>
                         )}
 
-                        <div className="flex items-center justify-between !mt-6">
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark"> {t('wallet:expected_unlock')}</span>
+                        <div className="flex items-center !mt-6 gap-x-1">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark"> {t('wallet:expected_unlock')}:</span>
                             <span className="font-semibold">
-                                <span className="mr-2">{Math.max(state.selectedNetwork?.minConfirm, state.selectedNetwork?.unLockConfirm)}</span>
-                                <span>{t('wallet:network_confirmation')}</span>
+                                {`${Math.max(state.selectedNetwork?.minConfirm, state.selectedNetwork?.unLockConfirm) || 0} ${t(
+                                    'wallet:network_confirmation'
+                                )}`}
                             </span>
                         </div>
                     </div>
-                    <div
-                        className="rounded-xl flex flex-col justify-between px-8 pt-12 pb-10"
-                        style={{
-                            backgroundImage: `url(${getS3Url(
-                                `/images/screen/wallet/bg_mesh_gradient_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.png`
-                            )})`,
-                            backgroundSize: 'cover'
-                        }}
-                    >
-                        <div className="flex items-start justify-center flex-1">{renderQrAddress()}</div>
-                        <div className="mt-8">{renderNotes()}</div>
+                    {/* Right columns: QR code for address */}
+                    <div>
+                        <div
+                            className={`flex items-start justify-center flex-1
+                            ${
+                                !state.address?.address || !(!state.selectedNetwork?.memoRegex || !state.address?.addressTag)
+                                    ? 'mt-12 mb-[100px]'
+                                    : 'mt-0 mb-12'
+                            }`}
+                        >
+                            {renderQrAddress()}
+                        </div>
+                        <MCard addClass="!p-6 border-transparent">{renderNotes()}</MCard>
                     </div>
                 </div>
 
-                <div className="text-2xl font-semibold mt-20">{t('wallet:dep_history')}</div>
+                <div className="text-2xl font-semibold mt-20">{t('common:global_label.history')}</div>
                 <div className="space-x-3 flex items-center my-6">
                     {listStatus.map((rs, i) => (
                         <div

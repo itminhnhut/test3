@@ -167,7 +167,7 @@
     "error_code": "Mã lỗi",
     "error": "Lỗi",
     "scan": "Quét",
-    "important_notes": "Lưu ý quan trọng",
+    "important_note": "Lưu ý quan trọng",
     "common_status": {
         "finished": "Hoàn thành",
         "cancelled": "Đã huỷ"

@@ -229,7 +229,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                         }
                         <div className="mt-6 flex items-center text-nao-yellow font-medium text-xs">
                             <img src={getS3Url('/images/nao/ic_warning.png')} className="mr-3" width={24} height={22} alt="" />
-                            {t(`nao:pool:description_${isLock ? 'lock' : 'unlock'}`)}
+                            {isLock ? t(`nao:pool:description_lock`) : t(`nao:pool:instant_get_back`)}
                         </div>
                         <ButtonNao onClick={onSave} className={`py-3 mt-8 font-semibold ${!Number(amount) || !validator()?.isValid ? 'opacity-30' : ''}`}>
                             {t('common:confirm')}
@@ -279,7 +279,7 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, load
                 </div> */}
                 <div className="flex items-center justify-between pt-3">
                     <label className="text-nao-grey">{isLock ? t('nao:pool:lock_duration') : t('nao:pool:time_to_get_back')}</label>
-                    <span>{isLock ? `${data?.duration ?? 7} ${t('nao:pool:days')}` : formatTime(timeTogetBack, 'HH:mm:ss dd/MM/yyyy')} </span>
+                    <span>{t('nao:pool:instant_get_back')}}</span>
                 </div>
             </div>
             {/* <div className="flex items-center mt-6" onClick={onHandleChecked}>

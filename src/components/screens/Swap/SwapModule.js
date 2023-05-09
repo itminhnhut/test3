@@ -459,20 +459,17 @@ const SwapModule = ({ width, pair }) => {
         const data = state.toAssetList;
 
         for (let i = 0; i < data?.length; ++i) {
-            const { toAsset, filters } = data?.[i];
+            const { toAsset, available, filters } = data?.[i];
             const currentAssetConfig = find(assetConfig, { assetCode: toAsset });
-            const available = true;
 
             assetItems.push(
-                <AssetItem key={`to_asset_item___${i}`} isChoosed={state.toAsset === toAsset} onClick={() => onClickToAsset(toAsset)} isDisabled={!available}>
-                    <div className={`flex items-center  `}>
-                        <div className={`${!available && 'opacity-20'}`}>
-                            <div className="w-5 h-5">
-                                <AssetLogo assetCode={toAsset} size={20} />
-                            </div>
+                <AssetItem key={`to_asset_item___${i}`} isChoosed={state.toAsset === toAsset} onClick={() => onClickToAsset(toAsset)} isDisabled={false}>
+                    <div className="flex items-center">
+                        <div className="w-5 h-5">
+                            <AssetLogo assetCode={toAsset} size={20} />
                         </div>
-                        <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
-                            <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{toAsset}</span>
+                        <p>
+                            <span className={`mx-2 text-txtPrimary dark:text-txtPrimary-dark`}>{toAsset}</span>
                             <span className="text-xs leading-4 text-left">{currentAssetConfig?.assetName}</span>
                         </p>
                     </div>
@@ -782,10 +779,14 @@ const SwapModule = ({ width, pair }) => {
 
     useEffect(() => {
         let result = uniqBy(state.swapConfigs, 'fromAsset').filter((e) => e?.fromAsset?.toLowerCase()?.includes(state.search?.toLowerCase())) || [];
-        result = result.map((r) => ({
-            ...r,
-            available: wallets?.[r.fromAssetId]?.value - wallets?.[r?.fromAssetId]?.locked_value
-        }));
+        result = result.map((r) => {
+            const available = wallets?.[r.fromAssetId]?.value - wallets?.[r?.fromAssetId]?.locked_value;
+            return {
+                ...r,
+                available: isNaN(available) ? 0 : available
+            };
+        });
+
         result = orderBy(result, ['available', 'fromAsset'], ['desc', 'asc']);
         setState({ fromAssetList: result });
     }, [state.swapConfigs, state.search, wallets]);
@@ -793,10 +794,14 @@ const SwapModule = ({ width, pair }) => {
     useEffect(() => {
         if (!state.swapConfigs?.length) return;
         let result = state.swapConfigs.filter((e) => e?.toAsset?.toLowerCase()?.includes(state.search?.toLowerCase()) && e.fromAsset === state.fromAsset);
-        result = result.map((e) => ({
-            ...e,
-            available: wallets?.[e.toAssetId]?.value - wallets?.[e?.toAssetId]?.locked_value
-        }));
+        result = result.map((e) => {
+            const available = wallets?.[e.toAssetId]?.value - wallets?.[e?.toAssetId]?.locked_value;
+            return {
+                ...e,
+                available: isNaN(available) ? 0 : available
+            };
+        });
+
         result = orderBy(result, ['available', 'toAsset'], ['desc', 'asc']);
         setState({ toAssetList: result });
     }, [state.swapConfigs, state.search, state.fromAsset, wallets]);
