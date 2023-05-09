@@ -519,7 +519,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                 onChangeSpotState={onChangeSpotState}
             />
 
-            {width > 992 && <DailyLuckydraw visible={showDailyLucky} onClose={() => setShowDailyLucky(false)} />}
+            {/* {width > 992 && <DailyLuckydraw visible={showDailyLucky} onClose={() => setShowDailyLucky(false)} />} */}
 
             {isFromFrame && (
                 <div
