@@ -86,12 +86,8 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
 
     const claim = debounce(async () => {
         if (!can_receive.current || !isAuth) {
-            if (router.query?.web) {
+            if (router.query?.web || isDesktop) {
                 isAuth ? router.push('/') : window.open(getLoginUrl('sso'), '_self');
-                return;
-            }
-            if (isDesktop) {
-                isAuth ? onClose && onClose() : window.open(getLoginUrl('sso'), '_self');
                 return;
             }
             emitWebViewEvent(isAuth ? 'back' : 'login');
@@ -103,9 +99,18 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                 options: { method: 'POST' }
             });
             if (data) {
-                total_reward.current = data?.total_reward;
-                can_receive.current = false;
-                setShowClaim(true);
+                if (!router.query.web && !isDesktop) {
+                    const data = JSON.stringify({
+                        type: 'lucky_daily',
+                        ticket: { ticket: dataSource?.[active], total_reward: data?.total_reward, unit: 'VNDC' },
+                        bg: getS3Url(`/images/screen/futures/luckdraw/bg_claimed_mb.png`)
+                    });
+                    emitWebViewEvent(data);
+                } else {
+                    total_reward.current = data?.total_reward;
+                    can_receive.current = false;
+                    setShowClaim(true);
+                }
             }
         } catch (e) {
             console.log(e);
@@ -317,7 +322,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                         </div>
                     )}
                 </div>
-                <Button onClick={() => claim()}>
+                <Button onClick={claim}>
                     {isAuth ? t(`common:luckydraw:${can_receive.current ? 'claim_now' : 'back_to_trading'}`) : t('common:global_btn:login')}
                 </Button>
             </div>
@@ -424,13 +429,6 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
                 saveFile(file, `${item?.ticket_code}.png`);
                 return;
             }
-            const data = JSON.stringify({
-                type: 'lucky_daily',
-                event: item.event,
-                ticket: { ...ticket, total_reward, unit: 'VNDC' },
-                bg: getS3Url(`/images/screen/futures/luckdraw/bg_claimed${isMobile ? '_mb' : ''}.png`)
-            });
-            emitWebViewEvent(data);
         } catch (error) {
             console.log('error', error);
         } finally {
@@ -440,9 +438,9 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
 
     return (
         <Modal
-            className={classNames('sm:!max-w-[588px]', { '!bg-transparent': isMobile, '!border': !isMobile })}
+            className={classNames('sm:!max-w-[588px]', { '!bg-transparent': isMobile })}
             wrapClassName={isMobile ? '!p-0 !bg-transparent' : ''}
-            isMobile
+            isMobile={isMobile}
             isVisible={visible}
             onBackdropCb={onClose}
             containerClassName={isMobile ? '!bg-black-800/[0.8]' : ''}
@@ -451,9 +449,14 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
         >
             {!isMobile && <div className="text-2xl font-semibold mb-6">{t('common:luckydraw:reward_received')}</div>}
             <div ref={contentRef} className={classNames('relative overflow-hidden', { 'mx-6 min-h-[490px]': isMobile, 'h-[380px]': !isMobile })}>
-                <div className="absolute z-[1] overflow-hidden w-full h-full object-cover">
-                    <Image layout="fill" src={`/images/screen/futures/luckdraw/bg_claimed${isMobile ? '_mb' : ''}.png`} />
-                </div>
+                <img
+                    className="absolute z-[1] overflow-hidden w-full h-full object-cover"
+                    src={
+                        isMobile
+                            ? getS3Url(`/images/screen/futures/luckdraw/bg_claimed_mb.png`)
+                            : 'https://nami.exchange/images/screen/futures/luckdraw/bg_claimed.png'
+                    }
+                />
                 <div className={classNames('space-y-8 flex flex-col items-center relative z-10 h-full', { 'pt-[5.875rem]': isMobile })}>
                     <div className="flex flex-col items-center">
                         <div
