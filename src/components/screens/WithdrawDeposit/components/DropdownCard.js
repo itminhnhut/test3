@@ -21,12 +21,13 @@ const DropdownCard = ({
     onSelect,
     additionalActions,
     showDropdownIcon = true,
-    placeholder
+    placeholder,
+    mustBeShow = false
 }) => {
     const cardRef = useRef(null);
     const [isVisible, setVisible] = useState(false);
     useClickAway(cardRef, () => {
-        if (isVisible) {
+        if (isVisible && !mustBeShow) {
             setVisible(false);
             setSearch('');
         }
@@ -52,6 +53,7 @@ const DropdownCard = ({
                             content={selected.content}
                             emptyContent={selected.emptyContent}
                             imgSize={imgSize}
+                            showDropdownIcon={showDropdownIcon}
                             endIcon={
                                 loadingList ? (
                                     <Spinner size={20} color="currentColor" />
@@ -87,6 +89,7 @@ const DropdownCard = ({
                                             onSelect(item);
                                         }
                                         setVisible(false);
+
                                         setSearch('');
                                     }
                                 }}

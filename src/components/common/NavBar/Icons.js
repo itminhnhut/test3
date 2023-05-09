@@ -13,9 +13,10 @@ import {
     FutureAdvanceIcon as advance,
     BxsUserIcon as profile,
     BxsDonateHeart as profile_referral,
-    BxsGift as reward_center,
+    BxsGift as daily_reward,
     BxsLogoutCircle as logout,
-    PartnerIcon as partner
+    PartnerIcon as partner,
+    FutureInsurance as nami_insurance
 } from '../../svg/SvgIcon';
 
 export default {
@@ -32,8 +33,9 @@ export default {
     advance,
     profile,
     profile_referral,
-    reward_center,
+    daily_reward,
     logout,
     partner,
-    payment_method
+    payment_method,
+    nami_insurance
 };

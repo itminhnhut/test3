@@ -272,7 +272,7 @@ const MarketTable = ({
             }
         };
 
-        let pairColumnsWidth = 228;
+        let pairColumnsWidth = 248;
         let starColumnWidth = 64;
 
         if (!data?.length) pairColumnsWidth = 128;

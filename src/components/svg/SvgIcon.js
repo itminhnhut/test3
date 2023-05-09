@@ -1,5 +1,19 @@
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
+const FutureInsurance = ({ size }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <path d="M12.231 2.4 5.6 6.261V9.27l6.631-3.956 6.625 3.956V6.261l-6.625-3.86z" fill={'#EB2B3D'} />
+        <path
+            d="M18.884 10.322v2.534a8.718 8.718 0 0 1-3.928 7.214c-.678.48-2.71 1.53-2.71 1.53l-2.648-1.483c.928-.325 1.815-.76 2.641-1.294l.258-.162a8.568 8.568 0 0 0 3.712-7.072V9.02l2.675 1.301z"
+            fill={'#EB2B3D'}
+        />
+        <path
+            d="M11.73 18.457c-.823.53-1.702.966-2.622 1.301l-.528-.42a8.576 8.576 0 0 1-2.98-6.503v-2.242l2.71-1.572v2.561a8.582 8.582 0 0 0 3.42 6.875z"
+            fill={'#EB2B3D'}
+        />
+    </svg>
+);
+
 const ArrowDownIcon = ({ className = '', color = '#8694B3' }) => (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#clip0_295_61062)">
@@ -348,29 +362,55 @@ const FutureAdvanceIcon = ({ size, ...props }) => (
     </svg>
 );
 
-const SuccessfulTransactionIcon = ({ size = 36, ...props }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
-        <path
-            d="M11.9501 14.6654V12.7252C10.8714 12.6763 9.87446 12.2198 9.13901 11.4209C7.60272 9.72523 7.60272 7.14916 9.13901 5.46983C9.85812 4.67092 10.8714 4.2144 11.9501 4.16549V1.83398H1.80078V22.1001H3.81103C4.07252 20.0621 5.0368 18.1871 6.55674 16.785C8.02765 15.4317 9.95618 14.6817 11.9501 14.6654Z"
-            fill="url(#paint0_linear_395_205101)"
-        />
-        <path d="M20.5132 22.1334C19.9412 17.8616 16.2803 14.666 11.9656 14.666V22.1007H3.41797V22.1334H20.5132Z" fill="#E2E8F0" />
-        <path d="M11.95 14.666C7.63531 14.6823 3.97437 17.8616 3.40234 22.1334H11.9663L11.95 14.666Z" fill="#0C0E14" />
-        <path d="M16.2312 8.43772C16.2312 6.07361 14.319 4.16602 11.9492 4.16602V12.7257C14.319 12.7094 16.2312 10.8018 16.2312 8.43772Z" fill="#E2E8F0" />
-        <path d="M7.66797 8.43772C7.66797 10.8018 9.58016 12.7094 11.95 12.7257V4.16602C9.58016 4.16602 7.66797 6.07361 7.66797 8.43772Z" fill="#0C0E14" />
-        <path d="M22.1965 22.1817H17.6367V20.16H20.17V17.6328H22.1965V22.1817Z" fill="#47ED95" />
-        <path d="M6.36062 22.1817H1.80078V17.6328H3.82738V20.16H6.36062V22.1817Z" fill="#47ED95" />
-        <path d="M3.82738 6.38355H1.80078V1.81836H6.36062V3.84008H3.82738V6.38355Z" fill="#47ED95" />
-        <path d="M22.1965 6.38355H20.17V3.84008H17.6367V1.81836H22.1965V6.38355Z" fill="#47ED95" />
-        <defs>
-            <linearGradient id="paint0_linear_395_205101" x1="4.64917" y1="8.69963" x2="25.1992" y2="13.4996" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#BDFEE7" />
-                <stop offset="0.891338" stopColor="#60F1A6" stopOpacity="0.93" />
-                <stop offset="1" stopColor="#47ED95" />
-            </linearGradient>
-        </defs>
-    </svg>
-);
+const SuccessfulTransactionIcon = ({ size = 36, ...props }) => {
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
+    return isDark ? (
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
+            <path
+                d="M11.9501 14.6654V12.7252C10.8714 12.6763 9.87446 12.2198 9.13901 11.4209C7.60272 9.72523 7.60272 7.14916 9.13901 5.46983C9.85812 4.67092 10.8714 4.2144 11.9501 4.16549V1.83398H1.80078V22.1001H3.81103C4.07252 20.0621 5.0368 18.1871 6.55674 16.785C8.02765 15.4317 9.95618 14.6817 11.9501 14.6654Z"
+                fill="url(#paint0_linear_395_205101)"
+            />
+            <path d="M20.5132 22.1334C19.9412 17.8616 16.2803 14.666 11.9656 14.666V22.1007H3.41797V22.1334H20.5132Z" fill="#E2E8F0" />
+            <path d="M11.95 14.666C7.63531 14.6823 3.97437 17.8616 3.40234 22.1334H11.9663L11.95 14.666Z" fill="#0C0E14" />
+            <path d="M16.2312 8.43772C16.2312 6.07361 14.319 4.16602 11.9492 4.16602V12.7257C14.319 12.7094 16.2312 10.8018 16.2312 8.43772Z" fill="#E2E8F0" />
+            <path d="M7.66797 8.43772C7.66797 10.8018 9.58016 12.7094 11.95 12.7257V4.16602C9.58016 4.16602 7.66797 6.07361 7.66797 8.43772Z" fill="#0C0E14" />
+            <path d="M22.1965 22.1817H17.6367V20.16H20.17V17.6328H22.1965V22.1817Z" fill="#47ED95" />
+            <path d="M6.36062 22.1817H1.80078V17.6328H3.82738V20.16H6.36062V22.1817Z" fill="#47ED95" />
+            <path d="M3.82738 6.38355H1.80078V1.81836H6.36062V3.84008H3.82738V6.38355Z" fill="#47ED95" />
+            <path d="M22.1965 6.38355H20.17V3.84008H17.6367V1.81836H22.1965V6.38355Z" fill="#47ED95" />
+            <defs>
+                <linearGradient id="paint0_linear_395_205101" x1="4.64917" y1="8.69963" x2="25.1992" y2="13.4996" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#BDFEE7" />
+                    <stop offset="0.891338" stopColor="#60F1A6" stopOpacity="0.93" />
+                    <stop offset="1" stopColor="#47ED95" />
+                </linearGradient>
+            </defs>
+        </svg>
+    ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
+            <path
+                d="M11.95 14.665v-1.94a4.036 4.036 0 0 1-2.811-1.304 4.418 4.418 0 0 1 0-5.951 4.005 4.005 0 0 1 2.811-1.305V1.834H1.8V22.1h2.011a8.726 8.726 0 0 1 2.746-5.315 8.066 8.066 0 0 1 5.393-2.12z"
+                fill="url(#6xmltrwi7a)"
+            />
+            <path
+                d="M20.513 22.133c-.572-4.271-4.233-7.467-8.547-7.467v7.435H3.418v.032h17.095zM16.231 8.438a4.27 4.27 0 0 0-4.282-4.272v8.56c2.37-.017 4.282-1.924 4.282-4.288z"
+                fill="#7EE6AE"
+            />
+            <path
+                d="M22.197 22.182h-4.56V20.16h2.533v-2.527h2.026v4.549zM6.36 22.182H1.8v-4.55h2.027v2.528h2.534v2.022zM3.827 6.384H1.801V1.818h4.56V3.84H3.827v2.544zM22.197 6.384H20.17V3.84h-2.533V1.818h4.56v4.566z"
+                fill="#30BF73"
+            />
+            <defs>
+                <linearGradient id="6xmltrwi7a" x1="4.649" y1="8.7" x2="25.199" y2="13.5" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#BDFEE7" />
+                    <stop offset=".891" stop-color="#60F1A6" stop-opacity=".93" />
+                    <stop offset="1" stop-color="#47ED95" />
+                </linearGradient>
+            </defs>
+        </svg>
+    );
+};
 
 const AddCircleIcon = ({ color = '#768394', ...props }) => (
     <svg {...props} width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -708,6 +748,22 @@ const SettingIcon = ({ size = 24, color = '#8694B3', ...props }) => (
     </svg>
 );
 
+const NavbarSettingIcon = ({ size, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <g clip-path="url(#pwkbsvwbka)">
+            <path
+                d="m19.44 12.99-.01.02c.04-.33.08-.67.08-1.01 0-.34-.03-.66-.07-.99l.01.02 2.44-1.92-2.43-4.22-2.87 1.16.01.01c-.52-.4-1.09-.74-1.71-1h.01L14.44 2H9.57l-.44 3.07h.01c-.62.26-1.19.6-1.71 1l.01-.01-2.88-1.17-2.44 4.22 2.44 1.92.01-.02c-.04.33-.07.65-.07.99 0 .34.03.68.08 1.01l-.01-.02-2.1 1.65-.33.26 2.43 4.2 2.88-1.15-.02-.04c.53.41 1.1.75 1.73 1.01h-.03L9.58 22h4.85s.03-.18.06-.42l.38-2.65h-.01c.62-.26 1.2-.6 1.73-1.01l-.02.04 2.88 1.15 2.43-4.2s-.14-.12-.33-.26l-2.11-1.66zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="pwkbsvwbka">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 const ArrowCompareIcon = ({ color, size = 24, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} {...props} viewBox="0 0 32 32" fill="none">
         <g clip-path="url(#kvn1hu363a)">
@@ -807,8 +863,8 @@ const BxsErrorAltIcon = ({ size = 16, color = '#F93636' }) => (
     </svg>
 );
 
-const ArrowForwardIcon = ({ size = 24, color = '"#fff"' }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+const ArrowForwardIcon = ({ size = 24, color = '#fff', className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none" className={className}>
         <path d="m8 2.667-.94.94 3.72 3.726H2.665v1.333h8.113l-3.72 3.727.94.94L13.333 8 7.999 2.667z" fill={color} />
     </svg>
 );
@@ -880,7 +936,108 @@ const BxsTimeIcon = ({ size = 24, color = 'currentColor' }) => (
     </svg>
 );
 
+const TimerIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <path
+            d="M10 .664H6v1.333h4V.664zM7.333 9.331h1.334v-4H7.333v4zm5.354-4.407.946-.947c-.286-.34-.6-.66-.94-.94l-.946.947A5.975 5.975 0 0 0 8 2.664a6 6 0 1 0 6 6 5.975 5.975 0 0 0-1.313-3.74zM8 13.331a4.663 4.663 0 0 1-4.667-4.667A4.663 4.663 0 0 1 8 3.997a4.663 4.663 0 0 1 4.667 4.667A4.663 4.663 0 0 1 8 13.331z"
+            fill={color}
+        />
+    </svg>
+);
+
+const StarPurpleIcon = ({ size, color = '#FFC632', ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none" {...props}>
+        <path d="m8 11.516 4.12 2.487-1.094-4.687 3.64-3.153-4.793-.407L8 1.336l-1.874 4.42-4.793.407 3.64 3.153-1.093 4.687L8 11.516z" fill={color} />
+    </svg>
+);
+
+const MoneyIcon = ({ size, color = 'currentColor', ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <g clip-path="url(#qeqr7ytgha)">
+            <path
+                d="M7.999 1.332a6.67 6.67 0 0 0-6.667 6.667 6.67 6.67 0 0 0 6.667 6.666A6.67 6.67 0 0 0 14.665 8 6.67 6.67 0 0 0 8 1.332zm.94 10.727v1.273h-1.78v-1.287c-1.14-.24-2.107-.973-2.18-2.266h1.306c.067.7.547 1.246 1.767 1.246 1.307 0 1.6-.653 1.6-1.06 0-.553-.293-1.073-1.78-1.426-1.653-.4-2.787-1.08-2.787-2.447 0-1.147.927-1.893 2.074-2.14V2.665h1.78v1.3c1.24.3 1.86 1.24 1.9 2.26H9.532c-.033-.74-.427-1.246-1.48-1.246-1 0-1.6.453-1.6 1.093 0 .56.433.927 1.78 1.273 1.347.347 2.787.927 2.787 2.607-.007 1.22-.92 1.887-2.08 2.107z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="qeqr7ytgha">
+                <path fill="#fff" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const BxsImage = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <path
+            d="M13.332 2.664H2.665c-.735 0-1.333.598-1.333 1.333v8c0 .736.598 1.334 1.333 1.334h10.667c.735 0 1.333-.598 1.333-1.334v-8c0-.735-.598-1.333-1.333-1.333zm-9 2a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3.667 6.667H3.332l2.667-3.334 1 1.334 2-2.667 3.666 4.667H8z"
+            fill={color}
+        />
+    </svg>
+);
+
+const SaveAlt = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 17 16" fill="none">
+        <path
+            d="M13.167 8v4.667H3.833V8H2.5v4.667C2.5 13.4 3.1 14 3.833 14h9.334c.733 0 1.333-.6 1.333-1.333V8h-1.333zm-4 .447 1.726-1.72.94.94L8.5 11 5.167 7.667l.94-.94 1.726 1.72V2h1.334v6.447z"
+            fill={color}
+        />
+    </svg>
+);
+
+const VietnamFlagIcon = ({ size = 24 }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <g clip-path="url(#vietnamFlag)">
+            <path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12z" fill="#D80027" />
+            <path d="m12 6.26 1.295 3.987h4.191l-3.39 2.463 1.294 3.986L12 14.232l-3.39 2.464 1.295-3.986-3.39-2.463h4.19L12 6.26z" fill="#FFDA44" />
+        </g>
+        <defs>
+            <clipPath id="vietnamFlag">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const USAFlagIcon = ({ size = 24 }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <g clip-path="url(#usaFlag)">
+            <path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12z" fill="#F0F0F0" />
+            <path
+                d="M11.479 12H24a12.01 12.01 0 0 0-.413-3.13H11.479V12zM11.479 5.74h10.76a12.064 12.064 0 0 0-2.769-3.131h-7.991v3.13zM12 24c2.824 0 5.42-.976 7.47-2.609H4.53A11.948 11.948 0 0 0 12 24zM1.761 18.26H22.24a11.93 11.93 0 0 0 1.348-3.13H.414c.3 1.117.758 2.168 1.347 3.13z"
+                fill="#D80027"
+            />
+            <path
+                d="M5.559 1.874h1.093l-1.017.739.389 1.196-1.018-.74-1.017.74.336-1.033c-.896.746-1.68 1.62-2.328 2.594h.35l-.647.47c-.1.168-.197.34-.29.513l.31.951-.578-.419C1 7.19.868 7.5.75 7.817l.34 1.048h1.258l-1.017.74.388 1.195-1.017-.739-.61.443C.033 10.994 0 11.494 0 12h12V0C9.63 0 7.42.688 5.559 1.874zm.465 8.926-1.018-.739-1.017.739.389-1.196-1.017-.739h1.257l.388-1.195.389 1.195h1.257l-1.017.74.389 1.195zm-.389-4.691.389 1.195-1.018-.739-1.017.74.389-1.196-1.017-.74h1.257l.388-1.195.389 1.196h1.257l-1.017.739zm4.693 4.691-1.017-.739-1.017.739.388-1.196-1.017-.739h1.257l.389-1.195.388 1.195h1.258l-1.018.74.389 1.195zm-.389-4.691.389 1.195-1.017-.739-1.017.74.388-1.196-1.017-.74h1.257l.389-1.195.388 1.196h1.258l-1.018.739zm0-3.496.389 1.196-1.017-.74-1.017.74.388-1.196-1.017-.739h1.257L9.311.678l.388 1.196h1.258l-1.018.739z"
+                fill="#0052B4"
+            />
+        </g>
+        <defs>
+            <clipPath id="usaFlag">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+const NotInterestedIcon = ({size}) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E';
+
+    return (
+    <svg width={size || 80} height={size || 80} viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#k3bfy9rdta)">
+            <path d="M40 73.333C58.4 73.333 73.333 58.4 73.333 40S58.4 6.666 40 6.666 6.667 21.6 6.667 40C6.667 58.4 21.6 73.333 40 73.333zm0-60c14.733 0 26.667 11.934 26.667 26.667 0 6.166-2.1 11.833-5.634 16.333L23.667 18.967A26.341 26.341 0 0 1 40 13.333zM18.967 23.666l37.366 37.367A26.341 26.341 0 0 1 40 66.666c-14.733 0-26.667-11.933-26.667-26.666 0-6.167 2.1-11.834 5.634-16.334z" fill={defaultColor}/>
+        </g>
+        <defs>
+            <clipPath id="k3bfy9rdta">
+                <path fill="#fff" d="M0 0h80v80H0z"/>
+            </clipPath>
+        </defs>
+    </svg>
+)}
+
 export {
+    FutureInsurance,
     ArrowDownIcon,
     TrendIcon,
     SeeIcon,
@@ -926,6 +1083,7 @@ export {
     ShareIcon,
     FireIcon,
     SettingIcon,
+    NavbarSettingIcon,
     ArrowCompareIcon,
     BxsUserCircle,
     TimeLapseIcon,
@@ -940,5 +1098,13 @@ export {
     ContactIcon,
     PartnerIcon,
     OrderIcon,
-    BxsTimeIcon
+    BxsTimeIcon,
+    StarPurpleIcon,
+    TimerIcon,
+    MoneyIcon,
+    BxsImage,
+    SaveAlt,
+    USAFlagIcon,
+    VietnamFlagIcon,
+    NotInterestedIcon
 };

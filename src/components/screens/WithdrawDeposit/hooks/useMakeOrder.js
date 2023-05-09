@@ -1,18 +1,24 @@
 import { PATHS } from 'constants/paths';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApiResultCreateOrder, ApiStatus } from 'redux/actions/const';
-import { createNewOrder } from 'redux/actions/withdrawDeposit';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { getAssetCode } from 'redux/actions/utils';
+import { createNewOrder, setPartnerModal } from 'redux/actions/withdrawDeposit';
+import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
 import toast from 'utils/toast';
+import { ORDER_TYPES } from '../constants';
 
 const useMakeOrder = ({ setState, input }) => {
     const { partnerBank, accountBank, partner } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
     const { t } = useTranslation();
+    const dispatch = useDispatch();
 
     const { side, assetId } = router.query;
+    const assetCode = getAssetCode(+assetId);
+
+    const setModalState = (key, state) => dispatch(setPartnerModal({ key, state }));
 
     const onMakeOrderSuccess = (order) => {
         router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + order.displayingId);
@@ -47,17 +53,25 @@ const useMakeOrder = ({ setState, input }) => {
                         toast({ text: t('dw_partner:error.not_found_partner'), type: 'warning' });
                     } else if (orderResponse?.status === ApiResultCreateOrder.NOT_ENOUGH_MONEY) {
                         toast({ text: t('dw_partner:error.not_enough_money'), type: 'warning' });
+                    } else if (orderResponse?.status === ApiResultCreateOrder.INVALID_AMOUNT) {
+                        toast({ text: t('dw_partner:error.reach_limit_withdraw', { asset: assetCode }), type: 'warning' });
+                    } else if (orderResponse?.status === ApiResultCreateOrder.EXCEEDING_PERMITTED_LIMIT) {
+                        setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                            visible: true,
+                            type: ORDER_TYPES.ERROR_EXCEEDING_LIMIT
+                        });
                     } else toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }
             }
             setState({ loadingConfirm: false });
+            sell;
         } catch (error) {
             console.log('error:', error);
             setState({ loadingConfirm: false });
         }
     };
 
-    return { onMakeOrderSuccess, onMakeOrderHandler };
+    return { onMakeOrderSuccess, onMakeOrderHandler, setModalState };
 };
 
 export default useMakeOrder;

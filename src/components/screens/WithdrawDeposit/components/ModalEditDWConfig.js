@@ -4,17 +4,24 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import TradingInputV2 from 'components/trade/TradingInputV2';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useMemo, useState } from 'react';
-import { DEFAULT_PARTNER_MAX, DEFAULT_PARTNER_MIN } from 'redux/actions/const';
 import { formatBalanceFiat, formatNumber } from 'redux/actions/utils';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from '../constants';
 
-const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfirm }) => {
+const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose, side, onConfirm }) => {
     const [amount, setAmount] = useState({
         min: '',
         max: ''
     });
-    const { t } = useTranslation();
-    const orderConfig = useMemo(() => partner?.orderConfig?.[side?.toLowerCase() || SIDE.BUY], [partner?.orderConfig, side]);
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+
+    const orderConfig = useMemo(
+        () => partner?.orderConfig?.[(side?.toLowerCase() || SIDE.BUY) + (assetId === ALLOWED_ASSET_ID['VNDC'] ? '' : 'Usdt')],
+        [partner?.orderConfig, side, assetId]
+    );
 
     useEffect(() => {
         if (orderConfig && side) {
@@ -41,14 +48,14 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                 if (+amount.min < orderConfig?.partnerMin) {
                     isValid = false;
                     msg = t('dw_partner:error.min_amount', {
-                        amount: formatBalanceFiat(orderConfig?.partnerMin, 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMin, 'VNDC'),
                         asset: 'VND'
                     });
                 }
                 if (+amount.min > orderConfig?.partnerMax) {
                     isValid = false;
                     msg = t('dw_partner:error.max_amount', {
-                        amount: formatBalanceFiat(orderConfig?.partnerMax, 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMax, 'VNDC'),
                         asset: 'VND'
                     });
                 }
@@ -73,7 +80,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                 if (+amount.max > orderConfig?.partnerMax) {
                     isValid = false;
                     msg = t('dw_partner:error.max_amount', {
-                        amount: formatBalanceFiat(orderConfig?.partnerMax, 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMax, 'VNDC'),
                         asset: 'VND'
                     });
                 }
@@ -81,7 +88,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                 if (+amount.max < orderConfig?.partnerMin) {
                     isValid = false;
                     msg = t('dw_partner:error.min_amount', {
-                        amount: formatBalanceFiat(orderConfig?.partnerMin, 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMin, 'VNDC'),
                         asset: 'VND'
                     });
                 }
@@ -93,17 +100,18 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
     );
 
     const onConfirmHandler = async () => {
-        +amount.min === partner?.orderConfig?.[side?.toLowerCase()]?.min && +amount.max === partner?.orderConfig?.[side?.toLowerCase()]?.max
+        +amount.min === orderConfig?.min && +amount.max === orderConfig?.max
             ? onClose()
-            : await onConfirm({ side: side?.toLowerCase(), min: +amount.min, max: +amount.max });
+            : await onConfirm({ side: side?.toLowerCase(), min: +amount.min, max: +amount.max, assetId });
     };
 
     return (
         <ModalV2
+            isMobile
             isVisible={isVisible}
             wrapClassName=""
             onBackdropCb={loading ? undefined : () => onClose()}
-            className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`)}
+            className={classNames(` md:!max-w-[588px] overflow-y-auto select-none border-divider`)}
         >
             <form
                 onSubmit={(e) => {
@@ -111,13 +119,27 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                     onConfirmHandler();
                 }}
             >
-                <div className="text-2xl font-semibold mb-6">{side && t(`dw_partner:${side?.toLowerCase()}_order_limit`)}</div>
+                <div className="text-2xl font-semibold mb-6">
+                    {side &&
+                        side === SIDE.BUY &&
+                        (language === 'en' ? `Buy ${ALLOWED_ASSET[+assetId]} Order Limit` : `Giới hạn lệnh Mua ${ALLOWED_ASSET[+assetId]}`)}
+                    {side && side === SIDE.SELL && t(`dw_partner:sell_order_limit`, { assetCode: ALLOWED_ASSET[+assetId] })}
+                </div>
                 <div className="space-y-4">
                     {['min', 'max'].map((key) => (
                         <div key={key}>
-                            <label htmlFor={key} className="txtSecond-3 mb-2">
-                                {t(`common:${key}`)}
+                            <label htmlFor={key} className="flex items-center  mb-2 justify-between">
+                                <div className="txtSecond-3 ">{t(`common:${key}`)}</div>
+                                <div className="flex  items-center space-x-1">
+                                    <span className="txtSecond-3">{ALLOWED_ASSET[+assetId]}:</span>
+
+                                    <span className="font-semibold text-sm max-w-[200px] truncate">
+                                        {side && assetId && formatBalanceFiat(amount[key] / rate?.[side]?.[assetId], ALLOWED_ASSET[+assetId])}{' '}
+                                        {ALLOWED_ASSET[+assetId]}
+                                    </span>
+                                </div>
                             </label>
+
                             <TradingInputV2
                                 id={key}
                                 value={amount[key]}
@@ -131,7 +153,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                                 decimalScale={0}
                                 allowedDecimalSeparators={[',', '.']}
                                 clearAble
-                                placeHolder={`${t(`common:${key}`)} ${formatNumber(key === 'min' ? orderConfig?.partnerMin : orderConfig?.partnerMax, 0)} `}
+                                placeholder={`${t(`common:${key}`)} ${formatNumber(key === 'min' ? orderConfig?.partnerMin : orderConfig?.partnerMax, 0)} `}
                                 errorEmpty
                                 renderTail={<div className="text-txtSecondary dark:text-txtSecondary-dark">VND</div>}
                             />

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import FilterButton from '../components/FilterButton';
-import { formatBalance, formatNumber, formatTime, getAssetCode, getAssetFromId } from 'redux/actions/utils';
+import { formatBalance, formatNumber, formatTime, getAssetCode, getAssetFromId, formatNanNumber } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { ApiStatus, PartnerOrderStatus, UserSocketEvent } from 'redux/actions/const';
-import { isNull } from 'lodash';
+import { find, isNull } from 'lodash';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
 import TagV2 from 'components/common/V2/TagV2';
@@ -17,14 +17,16 @@ import { formatLocalTimezoneToUTC } from 'utils/helpers';
 import axios from 'axios';
 import { useBoolean } from 'react-use';
 import { useSelector } from 'react-redux';
+import Skeletor from 'components/common/Skeletor';
 
-const getColumns = ({ t }) => [
+const getColumns = ({ t, configs }) => [
     {
         key: 'side',
         dataIndex: 'side',
         title: t('common:type'),
         align: 'center',
         width: 107,
+        fixed: 'left',
         render: (row) => (
             <div className="flex justify-center">
                 <TagV2 type={row === SIDE.BUY ? 'success' : 'failed'} icon={false}>
@@ -36,9 +38,9 @@ const getColumns = ({ t }) => [
     {
         key: 'displayingId',
         dataIndex: 'displayingId',
-        title: t('common:transaction_id'),
+        title: t('dw_partner:order_id'),
         align: 'left',
-        width: 124,
+        width: 135,
         render: (row) => <TextCopyable text={row} />
     },
     {
@@ -47,11 +49,17 @@ const getColumns = ({ t }) => [
         title: t('common:asset'),
         align: 'left',
         width: 148,
-        render: (row) => {
-            const assetCode = getAssetCode(+row);
-            return (
+        render: (v) => {
+            const assetConfig = find(configs, { id: +v });
+            return assetConfig ? (
                 <div className="flex gap-2 items-center">
-                    <AssetLogo assetCode={assetCode} size={32} useNextImg /> <div>{assetCode}</div>
+                    <AssetLogo assetCode={assetConfig?.assetCode} size={32} useNextImg />
+                    <div>{assetConfig?.assetName || 'Unknown'}</div>
+                </div>
+            ) : (
+                <div className="flex gap-2 items-center">
+                    <Skeletor width={32} />
+                    <Skeletor width={50} />
                 </div>
             );
         }
@@ -82,14 +90,12 @@ const getColumns = ({ t }) => [
         title: t('dw_partner:commission'),
         align: 'right',
         width: 152,
-        render: (row, item) => {
-            const currency = getAssetFromId(item?.commissionCurrency);
-            const isNullCommission = !row || !currency || row < Math.pow(1, currency?.assetDigit * -1);
-            return (
-                <div className={`${isNullCommission ? 'text-txtSecondary dark:text-txtSecondary-dark' : 'text-teal'} `}>
-                    {isNullCommission ? '-' : formatNumber(row, currency?.assetDigit) + ' ' + currency?.assetCode}
-                </div>
-            );
+        render: (v, item) => {
+            const assetConfig = find(configs, { id: +item?.commissionCurrency });
+            v = formatNumber(v, assetConfig?.assetDigit);
+
+            const isNullCommission = !v || v === '0' || !assetConfig;
+            return <div className={`${!isNullCommission && 'text-teal'} `}>{isNullCommission ? '-' : `+${v} ${assetConfig?.assetCode}`}</div>;
         }
     },
     {
@@ -150,6 +156,7 @@ const HistoryOrders = () => {
     } = useTranslation();
     const router = useRouter();
 
+    const configs = useSelector((state) => state.utils?.assetConfig);
     // const userSocket = useSelector((state) => state.socket.userSocket);
 
     const [state, set] = useState({
@@ -219,7 +226,8 @@ const HistoryOrders = () => {
                     params: {
                         ...state.params,
                         from: startDate,
-                        to: endDate
+                        to: endDate,
+                        partnerAcceptStatus: 1 // partner accepted only
                     },
                     cancelToken: source.token
                 });
@@ -278,7 +286,7 @@ const HistoryOrders = () => {
     return (
         <div className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg ">
             <div className="mx-6 my-8">
-                <div className="text-2xl font-semibold mb-8 ">{t('dw_partner:order_history')}</div>
+                <div className="text-2xl font-semibold mb-8">{t('dw_partner:transaction_history')}</div>
                 <FilterButton
                     language={language}
                     t={t}
@@ -295,7 +303,7 @@ const HistoryOrders = () => {
                 skip={0}
                 useRowHover
                 data={state.data}
-                columns={getColumns({ t })}
+                columns={getColumns({ t, configs })}
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 loading={state.loading}
@@ -319,7 +327,7 @@ const HistoryOrders = () => {
                         }),
                     language
                 }}
-                emptyTextContent={t('common:no_data')}
+                emptyTextContent={t('dw_partner:no_order_history')}
                 customSort={customSort}
             />
         </div>

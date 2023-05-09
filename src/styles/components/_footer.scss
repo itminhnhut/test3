@@ -37,13 +37,16 @@ padding-block:48px;
 
       .mal-footer___pocket__links___group {
 
-        margin-top: 32px;
-
-
         .mal-footer___pocket__links___group__item {
-          margin-bottom: 16px;
+         @apply mt-2;
+          &:first-child {
+            @apply mt-0;
+          }
 
-
+          @media screen and (min-width:1200px) {
+            @apply mt-0;
+          }
+          
           canvas {
             border-radius:6px;
             box-shadow:0 23.2px 32.5px 0 rgba(0, 0, 0, 0.03), 0 0 4.6px 0 rgba(0, 0, 0, 0.05);
@@ -63,46 +66,29 @@ padding-block:48px;
                 @apply bg-transparent ;
               }
             }
-
             ~ .socials_link  {
-            @apply px-4;
-            
-          }
-
+            @apply px-4;  
+             }
             font-weight: 600;
             font-size: 14px;
             line-height: 24px;
             cursor: pointer;
-            white-space: nowrap;
-
-           
+            white-space: nowrap;        
           }
 
-          .mal-footer___pocket__links___group__item__links {
-            // @apply flex flex-row flex-wrap;
-
-            // margin-top: 8px;
+          .mal-footer___pocket__links___group__item__links {  
             max-height: 0;
             overflow: hidden;
             transition: max-height .3s ease;
-
-
-
             a {
-              @apply text-sm  py-3 block;
-                  padding-left:48px;
-
+              @apply text-sm mt-2 py-3 block;
               
-              @media screen and (min-width:1200px) {
-                @apply  py-0 pl-0;
-
-                }
-
-              margin-top:8px;
+              padding-left:48px;      
               font-weight: 500;
-              font-size: 12px;
               line-height: 20px;
-
+              @media screen and (min-width:1200px) {
+                @apply p-0 text-sm;
+              }
               &:hover {
                 @apply text-dominant;
               }
@@ -110,10 +96,7 @@ padding-block:48px;
           }
 
           .mal-footer___pocket__links___group__item__links__active {
-            // @apply text-txtPrimary-dark ;
             max-height: 40em;
-
-
           }
         }
       }
@@ -167,7 +150,13 @@ padding-block:48px;
             @apply text-txtSecondary dark:text-txtSecondary-dark;
             max-height: 40em !important;
             a {
-              @apply mt-0 mb-3;
+              @apply mt-2;
+              &:first-child {
+                margin-top: 0px !important;
+              }
+              @media screen and (min-width:1200px) {
+                @apply mt-3;
+              }
               display:block;
               font-size: 14px;
             

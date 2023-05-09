@@ -33,11 +33,13 @@
             "api_mng": "API Management",
             "logout": "Log Out",
             "partner": "Partner",
-            "payment_method": "Payment Method"
+            "payment_method": "Payment Method",
+            "daily_reward": "Daily Trading Reward"
         }
     },
     "submenu": {
         "convert": "Nami Swap",
+        "nami_insurance":"Nami Insurance",
         "convert_description": "Trade cryptocurrencies in one click",
         "spot": "Spot Trading",
         "spot_description": "Trading quickly with {{pairsLength}} tokens listed with high liquidity",
@@ -56,7 +58,8 @@
         "staking_description": "Staking NAMI to receive bonus interest up to 50%/year",
         "farming": "Farming",
         "farming_description": "Farming NAMI and get many potential tokens",
-        "referral": "Referral Report",
+        "referral": "Referral",
+        "profile_referral": "Referral",
         "referral_description": "Receive up to 20% commission from friends' trades",
         "transfer": "Transfer",
         "transfer_description": "",
@@ -75,7 +78,11 @@
         "task_center": "Task Center",
         "api_mng": "API Management",
         "logout": "Log Out",
-        "user": "User Control"
+        "user": "User Control",
+        "profile": "Personal Information",
+        "partner": "Partner",
+        "payment_method": "Payment Method",
+        "daily_reward": "Daily Trading Reward"
     },
     "menu_grid": {
         "deposit": "Deposit",
@@ -121,6 +128,6 @@
     "get_discount": "to get discount",
     "trade_on": "Download on the",
     "scan_qr": "Scan the QR code to download Nami Exchange",
-    "down_with_qr": "Down Nami Exchange",
+    "down_with_qr": "Download Nami Exchange",
     "footer_title": "Secure Spot and Futures Exchange"
 }

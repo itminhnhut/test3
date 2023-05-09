@@ -165,8 +165,9 @@
     "resend": "Resend",
     "close": "Close",
     "error_code": "Code",
+    "error": "Error",
     "scan": "Scan",
-    "important_notes": "Important notes",
+    "important_note": "Important note",
     "common_status": {
         "finished": "Finished",
         "cancelled": "Cancelled"
@@ -394,8 +395,42 @@
     "denined": "Denied",
     "processing": "Processing",
     "deny": "Deny",
+    "accept": "Accept",
+    "reject": "Reject",
+    "proof": "Proof",
     "download_view": {
         "title": "Download the application now",
         "desc": "Over 600 trading pairs with leverage up to x125"
+    },
+    "luckydraw": {
+        "not_ticket_title": "You don't have any lucky ticket",
+        "ticket_title": "You've {{value}} lucky tickets",
+        "ticket_des": "Reach {{vndc}} VNDC daily volume to have a chance of winning {{nao}} NAO from NAO Futures",
+        "received_tickets": "You have used up all your lucky tickets today, wish you a successful trading day.",
+        "trade": "Trade now",
+        "open_now": "Open",
+        "pull_ticket": "Pull the ticket out to see the gift",
+        "goodluck": "Wish you better luck next time!",
+        "congrat_first": "Congratulation! You have received",
+        "get_now": "Get it now",
+        "continue": "Continue",
+        "conditions": "Bonus conditions",
+        "vol_trade": "Trade volume today",
+        "the_promotion_end_title": "The promotion has ended",
+        "the_promotion_end_description": "The Daily Trading Rewards Lucky Draw promotion has ended, please come back later.",
+        "reward_title": "Daily Trading Reward",
+        "reward_desc": "Trading everyday to claim your rewards for each milestone of trading volume",
+        "today_trading": "Today's trading volume:",
+        "claim_now": "Claim Now",
+        "claim_success": "Congratulations, you have received",
+        "volume_tooltip": "Daily volume includes both VNDC and USDT Futures and will automatically reset at 00:00 everyday (UTC+7)",
+        "start": "Start",
+        "back_to_trading": "Back to trading",
+        "reward_desc_trading": "Trading volume is not enough to claim next reward, please trade an additional volume of {{vol}} for {{value}} bonus.",
+        "reward_desc_trading_over": "Congratulations on getting all your bonus milestones today. Wishing you efficient and successful trading!",
+        "updated_vol": "Updated every 20 minutes",
+        "last_updated_time": "Last Updated",
+        "take_reward": "Take Reward",
+        "login_trade": "Log in and start trading Futures now to receive attractive daily rewards from Nami Exchange"
     }
 }
