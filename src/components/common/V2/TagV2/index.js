@@ -32,7 +32,7 @@ const typeStyles = {
     }
 };
 
-function TagV2({ type = TYPES.DEFAULT, children, className = '', icon = true }) {
+function TagV2({ type = TYPES.DEFAULT, children, className = '', icon = true, labelClassname = '' }) {
     const style = typeStyles[type];
 
     const [theme] = useDarkMode();
@@ -56,7 +56,7 @@ function TagV2({ type = TYPES.DEFAULT, children, className = '', icon = true }) 
                 })}
             <span
                 // style={{ color: style.color || defaultColor }}
-                className={`text-xs md:text-sm ${style?.colorContent ? style.colorContent : 'text-gray-1 dark:text-gray-7'}`}
+                className={`text-xs md:text-sm ${style?.colorContent ? style.colorContent : 'text-gray-1 dark:text-gray-7'} ${labelClassname}`}
             >
                 {children}
             </span>

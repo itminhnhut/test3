@@ -111,6 +111,7 @@
     "INVALID_USER": "Bạn cần đăng nhập để tiếp tục",
     "ACCOUNT_BAN_TRADE": "Tài khoản hiện tại ",
     "INSTRUMENT_NOT_LISTED_FOR_TRADING_YET": "Cặp giao dịch này đang bảo trì, vui lòng quay lại sau.",
+    "NAO_IS_MAINTAINED": "Từ 10h00 (UTC+7) ngày 28/04/2023 NAO Futures ngừng nhận yêu cầu mở lệnh mới và thêm khối lượng. NAO Futures sẽ được tiếp quản và vận hành trên ứng dụng Nami trong tháng 5/2023",
     "BALANCE_INSUFFICIENT": "Số dư của bạn không đủ",
     "NOT_FOUND_ORDER": "Không tìm thấy lệnh",
     "ORDER_ALREADY_CLOSED": "Lệnh đã được đóng",

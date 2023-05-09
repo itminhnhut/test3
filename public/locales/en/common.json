@@ -165,6 +165,7 @@
     "resend": "Resend",
     "close": "Close",
     "error_code": "Code",
+    "error": "Error",
     "scan": "Scan",
     "important_notes": "Important notes",
     "common_status": {
@@ -394,6 +395,8 @@
     "denined": "Denied",
     "processing": "Processing",
     "deny": "Deny",
+    "accept":"Accept",
+    "reject":"Reject",
     "download_view": {
         "title": "Download the application now",
         "desc": "Over 600 trading pairs with leverage up to x125"

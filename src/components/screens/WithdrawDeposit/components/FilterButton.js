@@ -46,7 +46,7 @@ const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble, language
     return (
         <div className="flex flex-wrap lg:flex-nowrap -m-3 lg:m-0 lg:gap-6 items-end">
             <div className="p-3 lg:p-0 w-1/2 lg:w-[246px] z-[42]">
-                <FilterWrapper label={t('common:search')}>
+                <FilterWrapper label={t('common:transaction_id')}>
                     <SearchBoxV2
                         isValueTrim={false}
                         wrapperClassname="!h-11"

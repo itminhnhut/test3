@@ -165,6 +165,7 @@
     "resend": "Gửi lại",
     "close": "Đóng",
     "error_code": "Mã lỗi",
+    "error": "Lỗi",
     "scan": "Quét",
     "important_notes": "Lưu ý quan trọng",
     "common_status": {
@@ -390,6 +391,8 @@
     "denined": "Đã từ chối",
     "processing": "Đang xử lý",
     "deny": "Từ chối",
+    "accept":"Chấp nhận",
+    "reject":"Từ chối",
     "download_view": {
         "title": "Tải ứng dụng ngay",
         "desc": "Hơn 600 cặp tài sản với đòn bẩy lên đến x125"

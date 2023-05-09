@@ -318,7 +318,7 @@ export const Information = ({ min, max, fee, receive, assetCode, className = '' 
                     title: t('wallet:min_withdraw'),
                     value: min
                 },
-                /* {
+                /*{
                     title: t('wallet:max_withdraw'),
                     value: max
                 }, */
@@ -330,16 +330,14 @@ export const Information = ({ min, max, fee, receive, assetCode, className = '' 
                     title: t('wallet:will_receive'),
                     value: receive
                 }
-            ].map((item, index) => {
-                return (
-                    <div key={index}>
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{item.title}</span>
-                        <span className="float-right font-semibold">
-                            {item.value || '--'} {assetCode}
-                        </span>
-                    </div>
-                );
-            })}
+            ].map((item, index) => (
+                <div key={index}>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{item.title}</span>
+                    <span className="float-right font-semibold">
+                        {item?.value || '--'} {assetCode}
+                    </span>
+                </div>
+            ))}
         </div>
     );
 };
