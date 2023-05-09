@@ -33,6 +33,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
     const { user: auth } = useSelector((state) => state.auth) || null;
     const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
     const isVerified = auth?.kyc_status >= KYC_STATUS.APPROVED;
+    const isPartner = auth?.partner_type === 2;
 
     useEffect(() => {
         if (isActive) {
@@ -56,22 +57,24 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
 
     const renderNavItem = useCallback(() => {
         return MOBILE_NAV_DATA.map((nav) => {
-            const { key, title, localized, isNew, url, child_lv1 } = nav;
+            const { key, title, spaceLine, localized, isNew, url, child_lv1 } = nav;
 
             if ((title === 'Wallet' || title === 'Profile') && !auth) return null;
 
             if (child_lv1 && child_lv1.length) {
                 const itemsLevel1 = [];
-                child_lv1.map((item) => {
-                    const Icon = NavbarIcons[item?.localized];
-                    const { localized } = item;
+                child_lv1.forEach((item) => {
+                    const { localized,notSameOrigin } = item;
+                    const Icon = NavbarIcons?.[localized];
+                    if (localized === 'partner' && !isPartner) return;
                     itemsLevel1.push(
                         <Link href={item.url} key={`${item.key}_${item.title}`}>
                             <a
                                 className="mal-pocket-navbar__drawer__navlink__group___item__lv1__item mal-pocket-nabar__item___hover  !px-12"
                                 onClick={() => onClose()}
+                                target={notSameOrigin ? '_blank' : '_self'}
                             >
-                                {Icon ? <Icon size={24} /> : getIcon(localized)}
+                                <div className="text-txtSecondary dark:text-txtSecondary-dark">{Icon ? <Icon size={24} /> : getIcon(localized)}</div>
                                 <span className="ml-3 font-medium text-sm text-txtPrimary  dark:text-txtPrimary-dark">
                                     {t(`navbar:submenu.${item.localized}`)}
                                 </span>
@@ -81,38 +84,41 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                 });
 
                 return (
-                    <div key={`${title}_${key}`}>
-                        <div
-                            className={`relative mal-pocket-navbar__drawer__navlink__group___item
+                    <>
+                        <div key={`${title}_${key}`}>
+                            <div
+                                className={`relative mal-pocket-navbar__drawer__navlink__group___item ${spaceLine ? '!mb-0 ' : ' '}
                                     ${!state.navActiveLv1[`${title}_${key}`] ? 'mal-pocket-nabar__item___hover ' : 'bg-hover dark:bg-hover-dark'}`}
-                            onClick={() =>
-                                setState({
-                                    navActiveLv1: {
-                                        [`${title}_${key}`]: !state.navActiveLv1[`${title}_${key}`]
-                                    }
-                                })
-                            }
-                        >
-                            <div className="flex flex-row items-center">
-                                {t(`navbar:menu.${localized}`)} {isNew && <span className="mal-dot__newest" />}
+                                onClick={() =>
+                                    setState({
+                                        navActiveLv1: {
+                                            [`${title}_${key}`]: !state.navActiveLv1[`${title}_${key}`]
+                                        }
+                                    })
+                                }
+                            >
+                                <div className="flex flex-row items-center">
+                                    {t(`navbar:menu.${localized}`)} {isNew && <span className="mal-dot__newest" />}
+                                </div>
+                                <div className={`transition duration-200 ease-in-out ${state.navActiveLv1[`${title}_${key}`] ? 'rotate-180' : ''}`}>
+                                    <SvgIcon
+                                        name="chevron_down"
+                                        size={16}
+                                        className="group-hover:rotate-[360deg]"
+                                        color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.darkBlue}
+                                    />
+                                    {/* <ChevronDown size={16} color={currentTheme !== THEME_MODE.LIGHT ? colors.gray[4] : colors.darkBlue} /> */}
+                                </div>
                             </div>
-                            <div className={`transition duration-200 ease-in-out ${state.navActiveLv1[`${title}_${key}`] ? 'rotate-180' : ''}`}>
-                                <SvgIcon
-                                    name="chevron_down"
-                                    size={16}
-                                    className="group-hover:rotate-[360deg]"
-                                    color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.darkBlue}
-                                />
-                                {/* <ChevronDown size={16} color={currentTheme !== THEME_MODE.LIGHT ? colors.gray[4] : colors.darkBlue} /> */}
-                            </div>
-                        </div>
-                        <div
-                            className={`mal-pocket-navbar__drawer__navlink__group___item__lv1
+                            <div
+                                className={`mal-pocket-navbar__drawer__navlink__group___item__lv1
                                             ${state.navActiveLv1[`${title}_${key}`] ? 'mal-pocket-navbar__drawer__navlink__group___item__lv1__active' : ''}`}
-                        >
-                            {itemsLevel1}
+                            >
+                                {itemsLevel1}
+                            </div>
                         </div>
-                    </div>
+                        {spaceLine && <hr className="my-6 border-divider dark:border-divider-dark" />}
+                    </>
                 );
             }
 
@@ -172,9 +178,9 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                             </div>
 
                             <div className="flex flex-row justify-center items-center user__button py-4 mx-4 relative">
-                                <div className="rounded-md w-full h-full left-0 absolute z-[-1]">
+                                <div className="rounded-xl w-full h-full left-0 absolute z-[-1]">
                                     <Image
-                                        className="rounded-md"
+                                        className="rounded-xl"
                                         layout="fill"
                                         src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)}
                                     />
