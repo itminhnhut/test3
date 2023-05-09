@@ -31,7 +31,6 @@ import classNames from 'classnames';
 const LIMIT_ROW = 5;
 
 const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, router, onProcessOrder }) => {
-    console.log('orderDetail:', orderDetail)
     const asset = find(assetConfig, { id: orderDetail?.baseAssetId });
     const assetCode = asset?.assetCode;
 
@@ -81,7 +80,9 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
                         <div className="p-2 w-1/2 lg:w-1/4">
                             <div className="space-y-2">
                                 <div className="txtPri-1">{t('dw_partner:rate')}</div>
-                                <div className="txtSecond-3">1 {assetCode} ≈ {orderDetail?.price} VND</div>
+                                <div className="txtSecond-3">
+                                    1 {assetCode} ≈ {formatBalanceFiat(orderDetail?.price, 'VNDC')} VND
+                                </div>
                             </div>
                         </div>
 
