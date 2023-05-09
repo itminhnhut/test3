@@ -6,13 +6,13 @@ import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout';
 import { useRouter } from 'next/router';
 const Platform = ({ platform }) => {
     const router = useRouter();
-    
+
     switch (platform) {
         case 'frame':
             return <NaoDailyLuckydraw platform={platform} />;
         default:
             return (
-                <MaldivesLayout hideInApp={!router.query?.web}>
+                <MaldivesLayout hideInApp={!router.query?.web} hideFooter={true}>
                     <Luckydraw />
                 </MaldivesLayout>
             );

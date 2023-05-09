@@ -344,7 +344,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
             />
             {isDesktop ? (
                 <BackgroundImage isDesktop={isDesktop} className="">
-                    <div className="max-w-screen-v3 mx-auto 2xl:max-w-screen-xxl sm:min-h-[calc(100vh-80px)] 2xl:min-h-[calc(1024px-80px)] relative !max-h-[1024px]">
+                    <div className="max-w-screen-v3 mx-auto 2xl:max-w-screen-xxl sm:min-h-[calc(100vh-80px)] relative ">
                         <div className="absolute right-0 top-1/2 -translate-y-1/2 max-w-[600px] px-8 text-center">
                             <div className="flex flex-col space-y-3 mb-8">{renderTextReward()}</div>
                             {renderTextVol()}
@@ -506,11 +506,11 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
 };
 
 const BackgroundImage = styled.div.attrs(({ isDesktop }) => ({
-    className: classNames('bg-dark max-h-[1024px]', { 'relative h-[272px]': !isDesktop })
+    className: classNames('bg-dark', { 'relative h-[272px]': !isDesktop })
 }))`
     background-image: ${({ isDesktop }) => `url(${getS3Url(`/images/screen/futures/luckdraw/bg_lucky${isDesktop ? '_desktop' : '_mb'}.png`)})`};
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
 
     .reward_line {
