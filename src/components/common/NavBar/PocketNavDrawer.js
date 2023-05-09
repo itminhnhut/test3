@@ -14,7 +14,7 @@ import { useWindowSize } from 'utils/customHooks';
 import { PulseLoader } from 'react-spinners';
 import { PATHS } from 'constants/paths';
 import FuturesSetting from '../../screens/Futures/FuturesSetting';
-import { AppleIcon, GooglePlayIcon, SuccessfulTransactionIcon } from '../../svg/SvgIcon';
+import { AppleIcon, GooglePlayIcon, SuccessfulTransactionIcon, USAFlagIcon, VietnamFlagIcon } from '../../svg/SvgIcon';
 import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
 import NavbarIcons from './Icons';
 import Image from 'next/image';
@@ -64,7 +64,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
             if (child_lv1 && child_lv1.length) {
                 const itemsLevel1 = [];
                 child_lv1.forEach((item) => {
-                    const { localized,notSameOrigin } = item;
+                    const { localized, notSameOrigin } = item;
                     const Icon = NavbarIcons?.[localized];
                     if (localized === 'partner' && !isPartner) return;
                     itemsLevel1.push(
@@ -269,13 +269,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                         )}
                         <a className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark " onClick={onChangeLang}>
                             <div className="flex flex-row items-center">{t('navbar:menu.lang')}</div>
-                            <div className="rounded-full">
-                                {language === LANGUAGE_TAG.EN ? (
-                                    <Image src={getS3Url('/images/icon/ic_us_flag.png')} width="20" height="20" />
-                                ) : (
-                                    <Image src={getS3Url('/images/icon/ic_vn_flag.png')} width="20" height="20" />
-                                )}
-                            </div>
+                            <div className="rounded-full">{language === LANGUAGE_TAG.EN ? <USAFlagIcon size={24} /> : <VietnamFlagIcon size={24} />}</div>
                         </a>
                         <a className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark hover:text-dominant mb-4">
                             <div className="flex flex-row items-center">{t('navbar:menu.download_app')}</div>

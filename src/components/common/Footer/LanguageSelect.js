@@ -11,7 +11,7 @@ const LanguageSelect = ({ t, language, currentTheme }) => {
     const [currentLocale, onChangeLang] = useLanguage();
 
     return (
-        <div ref={ref} className="flex group items-center text-xs md:text-sm relative">
+        <div ref={ref} className="flex py-3 group items-center text-xs md:text-sm relative">
             <div className="text-gray-1  dark:text-txtSecondary-dark">{t('navbar:menu.lang')}</div>
 
             <div className="flex items-center ml-4">
