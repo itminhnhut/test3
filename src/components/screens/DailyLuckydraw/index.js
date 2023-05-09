@@ -511,7 +511,7 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
 const BackgroundImage = styled.div.attrs(({ isDesktop }) => ({
     className: classNames('', { 'relative h-[272px]': !isDesktop })
 }))`
-    background-image: ${({ isDesktop }) => `url(${`/images/screen/futures/luckdraw/bg_lucky${isDesktop ? '_desktop' : '_mb'}.png`})`};
+    background-image: ${({ isDesktop }) => `url(${getS3Url(`/images/screen/futures/luckdraw/bg_lucky${isDesktop ? '_desktop' : '_mb'}.png`)})`};
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
