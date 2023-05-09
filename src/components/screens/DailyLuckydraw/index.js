@@ -343,12 +343,14 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                 total_reward={total_reward.current}
             />
             {isDesktop ? (
-                <BackgroundImage isDesktop={isDesktop} className="p-8 sm:min-h-[calc(100vh-80px)] relative">
-                    <div className="absolute right-[112px] top-1/2 -translate-y-1/2 max-w-[600px] px-8 text-center">
-                        <div className="flex flex-col space-y-3 mb-8">{renderTextReward()}</div>
-                        {renderTextVol()}
-                        <div className="space-y-[43px] relative top-8 mb-9">{renderReward()}</div>
-                        {renderButton()}
+                <BackgroundImage isDesktop={isDesktop} className="">
+                    <div className="max-w-screen-v3 mx-auto 2xl:max-w-screen-xxl sm:min-h-[calc(100vh-80px)] 2xl:min-h-[calc(1024px-80px)] relative !max-h-[1024px]">
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 max-w-[600px] px-8 text-center">
+                            <div className="flex flex-col space-y-3 mb-8">{renderTextReward()}</div>
+                            {renderTextVol()}
+                            <div className="space-y-[43px] relative top-8 mb-9">{renderReward()}</div>
+                            {renderButton()}
+                        </div>
                     </div>
                 </BackgroundImage>
             ) : (
@@ -423,9 +425,9 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
 
     const onShare = async (item) => {
         try {
+            const file = await formatFile(contentRef.current);
             if (!isMobile) {
                 setLoading(true);
-                const file = await formatFile(contentRef.current);
                 saveFile(file, `${item?.ticket_code}.png`);
                 return;
             }
@@ -451,11 +453,7 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
             <div ref={contentRef} className={classNames('relative overflow-hidden', { 'mx-6 min-h-[490px]': isMobile, 'h-[380px]': !isMobile })}>
                 <img
                     className="absolute z-[1] overflow-hidden w-full h-full object-cover"
-                    src={
-                        isMobile
-                            ? getS3Url(`/images/screen/futures/luckdraw/bg_claimed_mb.png`)
-                            : 'https://nami.exchange/images/screen/futures/luckdraw/bg_claimed.png'
-                    }
+                    src={isMobile ? getS3Url(`/images/screen/futures/luckdraw/bg_claimed_mb.png`) : 'https://nami.exchange/bg_claimed.png'}
                 />
                 <div className={classNames('space-y-8 flex flex-col items-center relative z-10 h-full', { 'pt-[5.875rem]': isMobile })}>
                     <div className="flex flex-col items-center">
@@ -464,9 +462,8 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
                                 'absolute bottom-6 left-6 !text-white': !isMobile
                             })}
                         >
-                            <span>ID: #{ticket?.ticket_code}</span>&nbsp;
-                            <span className="w-0.5 h-0.5 rounded-full bg-darkBlue-5 sm:bg-white" />
-                            &nbsp;
+                            <span>ID: #{ticket?.ticket_code}</span>
+                            <span className="w-0.5 h-0.5 rounded-full bg-darkBlue-5 sm:bg-white mx-1.5" />
                             <span>{formatTime(ticket?.time, 'HH:mm:ss dd/MM/yyyy')}</span>
                         </div>
                         <div
@@ -474,7 +471,7 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
                                 'absolute left-6 top-1/2 -translate-y-1/2 !text-left !-mt-6': !isMobile
                             })}
                         >
-                            <span className="">{t('common:luckydraw:claim_success')}</span>
+                            <span className="text-white">{t('common:luckydraw:claim_success')}</span>
                             <span className="text-3xl sm:text-5xl text-teal">{formatNumber(total_reward)} VNDC</span>
                         </div>
                     </div>
@@ -509,7 +506,7 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
 };
 
 const BackgroundImage = styled.div.attrs(({ isDesktop }) => ({
-    className: classNames('', { 'relative h-[272px]': !isDesktop })
+    className: classNames('bg-dark max-h-[1024px]', { 'relative h-[272px]': !isDesktop })
 }))`
     background-image: ${({ isDesktop }) => `url(${getS3Url(`/images/screen/futures/luckdraw/bg_lucky${isDesktop ? '_desktop' : '_mb'}.png`)})`};
     background-repeat: no-repeat;
