@@ -57,7 +57,7 @@ export const ButtonNaoVariants = {
     DANGER: 'DANGER',
 };
 export const ButtonNao = styled.div.attrs(({ disabled, variant, active = true }) => ({
-    className: classNames('text-center text-sm px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer h-10', {
+    className: classNames('text-center text-sm sm:text-base px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer h-10', {
         'bg-bgBtnPrimary text-txtBtnPrimary': active && (!variant || variant === ButtonNaoVariants.PRIMARY), // default theme is primary
         'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': variant === ButtonNaoVariants.SECONDARY || active === false,
         'bg-red-2 text-white': variant === ButtonNaoVariants.DANGER,
@@ -370,19 +370,19 @@ export const TextField = (props) => {
 
     return (
         <div className="w-full space-y-[6px]">
-            <div className="text-xs leading-6 text-txtSecondary dark:text-txtSecondary-dark">{label}</div>
+            <div className="text-xs sm:text-sm leading-6 text-txtSecondary dark:text-txtSecondary-dark">{label}</div>
             <WrapInput error={error} focus={focus} readOnly={readOnly}>
                 <input
-                    className={`w-full text-sm ${readOnly ? 'text-txtSecondary dark:text-txtSecondary-dark' : ''} ${className}`}
+                    className={`w-full text-sm sm:text-base ${readOnly ? 'text-txtSecondary dark:text-txtSecondary-dark' : ''} ${className}`}
                     onFocus={onFocus}
                     onBlur={_onBlur}
                     readOnly={readOnly}
                     {...propsTextField}
                 />
-                {prefix && <div className={`${prefixClassName} text-sm leading-6 text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap`}>{prefix}</div>}
+                {prefix && <div className={`${prefixClassName} text-sm sm:text-base leading-6 text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap`}>{prefix}</div>}
             </WrapInput>
             {error && helperText && (
-                <div className="flex items-center space-x-2 text-xs text-red-2">
+                <div className="flex items-center space-x-2 text-xs sm:text-sm text-red-2">
                     <WarningIcon />
                     <span>{helperText}</span>
                 </div>

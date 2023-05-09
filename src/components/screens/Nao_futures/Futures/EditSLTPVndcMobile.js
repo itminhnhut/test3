@@ -390,7 +390,7 @@ const EditSLTPVndcMobile = ({
                             {
                                 'left-1/2 -translate-x-1/2 ml-[3px]': i > 0 && i < dotStep.current,
                                 '-left-1/2 translate-x-[-80%]': i === dotStep.current,
-                                '!text-txtPrimary dark:text-txtPrimary-dark font-semibold': Number(i * size) === Number(data[key] > 0 ? percent[key] : 50) && onusMode,
+                                '!text-txtPrimary dark:!text-txtPrimary-dark font-semibold': Number(i * size) === Number(data[key] > 0 ? percent[key] : 50) && onusMode,
                             }
                         )}
                     >

@@ -801,8 +801,8 @@ const ModalFundingRate = ({ onClose, t }) => {
 
     const onDetail = () => {
         const url = router.locale === 'en'
-            ? '/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures?theme=dark&source=frame'
-            : '/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures?theme=dark&source=frame'
+            ? '/support/faq/noti-en-announcement/apply-funding-rates-on-nami-futures-and-nao-futures?theme=dark&source=frame'
+            : '/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures?theme=dark&source=frame'
         router.push(url)
     }
 

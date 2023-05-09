@@ -91,15 +91,18 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
     const renderRank = (data, item) => {
         const _rank = data || '-';
         return (
-            <div className="min-w-[24px] text-center">
+            <div className="w-6 h-6 flex-shrink-0 text-center relative font-SourceCodePro">
                 {data && data <= top_ranks_master ? (
-                    <img
-                        src={getS3Url(`/images/nao/contest/ic_top_${item?.rowIndex + 4}.png`)}
-                        className="min-w-[24px] min-h-[24px]"
-                        width="24"
-                        height="24"
-                        alt=""
-                    />
+                    <>
+                        <img
+                            src={getS3Url("/images/nao/contest/ic_top_teal.png")}
+                            className="w-6 h-6"
+                            width="24"
+                            height="24"
+                            alt=""
+                        />
+                        <span className='font-bold text-[0.625rem] leading-none pt-[0.1875rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white'>{item?.rowIndex + 4}</span>
+                    </>
                 ) : (
                     <span>{_rank}</span>
                 )}
@@ -223,13 +226,16 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                                             {loading ? (
                                                 <Skeletor width={24} height={24} circle />
                                             ) : item?.[rank] && item?.[rank] <= top_ranks_master ? (
-                                                <img
-                                                    src={getS3Url(`/images/nao/contest/ic_top_${index + 4}.png`)}
-                                                    className="min-w-[24px] min-h-[24px]"
-                                                    width="24"
-                                                    height="24"
-                                                    alt=""
-                                                />
+                                                <div className="w-6 h-6 flex-shrink-0 text-center relative font-SourceCodePro">
+                                                    <img
+                                                        src={getS3Url("/images/nao/contest/ic_top_teal.png")}
+                                                        className="w-6 h-6"
+                                                        width="24"
+                                                        height="24"
+                                                        alt=""
+                                                    />
+                                                    <span className='font-bold text-[0.625rem] leading-none pt-[0.1875rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white'>{index + 4}</span>
+                                                </div>
                                             ) : (
                                                 item?.[rank] || '-'
                                             )}

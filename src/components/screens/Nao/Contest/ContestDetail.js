@@ -104,7 +104,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
 
     const renderStatusMember = (status) => {
         if (status === undefined) return '-';
-        const baseClass = 'rounded-[800px] px-2 text-xs font-medium py-[2px] whitespace-nowrap';
+        const baseClass = 'rounded-[800px] px-2 text-xs sm:text-sm font-semibold py-[2px] whitespace-nowrap';
         let html = '';
         switch (status) {
             case statusMember.PENDING:
@@ -272,7 +272,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
             >
                 <SvgCross size={24} onClick={onClose} color="currentColor" className="ml-auto mb-2 cursor-pointer" />
-                <div className="pb-3 sm:pb-0 px-4 scrollbar-nao overflow-y-auto h-full">
+                <div className="pb-3 sm:pb-0 px-4 scrollbar-nao overflow-y-auto h-full text-sm sm:text-base">
                     <div className="flex sm:items-center sm:justify-between flex-wrap lg:flex-row flex-col">
                         {isMobile ? (
                             <div className="flex flex-col items-center justify-center">
@@ -282,21 +282,21 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                             #{dataSource?.[rank]}
                                         </span>
                                     ) : null}
-                                    <div className="w-[58px] h-[58px] rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark">
+                                    <div className="w-[3.375rem] h-[3.375rem] flex-shrink-0 rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark">
                                         <ImageNao
-                                            className="rounded-[50%] min-w-[58px] min-h-[58px] max-w-[58px] max-h-[58px] object-cover"
+                                            className="rounded-[50%] w-full h-full object-cover"
                                             src={dataSource?.avatar}
                                         />
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-2 mt-2">
                                     <LeadIcon />
-                                    <div className="text-xs leading-6 capitalize">
+                                    <div className="capitalize">
                                         {t('nao:contest:captain')}: {capitalize(dataSource?.leader_name) ?? '-'}
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    <div className="text-lg leading-8 font-semibold uppercase">
+                                    <div className="text-base sm:text-2xl font-semibold uppercase">
                                         {loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.name ?? '-'}
                                     </div>
                                     {dataSource?.is_group_master && <TickFbIcon size={16} />}
@@ -306,7 +306,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                         <Skeletor onusMode width={50} height={24} />
                                     ) : (
                                         <div className="bg-gray-13/[0.7] dark:bg-dark-4/[0.5] rounded-[800px] px-2 mt-2">
-                                            <span className={`text-xs font-medium leading-6 ${!dataSource?.status ? 'text-yellow-2' : 'text-txtSecondary dark:text-txtSecondary-dark'}`}>
+                                            <span className={`text-xs sm:text-sm font-semibold ${!dataSource?.status ? 'text-yellow-2' : 'text-txtSecondary dark:text-txtSecondary-dark'}`}>
                                                 {dataSource?.status ? t('nao:contest:eligible') : t('nao:contest:not_eligible')}
                                             </span>
                                         </div>
@@ -315,22 +315,15 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                         ) : (
                             <div className="flex items-center justify-between w-full">
                                 <div className="flex items-center space-x-4">
-                                    <div className="w-[58px] h-[58px] rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark">
+                                    <div className="w-[3.375rem] h-[3.375rem] flex-shrink-0 rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark">
                                         <ImageNao
-                                            className="rounded-[50%] min-w-[58px] min-h-[58px] max-w-[58px] max-h-[58px] object-cover"
+                                            className="rounded-[50%] w-full h-full object-cover"
                                             src={dataSource?.avatar}
                                         />
                                     </div>
                                     <div className="flex flex-col">
-                                        <div className="flex items-center space-x-2">
-                                            <LeadIcon />
-                                            <div className="text-sm leading-6 capitalize">
-                                                {t('nao:contest:captain')}:{' '}
-                                                {loading ? <Skeletor onusMode width={100} height={10} /> : capitalize(dataSource?.leader_name) ?? '-'}
-                                            </div>
-                                        </div>
                                         <div className="flex items-center space-x-3">
-                                            <div className="text-2xl leading-8 font-semibold uppercase">
+                                            <div className="text-base sm:text-2xl font-semibold uppercase">
                                                 {loading ? <Skeletor onusMode width={100} height={24} /> : dataSource?.name ?? '-'}
                                             </div>
                                             {dataSource?.is_group_master && <TickFbIcon size={24} />}
@@ -339,13 +332,20 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                     <Skeletor onusMode width={50} height={24} />
                                                 ) : (
                                                     <span
-                                                        className={`text-xs font-medium leading-6 rounded-[800px] px-2 ${
+                                                        className={`text-xs sm:text-sm font-semibold rounded-[800px] px-2 ${
                                                             !dataSource?.status ? 'text-yellow-2 bg-yellow-2/[0.1]' : 'text-txtSecondary dark:text-txtSecondary-dark bg-gray-13/[0.7] dark:bg-dark-4/[0.5]'
                                                         }`}
                                                     >
                                                         {dataSource?.status ? t('nao:contest:eligible') : t('nao:contest:not_eligible')}
                                                     </span>
                                                 ))}
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <LeadIcon />
+                                            <div className="capitalize">
+                                                {t('nao:contest:captain')}:{' '}
+                                                {loading ? <Skeletor onusMode width={100} height={10} /> : capitalize(dataSource?.leader_name) ?? '-'}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -361,22 +361,24 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <CardNao noBg className="!py-5 !px-[26px] mt-8 !min-h-[92px] sm:flex-row w-full sm:min-w-[577px] dark:bg-none dark:bg-darkBlue-3">
                                 <div className="flex sm:flex-row sm:justify-around flex-col w-full">
                                     <div className="flex flex-row sm:flex-col-reverse gap-1 justify-between items-center">
-                                        <label className="text-sm text-txtPrimary dark:text-txtPrimary-dark leading-6 whitespace-nowrap">{t('nao:contest:pnl_ranking')}</label>
+                                        <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">{t('nao:contest:pnl_ranking')}</label>
                                         <span className="font-semibold">#{dataSource?.current_rank_pnl}</span>
                                     </div>
+                                    <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
                                     <div className="flex flex-row sm:flex-col-reverse gap-1 justify-between items-center">
-                                        <label className="text-sm text-txtPrimary dark:text-txtPrimary-dark leading-6 whitespace-nowrap">{t('nao:contest:per_pnl')}</label>
+                                        <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">{t('nao:contest:per_pnl')}</label>
                                         <span className={`font-semibold ${getColor(dataSource?.pnl)}`}>
                                             {`${dataSource?.pnl > 0 ? '+' : ''}${formatNumber(dataSource?.pnl, 2, 0, true)}%`}
                                         </span>
                                     </div>
-                                    <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-5 my-2 sm:my-0 "></div>
+                                    <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
                                     <div className="flex flex-row sm:flex-col-reverse gap-1 justify-between items-center">
-                                        <label className="text-sm text-txtPrimary dark:text-txtPrimary-dark leading-6 whitespace-nowrap">{t('nao:contest:volume_ranking')}</label>
+                                        <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">{t('nao:contest:volume_ranking')}</label>
                                         <span className="font-semibold">#{dataSource?.[rank]}</span>
                                     </div>
+                                    <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
                                     <div className="flex flex-row sm:flex-col-reverse gap-1 justify-between items-center">
-                                        <label className="text-sm text-txtPrimary dark:text-txtPrimary-dark leading-6 whitespace-nowrap">
+                                        <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">
                                             {t('nao:contest:volume')} ({quoteAsset})
                                         </label>
                                         <span className="font-semibold break-all text-right">{formatNumber(dataSource?.total_volume, 0)}</span>
@@ -397,7 +399,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                         </div>
                                         <div className="text-sm">
                                             {t('nao:contest:rules_for_season_2')}
-                                            <span onClick={onRedirect} className="font-medium underline text-teal cursor-pointer">
+                                            <span onClick={onRedirect} className="font-semibold underline text-teal cursor-pointer">
                                                 {t('nao:contest:rules_content')}
                                             </span>
                                         </div>
@@ -429,7 +431,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                     </div>
                                                     {item?.name && renderStatusMember(item?.status)}
                                                 </div>
-                                                <div className="w-full h-[1px] bg-nao-grey/[0.2] my-4" />
+                                                <div className="w-full h-0 my-4" />
                                                 <div className="flex flex-col text-sm space-y-2">
                                                     <div className="flex items-center justify-between leading-6">
                                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">ID </div>
@@ -490,7 +492,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                         </div>
                     ) : (
                         <Table dataSource={dataSource?.members ?? []} classWrapper="border border-divider dark:border-none">
-                            <Column minWidth={50} className="text-txtSecondary dark:text-txtSecondary-dark font-medium" title={t('nao:contest:no')} fieldName={'index'} />
+                            <Column minWidth={50} className="text-txtSecondary dark:text-txtSecondary-dark font-semibold" title={t('nao:contest:no')} fieldName={'index'} />
                             <Column
                                 minWidth={220}
                                 ellipsis
@@ -499,7 +501,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 fieldName="name"
                                 cellRender={renderName}
                             />
-                            <Column minWidth={200} ellipsis className="text-txtPrimary dark:text-txtPrimary-dark" title={'ID NAO Futures'} fieldName="onus_user_id" />
+                            <Column minWidth={200} ellipsis className="text-txtSecondary dark:text-txtSecondary-dark" title={'ID NAO Futures'} fieldName="onus_user_id" />
                             <Column
                                 visible={visibleStatus}
                                 minWidth={isPending.group ? 100 : 120}
@@ -519,7 +521,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 visible={!isPending.group}
                                 minWidth={150}
                                 align="right"
-                                className="font-medium"
+                                className="font-semibold"
                                 title={`${t('nao:contest:volume')} (${quoteAsset})`}
                                 decimal={0}
                                 fieldName="total_volume"
@@ -528,7 +530,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 minWidth={150}
                                 align="right"
                                 visible={!previous}
-                                className="font-medium"
+                                className="font-semibold"
                                 title={t('common:ext_gate:time')}
                                 decimal={2}
                                 fieldName="time"
@@ -538,7 +540,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 visible={!isPending.group}
                                 minWidth={100}
                                 align="right"
-                                className="font-medium"
+                                className="font-semibold"
                                 title={t('nao:contest:per_pnl')}
                                 fieldName="pnl"
                                 cellRender={renderPnl}
@@ -595,15 +597,15 @@ const LeadIcon = () => {
                     <stop offset="1" stopColor="#49E8D5" />
                 </linearGradient>
                 <linearGradient id="paint1_linear_14907_6665" x1="2.02333" y1="1.44336" x2="2.02333" y2="16.0002" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#000c06" />
+                    <stop stopColor="#00dc68" />
                     <stop offset="1" stopColor="#49E8D5" />
                 </linearGradient>
                 <linearGradient id="paint2_linear_14907_6665" x1="2.02345" y1="0" x2="2.02345" y2="1.75686" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#000c06" />
+                    <stop stopColor="#00dc68" />
                     <stop offset="1" stopColor="#49E8D5" />
                 </linearGradient>
                 <linearGradient id="paint3_linear_14907_6665" x1="2.02345" y1="0.878906" x2="2.02345" y2="1.75734" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#000c06" />
+                    <stop stopColor="#00dc68" />
                     <stop offset="1" stopColor="#49E8D5" />
                 </linearGradient>
                 <clipPath id="clip0_14907_6665">

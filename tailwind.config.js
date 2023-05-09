@@ -38,7 +38,8 @@ module.exports = {
             sans: ['Barlow', 'sans-serif'],
             serif: ['serif'],
             inter: ['Inter', 'sans-serif'],
-            'SF-Pro': ['SF-Pro']
+            'SF-Pro': ['SF-Pro'],
+            'SourceCodePro': ['SourceCodePro'],
         },
         fontSize: {
             xxs: [

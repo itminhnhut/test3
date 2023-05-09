@@ -216,7 +216,7 @@
         "confirm_back": "Quay lại",
         "confirm_accept": "Chấp nhận",
         "confirm_title": "Đồng ý tham gia đội",
-        "confirm_description": "Bạn có chắc chắn muốn chấp nhận lời mời tham gia đội <span class='text-teal font-semibold'>{{value}}</span> không? Bạn sẽ không thể rời đội khi đã trở thành thành viên.",
+        "confirm_description": "Bạn có chắc chắn muốn chấp nhận lời mời tham gia đội <span class='text-teal'>{{value}}</span> không? Bạn sẽ không thể rời đội khi đã trở thành thành viên.",
         "confirm_close": "Đóng",
         "join_success": "Tham gia đội thành công",
         "team_invitations": "Lời mời tham gia đội",

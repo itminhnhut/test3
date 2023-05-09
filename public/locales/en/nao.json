@@ -216,7 +216,7 @@
         "confirm_back": "Back",
         "confirm_accept": "Accept",
         "confirm_title": "Accept Team Invitation",
-        "confirm_description": "Are you sure to join the team <span class='text-teal font-semibold'>{{value}}</span>? You can not leave after this action.",
+        "confirm_description": "Are you sure to join the team <span class='text-teal'>{{value}}</span>? You can not leave after this action.",
         "confirm_close": "Close",
         "join_success": "Successfully Joined",
         "team_invitations": "Team Invitations",

@@ -32,8 +32,6 @@ const ContesRules = ({
     } = useTranslation();
     const router = useRouter();
     const renderCountDown = (classNameContainer, classNameCountdown) => {
-        start = Date.now() - 86400000;
-        end = Date.now() + 86400000;
         const CONTEST_TIME = {
             START: new Date(start).getTime(),
             END: new Date(end).getTime()
@@ -131,16 +129,20 @@ const ContesRules = ({
                     {t('nao:contest:description')}
                     <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
-                <div className="sm_only:!w-full w-fit sm:px-4 rounded-md bg-gray-13 dark:bg-dark-4 py-3 mt-8 mb:mt-4 flex flex-row items-center justify-center">
+                <div className="sm_only:!w-full w-fit sm:px-4 rounded-md bg-gray-13 dark:bg-dark-4 py-3 flex flex-row items-center justify-center mt-8 mb:mt-4">
                     {renderCountDown('!font-normal mr-3', '!font-semibold')}
                 </div>
                 <div className="flex flex-row mt-3 mb:mt-7 justify-center mb:justify-start w-full">
                     {inHome ? (
-                        <ButtonNao onClick={() => router.push('/contest')} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3 sm_only:flex-1" primary>
+                        <ButtonNao
+                            onClick={() => router.push('/contest')}
+                            className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3 sm_only:flex-1 sm_only:px-1"
+                            primary
+                        >
                             {t('nao:contest:ranking')}
                         </ButtonNao>
                     ) : (
-                        <ButtonNao onClick={onRedirect} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3 sm_only:flex-1">
+                        <ButtonNao onClick={onRedirect} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3 sm_only:flex-1 sm_only:px-1">
                             {t('nao:contest:detail_rules')}
                         </ButtonNao>
                     )}
@@ -198,13 +200,13 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
 
 
     return (
-        <Popover className="relative flex sm_only:flex-1">
+        <Popover className="relative flex sm_only:flex-1 sm_only:flex-grow-[1.5]">
             {({ open, close }) => (
                 <>
-                    <Popover.Button>
+                    <Popover.Button className="w-full">
                         <ButtonNao
                             variant={ButtonNaoVariants.SECONDARY}
-                            className="px-[18px] text-sm font-semibold w-max !rounded-md flex items-center space-x-2 tournaments"
+                            className="px-[18px] text-sm font-semibold w-full !rounded-md flex items-center space-x-2 tournaments sm_only:px-1"
                         >
                             <span>{t('nao:contest:tournaments')}</span>
                             <ArrowDropDownIcon

@@ -362,7 +362,7 @@ const Contest = (props) => {
         return (
             <ul className="tabMenu">
                 <li
-                    className={classNames('font-medium mr-4 text-xs sm:text-sm w-[34%] sm:w-[162px] sm:h-[72px] flex relative', {
+                    className={classNames('font-semibold mr-4 text-xs sm:text-sm w-[34%] sm:w-[162px] sm:h-[72px] flex relative', {
                         active: tab === initState.tab1
                     })}
                     onClick={() => handleChangTab(initState.tab1)}
@@ -370,7 +370,7 @@ const Contest = (props) => {
                     {t('nao:contest:contest_ranking')}
                 </li>
                 <li
-                    className={classNames('font-medium text-xs sm:text-sm w-[60%] sm:w-[250px] sm:h-[72px] flex relative !pl-2 sm:!pl-8 !justify-start', {
+                    className={classNames('font-semibold text-xs sm:text-sm w-[60%] sm:w-[250px] sm:h-[72px] flex relative !pl-2 sm:!pl-8 !justify-start', {
                         active: tab === initState.tab2
                     })}
                     onClick={() => handleChangTab(initState.tab2)}

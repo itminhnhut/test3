@@ -10,6 +10,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import Modal from 'components/common/ReModal';
 import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
 import { getS3Url } from 'redux/actions/utils';
+import SvgCross from 'components/svg/Cross';
 
 const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, onShowDetail, getInfo, contest_id }) => {
     const { t } = useTranslation();
@@ -58,68 +59,64 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                 modalClassName="z-[99999] flex justitfy-center h-full"
                 onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-[24px] !py-10 max-w-[668px]'} min-h-[304px] rounded-t-[16px] !overflow-hidden `}
                 containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]">
-                <div className={`bg-[#0E1D32] h-full w-full`}>
-                    <div className="flex sm:items-center sm:justify-between min-h-[32px] !px-4 sm:px-[0px] mb-[32px] gap-2 flex-wrap lg:flex-row flex-col">
-                        <div className="flex items-center gap-7">
-                            <div className="flex flex-col">
-                                <div className="flex items-center space-x-3">
-                                    <div className="text-[24px] leading-8 font-semibold capitalize">
-                                        {t('nao:contest:team_invitations')} ({data.length})
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <SvgCross className="ml-auto" color="currentColor" size={24} onClick={onClose} />
+                <div className="h-full w-full mt-6">
+                    {/* <div className="flex sm:items-center sm:justify-between min-h-[32px] gap-2 flex-wrap lg:flex-row flex-col">
 
+
+                    </div> */}
+                    <div className="text-xl sm:text-2xl font-semibold capitalize !px-4 sm:px-[0px] mb-[32px]">
+                        {t('nao:contest:team_invitations')} ({data.length})
                     </div>
 
-                    <div className="flex flex-col px-4 scrollbar-nao overflow-y-auto h-[calc(100%-124px)]">
+                    <div className="flex flex-col px-4 scrollbar-nao overflow-y-auto h-[calc(100%-84px)] text-sm sm:text-base">
                         {Array.isArray(data) && data.length > 0 &&
                             data?.map((item, index) => {
                                 return (
                                     isMobile ?
-                                        <CardNao noBg className="mb-[16px] px-[4px] py-[16px] !max-w-[330px]" key={item._id}>
-                                            <div className="flex px-3 gap-4 sm:gap-6 text-gray-15 dark:text-gray-7 text-sm font-medium border-divider dark:border-divider-dark items-center align-middle w-full h-full min-h-[56px]">
+                                        <CardNao className="mb-[16px] px-[4px] py-[16px] !max-w-[330px] border dark:border-none border-divider" key={item._id}>
+                                            <div className="flex px-3 gap-4 sm:gap-6 font-medium items-center align-middle w-full h-full min-h-[56px]">
                                                 <div className='h-[48px] w-[48px] flex justify-center items-center'>
                                                     <ImageNao src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
                                                 </div>
                                                 <div className='items-center'>
-                                                    <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
+                                                    <div className='h-auto font-normal capitalize flex items-center'>
                                                         {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
                                                     </div>
-                                                    <div className='uppercase h-auto flex items-center leading-8 text-teal font-semibold text-base'>
+                                                    <div className='uppercase h-auto flex items-center font-semibold text-base sm:text-2xl'>
                                                         {item.group_name}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex pt-[8px] px-3 gap-4 sm:gap-6 text-gray-15 dark:text-gray-7 text-sm font-medium border-divider dark:border-divider-dark h-full w-full justify-between">
-                                                <ButtonNao className="py-2 px-2 !rounded-md font-semibold w-full text-sm leading-6" onClick={() => onAccept(item)}>
+                                            <div className="flex pt-[8px] px-3 gap-4 sm:gap-6 h-full w-full justify-between">
+                                                <ButtonNao className="py-2 px-2 !rounded-md font-semibold w-full !text-xs sm:!text-sm" onClick={() => onAccept(item)}>
                                                     {t('nao:contest:accept_invite')}
                                                 </ButtonNao>
-                                                <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} variant={ButtonNaoVariants.SECONDARY} className="py-2 px-2 w-full !rounded-md font-semibold text-sm leading-6">
+                                                <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} variant={ButtonNaoVariants.SECONDARY} className="py-2 px-2 w-full !rounded-md font-semibold !text-xs sm:!text-sm">
                                                     {t('nao:contest:team_detail')}
                                                 </ButtonNao>
                                             </div>
                                         </CardNao>
                                         :
-                                        <CardNao noBg className="!flex !flex-row mb-[16px] !min-h-[100px] !py-[8px] !px-[12px]" key={item._id}>
-                                            <div className="flex px-3 gap-4 sm:gap-6 text-gray-15 dark:text-gray-7 text-sm font-medium border-divider dark:border-divider-dark items-center align-middle h-full">
+                                        <CardNao className="!flex !flex-row mb-[16px] !min-h-[100px] !py-[8px] !px-[12px] border dark:border-none border-divider" key={item._id}>
+                                            <div className="flex px-3 gap-4 sm:gap-6 items-center align-middle h-full">
                                                 <div className='h-[48px] w-[48px] flex justify-center items-center'>
                                                     <ImageNao src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
                                                 </div>
                                                 <div className='items-center'>
-                                                    <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
+                                                    <div className='h-auto font-normal capitalize flex items-center'>
                                                         {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
                                                     </div>
-                                                    <div className='uppercase h-auto flex items-center leading-8 text-teal font-semibold text-base'>
+                                                    <div className='uppercase h-auto flex items-center font-semibold text-base sm:text-2xl'>
                                                         {item.group_name}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center pt-[8px] gap-[16px] text-gray-15 dark:text-gray-7 text-sm font-medium border-divider dark:border-divider-dark h-full justify-evenly">
-                                                <ButtonNao className="py-[8px] px-[16px] !rounded-md font-semibold max-w-[250px] text-sm leading-6" onClick={() => onAccept(item)}>
+                                            <div className="flex items-center pt-[8px] gap-[16px] font-medium h-full justify-evenly">
+                                                <ButtonNao className="py-[8px] px-[16px] !rounded-md font-semibold max-w-[250px] !text-xs sm:!text-sm" onClick={() => onAccept(item)}>
                                                     {t('nao:contest:accept_invite')}
                                                 </ButtonNao>
-                                                <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} variant={ButtonNaoVariants.SECONDARY} className="py-[8px] px-[16px] !rounded-md font-semibold  max-w-[250px] text-sm leading-6">
+                                                <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} variant={ButtonNaoVariants.SECONDARY} className="py-[8px] px-[16px] !rounded-md font-semibold  max-w-[250px] !text-xs sm:!text-sm">
                                                     {t('nao:contest:team_detail')}
                                                 </ButtonNao>
                                             </div>
@@ -130,9 +127,9 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                     </div>
 
 
-                    <div className="mx-[16px] mt-5 sm:mt-10">
+                    {/* <div className="mx-[16px] mt-5 sm:mt-10">
                         <ButtonNao onClick={onClose} variant={ButtonNaoVariants.SECONDARY} className="py-2 px-11 !rounded-md font-semibold">{t('common:close')}</ButtonNao>
-                    </div>
+                    </div> */}
                 </div>
             </Modal>
         </>
@@ -148,20 +145,20 @@ const LeaderFlag = <svg className="mr-1" width="14" height="16" viewBox="0 0 14 
     <path d="M1.02351 1.75734C1.50866 1.75734 1.90194 1.36405 1.90194 0.878906H0.145081C0.145081 1.36405 0.538367 1.75734 1.02351 1.75734Z" fill="url(#paint3_linear_14907_6988)" />
     <defs>
         <linearGradient id="paint0_linear_14907_6988" x1="0.526894" y1="1.7257" x2="17.3724" y2="6.24598" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#093DD1" />
-            <stop offset="1" stopColor="#49E8D5" />
+            <stop stopColor="#47cc85" />
+            <stop offset="1" stopColor="#47cc85" />
         </linearGradient>
         <linearGradient id="paint1_linear_14907_6988" x1="1.02351" y1="1.44336" x2="1.02351" y2="16.0002" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#FFFBD5" />
-            <stop offset="1" stopColor="#49E8D5" />
+            <stop stopColor="#00dc68" />
+            <stop offset="1" stopColor="#47cc85" />
         </linearGradient>
         <linearGradient id="paint2_linear_14907_6988" x1="1.02351" y1="0" x2="1.02351" y2="1.75686" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#FFFBD5" />
-            <stop offset="1" stopColor="#49E8D5" />
+            <stop stopColor="#00dc68" />
+            <stop offset="1" stopColor="#47cc85" />
         </linearGradient>
         <linearGradient id="paint3_linear_14907_6988" x1="1.02351" y1="0.878906" x2="1.02351" y2="1.75734" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#FFFBD5" />
-            <stop offset="1" stopColor="#49E8D5" />
+            <stop stopColor="#00dc68" />
+            <stop offset="1" stopColor="#47cc85" />
         </linearGradient>
     </defs>
 </svg>

@@ -217,16 +217,16 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={() => onClose()}
-            onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[484px]'} !overflow-hidden`}
+            onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[484px]'} !overflow-hidden text-sm sm:text-base`}
             containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
             center={!isMobile}
         >
             <SvgCross className="ml-auto" color="currentColor" size={24} onClick={onClose} />
-            <div className="!px-4 text-2xl leading-8 font-semibold">{t('nao:contest:create_a_team')}</div>
+            <div className="!px-4 text-xl sm:text-2xl leading-8 font-semibold">{t('nao:contest:create_a_team')}</div>
             <div className="!px-4 scrollbar-nao form-team mt-8 overflow-y-auto max-h-[calc(100%-136px)]">
                 <div>
-                    <div className="text-sm font-medium leading-6">{t('nao:contest:team_information')}</div>
-                    <div className="mt-4 flex items-center justify-between space-x-0 sm:space-x-4 flex-wrap sm:flex-nowrap">
+                    <div className="font-semibold">{t('nao:contest:team_information')}</div>
+                    <div className="mt-4 flex items-center justify-center sm:justify-between space-x-0 sm:space-x-4 flex-wrap sm:flex-nowrap">
                         <div onClick={onAddAvatar}
                             style={{ backgroundImage: avatar?.url ? `url(${avatar.url})` : null }}
                             className={classnames(
@@ -248,14 +248,13 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                 </div>
                 <div className="mt-8">
                     <Tooltip className="!p-[10px] sm:min-w-[282px] sm:!max-w-[282px]"
-                        backgroundColor={colors.nao.tooltip2} arrowColor="transparent" id="tooltip-list-team" >
-                        <div className="font-medium text-sm"  >
+                        arrowColor="transparent" id="tooltip-list-team" >
+                        <div className="text-sm"  >
                             {t('nao:contest:tooltip_create_team')}
                         </div>
                     </Tooltip>
-                    <div className="text-sm font-medium leading-6 flex items-center space-x-2">
-                        <span>{t('nao:contest:member_list')}</span>
-                        <img data-tip={''} data-for="tooltip-list-team" className="cursor-pointer" src={getS3Url('/images/nao/ic_info.png')} width="16" height="16" alt="" />
+                    <div className="text-sm leading-6 flex items-center space-x-2">
+                        <span data-for="tooltip-list-team">{t('nao:contest:member_list')}</span>
                     </div>
                     <div className="flex flex-col space-y-4 mt-4">
                         <TextField label={t('nao:contest:captain_id')} value={userData?.onus_user_id}
