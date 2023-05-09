@@ -27,7 +27,15 @@ import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
 
 import TagV2 from '../V2/TagV2';
 import { ChevronRight } from 'react-feather';
-import { BxsUserIcon, FutureExchangeIcon, FutureIcon, FuturePortfolioIcon, FutureWalletIcon, SuccessfulTransactionIcon } from '../../svg/SvgIcon';
+import {
+    BxChevronDown,
+    BxsUserIcon,
+    FutureExchangeIcon,
+    FutureIcon,
+    FuturePortfolioIcon,
+    FutureWalletIcon,
+    SuccessfulTransactionIcon
+} from '../../svg/SvgIcon';
 import NavbarIcons from './Icons';
 import AuthButton from './AuthButton';
 import Button from '../V2/ButtonV2/Button';
@@ -190,7 +198,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                 child_lv1.map((child) => {
                     itemsLevel1.push(
                         <Link href={child.url} key={`${child.title}_${child.key}`}>
-                            <a className="mal-navbar__link__group___item___childen__lv1___item">
+                            <a target={child?.notSameOrigin ? '_blank' : '_self'} className="mal-navbar__link__group___item___childen__lv1___item">
                                 {t(`navbar:submenu.${child.localized}`)} {child.isNew && <div className="mal-dot__newest" />}
                             </a>
                         </Link>
@@ -354,7 +362,9 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
                     {t(`navbar:menu.user.${item.localized}`)}
                 </div>
-                <ChevronRight className="!mr-0" size={16} />
+                <div className=" text-txtPrimary dark:text-txtPrimary-dark">
+                    <BxChevronDown className="!mr-0" size={24} color="currentColor" />
+                </div>
             </a>
         );
     };
@@ -435,11 +445,13 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                     {state.loadingVipLevel ? <PulseLoader size={3} color={colors.teal} /> : `VIP ${state.vipLevel || '0'}`}
                                 </div>
                             </div>
-                            <div className="flex items-center ">
+                            <div className="flex items-center space-x-1 ">
                                 <div className=" ">
                                     {t('navbar:use')} <span className="text-dominant uppercase">NAMI</span> - {t('navbar:get_discount')}
                                 </div>
-                                <ChevronRight className="!mr-0 ml-1" size={16} />
+                                <div className=" text-txtPrimary dark:text-txtPrimary-dark">
+                                    <BxChevronDown className="!mr-0" size={24} color="currentColor" />
+                                </div>
                             </div>
                         </div>
                     </Link>
