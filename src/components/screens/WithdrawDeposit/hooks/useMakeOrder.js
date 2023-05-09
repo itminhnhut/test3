@@ -1,20 +1,24 @@
 import { PATHS } from 'constants/paths';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApiResultCreateOrder, ApiStatus } from 'redux/actions/const';
 import { getAssetCode } from 'redux/actions/utils';
-import { createNewOrder } from 'redux/actions/withdrawDeposit';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { createNewOrder, setPartnerModal } from 'redux/actions/withdrawDeposit';
+import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
 import toast from 'utils/toast';
+import { ORDER_TYPES } from '../constants';
 
 const useMakeOrder = ({ setState, input }) => {
     const { partnerBank, accountBank, partner } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
     const { t } = useTranslation();
+    const dispatch = useDispatch();
 
     const { side, assetId } = router.query;
     const assetCode = getAssetCode(+assetId);
+
+    const setModalState = (key, state) => dispatch(setPartnerModal({ key, state }));
 
     const onMakeOrderSuccess = (order) => {
         router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + order.displayingId);
@@ -52,7 +56,10 @@ const useMakeOrder = ({ setState, input }) => {
                     } else if (orderResponse?.status === ApiResultCreateOrder.INVALID_AMOUNT) {
                         toast({ text: t('dw_partner:error.reach_limit_withdraw', { asset: assetCode }), type: 'warning' });
                     } else if (orderResponse?.status === ApiResultCreateOrder.EXCEEDING_PERMITTED_LIMIT) {
-                        toast({ text: t('dw_partner:error.exceeding_limit', { asset: assetCode }), type: 'warning' });
+                        setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                            visible: true,
+                            type: ORDER_TYPES.ERROR_EXCEEDING_LIMIT
+                        });
                     } else toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }
             }
@@ -64,7 +71,7 @@ const useMakeOrder = ({ setState, input }) => {
         }
     };
 
-    return { onMakeOrderSuccess, onMakeOrderHandler };
+    return { onMakeOrderSuccess, onMakeOrderHandler, setModalState };
 };
 
 export default useMakeOrder;

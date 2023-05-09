@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux';
 import { MODAL_TYPE } from 'redux/reducers/withdrawDeposit';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
-import toast from 'utils/toast';
 const useMarkOrder = ({ mode, toggleRefetch }) => {
     const dispatch = useDispatch();
     const router = useRouter();
@@ -100,7 +99,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                         }
                     }
 
-                    toggleRefetch();
+                    toggleRefetch(data.data);
                 } else {
                     setModalState(MODAL_TYPE.CONFIRM, {
                         loading: false,

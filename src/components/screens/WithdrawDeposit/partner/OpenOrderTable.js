@@ -30,93 +30,101 @@ import classNames from 'classnames';
 
 const LIMIT_ROW = 5;
 
-const OrderCard = memo(({ orderDetail, assetConfig, t, router, onProcessOrder }) => {
-    const assetCode = find(assetConfig, { id: orderDetail?.baseAssetId })?.assetCode;
+const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, router, onProcessOrder }) => {
+    const asset = find(assetConfig, { id: orderDetail?.baseAssetId });
+    const assetCode = asset?.assetCode;
+
     return (
         <Card className={classNames('border-0 bg-white dark:bg-dark-4', {})}>
-            <div className="flex items-center justify-between mb-6">
-                <div className="txtPri-3">
-                    {t(`dw_partner:${orderDetail?.side?.toLowerCase()}_asset_from_partners.partner`, {
-                        asset: assetCode
-                    })}
-                </div>{' '}
-                <div className="flex items-center gap-4">
+            <div className="flex items-center flex-wrap">
+                <div className="flex-grow border-b pb-5 lg:border-r border-divider dark:border-divider-dark lg:pb-0 lg:pr-10 lg:border-b-0 ">
+                    <div className="flex items-center mb-8">
+                        <div className="txtPri-3 pr-6">
+                            {t(`dw_partner:${orderDetail?.side?.toLowerCase()}_asset_from_partners.partner`, {
+                                asset: assetCode
+                            })}
+                        </div>{' '}
+                        <div className="flex -m-1 flex-wrap items-center">
+                            <div className="p-1">
+                                {orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && orderDetail?.status === PartnerOrderStatus.PENDING ? (
+                                    <TagV2 type={TYPES.DEFAULT} className="!bg-divider dark:!bg-divider-dark">
+                                        {t('dw_partner:wait_confirmation')}
+                                    </TagV2>
+                                ) : (
+                                    <OrderStatusTag className="!ml-0" status={orderDetail?.status} />
+                                )}
+                            </div>
+
+                            {orderDetail?.status === PartnerOrderStatus.PENDING && orderDetail?.timeExpire && (
+                                <div className="p-1 w-[100px]">
+                                    <CountdownClock countdownTime={orderDetail?.countdownTime} onComplete={() => {}} timeExpire={orderDetail?.timeExpire} />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap -m-2 justify-between ">
+                        <div className="flex gap-6 p-2 w-1/2 lg:w-1/4">
+                            <div className="space-y-2">
+                                <TextCopyable className="gap-x-1 txtPri-1" text={orderDetail?.displayingId} />
+                                <div className="txtSecond-3">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
+                            </div>
+                        </div>
+
+                        <div className="p-2 flex justify-end lg:justify-start w-1/2 lg:w-1/4">
+                            <div className="space-y-2 text-right lg:text-left">
+                                <div className="capitalize txtPri-1">{orderDetail?.userMetadata?.name?.toLowerCase()}</div>
+                                <div className="txtSecond-3">{orderDetail?.userMetadata?.code}</div>
+                            </div>
+                        </div>
+
+                        <div className="p-2 w-1/2 lg:w-1/4">
+                            <div className="space-y-2">
+                                <div className="txtPri-1">{t('dw_partner:rate')}</div>
+                                <div className="txtSecond-3">
+                                    1 {assetCode} ≈ {formatBalanceFiat(orderDetail?.price, 'VNDC')} VND
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-2 space-y-2 w-1/2 lg:w-1/4 flex justify-end lg:justify-start">
+                            <div className="text-right w-full">
+                                <div className="txtPri-3 font-semibold">
+                                    {`${orderDetail?.side === SIDE.SELL ? '+' : '-'}${formatBalanceFiat(orderDetail?.baseQty, assetCode)}`} {assetCode}
+                                </div>
+                                <div className="txtSecond-3 ">{formatBalanceFiat(orderDetail?.quoteQty, 'VNDC')} VND</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="lg:ml-10 flex flex-col items-center lg:max-w-[164px] w-full gap-3">
                     {orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.ACCEPTED ? (
                         <ButtonV2
                             onClick={() => router.push(`${PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS}/${orderDetail?.displayingId}`)}
                             variants="text"
-                            className="!py-0 !w-auto items-center"
+                            className="!py-0 items-center"
                         >
                             <span className="font-semibold">{t('dw_partner:transaction_detail')}</span>
                             <ChevronRight color="currentColor" size={16} />
                         </ButtonV2>
                     ) : (
                         <>
-                            <ButtonV2 className="!w-auto !h-9 px-4 py-3" onClick={() => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, orderDetail)}>
+                            <ButtonV2
+                                loading={loadingProcessOrder}
+                                className="!h-9 px-4 py-3"
+                                onClick={() => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, orderDetail)}
+                            >
                                 {t('common:accept')}
                             </ButtonV2>
                             <ButtonV2
-                                className="!w-auto px-4 py-3 !h-9"
+                                className="px-4 py-3 !h-9 disabled:!cursor-auto"
                                 variants="secondary"
+                                disabled={loadingProcessOrder}
                                 onClick={() => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, orderDetail)}
                             >
                                 {t('common:reject')}
                             </ButtonV2>
                         </>
                     )}
-                </div>
-            </div>
-            <div className="flex flex-wrap -m-2 justify-between ">
-                <div className="p-2 w-full xxs:w-1/2 lg:!w-auto">
-                    <div className="txtSecond-2 mb-3">{t('common:status')}</div>
-                    <div className="flex -m-1 flex-wrap items-center">
-                        <div className="p-1">
-                            {orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && orderDetail?.status === PartnerOrderStatus.PENDING ? (
-                                <TagV2 type={TYPES.DEFAULT} className="!bg-divider dark:!bg-divider-dark">
-                                    {t('dw_partner:wait_confirmation')}
-                                </TagV2>
-                            ) : (
-                                <OrderStatusTag className="!ml-0" status={orderDetail?.status} />
-                            )}
-                        </div>
-
-                        {orderDetail?.status === PartnerOrderStatus.PENDING && orderDetail?.timeExpire && (
-                            <div className="p-1 w-[100px]">
-                                <CountdownClock countdownTime={orderDetail?.countdownTime} onComplete={() => {}} timeExpire={orderDetail?.timeExpire} />
-                            </div>
-                        )}
-                    </div>
-                </div>
-                <div className="border-divider hidden lg:block  dark:border-divider-dark border-r" />
-
-                <div className="p-2 w-full  lg:!w-auto xxs:w-1/2  flex flex-col lg:!items-start xxs:items-end ">
-                    <div className="txtSecond-2 mb-3 ">{t('dw_partner:user')}</div>
-                    <div className="flex space-x-1 items-center flex-wrap lg:!justify-start xxs:justify-end ">
-                        <div className="capitalize txtPri-1">{orderDetail?.userMetadata?.name?.toLowerCase()}</div>
-                        <div className="txtSecond-2">({orderDetail?.userMetadata?.code})</div>
-                    </div>
-                </div>
-                <div className="border-divider hidden lg:block dark:border-divider-dark border-r" />
-                <div className="flex gap-6 p-2 w-full xxs:w-1/2 lg:!w-auto">
-                    <div className="">
-                        <div className="txtSecond-2 mb-3">{t('common:transaction_id')}</div>
-                        <TextCopyable className="gap-x-1 txtPri-1" text={orderDetail?.displayingId} />
-                    </div>
-                    <div className="">
-                        <div className="txtSecond-2 mb-3 ">{t('common:time')}</div>
-                        <div className="txtPri-1">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
-                    </div>
-                </div>
-
-                <div className="border-divider hidden lg:block dark:border-divider-dark border-r" />
-
-                <div className="p-2 w-full xxs:w-1/2 lg:!w-auto">
-                    <div>
-                        <div className="txtSecond-2 xxs:text-right mb-3">{t('dw_partner:amount')}</div>
-                        <div className="mt-3 txtPri-3 xxs:text-right font-semibold">
-                            {`${orderDetail?.side === SIDE.SELL ? '+' : '-'}${formatBalanceFiat(orderDetail?.baseQty, 'VNDC')}`}
-                        </div>
-                    </div>
                 </div>
             </div>
         </Card>
@@ -155,7 +163,7 @@ const OpenOrderTable = () => {
     dataRef.current = [...state.data];
     currentSideRef.current = state.params.side;
 
-    const { onMarkWithStatus, onProcessOrder, setModalState } = useMarkOrder({
+    const { onProcessOrder, setModalState } = useMarkOrder({
         mode: MODE.PARTNER,
         toggleRefetch: () => {}
     });
@@ -280,11 +288,19 @@ const OpenOrderTable = () => {
                         ))
                     ) : state.data.length ? (
                         state.data.map((order, i) => (
-                            <OrderCard onProcessOrder={onProcessOrder} router={router} assetConfig={assetConfig} key={i} orderDetail={order} t={t} />
+                            <OrderCard
+                                loadingProcessOrder={modalProps[MODAL_TYPE.CONFIRM].loading}
+                                onProcessOrder={onProcessOrder}
+                                router={router}
+                                assetConfig={assetConfig}
+                                key={i}
+                                orderDetail={order}
+                                t={t}
+                            />
                         ))
                     ) : (
                         <div className="mt-[60px]">
-                            <NoData />
+                            <NoData text={t('dw_partner:no_pending_transactions')} />
                         </div>
                     )}
                 </div>

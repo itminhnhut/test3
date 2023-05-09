@@ -47,7 +47,7 @@ const PartnerWD = ({ children }) => {
         <div className="px-4 pt-20 pb-[120px] bg-gray-13 dark:bg-dark font-normal text-base text-gray-15 dark:text-gray-4 tracking-normal">
             <div className="max-w-screen-v3 mx-auto 2xl:max-w-screen-xxl">
                 <h1 className="mb-8 font-semibold text-[32px] leading-[38px] text-gray-15 dark:text-gray-4 tracking-normal">{t('dw_partner:partner_title')}</h1>
-                <Tabs tab={id} className="space-x-6 border-b border-divider dark:border-divider-dark mb-12">
+                <Tabs tab={id} className="space-x-6 border-b border-divider dark:border-divider-dark mb-8">
                     {TABS.map((tab) => {
                         const tabId = getTabIdFromHref(tab.href);
 

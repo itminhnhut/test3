@@ -30,25 +30,25 @@ const RENDER_INFORMATION = [
         mode: [MODE.PARTNER],
         render: ({ data }) => data || null
     },
-    {
-        key: 'analyticMetadata.count',
-        icon: <OrderIcon color="currentColor" size={16} />,
-        mode: [MODE.USER],
-        render: ({ t, totalOrder, language }) => (
-            <>
-                {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 1 ? 's' : ''}`}
-            </>
-        )
-    },
-    {
-        key: 'analyticMetadata.avgTime',
-        icon: <TimerIcon color="currentColor" size={16} />,
-        mode: [MODE.USER],
-        render: ({ t, data, totalOrder }) => (totalOrder > 0 ? formatTimePartner(t, data) : null)
-    }
+    // {
+    //     key: 'analyticMetadata.count',
+    //     icon: <OrderIcon color="currentColor" size={16} />,
+    //     mode: [MODE.USER],
+    //     render: ({ t, totalOrder, language }) => (
+    //         <>
+    //             {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 1 ? 's' : ''}`}
+    //         </>
+    //     )
+    // },
+    // {
+    //     key: 'analyticMetadata.avgTime',
+    //     icon: <TimerIcon color="currentColor" size={16} />,
+    //     mode: [MODE.USER],
+    //     render: ({ t, data, totalOrder }) => (totalOrder > 0 ? formatTimePartner(t, data) : null)
+    // }
 ];
 
-const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refetchOrderDetail, mode = MODE.USER }) => {
+const GroupInforCard = ({ orderDetail, side, setModalQr, status, mode = MODE.USER }) => {
     const otherMode = mode === MODE.PARTNER ? MODE.USER : MODE.PARTNER;
     const totalOrder = orderDetail?.partnerMetadata?.analyticMetadata?.count || 0;
     const {
@@ -57,7 +57,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
     } = useTranslation();
 
     return (
-        <div>
+        <div className="mb-12">
             <h1 className="text-[18px] font-semibold mb-6">{t('dw_partner:transaction_bank_receipt')}</h1>
             {/* Không hiển thị thông tin lệnh đôi với màn USER - BUY khi đối tác chưa accept */}
             {mode === MODE.USER &&
@@ -84,7 +84,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                         {!orderDetail ? (
                                             <Skeletor circle width={80} height={80} />
                                         ) : (
-                                            <img src={orderDetail?.[`${otherMode}Metadata`]?.avatar || DefaultAvatar} className="mb-6 w-20 h-20 rounded-full" />
+                                            <img src={orderDetail?.[`${otherMode}Metadata`]?.avatar || DefaultAvatar} className="mb-6 object-cover w-20 h-20 rounded-full" />
                                         )}
 
                                         <div className="txtPri-1 capitalize font-semibold mb-3">
@@ -100,9 +100,9 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                                 });
                                                 return item.mode.includes(mode) ? (
                                                     !orderDetail ? (
-                                                        <Skeletor width={100} height={25} />
+                                                        <Skeletor key={item.key} width={100} height={25} />
                                                     ) : renderData ? (
-                                                        <TagV2 key={item.key} type={TYPES.DEFAULT} icon={false} className="dark:!bg-divider-dark">
+                                                        <TagV2 key={item.key} type={TYPES.DEFAULT} icon={false} className=" dark:!bg-divider-dark">
                                                             <div className="flex space-x-2 items-center">
                                                                 {item.icon}
                                                                 <div>{renderData}</div>

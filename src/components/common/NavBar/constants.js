@@ -49,7 +49,7 @@ export const NAV_DATA = [
                 child_lv1: []
             },
             {
-                key: 7,
+                key: 2,
                 title: 'Swap',
                 localized: 'swap',
                 isNew: false,
@@ -57,46 +57,23 @@ export const NAV_DATA = [
                 child_lv2: []
             },
 
-            // {
-            //     key: 2,
-            //     title: 'Launchpad',
-            //     localized: 'launchpad',
-            //     isNew: false,
-            //     url: 'https://launchpad.nami.exchange/',
-            //     child_lv1: []
-            // },
-            // {
-            //     key: 3,
-            //     title: 'Copy Trade',
-            //     localized: 'copytrade',
-            //     isNew: false,
-            //     url: '/',
-            //     child_lv2: [],
-            // },
             {
-                key: 6,
+                key: 3,
                 title: 'Referral',
                 localized: 'referral',
                 isNew: false,
                 url: '/reference',
                 child_lv2: []
-            }
+            },
             // {
             //     key: 4,
-            //     title: 'Staking',
-            //     localized: 'staking',
+            //     title: 'Nami Insurance',
+            //     localized: 'nami_insurance',
             //     isNew: false,
-            //     url: getV1Url('/staking'),
-            //     child_lv2: [],
-            // },
-            // {
-            //     key: 5,
-            //     title: 'Farming',
-            //     localized: 'farming',
-            //     isNew: false,
-            //     url: getV1Url('/farming'),
-            //     child_lv2: [],
-            // },
+            //     notSameOrigin: true,
+            //     url: 'https://namiinsurance.io/',
+            //     child_lv2: []
+            // }
         ]
     },
     {
@@ -114,14 +91,7 @@ export const NAV_DATA = [
                 url: '/swap',
                 child_lv2: []
             },
-            // {
-            //     key: 1,
-            //     title: 'Transfer',
-            //     localized: 'transfer',
-            //     isNew: false,
-            //     url: '/',
-            //     child_lv2: []
-            // }
+
             {
                 key: 7,
                 title: 'Classic',
@@ -159,32 +129,92 @@ export const NAV_DATA = [
 ];
 
 export const MOBILE_NAV_DATA = [
-    // {
-    //     key: 10,
-    //     title: 'Profile',
-    //     localized: 'user.user',
-    //     isNew: false,
-    //     url: PATHS.ACCOUNT,
-    //     child_lv1: [
-    //         {
-    //             key: 0,
-    //             title: 'APIManagement',
-    //             localized: 'api_mng',
-    //             // hide: true,
-    //             isNew: true,
-    //             url: getV1Url('/settings/api-management'),
-    //             child_lv1: []
-    //         }
-    //     ]
-    // },
     {
-        key: 'daily_reward',
-        title: 'daily_reward',
-        localized: 'user.daily_reward',
-        isNew: true,
-        url: '/luckydraw/nami?web=true',
-        child_lv1: []
+        key: 'profile',
+        title: 'profile',
+        localized: 'user.profile',
+        isNew: false,
+        child_lv1: [
+            {
+                key: 0,
+                title: 'Profile',
+                localized: 'profile',
+
+                isNew: true,
+                url: PATHS.ACCOUNT.PROFILE,
+                child_lv1: []
+            },
+            {
+                key: 1,
+                title: 'payment_method',
+                localized: 'payment_method',
+                isNew: true,
+                url: PATHS.ACCOUNT?.PAYMENT_METHOD || '/',
+                child_lv1: []
+            },
+            {
+                key: 2,
+                title: 'Referral',
+                localized: 'profile_referral',
+                isNew: true,
+                url: '/reference',
+                child_lv1: []
+            },
+            {
+                key: 3,
+                title: 'partner',
+                localized: 'partner',
+                isPartner: true,
+                // hide: true,
+                isNew: true,
+                url: PATHS?.PARNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
+                child_lv1: []
+            },
+            {
+                key: 'daily_reward',
+                title: 'daily_reward',
+                localized: 'daily_reward',
+                isNew: true,
+                url: '/luckydraw/nami?web=true',
+                child_lv1: []
+            }
+        ]
     },
+    {
+        key: 5,
+        title: 'Wallet',
+        localized: 'wallet',
+        isNew: false,
+        url: '/',
+        spaceLine: true,
+        child_lv1: [
+            {
+                key: 2,
+                title: 'Overview',
+                localized: 'overview_wallet',
+                isNew: false,
+                url: PATHS.WALLET.OVERVIEW,
+                child_lv2: []
+            },
+            {
+                key: 0,
+                title: 'Spot Wallet',
+                localized: 'spot_wallet',
+                isNew: false,
+                url: PATHS.WALLET.EXCHANGE.DEFAULT,
+                child_lv2: []
+            },
+            {
+                key: 1,
+                title: 'Futures Wallet',
+                localized: 'futures_wallet',
+                isNew: false,
+                url: PATHS.WALLET.FUTURES,
+                child_lv2: []
+            }
+        ]
+    },
+
     {
         key: 1,
         title: 'Market',
@@ -224,38 +254,7 @@ export const MOBILE_NAV_DATA = [
                 url: '/swap',
                 child_lv2: []
             },
-            // {
-            //     key: 2,
-            //     title: 'Launchpad',
-            //     localized: 'launchpad',
-            //     isNew: true,
-            //     url: 'https://launchpad.nami.exchange/',
-            //     child_lv1: []
-            // },
-            // {
-            //     key: 3,
-            //     title: 'Copy Trade',
-            //     localized: 'copytrade',
-            //     isNew: false,
-            //     url: '/',
-            //     child_lv2: []
-            // },
-            // {
-            //     key: 5,
-            //     title: 'Futures Mobile',
-            //     localized: 'mobile_futures',
-            //     isNew: false,
-            //     url: 'https://test.nami.exchange/mobile/futures',
-            //     child_lv2: []
-            // },
-            // {
-            //     key: 5,
-            //     title: 'Farming',
-            //     localized: 'farming',
-            //     isNew: false,
-            //     url: 'https://nami.exchange/farming',
-            //     child_lv2: [],
-            // },
+
             {
                 key: 6,
                 title: 'Referral',
@@ -263,7 +262,16 @@ export const MOBILE_NAV_DATA = [
                 isNew: false,
                 url: '/reference',
                 child_lv2: []
-            }
+            },
+            // {
+            //     key: 7,
+            //     title: 'Nami Insurance',
+            //     localized: 'nami_insurance',
+            //     isNew: false,
+            //     notSameOrigin: true,
+            //     url: 'https://namiinsurance.io/',
+            //     child_lv2: []
+            // }
         ]
     },
     {
@@ -317,22 +325,7 @@ export const MOBILE_NAV_DATA = [
         url: '/support',
         child_lv1: []
     },
-    // {
-    //     key: 3,
-    //     title: 'Explained',
-    //     localized: 'explained',
-    //     isNew: false,
-    //     url: 'https://explained.nami.exchange/',
-    //     child_lv1: []
-    // },
-    // {
-    //     key: 4,
-    //     title: 'Fee',
-    //     localized: 'fee',
-    //     isNew: false,
-    //     url: 'https://nami.exchange/fee-schedule',
-    //     child_lv1: []
-    // },
+
     {
         key: 6,
         title: 'Support',
@@ -340,91 +333,7 @@ export const MOBILE_NAV_DATA = [
         isNew: false,
         url: '/',
         child_lv1: []
-    },
-    {
-        key: 5,
-        title: 'Wallet',
-        localized: 'wallet',
-        isNew: false,
-        url: '/',
-        child_lv1: [
-            {
-                key: 2,
-                title: 'Overview',
-                localized: 'overview_wallet',
-                isNew: false,
-                url: PATHS.WALLET.OVERVIEW,
-                child_lv2: []
-            },
-            {
-                key: 0,
-                title: 'Spot Wallet',
-                localized: 'spot_wallet',
-                isNew: false,
-                url: PATHS.WALLET.EXCHANGE.DEFAULT,
-                child_lv2: []
-            },
-            {
-                key: 1,
-                title: 'Futures Wallet',
-                localized: 'futures_wallet',
-                isNew: false,
-                url: PATHS.WALLET.FUTURES,
-                child_lv2: []
-            }
-            // {
-            //     key: 2,
-            //     title: 'Staking Wallet',
-            //     localized: 'staking_wallet',
-            //     isNew: false,
-            //     url: PATHS.WALLET.STAKING,
-            //     child_lv2: [],
-            // },
-            // {
-            //     key: 3,
-            //     title: 'Farming Wallet',
-            //     localized: 'farming_wallet',
-            //     isNew: false,
-            //     url: PATHS.WALLET.FARMING,
-            //     child_lv2: [],
-            // },
-        ]
     }
-    // {
-    //     key: 'spotlight',
-    //     title: 'Spotlight',
-    //     localized: 'spotlight',
-    //     isNew: false,
-    //     url: '/',
-    //     child_lv1: []
-    // }
-    // {
-    //     key: 6,
-    //     title: 'More',
-    //     localized: 'more',
-    //     isNew: false,
-    //     url: '/',
-    //     child_lv1: [
-    //         {
-    //             key: 0,
-    //             title: 'Lorem ipsum',
-    //             localized: 'lorem',
-    //             isNew: false,
-    //             url: '/',
-    //             child_lv2: [
-    //                 {
-    //                     key: 0,
-    //                     title: 'Lorem ipsum nonstop',
-    //                     localized: 'loremnonstop',
-    //                     isNew: false,
-    //                     url: '/',
-    //                     child_lv3: []
-    //                 },
-    //                 // ...
-    //             ]
-    //         }
-    //     ]
-    // },
 ];
 
 export const USER_CP = [
@@ -473,50 +382,4 @@ export const USER_CP = [
         // url: '/luckydraw/nami',
         child_lv1: []
     }
-    // {
-    //     key: 1,
-    //     title: 'Security',
-    //     localized: 'security',
-    //     hide: true,
-    //     isNew: true,
-    //     url: '/',
-    //     child_lv1: []
-    // },
-    // {
-    //     key: 2,
-    //     title: 'Identify',
-    //     localized: 'identify',
-    //     hide: true,
-    //     isNew: true,
-    //     url: '/',
-    //     child_lv1: []
-    // },
-
-    // {
-    //     key: 3,
-    //     title: 'RewardCenter',
-    //     localized: 'reward_center',
-    //     hide: true,
-    //     isNew: true,
-    //     url: '/account/reward-center',
-    //     child_lv1: []
-    // },
-    // {
-    //     key: 5,
-    //     title: 'TaskCenter',
-    //     localized: 'task_center',
-    //     hide: true,
-    //     isNew: true,
-    //     url: '/',
-    //     child_lv1: []
-    // }
-    // {
-    //     key: 6,
-    //     title: 'APIManagement',
-    //     localized: 'api_mng',
-    //     // hide: true,
-    //     isNew: true,
-    //     url: getV1Url('/settings/api-management'),
-    //     child_lv1: []
-    // }
 ];

@@ -19,7 +19,8 @@ export const BankInfo = ({
     additionalActions,
     t,
     showDropdownIcon,
-    disabled
+    disabled,
+    mustBeShow
 }) => {
     const [search, setSearch] = useState('');
     return (
@@ -30,6 +31,7 @@ export const BankInfo = ({
             loadingList={loadingBanks}
             showDropdownIcon={showDropdownIcon}
             disabled={disabled}
+            mustBeShow={mustBeShow}
             label={
                 <>
                     {showTooltip && (

@@ -15,10 +15,18 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
     const { t } = useTranslation();
 
     return (
-        <Card className="mb-12 border !border-divider dark:border-0 bg-white dark:bg-dark-4">
-            <div className="flex flex-wrap justify-between">
-                <div className="w-1/2 md:w-1/3 ">
-                    <div className="txtSecond-2 mb-3">{t('common:status')}</div>
+        <div className="mb-12">
+            <div className="flex mb-6">
+                {!side ? (
+                    <Skeletor width="200px" />
+                ) : (
+                    <h2 className="text-2xl font-semibold">
+                        {t(`dw_partner:${side?.toLowerCase()}_asset_from_partners.${mode}`, {
+                            asset: assetCode
+                        })}
+                    </h2>
+                )}
+                <div className="ml-6">
                     <div className="flex -m-1 flex-wrap items-center">
                         <div className="p-1">
                             {!orderDetail ? (
@@ -43,37 +51,53 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                         )}
                     </div>
                 </div>
-                <div className="flex mt-6 md:mt-0 gap-12 justify-between md:justify-center order-3 md:order-2 w-full md:w-1/3 md:border-l md:border-r border-divider dark:border-divider-dark">
-                    <div className="">
-                        <div className="txtSecond-2 mb-3">{t('common:transaction_id')}</div>
-                        {!orderDetail ? <Skeletor width="100px" /> : <TextCopyable className="gap-x-1 txtPri-1" text={orderDetail?.displayingId} />}
+            </div>
+
+            <Card className="border !border-divider dark:border-0 bg-white dark:bg-dark-4">
+                <div className="flex flex-grow items-center justify-between">
+                    <div className="flex items-center -m-5">
+                        <div className="flex p-5">
+                            <div className="">
+                                <div className="mb-2">
+                                    {!orderDetail ? (
+                                        <Skeletor width="100px" />
+                                    ) : (
+                                        <TextCopyable className="gap-x-1 txtPri-1 " text={orderDetail?.displayingId} />
+                                    )}
+                                </div>
+                                <div className="txtSecond-2 ">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
+                            </div>
+                        </div>
+
+                        {/* <div className="flex justify-end text-right md:justify-start md:text-left p-2 w-1/2 md:w-1/4 ">
+                        <div className="">
+                            <div className="mb-2 capitalize txtPri-1">{orderDetail?.[`userMetadata`]?.name?.toLowerCase()}</div>
+                            <div className="txtSecond-2 ">{orderDetail?.[`userMetadata`]?.code}</div>
+                        </div>
+                    </div> */}
+
+                        <div className="flex p-5">
+                            <div className="">
+                                <div className="mb-2 txtPri-1">{t('dw_partner:rate')}</div>
+                                <div className="txtSecond-2 ">
+                                    1 {assetCode} ≈ {formatBalanceFiat(orderDetail?.price, 'VNDC')} VND
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="">
-                        <div className="txtSecond-2 mb-3 text-right md:text-left">{t('common:time')}</div>
-                        {!orderDetail ? (
-                            <Skeletor width="100px" />
-                        ) : (
-                            <div className="txtPri-1">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
-                        )}
-                    </div>
-                </div>
-                <div className="w-1/2  order-2 md:order-3 md:w-1/3 flex justify-end">
-                    <div>
-                        <div className="txtSecond-2 text-right mb-3">{t('dw_partner:amount')}</div>
-                        <div className="mt-3 txtPri-3 font-semibold">
-                            {!orderDetail ? (
-                                <Skeletor width="200px" height="30px" />
-                            ) : (
-                                `${(side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER) ? '+' : '-'}${formatBalanceFiat(
-                                    orderDetail?.baseQty,
-                                    assetCode
-                                )} ${assetCode}`
-                            )}
+
+                    <div className="flex p-2 text-right ">
+                        <div className="">
+                            <div className="mb-2 txtPri-3 font-semibold">
+                                {(side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER) ? '+' : '-'}
+                                {formatBalanceFiat(orderDetail?.baseQty, assetCode)} {assetCode}
+                            </div>
+                            <div className="txtSecond-2 ">{formatBalanceFiat(orderDetail?.quoteQty, 'VNDC')} VND</div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </Card>
+            </Card>
+        </div>
     );
 };
 

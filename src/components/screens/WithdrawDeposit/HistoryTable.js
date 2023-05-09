@@ -24,7 +24,7 @@ const getColumns = (t, user, side, configs) => [
     {
         key: 'displayingId',
         dataIndex: 'displayingId',
-        title: t('common:transaction_id'),
+        title: t('dw_partner:order_id'),
         align: 'left',
         width: 150,
         fixed: 'left',
@@ -76,7 +76,7 @@ const getColumns = (t, user, side, configs) => [
         width: 240,
         render: (v) => (
             <>
-                <div className="txtPri-2 mb-1">{v?.name}</div>
+                <div className="txtPri-2 mb-1 capitalize">{v?.name?.toLowerCase()}</div>
                 <div className="txtSecond-3">{v?.code}</div>
             </>
         )

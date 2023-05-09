@@ -44,9 +44,9 @@ const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble, language
     };
 
     return (
-        <div className="flex flex-wrap lg:flex-nowrap -m-3 lg:m-0 lg:gap-6 items-end">
+        <div className="flex flex-wrap lg:flex-nowrap -m-3 lg:m-0 lg:gap-3 items-end">
             <div className="p-3 lg:p-0 w-1/2 lg:w-[246px] z-[42]">
-                <FilterWrapper label={t('common:transaction_id')}>
+                <FilterWrapper label={t('dw_partner:order_id')}>
                     <SearchBoxV2
                         isValueTrim={false}
                         wrapperClassname="!h-11"
@@ -106,7 +106,7 @@ const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble, language
                     onSelect={(item) => onSelectFilter(item, 'status')}
                 />
             </div>
-            <div className="p-3 lg:p-0 w-1/2 lg:w-[84px]">
+            <div className="p-3 lg:p-0 w-1/2 flex justify-end lg:flex-1 ">
                 <ButtonV2
                     disabled={!isResetAble}
                     onClick={() => {
@@ -115,7 +115,7 @@ const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble, language
                         setSearch(null);
                     }}
                     variants="secondary"
-                    className="!p-4 !text-txtSecondary dark:!text-txtSecondary-dark !h-11"
+                    className="!p-4 !text-txtSecondary dark:!text-txtSecondary-dark !h-11 lg:!w-[84px]"
                 >
                     {t('common:global_label.reset')}
                 </ButtonV2>

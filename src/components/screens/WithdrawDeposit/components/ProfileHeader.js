@@ -12,6 +12,7 @@ import { BxChevronDown, CalendarFillIcon, ContactIcon, MoneyIcon, OrderIcon, Tim
 import { useRouter } from 'next/router';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import Card from './common/Card';
+import Skeletor from 'components/common/Skeletor';
 
 const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) => {
     const router = useRouter();
@@ -20,20 +21,42 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
             <Card className="px-8 dark:!bg-darkBlue-3 mb-6 border-0">
                 <div className="flex -m-3 flex-wrap items-center justify-center md:justify-between ">
                     <div className="flex p-3 md:flex-grow items-center">
-                        <img className="rounded-full object-cover w-14 h-14 md:h-20 md:w-20" src={partner?.avatar} />
-                        <div className="ml-6">
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px] truncate max-w-[260px] mb-3">{partner?.name}</div>
-                            <div className="flex items-center text-txtSecondary dark:text-txtSecondary-dark ">
-                                <div className="flex items-center">
-                                    <CalendarFillIcon color="currentColor" size={16} />
-                                    <div className="text-txtPrimary dark:text-txtPrimary-dark ml-2">{formatTime(partner?.startedAt, 'dd/MM/yyyy')}</div>
+                        {!partner ? (
+                            <>
+                                <Skeletor circle width={80} height={80} />
+
+                                <div className="ml-6">
+                                    <Skeletor width={150} className="mb-3" />
+                                    <div className="flex items-center text-txtSecondary dark:text-txtSecondary-dark ">
+                                        <div>
+                                            <Skeletor width={50} height={15} />
+                                        </div>
+                                        <div className="ml-2">
+                                            <Skeletor width={80} height={15} />
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="ml-4 flex items-center">
-                                    <ContactIcon color="currentColor" size={16} />
-                                    <div className="text-txtPrimary dark:text-txtPrimary-dark ml-2">{formatPhoneNumber(partner?.phone)}</div>
+                            </>
+                        ) : (
+                            <>
+                                <img className="rounded-full object-cover w-14 h-14 md:h-20 md:w-20" src={partner?.avatar} />
+                                <div className="ml-6">
+                                    <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px] truncate max-w-[260px] mb-3">
+                                        {partner?.name}
+                                    </div>
+                                    <div className="flex items-center text-txtSecondary dark:text-txtSecondary-dark ">
+                                        <div className="flex items-center">
+                                            <CalendarFillIcon color="currentColor" size={16} />
+                                            <div className="text-txtPrimary dark:text-txtPrimary-dark ml-2">{formatTime(partner?.startedAt, 'dd/MM/yyyy')}</div>
+                                        </div>
+                                        <div className="ml-4 flex items-center">
+                                            <ContactIcon color="currentColor" size={16} />
+                                            <div className="text-txtPrimary dark:text-txtPrimary-dark ml-2">{formatPhoneNumber(partner?.phone)}</div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </>
+                        )}
                     </div>
                     <div className="md:min-w-[460px] p-3">
                         <div
@@ -62,13 +85,9 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                                     imgSrc: bankDefault && bankDefault?.bankLogo
                                 }}
                                 endIcon={
-                                    banks &&
-                                    banks?.length > 1 && (
-                                        <div className="ml-6 text-txtPrimary dark:text-txtPrimary-dark">
-                                            <BxChevronDown size={24} color="currentColor" />
-                                            {/* <ChevronRight color="currentColor" size={24} /> */}
-                                        </div>
-                                    )
+                                    <div className="ml-6 text-txtPrimary dark:text-txtPrimary-dark">
+                                        <BxChevronDown size={24} color="currentColor" />
+                                    </div>
                                 }
                                 endIconPosition="center"
                             />
@@ -87,6 +106,7 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                             </div>
                             <div>{t('dw_partner:avg_process_time')}</div>
                         </div>
+
                         <div className="txtPri-3">~{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</div>
                     </Card>
                 </div>
@@ -98,7 +118,9 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                             </div>
                             <div>{t('dw_partner:total_volume')}</div>
                         </div>
-                        <div className="txtPri-3 uppercase">{numeral(partner?.analyticMetadata?.totalValue).format('0a')} VND</div>
+                        <div className="txtPri-3 uppercase">
+                            {numeral(partner?.analyticMetadata?.totalValue).format('0a')} VND
+                        </div>
                     </Card>
                 </div>
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">

@@ -6,6 +6,7 @@ import { DEFAULT_PARTNER_MAX, DEFAULT_PARTNER_MIN } from 'redux/actions/const';
 import { roundByExactDigit } from 'redux/actions/utils';
 import { getPartner, setAllowedAmount, setInput, setLoadingPartner, setPartner } from 'redux/actions/withdrawDeposit';
 
+const DEBOUNCE_TIME = 300;
 const useGetPartner = ({ assetId, side, amount, rate }) => {
     const { input, loadingPartner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
     const configs = useSelector((state) => state.utils.assetConfig);
@@ -21,12 +22,12 @@ const useGetPartner = ({ assetId, side, amount, rate }) => {
                 })
             );
         }
-    }, [rate, side, assetConfig]);
+    }, [rate, side, assetConfig, assetConfig]);
 
     useEffect(() => {
         let timeout = setTimeout(() => {
             dispatch(setInput(amount));
-        }, 200);
+        }, DEBOUNCE_TIME);
         if (+amount >= minimumAllowed && +amount <= maximumAllowed) {
             dispatch(setLoadingPartner(true));
         }
@@ -51,7 +52,7 @@ const useGetPartner = ({ assetId, side, amount, rate }) => {
                     params: { quantity: !input ? 0 : +input, assetId, side },
                     cancelToken: source.token,
                     callbackFn: () => {
-                        if (mounted && !loadingPartner) {
+                        if (mounted) {
                             dispatch(setLoadingPartner(true));
                             return;
                         }
