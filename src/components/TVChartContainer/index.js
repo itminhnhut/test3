@@ -12,6 +12,7 @@ import { VndcFutureOrderType } from '../screens/Futures/PlaceOrder/Vndc/VndcFutu
 import { isMobile } from 'react-device-detect';
 import { debounce, set } from 'lodash';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
+import { FuturesSettings } from 'redux/reducers/futures';
 
 const CONTAINER_ID = 'nami-tv';
 const CHART_VERSION = '1.0.9';
@@ -76,8 +77,22 @@ export class TVChartContainer extends React.PureComponent {
                 this.drawHighLowArrows();
             }
         }
-        if (prevProps.ordersList !== this.props.ordersList && !this.firstTime) {
+        if (prevProps.ordersList !== this.props.ordersList && !this.firstTime && this.props?.isShowSlTPLine) {
             this.rawOrders();
+        }
+
+        if (prevProps?.isShowSlTPLine !== this.props?.isShowSlTPLine && !this.firstTime) {
+            if (this.props?.isShowSlTPLine) {
+                this.rawOrders();
+            } else {
+                this.drawnSl = null;
+                this.drawnTp = null;
+                this.oldOrdersList = [];
+                Object.keys(this.drawnOrder).map((line) => {
+                    this.drawnOrder[line].remove();
+                    delete this.drawnOrder[line];
+                });
+            }
         }
     }
 
@@ -478,7 +493,7 @@ export class TVChartContainer extends React.PureComponent {
             this.setState({ chartStatus: ChartStatus.LOADED });
             if (this.timer) clearTimeout(this.timer);
             this.timer = setTimeout(() => {
-                this.rawOrders();
+                if (this.props?.isShowSlTPLine) this.rawOrders();
                 this.drawHighLowArrows();
                 this.firstTime = false;
                 this.widget
