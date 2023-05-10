@@ -379,7 +379,7 @@ export const USER_CP = [
         title: 'daily_reward',
         localized: 'daily_reward',
         isNew: true,
-        // url: '/luckydraw/nami',
+        url: '/luckydraw/nami?web=true',
         child_lv1: []
     }
 ];

@@ -431,6 +431,10 @@
         "updated_vol": "Updated every 20 minutes",
         "last_updated_time": "Last Updated",
         "take_reward": "Take Reward",
-        "login_trade": "Log in and start trading Futures now to receive attractive daily rewards from Nami Exchange"
+        "login_trade": "Log in and start trading Futures now to receive attractive daily rewards from Nami Exchange",
+        "share": "Share To",
+        "more": "More",
+        "download": "Download",
+        "reward_received": "Reward received successfully"
     }
 }

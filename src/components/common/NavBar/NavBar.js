@@ -343,9 +343,6 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
     const onClickItemControl = (item) => {
         switch (item?.title) {
-            case 'daily_reward':
-                width > 992 ? setShowDailyLucky(true) : router.push('/luckydraw/nami');
-                break;
             default:
                 break;
         }
@@ -531,8 +528,6 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                 resetDefault={resetDefault}
                 onChangeSpotState={onChangeSpotState}
             />
-
-            {width > 992 && <DailyLuckydraw visible={showDailyLucky} onClose={() => setShowDailyLucky(false)} />}
 
             {isFromFrame && (
                 <div
