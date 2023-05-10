@@ -298,7 +298,7 @@ const OrderOpenDetail = ({
                 <div className="bg-gray-1 dark:bg-gray-7 h-[2px] w-[2px] rounded-[50%] mx-1"></div>
                 <div>{formatTime(order?.opened_at || order?.created_at, 'HH:mm:ss')}</div>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-start justify-between">
                 <div className="flex flex-col gap-[2px]">
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
                     <div className="flex items-center">
@@ -357,7 +357,7 @@ const OrderOpenDetail = ({
                     />
                 </div>
             }
-            <div className="flex flex-wrap w-full mt-5 justify-between">
+            <div className="flex flex-wrap w-full mt-3 justify-between">
                 <OrderItem
                     label={!isTabOpen ? t('futures:order_table:open_price') : t('futures:stop_loss')}
                     value={!isTabOpen ? formatNumber(price, decimalPrice, 0, true) : renderSlTp(order?.sl)}

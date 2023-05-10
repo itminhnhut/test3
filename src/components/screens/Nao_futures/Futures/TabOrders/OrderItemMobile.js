@@ -12,7 +12,7 @@ import MiniTickerData from 'components/screens/Futures/MiniTickerData';
 import Emitter from 'redux/actions/emitter';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { useSelector } from 'react-redux';
-import { ChevronDown, ChevronUp } from 'react-feather';
+import { ChevronDown, ChevronUp, Share } from 'react-feather';
 import classnames from 'classnames'
 import SortIcon from 'components/screens/Nao_futures/SortIcon';
 import AddCircleOutline from 'components/svg/AddCircleOutline';
@@ -256,7 +256,7 @@ const OrderItemMobile = ({
                 )}
             </div>
             <div onClick={() => actions('expand')}
-                className="flex items-center justify-between">
+                className="flex items-start justify-between">
                 <div className="flex flex-col gap-[2px]">
                     <div className="flex items-center">
                         <div
@@ -266,7 +266,7 @@ const OrderItemMobile = ({
                             {order?.leverage}x
                         </div>
                         {canShare ?
-                            <SvgShare color="currentColor" onClick={() => actions('modal', 'share')} className="ml-3 flex-shrink-0" size={20} />
+                            <Share color='currentColor' size={16} onClick={() => actions('modal', 'share')} className="ml-3 flex-shrink-0" />
                             : null
                         }
                     </div>
@@ -316,7 +316,7 @@ const OrderItemMobile = ({
                         </div>
                     }
 
-                    <div className="flex flex-wrap w-full mt-5 justify-between">
+                    <div className="flex flex-wrap w-full mt-3 justify-between">
                         <OrderItem
                             label={isTabPosition ? t('futures:order_table:open_price') : t('futures:stop_loss')}
                             value={isTabPosition ? getOpenPrice(order, dataMarketWatch) : renderSlTp(order?.sl)}

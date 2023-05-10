@@ -144,10 +144,11 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
     const handleSetMaxAmount = () => {
         switch (adjustType) {
             case ADJUST_TYPE.ADD:
-                setAmount(floor(available))
+                // To do: allow decimals here
+                setAmount(formatNumber(available, assetConfig?.assetDigit));
                 break;
             case ADJUST_TYPE.REMOVE:
-                setAmount(floor(maxRemovable))
+                setAmount(formatNumber(maxRemovable, assetConfig?.assetDigit));
                 break;
         }
     }
