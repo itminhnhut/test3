@@ -100,12 +100,13 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
             });
             if (data) {
                 if (!router.query.web && !isDesktop) {
-                    const data = JSON.stringify({
-                        type: 'lucky_daily',
-                        ticket: { ticket: dataSource?.[active], total_reward: data?.total_reward, unit: 'VNDC' },
-                        bg: getS3Url(`/images/screen/futures/luckdraw/bg_claimed_mb.png`)
-                    });
-                    emitWebViewEvent(data);
+                    emitWebViewEvent(
+                        JSON.stringify({
+                            type: 'lucky_daily',
+                            ticket: { ...dataSource?.[active], total_reward: data?.total_reward, unit: 'VNDC' },
+                            bg: getS3Url(`/images/screen/futures/luckdraw/bg_claimed_mb.png`)
+                        })
+                    );
                 } else {
                     total_reward.current = data?.total_reward;
                     can_receive.current = false;
