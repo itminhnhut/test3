@@ -48,6 +48,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
     const can_receive = useRef(false);
     const total_reward = useRef(0);
     const last_updated_at = useRef(null);
+    const [loading, setLoading] = useState(false);
 
     const getIcon = (act) => {
         const size = isDesktop ? 36 : xs ? 14 : 20;
@@ -94,11 +95,14 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
             return;
         }
         try {
+            setLoading(true);
             const { data } = await fetchApi({
                 url: API_CLAIM_TICKET,
                 options: { method: 'POST' }
             });
             if (data) {
+                total_reward.current = data?.total_reward;
+                can_receive.current = false;
                 if (!router.query.web && !isDesktop) {
                     emitWebViewEvent(
                         JSON.stringify({
@@ -108,14 +112,13 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                         })
                     );
                 } else {
-                    total_reward.current = data?.total_reward;
-                    can_receive.current = false;
                     setShowClaim(true);
                 }
             }
         } catch (e) {
             console.log(e);
         } finally {
+            setLoading(false);
         }
     }, 200);
 
@@ -323,7 +326,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                         </div>
                     )}
                 </div>
-                <Button onClick={claim}>
+                <Button onClick={claim} loading={loading}>
                     {isAuth ? t(`common:luckydraw:${can_receive.current ? 'claim_now' : 'back_to_trading'}`) : t('common:global_btn:login')}
                 </Button>
             </div>
