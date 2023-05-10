@@ -85,12 +85,20 @@ export class TVChartContainer extends React.PureComponent {
             if (this.props?.isShowSlTPLine) {
                 this.rawOrders();
             } else {
-                this.drawnSl = null;
-                this.drawnTp = null;
                 this.oldOrdersList = [];
                 Object.keys(this.drawnOrder).map((line) => {
                     this.drawnOrder[line].remove();
                     delete this.drawnOrder[line];
+                });
+
+                Object.keys(this.drawnSl).map((line) => {
+                    this.drawnSl[line].remove();
+                    delete this.drawnSl[line];
+                });
+
+                Object.keys(this.drawnTp).map((line) => {
+                    this.drawnTp[line].remove();
+                    delete this.drawnTp[line];
                 });
             }
         }
