@@ -43,7 +43,8 @@ export const FuturesPositionMode = {
 
 export const FuturesSettings = {
     order_confirm: 'show_place_order_confirm_modal',
-    auto_type: 'auto_suggest_sl_tp'
+    auto_type: 'auto_suggest_sl_tp',
+    show_sl_tp_order_line: 'show_sl_tp_order_line'
 }
 
 export const initialState = {

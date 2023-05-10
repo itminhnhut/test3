@@ -17,13 +17,14 @@ import DynamicNoSsr from 'components/DynamicNoSsr';
 import dynamic from 'next/dynamic';
 import Emitter from 'redux/actions/emitter';
 import 'react-grid-layout/css/styles.css';
-import { getOrdersList } from 'redux/actions/futures';
+import { getOrdersList, fetchFuturesSetting } from 'redux/actions/futures';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
 import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
 import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTermsModal';
 import classNames from 'classnames';
 import DefaultMobileView from 'src/components/common/DefaultMobileView';
+import { FuturesSettings } from 'redux/reducers/futures';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -50,7 +51,9 @@ const initFuturesComponent = {
     isShowChart: true,
     isShowOpenOrders: true,
     isShowPlaceOrder: true,
-    isShowAssets: true
+    isShowAssets: true,
+    [FuturesSettings.order_confirm]: true,
+    [FuturesSettings.show_sl_tp_order_line]: true
 };
 
 const Futures = () => {
@@ -101,7 +104,10 @@ const Futures = () => {
     };
 
     useEffect(() => {
-        if (auth) getOrders();
+        if (auth) {
+            dispatch(fetchFuturesSetting());
+            getOrders();
+        }
     }, [auth]);
 
     const getOrders = () => {
