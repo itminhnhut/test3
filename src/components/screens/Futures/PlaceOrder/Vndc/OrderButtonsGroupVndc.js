@@ -99,6 +99,7 @@ const FuturesOrderButtonsGroupVndc = ({
     const onHandleHidden = () => {
         const params = {
             setting: {
+                ...settings?.user_setting,
                 [FuturesSettings.order_confirm]: hidden
             }
         };

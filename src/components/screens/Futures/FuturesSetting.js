@@ -2,7 +2,7 @@ import { Popover, Transition } from '@headlessui/react';
 import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
 import useDarkMode from 'hooks/useDarkMode';
-import { Fragment, useMemo, memo, useEffect, useRef } from 'react';
+import { Fragment, useMemo, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import colors from 'styles/colors';
 import Switch from 'components/common/V2/SwitchV2';
@@ -22,6 +22,8 @@ const FuturesSetting = memo(
         const { t } = useTranslation();
         const dispatch = useDispatch();
         const timer = useRef();
+        const [loading, setLoading] = useState(false);
+        const [mount, setMount] = useState(false);
 
         const FuturesComponents = [
             {
@@ -89,7 +91,7 @@ const FuturesSetting = memo(
 
         useEffect(() => {
             const settingFutures = localStorage.getItem('settingLayoutFutures');
-            if (settingFutures) {
+            if (settings?.user_setting && settingFutures && !mount) {
                 Object.keys(JSON.parse(settingFutures)).map((item) => {
                     if (userSetting.includes(item)) {
                         spotState[item] = settings?.user_setting?.[item] ?? true;
@@ -97,10 +99,29 @@ const FuturesSetting = memo(
                 });
                 localStorage.setItem('settingLayoutFutures', JSON.stringify(spotState));
                 onChangeSpotState(spotState);
+                setMount(true);
             }
-        }, [settings]);
+        }, [settings?.user_setting]);
+
+        const onChangeSetting = (key, value) => {
+            if (!userSetting.includes(key)) return;
+            try {
+                setLoading(true);
+                const obj = Object.keys(userSetting).reduce((pre, curr) => {
+                    pre[userSetting[curr]] = spotState[userSetting[curr]];
+                    return pre;
+                }, {});
+                const params = { setting: { ...settings?.user_setting, ...obj, [key]: value } };
+                dispatch(fetchFuturesSetting(params));
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
         const onChangeFuturesComponent = (key, value) => {
+            clearTimeout(timer.current);
             const _newSpotState = spotState;
             spotState[key] = value;
             localStorage.setItem('settingLayoutFutures', JSON.stringify(spotState));
@@ -108,13 +129,9 @@ const FuturesSetting = memo(
                 ...spotState,
                 ..._newSpotState
             });
-            clearTimeout(timer.current);
             timer.current = setTimeout(() => {
-                if (userSetting.includes(key)) {
-                    const params = { setting: { [key]: value } };
-                    dispatch(fetchFuturesSetting(params));
-                }
-            }, 500);
+                onChangeSetting(key, value);
+            }, 800);
         };
 
         const onSetDefault = () => {
@@ -122,6 +139,7 @@ const FuturesSetting = memo(
             timer.current = setTimeout(() => {
                 const params = {
                     setting: {
+                        ...settings?.user_setting,
                         [FuturesSettings.order_confirm]: true,
                         [FuturesSettings.show_sl_tp_order_line]: true
                     }
@@ -208,7 +226,7 @@ const FuturesSetting = memo(
                                                                         </span>
                                                                         <Switch
                                                                             checked={spotState?.[key]}
-                                                                            onChange={(value) => onChangeFuturesComponent(key, value)}
+                                                                            onChange={(value) => !loading && onChangeFuturesComponent(key, value)}
                                                                         />
                                                                     </div>
                                                                     {!!tooltip && (

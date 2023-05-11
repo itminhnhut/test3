@@ -200,6 +200,11 @@ const Futures = () => {
         setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
     }, [pairConfig, userSettings, state.layouts]);
 
+    useEffect(() => {
+        const settings = localStorage.getItem('settingLayoutFutures');
+        if (!settings) localStorage.setItem('settingLayoutFutures', JSON.stringify(initFuturesComponent));
+    }, []);
+
     const resetDefault = () => {
         localStorage.setItem('settingLayoutFutures', JSON.stringify(initFuturesComponent));
         setFilterLayout({ ...initFuturesComponent });
