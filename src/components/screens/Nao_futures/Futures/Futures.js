@@ -139,7 +139,7 @@ const FuturesMobile = () => {
     }, [auth, timestamp]);
 
     const getOrders = () => {
-        if (auth) dispatch(getOrdersList());
+        if (auth) dispatch(getOrdersList({ product: 2 }));
     };
 
     useEffect(() => {

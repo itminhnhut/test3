@@ -80,7 +80,11 @@ const OrderBalance = ({
     const className = totalProfit === 0 ? '' : totalProfit > 0 ? 'text-green-2' : 'text-red-2';
 
     const dataFormat = useMemo(() => {
-        const pnl = <div className={className}> {totalProfit > 0 ? "+" : totalProfit < 0 ? "-" : ""} {formatNumber(totalProfit, balance?.item?.assetDigit, 0, true)}</div>;
+        const pnl = (
+            <div className={className}>
+                {totalProfit > 0 ? '+' : ''}{formatNumber(totalProfit, balance?.item?.assetDigit, 0, true)}
+            </div>
+        );
         const total = balance.value + totalProfit;
         const lengthEquity = total ? formatNumber(total, balance?.item?.assetDigit)
             .replace(/,/g, '') : 0;

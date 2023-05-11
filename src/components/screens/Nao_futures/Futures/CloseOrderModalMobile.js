@@ -203,7 +203,8 @@ const CloseOrderModalMobile = ({
             price: +price,
             useQuoteQty: true,
             closeVolume: +volume,
-            special_mode: 1
+            special_mode: 1,
+            product: 2
         };
         let isLargeVolume = false;
         const isPartialClose = partialClose && percent < 100;

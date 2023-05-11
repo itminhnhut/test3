@@ -314,14 +314,14 @@ const placeFuturesOrderValidator = (params, utils) => {
     return _validator;
 };
 
-export const getOrdersList = (cb) => async (dispatch) => {
+export const getOrdersList = (params, cb) => async (dispatch) => {
     const { data } = await Axios.get(API_GET_FUTURES_ORDER, {
-        params: { status: 0 },
+        params: { status: 0, ...params }
     });
     if (data?.status === ApiStatus.SUCCESS) {
         dispatch({
             type: SET_FUTURES_ORDERS_LIST,
-            payload: data?.data?.orders || [],
+            payload: data?.data?.orders || []
         });
         if (cb) cb(data?.data?.orders || []);
     }
