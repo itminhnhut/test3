@@ -186,10 +186,10 @@ export function getWallet() {
     };
 }
 
-export function getUserFuturesBalance() {
+export function getUserFuturesBalance(isNao = false) {
     return async (dispatch) => {
         try {
-            const { data } = await Axios.get(API_GET_USER_BALANCE_V2, { params: { type: 2 } }); // old wallet type
+            const { data } = await Axios.get(API_GET_USER_BALANCE_V2, { params: { type: 2, isNao } }); // old wallet type
 
             if (data && data.status === ApiStatus.SUCCESS) {
                 dispatch({

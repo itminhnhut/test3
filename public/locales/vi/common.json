@@ -427,6 +427,10 @@
         "updated_vol": "Cập nhật 20 phút/lần",
         "last_updated_time": "Lần cập nhật gần nhất",
         "take_reward": "Nhận thưởng",
-        "login_trade": "Đăng nhập và bắt đầu giao dịch Futures ngay để nhận thưởng hàng ngày hấp dẫn từ Nami Exchange"
+        "login_trade": "Đăng nhập và bắt đầu giao dịch Futures ngay để nhận thưởng hàng ngày hấp dẫn từ Nami Exchange",
+        "share": "Chia sẻ đến",
+        "more": "Thêm",
+        "download": "Tải xuống",
+        "reward_received": "Nhận thưởng thành công"
     }
 }
