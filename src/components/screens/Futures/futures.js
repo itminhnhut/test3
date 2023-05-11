@@ -52,8 +52,8 @@ const initFuturesComponent = {
     isShowOpenOrders: true,
     isShowPlaceOrder: true,
     isShowAssets: true,
-    [FuturesSettings.order_confirm]: true,
-    [FuturesSettings.show_sl_tp_order_line]: true
+    // [FuturesSettings.order_confirm]: true,
+    // [FuturesSettings.show_sl_tp_order_line]: true
 };
 
 const Futures = () => {

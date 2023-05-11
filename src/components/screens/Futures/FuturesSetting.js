@@ -19,7 +19,10 @@ const FuturesSetting = memo(
         const { spotState, onChangeSpotState, resetDefault, className } = props;
         const settings = useSelector((state) => state.futures.settings);
         const [currentTheme, onThemeSwitch] = useDarkMode();
-        const { t } = useTranslation();
+        const {
+            t,
+            i18n: { language }
+        } = useTranslation();
         const dispatch = useDispatch();
         const timer = useRef();
         const [loading, setLoading] = useState(false);
@@ -58,44 +61,28 @@ const FuturesSetting = memo(
             }
         ];
 
+        const getUserSettings = () => {
+            if (!settings?.user_setting) return [];
+            return Object.keys(settings?.user_setting).reduce((pre, curr) => {
+                const value = settings.configs.find((rs) => rs.key === curr)?.description?.[language];
+                pre ? pre.push({ key: curr, value }) : (pre = [{ key: curr, value }]);
+                return pre;
+            }, []);
+        };
         const settingFutures = useMemo(() => {
             return {
-                general: [
-                    {
-                        value: t('spot:setting:order_confirmation'),
-                        key: FuturesSettings.order_confirm,
-                        tooltip: t('spot:setting:order_confirmation_tooltip')
-                    },
-                    {
-                        value: t('spot:setting:display_price_line'),
-                        key: FuturesSettings.show_sl_tp_order_line
-                    }
-                ]
-                // fees: [
-                //     {
-                //         value: 'Phí VNDC Futures',
-                //         key: 'fee_VNDC',
-                //         visible: true
-                //     },
-                //     {
-                //         value: 'Phí USDT Futures',
-                //         key: 'fee_USDT',
-                //         visible: true
-                //     }
-                // ]
+                userSetting: getUserSettings()
             };
-        }, []);
+        }, [settings, language]);
 
         const inActiveLabel = currentTheme === 'dark' ? colors.gray[7] : colors.gray[1];
-        const userSetting = [FuturesSettings.order_confirm, FuturesSettings.show_sl_tp_order_line];
+        const userSetting = [FuturesSettings.order_confirm, FuturesSettings.show_sl_tp_order_line, FuturesSettings.auto_type];
 
         useEffect(() => {
             const settingFutures = localStorage.getItem('settingLayoutFutures');
             if (settings?.user_setting && settingFutures && !mount) {
-                Object.keys(JSON.parse(settingFutures)).map((item) => {
-                    if (userSetting.includes(item)) {
-                        spotState[item] = settings?.user_setting?.[item] ?? true;
-                    }
+                Object.keys(settings?.user_setting).map((item) => {
+                    spotState[item] = settings?.user_setting?.[item] ?? spotState[item];
                 });
                 localStorage.setItem('settingLayoutFutures', JSON.stringify(spotState));
                 onChangeSpotState(spotState);
@@ -107,11 +94,11 @@ const FuturesSetting = memo(
             if (!userSetting.includes(key)) return;
             try {
                 setLoading(true);
-                const obj = Object.keys(userSetting).reduce((pre, curr) => {
-                    pre[userSetting[curr]] = spotState[userSetting[curr]];
+                const obj = userSetting.reduce((pre, curr) => {
+                    pre[curr] = spotState[curr];
                     return pre;
                 }, {});
-                const params = { setting: { ...settings?.user_setting, ...obj, [key]: value } };
+                const params = { setting: { ...obj, [key]: value } };
                 dispatch(fetchFuturesSetting(params));
             } catch (error) {
                 console.log(error);
