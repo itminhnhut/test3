@@ -76,7 +76,7 @@ const FuturesSetting = memo(
                 };
             });
         };
-        
+
         const settingFutures = useMemo(() => {
             return {
                 userSetting: getUserSettings()
@@ -139,7 +139,7 @@ const FuturesSetting = memo(
                     }
                 };
                 dispatch(fetchFuturesSetting(params));
-                if (resetDefault) resetDefault();
+                if (resetDefault) resetDefault({ [FuturesSettings.order_confirm]: true, [FuturesSettings.show_sl_tp_order_line]: true });
             }, 500);
         };
 
