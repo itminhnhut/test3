@@ -66,7 +66,6 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
     useDebounce(
         () => {
             setDebounceSearch(search);
-            setFriendList([]);
         },
         500,
         [search]
@@ -74,6 +73,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
 
     const handleChangeSearch = (value) => {
         setSearch(value);
+        setFriendList([]);
     };
 
     return isDesktop ? (
