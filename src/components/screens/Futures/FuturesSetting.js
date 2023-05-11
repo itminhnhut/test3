@@ -16,7 +16,7 @@ import Tooltip from 'components/common/Tooltip';
 
 const FuturesSetting = memo(
     (props) => {
-        const { spotState, onChangeSpotState, resetDefault, className } = props;
+        const { spotState, onChangeSpotState, resetDefault, className, isDrawer } = props;
         const settings = useSelector((state) => state.futures.settings);
         const [currentTheme, onThemeSwitch] = useDarkMode();
         const {
@@ -142,7 +142,7 @@ const FuturesSetting = memo(
                 if (resetDefault) resetDefault({ [FuturesSettings.order_confirm]: true, [FuturesSettings.show_sl_tp_order_line]: true });
             }, 500);
         };
-
+        console.log('isActive', props);
         return (
             <Popover className="relative h-full">
                 {({ open }) => (
@@ -163,8 +163,13 @@ const FuturesSetting = memo(
                             leaveFrom="opacity-100 translate-y-0"
                             leaveTo="opacity-0 translate-y-1"
                         >
-                            <Popover.Panel className="absolute right-0 top-full mt-[1px] z-10">
-                                <div className="p-4 min-w-[360px] border border-t-0 dark:border-divider-dark rounded-b-lg shadow-md bg-bgPrimary dark:bg-darkBlue-3 divide-solid divide-divider dark:divide-divider-dark divide-y">
+                            <Popover.Panel className={`absolute ${isDrawer ? '-right-3' : 'right-0'} top-full mt-[1px] z-10`}>
+                                <div
+                                    className={classNames(
+                                        'p-4 min-w-[360px] border border-t-0 dark:border-divider-dark rounded-b-lg shadow-md bg-bgPrimary dark:bg-darkBlue-3 divide-solid divide-divider dark:divide-divider-dark divide-y ',
+                                        // { '!border-none !shadow-none': isDrawer }
+                                    )}
+                                >
                                     <div className="mb-6 flex justify-between">
                                         <span className="text-sm sm:text-base text-txtPrimary dark:text-txtPrimary-dark font-semibold">
                                             {t('spot:setting.theme')}
@@ -206,13 +211,21 @@ const FuturesSetting = memo(
                                                             const { label, key, className = '', tooltip } = item;
                                                             return (
                                                                 <Fragment key={indx}>
-                                                                    <div className="h-6 flex justify-between space-x-2">
+                                                                    <div className="h-6 flex items-start justify-between space-x-2">
                                                                         <span
                                                                             className={classNames(
                                                                                 `text-sm text-txtPrimary dark:text-txtPrimary-dark flex items-center`,
-                                                                                { 'border-b border-dashed border-gray-1 dark:border-gray-7': !!tooltip },
+                                                                                {
+                                                                                    'underline leading-6': !!tooltip
+                                                                                },
                                                                                 className
                                                                             )}
+                                                                            style={{
+                                                                                textDecorationStyle: !!tooltip ? 'dashed' : 'unset',
+                                                                                textUnderlineOffset: 4,
+                                                                                textUnderlinePosition: 'under',
+                                                                                textDecorationColor: currentTheme === 'light' ? colors.gray[1] : colors.gray[7]
+                                                                            }}
                                                                             data-tip={tooltip}
                                                                             data-for={key}
                                                                         >
@@ -224,7 +237,17 @@ const FuturesSetting = memo(
                                                                         />
                                                                     </div>
                                                                     {!!tooltip && (
-                                                                        <Tooltip id={key} place="top" effect="solid" isV3 className="max-w-[300px]" />
+                                                                        <Tooltip
+                                                                            overridePosition={(e) => ({
+                                                                                left: isDrawer ? 0 : e.left,
+                                                                                top: e.top
+                                                                            })}
+                                                                            id={key}
+                                                                            place="top"
+                                                                            effect="solid"
+                                                                            isV3
+                                                                            className="max-w-[300px]"
+                                                                        />
                                                                     )}
                                                                 </Fragment>
                                                             );
