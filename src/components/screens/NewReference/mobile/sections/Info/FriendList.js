@@ -73,7 +73,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
 
     const handleChangeSearch = (value) => {
         setSearch(value);
-        setFriendList([]);
+        friendList.length > 0 && setFriendList([]);
     };
 
     return isDesktop ? (
