@@ -144,11 +144,11 @@ const FuturesMobile = () => {
 
     useEffect(() => {
         if (userSocket) {
-            userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
+            userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER_NAO, getOrders);
         }
         return () => {
             if (userSocket) {
-                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
+                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER_NAO, getOrders);
             }
         };
     }, [userSocket]);
