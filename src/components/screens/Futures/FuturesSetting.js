@@ -222,7 +222,7 @@ const FuturesSetting = memo(
                                                                             )}
                                                                             style={{
                                                                                 textDecorationStyle: !!tooltip ? 'dashed' : 'unset',
-                                                                                textUnderlineOffset: 4,
+                                                                                textUnderlineOffset: 2,
                                                                                 textUnderlinePosition: 'under',
                                                                                 textDecorationColor: currentTheme === 'light' ? colors.gray[1] : colors.gray[7]
                                                                             }}
