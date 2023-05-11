@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState, useCallback } from 'react';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
@@ -26,7 +26,6 @@ const HomeIntroduce = ({ trendData, t }) => {
     });
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-
     useEffect(() => {
         const makedData = makeData();
         if (Object.keys(makedData).length) {
@@ -57,72 +56,71 @@ const HomeIntroduce = ({ trendData, t }) => {
                         {t('home:introduce.title_desktop1')} <br />
                         {t('home:introduce.title_desktop2')}
                     </div>
-                    {/* <div className="homepage-introduce___description">
-                <Trans>{t('home:introduce.description')}</Trans>
-            </div> */}
-                    <div className="flex"></div>
-                    <div className="homepage-introduce___statitics">
-                        <div className="homepage-introduce___statitics____item">
-                            <div className="homepage-introduce___statitics____item___value">
-                                {/* {renderCountUp} */}
-                                {state.loadingStatistic || !state.statistic?.volume_24h ? (
-                                    <PulseLoader size={5} color={colors.teal} />
-                                ) : (
-                                    <>
-                                        $
+
+                    <div className="flex">
+                        <div className="homepage-introduce___statitics">
+                            <div className="homepage-introduce___statitics____item">
+                                <div className="homepage-introduce___statitics____item___value">
+                                    {/* {renderCountUp} */}
+                                    {state.loadingStatistic || !state.statistic?.volume_24h ? (
+                                        <PulseLoader size={5} color={colors.teal} />
+                                    ) : (
+                                        <>
+                                            $
+                                            <CountUp
+                                                start={0}
+                                                end={state.statistic?.volume_24h}
+                                                duration={2.75}
+                                                prefix="$"
+                                                formattingFn={(value) => formatNumber(value, 0)}
+                                                delay={0}
+                                                useEasing
+                                            >
+                                                {({ countUpRef }) => <span ref={countUpRef} />}
+                                            </CountUp>
+                                        </>
+                                    )}
+                                </div>
+                                <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_order_paid')}</div>
+                            </div>
+                            <div className="homepage-introduce___statitics____item">
+                                <div className="homepage-introduce___statitics____item___value">
+                                    {state.loadingStatistic || !state.statistic?.num_of_users ? (
+                                        <PulseLoader size={5} color={colors.teal} />
+                                    ) : (
                                         <CountUp
                                             start={0}
-                                            end={state.statistic?.volume_24h}
+                                            end={state.statistic.num_of_users}
                                             duration={2.75}
-                                            prefix="$"
                                             formattingFn={(value) => formatNumber(value, 0)}
                                             delay={0}
                                             useEasing
                                         >
                                             {({ countUpRef }) => <span ref={countUpRef} />}
                                         </CountUp>
-                                    </>
-                                )}
+                                    )}{' '}
+                                </div>
+                                <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_user')}</div>
                             </div>
-                            <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_order_paid')}</div>
-                        </div>
-                        <div className="homepage-introduce___statitics____item">
-                            <div className="homepage-introduce___statitics____item___value">
-                                {state.loadingStatistic || !state.statistic?.num_of_users ? (
-                                    <PulseLoader size={5} color={colors.teal} />
-                                ) : (
-                                    <CountUp
-                                        start={0}
-                                        end={state.statistic.num_of_users}
-                                        duration={2.75}
-                                        formattingFn={(value) => formatNumber(value, 0)}
-                                        delay={0}
-                                        useEasing
-                                    >
-                                        {({ countUpRef }) => <span ref={countUpRef} />}
-                                    </CountUp>
-                                )}{' '}
+                            <div className="homepage-introduce___statitics____item">
+                                <div className="homepage-introduce___statitics____item___value">
+                                    {state.loadingStatistic || !state.statistic?.total_trading_pair ? (
+                                        <PulseLoader size={5} color={colors.teal} />
+                                    ) : (
+                                        <CountUp
+                                            start={0}
+                                            end={state.statistic.total_trading_pair}
+                                            duration={2.75}
+                                            formattingFn={(value) => formatNumber(value, 0)}
+                                            delay={0}
+                                            useEasing
+                                        >
+                                            {({ countUpRef }) => <span ref={countUpRef} />}
+                                        </CountUp>
+                                    )}
+                                </div>
+                                <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_pairs')}</div>
                             </div>
-                            <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_user')}</div>
-                        </div>
-                        <div className="homepage-introduce___statitics____item">
-                            <div className="homepage-introduce___statitics____item___value">
-                                {state.loadingStatistic || !state.statistic?.total_trading_pair ? (
-                                    <PulseLoader size={5} color={colors.teal} />
-                                ) : (
-                                    <CountUp
-                                        start={0}
-                                        end={state.statistic.total_trading_pair}
-                                        duration={2.75}
-                                        formattingFn={(value) => formatNumber(value, 0)}
-                                        delay={0}
-                                        useEasing
-                                    >
-                                        {({ countUpRef }) => <span ref={countUpRef} />}
-                                    </CountUp>
-                                )}
-                            </div>
-                            <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_pairs')}</div>
                         </div>
                     </div>
 
@@ -142,26 +140,37 @@ const HomeIntroduce = ({ trendData, t }) => {
                         loop
                         muted
                         autoPlay
-                        class="video pointer-events-none max-h-[556px]"
-                        poster={getS3Url('/images/screen/homepage/banner_graphics_1.webp')}
+                        class="pointer-events-none max-h-[500px]"
+                        poster={getS3Url('/images/screen/homepage/banner_graphics_fit.webp')}
                         preload="none"
                         playsInline
                     >
-                        <source src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} type="video/mp4" />
+                        <source src={getS3Url('/images/screen/homepage/banner_graphics_fit.mp4')} type="video/mp4" />
                     </video>
                 </div>
             </div>
             <div className="homepage-introduce__banner ">
                 <video
-                    playsInline
                     loop
                     muted
                     autoPlay
-                    class="video pointer-events-none"
-                    poster={getS3Url('/images/screen/homepage/banner_graphics_1.webp')}
+                    className="lg:hidden pointer-events-none max-h-[390px] "
+                    poster={getS3Url('/images/screen/homepage/banner_graphics_fit.webp')}
                     preload="none"
+                    playsInline
                 >
-                    <source src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} type="video/mp4" />
+                    <source src={getS3Url('/images/screen/homepage/banner_graphics_fit.mp4')} type="video/mp4" />
+                </video>
+                <video
+                    loop
+                    muted
+                    className="hidden lg:block pointer-events-none h-full "
+                    poster={getS3Url('/images/screen/homepage/banner_graphics_fit.webp')}
+                    preload="none"
+                    playsInline
+                    autoPlay
+                >
+                    <source src={getS3Url('/images/screen/homepage/banner_graphics_fit.mp4')} type="video/mp4" />
                 </video>
             </div>
         </section>

@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useMemo, useRef, useState } from 'react';
 import { isFunction, keyBy } from 'lodash';
 import useOutsideClick from 'hooks/useOutsideClick';
-import { formatNumber, formatWallet } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber, formatWallet } from 'redux/actions/utils';
 import NumberFormat from 'react-number-format';
 import AssetLogo from 'components/wallet/AssetLogo';
 import ChevronDown from 'components/svg/ChevronDown';
@@ -17,23 +17,24 @@ import CheckCircle from 'components/svg/CheckCircle';
 import { PATHS } from 'constants/paths';
 import { roundToDown } from 'round-to';
 import { useTranslation } from 'next-i18next';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+import Tooltip from 'components/common/Tooltip';
 
-export const ErrorMessage = ({
-    message,
-    show
-}) => {
-    return <div
-        className={classNames(
-            'overflow-hidden transition-[max-height_opacity] duration-300', {
+export const ErrorMessage = ({ message, show }) => {
+    return (
+        <div
+            className={classNames('overflow-hidden transition-[max-height_opacity] duration-300', {
                 'max-h-0 opacity-0 ease-out': !show,
                 'max-h-[5rem] opacity-1 ease-in': show
             })}
-    >
-        <div className='flex items-center mt-3'>
-            <ErrorTriggers />
-            <div className='text-red text-xs leading-4 ml-1'>{message}</div>
+        >
+            <div className="flex items-center mt-3">
+                <ErrorTriggers />
+                <div className="text-red text-xs leading-4 ml-1">{message}</div>
+            </div>
         </div>
-    </div>;
+    );
 };
 
 export const AmountInput = ({
@@ -60,8 +61,9 @@ export const AmountInput = ({
     const mapAssetConfig = useMemo(() => keyBy(assetConfigs, 'id'), [assetConfigs]);
 
     const assetOptions = useMemo(() => {
-        return paymentConfigs.filter(c => c.assetCode?.includes(search.toUpperCase()))
-            .map(config => {
+        const listAssetAvailable = paymentConfigs
+            .filter((c) => c.assetCode?.includes(search.trim().toUpperCase()))
+            .map((config) => {
                 const wallet = spotWallets[config.assetId] || {
                     value: 0,
                     locked_value: 0
@@ -73,6 +75,7 @@ export const AmountInput = ({
                 };
             });
 
+        return  _.orderBy(listAssetAvailable, ['availableValue', 'assetCode'], ['desc', 'asc']);
     }, [paymentConfigs, spotWallets, search]);
     const ref = useRef(null);
 
@@ -111,7 +114,7 @@ export const AmountInput = ({
                         </div>
                         {+amount < max && (
                             <div className="cursor-pointer text-teal uppercase font-semibold" onClick={() => internalAmountChange(max)}>
-                                {t('common:max')}
+                                MAX
                             </div>
                         )}
                     </div>
@@ -122,7 +125,7 @@ export const AmountInput = ({
                         <ChevronDown
                             size={16}
                             className={openSelectAsset ? '!rotate-0' : ''}
-                            color={currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}
+                            color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
                         />
                     </div>
                 </div>
@@ -153,7 +156,7 @@ export const AmountInput = ({
                                     key={asset._id}
                                     onClick={() => {
                                         router
-                                            .push(withdrawLinkBuilder(asset.assetCode), null, {
+                                            .push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL, asset?.assetCode), null, {
                                                 scroll: false
                                             })
                                             .finally(() => {
@@ -184,54 +187,43 @@ export const AmountInput = ({
     );
 };
 
-export const AddressInput = ({
-    t,
-    value,
-    onChange,
-    isValid
-}) => {
+export const AddressInput = ({ t, value, onChange, isValid }) => {
     const refInput = useRef();
     const paste = () => {
-        navigator.clipboard.readText()
-            .then(text => {
-                if (onChange) {
-                    onChange(text);
-                    refInput.current?.focus();
-                }
-            });
+        navigator.clipboard.readText().then((text) => {
+            if (onChange) {
+                onChange(text);
+                refInput.current?.focus();
+            }
+        });
     };
 
-    return <div>
-        <div className='bg-gray-13 dark:bg-darkBlue-3 px-4 py-5 rounded-xl'>
-            <p className='text-txtSecondary dark:text-txtSecondary-dark mb-4'>{t('common:address_wallet')}</p>
-            <div className='flex font-semibold'>
-                <div className='flex-1'>
-                    <input
-                        ref={refInput}
-                        type='text'
-                        className='w-full font-semibold'
-                        placeholder={t('wallet:receive_address_placeholder')}
-                        value={value}
-                        onChange={e => onChange(e.target.value)}
-                    />
+    return (
+        <div>
+            <div className="bg-gray-13 dark:bg-darkBlue-3 px-4 py-5 rounded-xl">
+                <p className="text-txtSecondary dark:text-txtSecondary-dark mb-4">{t('wallet:receive_address')}</p>
+                <div className="flex font-semibold">
+                    <div className="flex-1">
+                        <input
+                            ref={refInput}
+                            type="text"
+                            className="w-full font-semibold placeholder-shown:font-normal"
+                            placeholder={t('wallet:receive_address_placeholder')}
+                            value={value}
+                            onChange={(e) => onChange(e.target.value)}
+                        />
+                    </div>
+                    <div className="text-teal cursor-pointer ml-6" onClick={paste}>
+                        {t('common:paste')}
+                    </div>
                 </div>
-                <div className='text-teal cursor-pointer ml-6' onClick={paste}>{t('common:paste')}</div>
             </div>
+            <ErrorMessage message={t('wallet:errors.invalid_withdraw_address')} show={!isValid && !!value} />
         </div>
-        <ErrorMessage
-            message={t('wallet:errors.invalid_withdraw_address')}
-            show={!isValid && !!value}
-        />
-    </div>;
+    );
 };
 
-export const NetworkInput = ({
-    t,
-    selected = {},
-    onChange,
-    networkList = [],
-    currentTheme
-}) => {
+export const NetworkInput = ({ t, selected = {}, onChange, networkList = [], currentTheme }) => {
     const [open, setOpen] = useState(false);
     const ref = useRef();
 
@@ -242,101 +234,116 @@ export const NetworkInput = ({
         setOpen(false);
     };
 
-    return <div className='relative'>
-        <div className='bg-gray-13 dark:bg-darkBlue-3 px-4 py-5 rounded-xl cursor-pointer'
-             onClick={() => {
-                 setOpen(true);
-             }}
-        >
-            <p className='text-txtSecondary dark:text-txtSecondary-dark mb-4'>{t('wallet:network')}</p>
-            <div className='flex justify-between font-semibold'>
-                <div className='flex-1'>
-                    {selected?.name}
-                </div>
-                <ChevronDown
-                    className={open ? '!!rotate-0' : ''}
-                    size={16}
-                    color={currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}
-                />
-            </div>
-        </div>
-
-        {
-            open &&
+    return (
+        <div className="relative">
             <div
-                ref={ref}
-                className={classNames(
-                    'absolute z-10 right-0 left-14 mt-2 flex flex-col p-4 space-y-6 max-h-[412px] min-h-[200px]',
-                    'rounded-xl shadow-common overflow-hidden',
-                    'bg-white nami-light-shadow',
-                    'dark:bg-darkBlue-3 dark:shadow-none dark:border dark:border-divider-dark '
-                )}
+                className="bg-gray-13 dark:bg-darkBlue-3 px-4 py-5 rounded-xl cursor-pointer"
+                onClick={() => {
+                    setOpen(true);
+                }}
             >
-                <p className='text-txtSecondary dark:text-txtSecondary-dark'>{t('wallet:select_network_warning')}</p>
-                <div className='flex-1 overflow-y-auto -mr-3 pr-2 space-y-3'>
-                    {networkList.map(network => {
-                        const isSelected = network._id === selected?._id;
-                        return <div
-                            key={network._id}
-                            className={classNames(
-                                'p-4 rounded-md border border-transparent cursor-pointer',
-                                'flex items-center hover:bg-gray-13 dark:hover:bg-darkBlue-3',
-                                {
-                                    '!cursor-not-allowed': !network?.withdrawEnable,
-                                    '!border-teal bg-gray-13 dark:bg-darkBlue-3': isSelected
-                                })}
-                            onClick={() => internalOnChange(network)}
-                        >
-                            <div className='flex-1'>
-                                <p
-                                    className={classNames('font-semibold mb-2', {
-                                        'text-txtSecondary dark:text-txtSecondary-dark': !network?.withdrawEnable
-                                    })}
-                                >{network.name}</p>
-                                <div className='text-sm'>
-                                <span
-                                    className='mr-1 text-txtSecondary dark:text-txtSecondary-dark'>{t('common:transaction_fee')}:</span>
-                                    <span>{network.withdrawFee} {network.coin}</span>
-                                </div>
-                            </div>
-                            {isSelected && <CheckCircle />}
-                        </div>;
-                    })}
+                <p className="text-txtSecondary dark:text-txtSecondary-dark mb-4">{t('wallet:network')}</p>
+                <div className="flex justify-between font-semibold">
+                    <div className="flex-1">{selected?.name}</div>
+                    <ChevronDown className={open ? '!!rotate-0' : ''} size={16} color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue} />
                 </div>
             </div>
-        }
-    </div>;
-};
 
-export const MemoInput = ({
-    t,
-    value,
-    onChange,
-    errorMessage
-}) => {
-    return <div>
-        <div className='bg-gray-13 dark:bg-darkBlue-3 px-4 py-5 rounded-xl'>
-            <p className='text-txtSecondary dark:text-txtSecondary-dark mb-4'>Memo ({t('common:optional')})</p>
-            <input
-                className='w-full'
-                placeholder={t('wallet:receiver_memo')}
-                value={value}
-                onChange={e => onChange(e.target.value)}
-                type='text'
-            />
+            {open && (
+                <div
+                    ref={ref}
+                    className={classNames(
+                        'absolute z-10 right-0 left-14 mt-2 flex flex-col p-4 space-y-6 max-h-[412px] min-h-[200px]',
+                        'rounded-xl shadow-common overflow-hidden',
+                        'bg-white nami-light-shadow',
+                        'dark:bg-darkBlue-3 dark:shadow-none dark:border dark:border-divider-dark '
+                    )}
+                >
+                    <p className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:select_network_warning')}</p>
+                    <div className="flex-1 overflow-y-auto -mr-3 pr-2 space-y-3">
+                        {networkList.map((network) => {
+                            const isSelected = network._id === selected?._id;
+                            return (
+                                <div
+                                    key={network._id}
+                                    className={classNames(
+                                        'p-4 rounded-md border border-transparent cursor-pointer',
+                                        'flex items-center hover:bg-gray-13 dark:hover:bg-darkBlue-3',
+                                        {
+                                            '!cursor-not-allowed': !network?.withdrawEnable,
+                                            '!border-teal bg-gray-13 dark:bg-darkBlue-3': isSelected
+                                        }
+                                    )}
+                                    onClick={() => internalOnChange(network)}
+                                >
+                                    <div className="flex-1">
+                                        <p
+                                            className={classNames('font-semibold mb-2', {
+                                                'text-txtSecondary dark:text-txtSecondary-dark': !network?.withdrawEnable
+                                            })}
+                                        >
+                                            {network.name}
+                                        </p>
+                                        <div className="text-sm">
+                                            <span className="mr-1 text-txtSecondary dark:text-txtSecondary-dark">{t('common:transaction_fee')}:</span>
+                                            <span>
+                                                {network.withdrawFee} {network.coin}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {isSelected && <CheckCircle />}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
         </div>
-        <ErrorMessage message={errorMessage} show={!!errorMessage && !!value} />
-    </div>;
+    );
 };
 
-export const Information = ({
-    min,
-    max,
-    fee,
-    receive,
-    assetCode,
-    className = ''
-}) => {
+export const MemoInput = ({ t, value, onChange, errorMessage }) => {
+    const refInputMemo = useRef();
+    const paste = () => {
+        navigator.clipboard.readText().then((text) => {
+            if (onChange) {
+                onChange(text);
+                refInputMemo.current?.focus();
+            }
+        });
+    };
+
+    return (
+        <div>
+            <div className="bg-gray-13 dark:bg-darkBlue-3 p-4 rounded-xl">
+                <Tooltip isV3={true} id={'tooltip-memo'} place="top" effect="solid" className="w-[400px]">
+                    <div className="text-center px-6 py-3 text-tiny">{t('wallet:notes.memo_tooltip')}</div>
+                </Tooltip>
+                <div className="py-0.5 border-b border-dashed border-darkBlue-5 cursor-pointer w-auto inline-block" data-for="tooltip-memo" data-tip="">
+                    <span className="text-base text-txtSecondary dark:text-txtSecondary-dark ">MEMO</span>
+                </div>
+                <div className="flex font-semibold py-1 mt-2">
+                    <div className="flex-1">
+                        <input
+                            ref={refInputMemo}
+                            type="text"
+                            className="w-full font-semibold placeholder-shown:font-normal"
+                            placeholder={t('wallet:receiver_memo')}
+                            value={value}
+                            onChange={(e) => onChange(e.target.value)}
+                        />
+                    </div>
+                    <div className="text-teal cursor-pointer ml-6" onClick={paste}>
+                        {t('common:paste')}
+                    </div>
+                </div>
+            </div>
+            <ErrorMessage message={errorMessage} show={!!errorMessage && !!value} />
+        </div>
+    );
+};
+
+export const Information = ({ min, max, fee, receive, assetCode, className = '' }) => {
     const { t } = useTranslation();
     return (
         <div className={classNames('space-y-2', className)}>
@@ -345,10 +352,10 @@ export const Information = ({
                     title: t('wallet:min_withdraw'),
                     value: min
                 },
-                {
+                /*{
                     title: t('wallet:max_withdraw'),
                     value: max
-                },
+                }, */
                 {
                     title: t('wallet:withdraw_fee'),
                     value: fee
@@ -357,16 +364,14 @@ export const Information = ({
                     title: t('wallet:will_receive'),
                     value: receive
                 }
-            ].map((item, index) => {
-                return (
-                    <div key={index}>
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{item.title}</span>
-                        <span className="float-right font-semibold">
-                            {item.value || '--'} {assetCode}
-                        </span>
-                    </div>
-                );
-            })}
+            ].map((item, index) => (
+                <div key={index}>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{item.title}</span>
+                    <span className="float-right font-semibold">
+                        {item?.value || '--'} {assetCode}
+                    </span>
+                </div>
+            ))}
         </div>
     );
 };

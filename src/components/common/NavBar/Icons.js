@@ -1,3 +1,4 @@
+import payment_method from 'components/svg/CreditCard';
 import {
     FutureExchangeIcon as spot,
     FutureIcon as futures,
@@ -5,7 +6,6 @@ import {
     FutureLaunchpadIcon as launchpad,
     FutureReferralIcon as referral,
     FuturePortfolioIcon as overview_wallet,
-
     FutureIcon as futures_wallet,
     FutureExchangeIcon as spot_wallet,
     FutureTransferIcon as transfer,
@@ -13,9 +13,12 @@ import {
     FutureAdvanceIcon as advance,
     BxsUserIcon as profile,
     BxsDonateHeart as profile_referral,
-    BxsGift as reward_center,
-    BxsLogoutCircle as logout
+    BxsGift as daily_reward,
+    BxsLogoutCircle as logout,
+    PartnerIcon as partner,
+    FutureInsurance as nami_insurance
 } from '../../svg/SvgIcon';
+
 export default {
     spot,
     futures,
@@ -30,6 +33,9 @@ export default {
     advance,
     profile,
     profile_referral,
-    reward_center,
-    logout
+    daily_reward,
+    logout,
+    partner,
+    payment_method,
+    nami_insurance
 };

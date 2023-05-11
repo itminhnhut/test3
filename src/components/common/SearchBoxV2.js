@@ -26,7 +26,7 @@ const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChan
             />
             <CloseIcon
                 size={width ? (width >= 768 ? 20 : 16) : 20}
-                className={`cursor-pointer ${value ? 'visible' : 'invisible'}`}
+                className={`cursor-pointer ${value ? 'opacity-100' : 'opacity-0'}`}
                 onClick={() => onChange('')}
             />
         </div>

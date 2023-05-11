@@ -1,3 +1,5 @@
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+
 export const EPS = 0.00000001;
 
 export const LOCAL_STORAGE_KEY = {
@@ -575,6 +577,7 @@ export const ExchangeOrderEnum = {
         TOO_MUCH_ORDERS: 'TOO_MUCH_ORDERS',
         INSTRUMENTS_DO_NOT_MATCH: 'INSTRUMENTS_DO_NOT_MATCH',
         INSTRUMENT_NOT_LISTED_FOR_TRADING_YET: 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET',
+        NAO_IS_MAINTAINED: "NAO_IS_MAINTAINED",
         INVALID_PRICE: 'INVALID_PRICE',
         INVALID_TICK_SIZE: 'INVALID_TICK_SIZE',
         INVALID_STEP_SIZE: 'INVALID_STEP_SIZE',
@@ -827,7 +830,8 @@ export const UserSocketEvent = {
     UPDATE_BALANCE: 'user:update_balance',
     FUTURES_OPEN_ORDER: 'future:update_opening_order',
     FUTURE_DONE_CLOSING_ALL_ORDERS: 'future:done_closing_all_orders',
-    FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error'
+    FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error',
+    PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER'
 };
 
 export const EarnOrder_Status = {
@@ -875,3 +879,77 @@ export const rateCurrency = {
 };
 
 export const DefaultAvatar = 'https://nami-dev.sgp1.digitaloceanspaces.com/nami.exchange/images/preset_avatar/2/Len_cung_trang_11.png';
+
+export const GET_PARTNER_STATUS = {
+    INVALID_AMOUNT: 'INVALID_AMOUNT'
+};
+
+export const ApiResultCreateOrder = {
+    INVALID_OTP: 'INVALID_OTP',
+    TOO_MUCH_REQUEST: 'TOO_MUCH_REQUEST',
+    NOT_FOUND_PARTNER: 'NOT_FOUND_PARTNER',
+    NOT_ENOUGH_MONEY: 'NOT_ENOUGH_MONEY',
+    INVALID_AMOUNT: 'INVALID_AMOUNT',
+    EXCEEDING_PERMITTED_LIMIT: 'EXCEEDING_PERMITTED_LIMIT',
+    NOT_FOUND_ORDER: 'NOT_FOUND_ORDER'
+};
+
+export const DEFAULT_PARTNER_MIN = {
+    [SIDE.SELL]: 100e3,
+    [SIDE.BUY]: 100e3
+};
+
+export const DEFAULT_PARTNER_MAX = {
+    [SIDE.SELL]: 500e6,
+    [SIDE.BUY]: 500e6
+};
+
+export const PartnerOrderStatus = {
+    PENDING: 0,
+    SUCCESS: 1,
+    REJECTED: 2,
+    DISPUTED: 3
+};
+
+export const PartnerPersonStatus = {
+    PENDING: 0,
+    TRANSFERRED: 1,
+    DISPUTED: 2
+};
+
+export const PartnerOrderLog = {
+    CREATED: 0,
+    CANCELED: 1,
+    REJECTED: 2,
+    ACCEPTED: 3,
+    TRANSFERRED_FIAT: 4,
+    RECEIVED_FIAT: 5,
+    UPLOADED: 6,
+    DISPUTED: 7,
+    COMPLETED_DISPUTE: 8,
+    TIMEOUT_NOT_ACCEPT: 9,
+    TIMEOUT_NOT_TRANSFER: 10,
+    TIMEOUT_NOT_RECEIVE: 11,
+    SYSTEM_UPDATE_SUCCESS: 12,
+    SYSTEM_UPDATE_REJECT: 13,
+    SYSTEM_UPDATE_DISPUTE: 14
+};
+
+export const PartnerOrderStatusLog = {
+    PENDING: 0,
+    PROCESSING: 1,
+    SUCCESS: 2,
+    REJECTED: 3,
+    DISPUTED: 4
+};
+
+export const PartnerAcceptStatus = {
+    PENDING: PartnerPersonStatus.PENDING,
+    ACCEPTED: PartnerPersonStatus.TRANSFERRED,
+    DENIED: PartnerPersonStatus.DISPUTED
+};
+
+export const PartnerReasonDisputed = {
+    TIME_OUT: 1,
+    USER_DISPUTED: 2
+};

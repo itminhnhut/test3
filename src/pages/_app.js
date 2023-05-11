@@ -23,7 +23,6 @@ import * as ga from 'src/utils/ga';
 import { indexingArticles } from 'utils';
 import { isMobile } from 'react-device-detect';
 import { getCookie, setCookie } from 'cookies-next';
-
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {
 //         case 'FCP':
@@ -189,7 +188,7 @@ const App = ({ Component, pageProps }) => {
                     store.dispatch(getVip());
                     store.dispatch(getWallet());
                 }
-                store.dispatch(getUserFuturesBalance());
+                store.dispatch(getUserFuturesBalance(router.pathname.includes('mobile')));
                 store.dispatch(getUserPartnersBalance());
             }
         }

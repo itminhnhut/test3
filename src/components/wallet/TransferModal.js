@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatNumber, formatWallet, getLoginUrl, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
+import {dwLinkBuilder, formatNumber, formatWallet, getLoginUrl, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { ApiStatus, WalletType } from 'redux/actions/const';
 import { useTranslation } from 'next-i18next';
 import { API_FUTURES_CAMPAIGN_TRANSFER_STATUS, POST_WALLET_TRANSFER } from 'redux/actions/apis';
@@ -28,6 +28,8 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import SwapWarning from 'components/svg/SwapWarning';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Notice from 'components/svg/Notice';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -554,7 +556,7 @@ const TransferModal = ({
                         <div
                             key={`transfer_asset__list_${wallet?.assetCode}_${state.asset}`}
                             className={`px-4 py-3 flex items-center justify-between cursor-pointer first:mt-0 mt-3
-                                hover:bg-hover-1 dark:hover:bg-hover-dark 
+                                hover:bg-hover-1 dark:hover:bg-hover-dark
                                 ${state.asset === wallet?.assetCode ? 'bg-hover-1 dark:bg-hover-dark' : ''}`}
                             onClick={() =>
                                 state.asset !== wallet?.assetCode &&
@@ -839,7 +841,8 @@ const TransferModal = ({
                         {renderAvailableWallet()}
                         <AddCircleColorIcon
                             className="cursor-pointer"
-                            onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
+                            // onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
+                            onClick={() => handleKycRequest(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))}
                         />
                     </div>
                 </div>

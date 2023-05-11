@@ -33,6 +33,7 @@ const InputV2 = ({
     type = 'text',
     disabled = false,
     classNameInput = '',
+    classNameDivInner = '',
     ...restProps
 }) => {
     const { t } = useTranslation();
@@ -64,15 +65,16 @@ const InputV2 = ({
 
     return (
         <div className={classNames('relative pb-6', className)}>
-            {label ? <p className="text-txtSecondary pb-2">{label}</p> : null}
+            {label ? <p className="text-gray-1 dark:text-gray-7 pb-2 text-sm">{label}</p> : null}
             <div
                 className={classNames(
                     'bg-gray-10 dark:bg-dark-2 border border-transparent rounded-md flex items-center gap-2 p-[0.6875rem] transition',
                     'dark:focus-within:border-teal focus-within:border-green-3 dark:border-dark-2',
                     {
-                        'border-red': !!error,
+                        '!border-red': !!error,
                         'text-txtDisabled dark:text-txtDisabled-dark select-none': disabled
-                    }
+                    },
+                    classNameDivInner
                 )}
             >
                 {prefix ? prefix : null}
@@ -97,7 +99,7 @@ const InputV2 = ({
                         onClick={handleClear}
                         color={colors.darkBlue5}
                     />
-                    <div className="pl-2">{suffix ? suffix : null}</div>
+                    {suffix && <div className="pl-2">{suffix}</div>}
                 </div>
                 {canPaste ? (
                     <span onClick={paste} className="text-teal font-semibold cursor-pointer select-none">

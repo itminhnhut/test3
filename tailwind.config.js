@@ -92,33 +92,27 @@ module.exports = {
             '3xl': [
                 '1.75rem',
                 {
-                    lineHeight: '2.5rem'
+                    lineHeight: '2.25rem'
                 }
             ], // Heading 4 28px
             '4xl': [
+                '2rem',
+                {
+                    lineHeight: '2.375rem',
+                },
+            ], //32px
+            '5xl': [
                 '2.25rem',
                 {
-                    lineHeight: '3.5rem'
-                }
-            ], // Heading 3 36px
-            '5xl': [
-                '2.5rem',
-                {
-                    lineHeight: '3.5rem'
-                }
-            ], // Heading 2 40px
+                    lineHeight: '3rem',
+                },
+            ], //36px
             '6xl': [
-                '4rem',
+                '2.75rem',
                 {
-                    lineHeight: '4.5rem'
-                }
-            ], // Heading 1 64px
-            '5.5xl': [
-                '3.5rem',
-                {
-                    lineHeight: '4.25rem'
-                }
-            ] // Heading 2 56px
+                    lineHeight: '3.625rem',
+                },
+            ], //44px
         },
         // TODO split text, background
         colors: {
@@ -210,7 +204,11 @@ module.exports = {
             green: {
                 DEFAULT: '#22B02E',
                 opacity: 'rgba(34, 176, 46, 0.18)',
+                border_light: 'rgba(126, 229, 174, 0.1)',
                 ...commonColors.green
+            },
+            purple: {
+                ...commonColors.purple
             },
             yellow: {
                 DEFAULT: '#FFD965',
@@ -418,7 +416,9 @@ module.exports = {
                     'linear-gradient(285.88deg, rgba(98, 255, 104, 0.24) 6.52%, rgba(50, 244, 110, 0.59) 38.97%, rgba(45, 225, 96, 0.53) 65.02%, #3BE29C 91.4%)',
                 'gradient-button-hover-dark': 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)',
                 'gradient-button-hover': `linear-gradient(0deg, ${commonColors.teal} 100%, ${commonColors.teal} 100%)`,
-                'refferal-v2-banner': "url('/images/reference/background_desktop_2.png')"
+                'refferal-v2-banner': "url('/images/reference/background_desktop_2.png')",
+                'tx-history-detail': "url('/images/screen/transaction-history/detail_bg-light.png')",
+                'tx-history-detail-dark': "url('/images/screen/transaction-history/detail_bg-dark.png')"
             },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',

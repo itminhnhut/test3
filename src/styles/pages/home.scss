@@ -17,7 +17,7 @@
   z-index: 1;
 
   .homepage-introduce__banner {
-    @apply flex lg:absolute 2xl:hidden right-0 max-h-[556px] bottom-0 top-20;
+    @apply flex pt-[71px] justify-end lg:pt-0 lg:absolute 2xl:hidden right-0 max-h-[556px] bottom-0 top-20;
     
   }
 
@@ -28,7 +28,7 @@
     }
 
     .homepage-introduce___wrapper__left {
-        @apply relative z-20 w-full md:w-[60%] lg:w-[45%] lg:mb-[50px] xl:mb-[100px];
+        @apply relative z-20 w-full md:w-[50%] lg:w-[45%] md:mb-[50px] xl:mb-[100px];
 
       .homepage-introduce___nami_exchange {
         @apply text-sm text-dominant font-medium;
@@ -515,8 +515,7 @@
 
           // Price Style
           .homepage-markettrend__market_table__price {
-            @apply text-txtPrimary dark:text-txtPrimary-dark text-sm;
-            font-weight: 500;
+            @apply font-normal text-txtPrimary dark:text-txtPrimary-dark text-sm;
             @media (min-width: 992px) {
               @apply text-base;
             }
@@ -525,7 +524,8 @@
 
           // Percent Style
           .homepage-markettrend__market_table__percent {
-            font-weight: 500;
+            @apply  font-normal;
+            // font-weight: 500;
           }
 
           // Chart Style

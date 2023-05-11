@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { useWindowSize } from 'react-use';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
-const types = {
+export const TYPES = {
     DEFAULT: 'default',
     SUCCESS: 'success',
     WARNING: 'warning',
@@ -15,24 +15,24 @@ const types = {
 };
 
 const typeStyles = {
-    [types.DEFAULT]: {},
-    [types.SUCCESS]: {
+    [TYPES.DEFAULT]: {},
+    [TYPES.SUCCESS]: {
         backgroundColor: 'bg-teal/[0.1]',
         colorContent: 'text-teal',
         icon: CheckCircle
     },
-    [types.FAILED]: {
+    [TYPES.FAILED]: {
         backgroundColor: 'bg-red/[0.1]',
         colorContent: 'text-red'
     },
-    [types.WARNING]: {
+    [TYPES.WARNING]: {
         backgroundColor: 'bg-yellow-2/[0.1]',
         icon: WarningTriangle,
         colorContent: 'text-yellow-2'
     }
 };
 
-function TagV2({ type = types.DEFAULT, children, className = '', icon = true }) {
+function TagV2({ type = TYPES.DEFAULT, children, className = '', icon = true, labelClassname = '' }) {
     const style = typeStyles[type];
 
     const [theme] = useDarkMode();
@@ -43,20 +43,20 @@ function TagV2({ type = types.DEFAULT, children, className = '', icon = true }) 
         <span
             className={classnames(
                 className,
-                `flex items-center leading-7 rounded-full w-fit px-3 md:px-4 py-1 ${
-                    style.backgroundColor ? style.backgroundColor : 'bg-gray-11 dark:bg-divider-dark/[0.5]'
+                `flex items-center leading-7 rounded-full min-w-[fit-content] w-fit px-3 md:px-4 py-1 select-none ${
+                    style && style?.backgroundColor ? style.backgroundColor : 'bg-gray-11 dark:bg-divider-dark/[0.5]'
                 }`
             )}
         >
             {icon &&
-                style.icon &&
+                style?.icon &&
                 React.createElement(style.icon, {
                     className: 'mr-2',
                     size: isMobile ? 12 : 16
                 })}
             <span
                 // style={{ color: style.color || defaultColor }}
-                className={`text-xs md:text-sm ${style?.colorContent ? style.colorContent : 'text-gray-1 dark:text-gray-7'}`}
+                className={`text-xs md:text-sm ${style?.colorContent ? style.colorContent : 'text-gray-1 dark:text-gray-7'} ${labelClassname}`}
             >
                 {children}
             </span>
@@ -65,7 +65,7 @@ function TagV2({ type = types.DEFAULT, children, className = '', icon = true }) 
 }
 
 TagV2.propTypes = {
-    type: PropTypes.oneOf(Object.values(types)),
+    type: PropTypes.oneOf(Object.values(TYPES)),
     children: PropTypes.node.isRequired,
     className: PropTypes.string
 };

@@ -9,6 +9,9 @@ import { WalletType } from 'redux/actions/const';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import router from 'next/router';
 import { PATHS } from 'constants/paths';
+import { dwLinkBuilder } from 'redux/actions/utils';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const TradeHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -49,16 +52,18 @@ const TradeHistory = (props) => {
                 });
                 break;
             case 'deposit':
-                href = walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
-                    type: 'crypto',
-                    asset: assetCode
-                });
+                // href = walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                //     type: 'crypto',
+                //     asset: assetCode
+                // });
+                href = dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, assetCode);
                 break;
             case 'withdraw':
-                href = walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, {
-                    type: 'crypto',
-                    asset: assetCode
-                });
+                // href = walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, {
+                //     type: 'crypto',
+                //     asset: assetCode
+                // });
+                href = dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL, assetCode);
                 break;
             case 'convert':
                 dispatch(

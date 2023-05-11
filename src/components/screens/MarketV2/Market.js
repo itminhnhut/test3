@@ -23,7 +23,7 @@ const Market = () => {
     // * Initial State
     const [state, set] = useState({
         currentPage: 1,
-        tabIndex: 1,
+        tabIndex: 0,
         subTabIndex: 1,
         search: '',
         loadingTrend: false,
@@ -171,7 +171,7 @@ const Market = () => {
         const q = subTab[state.subTabIndex].key.toUpperCase()
         if (q === 'ALL') return state?.exchangeMarket?.filter(e => suggestedSymbols.includes(e.b))
         return state?.exchangeMarket?.filter(e => suggestedSymbols.includes(e.b) && e.q === q)
-    }, [state?.exchangeMarket, state.subTabIndex])
+    }, [state?.exchangeMarket, state?.subTabIndex, state?.futuresMarket])
 
 
     // * Render Handler
@@ -238,26 +238,24 @@ const Market = () => {
         // Favorite data handling
         if (tab[state.tabIndex].key === 'favorite') {
             if (favSubTab[state.favType]?.key === 'exchange') {
-                // log.d('Tab Favorite - Exchange')
                 watch = convert?.exchange
             }
             if (favSubTab[state.favType]?.key === 'futures') {
-                // log.d('Tab Favorite - Futures')
                 watch = convert?.futures
             }
 
-            if (subTab[state.subTabIndex].key === 'vndc') {
+            if (subTab?.[state?.subTabIndex]?.key === 'vndc') {
                 // log.d('Tab Exchange - VNDC')
-                watch = watch.filter(e => e.q === 'VNDC')
-            } else if (subTab[state.subTabIndex].key === 'usdt') {
+                watch = watch?.filter(e => e.q === 'VNDC')
+            } else if (subTab?.[state.subTabIndex]?.key === 'usdt') {
                 // log.d('Tab Exchange - USDT')
-                watch = watch.filter(e => e.q === 'USDT')
+                watch = watch?.filter(e => e.q === 'USDT')
             }
         }
 
         // Exchange data handling
-        if (tab[state.tabIndex].key === 'exchange') {
-            if (subTab[state.subTabIndex].key === 'vndc' && state.exchangeMarket) {
+        if (tab?.[state?.tabIndex]?.key === 'exchange') {
+            if (subTab?.[state?.subTabIndex]?.key === 'vndc' && state.exchangeMarket) {
                 // log.d('Tab Exchange - VNDC')
                 watch = state.exchangeMarket.filter(e => e.q === 'VNDC')
             } else if (subTab[state.subTabIndex].key === 'usdt' && state.exchangeMarket) {

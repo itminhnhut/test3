@@ -35,7 +35,7 @@
     @apply text-black-600
   }
   .post-details-title {
-    @apply text-5xl font-bold;
+    @apply text-6xl font-bold;
     letter-spacing: 0.02rem;
   }
   .post-details-excerpt {
@@ -138,7 +138,7 @@
     .text-category.active {
       @apply text-3xl transition transition-all opacity-100;
       @screen md {
-        @apply text-5xl;
+        @apply text-6xl;
       }
       &:after {
         display: block;
