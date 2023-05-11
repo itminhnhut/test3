@@ -100,7 +100,7 @@ const CloseOrdersByCondtionMobile = memo(({
                     orders: response.data,
                     isLoading: false
                 });
-                await getOrdersList()
+                await getOrdersList({ product: 2 })
             }
         } catch (error) {
             console.log('Error when get orders by close type', error);

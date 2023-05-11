@@ -142,7 +142,7 @@ const TabOpenOrders = ({
         };
         fetchOrder('DELETE', params, () => {
             context.alert.show('success', t('futures:close_order:modal_title', { value: id }), t('futures:close_order:request_successfully', { value: id }));
-            dispatch(reFetchOrderListInterval(1, 10000));
+            dispatch(reFetchOrderListInterval(1, 10000, true));
         });
     };
 

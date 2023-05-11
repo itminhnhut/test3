@@ -334,14 +334,16 @@ export const removeItemMarketWatch = (pair) => async (dispatch) => {
     });
 };
 
-export const reFetchOrderListInterval = (times = 1, duration = 5000) => (dispatch) => {
-    for (let i = 0; i < times; i++) {
-        console.log(`call ${i}`.repeat(10));
-        setTimeout(() => {
-            dispatch(getOrdersList());
-        }, duration * (i + 1));
-    }
-};
+export const reFetchOrderListInterval =
+    (times = 1, duration = 5000, isNAO = false) =>
+    (dispatch) => {
+        for (let i = 0; i < times; i++) {
+            console.log(`call ${i}`.repeat(10));
+            setTimeout(() => {
+                dispatch(getOrdersList(isNAO ? { product: 2 } : null));
+            }, duration * (i + 1));
+        }
+    };
 
 export const updateSymbolView = ({ symbol }) => async (dispatch) => {
     const { data } = await Axios.post(API_UPDATE_FUTURES_SYMBOL_VIEW, {

@@ -69,10 +69,10 @@ const TabOrders = memo(({
             userSocket.on(UserSocketEvent.FUTURE_DONE_CLOSING_ALL_ORDERS, async (data) => {
                 if (data === 'done') {
                     setIsClosingOrders({ isClosing: 'done', timeout: 0 });
-                    await getOrdersList();
+                    await getOrdersList({ product: 2 });
                 }
                 setTimeout(async () => {
-                    await getOrdersList();
+                    await getOrdersList({ product: 2 });
                     setIsClosingOrders({ isClosing: 'false', timeout: 0 });
                 }, 2000);
             });
