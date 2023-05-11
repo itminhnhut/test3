@@ -27,35 +27,39 @@ const FuturesSetting = memo(
         const timer = useRef();
         const [loading, setLoading] = useState(false);
         const [mount, setMount] = useState(false);
+        const userSetting = [
+            { key: FuturesSettings.order_confirm, tooltip: t('spot:setting:order_confirmation_tooltip') },
+            { key: FuturesSettings.show_sl_tp_order_line, tooltip: t('spot:setting:display_price_line_tooltip') }
+        ];
 
         const FuturesComponents = [
             {
-                value: t('futures:setting:favorites'),
+                label: t('futures:setting:favorites'),
                 key: 'isShowFavorites',
                 visible: true
             },
             {
-                value: t('futures:setting:pair_detail'),
+                label: t('futures:setting:pair_detail'),
                 key: 'isShowPairDetail',
                 visible: true
             },
             {
-                value: t('futures:setting:chart'),
+                label: t('futures:setting:chart'),
                 key: 'isShowChart',
                 visible: true
             },
             {
-                value: t('futures:setting:orders_history'),
+                label: t('futures:setting:orders_history'),
                 key: 'isShowOpenOrders',
                 visible: true
             },
             {
-                value: t('futures:setting:place_order'),
+                label: t('futures:setting:place_order'),
                 key: 'isShowPlaceOrder',
                 visible: true
             },
             {
-                value: t('common:assets'),
+                label: t('common:assets'),
                 key: 'isShowAssets',
                 visible: true
             }
@@ -63,12 +67,16 @@ const FuturesSetting = memo(
 
         const getUserSettings = () => {
             if (!settings?.user_setting) return [];
-            return Object.keys(settings?.user_setting).reduce((pre, curr) => {
-                const value = settings.configs.find((rs) => rs.key === curr)?.description?.[language];
-                pre ? pre.push({ key: curr, value }) : (pre = [{ key: curr, value }]);
-                return pre;
-            }, []);
+            return userSetting.map((item) => {
+                const label = settings.configs.find((rs) => rs.key === item.key)?.description?.[language];
+                return {
+                    key: item.key,
+                    label,
+                    tooltip: item?.tooltip
+                };
+            });
         };
+        
         const settingFutures = useMemo(() => {
             return {
                 userSetting: getUserSettings()
@@ -76,7 +84,6 @@ const FuturesSetting = memo(
         }, [settings, language]);
 
         const inActiveLabel = currentTheme === 'dark' ? colors.gray[7] : colors.gray[1];
-        const userSetting = [FuturesSettings.order_confirm, FuturesSettings.show_sl_tp_order_line, FuturesSettings.auto_type];
 
         useEffect(() => {
             const settingFutures = localStorage.getItem('settingLayoutFutures');
@@ -91,14 +98,14 @@ const FuturesSetting = memo(
         }, [settings?.user_setting]);
 
         const onChangeSetting = (key, value) => {
-            if (!userSetting.includes(key)) return;
+            if (!userSetting.find((item) => item.key === key)) return;
             try {
                 setLoading(true);
                 const obj = userSetting.reduce((pre, curr) => {
-                    pre[curr] = spotState[curr];
+                    pre[curr.key] = spotState[curr.key];
                     return pre;
                 }, {});
-                const params = { setting: { ...obj, [key]: value } };
+                const params = { setting: { ...settings?.user_setting, ...obj, [key]: value } };
                 dispatch(fetchFuturesSetting(params));
             } catch (error) {
                 console.log(error);
@@ -181,11 +188,11 @@ const FuturesSetting = memo(
                                     <div className="py-6 divide-y-[1px] divide-divider dark:divide-divider-dark grid grid-cols-1 gap-6">
                                         <div className="space-y-4">
                                             {FuturesComponents.map((item, index) => {
-                                                const { value, key, visible } = item;
+                                                const { label, key, visible } = item;
                                                 if (!visible) return null;
                                                 return (
                                                     <div className="h-6 flex justify-between" key={key + index}>
-                                                        <span className="text-sm text-txtPrimary dark:text-txtPrimary-dark flex items-center">{value}</span>
+                                                        <span className="text-sm text-txtPrimary dark:text-txtPrimary-dark flex items-center">{label}</span>
                                                         <Switch checked={spotState?.[key]} onChange={(value) => onChangeFuturesComponent(key, value)} />
                                                     </div>
                                                 );
@@ -196,7 +203,7 @@ const FuturesSetting = memo(
                                                 return (
                                                     <div className="space-y-4 pt-6">
                                                         {settingFutures[setting].map((item, indx) => {
-                                                            const { value, key, className = '', tooltip } = item;
+                                                            const { label, key, className = '', tooltip } = item;
                                                             return (
                                                                 <Fragment key={indx}>
                                                                     <div className="h-6 flex justify-between space-x-2">
@@ -209,7 +216,7 @@ const FuturesSetting = memo(
                                                                             data-tip={tooltip}
                                                                             data-for={key}
                                                                         >
-                                                                            {value}
+                                                                            {label}
                                                                         </span>
                                                                         <Switch
                                                                             checked={spotState?.[key]}

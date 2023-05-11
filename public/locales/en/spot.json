@@ -46,6 +46,7 @@
         "reset_default_layout": "Back to default layout",
         "order_confirmation": "Order Confirmation",
         "order_confirmation_tooltip": "Order Confirmation with open position orders",
-        "display_price_line": "Display price lines of all opening positions"
+        "display_price_line": "Display price lines of all opening positions",
+        "display_price_line_tooltip": "Display the price lines of Open and SL-TP prices from all opening positions on candlestick chart"
     }
 }
