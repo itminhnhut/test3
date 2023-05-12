@@ -113,12 +113,11 @@ function TabTransactionsHistory({
             const res = await fetchApi({
                 url: API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES,
                 params: {
-                    timeFrom: range.start ? startOfDay(range.start)
-                        .valueOf() : '',
-                    timeTo: range.end ? endOfDay(range.end)
-                        .valueOf() : '',
+                    timeFrom: range.start ? startOfDay(range.start).valueOf() : '',
+                    timeTo: range.end ? endOfDay(range.end).valueOf() : '',
                     category: category !== 'all' ? category : '',
-                    lastId: isLoadMore ? last(data.result)?._id : ''
+                    lastId: isLoadMore ? last(data.result)?._id : '',
+                    walletType: 9
                 }
             });
             if (res.status === 'ok' && res.data) {
