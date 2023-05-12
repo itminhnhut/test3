@@ -76,6 +76,21 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
         };
     }, [id, assetConfig]);
 
+    const renderWallet = (key) => {
+        switch (key) {
+            case WalletType.SPOT:
+                return t('common:wallet', { wallet: 'Nami Spot' });
+            case WalletType.FUTURES:
+                return t('common:wallet', { wallet: 'Nami Futures' });
+            case WalletType.BROKER:
+                return t('common:wallet', { wallet: language === 'vi' ? 'hoa hồng Nami' : 'Nami Commission' });
+            case WalletType.NAO_FUTURES:
+                return t('common:wallet', { wallet: 'NAO Futures' });
+            default:
+                return key;
+        }
+    };
+
     const isMoneyUseOutofDigit = detailTx?.result?.money_use && Math.abs(+detailTx?.result?.money_use) < Math.pow(10, (assetData?.assetDigit || 0) * -1);
 
     return (
@@ -248,7 +263,9 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         break;
                                     case COLUMNS_TYPE.WALLET_TYPE:
                                         formatKeyData = (
-                                            <div className="">{+keyData === 8 ? t('transaction-history:broker_wallet') : WalletTypeById?.[keyData]}</div>
+                                            <div className="">
+                                                {+keyData === 8 ? t('transaction-history:broker_wallet') : renderWallet(WalletTypeById?.[keyData])}
+                                            </div>
                                         );
                                         break;
                                     case COLUMNS_TYPE.NAMI_SYSTEM:
