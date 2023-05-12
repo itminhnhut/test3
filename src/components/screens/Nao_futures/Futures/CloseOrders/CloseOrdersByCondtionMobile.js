@@ -53,12 +53,13 @@ const CloseOrdersByCondtionMobile = memo(({
             const response = await FetchApi({
                 url: API_GET_ALL_ORDERS_BY_CONDTION,
                 options: {
-                    method: 'POST',
+                    method: 'POST'
                 },
                 params: {
                     type,
-                    pair
-                },
+                    pair,
+                    product: 2
+                }
             });
             if (response.status === 'ok' && response.data) {
                 setState({
@@ -86,19 +87,20 @@ const CloseOrdersByCondtionMobile = memo(({
             const response = await FetchApi({
                 url: API_CLOSE_ALL_ORDERS_BY_CONDTION,
                 options: {
-                    method: 'POST',
+                    method: 'POST'
                 },
                 params: {
                     type,
-                    pair
-                },
+                    pair,
+                    product: 2
+                }
             });
             if (response.status === 'ok' && response.data) {
                 setState({
                     orders: response.data,
                     isLoading: false
                 });
-                await getOrdersList()
+                await getOrdersList({ product: 2 })
             }
         } catch (error) {
             console.log('Error when get orders by close type', error);

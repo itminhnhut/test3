@@ -140,14 +140,10 @@ const OrderOpenDetail = ({
     const fetchOrder = async (method = 'DELETE', params, cb) => {
         setLoading(true);
         try {
-            const {
-                status,
-                data,
-                message
-            } = await fetchApi({
+            const { status, data, message } = await fetchApi({
                 url: API_GET_FUTURES_ORDER,
                 options: { method },
-                params: params,
+                params: { ...params, product: 2 }
             });
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);

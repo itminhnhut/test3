@@ -189,7 +189,7 @@ const App = ({ Component, pageProps }) => {
                     store.dispatch(getVip());
                     store.dispatch(getWallet());
                 }
-                store.dispatch(getUserFuturesBalance());
+                store.dispatch(getUserFuturesBalance(router.pathname.includes('mobile')));
                 store.dispatch(getUserPartnersBalance());
                 store.dispatch(getBalance(9, WalletType.NAO_FUTURES)); // wallet NAO FUTURES
             }

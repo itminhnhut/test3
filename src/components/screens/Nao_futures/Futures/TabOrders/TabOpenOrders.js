@@ -107,14 +107,10 @@ const TabOpenOrders = ({
 
     const fetchOrder = async (method = 'DELETE', params, cb) => {
         try {
-            const {
-                status,
-                data,
-                message
-            } = await fetchApi({
+            const { status, data, message } = await fetchApi({
                 url: API_GET_FUTURES_ORDER,
                 options: { method },
-                params: params,
+                params: { ...params, product: 2 }
             });
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
@@ -146,7 +142,7 @@ const TabOpenOrders = ({
         };
         fetchOrder('DELETE', params, () => {
             context.alert.show('success', t('futures:close_order:modal_title', { value: id }), t('futures:close_order:request_successfully', { value: id }));
-            dispatch(reFetchOrderListInterval(1, 10000));
+            dispatch(reFetchOrderListInterval(1, 10000, true));
         });
     };
 

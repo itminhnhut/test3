@@ -62,8 +62,9 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, tab, active, onShowDetail,
                 params: {
                     ...filter.current,
                     status: 1,
-                },
-            })
+                    product: 2
+                }
+            });
             if (status === ApiStatus.SUCCESS) {
                 hasMore.current = data.hasNext;
                 const _dataSource = isFirstLoad ? data?.orders || [] : [...dataSource].concat(data?.orders);

@@ -139,16 +139,16 @@ const FuturesMobile = () => {
     }, [auth, timestamp]);
 
     const getOrders = () => {
-        if (auth) dispatch(getOrdersList());
+        if (auth) dispatch(getOrdersList({ product: 2 }));
     };
 
     useEffect(() => {
         if (userSocket) {
-            userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
+            userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER_NAO, getOrders);
         }
         return () => {
             if (userSocket) {
-                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
+                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER_NAO, getOrders);
             }
         };
     }, [userSocket]);

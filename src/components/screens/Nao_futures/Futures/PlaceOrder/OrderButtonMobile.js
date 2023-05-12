@@ -77,7 +77,7 @@ const OrderButtonMobile = ({
                 setDisabled(false);
             }, 1000);
             setShowConfirmModal(false);
-            dispatch(reFetchOrderListInterval(2, 5000));
+            dispatch(reFetchOrderListInterval(2, 5000, true));
         });
     };
 
