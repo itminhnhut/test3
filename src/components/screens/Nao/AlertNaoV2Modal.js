@@ -100,7 +100,7 @@ const AlertNaoV2Modal = memo(forwardRef((props, ref) => {
             {!options.current?.hideCloseButton
                 && <SvgCross onClick={onCancel} className="ml-auto" size={24} color="currentColor" />
             }
-            <div ref={wrapperRef} className="flex flex-col items-center justify-between h-full">
+            <div ref={wrapperRef} className="flex flex-col items-center justify-between h-[calc(100%-1.5rem)]">
                 <div className='mb-6'>
                     {getIcon(options.current.type)}
                 </div>

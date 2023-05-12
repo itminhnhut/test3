@@ -20,10 +20,11 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
     const [loading, setLoading] = useState(false)
     const isMobile = width <= 640;
 
-    const acceptInvite = async (id) => {
+    const acceptInvite = async (group) => {
+        if (!group) return;
         const action = 'ACCEPT'
-        const group_displaying_id = id
-        setLoading(true)
+        const group_displaying_id = group?.group_displaying_id;
+        setLoading(true);
         try {
             const { data, status } = await fetchApi({
                 url: API_CONTEST_POST_ACCEPT_INVITATION,
@@ -32,9 +33,12 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
             });
             if (status === ApiStatus.SUCCESS) {
                 getInfo();
-                context.alertV2.show('success', t('nao:contest:join_success'));
+                setTimeout(
+                    () => context.alertV2.show('success', t('nao:contest:join_success'), t('nao:contest:join_message', { teamname: group.group_name })),
+                    500
+                );
             } else {
-                context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
+                setTimeout(() => context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`)), 500);
             }
 
         } catch (error) {
@@ -49,7 +53,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
         context.alertV2.show('team', t('nao:contest:confirm_title'),
             t('nao:contest:confirm_description', { value: item.group_name }), null,
             () => {
-                acceptInvite(item?.group_displaying_id);
+                acceptInvite(item);
             }, null, { confirmTitle: t('nao:contest:confirm_accept'), timer: 1000 });
     }
 

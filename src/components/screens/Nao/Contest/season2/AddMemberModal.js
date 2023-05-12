@@ -80,8 +80,8 @@ const AddMemberModal = ({ onClose, contest_id }) => {
                 params: { contest_id: contest_id, invite_onus_user_id: member },
             });
             if (status === ApiStatus.SUCCESS) {
-                context.alertV2.show('success', t('nao:contest:member_successfully'), null, null, null, () => {
-                    onClose(data)
+                context.alertV2.show('success', t('nao:contest:member_successfully'), t('nao:contest:adding_member_message', { username: fullname.current }), null, null, () => {
+                    onClose(data);
                 });
             } else {
                 context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));

@@ -72,7 +72,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
         }
     };
 
-    const onCancelInvite = async (id, index) => {
+    const onCancelInvite = async (user, index) => {
+        if (!user) return;
         setDisabled(true);
         try {
             const { data, status } = await fetchApi({
@@ -80,7 +81,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 options: { method: 'POST' },
                 params: {
                     contest_id: contest_id,
-                    invite_onus_user_id: id
+                    invite_onus_user_id: user.onus_user_id
                 }
             });
             if (!index) return;
@@ -89,7 +90,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 const members = [..._dataSource?.members];
                 members[index] = null;
                 _dataSource.members = members;
-                context.alertV2.show('success', t('nao:contest:delete_successfully'), null, null, null, () => {
+                context.alertV2.show('success', t('nao:contest:delete_successfully'), t('nao:contest:delete_message', {username: user.name}), null, null, () => {
                     setDataSource(_dataSource);
                 });
             } else {
@@ -154,7 +155,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                     t('nao:contest:delete_content', { value: item.name }),
                     null,
                     () => {
-                        onCancelInvite(item?.onus_user_id, index);
+                        onCancelInvite(item, index);
                     },
                     null,
                     { confirmTitle: t('nao:contest:delete_invitation') }
@@ -189,14 +190,14 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
             t('nao:contest:confirm_description', { value: dataSource.name }),
             null,
             () => {
-                acceptInvite(dataSource?.displaying_id);
+                acceptInvite(dataSource);
             },
             null,
             { confirmTitle: t('nao:contest:confirm_accept') }
         );
     };
 
-    const acceptInvite = async (id) => {
+    const acceptInvite = async (group) => {
         setDisabled(true);
         try {
             const { data, status } = await fetchApi({
@@ -204,16 +205,20 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 options: { method: 'POST' },
                 params: {
                     contest_id: contest_id,
-                    group_displaying_id: id,
+                    group_displaying_id: group?.displaying_id,
                     action: 'ACCEPT'
                 }
             });
             if (status === ApiStatus.SUCCESS) {
-                context.alertV2.show('success', t('nao:contest:join_success'), null, null, null, () => {
+                setTimeout(() => context.alertV2.show('success', t('nao:contest:join_success'), t('nao:contest:join_message', { teamname: group.name }), null, null, () => {
                     onClose('trigger');
-                });
+                }), 500);
             } else {
-                context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
+                setTimeout(
+                    () => context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`)),
+                    500
+                );
+
             }
         } catch (e) {
             console.log(e);
@@ -504,7 +509,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <Column minWidth={200} ellipsis className="text-txtSecondary dark:text-txtSecondary-dark" title={'ID NAO Futures'} fieldName="onus_user_id" />
                             <Column
                                 visible={visibleStatus}
-                                minWidth={isPending.group ? 100 : 120}
+                                minWidth={isPending.group ? 140 : 160}
                                 title={t('common:status')}
                                 fieldName="status"
                                 cellRender={renderStatusMember}

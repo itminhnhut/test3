@@ -197,7 +197,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                 context.alertV2.show('success', t('nao:contest:team_successfully'), null, null,
                     () => { onShowDetail({ displaying_id: data?.group_displaying_id, is_leader: 1, ...data }) },
                     null,
-                    { confirmTitle: t('nao:contest:team_details') });
+                    { confirmTitle: t('nao:contest:team_details'), messages: t('nao:contest:team_successfully_msg') });
             } else {
                 context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
             }

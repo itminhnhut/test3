@@ -123,9 +123,9 @@ const ContesRules = ({
     }, [seasons]);
 
     return (
-        <section className="contest_rules py-6 sm:py-[3.375rem] w-full flex flex-col mb:flex-row mb:justify-between">
-            <div className="text-center mb:text-left flex flex-col flex-wrap mb:block">
-                <div className="font-semibold text-xl mb:text-2xl text-teal">{t('nao:contest:tournament')}</div>
+        <section className="contest_rules py-6 sm:py-[3.375rem] w-full flex flex-col sm:flex-row sm:justify-between">
+            <div className="text-center sm:text-left flex flex-col flex-wrap sm:block">
+                <div className="font-semibold text-xl sm:text-2xl text-teal">{t('nao:contest:tournament')}</div>
                 <div className="font-semibold text-xl sm:text-6xl pt-3 sm:pt-4">
                     <div>{title?.[language]}</div>
                     <div>{title_champion?.[language]}</div>
@@ -135,10 +135,10 @@ const ContesRules = ({
                     {t('nao:contest:description')}
                     <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
-                <div className="sm_only:!w-full w-fit sm:px-4 rounded-md bg-gray-13 dark:bg-dark-4 py-3 flex flex-row items-center justify-center mt-8 mb:mt-4">
+                <div className="sm_only:!w-full w-fit sm:px-4 rounded-md bg-gray-13 dark:bg-dark-4 py-3 flex flex-row items-center justify-center mt-8 sm:mt-4">
                     {renderCountDown('!font-normal mr-3', '!font-semibold')}
                 </div>
-                <div className="flex flex-row mt-3 mb:mt-7 justify-center mb:justify-start w-full">
+                <div className="flex flex-row mt-3 sm:mt-7 justify-center sm:justify-start w-full">
                     {inHome ? (
                         <ButtonNao
                             onClick={() => router.push('/contest')}
@@ -159,7 +159,7 @@ const ContesRules = ({
                     )}
                 </div>
             </div>
-            <div className="mt-9 mb:mt-0 text-center">
+            <div className="mt-9 sm:mt-0 text-center">
                 {season === seasonConfig ? (
                     <Image
                         src={getS3Url('/images/contest/bg-contest.png')}

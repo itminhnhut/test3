@@ -19,6 +19,7 @@ import CloseOrderModalMobile from './CloseOrderModalMobile';
 import AdjustPositionMargin from './AdjustPositionMargin';
 import AddCircleOutline from 'components/svg/AddCircleOutline';
 import SvgShare from 'components/svg/Share';
+import { Share } from 'react-feather';
 
 const INITIAL_STATE = {
     socketStatus: false,
@@ -305,7 +306,7 @@ const OrderOpenDetail = ({
                             {order?.leverage}x
                         </div>
                         {canShare ?
-                            <SvgShare color="currentColor" onClick={openShare} className="ml-2 flex-shrink-0" size={20} />
+                            <Share color="currentColor" onClick={openShare} className="ml-2 flex-shrink-0" size={16} />
                             : null
                         }
                     </div>
