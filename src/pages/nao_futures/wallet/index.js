@@ -41,7 +41,7 @@ const MIN_WITHDRAWAL = {
 const MAX_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 500e6,
     [WalletCurrency.NAMI]: 100000,
-    [WalletCurrency.NAO]: 50000,
+    [WalletCurrency.NAO]: 100000,
     [WalletCurrency.ONUS]: 50000,
     [WalletCurrency.USDT]: 5000,
 };

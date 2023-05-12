@@ -1036,6 +1036,79 @@ const NotInterestedIcon = ({size}) => {
     </svg>
 )}
 
+const SaveAltIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#6cukkge35a)">
+            <g clip-path="url(#cnojdb08tb)">
+                <path
+                    d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67 2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z"
+                    fill={color}
+                />
+            </g>
+        </g>
+        <defs>
+            <clipPath id="6cukkge35a">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+            <clipPath id="cnojdb08tb">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const FacebookIcon = ({ size = 24, ...props }) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#qk5jpw3tia)">
+            <path
+                d="M24 12c0-6.627-5.373-12-12-12S0 5.373 0 12c0 5.99 4.388 10.954 10.125 11.854V15.47H7.078V12h3.047V9.356c0-3.007 1.792-4.668 4.533-4.668 1.312 0 2.686.234 2.686.234v2.953H15.83c-1.491 0-1.956.925-1.956 1.875V12h3.328l-.532 3.469h-2.796v8.385C19.612 22.954 24 17.99 24 12z"
+                fill="#1877F2"
+            />
+            <path
+                d="M16.671 15.469 17.203 12h-3.328V9.75c0-.949.465-1.875 1.956-1.875h1.513V4.922s-1.374-.234-2.686-.234c-2.741 0-4.533 1.66-4.533 4.668V12H7.078v3.469h3.047v8.385a12.13 12.13 0 0 0 3.75 0V15.47h2.796z"
+                fill="#fff"
+            />
+        </g>
+        <defs>
+            <clipPath id="qk5jpw3tia">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const TwitterIcon = ({ size = 24, ...props }) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M7.548 21.751c9.056 0 14.01-7.503 14.01-14.01 0-.213 0-.425-.015-.636A10.02 10.02 0 0 0 24 4.555a9.815 9.815 0 0 1-2.828.775 4.94 4.94 0 0 0 2.165-2.723 9.865 9.865 0 0 1-3.127 1.195 4.929 4.929 0 0 0-8.391 4.491A13.98 13.98 0 0 1 1.67 3.148a4.928 4.928 0 0 0 1.525 6.573A4.88 4.88 0 0 1 .96 9.105v.063a4.926 4.926 0 0 0 3.95 4.826 4.914 4.914 0 0 1-2.223.085 4.93 4.93 0 0 0 4.6 3.42A9.88 9.88 0 0 1 0 19.538a13.941 13.941 0 0 0 7.548 2.208"
+            fill="#1DA1F2"
+        />
+    </svg>
+);
+
+const TelegramIcon = ({ size = 24, ...props }) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clipPath="url(#imvo5tb4ca)">
+            <path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12z" fill="url(#gdmzl1l29b)" />
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M5.431 11.872c3.498-1.524 5.831-2.529 6.998-3.014 3.333-1.387 4.025-1.627 4.476-1.635.1-.002.322.023.465.14a.506.506 0 0 1 .171.324c.016.094.036.306.02.473-.18 1.897-.962 6.502-1.36 8.627-.167.9-.499 1.2-.82 1.23-.696.064-1.225-.46-1.9-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.213-.07-.062-.174-.04-.248-.024-.107.024-1.794 1.14-5.062 3.346-.48.329-.913.49-1.302.48-.428-.009-1.252-.242-1.865-.44-.751-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663z"
+                fill="#fff"
+            />
+        </g>
+        <defs>
+            <linearGradient id="gdmzl1l29b" x1="12" y1="0" x2="12" y2="23.822" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#2AABEE" />
+                <stop offset="1" stopColor="#229ED9" />
+            </linearGradient>
+            <clipPath id="imvo5tb4ca">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 export {
     FutureInsurance,
     ArrowDownIcon,
@@ -1106,5 +1179,9 @@ export {
     SaveAlt,
     USAFlagIcon,
     VietnamFlagIcon,
-    NotInterestedIcon
+    NotInterestedIcon,
+    SaveAltIcon,
+    FacebookIcon,
+    TwitterIcon,
+    TelegramIcon
 };
