@@ -25,7 +25,8 @@ export const WalletTypeById = {
     5: WalletType.EARN,
     6: EarnWalletType.STAKE,
     7: EarnWalletType.FARM,
-    8: WalletType.BROKER
+    8: WalletType.BROKER,
+    9: WalletType.NAO_FUTURES
 };
 
 const NULL_ASSET = '--';
@@ -264,7 +265,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     case COLUMNS_TYPE.WALLET_TYPE:
                                         formatKeyData = (
                                             <div className="">
-                                                {+keyData === 8 ? t('transaction-history:broker_wallet') : renderWallet(WalletTypeById?.[keyData])}
+                                                {renderWallet(WalletTypeById?.[keyData])}
                                             </div>
                                         );
                                         break;

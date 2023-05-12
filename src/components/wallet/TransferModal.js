@@ -61,7 +61,8 @@ export const WalletTypeV1 = {
     FUTURES: 2,
     P2P: 3,
     POOL: 4,
-    PARTNERS: 8
+    PARTNERS: 8,
+    NAO_FUTURES: 9
 };
 
 export const MinTransferFromBroker = {
