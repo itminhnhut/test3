@@ -217,7 +217,7 @@ const NaoPerformance = memo(() => {
     return (
         <section id="nao_performance" className="pt-6 sm:pt-20 text-sm sm:text-base">
             <div className="flex items-center flex-wrap justify-between gap-5">
-                <div className='space-y-2 flex flex-col'>
+                <div className="space-y-2 flex flex-col">
                     <TextLiner className="">{t('nao:onus_performance:title')}</TextLiner>
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:onus_performance:description')}</span>
                 </div>
@@ -233,7 +233,7 @@ const NaoPerformance = memo(() => {
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center h-full px-4 rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
                                 { '!border-teal bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
@@ -243,7 +243,7 @@ const NaoPerformance = memo(() => {
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
                                 { '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.USDT }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}

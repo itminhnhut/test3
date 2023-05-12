@@ -73,7 +73,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                     {status === 'Processing' && <SvgProgress className="md:w-6 md:h-6 w-[14px] h-[14px] flex-shrink-0" />}
                     {status === 'Executed' && <CheckCircle className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />}
                     {status === 'Failed' && <CrossCircle fill="blue" className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />}
-                    {status === 'Canceled' && <SvgCancelCircle className="md:w-6 md:h-6 w-[14px] h-[14px] flex-shrink-0" />}
+                    {status === 'Canceled' && <SvgCancelCircle className="md:!w-5 md:!h-5 !w-[12px] !h-[12px] flex-shrink-0" />}
 
                     <span className="text-txtPrimary dark:text-txtPrimary-dark font-medium sm:text-lg ml-2">{voteName && voteName[language]}</span>
                 </div>
@@ -98,7 +98,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         )}
                         {status === 'Canceled' && (
                             <div className="flex flex-row justify-start items-center gap-2">
-                                <SvgCancelCircle className="w-[12px] h-[12px]" />
+                                <SvgCancelCircle className="!w-[12px] !h-[12px]" />
                                 <span className="text-[0.875rem]">{statusText}</span>
                             </div>
                         )}

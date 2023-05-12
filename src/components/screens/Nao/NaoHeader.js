@@ -36,7 +36,22 @@ const category = [
     { label: 'summary_2022', link: '/nao/summary-2022', options: '_self' }
 ];
 
-const NaoHeader = memo(({ onDownload }) => {
+const onDownload = (key) => {
+    let url = '';
+    switch (key) {
+        case 'app_store':
+            url = 'https://apps.apple.com/us/app/onus-invest-btc-eth-doge/id1498452975';
+            break;
+        case 'google_play':
+            url = 'https://play.google.com/store/apps/details?id=com.vndc';
+            break;
+        default:
+            break;
+    }
+    window.open(url, '_blank');
+};
+
+const NaoHeader = memo(() => {
     const isApp = useApp();
     const [currentLocale, onChangeLang] = useLanguage();
     const {

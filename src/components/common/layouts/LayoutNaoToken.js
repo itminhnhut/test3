@@ -129,21 +129,6 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
         }
     }, [])
 
-    const onDownload = (key) => {
-        let url = '';
-        switch (key) {
-            case 'app_store':
-                url = 'https://apps.apple.com/us/app/onus-invest-btc-eth-doge/id1498452975';
-                break;
-            case 'google_play':
-                url = 'https://play.google.com/store/apps/details?id=com.vndc';
-                break;
-            default:
-                break;
-        }
-        window.open(url, '_blank');
-    }
-
     return (
         <>
             <Head>
@@ -158,7 +143,7 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
                     {isHeader ?
                         <Background width={width}>
                             <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
-                                <NaoHeader onDownload={onDownload} />
+                                <NaoHeader />
                                 {children}
                             </div>
                             <NaoFooter />

@@ -12,6 +12,10 @@ import { Popover, Transition } from '@headlessui/react';
 import orderBy from 'lodash/orderBy';
 import classNames from 'classnames';
 import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import Modal from 'components/common/ReModal';
+import SvgCross from 'components/svg/Cross';
+import { useWindowSize } from 'utils/customHooks';
+
 const ContesRules = ({
     inHome = false,
     seasonConfig = '',
@@ -31,6 +35,8 @@ const ContesRules = ({
         i18n: { language }
     } = useTranslation();
     const router = useRouter();
+    const { width } = useWindowSize();
+    const isMobile = width && width <= 640;
     const renderCountDown = (classNameContainer, classNameCountdown) => {
         const CONTEST_TIME = {
             START: new Date(start).getTime(),
@@ -146,7 +152,11 @@ const ContesRules = ({
                             {t('nao:contest:detail_rules')}
                         </ButtonNao>
                     )}
-                    <DropdownPreSeason t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
+                    {isMobile ? (
+                        <TournamentList t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
+                    ) : (
+                        <DropdownPreSeason t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
+                    )}
                 </div>
             </div>
             <div className="mt-9 mb:mt-0 text-center">
@@ -179,7 +189,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
         const start = new Date(item?.start).getTime();
         const end = new Date(item?.end).getTime();
         if (now < start && now < end) {
-            return <div className="text-yellow-2 bg-yellow-2/[0.1] px-2 py-1 !pl-3 sm:!pl-2  rounded-r-[80px] sm:rounded-[80px]">{t('nao:coming_soon_2')}</div>;
+            return <div className="text-yellow-2 bg-yellow-2/[0.15] px-2 py-1 !pl-3 sm:!pl-2  rounded-r-[80px] sm:rounded-[80px]">{t('nao:coming_soon_2')}</div>;
         } else if (now > start && now < end) {
             return (
                 <div className="flex items-center space-x-1 bg-teal/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-r-[80px] sm:rounded-[80px] w-max">
@@ -206,7 +216,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                     <Popover.Button className="w-full">
                         <ButtonNao
                             variant={ButtonNaoVariants.SECONDARY}
-                            className="px-[18px] text-sm font-semibold w-full !rounded-md flex items-center space-x-2 tournaments sm_only:px-1"
+                            className="px-4 text-sm font-semibold w-full !rounded-md flex items-center space-x-2 tournaments sm_only:px-1"
                         >
                             <span>{t('nao:contest:tournaments')}</span>
                             <ArrowDropDownIcon
@@ -231,7 +241,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                             }}
                             className="absolute top-12 min-w-[90vw] overflow-hidden sm:min-w-max sm:!translate-x-0 left-1/2 sm:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full"
                         >
-                            <div className="py-1 shadow-onlyLight font-medium text-sm flex flex-col rounded-xl border border-divider dark:border-divider-dark text-left overflow-y-auto max-h-[400px] sm:max-h-[300px]">
+                            <div className="py-1 shadow-onlyLight text-sm flex flex-col rounded-xl border border-divider dark:border-divider-dark text-left overflow-y-auto max-h-[400px] sm:max-h-[300px]">
                                 {seasonsFilter.map((item, index) => (
                                     <div
                                         onClick={() => {
@@ -242,7 +252,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                                         className="px-3 sm:px-4 sm:space-x-2 py-2 hover:bg-hover-1 dark:hover:bg-hover-dark cursor-pointer flex sm:items-center flex-col space-y-2 sm:space-y-0 sm:flex-row"
                                     >
                                         <div className="-ml-4 sm:ml-0 text-[10px] leading-[12px] whitespace-nowrap w-max">{progress(item)}</div>
-                                        <span className="leading-6">{item?.title_detail?.[language]} </span>
+                                        <span className="">{item?.title_detail?.[language]} </span>
                                     </div>
                                 ))}
                             </div>
@@ -259,5 +269,68 @@ const DropDonwIcon = ({ className = '' }) => (
         <path d="M8 6L12 10L4 10L8 6Z" fill="currentColor" />
     </svg>
 );
+
+// To do: continue styling
+const TournamentList = ({ t, seasonsFilter, router, season, language }) => {
+    const [showTournaments, setShowTournaments] = useState(false);
+
+    const Progress = (item) => {
+        const now = new Date().getTime();
+        const start = new Date(item?.start).getTime();
+        const end = new Date(item?.end).getTime();
+        if (now < start && now < end) {
+            return <div className="text-yellow-2 bg-yellow-2/[0.15] px-3 py-1 rounded-[80px] w-fit">{t('nao:coming_soon_2')}</div>;
+        } else if (now > start && now < end) {
+            return (
+                <div className="flex items-center space-x-1 bg-teal/[0.1] px-3 py-1 rounded-[80px] w-fit">
+                    <img src={getS3Url('/images/nao/ic_nao_large.png')} width={16} height={16} />
+                    <div className="text-teal ">{t('nao:going_on')}</div>
+                </div>
+            );
+        } else {
+            return <div className="text-gray-7 bg-gray-7/[0.1] px-3 py-1 rounded-[80px] w-fit">{t('nao:ended')}</div>;
+        }
+    };
+
+    return (
+        <div className="relative flex sm_only:flex-1 sm_only:flex-grow-[1.5]">
+            {showTournaments && (
+                <Modal
+                    onusMode={true}
+                    isVisible={true}
+                    onBackdropCb={() => setShowTournaments(false)}
+                    onusClassName="!px-0 pb-[3.75rem] !overflow-hidden text-sm sm:text-base"
+                    containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
+                >
+                    <SvgCross className="ml-auto mr-7" color="currentColor" size={24} onClick={() => setShowTournaments(false)} />
+                    <div className="!px-6 mt-6 text-xl sm:text-2xl font-semibold">{t('nao:contest:tournaments')}</div>
+                    <div className="scrollbar-nao form-team mt-8 overflow-y-auto max-h-[calc(100%-4rem)]">
+                        {seasonsFilter.map((item, index) => (
+                            <div
+                                onClick={() => {
+                                    router.push(`/contest/${item.season}`);
+                                    close();
+                                }}
+                                key={index}
+                                className="px-6 py-3 hover:bg-hover-1 dark:hover:bg-hover-dark cursor-pointer flex items-center space-x-3 sm:flex-row"
+                            >
+                                <div className="text-xs sm:text-sm whitespace-nowrap w-max min-w-[7rem]">{Progress(item)}</div>
+                                <span className="">{item?.title_detail?.[language]} </span>
+                            </div>
+                        ))}
+                    </div>
+                </Modal>
+            )}
+            <ButtonNao
+                variant={ButtonNaoVariants.SECONDARY}
+                className="px-4 text-sm font-semibold w-full !rounded-md flex items-center space-x-2 tournaments sm_only:px-1"
+                onClick={() => setShowTournaments(true)}
+            >
+                <span>{t('nao:contest:tournaments')}</span>
+                <ArrowDropDownIcon size={16} color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" />
+            </ButtonNao>
+        </div>
+    );
+};
 
 export default ContesRules;

@@ -54,8 +54,15 @@ const ContestTeamRanks = ({
     const router = useRouter();
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const lastUpdatedTime = useRef(null);
     const mount = useRef(false);
+    const isMobile = width <= 640;
+
+    useEffect(() => {
+        setPage(1);
+        setPageSize(10);
+    }, [isMobile]);
 
     useEffect(() => {
         setLoading(true);
@@ -111,6 +118,13 @@ const ContestTeamRanks = ({
         setTab(key);
     };
 
+    const onReadMore = () => {
+        setPageSize((old) => {
+            const newSize = pageSize + 10;
+            return newSize >= dataSource.length ? dataSource.length : newSize;
+        })
+    }
+
     const renderTeam = (data, item) => {
         return (
             <div className="flex items-center gap-2">
@@ -134,7 +148,7 @@ const ContestTeamRanks = ({
     };
 
     const renderActions = (e) => {
-        return <div className="text-txtSecondary dark:text-txtSecondary-dark underline text-xs cursor-pointer">{t('nao:contest:details')}</div>;
+        return <div className="text-teal font-semibold text-sm sm:text-base cursor-pointer">{t('nao:contest:details')}</div>;
     };
 
     const renderRank = (data, item) => {
@@ -167,7 +181,7 @@ const ContestTeamRanks = ({
                     id="tooltip-team-rank"
                 >
                     <div
-                        className="font-medium text-sm"
+                        className="text-sm"
                         dangerouslySetInnerHTML={{
                             __html: minVolumeTeam?.isHtml ? t('nao:contest:tooltip_team', { value: minVolumeTeam[language] }) : minVolumeTeam[language]
                         }}
@@ -227,50 +241,51 @@ const ContestTeamRanks = ({
                 </TabsNao>
             )}
             {top3.length > 0 && (
-                <div className="flex flex-wrap gap-5 sm:gap-[1.375rem] mt-[2.75rem]">
+                <div className="flex flex-wrap gap-5 sm:gap-[1.375rem] mt-[2.75rem] text-sm sm:text-base">
                     {top3.map((item, index) => (
-                        <CardNao onClick={() => onShowDetail(item, tab, quoteAsset)} key={index} className="!p-5">
+                        <CardNao onClick={() => onShowDetail(item, tab, quoteAsset)} key={index} className="!p-3 sm:!p-5">
                             <div className="flex items-center justify-between flex-1 gap-5">
                                 <div className="flex items-center space-x-4">
-                                    <div className="w-[3rem] h-[3rem] rounded-[50%] relative">
+                                    <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal">
                                         <ImageNao
+                                            className="object-cover w-14 h-14 rounded-full"
                                             src={item?.avatar}
-                                            className="min-w-[3rem] min-h-[3rem] max-w-[3rem] max-h-[3rem] rounded-[50%] object-cover"
                                             alt=""
                                         />
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col">
-                                        <div className="flex items-center gap-2 text-lg font-semibold leading-8 capitalize">
+                                        <div className="flex items-center gap-2 font-semibold capitalize">
                                             <span>{capitalize(item?.name)}</span>
                                             {item?.is_group_master && <TickFbIcon size={18} />}
                                             {/* {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />} */}
                                         </div>
-                                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium cursor-pointer capitalize">
+                                        <span className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer capitalize">
                                             {capitalize(item?.leader_name)}
                                         </span>
                                     </div>
                                 </div>
                                 <div className="text-5xl pb-0 font-semibold">{item?.[rank] > 0 ? `#${index + 1}` : '-'}</div>
                             </div>
+                            <div className="h-8"></div>
                             <div className="rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
-                                    <span className="font-semibold leading-8">
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
+                                    <span className="font-semibold">
                                         {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                     </span>
                                 </div>
                                 {tab === 'pnl' ? (
-                                    <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
-                                        <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
+                                    <div className="flex items-center justify-between gap-2 mt-3">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
+                                        <span className={`font-semibold ${getColor(item.pnl)}`}>
                                             {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}
                                             {formatNumber(item?.pnl, 2, 0, true)}%
                                         </span>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_trades')}</div>
-                                        <span className={`font-semibold leading-8`}>{formatNumber(item?.total_order)}</span>
+                                    <div className="flex items-center justify-between gap-2 mt-3">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_trades')}</div>
+                                        <span className={`font-semibold`}>{formatNumber(item?.total_order)}</span>
                                     </div>
                                 )}
                             </div>
@@ -278,27 +293,27 @@ const ContestTeamRanks = ({
                     ))}
                 </div>
             )}
-            {width <= 640 ? (
+            {isMobile ? (
                 <>
                     <div className="mt-3">
                         {Array.isArray(dataSource) && dataSource?.length > 0 ? (
-                            dataSource?.slice((page - 1) * 10, page * 10).map((item, index) => {
+                            dataSource?.slice((page - 1) * pageSize, page * pageSize).map((item, index) => {
                                 return (
                                     <CardNao onClick={() => onShowDetail(item, tab, quoteAsset)} key={index} className="mt-5 !py-[1.125rem] !px-3">
                                         <div className="text-sm flex-1">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center space-x-2">
                                                     <ImageNao
-                                                        className="rounded-[50%] object-cover w-[2.25rem] h-[2.25rem] flex-shrink-0"
+                                                        className="rounded-[50%] object-cover w-9 h-9 flex-shrink-0"
                                                         src={item?.avatar}
-                                                        width="24"
-                                                        height="24"
+                                                        width="36"
+                                                        height="36"
                                                         alt=""
                                                     />
                                                     <span className="font-semibold">{item?.name} </span>
                                                     {item?.is_group_master && <TickFbIcon size={16} />}
                                                 </div>
-                                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium ">
+                                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm ">
                                                     {loading ? (
                                                         <Skeletor width={24} height={24} circle />
                                                     ) : item?.[rank] && item?.[rank] <= top_ranks_team ? (
@@ -317,19 +332,19 @@ const ContestTeamRanks = ({
                                                     )}
                                                 </div>
                                             </div>
-
-                                            <div className="flex items-center font-medium justify-between pt-2">
-                                                <label className="leading-6 text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:captain')}</label>
+                                            <div className="h-8"></div>
+                                            <div className="flex items-center justify-between">
+                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:captain')}</label>
                                                 <span className="text-right font-semibold capitalize">{capitalize(item?.leader_name)}</span>
                                             </div>
-                                            <div className="flex items-center font-medium justify-between pt-2">
-                                                <label className="leading-6 text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
+                                            <div className="flex items-center justify-between pt-3">
+                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
                                                 <span className="text-right font-semibold">
                                                     {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                                 </span>
                                             </div>
-                                            <div className="flex items-center font-medium justify-between pt-1">
-                                                <label className="leading-6 text-txtSecondary dark:text-txtSecondary-dark">
+                                            <div className="flex items-center justify-between pt-3">
+                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">
                                                     {t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
                                                 </label>
                                                 {tab === 'pnl' ? (
@@ -342,7 +357,7 @@ const ContestTeamRanks = ({
                                             </div>
                                             <div
                                                 onClick={() => onShowDetail(item, tab, quoteAsset)}
-                                                className="text-sm font-semibold text-teal pt-1 cursor-pointer select-none text-center"
+                                                className="text-sm font-semibold text-teal pt-4 cursor-pointer select-none text-center"
                                             >
                                                 {t('nao:contest:details')}
                                             </div>
@@ -358,7 +373,7 @@ const ContestTeamRanks = ({
                                 <div className="hidden dark:block">
                                     <NoDataDarkIcon />
                                 </div>
-                                <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1">{t('nao:contest:no_rank')}</div>
+                                <div className="text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark mt-1">{t('nao:contest:no_rank')}</div>
                             </CardNao>
                         )}
                     </div>
@@ -372,7 +387,7 @@ const ContestTeamRanks = ({
                 >
                     <Column
                         minWidth={50}
-                        className="text-txtSecondary dark:text-txtSecondary-dark font-medium"
+                        className="text-txtSecondary dark:text-txtSecondary-dark"
                         title={t('nao:contest:rank')}
                         fieldName={rank}
                         cellRender={renderRank}
@@ -388,7 +403,7 @@ const ContestTeamRanks = ({
                     <Column
                         minWidth={150}
                         align="right"
-                        className="font-medium"
+                        className=""
                         title={`${t('nao:contest:volume')} (${quoteAsset})`}
                         decimal={0}
                         fieldName="total_volume"
@@ -399,7 +414,7 @@ const ContestTeamRanks = ({
                             maxWidth={120}
                             minWidth={100}
                             align="right"
-                            className="font-medium"
+                            className=""
                             title={t('nao:contest:per_pnl')}
                             fieldName="pnl"
                             cellRender={renderPnl}
@@ -409,24 +424,31 @@ const ContestTeamRanks = ({
                             maxWidth={120}
                             minWidth={100}
                             align="right"
-                            className="font-medium"
+                            className=""
                             title={t('nao:contest:total_trades')}
                             fieldName="total_order"
                             decimal={0}
                         />
                     )}
-                    <Column maxWidth={100} minWidth={100} align="right" className="font-medium" title={''} cellRender={renderActions} />
+                    <Column maxWidth={100} minWidth={100} align="right" className="" title={''} cellRender={renderActions} />
                     {/* formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY') */}
                 </Table>
             )}
             {lastUpdated && lastUpdatedTime.current && (
-                <div className="mt-6 text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium leading-6">
+                <div className="mt-6 text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                     {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
                 </div>
             )}
-            <div className="w-full flex justify-center mt-6">
-                <RePagination onusMode total={total} current={page} pageSize={10} onChange={(page) => setPage(page)} name="" />
-            </div>
+            {!isMobile && (
+                <div className="w-full hidden sm:flex justify-center mt-6">
+                    <RePagination onusMode total={total} current={page} pageSize={10} onChange={(page) => setPage(page)} name="" />
+                </div>
+            )}
+            {isMobile && pageSize < dataSource.length && (
+                <div className="w-fit block sm:hidden m-auto text-teal font-semibold mt-6" onClick={onReadMore}>
+                    {t('common:read_more')}
+                </div>
+            )}
         </section>
     );
 };
