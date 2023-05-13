@@ -38,39 +38,36 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
 
     const handleListFriend = _.throttle(async () => {
         setLoading(true);
+        const params = {
+            limit: LIMIT,
+            page
+        };
+        if (search) params.code = search.trim();
+
         FetchApi({
             url: API_NEW_REFERRAL_FRIENDS_BY_REF.replace(':code', code),
             options: {
                 method: 'GET'
             },
-            params: {
-                code: debounceSearch,
-                limit: LIMIT,
-                page
-            }
+            params
         }).then(({ data, status }) => {
             if (status === 'ok') {
                 hasNext.current = data.hasNext;
-                setFriendList((prev) => [...prev, ...data.results]);
-            } else {
-                setFriendList([]);
+                setFriendList(data.results);
             }
             setLoading(false);
         });
     }, 500);
 
     useEffect(() => {
-        handleListFriend();
-    }, [code, debounceSearch, page]);
+        const fetchSearchUser = setTimeout(handleSearchToUser, 500);
+        return () => clearTimeout(fetchSearchUser);
+    }, [search]);
 
-    useDebounce(
-        () => {
-            setDebounceSearch(search);
-            setFriendList([]);
-        },
-        500,
-        [search]
-    );
+    const handleSearchToUser = async () => {
+        setFriendList([]);
+        await handleListFriend();
+    };
 
     const handleChangeSearch = (value) => {
         setSearch(value);
@@ -94,10 +91,12 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                     <div>{t('reference:table.referral_date')}</div>
                 </div>
                 {loading ? (
-                    <IconLoading color={colors.teal} />
+                    <div className="flex flex-col gap-4 h-[300px] overflow-auto no-scrollbar">
+                        <IconLoading color={colors.teal} />
+                    </div>
                 ) : friendList.length ? (
                     <>
-                        <div className="flex flex-col gap-4 max-h-[400px] h-full overflow-auto no-scrollbar">
+                        <div className="flex flex-col gap-4 h-[300px] overflow-auto no-scrollbar">
                             {friendList.map((data, index) => {
                                 return (
                                     <div className="w-full flex items-center justify-between" key={index}>
@@ -147,7 +146,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                         <div>NamiID</div>
                         <div>{t('reference:referral.referral_date')}</div>
                     </div>
-                    <div className="flex flex-col gap-2 max-h-[400px] h-full overflow-auto no-scrollbar text-gray-6 text-sm font-semibold">
+                    <div className="flex flex-col gap-2 max-h-[300px] h-full overflow-auto no-scrollbar text-gray-6 text-sm font-semibold">
                         {friendList.map((data, index) => {
                             return (
                                 <div className="w-full flex items-center justify-between text-sm font-medium leading-6" key={index}>
