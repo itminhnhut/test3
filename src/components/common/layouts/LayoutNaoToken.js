@@ -12,6 +12,7 @@ import AlertNaoV2Modal from 'components/screens/Nao/AlertNaoV2Modal';
 export const AlertContext = createContext(null);
 import vi from 'date-fns/locale/vi'
 import en from 'date-fns/locale/en-US'
+import useApp from 'hooks/useApp';
 vi.localize = {
     day: (n) => days[n]['vi'],
     month: (n) => months[n]['vi'],
@@ -116,6 +117,7 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
     const alert = useRef(null);
     const alertV2 = useRef(null);
     const { width } = useWindowSize();
+    const isApp = useApp();
 
     useEffect(() => {
         document.body.classList.add('disabled-zoom');
@@ -127,27 +129,12 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
         }
     }, [])
 
-    const onDownload = (key) => {
-        let url = '';
-        switch (key) {
-            case 'app_store':
-                url = 'https://apps.apple.com/us/app/onus-invest-btc-eth-doge/id1498452975';
-                break;
-            case 'google_play':
-                url = 'https://play.google.com/store/apps/details?id=com.vndc';
-                break;
-            default:
-                break;
-        }
-        window.open(url, '_blank');
-    }
-
     return (
         <>
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
             </Head>
-            <div className="bg-nao-bgShadow text-nao-white min-h-full font-inter">
+            <div className="bg-bgPrimary dark:bg-bgPrimary-dark text-txtPrimary dark:text-txtPrimary-dark min-h-full font-SF-Pro">
 
                 <AlertContext.Provider value={{
                     alert: alert.current,
@@ -156,7 +143,7 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
                     {isHeader ?
                         <Background width={width}>
                             <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
-                                <NaoHeader onDownload={onDownload} />
+                                <NaoHeader />
                                 {children}
                             </div>
                             <NaoFooter />
@@ -176,8 +163,8 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
 const Background = styled.div.attrs({
     className: 'min-w-full min-h-screen flex flex-col justify-between'
 })`
-    background-image:${({ width }) => `url(${getS3Url(`/images/nao/bg-dashboard${width <= 780 ? '_mb' : ''}.png`)})`};
-    background-repeat: no-repeat;     
+    /* background-image:${({ width }) => `url(${getS3Url(`/images/nao/bg-dashboard${width <= 780 ? '_mb' : ''}.png`)})`}; */
+    background-repeat: no-repeat;
     background-size: cover;
     background-position: center top;
 `

@@ -331,6 +331,7 @@
         },
         "confirm_order_message": "Bạn có xác nhận đặt lệnh {{type}} {{symbol}} ở giá {{price}} không?",
         "confirm_order_message_market": "Bạn có xác nhận đặt lệnh {{type}} {{symbol}} không?",
+        "login_medium": "Vui lòng đăng nhập ngay",
         "login_short": "Đăng nhập ngay",
         "available": "Khả dụng",
         "liq_price": "Giá thanh lý",

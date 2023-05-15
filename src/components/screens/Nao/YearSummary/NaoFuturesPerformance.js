@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { ButtonNao } from 'components/screens/Nao/NaoStyle';
+import { ButtonNao, CardNao, TextLiner } from 'components/screens/Nao/NaoStyle';
 import classNames from 'classnames';
 import { assetCodeFromId, WalletCurrency } from 'utils/reference-utils';
 import { Popover, Transition } from '@headlessui/react';
@@ -13,6 +13,9 @@ import format from 'date-fns/format';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_NAO_YEAR_SUMMARY_STATISTIC } from 'redux/actions/apis';
 import useWindowSize from 'hooks/useWindowSize';
+import SvgFilter from 'components/svg/SvgFilter';
+import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import CheckCircle from 'components/svg/CheckCircle';
 
 function NaoFuturesPerformance() {
     const [data, setData] = useState({
@@ -54,55 +57,65 @@ function NaoFuturesPerformance() {
         setFilters({ ...filters, ...filter });
     };
 
-    return <>
-        <div className='mb-12 mt-20'>
-                <h3 className={classNames('inline-block font-semibold text-2xl', {
-                    'text-nao-gradient': isMobile
-                })}>{t('nao:onus_performance:title')}</h3>
-            <div className='flex gap-2 mt-8 md:mt-0 w-full md:w-auto justify-between md:justify-end'>
-                <RangePopover
-                    language={language}
-                    active={filters.month}
-                    onChange={(value) => changeFilters({ month: value === 2022 ? null : value })}
-                    className='flex order-last md:order-first'
-                    popoverClassName={'md:mr-2'}
-                    isMobile={isMobile}
-                />
-                <div className='order-first gap-2 md:order-last flex gap-last'>
-                    <ButtonNao
-                        className={classNames({ '!bg-nao-bg3 !font-normal': filters.currency !== WalletCurrency.VNDC })}
-                        onClick={() => changeFilters({ currency: WalletCurrency.VNDC })}
-                    >{isMobile ? 'VNDC' : 'Futures VNDC'}</ButtonNao>
-                    <ButtonNao
-                        className={classNames({ '!bg-nao-bg3 !font-normal': filters.currency !== WalletCurrency.USDT })}
-                        onClick={() => changeFilters({ currency: WalletCurrency.USDT })}
-                    >{isMobile ? 'USDT' : 'Futures USDT'}</ButtonNao>
+    return (
+        <>
+            <div className="mb-12 mt-20">
+                <div className="flex items-center flex-wrap justify-between gap-5">
+                    <TextLiner className="">{t('nao:onus_performance:title')}</TextLiner>
+                    <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
+                        <RangePopover
+                            language={language}
+                            active={filters.month}
+                            onChange={(value) => changeFilters({ month: value === 2022 ? null : value })}
+                            className="flex order-last"
+                            popoverClassName={'lg:mr-2'}
+                        />
+                        <div className="order-first gap-2 flex gap-last">
+                            <button
+                                type="BUTTON"
+                                className={classNames(
+                                    'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                    { '!border-teal bg-teal/10 !text-teal font-semibold': filters.currency === WalletCurrency.VNDC }
+                                )}
+                                onClick={() => changeFilters({ currency: WalletCurrency.VNDC })}
+                            >
+                                Futures VNDC
+                            </button>
+                            <button
+                                type="BUTTON"
+                                className={classNames(
+                                    'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                    { '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': filters.currency !== WalletCurrency.VNDC }
+                                )}
+                                onClick={() => changeFilters({ currency: WalletCurrency.USDT })}
+                            >
+                                Futures USDT
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
-            <div className='flex flex-col px-10 py-8 rounded-xl bg-nao/[.15]'>
-                <span
-                    className='text-lg text-nao-text font-medium leading-7'>{t('nao:year_summary:volume_trades')}</span>
-                <span
-                    className='text-xl font-semibold leading-8 mt-4'>{formatNumber(data.statistic?.volume, 0)} {assetCodeFromId(filters.currency)}</span>
-                <span className='text-nao-grey text-sm mt-2'>${formatNumber(data.statistic?.volume_usdt, 0)}</span>
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <CardNao className="rounded-lg">
+                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">{t('nao:year_summary:volume_trades')}</span>
+                    <span className="text-xl sm:text-2xl font-semibold mt-4">
+                        {formatNumber(data.statistic?.volume, 0)} {assetCodeFromId(filters.currency)}
+                    </span>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base mt-2">${formatNumber(data.statistic?.volume_usdt, 0)}</span>
+                </CardNao>
 
-            <div className='flex flex-col px-10 py-8 rounded-xl bg-nao/[.15]'>
-                <span
-                    className='text-lg text-nao-text font-medium leading-7'>{t('nao:year_summary:order_number')}</span>
-                <span
-                    className='text-xl font-semibold leading-8 mt-4'>{formatNumber(data.statistic?.num_of_transaction, 0)}</span>
-            </div>
+                <CardNao className="rounded-lg">
+                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">{t('nao:year_summary:order_number')}</span>
+                    <span className="text-xl sm:text-2xl font-semibold mt-4">{formatNumber(data.statistic?.num_of_transaction, 0)}</span>
+                </CardNao>
 
-            <div className='flex flex-col px-10 py-8 rounded-xl bg-nao/[.15]'>
-                <span className='text-lg text-nao-text font-medium leading-7'>{t('nao:year_summary:user_count')}</span>
-                <span
-                    className='text-xl font-semibold leading-8 mt-4'>{formatNumber(data.statistic?.num_of_user, 0)}</span>
+                <CardNao className="rounded-lg">
+                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">{t('nao:year_summary:user_count')}</span>
+                    <span className="text-xl sm:text-2xl font-semibold mt-4">{formatNumber(data.statistic?.num_of_user, 0)}</span>
+                </CardNao>
             </div>
-        </div>
-    </>;
+        </>
+    );
 }
 
 const RangePopover = ({
@@ -126,33 +139,33 @@ const RangePopover = ({
         return t('nao:year_summary:month', { month: option, year: 2022 });
     };
 
-    return <Popover className={classNames('relative flex', popoverClassName)}>
-        {({
-            open,
-            close
-        }) => (
-            <>
-                <Popover.Button>
-                    <div
-                        className='text-sm pl-4 pr-2 h-10 bg-nao-bg3 rounded-md flex items-center justify-between text-nao-white min-w-[72px]'>
-                        <span className='mr-1'>{getOptionString(active)}</span>
-                        <img alt='' src={getS3Url('/images/nao/ic_arrow_bottom.png')} height='16' width='16' />
-                    </div>
-                </Popover.Button>
-                <Transition
-                    as={Fragment}
-                    enter='transition ease-out duration-200'
-                    enterFrom='opacity-0 translate-y-1'
-                    enterTo='opacity-100 translate-y-0'
-                    leave='transition ease-in duration-150'
-                    leaveFrom='opacity-100 translate-y-0'
-                    leaveTo='opacity-0 translate-y-1'
-                >
-                    <Popover.Panel
-                        className='absolute min-w-[10rem] shadow-onlyLight top-8 right-0 z-50 bg-nao-bg3 rounded-xl mt-3'>
-                        <div className='font-medium text-xs flex flex-col'>
-                            {[2022, ...range(12, 5, -1)]
-                                .map(option => {
+    return (
+        <Popover className={classNames('relative flex', popoverClassName)}>
+            {({ open, close }) => (
+                <>
+                    <Popover.Button>
+                        <div className="h-10 flex justify-center items-center">
+                            <div className="sm:hidden">
+                                <SvgFilter size={24} color="currentColor" className="text-txtPrimary dark:text-txtPrimary-dark" />
+                            </div>
+                            <div className="hidden sm:flex px-4 py-3 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtSecondary dark:text-txtSecondary-dark rounded-md !font-SF-Pro !text-base">
+                                {getOptionString(active)}
+                                <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
+                            </div>
+                        </div>
+                    </Popover.Button>
+                    <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-200"
+                        enterFrom="opacity-0 translate-y-1"
+                        enterTo="opacity-100 translate-y-0"
+                        leave="transition ease-in duration-150"
+                        leaveFrom="opacity-100 translate-y-0"
+                        leaveTo="opacity-0 translate-y-1"
+                    >
+                        <Popover.Panel className="absolute min-w-[11rem] sm:min-w-[14rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-bgPrimary dark:bg-dark-4 border border-divider dark:border-divider-dark rounded-md mt-3">
+                            <div className="text-sm sm:text-base flex flex-col text-txtPrimary dark:text-txtPrimary-dark sm:py-3">
+                                {[2022, ...range(12, 5, -1)].map((option) => {
                                     const isActive = active === option || (option === 2022 && !active);
                                     return (
                                         <div
@@ -162,21 +175,22 @@ const RangePopover = ({
                                                 close();
                                             }}
                                             className={classNames(
-                                                'flex justify-between items-center py-2 px-4 cursor-pointer leading-6',
-                                                'first:rounded-t-xl last:rounded-b-xl hover:bg-onus-2'
-                                            )}>
+                                                'flex justify-between items-center py-3 my-1 px-4 cursor-pointer',
+                                                'first:rounded-t-md last:rounded-b-md hover:bg-hover-1 dark:hover:bg-hover-dark'
+                                            )}
+                                        >
                                             <span>{getOptionString(option)}</span>
-                                            {isActive && <Check size={16} color={colors.onus.base} />}
+                                            {isActive && <CheckCircle color="currentColor" size={16} />}
                                         </div>
                                     );
-                                })
-                            }
-                        </div>
-                    </Popover.Panel>
-                </Transition>
-            </>
-        )}
-    </Popover>;
+                                })}
+                            </div>
+                        </Popover.Panel>
+                    </Transition>
+                </>
+            )}
+        </Popover>
+    );
 };
 
 export default NaoFuturesPerformance;
