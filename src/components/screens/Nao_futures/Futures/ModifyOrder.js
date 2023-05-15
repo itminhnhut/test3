@@ -7,7 +7,7 @@ import { createSelector } from "reselect";
 import { useSelector } from "react-redux";
 
 const getWallet = createSelector(
-    [(state) => state?.wallet?.FUTURES, (utils, params) => params],
+    [(state) => state?.wallet?.NAO_FUTURES, (utils, params) => params],
     (wallet, params) => {
         return wallet[params];
     }
