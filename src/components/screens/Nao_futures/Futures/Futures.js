@@ -71,12 +71,6 @@ const FuturesMobile = () => {
         if (router?.query?.pair) {
             setState({ pair: router.query.pair });
             localStorage.setItem(LOCAL_STORAGE_KEY.PreviousFuturesPair, router.query.pair);
-            // emitWebViewEvent(
-            //     JSON.stringify({
-            //         type: 'changed_symbol',
-            //         symbol: router.query.pair
-            //     })
-            // );
             dispatch(updateSymbolView({ symbol: router.query.pair }));
         }
     }, [router]);
