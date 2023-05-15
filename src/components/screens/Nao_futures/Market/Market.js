@@ -451,7 +451,7 @@ const InputSearch = ({ onChange }) => {
     </div>
 }
 
-const LastPrice = ({ price, decimal = 0 }) => {
+const LastPrice = ({ price, decimal = 8 }) => {
     const prevPrice = usePrevious(price);
     return (
         <span
