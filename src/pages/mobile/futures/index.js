@@ -25,13 +25,13 @@ const FuturesIndex = () => {
     return null;
 };
 
-export const getServerSideProps = async ({ query, locale }) => {
-    const theme = query?.theme ?? 'dark';
+export const getServerSideProps = async ({ locale }) => {
     return {
         redirect: {
             permanent: false,
-            destination: `/${locale}/mobile/futures/${FUTURES_DEFAULT_SYMBOL}?theme=${theme}`
+            destination: `/mobile/futures/${FUTURES_DEFAULT_SYMBOL}`
         }
     };
+
 };
 export default FuturesIndex;
