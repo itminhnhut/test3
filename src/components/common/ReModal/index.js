@@ -60,14 +60,9 @@ const Modal = ({
             >
                 <div
                     onClick={() => onBackdropCb && onBackdropCb()}
-                    style={{
-                        backgroundColor: hexRgb(colors.darkBlue2, {
-                            alpha: 0.7,
-                            format: 'rgba',
-                        }),
-                    }}
+                   
                     className={classNames(
-                        'absolute z-[9999999] top-0 left-0 w-full h-full transition-opacity duration-200',
+                        'absolute z-[9999999] top-0 left-0 w-full h-full transition-opacity duration-200 bg-black-800/[0.6] dark:bg-black-800/[0.8]',
                         { 'visible opacity-100': isVisible },
                         { 'invisible opacity-0': !isVisible },
                         { '!bg-black-800/[0.6] dark:!bg-black-800/[0.8]': onusMode },
