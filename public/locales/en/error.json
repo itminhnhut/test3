@@ -111,7 +111,7 @@
     "INVALID_USER": "You need to login to continue",
     "ACCOUNT_BAN_TRADE": "Current Account",
     "INSTRUMENT_NOT_LISTED_FOR_TRADING_YET": "This trading pair is under maintenance, please come back later.",
-    "NAO_IS_MAINTAINED": "From 10:00 am (UTC+7) on 28/04/2023 NAO Futures stops accepting new order requests and add volume to activated positions. NAO Futures will be taken over and operated on Nami Exchange app in May 2023",
+    "NAO_IS_MAINTAINED": "From 10:00 am (UTC+7) on 12/05/2023 NAO Futures stops accepting new order requests and add volume to activated positions. NAO Futures will be taken over and operated on Nami Exchange app in May 2023",
     "BALANCE_INSUFFICIENT": "Your balance is not enough",
     "NOT_FOUND_ORDER": "Order not found",
     "ORDER_ALREADY_CLOSED": "The order has been closed",

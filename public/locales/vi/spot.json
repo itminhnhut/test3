@@ -46,6 +46,7 @@
         "reset_default_layout": "Giao diện mặc định",
         "order_confirmation": "Xác nhận đặt lệnh",
         "order_confirmation_tooltip": "Xác nhận đặt lệnh với các yêu cầu mở vị thế mới",
-        "display_price_line": "Hiển thị đường giá tất cả các vị thế"
+        "display_price_line": "Hiển thị đường giá tất cả các vị thế",
+        "display_price_line_tooltip": "Hiển thị đường giá của giá mở và giá SL-TP của tất cả các vị thế đang mở trên biểu đồ nến"
     }
 }

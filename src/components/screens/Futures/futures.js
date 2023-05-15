@@ -51,9 +51,9 @@ const initFuturesComponent = {
     isShowChart: true,
     isShowOpenOrders: true,
     isShowPlaceOrder: true,
-    isShowAssets: true,
-    [FuturesSettings.order_confirm]: true,
-    [FuturesSettings.show_sl_tp_order_line]: true
+    isShowAssets: true
+    // [FuturesSettings.order_confirm]: true,
+    // [FuturesSettings.show_sl_tp_order_line]: true
 };
 
 const Futures = () => {
@@ -205,9 +205,9 @@ const Futures = () => {
         if (!settings) localStorage.setItem('settingLayoutFutures', JSON.stringify(initFuturesComponent));
     }, []);
 
-    const resetDefault = () => {
-        localStorage.setItem('settingLayoutFutures', JSON.stringify(initFuturesComponent));
-        setFilterLayout({ ...initFuturesComponent });
+    const resetDefault = (params) => {
+        localStorage.setItem('settingLayoutFutures', JSON.stringify({ ...initFuturesComponent, ...params }));
+        setFilterLayout({ ...initFuturesComponent, ...params });
     };
 
     const decimals = useMemo(() => {
