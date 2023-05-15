@@ -1,12 +1,6 @@
 import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React from 'react';
 import RankList from 'components/screens/Nao/YearSummary/RankList';
-import {
-    API_CONTEST_NAO_YEAR_SUMMARY_ORDER,
-    API_CONTEST_NAO_YEAR_SUMMARY_PNL,
-    API_CONTEST_NAO_YEAR_SUMMARY_VOLUME
-} from 'redux/actions/apis';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import NaoFuturesPerformance from 'components/screens/Nao/YearSummary/NaoFuturesPerformance';
@@ -14,27 +8,22 @@ import classNames from 'classnames';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import NaoHeader from 'components/screens/Nao/NaoHeader';
 import NaoFooter from 'components/screens/Nao/NaoFooter';
-import { TextLiner } from 'components/screens/Nao/NaoStyle';
 
 const seeDetailedVIURL = 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-vndc-nami-championship-mua-3/';
 const seeDetailedENURL = 'https://goonus.io/en/onus-x-nami-onus-futures-vndc-tournament-nami-championship-season-3/';
 
-export default function () {
+export default function ({ version }) {
     const {
         t,
         i18n: { language }
     } = useTranslation();
 
     const renderVolume = (value, className = '') => {
-        return <span
-            className={classNames('text-sm sm:text-base text-right font-semibold', className)}
-        > {formatNumber(value, 0)} VNDC</span>;
+        return <span className={classNames('text-sm sm:text-base text-right font-semibold', className)}> {formatNumber(value, 0)} VNDC</span>;
     };
 
     const renderPNLRate = (value, className = '') => {
-        return <span
-            className={classNames('text-sm sm:text-base text-right text-teal font-semibold', className)}
-        >{value} %</span>;
+        return <span className={classNames('text-sm sm:text-base text-right text-teal font-semibold', className)}>{value} %</span>;
     };
 
     const renderOrderCount = (value, className = '') => {
@@ -54,9 +43,9 @@ export default function () {
                 <div className="nao_section px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
                     <div className="grid grid-cols-1 sm:grid-cols-2 mt-14">
                         <div className="flex flex-col justify-center">
-                            <h4 className="font-semibold text-2xl sm:text-5xl text-center sm:text-left">{t('nao:year_summary:title')} 2022</h4>
+                            <h4 className="font-semibold text-2xl sm:text-5xl text-center sm:text-left">{t('nao:year_summary:title', { version })}</h4>
                             <p className="text-base lg:text-lg text-txtPrimary dark:text-txtPrimary-dark mt-2 text-center sm:text-left">
-                                {t('nao:year_summary:content')}{' '}
+                                {t('nao:year_summary:content', { version })}{' '}
                                 <a
                                     href={language === LANGUAGE_TAG.EN ? seeDetailedENURL : seeDetailedVIURL}
                                     target="_blank"
@@ -74,9 +63,9 @@ export default function () {
 
                 <div className="bg-gray-13 dark:bg-dark mt-12 sm:mt-20 rounded-t-3xl pb-20 sm:pb-[120px] pt-6 sm:pt-20">
                     <div className="nao_section px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
-                        <NaoFuturesPerformance />
+                        <NaoFuturesPerformance version={version} />
 
-                        <TextLiner className="font-semibold mb-12 mt-20">{t('nao:year_summary:pnl_ranking')}</TextLiner>
+                        {/* <TextLiner className="font-semibold mb-12 mt-20">{t('nao:year_summary:pnl_ranking')}</TextLiner>
                         <RankList
                             url={API_CONTEST_NAO_YEAR_SUMMARY_PNL}
                             rankFieldName="rank_pnl"
@@ -127,11 +116,11 @@ export default function () {
                                     render: renderOrderCount
                                 }
                             ]}
-                        />
+                        /> */}
 
                         <div className="mt-20 flex flex-col items-center">
                             <img width={100} src={getS3Url('/images/nao/year_summary/footer.png')} />
-                            <span className="mt-5 font-semibold">{t('nao:year_summary:tks')}</span>
+                            <span className="mt-5 font-semibold max-w-4xl text-center">{t('nao:year_summary:tks')}</span>
                         </div>
                     </div>
                 </div>
@@ -140,10 +129,4 @@ export default function () {
             </div>
         </LayoutNaoToken>
     );
-};
-
-export const getStaticProps = async ({ locale }) => ({
-    props: {
-        ...(await serverSideTranslations(locale, ['common', 'nao']))
-    }
-});
+}

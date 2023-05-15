@@ -4,9 +4,7 @@ import classNames from 'classnames';
 import { assetCodeFromId, WalletCurrency } from 'utils/reference-utils';
 import { Popover, Transition } from '@headlessui/react';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
-import { Check } from 'react-feather';
-import colors from 'styles/colors';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { range } from 'lodash';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import format from 'date-fns/format';
@@ -17,7 +15,8 @@ import SvgFilter from 'components/svg/SvgFilter';
 import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
 import CheckCircle from 'components/svg/CheckCircle';
 
-function NaoFuturesPerformance() {
+const rate_USDT_VNDC = 23400;
+function NaoFuturesPerformance({ version }) {
     const [data, setData] = useState({
         last_time_update: 0,
         statistic: {}
@@ -27,6 +26,7 @@ function NaoFuturesPerformance() {
         month: null,
         currency: 72
     });
+
     const {
         t,
         i18n: { language }
@@ -36,10 +36,7 @@ function NaoFuturesPerformance() {
     const isMobile = width < 620;
 
     const getData = async () => {
-        const {
-            status,
-            data
-        } = await fetchApi({
+        const { status, data } = await fetchApi({
             url: API_CONTEST_NAO_YEAR_SUMMARY_STATISTIC,
             params: filters
         });
@@ -49,28 +46,45 @@ function NaoFuturesPerformance() {
         }
     };
 
-    useEffect(() => {
-        getData();
-    }, [filters]);
+    // useEffect(() => {
+    //     getData();
+    // }, [filters]);
 
     const changeFilters = (filter) => {
         setFilters({ ...filters, ...filter });
     };
 
+    const config = {
+        72: {
+            total_volume: '227204089300551',
+            order_number: '9543083',
+            user_count: '679095'
+        },
+        22: {
+            total_volume: '1282784200',
+            order_number: '1122754',
+            user_count: '43197'
+        }
+    };
+
+    const general = useMemo(() => {
+        return config[filters.currency];
+    }, [filters]);
+
     return (
         <>
             <div className="mb-12 mt-20">
                 <div className="flex items-center flex-wrap justify-between gap-5">
-                    <TextLiner className="">{t('nao:onus_performance:title')}</TextLiner>
+                    <TextLiner className="">{t('nao:onus_performance:title', { version })}</TextLiner>
                     <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
-                        <RangePopover
+                        {/* <RangePopover
                             language={language}
                             active={filters.month}
                             onChange={(value) => changeFilters({ month: value === 2022 ? null : value })}
                             className="flex order-last"
                             popoverClassName={'lg:mr-2'}
-                        />
-                        <div className="order-first gap-2 flex gap-last">
+                        /> */}
+                        <div className="order-first gap-2 flex gap-last h-10">
                             <button
                                 type="BUTTON"
                                 className={classNames(
@@ -95,35 +109,56 @@ function NaoFuturesPerformance() {
                     </div>
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                 <CardNao className="rounded-lg">
-                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">{t('nao:year_summary:volume_trades')}</span>
-                    <span className="text-xl sm:text-2xl font-semibold mt-4">
-                        {formatNumber(data.statistic?.volume, 0)} {assetCodeFromId(filters.currency)}
+                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
+                        {t('nao:onus_performance:total_volume')}
                     </span>
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base mt-2">${formatNumber(data.statistic?.volume_usdt, 0)}</span>
+                    <span className="text-xl sm:text-2xl font-semibold mt-4">{formatNumber(general.total_volume)} {assetCodeFromId(filters.currency)}</span>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base mt-2">
+                        ${formatNumber(general.total_volume / (filters.currency === 72 ? rate_USDT_VNDC : 1))}
+                    </span>
                 </CardNao>
 
                 <CardNao className="rounded-lg">
-                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">{t('nao:year_summary:order_number')}</span>
-                    <span className="text-xl sm:text-2xl font-semibold mt-4">{formatNumber(data.statistic?.num_of_transaction, 0)}</span>
+                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
+                        {t('nao:year_summary:order_number')}
+                    </span>
+                    <span className="text-xl sm:text-2xl font-semibold mt-4">{formatNumber(general.order_number)}</span>
                 </CardNao>
 
                 <CardNao className="rounded-lg">
-                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">{t('nao:year_summary:user_count')}</span>
-                    <span className="text-xl sm:text-2xl font-semibold mt-4">{formatNumber(data.statistic?.num_of_user, 0)}</span>
+                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
+                        {t('nao:year_summary:user_count')}
+                    </span>
+                    <span className="text-xl sm:text-2xl font-semibold mt-4">{formatNumber(general.user_count)}</span>
                 </CardNao>
+                {/* <CardNao className="rounded-lg">
+                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
+                        {t('nao:year_summary:total_profit_share')}
+                    </span>
+                    <span className="text-xl sm:text-2xl font-semibold mt-4">18,666,106,056 VNDC</span>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base mt-2">$797,697</span>
+                </CardNao>
+                <CardNao className="rounded-lg">
+                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
+                        {t('nao:year_summary:total_number_investors')}
+                    </span>
+                    <span className="text-xl sm:text-2xl font-semibold mt-4">1,992</span>
+                </CardNao>
+                <CardNao className="rounded-lg">
+                    <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
+                        {t('nao:year_summary:total_commission')}
+                    </span>
+                    <span className="text-xl sm:text-2xl font-semibold mt-4">31,344,773,689 VNDC</span>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base mt-2">$1,339,520</span>
+                </CardNao> */}
             </div>
         </>
     );
 }
 
-const RangePopover = ({
-    active,
-    onChange,
-    popoverClassName = '',
-    isMobile = false
-}) => {
+const RangePopover = ({ active, onChange, popoverClassName = '', isMobile = false }) => {
     const {
         t,
         i18n: { language }

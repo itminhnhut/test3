@@ -8,6 +8,7 @@
     "buy_token": "Buy Token",
     "contest_futures": "Contest Futures",
     "summary_2022": "Final Award 2022",
+    "achievements": "{{value}} Achievements",
     "voting": "Voting",
     "project_info": "Project information",
     "circulating_supply": "Circulating supply",
@@ -15,7 +16,7 @@
     "coming_soon": "Coming soon",
     "note": "Note",
     "onus_performance": {
-        "title": "NAO Futures performance",
+        "title": "NAO Futures {{version}} performance",
         "description": "Update information about NAO Futures product",
         "total_volume": "Total volume",
         "total_orders": "Total trades",
@@ -235,11 +236,11 @@
         "tournament": "Tournament"
     },
     "year_summary": {
-        "title": "NAO Futures {{year}} Year in Review",
-        "content": "Nami Frame Futures project would like to announce the aggregate data for 2022, along with the rankings for the respective year award categories.",
+        "title": "NAO Futures {{version}} Achievements",
+        "content": "The Nami Frame Futures project would like to announce the aggregated data for the NAO Futures {{version}}, along with an impressive list of traders.",
         "see_detailed_rules": "View Details",
 
-        "nao_futures_performance": "NAO Futures Performance",
+        "nao_futures_performance": "NAO Futures {{version}} performance",
         "year": "{{year}}",
         "month": "{{month}}",
         "volume_trades": "Total Volume",
@@ -257,7 +258,13 @@
         "id_nao_futures": "ID NAO Futures",
         "pnl_rate": "% PnL",
         "last_time_update": "Last time update",
-        "tks": "Thank you for endlessly trusting and supporting the NAO Futures project!"
+        "tks": "Thank you for trusting and supporting the project, continue your trading with NAO Futures new version on Nami Exchange application!",
+        "total_volume": "The total trading volume",
+        "total_users": "The total users",
+        "total_transactions": "Total number of successful transactions",
+        "total_profit_share": "Total profit shared for the Management Pool",
+        "total_number_investors": "Total number of investors who have joined the Management Pool",
+        "total_commission": "Total value of commission shared with partners (as of May 7, 2023)"
     },
     "ended": "Ended",
     "going_on": "Going on",

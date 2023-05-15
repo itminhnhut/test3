@@ -33,7 +33,7 @@ const category = [
     { label: "Stake NAO", link: "/nao/stake", options: "_self" },
     { label: "voting", el: "nao_proposal", url: "/nao" },
     { label: "contest_futures", link: "/contest", options: "_self" },
-    { label: 'summary_2022', link: '/nao/summary-2022', options: '_self' }
+    { label: 'NAO Futures v1', link: '/nao/summary', options: '_self' }
 ];
 
 const onDownload = (key) => {

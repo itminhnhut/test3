@@ -8,6 +8,7 @@
     "buy_token": "Mua NAO",
     "contest_futures": "Đua top Futures",
     "summary_2022": "Tổng kết 2022",
+    "summary": "Tổng kết {{value}}",
     "voting": "Biểu quyết",
     "project_info": "Thông tin dự án",
     "circulating_supply": "Tổng lưu hành",
@@ -15,7 +16,7 @@
     "coming_soon": "Sắp ra mắt",
     "note": "Lưu ý",
     "onus_performance": {
-        "title": "Thống kê về NAO Futures",
+        "title": "Thống kê về NAO Futures {{version}}",
         "description": "Các thông tin cập nhật về sản phẩm NAO Futures",
         "total_volume": "Khối lượng giao dịch",
         "total_orders": "Số lệnh giao dịch",
@@ -235,11 +236,11 @@
         "tournament": "Giải đấu"
     },
     "year_summary": {
-        "title": "Tổng kết dự án NAO Futures {{year}}",
-        "content": "Dự án Nami Frame Futures xin công bố số liệu tổng hợp cho năm 2022, cùng với đó là bảng xếp hạng cho những hạng mục giải thưởng năm tương ứng.",
+        "title": "Tổng kết NAO Futures {{version}}",
+        "content": "Dự án Nami Frame Futures xin công bố số liệu tổng hợp cho phiên bản NAO Futures {{version}}, cùng với đó là danh sách những nhà giao dịch ấn tượng.",
         "see_detailed_rules": "Xem thông tin chi tiết",
 
-        "nao_futures_performance": "Thống kê về NAO Futures",
+        "nao_futures_performance": "Thống kê về NAO Futures {{version}}",
         "year": "Năm {{year}}",
         "month": "Tháng {{month}} {{year}}",
         "volume_trades": "Khối lượng giao dịch",
@@ -257,7 +258,13 @@
         "id_nao_futures": "ID NAO Futures",
         "pnl_rate": "Tỷ lệ lợi nhuận",
         "last_time_update": "Cập nhật lần cuối vào",
-        "tks": "Cảm ơn cộng đồng người dùng đã tin tưởng và ủng hộ dự án NAO Futures!"
+        "tks": "Cảm ơn cộng đồng người dùng đã tin tưởng và ủng hộ dự án, hãy tiếp tục giao dịch NAO Futures phiên bản mới trên ứng dụng Nami Exchange!",
+        "total_volume": "Tổng khối lượng giao dịch",
+        "total_users": "Tổng số người dùng",
+        "total_transactions": "Tổng số giao dịch thành công",
+        "total_profit_share": "Tổng lợi nhuận chia sẻ cho Pool Quản trị",
+        "total_number_investors": "Tổng số nhà đầu tư đã tham gia Pool Quản trị",
+        "total_commission": "Tổng giá trị hoa hồng chia sẻ cho đối tác (tính tới ngày 07.05.2023)"
     },
     "ended": "Đã kết thúc",
     "going_on": "Đang diễn ra",
