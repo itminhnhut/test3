@@ -112,9 +112,9 @@ function NaoFuturesPerformance({ version }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                 <CardNao className="rounded-lg">
                     <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
-                        {t('nao:onus_performance:total_volume')}
+                        {t('nao:onus_performance:total_volume')} ({assetCodeFromId(filters.currency)})
                     </span>
-                    <span className="text-xl sm:text-2xl font-semibold mt-4">{formatNumber(general.total_volume)} {assetCodeFromId(filters.currency)}</span>
+                    <span className="text-xl sm:text-2xl font-semibold mt-4">{formatNumber(general.total_volume)} </span>
                     <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base mt-2">
                         ${formatNumber(general.total_volume / (filters.currency === 72 ? rate_USDT_VNDC : 1))}
                     </span>

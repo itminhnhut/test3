@@ -118,7 +118,7 @@ export default function ({ version }) {
                             ]}
                         /> */}
 
-                        <div className="mt-20 flex flex-col items-center">
+                        <div className="mt-20 lg:pt-20 flex flex-col items-center">
                             <img width={100} src={getS3Url('/images/nao/year_summary/footer.png')} />
                             <span className="mt-5 font-semibold max-w-4xl text-center">{t('nao:year_summary:tks')}</span>
                         </div>
