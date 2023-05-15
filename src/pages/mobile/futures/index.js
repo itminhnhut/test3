@@ -19,7 +19,7 @@ const FuturesIndex = () => {
         )
 
         router.push(
-            `/nao_futures${PATHS.FUTURES_V2.DEFAULT}/${prevSymbol && !!prevSymbol?.toString()?.length
+            `/mobile${PATHS.FUTURES_V2.DEFAULT}/${prevSymbol && !!prevSymbol?.toString()?.length
                 ? prevSymbol
                 : FUTURES_DEFAULT_SYMBOL
             }${params}`,
