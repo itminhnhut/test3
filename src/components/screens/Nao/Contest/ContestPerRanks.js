@@ -141,7 +141,7 @@ const ContestPerRanks = ({
                             height="24"
                             alt=""
                         />
-                        <span className='font-bold text-[0.625rem] leading-none pt-[0.1875rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white'>{item?.rowIndex + 4}</span>
+                        <span className='font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white'>{item?.rowIndex + 4}</span>
                     </>
                 ) : (
                     <span>{_rank}</span>
@@ -299,7 +299,7 @@ const ContestPerRanks = ({
                                                             height="24"
                                                             alt=""
                                                         />
-                                                        <span className="font-bold text-[0.625rem] leading-none pt-[0.1875rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
+                                                        <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
                                                             {index + 4}
                                                         </span>
                                                     </div>
