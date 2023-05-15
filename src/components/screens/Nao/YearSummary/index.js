@@ -46,13 +46,13 @@ export default function ({ version }) {
                             <h4 className="font-semibold text-2xl sm:text-5xl text-center sm:text-left">{t('nao:year_summary:title', { version })}</h4>
                             <p className="text-base lg:text-lg text-txtPrimary dark:text-txtPrimary-dark mt-2 text-center sm:text-left">
                                 {t('nao:year_summary:content', { version })}{' '}
-                                <a
-                                    href={language === LANGUAGE_TAG.EN ? seeDetailedENURL : seeDetailedVIURL}
-                                    target="_blank"
-                                    className="text-teal underline cursor-pointer block sm:inline"
-                                >
-                                    {t('nao:year_summary:see_detailed_rules')}
-                                </a>
+                                {/* <a */}
+                                {/*     href={language === LANGUAGE_TAG.EN ? seeDetailedENURL : seeDetailedVIURL} */}
+                                {/*     target="_blank" */}
+                                {/*     className="text-teal underline cursor-pointer block sm:inline" */}
+                                {/* > */}
+                                {/*     {t('nao:year_summary:see_detailed_rules')} */}
+                                {/* </a> */}
                             </p>
                         </div>
                         <div className="flex justify-center sm:mt-0 mt-10">

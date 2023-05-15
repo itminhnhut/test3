@@ -32,7 +32,7 @@ const category = [
     // { label: 'buy_token', el: 'nao_token' },
     { label: "Stake NAO", link: "/nao/stake", options: "_self" },
     { label: "voting", el: "nao_proposal", url: "/nao" },
-    { label: "contest_futures", link: "/contest", options: "_self" },
+    // { label: "contest_futures", link: "/contest", options: "_self" },
     { label: 'NAO Futures v1', link: '/nao/summary', options: '_self' }
 ];
 
