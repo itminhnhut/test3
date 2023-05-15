@@ -266,7 +266,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                 key={item.symbol}
                 className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-hover dark:bg-hover-dark' : ''}`}
                 onClick={() => {
-                    router.push(`/nao_futures/futures/${item.symbol}`);
+                    router.push(`/mobile/futures/${item.symbol}`);
                 }}
             >
                 <div className="flex flex-1 items-center">

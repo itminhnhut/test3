@@ -2,7 +2,7 @@
 User-agent: *
 Allow: /
 
-Disallow: /*nao_futures/futures/order/*
+Disallow: /*mobile/futures/order/*
 Disallow: /*library/*
 Disallow: /*_next/*
 

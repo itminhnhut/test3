@@ -349,7 +349,7 @@ export default function Transfer() {
                             componentType="button"
                             className="!text-sm !font-semibold"
                             title={t('common:back')}
-                            onClick={() => router.push('/nao_futures/wallet')}
+                            onClick={() => router.push('/mobile/wallet')}
                         />
                         <div
                             className={classNames('h-11 bg-teal rounded-md flex items-center justify-center font-semibold text-sm text-white', {

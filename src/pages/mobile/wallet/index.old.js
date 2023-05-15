@@ -247,7 +247,7 @@ const MarketScreen = () => {
                                         className='flex justify-between items-center py-2 border-b border-gray-4 dark:border-darkBlue-3'
                                         onClick={() => {
                                             router.push(
-                                                '/nao_futures/wallet/' +
+                                                '/mobile/wallet/' +
                                                     asset.assetCode
                                             )
                                         }}

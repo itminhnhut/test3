@@ -99,7 +99,7 @@ const TabOrders = memo(({
             emitWebViewEvent(openDetailModal ? 'nami_futures' : 'order_detail');
             setOpenDetailModal(!openDetailModal);
         } else {
-            router.push(`/nao_futures/futures/order/${row.displaying_id}`);
+            router.push(`/mobile/futures/order/${row.displaying_id}`);
         }
     };
 

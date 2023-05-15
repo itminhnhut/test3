@@ -404,7 +404,7 @@ const OrderDetail = ({
                 <Row>
                     <Label>{t('common:to')}</Label>
                     <Span className="text-teal"
-                          onClick={() => redirect(`/nao_futures/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
+                          onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
@@ -458,7 +458,7 @@ const OrderDetail = ({
                 <Row>
                     <Label>{t('common:from')}</Label>
                     <Span className="text-teal"
-                          onClick={() => redirect(`/nao_futures/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
+                          onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
@@ -540,7 +540,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:to')}</Label>
-                    <Span className="text-teal" onClick={() => redirect(`/nao_futures/futures/order/${id_to}`)}>
+                    <Span className="text-teal" onClick={() => redirect(`/mobile/futures/order/${id_to}`)}>
                         #{id_to}
                     </Span>
                 </Row>
@@ -598,7 +598,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:from')}</Label>
-                    <Span className="text-teal" onClick={() => redirect(`/nao_futures/futures/order/${from_id}`)}>
+                    <Span className="text-teal" onClick={() => redirect(`/mobile/futures/order/${from_id}`)}>
                         #{from_id}
                     </Span>
                 </Row>
