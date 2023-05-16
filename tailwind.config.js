@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const colors = require('tailwindcss/colors');
+const defaultTheme = require('tailwindcss/defaultTheme');
 const colors2 = require('./src/styles/colors');
 // Common colors
 const commonColors = {
@@ -37,7 +38,8 @@ module.exports = {
             sans: ['Barlow', 'sans-serif'],
             serif: ['serif'],
             inter: ['Inter', 'sans-serif'],
-            'SF-Pro': ['SF-Pro']
+            'SF-Pro': ['SF-Pro'],
+            'SourceCodePro': ['SourceCodePro'],
         },
         fontSize: {
             xxs: [
@@ -50,7 +52,7 @@ module.exports = {
             xs: [
                 '.75rem',
                 {
-                    lineHeight: '1.125rem'
+                    lineHeight: '1rem'
                 }
             ], // Caption 12px
             sm: [
@@ -247,7 +249,8 @@ module.exports = {
                 mb: '820px',
                 xxs: '360px',
                 xsm: '320px',
-                xs: '319px'
+                xs: '319px',
+                sm_only: { max: defaultTheme.screens.sm },
             },
             spacing: {
                 128: '32rem',
@@ -418,7 +421,23 @@ module.exports = {
                 'gradient-button-hover': `linear-gradient(0deg, ${commonColors.teal} 100%, ${commonColors.teal} 100%)`,
                 'refferal-v2-banner': "url('/images/reference/background_desktop_2.png')",
                 'tx-history-detail': "url('/images/screen/transaction-history/detail_bg-light.png')",
-                'tx-history-detail-dark': "url('/images/screen/transaction-history/detail_bg-dark.png')"
+                'tx-history-detail-dark': "url('/images/screen/transaction-history/detail_bg-dark.png')",
+                'progress-gradient': `linear-gradient(101.26deg,${commonColors.lightTeal} -5.29%,${commonColors.teal} 100%)`,
+                'nao-stake-mb': "url('/images/nao/bg-light-stake-mb.webp')",
+                'nao-corner': "url('/images/nao/bg-corner-light.webp')",
+                'nao-corner-mb': "url('/images/nao/bg-corner-light-mb.webp')",
+                'nao-corner-dark': "url('/images/nao/bg-corner.webp')",
+                'nao-corner-mb-dark': "url('/images/nao/bg-corner-mb.webp')",
+            },
+            backgroundSize: {
+                auto: 'auto',
+                cover: 'cover',
+                contain: 'contain',
+                inherit: 'inherit',
+                initial: 'initial',
+                revert: 'revert',
+                unset: 'unset',
+                full: '100% 100%',
             },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
@@ -442,7 +461,17 @@ module.exports = {
             },
             transitionProperty: {
                 height: 'height'
-            }
+            },
+            fill: {
+                fillPrimary: {
+                    DEFAULT: commonColors.white,
+                    dark: commonColors.dark.dark,
+                },
+                fillSecondary: {
+                    DEFAULT: commonColors.gray[12],
+                    dark: commonColors.dark[2],
+                },
+            },
         }
     },
     variants: {

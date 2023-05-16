@@ -1,8 +1,12 @@
 import React, { memo } from 'react';
-import { getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
+import SvgFacebook from 'components/svg/SvgFacebook';
+import TwitterFilled from 'components/svg/TwitterFilled';
+import TelegramFilled from 'components/svg/TelegramFilled';
+import RedditFilled from 'components/svg/RedditFilled';
+import classNames from 'classnames';
 
-const NaoFooter = memo(() => {
+const NaoFooter = memo(({noSpacingTop}) => {
     const { t } = useTranslation();
     const onRedirect = (key) => {
         let url = '';
@@ -32,21 +36,34 @@ const NaoFooter = memo(() => {
     }
 
     return (
-        <div className="nao_footer min-h-[6.25rem] bg-nao-bg3 flex items-center mt-[100px] sm:mt-20 py-9 px-4 nao:p-0">
-            <div className="text-sm sm:text-[1rem] max-w-[72.5rem] w-full m-auto h-full flex flex-col lg:flex-row  items-center justify-between text-center flex-wrap sm:gap-5">
-                <div className="nao_footer_left text-nao-text font-medium gap-0 sm:gap-5 flex items-center sm:flex-row flex-col sm:w-auto w-full">
-                    <div onClick={() => onRedirect('term')} className="pb-3 border-b border-nao-line w-full sm:border-none whitespace-nowrap sm:p-0 cursor-pointer">{t('nao:term')}</div>
+        <div className={classNames("nao_footer min-h-[6.25rem] bg-gray-12 dark:bg-dark-2 flex items-center py-9 px-4 nao:p-0 text-txtSecondary dark:text-txtSecondary-dark", noSpacingTop ? '' : 'mt-12 sm:mt-20')}>
+            <div className="text-sm max-w-[72.5rem] w-full m-auto h-full flex flex-col lg:flex-row  items-center justify-between text-center flex-wrap sm:gap-5">
+                <div className="nao_footer_left font-semibold gap-0 sm:gap-5 flex items-center sm:flex-row flex-col sm:w-auto w-full">
+                    <div
+                        onClick={() => onRedirect('term')}
+                        className="pb-3 border-b border-divider dark:border-divider-dark w-full sm:border-none whitespace-nowrap sm:p-0 cursor-pointer"
+                    >
+                        {t('nao:term')}
+                    </div>
                     <div className="hidden sm:flex">|</div>
-                    <div onClick={() => onRedirect('privacy')} className="py-3 border-b border-nao-line w-full sm:border-none whitespace-nowrap sm:p-0 cursor-pointer">{t('nao:privacy_policy')}</div>
+                    <div
+                        onClick={() => onRedirect('privacy')}
+                        className="py-3 border-b border-divider dark:border-divider-dark w-full sm:border-none whitespace-nowrap sm:p-0 cursor-pointer"
+                    >
+                        {t('nao:privacy_policy')}
+                    </div>
                 </div>
 
-
-                <div className='nao_footer_center text-nao-text font-medium pt-6 pb-4 sm:p-0 mx-11 sm:mx-0'>Copyright © 2022 Nami Foundation. All rights reserved.</div>
-                <div className='nao_footer_right items-center gap-5 flex'>
-                    <img className="cursor-pointer" onClick={() => onRedirect('facebook')} src={getS3Url("/images/nao/ic_facebook.png")} alt="" height={24} width={24} />
-                    <img className="cursor-pointer" onClick={() => onRedirect('telegram')} src={getS3Url("/images/nao/ic_telegram.png")} alt="" height={24} width={24} />
-                    <img className="cursor-pointer" onClick={() => onRedirect('twitter')} src={getS3Url("/images/nao/ic_twitter.png")} alt="" height={24} width={24} />
-                    <img className="cursor-pointer" onClick={() => onRedirect('reddit')} src={getS3Url("/images/nao/ic_reddit.png")} alt="" height={24} width={24} />
+                <div className="nao_footer_right flex flex-wrap justify-center items-center">
+                    <div className="font-medium pt-6 pb-4 w-full lg:w-auto sm:pt-0 lg:p-0 mx-11 lg:mx-4">
+                        Copyright © 2022 Nami Foundation. All rights reserved.
+                    </div>
+                    <div className="items-center gap-5 flex">
+                        <SvgFacebook className="cursor-pointer" onClick={() => onRedirect('facebook')} size={24} color="#1778F2" />
+                        <TwitterFilled className="cursor-pointer" onClick={() => onRedirect('twitter')} size={24} color="#1DA1F2" />
+                        <TelegramFilled className="cursor-pointer" onClick={() => onRedirect('telegram')} size={24} color="#6CC1E3" />
+                        <RedditFilled className="cursor-pointer" onClick={() => onRedirect('reddit')} size={24} color="#FF4300" color2="white" />
+                    </div>
                 </div>
             </div>
         </div>

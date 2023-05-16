@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
-// import OrderDetailComponent from 'components/screens/Mobile/Futures/OrderDetail';
+// import OrderDetailComponent from 'components/screens/Nao_futures/Futures/OrderDetail';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router'
@@ -12,10 +12,10 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import { UserSocketEvent } from 'redux/actions/const';
 import { getOrdersList } from 'redux/actions/futures';
-import OrderDetailLoading from 'components/screens/Mobile/Futures/OrderDetailLoading'
+import OrderDetailLoading from 'components/screens/Nao_futures/Futures/OrderDetailLoading'
 import dynamic from 'next/dynamic';
 const OrderDetailComponent = dynamic(
-    () => import('components/screens/Mobile/Futures/OrderDetail'),
+    () => import('components/screens/Nao_futures/Futures/OrderDetail'),
     { loading: () => <OrderDetailLoading /> }
 );
 
@@ -44,16 +44,16 @@ const OrderDetail = (props) => {
     }, [auth, timestamp]);
 
     const getOrders = () => {
-        if (auth) dispatch(getOrdersList());
+        if (auth) dispatch(getOrdersList({ product: 2 }));
     };
 
     useEffect(() => {
         if (userSocket) {
-            userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
+            userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER_NAO, getOrders);
         }
         return () => {
             if (userSocket) {
-                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
+                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER_NAO, getOrders);
             }
         };
     }, [userSocket]);

@@ -964,7 +964,7 @@ export const secondToMinutesAndSeconds = (time) => {
 
 export const getPriceColor = (value, onusMode = false) => {
     if (onusMode) {
-        return value === 0 ? '' : value < 0 ? 'text-onus-red' : 'text-onus-green';
+        return value === 0 ? '' : value < 0 ? 'text-red-2' : 'text-green-2';
     } else {
         return value === 0 ? '' : value < 0 ? 'text-red-2 dark:text-red' : 'text-green-3 dark:text-teal';
     }
@@ -1211,7 +1211,7 @@ export const copy = (text, cb) => {
     }
 };
 
-export const CopyText = memo(({ text = '', setText, value, className = '', size = 16, label }) => {
+export const CopyText = memo(({ text = '', setText, value, className = '', size = 16, label, CustomCopyIcon, textClass, copyClass, checkedClass }) => {
     const [copied, setCopied] = useState(false);
     const title = label ?? text;
     useEffect(() => {
@@ -1225,6 +1225,13 @@ export const CopyText = memo(({ text = '', setText, value, className = '', size 
             }, 3000);
     }, [copied]);
 
+    const renderCopyIcon = () => {
+        if (CustomCopyIcon) {
+            return <CustomCopyIcon size={size} className={copyClass}  />;
+        }
+        return <CopyIcon size={size} />;
+    };
+
     return (
         <div
             className={`flex items-center space-x-2 cursor-pointer ${className}`}
@@ -1235,8 +1242,8 @@ export const CopyText = memo(({ text = '', setText, value, className = '', size 
                 })
             }
         >
-            <span>{title}</span>
-            {!copied ? <CopyIcon size={size} /> : <CheckedIcon size={size} color={colors.teal} />}
+            <span className={textClass}>{title}</span>
+            {!copied ? renderCopyIcon() : <CheckedIcon size={size} color={colors.teal} className={checkedClass} />}
         </div>
     );
 });

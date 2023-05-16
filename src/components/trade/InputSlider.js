@@ -68,8 +68,8 @@ const Slider = ({
     const _xStart = useRef(xStart);
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
-    const _bgColorDot = onusMode ? colors.onus.bg3 : isDark ? colors.dark[2] : colors.gray[11];
-    const _bgColorActive = bgColorActive ? bgColorActive : onusMode ? '#418FFF' : colors.teal;
+    const _bgColorDot = onusMode ? (isDark ? colors.dark[2] : colors.gray[12]) : isDark ? colors.dark[2] : colors.gray[11];
+    const _bgColorActive = bgColorActive ? bgColorActive : onusMode ? colors.teal : colors.teal;
 
 
     function getPosition() {
@@ -305,7 +305,7 @@ const Slider = ({
                                 'left-1/2 -translate-x-1/2': i > 0 && i !== _dots,
                                 '-left-1/2 translate-x-[-80%] pr-1': i === _dots
                             },
-                            { '!font-normal': onusMode, '!text-onus-white font-semibold': Number(labelX) === Number(x) && onusMode },
+                            { 'font-normal': onusMode, '!text-txtPrimary dark:!text-txtPrimary-dark !font-semibold': Number(labelX) === Number(x) && onusMode },
                             { 'dark:!text-white !text-txtPrimary font-semibold': Number(labelX) === Number(x) && !onusMode }
                         )}
                     >
@@ -320,7 +320,7 @@ const Slider = ({
     };
 
     return (
-        <>
+        <div className='px-2'>
             {useLabel && positionLabel === 'top' && (
                 <>
                     <div className="relative w-full flex items-center justify-between">
@@ -354,7 +354,7 @@ const Slider = ({
                         naoMode={naoMode}
                         className={naoMode ? '!flex justify-center items-center' : ''}
                     >
-                        {naoMode && <img src={getS3Url('/images/nao/ic_nao.png')} width={22} height={22} alt="" />}
+                        {/* {naoMode && <img src={getS3Url('/images/nao/ic_nao.png')} width={22} height={22} alt="" />} */}
                         {customPercentLabel
                             ? customPercentLabel(pos)
                             : showPercentLabel && (
@@ -373,7 +373,7 @@ const Slider = ({
                     <div className="h-[12px] w-full" />
                 </>
             )}
-        </>
+        </div>
     );
 };
 

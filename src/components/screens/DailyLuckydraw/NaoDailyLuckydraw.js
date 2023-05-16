@@ -291,7 +291,7 @@ const Luckydraw = ({ platform }) => {
                         <div
                             className={classNames('text-sm flex items-center justify-center space-x-2', {
                                 'text-darkBlue-5': platform === 'nami',
-                                'text-nao-text2': platform === 'frame',
+                                'text-txtPrimary dark:text-txtPrimary-dark2': platform === 'frame',
                                 '!text-xs': xs
                             })}
                         >
@@ -317,7 +317,7 @@ const Luckydraw = ({ platform }) => {
                             <div
                                 className={classNames('text-center text-xs mt-3', {
                                     'text-darkBlue-5': platform === 'nami',
-                                    'text-nao-text2': platform === 'frame'
+                                    'text-txtPrimary dark:text-txtPrimary-dark2': platform === 'frame'
                                 })}
                             >
                                 <div>
@@ -363,7 +363,7 @@ const ModalClaim = ({ onClose, visible, platform, getImage, ticket, total_reward
                 className={classNames(
                     'flex flex-col items-center justify-center fixed top-0 right-0 h-full w-full z-[99]  overflow-hidden',
                     { invisible: !visible },
-                    { visible: visible, 'bg-nao-bgShadow/[0.9]': platform === 'frame', 'bg-nao-nami/[0.95]': platform === 'nami' }
+                    { visible: visible, 'bg-black-800/[0.6] dark:bg-black-800/[0.8]': platform === 'frame', 'bg-nao-nami/[0.95]': platform === 'nami' }
                 )}
             >
                 <BgModalClaim ref={wrapperRef} platform={platform} url={getImage(true)}>
