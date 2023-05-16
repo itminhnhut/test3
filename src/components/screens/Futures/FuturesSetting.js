@@ -16,86 +16,80 @@ import Tooltip from 'components/common/Tooltip';
 
 const FuturesSetting = memo(
     (props) => {
-        const { spotState, onChangeSpotState, resetDefault, className } = props;
+        const { spotState, onChangeSpotState, resetDefault, className, isDrawer } = props;
         const settings = useSelector((state) => state.futures.settings);
         const [currentTheme, onThemeSwitch] = useDarkMode();
-        const { t } = useTranslation();
+        const {
+            t,
+            i18n: { language }
+        } = useTranslation();
         const dispatch = useDispatch();
         const timer = useRef();
         const [loading, setLoading] = useState(false);
         const [mount, setMount] = useState(false);
+        const userSetting = [
+            { key: FuturesSettings.order_confirm, tooltip: t('spot:setting:order_confirmation_tooltip') },
+            { key: FuturesSettings.show_sl_tp_order_line, tooltip: t('spot:setting:display_price_line_tooltip') }
+        ];
 
         const FuturesComponents = [
             {
-                value: t('futures:setting:favorites'),
+                label: t('futures:setting:favorites'),
                 key: 'isShowFavorites',
                 visible: true
             },
             {
-                value: t('futures:setting:pair_detail'),
+                label: t('futures:setting:pair_detail'),
                 key: 'isShowPairDetail',
                 visible: true
             },
             {
-                value: t('futures:setting:chart'),
+                label: t('futures:setting:chart'),
                 key: 'isShowChart',
                 visible: true
             },
             {
-                value: t('futures:setting:orders_history'),
+                label: t('futures:setting:orders_history'),
                 key: 'isShowOpenOrders',
                 visible: true
             },
             {
-                value: t('futures:setting:place_order'),
+                label: t('futures:setting:place_order'),
                 key: 'isShowPlaceOrder',
                 visible: true
             },
             {
-                value: t('common:assets'),
+                label: t('common:assets'),
                 key: 'isShowAssets',
                 visible: true
             }
         ];
 
+        const getUserSettings = () => {
+            if (!settings?.user_setting) return [];
+            return userSetting.map((item) => {
+                const label = settings.configs.find((rs) => rs.key === item.key)?.description?.[language];
+                return {
+                    key: item.key,
+                    label,
+                    tooltip: item?.tooltip
+                };
+            });
+        };
+
         const settingFutures = useMemo(() => {
             return {
-                general: [
-                    {
-                        value: t('spot:setting:order_confirmation'),
-                        key: FuturesSettings.order_confirm,
-                        tooltip: t('spot:setting:order_confirmation_tooltip')
-                    },
-                    {
-                        value: t('spot:setting:display_price_line'),
-                        key: FuturesSettings.show_sl_tp_order_line
-                    }
-                ]
-                // fees: [
-                //     {
-                //         value: 'Phí VNDC Futures',
-                //         key: 'fee_VNDC',
-                //         visible: true
-                //     },
-                //     {
-                //         value: 'Phí USDT Futures',
-                //         key: 'fee_USDT',
-                //         visible: true
-                //     }
-                // ]
+                userSetting: getUserSettings()
             };
-        }, []);
+        }, [settings, language]);
 
         const inActiveLabel = currentTheme === 'dark' ? colors.gray[7] : colors.gray[1];
-        const userSetting = [FuturesSettings.order_confirm, FuturesSettings.show_sl_tp_order_line];
 
         useEffect(() => {
             const settingFutures = localStorage.getItem('settingLayoutFutures');
             if (settings?.user_setting && settingFutures && !mount) {
-                Object.keys(JSON.parse(settingFutures)).map((item) => {
-                    if (userSetting.includes(item)) {
-                        spotState[item] = settings?.user_setting?.[item] ?? true;
-                    }
+                Object.keys(settings?.user_setting).map((item) => {
+                    spotState[item] = settings?.user_setting?.[item] ?? spotState[item];
                 });
                 localStorage.setItem('settingLayoutFutures', JSON.stringify(spotState));
                 onChangeSpotState(spotState);
@@ -104,11 +98,11 @@ const FuturesSetting = memo(
         }, [settings?.user_setting]);
 
         const onChangeSetting = (key, value) => {
-            if (!userSetting.includes(key)) return;
+            if (!userSetting.find((item) => item.key === key)) return;
             try {
                 setLoading(true);
-                const obj = Object.keys(userSetting).reduce((pre, curr) => {
-                    pre[userSetting[curr]] = spotState[userSetting[curr]];
+                const obj = userSetting.reduce((pre, curr) => {
+                    pre[curr.key] = spotState[curr.key];
                     return pre;
                 }, {});
                 const params = { setting: { ...settings?.user_setting, ...obj, [key]: value } };
@@ -145,10 +139,10 @@ const FuturesSetting = memo(
                     }
                 };
                 dispatch(fetchFuturesSetting(params));
-                if (resetDefault) resetDefault();
+                if (resetDefault) resetDefault({ [FuturesSettings.order_confirm]: true, [FuturesSettings.show_sl_tp_order_line]: true });
             }, 500);
         };
-
+        console.log('isActive', props);
         return (
             <Popover className="relative h-full">
                 {({ open }) => (
@@ -169,8 +163,13 @@ const FuturesSetting = memo(
                             leaveFrom="opacity-100 translate-y-0"
                             leaveTo="opacity-0 translate-y-1"
                         >
-                            <Popover.Panel className="absolute right-0 top-full mt-[1px] z-10">
-                                <div className="p-4 min-w-[360px] border border-t-0 dark:border-divider-dark rounded-b-lg shadow-md bg-bgPrimary dark:bg-darkBlue-3 divide-solid divide-divider dark:divide-divider-dark divide-y">
+                            <Popover.Panel className={`absolute ${isDrawer ? '-right-3' : 'right-0'} top-full mt-[1px] z-10`}>
+                                <div
+                                    className={classNames(
+                                        'p-4 min-w-[360px] border border-t-0 dark:border-divider-dark rounded-b-lg shadow-md bg-bgPrimary dark:bg-darkBlue-3 divide-solid divide-divider dark:divide-divider-dark divide-y ',
+                                        // { '!border-none !shadow-none': isDrawer }
+                                    )}
+                                >
                                     <div className="mb-6 flex justify-between">
                                         <span className="text-sm sm:text-base text-txtPrimary dark:text-txtPrimary-dark font-semibold">
                                             {t('spot:setting.theme')}
@@ -194,11 +193,11 @@ const FuturesSetting = memo(
                                     <div className="py-6 divide-y-[1px] divide-divider dark:divide-divider-dark grid grid-cols-1 gap-6">
                                         <div className="space-y-4">
                                             {FuturesComponents.map((item, index) => {
-                                                const { value, key, visible } = item;
+                                                const { label, key, visible } = item;
                                                 if (!visible) return null;
                                                 return (
                                                     <div className="h-6 flex justify-between" key={key + index}>
-                                                        <span className="text-sm text-txtPrimary dark:text-txtPrimary-dark flex items-center">{value}</span>
+                                                        <span className="text-sm text-txtPrimary dark:text-txtPrimary-dark flex items-center">{label}</span>
                                                         <Switch checked={spotState?.[key]} onChange={(value) => onChangeFuturesComponent(key, value)} />
                                                     </div>
                                                 );
@@ -209,20 +208,28 @@ const FuturesSetting = memo(
                                                 return (
                                                     <div className="space-y-4 pt-6">
                                                         {settingFutures[setting].map((item, indx) => {
-                                                            const { value, key, className = '', tooltip } = item;
+                                                            const { label, key, className = '', tooltip } = item;
                                                             return (
                                                                 <Fragment key={indx}>
-                                                                    <div className="h-6 flex justify-between space-x-2">
+                                                                    <div className="h-6 flex items-start justify-between space-x-2">
                                                                         <span
                                                                             className={classNames(
                                                                                 `text-sm text-txtPrimary dark:text-txtPrimary-dark flex items-center`,
-                                                                                { 'border-b border-dashed border-gray-1 dark:border-gray-7': !!tooltip },
+                                                                                {
+                                                                                    'underline leading-6': !!tooltip
+                                                                                },
                                                                                 className
                                                                             )}
+                                                                            style={{
+                                                                                textDecorationStyle: !!tooltip ? 'dashed' : 'unset',
+                                                                                textUnderlineOffset: 2,
+                                                                                textUnderlinePosition: 'under',
+                                                                                textDecorationColor: currentTheme === 'light' ? colors.gray[1] : colors.gray[7]
+                                                                            }}
                                                                             data-tip={tooltip}
                                                                             data-for={key}
                                                                         >
-                                                                            {value}
+                                                                            {label}
                                                                         </span>
                                                                         <Switch
                                                                             checked={spotState?.[key]}
@@ -230,7 +237,17 @@ const FuturesSetting = memo(
                                                                         />
                                                                     </div>
                                                                     {!!tooltip && (
-                                                                        <Tooltip id={key} place="top" effect="solid" isV3 className="max-w-[300px]" />
+                                                                        <Tooltip
+                                                                            overridePosition={(e) => ({
+                                                                                left: isDrawer ? 0 : e.left,
+                                                                                top: e.top
+                                                                            })}
+                                                                            id={key}
+                                                                            place="top"
+                                                                            effect="solid"
+                                                                            isV3
+                                                                            className="max-w-[300px]"
+                                                                        />
                                                                     )}
                                                                 </Fragment>
                                                             );

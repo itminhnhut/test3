@@ -407,14 +407,16 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                         <span className="font-semibold">{formatNumber(_lastPrice, 2, 0, true)}</span>
                     </div>
                 </div>
-                <CheckBox
-                    isV3
-                    onChange={onChangeAutoType}
-                    active={autoType}
-                    className="h-full"
-                    labelClassName="!text-base"
-                    label={t('futures:mobile:auto_type_sltp')}
-                />
+                {!order?.order_value && (
+                    <CheckBox
+                        isV3
+                        onChange={onChangeAutoType}
+                        active={autoType}
+                        className="h-full"
+                        labelClassName="!text-base"
+                        label={t('futures:mobile:auto_type_sltp')}
+                    />
+                )}
                 <div className="mt-8 space-y-6">
                     <div className="space-y-4">
                         <div className="flex items-center justify-between space-x-2">
