@@ -97,7 +97,8 @@ export const Thumb = styled.div`
 
     &:after {
         content: '${({ x }) => `${x}%`}';
-        display: ${({ useTooltip }) => (useTooltip ? 'block' : 'none')};
+        opacity: ${({ useTooltip }) => (useTooltip ? 1 : 0)};
+        /* display: ${({ useTooltip }) => (useTooltip ? 'block' : 'none')}; */
         position: absolute;
         top: -27px;
         padding: 0 4px;
@@ -107,6 +108,7 @@ export const Thumb = styled.div`
         transform: translateX(-50%);
         font-size: 12px;
         font-weight: 500;
+        transition: opacity 0.2s linear;
     }
 `;
 

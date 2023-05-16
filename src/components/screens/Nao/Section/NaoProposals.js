@@ -11,6 +11,7 @@ import FetchApi from 'utils/fetch-api';
 import SvgProgress from 'components/svg/SvgEdit';
 import CheckCircle from 'components/svg/CheckCircle';
 import CrossCircle from 'components/svg/CrossCircle';
+import { useSelector } from 'react-redux';
 
 export default function NaoProposals({ listProposal, assetNao }) {
     const [dataUserVote, setDataUserVote] = useState('');
@@ -59,12 +60,13 @@ export default function NaoProposals({ listProposal, assetNao }) {
     );
 }
 const Proposal = ({ proposal, language, assetNao }) => {
+    const isAuth = useSelector((state) => state.auth?.user);
     const { voteName, totalPool, _id, totalVoteYes, totalVoteNo, status } = proposal;
     const router = useRouter();
     const { t } = useTranslation();
     const statusText = t(`nao:vote:status:${status.toLowerCase()}`);
     return (
-        <CardNao className="!px-6 sm:!px-8 !py-6 !sm:min-h-0 !min-h-0 cursor-pointer" onClick={() => isAuth && router.push(`/vote/${_id}`)}>
+        <CardNao className="!px-6 sm:!px-8 !py-6 !sm:min-h-0 !min-h-0 cursor-pointer" onClick={() => isAuth && router.push(`/nao/vote/${_id}`)}>
             <div className="flex flex-col xl:flex-row flex-wrap xl:items-center justify-between gap-4">
                 <div className="flex flex-row flex-1 items-center xl:max-w-[520px]">
                     {status === 'Processing' && <SvgProgress className="md:w-6 md:h-6 w-[14px] h-[14px] flex-shrink-0" />}
