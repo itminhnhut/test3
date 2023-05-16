@@ -36,6 +36,10 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
         setPage(PAGE);
     };
 
+    useEffect(() => {
+        console.log('deferredText', deferredText);
+    }, [deferredText]);
+
     const handleListFriend = _.throttle(async () => {
         setLoading(true);
         const params = {
@@ -71,6 +75,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
 
     const handleChangeSearch = (value) => {
         setSearch(value);
+        friendList.length > 0 && setFriendList([]);
     };
 
     return isDesktop ? (

@@ -3,7 +3,6 @@
     "payment_method_add": "Add payment method",
     "account_number": "Account number",
     "bank_name": "Bank name",
-    "confirm": "Confirm",
     "transaction_details": "Transaction details",
     "depsit_from_partners": "Deposit {{asset}} through partner",
     "sell": "sell",
@@ -20,5 +19,10 @@
     "bank_account_not_found": "No accounts found. Please check account number again",
     "set_default_bank_success": "Default bank changed",
     "please_input_account_num": "Please, enter your account number",
-    "validate_input_account": "Invalid account"
+    "validate_input_account": "Invalid account",
+    "confirm": {
+        "title": "Remove payment method",
+        "text": "Removed account can be re-added by adding payment method. However, this account can't be added on other Nami accounts",
+        "noti_text": "Remove payment method  successfully"
+    }
 }
