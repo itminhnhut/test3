@@ -18,7 +18,7 @@ import Tooltip from 'components/common/Tooltip';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 
 const CONTAINER_ID = 'nami-mobile-tv';
-const CHART_VERSION = '1.0.8';
+const CHART_VERSION = '1.0.9';
 const ChartStatus = {
     NOT_LOADED: 1,
     LOADED: 2,

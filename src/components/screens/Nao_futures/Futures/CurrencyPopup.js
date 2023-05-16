@@ -33,17 +33,17 @@ const CurrencyPopup = (props) => {
     const alertContext = useContext(AlertContext);
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
+    const assetCodeArray = ["VNDC", "NAO", "NAMI",  "USDT"];
+    const codeOfAsset = [72, 447, 1,  22];
 
     useEffect(() => {
         if (dataRow) {
-            const assetCodeArray = ["VNDC", "NAO", "NAMI", "ONUS", "USDT"];
-            const codeOfAsset = [72, 447, 1, 86, 22];
             codeOfAsset.forEach((item, index) => {
                 if (currency === item) {
                     setHoverItemsChose(assetCodeArray[index]);
                 }
             });
-            let handleFeesNAO = [fees[1], fees[0], ...fees?.slice(2, 5)];
+            let handleFeesNAO = fees.filter((rs) => rs.assetId !== 86);
             if (dataRow?.symbol?.indexOf("USDT") > -1) {
                 let handleFees = [
                     handleFeesNAO[0],
@@ -135,8 +135,6 @@ const CurrencyPopup = (props) => {
     const onClose = () => {
         setVisibleModalFees(false);
         if (forceFetchOrder) forceFetchOrder()
-        const assetCodeArray = ["VNDC", "NAO", "NAMI", "ONUS", "USDT"];
-        const codeOfAsset = [72, 447, 1, 86, 22];
         codeOfAsset.forEach((item, index) => {
             if (currency === item) {
                 setHoverItemsChose(assetCodeArray[index]);
@@ -145,8 +143,6 @@ const CurrencyPopup = (props) => {
     };
 
     useEffect(() => {
-        const assetCodeArray = ["VNDC", "NAO", "NAMI", "ONUS", "USDT"];
-        const codeOfAsset = [72, 447, 1, 86, 22];
         if (currency === codeOfAsset[assetCodeArray.indexOf(hoverItemsChose)]) {
             setdDisabledButton(true);
         } else {

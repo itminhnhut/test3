@@ -6,6 +6,7 @@ export const Errors = {
 export const PromotionName = {
     ONBOARDING_5USDT: 'ONBOARDING_5USDT',
     ONBOARDING_10K: 'ONBOARDING_10K',
+    ONBOARDING_100K: 'ONBOARDING_100K',
 }
 
 export const PromotionStatus = {
