@@ -85,17 +85,23 @@ const Index = () => {
                 <div className={`mb-6 text-sm font-bold`}>
                     <div className="text-2xl dark:text-txtPrimary-dark font-semibold">{t('modal:scan_qr_to_download')}</div>
                 </div>
-                <div className="flex items-center justify-center relative py-12 ">
-                    <div className="z-10 rounded-xl qr-code">
-                        <QRCode value={`${APP_URL}#nami_exchange_download_app`} eyeRadius={6} size={150} />
-                    </div>
-                    <div className="absolute w-full h-full z-0">
-                        <Image
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded-xl"
-                            src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)}
-                        />
+                <div className="nao_section px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                    <NaoInfo dataSource={dataSource} assetNao={assetNao} ammData={ammData} />
+                </div>
+                <div className="bg-gray-13 dark:bg-dark mt-12 sm:mt-20 rounded-t-3xl">
+                    <div className="nao_section px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                        <NaoPerformance />
+                        <NaoPool dataSource={dataSource} assetNao={assetNao} />
+                        <NaoProposals listProposal={listProposal} assetNao={assetNao} />
+
+                        <section id="nao_pool" className="pb-20 pt-12 sm:pt-20 sm:pb-[120px]">
+                            {/* <SectionNao
+                                noBg
+                                className="px-3 sm:px-10 rounded-xl min-w-full sm:min-w-[372px] flex flex-col justify-between flex-1 relative bg-bgPrimary dark:bg-bgPrimary-dark"
+                            >
+                                <ContesRules season={current?.season ?? 1} seasons={seasons} {...current} inHome={true} />
+                            </SectionNao> */}
+                        </section>
                     </div>
                 </div>
             </ModalV2>
