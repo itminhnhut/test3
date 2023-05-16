@@ -5,7 +5,6 @@ import { Active, Dot, DotContainer, SliderBackground, Thumb, ThumbLabel, Track }
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import classNames from 'classnames';
 import colors from 'styles/colors';
-import debounce from 'lodash/debounce';
 
 function getClientPosition(e) {
     const { touches } = e;
@@ -72,6 +71,7 @@ const Slider = ({
     const _bgColorDot = onusMode ? (isDark ? colors.dark[2] : colors.gray[12]) : isDark ? colors.dark[2] : colors.gray[11];
     const _bgColorActive = bgColorActive ? bgColorActive : onusMode ? colors.teal : colors.teal;
     const [draging, setDraging] = useState(false);
+    const timer = useRef();
 
     function getPosition() {
         let top = ((y - ymin) / (ymax - ymin)) * 100;
@@ -130,7 +130,7 @@ const Slider = ({
 
     function handleMouseDown(e) {
         if (disabled) return;
-
+        clearTimeout(timer.current)
         e.preventDefault();
         e.stopPropagation();
         e.nativeEvent.stopImmediatePropagation();
@@ -161,7 +161,7 @@ const Slider = ({
     const handleMouseUp = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        onHideTooltip()
+        onHideTooltip();
     };
 
     function getPos(e) {
@@ -197,9 +197,12 @@ const Slider = ({
         }
     }
 
-    const onHideTooltip = debounce(() => {
-        setDraging(false);
-    }, 300);
+    const onHideTooltip = () => {
+        clearTimeout(timer.current)
+        timer.current = setTimeout(() => {
+            setDraging(false);
+        }, 300);
+    };
 
     function handleTrackMouseDown(e) {
         if (disabled) return;
