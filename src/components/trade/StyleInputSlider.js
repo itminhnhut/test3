@@ -90,11 +90,24 @@ export const Thumb = styled.div`
     /* clip-path:${({ onusMode }) => (onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)')}; */
     border-radius: ${({ onusMode }) => (onusMode ? '50%' : '50%')};
     border: ${({ onusMode, naoMode }) => (onusMode && !naoMode ? `4px solid ${colors.green[1]}` : 'none')};
-    background: ${({ isZero, isDark, bgColorActive, naoMode }) =>
-        naoMode ? colors.teal : bgColorActive ? bgColorActive : colors.teal};
+    background: ${({ isZero, isDark, bgColorActive, naoMode }) => (naoMode ? colors.teal : bgColorActive ? bgColorActive : colors.teal)};
     user-select: none;
     cursor: pointer;
     pointer-events: none;
+
+    &:after {
+        content: '${({ x }) => `${x}%`}';
+        display: ${({ useTooltip }) => (useTooltip ? 'block' : 'none')};
+        position: absolute;
+        top: -27px;
+        padding: 0 4px;
+        background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)};
+        height: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        font-weight: 500;
+    }
 `;
 
 export const ThumbLabel = styled.div`

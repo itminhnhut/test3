@@ -368,6 +368,7 @@ const CloseOrderModalMobile = ({
                                     </div>
                                     <Slider
                                         useLabel
+                                        useTooltip
                                         positionLabel="top"
                                         onusMode
                                         labelSuffix="%"
