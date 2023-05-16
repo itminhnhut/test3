@@ -155,7 +155,7 @@ const ContesRules = ({
                     {isMobile ? (
                         <TournamentList t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
                     ) : (
-                        <DropdownPreSeason t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
+                        <DropdownPreSeason inHome={inHome} t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
                     )}
                 </div>
             </div>
@@ -182,14 +182,16 @@ const ContesRules = ({
     );
 };
 
-const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
+const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome }) => {
     const [offset, setOffset] = useState(0);
     const progress = (item) => {
         const now = new Date().getTime();
         const start = new Date(item?.start).getTime();
         const end = new Date(item?.end).getTime();
         if (now < start && now < end) {
-            return <div className="text-yellow-2 bg-yellow-2/[0.15] px-2 py-1 !pl-3 sm:!pl-2  rounded-r-[80px] sm:rounded-[80px]">{t('nao:coming_soon_2')}</div>;
+            return (
+                <div className="text-yellow-2 bg-yellow-2/[0.15] px-2 py-1 !pl-3 sm:!pl-2  rounded-r-[80px] sm:rounded-[80px]">{t('nao:coming_soon_2')}</div>
+            );
         } else if (now > start && now < end) {
             return (
                 <div className="flex items-center space-x-1 bg-teal/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-r-[80px] sm:rounded-[80px] w-max">
@@ -207,7 +209,6 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
             setOffset(document.querySelector('.tournaments').clientWidth);
         }, 500);
     }, [seasonsFilter]);
-
 
     return (
         <Popover className="relative flex sm_only:flex-1 sm_only:flex-grow-[1.5]">
@@ -241,7 +242,11 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                             }}
                             className="absolute top-12 min-w-[90vw] overflow-hidden sm:min-w-max sm:!translate-x-0 left-1/2 sm:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full"
                         >
-                            <div className="py-1 shadow-onlyLight text-sm flex flex-col rounded-xl border border-divider dark:border-divider-dark text-left overflow-y-auto max-h-[400px] sm:max-h-[300px]">
+                            <div
+                                className={`${
+                                    inHome ? 'sm:max-h-[250px]' : 'sm:max-h-[300px]'
+                                } py-1 shadow-onlyLight text-sm flex flex-col rounded-xl border border-divider dark:border-divider-dark text-left max-h-[400px] overflow-y-auto`}
+                            >
                                 {seasonsFilter.map((item, index) => (
                                     <div
                                         onClick={() => {
@@ -251,8 +256,8 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                                         key={index}
                                         className="px-3 sm:px-4 sm:space-x-2 py-2 hover:bg-hover-1 dark:hover:bg-hover-dark cursor-pointer flex sm:items-center flex-col space-y-2 sm:space-y-0 sm:flex-row"
                                     >
-                                        <div className="-ml-4 sm:ml-0 text-[10px] leading-[12px] whitespace-nowrap w-max">{progress(item)}</div>
-                                        <span className="">{item?.title_detail?.[language]} </span>
+                                        <div className="-ml-4 sm:ml-0 text-[10px] leading-[12px] sm:text-sm whitespace-nowrap w-max">{progress(item)}</div>
+                                        <span className="sm:text-base">{item?.title_detail?.[language]} </span>
                                     </div>
                                 ))}
                             </div>

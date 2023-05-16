@@ -233,7 +233,7 @@ export default function Vote() {
                                 />
                             </div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark text-[0.75rem] leading-6">
+                                <span className="text-txtSecondary dark:text-gray-4 text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
                                 <span className="text-[0.75rem] text-txtPrimary dark:text-txtPrimary-dark">{`${formatNumber(
@@ -270,7 +270,7 @@ export default function Vote() {
                                 />
                             </div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark text-[0.75rem] leading-6">
+                                <span className="text-txtSecondary dark:text-gray-4 text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
                                 <span className="text-[0.75rem] text-txtPrimary dark:text-txtPrimary-dark">{`${formatNumber(

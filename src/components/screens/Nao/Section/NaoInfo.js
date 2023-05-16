@@ -53,32 +53,32 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                     </div>
                     <div className="h-[1px] mx-0 my-4 sm:h-auto sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-7 sm:my-0"></div>
                     <div className="flex flex-col justify-between gap-3 w-full text-sm sm:text-base">
-                        <div className="flex items-center justify-between space-x-10">
+                        <div className="flex items-center justify-between space-x-2">
                             <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:holders_wallet')}</label>
                             <div className="flex items-center space-x-2">
                                 {ammData ? (
-                                    <div className="font-semibold">{formatNumber(holders_wallet, assetNao?.assetDigit ?? 8)}</div>
+                                    <div className="font-semibold text-right break-all">{formatNumber(holders_wallet, assetNao?.assetDigit ?? 8)}</div>
                                 ) : (
                                     <div className="font-semibold">-</div>
                                 )}
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                             </div>
                         </div>
-                        <div className="flex items-center justify-between space-x-10">
+                        <div className="flex items-center justify-between space-x-2">
                             <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:liq_pools')}</label>
                             <div className="flex items-center space-x-2">
                                 {ammData ? (
-                                    <div className="font-semibold">{formatNumber(ammData, assetNao?.assetDigit ?? 8)}</div>
+                                    <div className="font-semibold text-right break-all">{formatNumber(ammData, assetNao?.assetDigit ?? 8)}</div>
                                 ) : (
                                     <div className="font-semibold">-</div>
                                 )}
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                             </div>
                         </div>
-                        <div className="flex items-center justify-between space-x-10">
+                        <div className="flex items-center justify-between space-x-2">
                             <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:governance_pool')}</label>
                             <div className="flex items-center space-x-2">
-                                <div className="font-semibold">{formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8)}</div>
+                                <div className="font-semibold text-right break-all">{formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8)}</div>
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                             </div>
                         </div>
