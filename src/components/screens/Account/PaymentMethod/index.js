@@ -6,7 +6,7 @@ import { useState, useEffect, useMemo } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import NoData from 'components/common/V2/TableV2/NoData';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
-import { API_DEFAULT_BANK_USER, API_GET_USER_BANK_LIST } from 'redux/actions/apis';
+import { API_DEFAULT_BANK_USER, API_GET_USER_BANK_LIST, API_POST_REMOVE_USER_BANK_ACCOUNT } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import fetchAPI from 'utils/fetch-api';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
@@ -25,6 +25,10 @@ import { getS3Url } from 'redux/actions/utils';
 
 const LIMIT_ROW = 5;
 
+const initState = {
+    accountBank: { isConfirm: false, isLoading: false }
+};
+
 const index = () => {
     const [search, setSearch] = useState('');
     const user = useSelector((state) => state.auth?.user);
@@ -38,7 +42,7 @@ const index = () => {
 
     const { t } = useTranslation();
 
-    const [accountBank, setAccountBank] = useState({ isConfirm: false, isLoading: false });
+    const [accountBank, setAccountBank] = useState(initState.accountBank);
 
     const [loadingListUserBank, setLoadingListUserBank] = useState(false);
     const [listUserBank, setListUserBank] = useState([]);
@@ -118,9 +122,8 @@ const index = () => {
                 bankAccountId
             }
         })
-            .then(({ status, data }) => {
+            .then(({ status }) => {
                 const isSuccess = status === ApiStatus.SUCCESS;
-
                 if (isSuccess) {
                     toast({ text: t('payment-method:set_default_bank_success'), type: 'success' });
                     fetchListUserBank();
@@ -145,22 +148,29 @@ const index = () => {
     };
 
     const onConfirm = async () => {
+        setAccountBank((prev) => ({ ...prev, isLoading: !prev.isLoading }));
         try {
-            setAccountBank((prev) => ({ ...prev, isLoading: !prev.isLoading }));
-            const data = await fetchAPI({
-                url: API_DEFAULT_BANK_USER,
+            const { bankAccountId = '' } = accountBank;
+            const { status, message } = await fetchAPI({
+                url: API_POST_REMOVE_USER_BANK_ACCOUNT,
                 options: {
                     method: 'POST'
                 },
                 params: {
-                    bankAccountId: '223123'
+                    bankAccountId
                 }
             });
-            toast({ text: t('payment-method:confirm.noti_text'), type: 'success' });
+            if (status === 'ok') {
+                toast({ text: t('payment-method:confirm.noti_text'), type: 'success' });
+                fetchListUserBank();
+                currentPage > 1 && setCurrentPage(1);
+            } else {
+                console.error(message);
+            }
         } catch (error) {
             console.error(error);
         } finally {
-            setAccountBank((prev) => ({ ...prev, isLoading: false, isConfirm: false }));
+            setAccountBank(initState.accountBank);
         }
     };
 
@@ -185,7 +195,7 @@ const index = () => {
                 )}
             >
                 <div className="flex flex-col justify-center items-center text-center">
-                    <img src={'/images/icon/ic_warning_2.png'} className="mr-3" width={80} height={80} alt="" />
+                    <img src={getS3Url('/images/icon/ic_warning_2.png')} className="mr-3" width={80} height={80} alt="" />
                     <div className="dark:text-gray-4 text-txtPrimary text-2xl font-semibold mt-6">{t('payment-method:confirm.title')}</div>
                     <div className="dark:text-gray-7 text-gray-1 mt-4">{t('payment-method:confirm.text')}</div>
                     <ButtonV2 disabled={accountBank.isLoading} onClick={onConfirm} className="mt-10">
@@ -252,7 +262,7 @@ const index = () => {
                                                     {t('reference:referral.set_default')}
                                                 </ButtonV2>
                                                 <hr className="h-7 w-[1px] border-[1px] border-solid dark:border-divider-dark border-divider mx-3" />
-                                                <ButtonV2 variants="text" className="px-6 !text-base" onClick={() => handleRemoveBank(bankAccount?._id)}>
+                                                <ButtonV2 variants="text" className="px-6 !text-base" onClick={() => handleRemoveBank(bankAccount?._id || '')}>
                                                     {t('common:clear')}
                                                 </ButtonV2>
                                             </div>

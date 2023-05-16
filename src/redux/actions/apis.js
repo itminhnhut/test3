@@ -71,6 +71,7 @@ export const API_GET_USER_BANK_LIST = API_V3_PREFIX + 'payment/user_bank_account
 export const API_GET_BANK_ACCOUNT_NAME = API_V3_PREFIX + 'payment/bank_account_name';
 export const API_GET_BANK_AVAILABLE = API_V3_PREFIX + 'payment/available_banks';
 export const API_ADD_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/user_bank_accounts';
+export const API_POST_REMOVE_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/disable_user_bank_accounts';
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'futures/ticker';
@@ -332,5 +333,5 @@ export const API_SET_PHONE_VERIFY = API_PREFIX + 'user/set_phone_verify';
 
 // internal
 export const API_INTERNAL_FIND_USER = API_V3_PREFIX + 'spot/internal-find-user';
-export const API_INTERNAL_TRANSFER= API_V3_PREFIX + 'spot/internal-transfer';
+export const API_INTERNAL_TRANSFER = API_V3_PREFIX + 'spot/internal-transfer';
 export const API_INTERNAL_TRANSFER_HISTORY = API_V3_PREFIX + 'spot/internal-transfer-history';
