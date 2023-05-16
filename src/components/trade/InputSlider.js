@@ -130,7 +130,7 @@ const Slider = ({
 
     function handleMouseDown(e) {
         if (disabled) return;
-        clearTimeout(timer.current)
+        clearTimeout(timer.current);
         e.preventDefault();
         e.stopPropagation();
         e.nativeEvent.stopImmediatePropagation();
@@ -198,7 +198,7 @@ const Slider = ({
     }
 
     const onHideTooltip = () => {
-        clearTimeout(timer.current)
+        clearTimeout(timer.current);
         timer.current = setTimeout(() => {
             setDraging(false);
         }, 300);
@@ -206,7 +206,7 @@ const Slider = ({
 
     function handleTrackMouseDown(e) {
         if (disabled) return;
-
+        setDraging(true);
         e.preventDefault();
         const clientPos = getClientPosition(e);
         const rect = container.current.getBoundingClientRect();
