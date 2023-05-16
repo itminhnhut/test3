@@ -63,13 +63,12 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
     }, [search]);
 
     const handleSearchToUser = async () => {
-        friendList.length > 0 && setFriendList([]);
+        setFriendList([]);
         await handleListFriend();
     };
 
     const handleChangeSearch = (value) => {
         setSearch(value);
-        friendList.length > 0 && setFriendList([]);
     };
 
     return isDesktop ? (
