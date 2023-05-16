@@ -40,10 +40,10 @@ const onDownload = (key) => {
     let url = '';
     switch (key) {
         case 'app_store':
-            url = 'https://apps.apple.com/us/app/onus-invest-btc-eth-doge/id1498452975';
+            url = 'https://apps.apple.com/app/id1480302334';
             break;
         case 'google_play':
-            url = 'https://play.google.com/store/apps/details?id=com.vndc';
+            url = 'https://play.google.com/store/apps/details?id=com.namicorp.exchange';
             break;
         default:
             break;

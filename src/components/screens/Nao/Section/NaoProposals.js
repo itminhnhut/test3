@@ -108,7 +108,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         <Progressbar percent={Math.ceil((totalVoteYes / totalPool) * 100)} height={6} />
                     </div>
                     <div className="flex flex-row justify-between">
-                        <span className="text-txtSecondary dark:text-gray-4 text-xs sm:text-base">{t('nao:vote:vote_rating')}</span>
+                        <span className="text-txtSecondary dark:text-gray-4 text-xs sm:text-sm">{t('nao:vote:vote_rating')}</span>
                         <div className="flex flex-row gap-2">
                             <div className="flex flex-row items-center gap-2">
                                 <SvgChecked className="w-3 h-3 flex-shrink-0" />
