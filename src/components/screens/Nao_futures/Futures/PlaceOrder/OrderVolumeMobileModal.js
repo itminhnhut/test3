@@ -130,6 +130,7 @@ const OrderVolumeMobileModal = (props) => {
             <div className='mb-8'>
                 <Slider
                     useLabel
+                    useTooltip
                     positionLabel='top'
                     onusMode
                     labelSuffix='%'
