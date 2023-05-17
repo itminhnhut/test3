@@ -263,7 +263,7 @@ const index = () => {
                                                 </ButtonV2>
                                                 <hr className="h-7 w-[1px] border-[1px] border-solid dark:border-divider-dark border-divider mx-3" />
                                                 <ButtonV2 variants="text" className="px-6 !text-base" onClick={() => handleRemoveBank(bankAccount?._id || '')}>
-                                                    {t('common:clear')}
+                                                    {t('payment-method:remove')}
                                                 </ButtonV2>
                                             </div>
                                         ))}

@@ -20,6 +20,7 @@
     "set_default_bank_success": "Đã thay đổi ngân hàng mặc định",
     "please_input_account_num": "Vui lòng nhập số tài khoản",
     "validate_input_account": "Số tài khoản không hợp lệ",
+    "remove": "Xoá",
     "confirm": {
         "title": "Xóa phương thức thanh toán",
         "text": "Tài khoản bị xóa có thể thêm lại bằng cách thêm phương thức thanh toán. Tài khoản bị xóa không thể thêm trên tài khoản Nami khác",

@@ -20,6 +20,7 @@
     "set_default_bank_success": "Default bank changed",
     "please_input_account_num": "Please, enter your account number",
     "validate_input_account": "Invalid account",
+    "remove": "Remove",
     "confirm": {
         "title": "Remove payment method",
         "text": "Removed account can be re-added by adding payment method. However, this account can't be added on other Nami accounts",
