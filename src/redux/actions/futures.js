@@ -13,7 +13,8 @@ import {
     API_GET_FUTURES_USER_SETTINGS,
     API_SET_FUTURES_MARGIN_MODE,
     API_SET_FUTURES_POSITION_MODE,
-    API_UPDATE_FUTURES_SYMBOL_VIEW
+    API_UPDATE_FUTURES_SYMBOL_VIEW,
+    API_GET_NAO_FUTURES_SETTING
 } from './apis';
 import { ApiStatus, TRADING_MODE } from './const';
 import {
@@ -27,10 +28,11 @@ import {
     SET_FUTURES_PAIR_CONFIGS,
     SET_FUTURES_SETTING,
     SET_FUTURES_USE_SLTP,
-    SET_FUTURES_USER_SETTINGS
+    SET_FUTURES_USER_SETTINGS,
 } from './types';
 import { favoriteAction } from './user';
 import { checkInFundingTime, checkLargeVolume, formatNumber } from 'redux/actions/utils';
+import isEmpty from 'lodash/isEmpty';
 
 export const setUsingSltp = (payload) => (dispatch) => dispatch({
     type: SET_FUTURES_USE_SLTP,
@@ -352,11 +354,21 @@ export const updateSymbolView = ({ symbol }) => async (dispatch) => {
 };
 
 export const fetchFuturesSetting = (params) => async (dispatch) => {
-    const { data } = await Axios[params ? 'post' : 'get'](API_GET_FUTURES_SETTING, { ...params });
+    const api = params?.isNao ? API_GET_NAO_FUTURES_SETTING : API_GET_FUTURES_SETTING;
+    const isUpdate = !isEmpty(params);
+    if (params?.isNao) delete params?.isNao;
+    const { data } = await Axios[isUpdate ? 'post' : 'get'](api, { ...params });
     if (data?.status === ApiStatus.SUCCESS) {
         dispatch({
-            type: params ? SET_FUTURES_SETTING : GET_FUTURES_SETTING,
-            payload: params ? params : data?.data,
+            type: isUpdate ? SET_FUTURES_SETTING : GET_FUTURES_SETTING,
+            payload: isUpdate ? params : data?.data
         });
     }
+};
+
+export const setFuturesSetting = (params) => async (dispatch) => {
+    dispatch({
+        type: SET_FUTURES_SETTING,
+        payload: params
+    });
 };

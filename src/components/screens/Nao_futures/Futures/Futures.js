@@ -125,7 +125,7 @@ const FuturesMobile = () => {
 
     useEffect(() => {
         dispatch(getFuturesMarketWatch());
-        dispatch(fetchFuturesSetting());
+        dispatch(fetchFuturesSetting({ isNao: true }));
         getCampaignStatus();
         emitWebViewEvent('nami_futures');
     }, []);
