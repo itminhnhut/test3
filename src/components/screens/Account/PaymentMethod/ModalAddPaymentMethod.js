@@ -19,6 +19,7 @@ import SearchBoxV2 from 'components/common/SearchBoxV2';
 import Image from 'next/image';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import SwapWarning from 'components/svg/SwapWarning';
+import useDebounce from 'hooks/useDebounce';
 
 const regex = /^[0-9]*$/; // chỉ cho phép nhập các ký tự từ 0 đến 9 hoặc giá trị rỗng
 
@@ -192,6 +193,7 @@ const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark }) =>
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
     const [search, setSearch] = useState('');
+    const reboundSearch = useDebounce(search, 300);
 
     useOutsideClick(ref, () => {
         setOpen(false);
@@ -200,11 +202,14 @@ const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark }) =>
     const [listItems, setListItems] = useState([]);
 
     useEffect(() => {
-        if (!search && listData?.length === 0) setListItems([]);
-        else {
-            setListItems(listData.filter((eachData) => eachData.bank_name.toLowerCase().includes(search.toLowerCase())));
+        if (!reboundSearch && listData?.length === 0) {
+            setListItems([]);
+        } else {
+            const bankByName = listData.filter((bank) => bank.bank_name.toLowerCase().includes(reboundSearch.toLowerCase()));
+            const bankByKey = listData.filter((bank) => bank.bank_key.toLowerCase().includes(reboundSearch.toLowerCase()));
+            setListItems([...bankByName, ...bankByKey]);
         }
-    }, [search, listData]);
+    }, [reboundSearch, listData]);
 
     const internalOnChange = (bank) => {
         if (isFunction(onChange)) onChange(bank);
@@ -251,11 +256,11 @@ const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark }) =>
                         />
                     </div>
                     <ul className="mt-6 max-h-[200px] overflow-y-auto">
-                        {listItems?.length ? (
-                            listItems.map((item) => (
+                        {listItems?.length > 0 ? (
+                            listItems.map((item, key) => (
                                 <li
                                     className="cursor-pointer flex items-center justify-between py-3 px-4 mt-3 first:mt-0 hover:bg-hover dark:hover:bg-hover-dark transition"
-                                    key={item?.bank_code}
+                                    key={`${item?.bank_code}_${item?.bank_key}_${key}`}
                                     onClick={() => internalOnChange(item)}
                                 >
                                     <div className={`flex items-center gap-x-3`}>
@@ -281,7 +286,7 @@ const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark }) =>
 };
 
 const BankList = styled.div.attrs(({ ref }) => ({
-    className: `transition absolute right-0 bottom-full py-4 mb-2 w-full max-h-[292px] z-20 rounded-xl 
+    className: `transition absolute right-0 bottom-full py-4 mb-2 w-full max-h-[292px] z-20 rounded-xl
     border border-divider dark:border-divider-dark bg-white dark:bg-dark-4
     shadow-card_light dark:shadow-popover`,
     ref: ref
