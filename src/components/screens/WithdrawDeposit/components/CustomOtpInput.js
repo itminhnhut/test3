@@ -80,10 +80,13 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
     const onConfirmHandler = async (otp) => {
         try {
             const response = await onConfirm(otp);
+            console.log("___here: ", response);
             // Lưu ý: Hàm onConfirm cần trả về Response
-            if (response?.status === ApiResultCreateOrder.INVALID_OTP || response.status !== ApiStatus.SUCCESS) {
-                onFocusFirstInput();
-                setState({ otp: INITAL_OTP_STATE, isError: true });
+            if(response) {
+                if (response?.status === ApiResultCreateOrder.INVALID_OTP || response.status !== ApiStatus.SUCCESS) {
+                    onFocusFirstInput();
+                    setState({ otp: INITAL_OTP_STATE, isError: true });
+                }
             }
         } catch (error) {
             onFocusFirstInput();
@@ -118,7 +121,7 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
             {state.modes.map((mode) => (
                 <div key={mode}>
                     <div className={classNames('mb-6', { '!mb-8': isTfaEnabled })}>
-                        {mode !== MODE_OTP.TFA && <div className="txtPri-3"> {t('dw_partner:verify')}</div>}
+                        {mode !== MODE_OTP.TFA && <div className="txtPri-3"> {mode === MODE_OTP.SMART_OTP ? "Xác minh Smart OTP" : t('dw_partner:verify')}</div>}
                         {mode !== MODE_OTP.TFA && <div className="txtSecond-2 mt-4">{t(`dw_partner:otp_code_send_to_${mode}`)}</div>}
                     </div>
 
@@ -152,12 +155,11 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
                     </div>
 
                     <div
-                        className={classNames('flex items-center', {
-                            'justify-between': mode !== MODE_OTP.TFA,
-                            'justify-end': mode === MODE_OTP.TFA
+                        className={classNames('flex items-center justify-between', {
+                            '!justify-end': mode === MODE_OTP.TFA || mode === MODE_OTP.SMART_OTP
                         })}
                     >
-                        {mode !== MODE_OTP.TFA && (
+                        {(mode !== MODE_OTP.TFA && mode !== MODE_OTP.SMART_OTP) && (
                             <div className="flex items-center space-x-2">
                                 <span className="txtSecond-2">{t('dw_partner:not_received_otp')}</span>
                                 <Countdown

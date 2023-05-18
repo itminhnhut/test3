@@ -43,7 +43,8 @@ const CardInput = () => {
         amount: '',
         loadingConfirm: false,
         showOtp: false,
-        otpExpireTime: null
+        otpExpireTime: null,
+        isUseSmartOtp: false
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
@@ -337,6 +338,7 @@ const CardInput = () => {
                     setState({ showOtp: false });
                 }}
                 loading={state.loadingConfirm}
+                isUseSmartOtp={state.isUseSmartOtp}
             />
             <ModalConfirm
                 mode={MODE.USER}

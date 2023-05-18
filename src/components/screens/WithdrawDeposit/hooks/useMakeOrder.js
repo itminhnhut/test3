@@ -27,6 +27,7 @@ const useMakeOrder = ({ setState, input }) => {
     const onMakeOrderHandler = async (otp) => {
         try {
             setState({ loadingConfirm: true });
+
             const orderResponse = await createNewOrder({
                 assetId,
                 bankAccountId: side === SIDE.BUY ? partnerBank?._id : accountBank?._id,
@@ -37,11 +38,16 @@ const useMakeOrder = ({ setState, input }) => {
             });
 
             if (orderResponse && (orderResponse.status === ApiStatus.SUCCESS || orderResponse.status === ApiResultCreateOrder.TOO_MUCH_REQUEST)) {
-                if (orderResponse.data.remaining_time) {
-                    setState({ showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time });
+                // ____________here
+                if(orderResponse.data.use_smart_otp) {
+                    setState({showOtp: true, isUseSmartOtp: true })
                 } else {
-                    onMakeOrderSuccess(orderResponse.data);
-                    return;
+                    if (orderResponse.data.remaining_time) {
+                        setState({ showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time });
+                    } else {
+                        onMakeOrderSuccess(orderResponse.data);
+                        return;
+                    }
                 }
             } else {
                 if (orderResponse?.status === ApiResultCreateOrder.INVALID_OTP) {
