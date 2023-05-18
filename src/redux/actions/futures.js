@@ -355,8 +355,8 @@ export const updateSymbolView = ({ symbol }) => async (dispatch) => {
 
 export const fetchFuturesSetting = (params) => async (dispatch) => {
     const api = params?.isNao ? API_GET_NAO_FUTURES_SETTING : API_GET_FUTURES_SETTING;
-    const isUpdate = !isEmpty(params);
     if (params?.isNao) delete params?.isNao;
+    const isUpdate = !isEmpty(params);
     const { data } = await Axios[isUpdate ? 'post' : 'get'](api, { ...params });
     if (data?.status === ApiStatus.SUCCESS) {
         dispatch({

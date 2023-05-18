@@ -27,11 +27,11 @@ const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, fo
     useEffect(() => {
         const onHandleSetting = (string) => {
             let convertedObject = {};
-            const dataFilter = string.split(';').forEach((item) => {
+            string.split(';').forEach((item) => {
                 const [key, value] = item.split('=');
                 convertedObject[key] = value === 'true';
             });
-            dispatch(setFuturesSetting({ setting: dataFilter }));
+            dispatch(setFuturesSetting({ setting: convertedObject }));
         };
         window.onHandleSetting = onHandleSetting;
     }, []);
