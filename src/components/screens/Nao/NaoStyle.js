@@ -3,7 +3,6 @@ import colors from 'styles/colors';
 import classNames from 'classnames';
 import CTooltip from 'components/common/Tooltip';
 import { Children, useMemo, useState } from 'react';
-import useWindowSize from 'hooks/useWindowSize';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
@@ -191,13 +190,13 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
     const isScroll = checkScrollBar(content.current, 'vertical');
     const _children = Children.toArray(children.filter((child) => child.props?.visible === true || child.props?.visible === undefined));
     return (
-        <CardNao id="nao-table" className={classNames('mt-8 !p-0 !justify-start', classWrapper)}>
+        <CardNao id="nao-table" className={classNames('mt-6 !p-0 !justify-start', classWrapper)}>
             <div ref={content} className={classNames('overflow-auto nao-table-content min-h-[200px]')}>
                 <div
                     ref={header}
                     className={classNames(
-                        'z-10 py-3 border-b border-divider dark:border-divider-dark bg-transparent overflow-hidden min-w-max w-full',
-                        'px-3 nao-table-header flex items-center text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium justify-between',
+                        'z-10 pt-10 pb-6 border-b border-divider dark:border-divider-dark bg-transparent overflow-hidden min-w-max w-full',
+                        'px-6 nao-table-header flex items-center text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium justify-between',
                         // 'pr-7'
                         classHeader
                     )}
@@ -227,7 +226,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                                     onClick={() => _onRowClick(item, index)}
                                     style={{ minWidth: 'fit-content' }}
                                     key={`row_${index}`}
-                                    className={classNames('px-3 flex items-center flex-1 w-full hover:bg-hover dark:hover:bg-hover-dark')}
+                                    className={classNames('px-6 flex items-center flex-1 w-full hover:bg-hover dark:hover:bg-hover-dark')}
                                 >
                                     {_children.map((child, indx) => {
                                         const width = child?.props?.width;

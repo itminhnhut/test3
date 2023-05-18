@@ -73,8 +73,8 @@ function NaoFuturesPerformance({ version }) {
 
     return (
         <>
-            <div className="mb-12 mt-20">
-                <div className="flex items-center flex-wrap justify-between gap-5">
+            <div className="mb-8">
+                <div className="flex items-center flex-wrap justify-between gap-6">
                     <TextLiner className="">{t('nao:onus_performance:title', { version })}</TextLiner>
                     <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
                         {/* <RangePopover
@@ -109,8 +109,8 @@ function NaoFuturesPerformance({ version }) {
                     </div>
                 </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                <CardNao className="rounded-lg">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-6">
+                <CardNao className="rounded-xl xl:w-1/3 !min-w-max">
                     <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
                         {t('nao:onus_performance:total_volume')} ({assetCodeFromId(filters.currency)})
                     </span>
@@ -120,14 +120,14 @@ function NaoFuturesPerformance({ version }) {
                     </span>
                 </CardNao>
 
-                <CardNao className="rounded-lg">
+                <CardNao className="rounded-xl xl:w-1/3 !min-w-max">
                     <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
                         {t('nao:year_summary:order_number')}
                     </span>
                     <span className="text-xl sm:text-2xl font-semibold mt-4">{formatNumber(general.order_number)}</span>
                 </CardNao>
 
-                <CardNao className="rounded-lg">
+                <CardNao className="rounded-xl xl:w-1/3 !min-w-max">
                     <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
                         {t('nao:year_summary:user_count')}
                     </span>

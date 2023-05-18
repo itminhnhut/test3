@@ -127,7 +127,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
     const showData = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
-        <section className="contest_individual_ranks pt-[4.125rem] text-sm sm:text-base">
+        <section className="contest_individual_ranks pt-20 text-sm sm:text-base">
             {minVolumeTeam && (
                 <Tooltip
                     className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
@@ -168,7 +168,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                 </div> */}
             </div>
             {top3.length > 0 && (
-                <div className="flex flex-wrap gap-5 sm:gap-[1.375rem] mt-[2.75rem] text-sm sm:text-base">
+                <div className="flex flex-wrap gap-5 sm:sm:gap-6 mt-8 text-sm sm:text-base">
                     {top3.map((item, index) => (
                         <CardNao
                             onClick={() => onShowDetail(item, tab)}
@@ -176,7 +176,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                             className="!p-5 !bg-transparent border border-divider dark:border-divider-dark"
                         >
                             <div className="flex items-center space-x-3">
-                                <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal">
+                                <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
                                     <ImageNao
                                         className="object-cover w-14 h-14 rounded-full"
                                         src={item?.avatar}
@@ -293,7 +293,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                             );
                         })
                     ) : (
-                        <div className={`flex items-center justify-center flex-col m-auto`}>
+                        <div className={`flex items-center justify-center flex-col m-auto pt-8`}>
                             <div className="block dark:hidden">
                                 <NoDataLightIcon />
                             </div>

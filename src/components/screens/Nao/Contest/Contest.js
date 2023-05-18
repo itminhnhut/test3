@@ -15,7 +15,7 @@ import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
 
 import Image from 'next/image';
-
+import { SocialFireIcon } from '../../../svg/SvgIcon';
 import classNames from 'classnames';
 import NaoHeader from '../NaoHeader';
 import NaoFooter from '../NaoFooter';
@@ -346,31 +346,31 @@ const Contest = (props) => {
 
     const renderTab = () => {
         return (
-            <ul className="tabMenu">
-                <li
-                    className={classNames('font-semibold mr-4 text-xs sm:text-sm w-[34%] sm:w-[162px] sm:h-[72px] flex relative', {
-                        active: tab === initState.tab1
-                    })}
+            <div className="flex items-center space-x-2">
+                <div
                     onClick={() => handleChangTab(initState.tab1)}
+                    className={classNames(
+                        'rounded-full ring-[1px] ring-divider dark:ring-divider-dark px-4 sm:px-5 py-2 sm:py-3 text-sm sm:text-base cursor-pointer text-txtSecondary-dark',
+                        {
+                            '!ring-teal !text-teal font-semibold': tab === initState.tab1
+                        }
+                    )}
                 >
                     {t('nao:contest:contest_ranking')}
-                </li>
-                <li
-                    className={classNames('font-semibold text-xs sm:text-sm w-[60%] sm:w-[250px] sm:h-[72px] flex relative !pl-2 sm:!pl-8 !justify-start', {
-                        active: tab === initState.tab2
-                    })}
+                </div>
+                <div
                     onClick={() => handleChangTab(initState.tab2)}
+                    className={classNames(
+                        'flex items-center space-x-2 rounded-full ring-[1px] ring-divider dark:ring-divider-dark px-4 sm:px-5 py-2 sm:py-3 text-sm sm:text-base cursor-pointer text-txtSecondary-dark',
+                        {
+                            '!ring-teal !text-teal font-semibold': tab === initState.tab2
+                        }
+                    )}
                 >
-                    {t('nao:contest:contest_special')}
-                    <div className="wrapper_star right-0 absolute top-0 border-[#24E0CF] bg-bgNaoStart flex items-center border-solid rounded-b-xl py-1 px-[18px]">
-                        <Image src={getS3Url('/images/contest/ic_star.png')} width="16px" height="16px" />
-                        <div className="ml-2 font-semibold text-sm leading-6">HOT</div>
-                    </div>
-                </li>
-                <li className="hidden lg:inline absolute right-0 top-0">
-                    <Image src={getS3Url('/images/contest/bg_champion.png')} width="274px" height="187px" />
-                </li>
-            </ul>
+                    <SocialFireIcon />
+                    <span>{t('nao:contest:contest_special')}</span>
+                </div>
+            </div>
         );
     };
 
@@ -437,16 +437,16 @@ const Contest = (props) => {
                     </div>
                     <div className="bg-gray-13 dark:bg-dark rounded-t-3xl">
                         <div className="px-4 pb-20 sm:pb-[120px] max-w-[72.5rem] w-full m-auto">
-                        <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} currencies={currencies} />
-                        {props?.season == SEASON_SPECIAL ? (
-                            <div className="tab1 overflow-hidden pt-[68px] lg:pt-[234px]">
-                                {renderTab()}
-                                {renderContentTab1()}
-                                {renderContentTab2()}
-                            </div>
-                        ) : (
-                            renderContestRank()
-                        )}
+                            <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} currencies={currencies} />
+                            {props?.season == SEASON_SPECIAL ? (
+                                <div>
+                                    {renderTab()}
+                                    {renderContentTab1()}
+                                    {renderContentTab2()}
+                                </div>
+                            ) : (
+                                renderContestRank()
+                            )}
                         </div>
                     </div>
                 </div>

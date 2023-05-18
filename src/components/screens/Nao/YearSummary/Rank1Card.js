@@ -29,7 +29,7 @@ export default function Rank1Card({
                 />
                 <div className="flex justify-between items-center flex-1">
                     <div className="flex items-center space-x-4">
-                        <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal">
+                        <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
                             <ImageNao
                                 className="object-cover"
                                 src={record?.avatar}
@@ -44,7 +44,7 @@ export default function Rank1Card({
                             </span>
                         </div>
                     </div>
-                    <div className="text-5xl pb-0 font-semibold lg:hidden">#1</div>
+                    <div className="text-6xl pb-0 font-semibold lg:hidden">#1</div>
                 </div>
                 <div className="md:w-[1px] md:h-auto h-0 bg-divider dark:bg-divider-dark md:mx-8 md:my-0 my-4" />
                 <div className="flex-1 flex flex-col justify-around space-y-3">
