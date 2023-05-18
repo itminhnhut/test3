@@ -43,18 +43,8 @@ const CurrencyPopup = (props) => {
                     setHoverItemsChose(assetCodeArray[index]);
                 }
             });
-            let handleFeesNAO = fees.filter((rs) => rs.assetId !== 86);
-            if (dataRow?.symbol?.indexOf("USDT") > -1) {
-                let handleFees = [
-                    handleFeesNAO[0],
-                    handleFeesNAO[4],
-                    ...handleFeesNAO?.slice(2, 4),
-                ];
-                setFees(handleFees);
-            } else {
-                let handleFees = handleFeesNAO.slice(0, 4);
-                setFees(handleFees);
-            }
+            const assetId = dataRow?.symbol?.indexOf('USDT') > -1 ? 72 : 22;
+            setFees(fees.filter((rs) => !(rs.assetId === 86 || rs.assetId === assetId)));
         }
     }, [dataRow]);
 
