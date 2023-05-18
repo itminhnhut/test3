@@ -482,7 +482,7 @@ export class MobileTradingView extends React.PureComponent {
                 editorFontsList: ['Inter', 'Sans'],
                 volumePaneSize: 'tiny'
             },
-            custom_css_url: '/library/trading_view/customized_mobile_chart.css?version=5.0.1'
+            custom_css_url: '/library/trading_view/customized_mobile_chart.css?version=5.0.2'
         };
 
         // Clear to solve config when load saved chart
