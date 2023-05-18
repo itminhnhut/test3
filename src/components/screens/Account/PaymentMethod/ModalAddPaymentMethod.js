@@ -23,13 +23,21 @@ import useDebounce from 'hooks/useDebounce';
 
 const regex = /^[0-9]*$/; // chỉ cho phép nhập các ký tự từ 0 đến 9 hoặc giá trị rỗng
 
+const initState = {
+    selectedBank: {},
+    bankNumber: '',
+    helperTextBankNumber: ''
+};
+
 const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, fetchListUserBank }) => {
-    const [bankNumber, setBankNumber] = useState('');
-    const [selectedBank, setSelectedBank] = useState({});
+    const [bankNumber, setBankNumber] = useState(initState.bankNumber);
+    const [selectedBank, setSelectedBank] = useState(initState.selectedBank);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
-    const [helperTextBankNumber, setHelperTextBankNumber] = useState('');
+    const [helperTextBankNumber, setHelperTextBankNumber] = useState(initState.helperTextBankNumber);
     const [listBankAvailable, setListBankAvailable] = useState([]);
+
+    const useRefResetSearch = useRef(false);
 
     useEffect(() => {
         fetchAPI({
@@ -65,7 +73,13 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
                     isSuccess,
                     msg: isSuccess ? '' : t('payment-method:bank_account_not_found')
                 });
-                if (isSuccess) fetchListUserBank();
+                if (isSuccess) {
+                    fetchListUserBank();
+                    setSelectedBank(initState.selectedBank);
+                    setBankNumber(initState.bankNumber);
+                    setHelperTextBankNumber(initState.helperTextBankNumber);
+                    useRefResetSearch.current = true;
+                }
             })
             .catch((e) => {
                 setResult({
@@ -161,7 +175,14 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
                 {/* Bank name */}
                 <div className="flex flex-col gap-y-2">
                     <span className="text-sm">{t('payment-method:bank_name')}</span>
-                    <BankNameInput t={t} listData={listBankAvailable} selected={selectedBank} onChange={(bank) => setSelectedBank(bank)} isDark={isDark} />
+                    <BankNameInput
+                        t={t}
+                        listData={listBankAvailable}
+                        selected={selectedBank}
+                        isResetSearch={useRefResetSearch}
+                        onChange={(bank) => setSelectedBank(bank)}
+                        isDark={isDark}
+                    />
                 </div>
                 {/* Bank number */}
                 <div className="flex flex-col gap-y-2">
@@ -189,11 +210,18 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
     );
 };
 
-const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark }) => {
+const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark, isResetSearch }) => {
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
     const [search, setSearch] = useState('');
     const reboundSearch = useDebounce(search, 300);
+
+    useEffect(() => {
+        if (isResetSearch.current) {
+            setSearch('');
+            isResetSearch.current = false;
+        }
+    }, [isResetSearch.current]);
 
     useOutsideClick(ref, () => {
         setOpen(false);
