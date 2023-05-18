@@ -100,7 +100,6 @@ export class MobileTradingView extends React.PureComponent {
         }
 
         if (prevProps.ordersList !== this.props.ordersList && !this.firstTime && this.props?.isShowSlTPLine) {
-            console.log('this.props?.isShowSlTPLine',this.props?.isShowSlTPLine)
             this.rawOrders();
         }
         if (prevProps?.isShowSlTPLine !== this.props?.isShowSlTPLine && !this.firstTime) {
