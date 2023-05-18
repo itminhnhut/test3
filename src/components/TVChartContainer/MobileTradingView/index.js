@@ -99,8 +99,30 @@ export class MobileTradingView extends React.PureComponent {
             this.handleActiveTime(this.props.initTimeFrame);
         }
 
-        if (prevProps.ordersList !== this.props.ordersList && !this.firstTime) {
+        if (prevProps.ordersList !== this.props.ordersList && !this.firstTime && this.props?.isShowSlTPLine) {
+            console.log('this.props?.isShowSlTPLine',this.props?.isShowSlTPLine)
             this.rawOrders();
+        }
+        if (prevProps?.isShowSlTPLine !== this.props?.isShowSlTPLine && !this.firstTime) {
+            if (this.props?.isShowSlTPLine) {
+                this.rawOrders();
+            } else {
+                this.oldOrdersList = [];
+                Object.keys(this.drawnOrder).map((line) => {
+                    this.drawnOrder[line].remove();
+                    delete this.drawnOrder[line];
+                });
+
+                Object.keys(this.drawnSl).map((line) => {
+                    this.drawnSl[line].remove();
+                    delete this.drawnSl[line];
+                });
+
+                Object.keys(this.drawnTp).map((line) => {
+                    this.drawnTp[line].remove();
+                    delete this.drawnTp[line];
+                });
+            }
         }
         if (prevProps.fullChart !== this.props.fullChart) {
             this.initWidget(this.props.symbol, this.props.fullChart);
@@ -460,7 +482,7 @@ export class MobileTradingView extends React.PureComponent {
                 editorFontsList: ['Inter', 'Sans'],
                 volumePaneSize: 'tiny'
             },
-            custom_css_url: '/library/trading_view/customized_mobile_chart.css?version=5.0.1'
+            custom_css_url: '/library/trading_view/customized_mobile_chart.css?version=5.0.2'
         };
 
         // Clear to solve config when load saved chart
@@ -495,7 +517,7 @@ export class MobileTradingView extends React.PureComponent {
             // if (this.props.isVndcFutures) {
             if (this.timer) clearTimeout(this.timer);
             this.timer = setTimeout(() => {
-                this.rawOrders();
+                if (this.props?.isShowSlTPLine) this.rawOrders();
                 this.drawHighLowArrows();
                 this.firstTime = false;
                 this.widget

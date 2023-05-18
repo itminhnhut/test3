@@ -5,7 +5,8 @@
     --primary-color: #0c0e14;
 }
 
-html, body {
+html,
+body {
     font-family: 'Inter', Arial, sans-serif;
     background: var(--primary-color) !important;
 }
@@ -20,7 +21,6 @@ html.theme-dark .chart-page {
 }
 
 html ._tv-dialog-content {
-
 }
 
 html ._tv-dialog-content .main-properties {
@@ -38,7 +38,7 @@ html ._tv-dialog {
 }
 
 html .pane-legend-title__details {
-    font-size: 10px!important;
+    font-size: 10px !important;
 }
 
 html.theme-dark .drawingToolbar-U3_QXRof- {
@@ -46,6 +46,10 @@ html.theme-dark .drawingToolbar-U3_QXRof- {
     border-right: 3px solid #222940 !important;
 }
 
-html.theme-dark .group-2JyOhh7Z-{
+html.theme-dark .group-2JyOhh7Z- {
     background-color: #0c0e14 !important;
+}
+
+html .pane-legend-line span{
+    font-size: 0.75rem !important;
 }

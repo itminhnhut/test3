@@ -335,7 +335,7 @@ const NaoPerformance = memo(() => {
             </div>
             {dataSource?.lastTimeUpdate && (
                 <div className="text-xs sm:text-sm mt-3 sm:mt-4 text-txtSecondary dark:text-txtSecondary-dark">
-                    {t('nao:contest:last_updated_time_dashboard', { minute: 5 })}: {formatTime(new Date(dataSource?.lastTimeUpdate))}
+                    {t('nao:contest:last_updated_time_dashboard', { minute: 5 })}: {formatTime(new Date(dataSource?.lastTimeUpdate), 'HH:mm dd/MM/yyyy')}
                 </div>
             )}
         </section>

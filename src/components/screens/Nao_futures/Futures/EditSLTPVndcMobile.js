@@ -390,7 +390,7 @@ const EditSLTPVndcMobile = ({
                             {
                                 'left-1/2 -translate-x-1/2 ml-[3px]': i > 0 && i < dotStep.current,
                                 '-left-1/2 translate-x-[-80%]': i === dotStep.current,
-                                '!text-txtPrimary dark:!text-txtPrimary-dark font-semibold': Number(i * size) === Number(data[key] > 0 ? percent[key] : 50) && onusMode,
+                                '!text-txtPrimary dark:!text-txtPrimary-dark font-medium': Number(i * size) === Number(data[key] > 0 ? percent[key] : 50) && onusMode,
                             }
                         )}
                     >
@@ -550,9 +550,10 @@ const EditSLTPVndcMobile = ({
                         {!slError?.isValid && slError?.msg.length && <div className='flex items-center mt-2 font-normal text-xs leading-3 text-red-2'><RedDot className='mr-[5px]' />{slError?.msg}</div>}
                     </>
                 }
-                <div className={`mt-2 pb-2 ${!show.sl ? 'hidden' : ''}`}>
+                <div className={`mt-4 pb-2 ${!show.sl ? 'hidden' : ''}`}>
                     <Slider
                         useLabel
+                        useTooltip
                         onusMode
                         labelSuffix="%"
                         x={percent.sl}
@@ -618,6 +619,7 @@ const EditSLTPVndcMobile = ({
                 <div className={`mt-2 ${!show.tp ? 'hidden' : ''}`}>
                     <Slider
                         useLabel
+                        useTooltip
                         onusMode
                         labelSuffix="%"
                         x={percent.tp}

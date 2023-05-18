@@ -129,7 +129,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         return (
             <div className="flex items-center w-full">
                 <img src={getS3Url(logoPath)} width={24} height={24} alt="" />
-                <div className="ml-2 flex-1">
+                <div className="ml-3 flex-1">
                     <div className="flex justify-between text-sm font-semibold">
                         <div className="">{assetConfig[assetId]?.assetCode}</div>
                         <div className="">
@@ -150,7 +150,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
             <div>
                 <div className="flex items-center w-full">
                     <img src={getS3Url(logoPath)} width={20} height={20} alt="" />
-                    <div className="ml-2 flex-1">
+                    <div className="ml-3 flex-1">
                         <div className="flex justify-between text-sm font-semibold">
                             <div className="">{assetConfig[assetId]?.assetCode}</div>
                             <div className="">{formatNumber(item.interest?.[assetId] || 0, assetConfig[assetId]?.assetDigit ?? 8)}</div>
