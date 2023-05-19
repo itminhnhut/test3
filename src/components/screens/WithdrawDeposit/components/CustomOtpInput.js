@@ -80,8 +80,8 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
     const onConfirmHandler = async (otp) => {
         try {
             const response = await onConfirm(otp);
-            console.log("___here: ", response);
             // Lưu ý: Hàm onConfirm cần trả về Response
+            console.log("response: ", response);
             if(response) {
                 if (response?.status === ApiResultCreateOrder.INVALID_OTP || response.status !== ApiStatus.SUCCESS) {
                     onFocusFirstInput();

@@ -14,7 +14,6 @@ import { ApiResultCreateOrder, ApiStatus } from 'redux/actions/const';
 import Spinner from 'components/svg/Spinner';
 import CustomOtpInput from './CustomOtpInput';
 import { MODE_OTP } from 'constants/constants';
-import toast from 'utils/toast';
 
 const OTP_REQUIRED_LENGTH = 6;
 
@@ -33,8 +32,11 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUse
             tfa: false
         },
         isError: false,
-        modes: OTP_MODE
+        modes: OTP_MODE,
+        validateSmartOtp: false,
+        errorTimes: 0
     });
+
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
@@ -102,20 +104,18 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUse
         } catch {}
     };
 
-    const [validateSmartOtp, setValidateSmartOtp] = useState(false);
 
     const onSubmitSmartOtp = async (code) => {
-        setValidateSmartOtp(true);
+        setState({validateSmartOtp: true})
 
         try {
             const response = await onConfirm({ smartOtp: code?.smartOtp });
-            console.log('___response: ', response);
             // if (response?.status !== ApiStatus.SUCCESS) toast({ text: t('dw_partner:error.invalid_otp'), type: 'warning', duration: 1500 });
             return response;
         } catch (error) {
             console.error('ERROR WHEN SUBMIT OTP CODE: ', error);
         } finally {
-            setValidateSmartOtp(false);
+            setState({ validateSmartOtp: false })
         }
     };
 
@@ -144,7 +144,7 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUse
             )}
         >
             {isUseSmartOtp ? (
-                <CustomOtpInput loading={validateSmartOtp} onConfirm={(otp) => onSubmitSmartOtp(otp)} modeOtp={MODE_OTP.SMART_OTP} />
+                <CustomOtpInput loading={state.validateSmartOtp} onConfirm={(otp) => onSubmitSmartOtp(otp)} modeOtp={MODE_OTP.SMART_OTP} />
             ) : (
                 <>
                     {state.modes.map((mode) => (

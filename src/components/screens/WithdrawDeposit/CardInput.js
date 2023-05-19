@@ -18,6 +18,7 @@ import useGetPartner from './hooks/useGetPartner';
 import FetchApi from 'utils/fetch-api';
 import { ModalConfirm } from './DetailOrder';
 import { MODE } from './constants';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const ModalOtp = dynamic(() => import('./components/ModalOtp'));
 const DWAddPhoneNumber = dynamic(() => import('components/common/DWAddPhoneNumber'));
@@ -44,7 +45,8 @@ const CardInput = () => {
         loadingConfirm: false,
         showOtp: false,
         otpExpireTime: null,
-        isUseSmartOtp: false
+        isUseSmartOtp: false,
+        showAlertDisableSmartOtp: false
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
@@ -348,6 +350,18 @@ const CardInput = () => {
                         visible: false
                     });
                 }}
+            />
+            <AlertModalV2
+                isVisible={state.showAlertDisableSmartOtp}
+                onClose={() => setState({showAlertDisableSmartOtp: false})}
+                textButton="Xác thực bằng Email"
+                onConfirm={() => {
+                     setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false })
+                     onMakeOrderHandler()
+                }}
+                type="error"
+                title={t('dw_partner:disabled_smart_otp_title')}
+                message={t('dw_partner:disabled_smart_otp_des')}
             />
         </>
     );

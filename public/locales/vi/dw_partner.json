@@ -139,9 +139,11 @@
     "phone": "Số điện thoại",
     "phone_placeholder": "Vui lòng nhập số điện thoại của bạn",
     "otp_code_send_to_phone": "Vui lòng nhập 6 kí tự đã được gửi đến số điện thoại của bạn.",
-    "smart_otp_des": "Vui lòng nhập mã Smart OTP được cung cấp trong ứng dụng Nami Exchange để xác nhận giao dịch",
+    "otp_code_send_to_smartOtp": "Vui lòng nhập mã Smart OTP được cung cấp trong ứng dụng Nami Exchange để xác nhận giao dịch",
     "add_phone_success": "Chúc mừng! Bạn đã xác minh số điện thoại thành công. Giờ đây, bạn đã có thể giao dịch qua ĐTNR",
     "resend_otp_success": "Một mã OTP mới đã được gửi đến số điện thoại của bạn.",
+    "disabled_smart_otp_title": "Vô hiệu hoá Smart OTP",
+    "disabled_smart_otp_des": "Tính năng Smart OTP đã bị vô hiệu hoá do nhập mã Smart OTP sai quá 5 lần. Vui lòng chuyển sang phương thức xác thực khác để tiếp tục.",
     "error": {
         "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
         "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",
@@ -155,7 +157,9 @@
         "phone_existed": "Số điện thoại đã tồn tại",
         "missing_phone": "Trường thông tin bắt buộc",
         "not_found_order": "Không tìm thấy lệnh #{{displayingId}} hoặc đang được xử lý, vui lòng tải lại hoặc liên hệ hỗ trợ",
-        "invalid_otp": "Mã OTP không hợp lệ. Vui lòng thử lại."
+        "invalid_otp": "Mã OTP không hợp lệ. Vui lòng thử lại.",
+        "invalid_secret": "Vui lòng xác nhận mã PIN trong ứng dụng điện thoại trước.",
+        "invalid_times": "Mã Smart OTP không hợp lệ lần thứ {{timesErr}}. Please try again."
     },
     "filter": {
         "a_day": "1 ngày",

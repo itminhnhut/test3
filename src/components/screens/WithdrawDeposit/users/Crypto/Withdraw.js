@@ -83,7 +83,7 @@ const ModalConfirm = ({  selectedAsset, selectedNetwork, open, address, memo, am
     const { t } = useTranslation();
 
     const postData = async (otp) => {
-        const result = await withdrawHelper(selectedAsset?.assetId, amount, selectedNetwork?.network, address, memo, otp);
+        const result = await withdrawHelper(selectedAsset?.assetId ?? "72", amount ?? 0, selectedNetwork?.network ?? 'ETH', address ?? "", memo, otp);
         return result;
     };
 
@@ -142,6 +142,7 @@ const ModalConfirm = ({  selectedAsset, selectedNetwork, open, address, memo, am
             />
             <ModalV2
                 isVisible={open}
+                // isVisible={true}
                 className="!max-w-[488px]"
                 onBackdropCb={onClose}
             >
@@ -168,15 +169,15 @@ const ModalConfirm = ({  selectedAsset, selectedNetwork, open, address, memo, am
                                     },
                                     {
                                         title: t('common:amount'),
-                                        value: `${formatNumber(amount, assetDigit)} ${assetCode}`
+                                        value: `${amount ? formatNumber(amount, assetDigit) : '--'} ${assetCode ?? ""}`
                                     },
                                     {
                                         title: t('common:fee'),
-                                        value: `${formatNumber(selectedNetwork?.withdrawFee, assetDigit)} ${assetCode}`
+                                        value: `${selectedNetwork?.withdrawFee ? formatNumber(selectedNetwork?.withdrawFee, assetDigit) : '--'} ${assetCode ?? ""}`
                                     },
                                     {
                                         title: t('wallet:will_receive'),
-                                        value: `${formatNumber(amount - selectedNetwork?.withdrawFee, assetDigit)} ${assetCode}`
+                                        value: `${amount - selectedNetwork?.withdrawFee ? formatNumber(amount - selectedNetwork?.withdrawFee, assetDigit) : '--'} ${assetCode ?? ""}`
                                     },
                                     {
                                         title: t('wallet:network'),

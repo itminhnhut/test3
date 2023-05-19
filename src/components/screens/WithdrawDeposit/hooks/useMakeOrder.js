@@ -37,13 +37,15 @@ const useMakeOrder = ({ setState, input }) => {
                 otp
             });
 
+            console.log("____orderResponse: ", orderResponse);
+
             if (orderResponse && (orderResponse.status === ApiStatus.SUCCESS || orderResponse.status === ApiResultCreateOrder.TOO_MUCH_REQUEST)) {
                 // ____________here
                 if(orderResponse.data.use_smart_otp) {
                     setState({showOtp: true, isUseSmartOtp: true })
                 } else {
                     if (orderResponse.data.remaining_time) {
-                        setState({ showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time });
+                        setState({ showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time, isUseSmartOtp: false });
                     } else {
                         onMakeOrderSuccess(orderResponse.data);
                         return;
@@ -66,11 +68,20 @@ const useMakeOrder = ({ setState, input }) => {
                             visible: true,
                             type: ORDER_TYPES.ERROR_EXCEEDING_LIMIT
                         });
+                    } else if(orderResponse?.status === ApiResultCreateOrder.SECRET_INVALID) {
+                        toast({ text: t('dw_partner:error.invalid_secret'), type: 'warning' });
+                    } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID) {
+                        toast({ text: t('dw_partner:error.invalid_times', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
+                    } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID_EXCEED_TIME) {
+                        console.log("_____here");
+                        setState({ showAlertDisableSmartOtp: true, isUseSmartOtp: false })
                     } else toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }
             }
+
             setState({ loadingConfirm: false });
-            sell;
+            return orderResponse
+            // sell;
         } catch (error) {
             console.log('error:', error);
             setState({ loadingConfirm: false });
