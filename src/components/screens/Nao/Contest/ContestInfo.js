@@ -152,10 +152,10 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                     </TabsNao>
                 )}
                 <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-9 mb-12 sm:mt-6 text-sm sm:text-base">
-                    <CardNao className={`!p-6 lg:!max-w-[375px] ${previous ? '' : '!justify-center space-y-3'}`}>
+                    <CardNao className={`!p-6 lg:!max-w-[375px] ${previous && contest_id !== 10 ? '' : '!justify-center space-y-3'}`}>
                         <label className="text-xl sm:text-2xl text-teal font-semibold leading-8 capitalize">{capitalize(userData?.name)}</label>
                         <div className=" text-txtSecondary dark:text-txtSecondary-dark flex flex-col items-start">
-                            {previous && <div className="leading-6">ID: {userData?.onus_user_id}</div>}
+                            {previous && contest_id !== 10 && <div className="leading-6">ID: {userData?.onus_user_id}</div>}
                             {/* <span className="text-gray-15 dark:text-gray-7 mx-2 sm:hidden">•</span> */}
                             <div className="flex text-txtSecondary dark:text-txtSecondary-dark leading-6 mt-1">
                                 {t('nao:contest:team_label')}:&nbsp;
@@ -183,7 +183,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                         </div>
                     </CardNao>
                     <CardNao className="!min-h-[136px] !py-3 sm:!py-5 w-full lg:w-max">
-                        {!previous && (
+                        {(!previous || contest_id === 10) && (
                             <div className="flex items-center justify-between md:space-x-6 flex-wrap md:flex-nowrap">
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">ID</label>

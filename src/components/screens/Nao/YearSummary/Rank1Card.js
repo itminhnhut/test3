@@ -8,7 +8,7 @@ import TickFbIcon from 'components/svg/TickFbIcon';
 const BackgroundTop1 = styled.div.attrs({
     className: 'rounded-xl'
 })`
-    background-image: ${() => `url(/images/contest/bg_top.png)`};
+    background-image: ${() => `url(${getS3Url('/images/contest/bg_top.png')})`};
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -31,7 +31,7 @@ export default function Rank1Card({ record, information = [] }) {
                         <div className="w-[4.25rem] h-[4.25rem] lg:w-[6.75rem] lg:h-[6.75rem] rounded-full p-1 border-[1.5px] border-teal flex items-center relative">
                             <img
                                 className="absolute top-[-18px] left-[-7px] lg:-top-7 lg:-left-3 w-[30px] h-[30px] lg:w-[50px] lg:h-[50px]"
-                                src={'/images/contest/ic_crown.png'}
+                                src={getS3Url('/images/contest/ic_crown.png')}
                                 alt="Nami NAO"
                             />
                             <ImageNao className="object-cover" src={record?.avatar} alt="" />

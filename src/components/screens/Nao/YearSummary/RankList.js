@@ -204,7 +204,7 @@ import { format } from 'date-fns';
 //     last_time_update: 1672504200040
 // };
 
-function RankList({ url = '', information = [], rankFieldName = '' }) {
+function RankList({ url = '', information = [], rankFieldName = '', version }) {
     const [data, setData] = useState({
         users: [],
         last_time_update: 0
@@ -314,7 +314,7 @@ function RankList({ url = '', information = [], rankFieldName = '' }) {
                     <Column
                         minWidth={150}
                         className="text-txtPrimary dark:text-txtPrimary-dark capitalize"
-                        title={'ID ONUS Futures'}
+                        title={`ID NAO Futures`}
                         fieldName="onus_user_id"
                     />
                     {information.map((item) => {

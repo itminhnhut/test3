@@ -57,7 +57,7 @@ export default function ({ version }) {
                             </p>
                         </div>
                         <div className="flex justify-center sm:mt-0 mt-10">
-                            <img width={353} className="sm:min-w-[500px]" src={`/images/nao/year_summary/banner_${version}.png`} alt="Nami Nao" />
+                            <img width={353} className="sm:min-w-[500px]" src={getS3Url(`/images/nao/year_summary/banner_${version}.png`)} alt="Nami Nao" />
                         </div>
                     </div>
                 </div>
@@ -69,6 +69,7 @@ export default function ({ version }) {
                         <div className="mt-12 md:mt-20">
                             <TextLiner className="font-semibold mb-6 md:mb-8">{t('nao:year_summary:pnl_ranking')}</TextLiner>
                             <RankList
+                                version={version}
                                 url={API_CONTEST_NAO_YEAR_SUMMARY_PNL}
                                 rankFieldName="rank_pnl"
                                 information={[
@@ -89,6 +90,7 @@ export default function ({ version }) {
                         <div className="mt-12 md:mt-20">
                             <TextLiner className="font-semibold mb-6 md:mb-8">{t('nao:year_summary:volume_ranking')}</TextLiner>
                             <RankList
+                                version={version}
                                 url={API_CONTEST_NAO_YEAR_SUMMARY_VOLUME}
                                 rankFieldName="rank_volume"
                                 information={[
@@ -106,9 +108,10 @@ export default function ({ version }) {
                             />
                         </div>
 
-                        <div className='mt-12 md:mt-20'>
+                        <div className="mt-12 md:mt-20">
                             <TextLiner className="font-semibold mb-6 md:mb-8">{t('nao:year_summary:total_trade_ranking')}</TextLiner>
                             <RankList
+                                version={version}
                                 url={API_CONTEST_NAO_YEAR_SUMMARY_ORDER}
                                 rankFieldName="rank_order"
                                 information={[
@@ -127,7 +130,7 @@ export default function ({ version }) {
                         </div>
 
                         <div className="mt-12 sm:mt-20 flex flex-col items-center">
-                            <img className="w-[59px] sm:w-[93px]" src={'/images/nao/year_summary/ic_nao_v1.png'} />
+                            <img className="w-[59px] sm:w-[93px]" src={getS3Url('/images/nao/year_summary/ic_nao_v1.png')} />
                             <span className="mt-4 sm:mt-6 text-sm sm:text-base font-semibold max-w-4xl text-center">{t('nao:year_summary:tks')}</span>
                         </div>
                     </div>

@@ -252,7 +252,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
     return (
         <div className="w-full h-full mt-20 sm:mt-[120px] first:mt-12 sm:first:mt-20">
             <div className="w-full flex flex-col sm:flex-row items-center sm:space-x-20 sm:border-b dark:border-b-gray-7">
-                <Image src={config.bg_champ} width="390px" height="252px" />
+                <Image src={getS3Url(config.bg_champ)} width="390px" height="252px" />
                 <div className="mt-4 sm:mt-0 text-center sm:text-left">
                     <div className="text-xl sm:text-6xl flex font-semibold justify-center space-x-1">
                         <span className="text-teal">{config?.total}</span>
