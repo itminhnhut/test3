@@ -374,7 +374,7 @@ const ContestTeamRanks = ({
                     </div>
                 </>
             ) : (
-                <div className='bg-dark-4'>
+                <div className="dark:bg-dark-4 rounded-xl">
                     <Table
                         loading={loading}
                         noItemsMessage={t('nao:contest:no_rank')}
@@ -429,9 +429,11 @@ const ContestTeamRanks = ({
                         <Column maxWidth={100} minWidth={100} align="right" className="" title={''} cellRender={renderActions} />
                         {/* formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY') */}
                     </Table>
-                    <div className="w-full hidden sm:flex justify-center py-8">
-                        <RePagination onusMode total={total} current={page} pageSize={10} onChange={(page) => setPage(page)} name="" />
-                    </div>
+                    {total > 1 && (
+                        <div className="w-full hidden sm:flex justify-center py-8">
+                            <RePagination onusMode total={total} current={page} pageSize={10} onChange={(page) => setPage(page)} name="" />
+                        </div>
+                    )}
                 </div>
             )}
 

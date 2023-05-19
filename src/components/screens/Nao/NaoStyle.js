@@ -10,6 +10,9 @@ import Skeletor from 'components/common/Skeletor';
 import _ from 'lodash';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import CheckCircle from 'components/svg/CheckCircle';
+import CrossCircle from 'components/svg/CrossCircle';
+import { WarningFilledIcon, RemoveCircleIcon } from 'components/svg/SvgIcon';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-xl sm:text-2xl font-semibold w-max text-txtPrimary dark:text-txtPrimary-dark'
@@ -53,15 +56,18 @@ export const Divider = styled.div.attrs({
 export const ButtonNaoVariants = {
     PRIMARY: 'PRIMARY',
     SECONDARY: 'SECONDARY',
-    DANGER: 'DANGER',
+    DANGER: 'DANGER'
 };
 export const ButtonNao = styled.div.attrs(({ disabled, variant, active = true }) => ({
-    className: classNames('text-center text-sm sm:text-base px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer h-10', {
-        'bg-bgBtnPrimary text-txtBtnPrimary': active && (!variant || variant === ButtonNaoVariants.PRIMARY), // default theme is primary
-        'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': variant === ButtonNaoVariants.SECONDARY || active === false,
-        'bg-red-2 text-white': variant === ButtonNaoVariants.DANGER,
-        '!bg-gray-12 dark:!bg-dark-2 text-txtDisabled dark:text-txtDisabled-dark': disabled
-    })
+    className: classNames(
+        'text-center text-sm sm:text-base px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer py-[10px] sm:py-3',
+        {
+            'bg-bgBtnPrimary text-txtBtnPrimary': active && (!variant || variant === ButtonNaoVariants.PRIMARY), // default theme is primary
+            'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': variant === ButtonNaoVariants.SECONDARY || active === false,
+            'bg-red-2 text-white': variant === ButtonNaoVariants.DANGER,
+            '!bg-gray-12 dark:!bg-dark-2 text-txtDisabled dark:text-txtDisabled-dark': disabled
+        }
+    )
 }))``;
 
 export const BackgroundHeader = styled.div.attrs({
@@ -88,7 +94,9 @@ export const Tooltip = ({ id, arrowColor, backgroundColor, className, children, 
             id={id}
             place={place}
             effect="solid"
-            className={classNames(`!opacity-100 !rounded-lg max-w-[250px] sm:max-w sm:w-full !bg-gray-15 dark:!bg-dark-1 text-white dark:text-gray-4 ${className}`)}
+            className={classNames(
+                `!opacity-100 !rounded-lg max-w-[250px] sm:max-w sm:w-full !bg-gray-15 dark:!bg-dark-1 text-white dark:text-gray-4 ${className}`
+            )}
             arrowColor={arrowColor ?? defaultTooltipBg}
             backgroundColor={backgroundColor ?? defaultTooltipBg}
             {...restProps}
@@ -196,7 +204,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                     ref={header}
                     className={classNames(
                         'z-10 pt-10 pb-6 border-b border-divider dark:border-divider-dark bg-transparent overflow-hidden min-w-max w-full',
-                        'px-6 nao-table-header flex items-center text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium justify-between',
+                        'px-6 nao-table-header flex items-center text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base justify-between',
                         // 'pr-7'
                         classHeader
                     )}
@@ -249,7 +257,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                                                 style={{ width, maxWidth, minWidth, textAlign: align }}
                                                 key={indx}
                                                 className={classNames(
-                                                    `min-h-[56px] flex items-center text-sm ${className} ${_align}`,
+                                                    `min-h-[56px] flex items-center text-sm sm:text-base ${className} ${_align}`,
                                                     'break-words mx-2',
                                                     { 'flex-1': indx !== 0 },
                                                     { 'ml-0': indx === 0 },
@@ -280,14 +288,16 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                             );
                         })
                     ) : (
-                        <div className={`flex items-center justify-center flex-col m-auto`}>
+                        <div className={`flex items-center justify-center flex-col m-auto pb-8`}>
                             <div className="block dark:hidden">
                                 <NoDataLightIcon />
                             </div>
                             <div className="hidden dark:block">
                                 <NoDataDarkIcon />
                             </div>
-                            <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1">{noItemsMessage ? noItemsMessage : t('common:no_data')}</div>
+                            <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1">
+                                {noItemsMessage ? noItemsMessage : t('common:no_data')}
+                            </div>
                         </div>
                     )}
                 </div>
@@ -327,7 +337,7 @@ export const useOutsideAlerter = (ref, cb) => {
     useEffect(() => {
         const handleClickOutside = (event, cb) => {
             if (ref.current && !ref.current?.contains(event.target)) {
-              if (cb) cb();
+                if (cb) cb();
             }
         };
         document.addEventListener('mousedown', (event) => handleClickOutside(event, cb));
@@ -378,7 +388,11 @@ export const TextField = (props) => {
                     readOnly={readOnly}
                     {...propsTextField}
                 />
-                {prefix && <div className={`${prefixClassName} text-sm sm:text-base leading-6 text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap`}>{prefix}</div>}
+                {prefix && (
+                    <div className={`${prefixClassName} text-sm sm:text-base leading-6 text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap`}>
+                        {prefix}
+                    </div>
+                )}
             </WrapInput>
             {error && helperText && (
                 <div className="flex items-center space-x-2 text-xs sm:text-sm text-red-2">
@@ -393,9 +407,8 @@ export const TextField = (props) => {
 export const WrapInput = styled.div.attrs(({ error }) => ({
     className: classNames('w-full relative flex items-center justify-between bg-gray-12 dark:bg-dark-2 px-3 py-2 rounded-md', { 'border border-red-2': error })
 }))`
-
     :hover {
-        border: ${({readOnly}) => readOnly ? 'none' : `solid 1px ${colors.teal}`};
+        border: ${({ readOnly }) => (readOnly ? 'none' : `solid 1px ${colors.teal}`)};
         &::after {
             display: none;
         }
@@ -455,8 +468,6 @@ export const ImageNao = ({ src, fallBack, ...props }) => {
     );
 };
 
-
-
 export const TabsNao = styled.div.attrs({
     className: 'flex items-center space-x-4 relative mt-4'
 })`
@@ -512,3 +523,41 @@ export const TabItemNao = styled.div.attrs(({ active }) => ({
         width: ${({ active }) => `calc(100% + ${active ? '-2px' : '18px'})`};
     } */
 `;
+
+export const VoteStatus = ({ iconClassName = '', className = '', status, statusText = '' }) => {
+    const renderStatus = () => {
+        switch (status) {
+            case 'Processing':
+                return (
+                    <>
+                        <WarningFilledIcon className={iconClassName} />
+                        <span className="font-semibold">{statusText}</span>
+                    </>
+                );
+            case 'Executed':
+                return (
+                    <>
+                        <CheckCircle className={iconClassName} />
+                        <span className="font-semibold">{statusText}</span>
+                    </>
+                );
+            case 'Failed':
+                return (
+                    <>
+                        <CrossCircle className={iconClassName} />
+                        <span className="font-semibold">{statusText}</span>
+                    </>
+                );
+            case 'Canceled':
+                return (
+                    <>
+                        <RemoveCircleIcon className={iconClassName} />
+                        <span className="font-semibold">{statusText}</span>
+                    </>
+                );
+            default:
+                return null;
+        }
+    };
+    return <div className={`flex space-x-2 items-center ${className}`}>{renderStatus()}</div>;
+};

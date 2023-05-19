@@ -73,7 +73,7 @@ function NaoFuturesPerformance({ version }) {
 
     return (
         <>
-            <div className="mb-8">
+            <div className="mb-6 sm:mb-8">
                 <div className="flex items-center flex-wrap justify-between gap-6">
                     <TextLiner className="">{t('nao:onus_performance:title', { version })}</TextLiner>
                     <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
@@ -84,12 +84,12 @@ function NaoFuturesPerformance({ version }) {
                             className="flex order-last"
                             popoverClassName={'lg:mr-2'}
                         /> */}
-                        <div className="order-first gap-2 flex gap-last h-10">
+                        <div className="order-first gap-2 flex gap-last h-9 sm:h-12">
                             <button
                                 type="BUTTON"
                                 className={classNames(
-                                    'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
-                                    { '!border-teal bg-teal/10 !text-teal font-semibold': filters.currency === WalletCurrency.VNDC }
+                                    'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[800px] ring-[1px] ring-divider dark:ring-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                    { '!ring-teal bg-teal/10 !text-teal font-semibold': filters.currency === WalletCurrency.VNDC }
                                 )}
                                 onClick={() => changeFilters({ currency: WalletCurrency.VNDC })}
                             >
@@ -98,8 +98,8 @@ function NaoFuturesPerformance({ version }) {
                             <button
                                 type="BUTTON"
                                 className={classNames(
-                                    'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
-                                    { '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': filters.currency !== WalletCurrency.VNDC }
+                                    'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[800px] ring-[1px] ring-divider dark:ring-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                    { '!ring-teal bg-teal bg-opacity-10 !text-teal font-semibold': filters.currency !== WalletCurrency.VNDC }
                                 )}
                                 onClick={() => changeFilters({ currency: WalletCurrency.USDT })}
                             >
@@ -110,7 +110,7 @@ function NaoFuturesPerformance({ version }) {
                 </div>
             </div>
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-6">
-                <CardNao className="rounded-xl xl:w-1/3 !min-w-max">
+                <CardNao className="rounded-xl xl:w-1/3 !min-w-max !p-6 sm:!p-8">
                     <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
                         {t('nao:onus_performance:total_volume')} ({assetCodeFromId(filters.currency)})
                     </span>
@@ -120,14 +120,14 @@ function NaoFuturesPerformance({ version }) {
                     </span>
                 </CardNao>
 
-                <CardNao className="rounded-xl xl:w-1/3 !min-w-max">
+                <CardNao className="rounded-xl xl:w-1/3 !min-w-max !p-6 sm:!p-8">
                     <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
                         {t('nao:year_summary:order_number')}
                     </span>
                     <span className="text-xl sm:text-2xl font-semibold mt-4">{formatNumber(general.order_number)}</span>
                 </CardNao>
 
-                <CardNao className="rounded-xl xl:w-1/3 !min-w-max">
+                <CardNao className="rounded-xl xl:w-1/3 !min-w-max !p-6 sm:!p-8">
                     <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark font-medium leading-7">
                         {t('nao:year_summary:user_count')}
                     </span>

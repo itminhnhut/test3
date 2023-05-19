@@ -1126,6 +1126,31 @@ export const SocialFireIcon = () => (
     </svg>
 );
 
+export const WarningFilledIcon = ({ size = 16, ...props }) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M8.59 1.688c-.231-.436-.949-.436-1.18 0l-6 11.334A.666.666 0 0 0 2 14h12a.665.665 0 0 0 .589-.978l-6-11.334zM8.666 12H7.333v-1.333h1.334V12zM7.333 9.334V6h1.334v3.334H7.333z"
+            fill="#FFC632"
+        />
+    </svg>
+);
+
+export const RemoveCircleIcon = ({ size = 16, ...props }) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clipPath="url(#4oup610i4a)">
+            <path
+                d="M8 1.332a6.67 6.67 0 0 0-6.667 6.667A6.67 6.67 0 0 0 8 14.665 6.67 6.67 0 0 0 14.667 8 6.67 6.67 0 0 0 8 1.332zm3.333 7.333H4.667V7.332h6.666v1.333z"
+                fill="#8694B3"
+            />
+        </g>
+        <defs>
+            <clipPath id="4oup610i4a">
+                <rect width="16" height="16" rx="8" fill="#fff" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 export {
     FutureInsurance,
     ArrowDownIcon,

@@ -76,7 +76,7 @@ module.exports = {
             lg: [
                 '1.125rem',
                 {
-                    lineHeight: '1.75rem'
+                    lineHeight: '1.625rem'
                 }
             ], // Body 2 18px
             xl: [

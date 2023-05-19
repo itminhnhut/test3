@@ -314,7 +314,7 @@ const TournamentList = ({ t, seasonsFilter, router, season, language }) => {
                             <div
                                 onClick={() => {
                                     router.push(`/contest/${item.season}`);
-                                    close();
+                                    setShowTournaments(false)
                                 }}
                                 key={index}
                                 className="px-6 py-3 hover:bg-hover-1 dark:hover:bg-hover-dark cursor-pointer flex items-center space-x-3 sm:flex-row"
