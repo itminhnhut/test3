@@ -447,7 +447,7 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
             className={classNames('sm:!max-w-[588px]', { '!bg-transparent': isMobile })}
             wrapClassName={isMobile ? '!p-0 !bg-transparent' : ''}
             isMobile={isMobile}
-            isVisible={true}
+            isVisible={visible}
             onBackdropCb={onClose}
             containerClassName={isMobile ? '!bg-black-800/[0.8]' : ''}
             btnCloseclassName="bg-transparent"
