@@ -433,5 +433,6 @@
         "download": "Tải xuống",
         "reward_received": "Nhận thưởng thành công"
     },
-    "wallet": "Ví {{wallet}}"
+    "wallet": "Ví {{wallet}}",
+    "reload": "Tải lại"
 }
