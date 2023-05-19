@@ -314,7 +314,7 @@ function RankList({ url = '', information = [], rankFieldName = '', version }) {
                     <Column
                         minWidth={150}
                         className="text-txtPrimary dark:text-txtPrimary-dark capitalize"
-                        title={`ID NAO Futures`}
+                        title={`user ID`}
                         fieldName="onus_user_id"
                     />
                     {information.map((item) => {
