@@ -108,7 +108,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                         JSON.stringify({
                             type: 'lucky_daily',
                             ticket: { ...dataSource?.[active], total_reward: data?.total_reward, unit: 'VNDC' },
-                            bg: getS3Url(`/images/screen/futures/luckdraw/bg_claimed_mb.png`)
+                            bg: getS3Url(`/images/screen/futures/luckdraw/bg_claimed_mb_v2.png`)
                         })
                     );
                 } else {
@@ -457,7 +457,7 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
             <div ref={contentRef} className={classNames('relative overflow-hidden', { 'mx-6 min-h-[490px]': isMobile, 'h-[380px]': !isMobile })}>
                 <img
                     className="absolute z-[1] overflow-hidden w-full h-full object-cover"
-                    src={isMobile ? getS3Url(`/images/screen/futures/luckdraw/bg_claimed_mb_v2.png`) : 'https://nami.exchange/bg_claimed_v2.png'}
+                    src={isMobile ? getS3Url(`/images/screen/futures/luckdraw/bg_claimed_mb_v2.png`) : 'https://nami.exchange/images/bg_claimed_v2.png'}
                 />
                 <div className={classNames('space-y-8 flex flex-col items-center relative z-10 h-full', { 'pt-[5.875rem]': isMobile })}>
                     <div className="flex flex-col items-center">
