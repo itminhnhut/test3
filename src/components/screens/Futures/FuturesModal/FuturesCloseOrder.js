@@ -213,7 +213,8 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
                 price: +price,
                 useQuoteQty: true,
                 closeVolume: +volume,
-                special_mode: 1
+                special_mode: 1,
+                type: isPending ? 'CANCEL_ORDER' : 'CLOSE_POSITION'
             };
             let isLargeVolume = false;
             const isPartialClose = partialClose && percent < 100;

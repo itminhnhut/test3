@@ -160,7 +160,6 @@ const Slider = ({
 
     const handleMouseUp = (e) => {
         e.preventDefault();
-        e.stopPropagation();
         onHideTooltip();
     };
 
