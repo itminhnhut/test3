@@ -315,9 +315,12 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
         const symbol = pair?.baseAsset + pair?.quoteAsset;
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        urlParams.set('symbol', symbol);
-        const url = `/${router.locale}/futures/funding-history?${urlParams.toString()}`;
-        window.history.pushState(null, null, url);
+        const isApp = urlParams.get('source');
+        if (!isApp) {
+            urlParams.set('symbol', symbol);
+            const url = `/${router.locale}/futures/funding-history?${urlParams.toString()}`;
+            window.history.pushState(null, null, url);
+        }
         setFilter({ ...filter, symbol: symbol });
         setActivePairList(false);
     };
