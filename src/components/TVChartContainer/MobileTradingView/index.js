@@ -16,6 +16,7 @@ import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import Tooltip from 'components/common/Tooltip';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const CONTAINER_ID = 'nami-mobile-tv';
 const CHART_VERSION = '1.0.9';
@@ -745,7 +746,7 @@ const Funding = ({ symbol }) => {
 
     return (
         <>
-            {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}
+            {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} symbol={symbol} />}
             <div className="flex items-center px-4 pt-3 pb-4 space-x-6 border-b-4 border-divider/70 dark:border-divider-dark/50">
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
                     <div className="flex items-center space-x-1" onClick={() => setShowModal(true)}>
@@ -798,11 +799,12 @@ const Funding = ({ symbol }) => {
     );
 }
 
-const ModalFundingRate = ({ onClose, t }) => {
+const ModalFundingRate = ({ onClose, t ,symbol}) => {
     const router = useRouter();
+    const [currentTheme] = useDarkMode();
 
     const onRedirect = () => {
-        router.push(`/${router.locale}/futures/funding-history?theme=dark&source=frame`);
+        router.push(`/${router.locale}/futures/funding-history?theme=${currentTheme}&source=frame&symbol=${symbol}`);
     };
 
     const onDetail = () => {
