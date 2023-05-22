@@ -120,7 +120,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
             percent: percent || 0,
             estimate: dataSource?.poolRevenueThisWeek,
             estimateUSD: dataSource?.poolRevenueThisWeekUSD,
-            totalEstUSDT: totalEstUSDT,
+            totalEstUSDT: totalEstUSDT * (percent / 100 || 0),
             totalStaked,
             availableStaked,
             totalProfit: dataSource?.totalProfit
@@ -140,7 +140,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     </div>
                     <div className="flex justify-between text-xs text-txtSecondary dark:text-txtSecondary-dark">
                         <div className="">{assetConfig[assetId]?.assetName}</div>
-                        <div className="">${formatNumber((data.estimateUSD?.[assetId] || 0) * (data.percent / 100 || 0), 0)}</div>
+                        <div className="">${formatNumber((data.estimateUSD?.[assetId] || 0) * (data.percent / 100 || 0), 4)}</div>
                     </div>
                 </div>
             </div>
@@ -159,7 +159,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         </div>
                         <div className="flex justify-between text-xs text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="">{assetConfig[assetId]?.assetName}</div>
-                            <div className=""> ${formatNumber(item.interestUSD?.[assetId] || 0, 0)}</div>
+                            <div className=""> ${formatNumber(item.interestUSD?.[assetId] || 0, 4)}</div>
                         </div>
                     </div>
                 </div>
@@ -307,11 +307,15 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             {listHitory.length > 0 ? (
                                 <div className="grid sm:grid-cols-2 gap-3">
                                     {listHitory.map((item, index) => {
+                                        const sumUSDT = Object.values(item.interestUSD).reduce((a, b) => a + b, 0);
                                         return (
                                             <CardNao key={index} className="rounded-xl border border-divider dark:border-none">
                                                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
                                                     {t('nao:pool:week', { value: listHitory.length - index })} {formatTime(item.fromTime, 'dd/MM/yyyy')} -{' '}
                                                     {formatTime(item.toTime, 'dd/MM/yyyy')}
+                                                </div>
+                                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm pt-1 mb-6">
+                                                    {t('nao:pool:equivalent')} ${formatNumber(sumUSDT, 4)}
                                                 </div>
                                                 <div className="mt-1 flex flex-col space-y-4">
                                                     <div className="w-full py-0.5">
