@@ -237,7 +237,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     </div>
                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark pt-0.5">
                         <span>{t('nao:pool:equivalent')}</span>&nbsp;
-                        <RefCurrency price={3862} quoteAsset={'VNDC'} />
+                        <RefCurrency price={data.totalProfit} quoteAsset={'VNDC'} />
                     </div>
 
                     <hr className="border-divider dark:border-divider-dark my-4" />
