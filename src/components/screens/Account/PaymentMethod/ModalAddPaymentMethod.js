@@ -79,6 +79,7 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
                     setBankNumber(initState.bankNumber);
                     setHelperTextBankNumber(initState.helperTextBankNumber);
                     useRefResetSearch.current = true;
+                    onBackdropCb();
                 }
             })
             .catch((e) => {
@@ -95,7 +96,6 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
     const onCloseAlert = () => {
         setHelperTextBankNumber('');
         setResult(null);
-        onBackdropCb();
     };
 
     const renderAlertNotification = useCallback(() => {
@@ -134,80 +134,81 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
     };
 
     return (
-        <ModalV2
-            loading={loading}
-            isVisible={isOpenModalAdd}
-            onBackdropCb={onBackdropCb}
-            className="!max-w-[488px]"
-            wrapClassName="px-0 flex flex-col tracking-normal overflow-auto"
-            btnCloseclassName="px-8"
-        >
-            {/* Title */}
-            <div className="txtPri-3 px-8">{t('payment-method:payment_method_add')}</div>
+        <>
+            <ModalV2
+                loading={loading}
+                isVisible={isOpenModalAdd}
+                onBackdropCb={onBackdropCb}
+                className="!max-w-[488px]"
+                wrapClassName="px-0 flex flex-col tracking-normal overflow-auto"
+                btnCloseclassName="px-8"
+            >
+                {/* Title */}
+                <div className="txtPri-3 px-8">{t('payment-method:payment_method_add')}</div>
 
-            {/* Notice */}
-            <div className="p-4 bg-gray-13 dark:bg-dark-4 flex items-center mt-6 mb-8 gap-x-4">
-                <BxsInfoCircle size={24} color={isDark ? colors.gray[7] : colors.gray[1]} />
-                <div className="text-xs leading-[16px]">{t('payment-method:privacy')}</div>
-            </div>
+                {/* Notice */}
+                <div className="p-4 bg-gray-13 dark:bg-dark-4 flex items-center mt-6 mb-8 gap-x-4">
+                    <BxsInfoCircle size={24} color={isDark ? colors.gray[7] : colors.gray[1]} />
+                    <div className="text-xs leading-[16px]">{t('payment-method:privacy')}</div>
+                </div>
 
-            <div className="px-8 flex flex-col gap-y-4 txtSecond-3">
-                {/* Banner Info */}
-                <div
-                    style={{
-                        backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${isDark ? 'dark' : 'light'}.png`)})`
-                    }}
-                    className="rounded-xl bg-cover bg-center dark:shadow-popover "
-                >
-                    <div className="w-full border p-6 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
-                        {user?.avatar ? (
-                            <img src={user?.avatar} alt="avatar_user" className="rounded-full w-12 h-12 bg-cover" />
-                        ) : (
-                            // <Image width={48} height={48} objectFit="cover" src={user?.avatar} alt="avatar_user" className="rounded-full" />
-                            <BxsUserCircle size={48} />
-                        )}
-                        <div>
-                            <div className="txtPri-1 pl-[1px]">{user?.name ?? '_'}</div>
-                            <div className="mt-1">{t('payment-method:owner_account')}</div>
+                <div className="px-8 flex flex-col gap-y-4 txtSecond-3">
+                    {/* Banner Info */}
+                    <div
+                        style={{
+                            backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${isDark ? 'dark' : 'light'}.png`)})`
+                        }}
+                        className="rounded-xl bg-cover bg-center dark:shadow-popover "
+                    >
+                        <div className="w-full border p-6 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
+                            {user?.avatar ? (
+                                <img src={user?.avatar} alt="avatar_user" className="rounded-full w-12 h-12 bg-cover" />
+                            ) : (
+                                // <Image width={48} height={48} objectFit="cover" src={user?.avatar} alt="avatar_user" className="rounded-full" />
+                                <BxsUserCircle size={48} />
+                            )}
+                            <div>
+                                <div className="txtPri-1 pl-[1px]">{user?.name ?? '_'}</div>
+                                <div className="mt-1">{t('payment-method:owner_account')}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Bank name */}
-                <div className="flex flex-col gap-y-2">
-                    <span className="text-sm">{t('payment-method:bank_name')}</span>
-                    <BankNameInput
-                        t={t}
-                        listData={listBankAvailable}
-                        selected={selectedBank}
-                        isResetSearch={useRefResetSearch}
-                        onChange={(bank) => setSelectedBank(bank)}
-                        isDark={isDark}
-                    />
+                    {/* Bank name */}
+                    <div className="flex flex-col gap-y-2">
+                        <span className="text-sm">{t('payment-method:bank_name')}</span>
+                        <BankNameInput
+                            t={t}
+                            listData={listBankAvailable}
+                            selected={selectedBank}
+                            isResetSearch={useRefResetSearch}
+                            onChange={(bank) => setSelectedBank(bank)}
+                            isDark={isDark}
+                        />
+                    </div>
+                    {/* Bank number */}
+                    <div className="flex flex-col gap-y-2">
+                        <span className="text-sm">{t('payment-method:account_number')}</span>
+                        <InputV2
+                            // type="number"
+                            className="!pb-0"
+                            value={bankNumber}
+                            onChange={(value) => onChangeBankNumber(value)}
+                            placeholder={t('payment-method:input_bank_account')}
+                            allowClear
+                            onBlur={onBlurInputBankNumber}
+                            error={helperTextBankNumber}
+                            onFocus={() => setHelperTextBankNumber('')}
+                        />
+                    </div>
                 </div>
-                {/* Bank number */}
-                <div className="flex flex-col gap-y-2">
-                    <span className="text-sm">{t('payment-method:account_number')}</span>
-                    <InputV2
-                        // type="number"
-                        className="!pb-0"
-                        value={bankNumber}
-                        onChange={(value) => onChangeBankNumber(value)}
-                        placeholder={t('payment-method:input_bank_account')}
-                        allowClear
-                        onBlur={onBlurInputBankNumber}
-                        error={helperTextBankNumber}
-                        onFocus={() => setHelperTextBankNumber('')}
-                    />
-                </div>
-            </div>
-            {/* Button action */}
-            <ButtonV2 disabled={!bankNumber || !selectedBank?.bank_code} loading={loading} className="mx-8 mt-10 w-auto" onClick={handleBtnAdd}>
-                {t('payment-method:add')}
-            </ButtonV2>
-
+                {/* Button action */}
+                <ButtonV2 disabled={!bankNumber || !selectedBank?.bank_code} loading={loading} className="mx-8 mt-10 w-auto" onClick={handleBtnAdd}>
+                    {t('payment-method:add')}
+                </ButtonV2>
+            </ModalV2>
             {renderAlertNotification()}
-        </ModalV2>
+        </>
     );
 };
 
