@@ -95,6 +95,7 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
     const onCloseAlert = () => {
         setHelperTextBankNumber('');
         setResult(null);
+        onBackdropCb();
     };
 
     const renderAlertNotification = useCallback(() => {
