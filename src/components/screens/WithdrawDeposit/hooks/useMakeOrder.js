@@ -71,9 +71,8 @@ const useMakeOrder = ({ setState, input }) => {
                     } else if(orderResponse?.status === ApiResultCreateOrder.SECRET_INVALID) {
                         toast({ text: t('dw_partner:error.invalid_secret'), type: 'warning' });
                     } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID) {
-                        toast({ text: t('dw_partner:error.invalid_times', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
+                        toast({ text: t('dw_partner:error.invalid_smart_otp', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
                     } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID_EXCEED_TIME) {
-                        console.log("_____here");
                         setState({ showAlertDisableSmartOtp: true, isUseSmartOtp: false })
                     } else toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }

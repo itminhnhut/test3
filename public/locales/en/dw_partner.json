@@ -159,7 +159,7 @@
         "not_found_order": "Order #{{displayingId}} not found or being processed, please reload or contact support.",
         "invalid_otp": "OTP is invalid. Please try again.",
         "invalid_secret": "Please confirm PIN code in app first.",
-        "invalid_times": "Otp is invalid {{timesErr}} times. Please try again."
+        "invalid_smart_otp": "Otp is invalid {{timesErr}} times. Please try again."
     },
     "filter": {
         "a_day": "1 day",

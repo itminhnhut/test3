@@ -159,7 +159,7 @@
         "not_found_order": "Không tìm thấy lệnh #{{displayingId}} hoặc đang được xử lý, vui lòng tải lại hoặc liên hệ hỗ trợ",
         "invalid_otp": "Mã OTP không hợp lệ. Vui lòng thử lại.",
         "invalid_secret": "Vui lòng xác nhận mã PIN trong ứng dụng điện thoại trước.",
-        "invalid_times": "Mã Smart OTP không hợp lệ lần thứ {{timesErr}}. Please try again."
+        "invalid_smart_otp": "Mã Smart OTP không hợp lệ lần thứ {{timesErr}}. Please try again."
     },
     "filter": {
         "a_day": "1 ngày",

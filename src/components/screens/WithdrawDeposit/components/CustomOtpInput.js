@@ -45,7 +45,7 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
         if (isTfaEnabled && isUse2fa) {
             listModeAvailable.push('tfa');
         }
-        setState({ modes: listModeAvailable });
+        setState({ modes: listModeAvailable, isError: false });
     }, [isTfaEnabled, isUse2fa, modeOtp]);
 
     const isValidInput = useCallback(
@@ -69,7 +69,7 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
         // change focus to first tfa input
         if (mode !== MODE_OTP.TFA && formatVal.length === OTP_REQUIRED_LENGTH && isTfaEnabled) {
             const input = parentTfaRef.current?.firstChild?.firstChild?.firstChild;
-            input.focus();
+            input?.focus();
         }
 
         if (isValidInput(newOtp)) {
@@ -81,7 +81,6 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
         try {
             const response = await onConfirm(otp);
             // Lưu ý: Hàm onConfirm cần trả về Response
-            console.log("response: ", response);
             if(response) {
                 if (response?.status === ApiResultCreateOrder.INVALID_OTP || response.status !== ApiStatus.SUCCESS) {
                     onFocusFirstInput();
@@ -127,7 +126,8 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
 
                     {isTfaEnabled && (
                         <div className="text-sm font-medium mb-4">
-                            {mode === 'email' ? t('dw_partner:email_verification_code') : t('dw_partner:verify_2fa')}
+                            {mode === MODE_OTP.EMAIL && t('dw_partner:email_verification_code')}
+                            {mode === MODE_OTP.TFA && t('dw_partner:verify_2fa')}
                         </div>
                     )}
 
@@ -148,7 +148,7 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
                                     '!border-red': state.isError
                                 }
                             )}
-                            shouldAutoFocus={mode !== MODE_OTP.PHONE}
+                            shouldAutoFocus={mode !== MODE_OTP.TFA}
                             hasErrored={state.isError}
                             errorStyle={classNames('border-red border')}
                         />

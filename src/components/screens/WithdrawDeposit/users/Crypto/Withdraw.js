@@ -20,8 +20,12 @@ import { CopyIcon } from 'components/svg/SvgIcon';
 import Countdown from 'react-countdown-now';
 import CustomOtpInput from '../../components/CustomOtpInput';
 import { MODE_OTP } from 'constants/constants';
+import FetchApi from 'utils/fetch-api';
+import { ApiStatus, WithdrawResult } from 'redux/actions/const';
+import { API_WITHDRAW_V4 } from 'redux/actions/apis';
+import { isObject } from 'lodash';
 
-const errorMessageMapper = (t, error) => {
+const errorMessageMapper = (t, error, data) => {
     switch (error) {
         case WITHDRAW_RESULT.MissingOtp:
             return t('wallet:withdraw_prompt.input_otp_suggest');
@@ -30,6 +34,8 @@ const errorMessageMapper = (t, error) => {
         case WITHDRAW_RESULT.NotEnoughBalance:
             return t('error:BALANCE_NOT_ENOUGH');
         case WITHDRAW_RESULT.UnsupportedAddress:
+            return t('error:INVALID_ADDRESS');
+        case WITHDRAW_RESULT.InvalidAddress:
             return t('error:INVALID_ADDRESS');
         case WITHDRAW_RESULT.AmountExceeded:
         case WITHDRAW_RESULT.AmountTooSmall:
@@ -40,6 +46,10 @@ const errorMessageMapper = (t, error) => {
             return t('error:INVALID_KYC_STATUS');
         case WITHDRAW_RESULT.WithdrawDisabled:
             return t('wallet:errors.withdraw_disabled');
+        case WITHDRAW_RESULT.SOTP_INVALID:
+            return t('dw_partner:error.invalid_smart_otp', { timesErr: data?.count ?? 1 });
+        case WITHDRAW_RESULT.SECRET_INVALID:
+            return t('dw_partner:error.invalid_secret')
         case WITHDRAW_RESULT.Unknown:
         default:
             return t('error:UNKNOWN_ERROR');
@@ -55,79 +65,80 @@ const PHASE_CONFIRM = {
     RESULT: 3
 };
 
-const ModalConfirm = ({  selectedAsset, selectedNetwork, open, address, memo, amount, assetDigit, assetCode, currentTheme, closeModal }) => {
+const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amount, assetDigit, assetCode, currentTheme, closeModal }) => {
     const [phase, setPhase] = useState(PHASE_CONFIRM.INFO);
     const [loading, setLoading] = useState(false);
-    const [loadingResend, setLoadingResend] = useState(false)
+    const [loadingResend, setLoadingResend] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
-    const remaining_time = useRef({
-        timer: Date.now(),
-        value: 0
-    });
-    const [expired, setExpired] = useState(false);
-    // const [otp, setOtp] = useState({
-    //     email: null,
-    //     tfa: null
-    // });
+    const [otpMode, setOtpMode] = useState(MODE_OTP.EMAIL);
+    const [expiredTime, setExpiredTime] = useState(0);
+    const [showAlertDisableSmartOtp, setShowAlertDisableSmartOtp] = useState(false)
+    const { t } = useTranslation();
+    let auth = useSelector((state) => state.auth) || null;
 
     const onClose = () => {
         closeModal();
-        // setOtp({
-        //     email: null,
-        //     tfa: null
-        // });
-        setExpired(false);
         setPhase(PHASE_CONFIRM.INFO);
     };
 
-    const { t } = useTranslation();
-
     const postData = async (otp) => {
-        const result = await withdrawHelper(selectedAsset?.assetId ?? "72", amount ?? 0, selectedNetwork?.network ?? 'ETH', address ?? "", memo, otp);
+        const result = await withdrawHelper(selectedAsset?.assetId ?? '72', amount ?? 0, selectedNetwork?.network ?? 'ETH', address ?? '', memo, otp);
         return result;
     };
 
-    const onConfirmInfo = async () => {
-        setLoadingResend(true)
+    const alertErr = (errStatus, dataErr) => {
+        console.log("______alertErr: ", errStatus, dataErr)
 
-        if (remaining_time.current.timer > Date.now()) {
-            setPhase(PHASE_CONFIRM.OTP);
-        } else {
-            await postData(null).then((rs) => {
-                if (rs?.data?.remaining_time) {
-                    remaining_time.current = {
-                        timer: Date.now() + rs?.data?.remaining_time,
-                        value: rs?.data?.remaining_time ?? 0
-                    };
-                    setPhase(PHASE_CONFIRM.OTP);
-                } else {
-                    toast({
-                        text: errorMessageMapper(t),
-                        type: 'error'
-                    });
-                }
-            });
-        }
-        setLoadingResend(false)
-        setExpired(false);
+        return toast({
+            text: errorMessageMapper(t, errStatus, dataErr),
+            type: 'warning',
+            duration: 200
+        });
     };
 
-    const onConfirmOTP = async (otp) => {
+    const handlePostOrder = async (otp) => {
+        otp ?  setLoading(true) : setLoadingResend(true);
         try {
-            setLoading(true);
-            const response = await postData({email: otp?.email ?? "000000"});
+            const res = await FetchApi({
+                url: API_WITHDRAW_V4,
+                options: {
+                    method: 'POST'
+                },
+                params: {
+                    assetId: selectedAsset?.assetId,
+                    amount: '150000',
+                    network: selectedNetwork?.network,
+                    withdrawTo: address || "0xD5B2F0Ef97de5DF5c640280eFC35445aa088F4b5",
+                    tag: memo,
+                    otp
+                }
+            })
 
-            if (response?.status === 'ok') {
-                setShowAlert(true);
-                if (onClose) onClose();
-            } else {
-                toast({ text: t('dw_partner:error.invalid_otp'), type: 'warning', duration: 1500 });
-            }
+            const { status, data } = res;
 
-            return response;
+            if (status === ApiStatus.SUCCESS) {
+                setPhase(PHASE_CONFIRM.OTP);
+
+                if (data?.use_smart_otp) {
+                    setOtpMode(MODE_OTP.SMART_OTP);
+                } else if (data?.remaining_time) {
+                    setExpiredTime(Date.now() + data.remaining_time);
+                    setOtpMode(MODE_OTP.EMAIL);
+                } else {
+                    setShowAlert(true);
+                    if (onClose) onClose();
+                }
+            } else if(status === WITHDRAW_RESULT.EXCEEDED_SMART_OTP) {
+                setShowAlertDisableSmartOtp(true)
+            } else if (status === ApiStatus.ERROR) {
+                if(!isObject(res.data)) alertErr(res?.data)
+                else alertErr()
+            } else alertErr(res?.status, res?.data)
+            return res;
         } catch (error) {
+            alertErr(errorMessageMapper(t, error));
         } finally {
-            setLoading(false);
+            otp ? setLoading(false) : setLoadingResend(false);
         }
     };
 
@@ -169,15 +180,19 @@ const ModalConfirm = ({  selectedAsset, selectedNetwork, open, address, memo, am
                                     },
                                     {
                                         title: t('common:amount'),
-                                        value: `${amount ? formatNumber(amount, assetDigit) : '--'} ${assetCode ?? ""}`
+                                        value: `${amount ? formatNumber(amount, assetDigit) : '--'} ${assetCode ?? ''}`
                                     },
                                     {
                                         title: t('common:fee'),
-                                        value: `${selectedNetwork?.withdrawFee ? formatNumber(selectedNetwork?.withdrawFee, assetDigit) : '--'} ${assetCode ?? ""}`
+                                        value: `${selectedNetwork?.withdrawFee ? formatNumber(selectedNetwork?.withdrawFee, assetDigit) : '--'} ${
+                                            assetCode ?? ''
+                                        }`
                                     },
                                     {
                                         title: t('wallet:will_receive'),
-                                        value: `${amount - selectedNetwork?.withdrawFee ? formatNumber(amount - selectedNetwork?.withdrawFee, assetDigit) : '--'} ${assetCode ?? ""}`
+                                        value: `${
+                                            amount - selectedNetwork?.withdrawFee ? formatNumber(amount - selectedNetwork?.withdrawFee, assetDigit) : '--'
+                                        } ${assetCode ?? ''}`
                                     },
                                     {
                                         title: t('wallet:network'),
@@ -198,7 +213,7 @@ const ModalConfirm = ({  selectedAsset, selectedNetwork, open, address, memo, am
                                 <ButtonV2 variants="secondary" onClick={onClose}>
                                     {t('common:cancel')}
                                 </ButtonV2>
-                                <ButtonV2 disabled={loadingResend} loading={loadingResend} onClick={onConfirmInfo}>
+                                <ButtonV2 disabled={loadingResend} loading={loadingResend} onClick={() => handlePostOrder()}>
                                     {t('common:continue')}
                                 </ButtonV2>
                             </div>
@@ -210,25 +225,29 @@ const ModalConfirm = ({  selectedAsset, selectedNetwork, open, address, memo, am
                     // OTP PHASE
                     phase === PHASE_CONFIRM.OTP && (
                         <CustomOtpInput
-                            otpExpireTime={remaining_time.current.timer}
+                            otpExpireTime={expiredTime}
                             loading={loading}
-                            onConfirm={(otp) => onConfirmOTP(otp)}
+                            onConfirm={(otp) => handlePostOrder(otp)}
                             loadingResend={loadingResend}
-                            onResend={onConfirmInfo}
+                            onResend={() => handlePostOrder()}
+                            modeOtp={otpMode}
+                            isUse2fa={otpMode === MODE_OTP.EMAIL ? auth.user?.isTfaEnabled : false}
                         />
                     )
                 }
-                {/* {
-                    // RESULT PHASE
-                    phase === PHASE_CONFIRM.RESULT && (
-                        <div className="flex flex-col items-center text-center">
-                            <WarningTriangle size={64} />
-                            <p className="text-2xl mt-8 mb-4 font-semibold">{t('wallet:withdraw_failed_title')}</p>
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{errorMessageMapper(t, withdrawResult?.data)}</span>
-                        </div>
-                    )
-                } */}
             </ModalV2>
+            <AlertModalV2
+                isVisible={showAlertDisableSmartOtp}
+                onClose={() => setShowAlertDisableSmartOtp(false)}
+                textButton="Xác thực bằng Email"
+                onConfirm={() => {
+                    handlePostOrder(null);
+                    setShowAlertDisableSmartOtp(false)
+                }}
+                type="error"
+                title={t('dw_partner:disabled_smart_otp_title')}
+                message={t('dw_partner:disabled_smart_otp_des')}
+            />
         </>
     );
 };
@@ -433,7 +452,8 @@ const CryptoWithdraw = ({ assetId }) => {
                 otpModes={otpModes}
                 selectedAsset={selectedAsset}
                 selectedNetwork={state.selectedNetwork}
-                open={state.openWithdrawConfirm}
+                open={true}
+                // open={state.openWithdrawConfirm}
                 closeModal={() => setState({ openWithdrawConfirm: false })}
                 address={state.address}
                 memo={state.memo}
