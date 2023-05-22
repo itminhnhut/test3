@@ -47,7 +47,7 @@ export default function FundingHistory(props) {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const symbol = urlParams.get('symbol');
-        if (symbol.indexOf(CURRENCIES[1].value) !== -1) setSelectedCurrency(CURRENCIES[1].value);
+        if (symbol && symbol.indexOf(CURRENCIES[1].value) !== -1) setSelectedCurrency(CURRENCIES[1].value);
     }, []);
 
     const renderTabContent = () => {
