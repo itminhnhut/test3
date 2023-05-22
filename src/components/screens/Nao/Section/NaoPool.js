@@ -150,16 +150,18 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                                     assetSymbol={assetConfig[1]?.assetCode}
                                                 />
                                             </div>
-                                            <div className="w-full sm:p-0.5">
-                                                <HistoryPriceItem
-                                                    s3Url={`/images/nao/ic_onus.png`}
-                                                    total={item?.interest?.[86]}
-                                                    digitsTotal={assetConfig[86]?.assetDigit ?? 0}
-                                                    usdPrice={item?.interestUSD?.[86]}
-                                                    assetName={assetConfig[86]?.assetName}
-                                                    assetSymbol={assetConfig[86]?.assetCode}
-                                                />
-                                            </div>
+                                            {item?.interest?.[86] > 0 && (
+                                                <div className="w-full sm:p-0.5">
+                                                    <HistoryPriceItem
+                                                        s3Url={`/images/nao/ic_onus.png`}
+                                                        total={item?.interest?.[86]}
+                                                        digitsTotal={assetConfig[86]?.assetDigit ?? 0}
+                                                        usdPrice={item?.interestUSD?.[86]}
+                                                        assetName={assetConfig[86]?.assetName}
+                                                        assetSymbol={assetConfig[86]?.assetCode}
+                                                    />
+                                                </div>
+                                            )}
                                             <div className="w-full sm:p-0.5">
                                                 <HistoryPriceItem
                                                     s3Url={`/images/nao/ic_onus.png`}
@@ -338,16 +340,18 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 assetSymbol={assetConfig[1]?.assetCode}
                             />
                         </div>
-                        <div className="w-full sm:p-0.5">
-                            <PoolPriceItem
-                                digitsPrice={assetConfig[86]?.assetDigit ?? 0}
-                                s3Url={'/images/nao/ic_onus.png'}
-                                price={data.estimate?.[86]}
-                                usdPrice={data.estimateUsd?.[86]}
-                                assetName={assetConfig[86]?.assetName}
-                                assetSymbol={assetConfig[86]?.assetCode}
-                            />
-                        </div>
+                        {data.estimate?.[86] > 0 && (
+                            <div className="w-full sm:p-0.5">
+                                <PoolPriceItem
+                                    digitsPrice={assetConfig[86]?.assetDigit ?? 0}
+                                    s3Url={'/images/nao/ic_onus.png'}
+                                    price={data.estimate?.[86]}
+                                    usdPrice={data.estimateUsd?.[86]}
+                                    assetName={assetConfig[86]?.assetName}
+                                    assetSymbol={assetConfig[86]?.assetCode}
+                                />
+                            </div>
+                        )}
                         <div className="w-full sm:p-0.5">
                             <PoolPriceItem
                                 digitsPrice={assetConfig[22]?.assetDigit ?? 0}

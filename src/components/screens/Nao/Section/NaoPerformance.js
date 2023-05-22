@@ -160,6 +160,7 @@ const NaoPerformance = memo(() => {
         const assets = [];
         let first = true;
         return Object.keys(dataSource?.feeRevenue).reduce((newItem, item) => {
+            if (Number(item) === 86 && dataSource.feeRevenue[item] <= 0) return;
             const asset = assetConfig.find((rs) => rs.id === Number(item));
             if (asset) {
                 assets.push({
