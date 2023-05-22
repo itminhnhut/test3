@@ -162,9 +162,9 @@ const ContesRules = ({
             <div className="mt-10 sm:mt-0 text-center">
                 {season === seasonConfig ? (
                     <Image
-                        src={getS3Url('/images/contest/bg-contest.png')}
-                        width="568px"
-                        height="369px"
+                        src={getS3Url('/images/contest/bg_contest_v1.png')}
+                        width="544px"
+                        height="354px"
                         title={title_champion?.[language]}
                         alt={title_champion?.[language]}
                     />
@@ -314,7 +314,7 @@ const TournamentList = ({ t, seasonsFilter, router, season, language }) => {
                             <div
                                 onClick={() => {
                                     router.push(`/contest/${item.season}`);
-                                    setShowTournaments(false)
+                                    setShowTournaments(false);
                                 }}
                                 key={index}
                                 className="px-6 py-3 hover:bg-hover-1 dark:hover:bg-hover-dark cursor-pointer flex items-center space-x-3 sm:flex-row"
