@@ -277,9 +277,11 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         <div className="w-full py-0.5">
                             <EstimateInterest assetId={1} logoPath={`/images/coins/64/${1}.png`} />
                         </div>
-                        <div className="w-full py-0.5">
-                            <EstimateInterest assetId={86} logoPath={'/images/nao/ic_onus.png'} />
-                        </div>
+                        {data.estimate?.[86] && data.estimate?.[86] > 0 && (
+                            <div className="w-full py-0.5">
+                                <EstimateInterest assetId={86} logoPath={'/images/nao/ic_onus.png'} />
+                            </div>
+                        )}
                         <div className="w-full py-0.5">
                             <EstimateInterest assetId={22} logoPath={`/images/coins/64/${22}.png`} />
                         </div>
@@ -319,9 +321,11 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                                     <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={1} logoPath={`/images/coins/64/${1}.png`} />
                                                     </div>
-                                                    <div className="w-full py-0.5">
-                                                        <HistoryInterest item={item} assetId={86} logoPath={'/images/nao/ic_onus.png'} />
-                                                    </div>
+                                                    {item.interest?.[86] && item.interest?.[86] > 0 && (
+                                                        <div className="w-full py-0.5">
+                                                            <HistoryInterest item={item} assetId={86} logoPath={'/images/nao/ic_onus.png'} />
+                                                        </div>
+                                                    )}
                                                     <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={22} logoPath={`/images/coins/64/${22}.png`} />
                                                     </div>
