@@ -174,7 +174,7 @@ const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, clo
                                     isPosition ? 'px-6' : 'px-4'
                                 } py-4 bg-gray-13 dark:bg-dark-4 rounded-md text-txtSecondary dark:text-txtSecondary-dark flex space-x-4`}
                             >
-                                <BxsInfoCircle />
+                                <BxsInfoCircle color={colors.yellow[2]} />
                                 <span>{t('futures:mobile:close_all_positions:confirm_description')}</span>
                             </div>
                         </div>

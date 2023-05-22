@@ -5,7 +5,6 @@ import { Active, Dot, DotContainer, SliderBackground, Thumb, ThumbLabel, Track }
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import classNames from 'classnames';
 import colors from 'styles/colors';
-import { getS3Url } from 'redux/actions/utils';
 
 function getClientPosition(e) {
     const { touches } = e;
@@ -58,6 +57,7 @@ const Slider = ({
     height,
     naoMode,
     bgColorDot,
+    useTooltip = false,
     ...props
 }) => {
     const container = useRef(null);
@@ -68,9 +68,10 @@ const Slider = ({
     const _xStart = useRef(xStart);
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
-    const _bgColorDot = onusMode ? colors.onus.bg3 : isDark ? colors.dark[2] : colors.gray[11];
-    const _bgColorActive = bgColorActive ? bgColorActive : onusMode ? '#418FFF' : colors.teal;
-
+    const _bgColorDot = onusMode ? (isDark ? colors.dark[2] : colors.gray[12]) : isDark ? colors.dark[2] : colors.gray[11];
+    const _bgColorActive = bgColorActive ? bgColorActive : onusMode ? colors.teal : colors.teal;
+    const [draging, setDraging] = useState(false);
+    const timer = useRef();
 
     function getPosition() {
         let top = ((y - ymin) / (ymax - ymin)) * 100;
@@ -129,7 +130,7 @@ const Slider = ({
 
     function handleMouseDown(e) {
         if (disabled) return;
-
+        clearTimeout(timer.current);
         e.preventDefault();
         e.stopPropagation();
         e.nativeEvent.stopImmediatePropagation();
@@ -151,11 +152,16 @@ const Slider = ({
         document.addEventListener('touchmove', handleDrag, { passive: false });
         document.addEventListener('touchend', handleDragEnd);
         document.addEventListener('touchcancel', handleDragEnd);
-
+        setDraging(true);
         if (onDragStart) {
             onDragStart(e);
         }
     }
+
+    const handleMouseUp = (e) => {
+        e.preventDefault();
+        onHideTooltip();
+    };
 
     function getPos(e) {
         const clientPos = getClientPosition(e);
@@ -184,15 +190,22 @@ const Slider = ({
         });
         document.removeEventListener('touchend', handleDragEnd);
         document.removeEventListener('touchcancel', handleDragEnd);
-
+        onHideTooltip();
         if (onDragEnd) {
             onDragEnd(e);
         }
     }
 
+    const onHideTooltip = () => {
+        clearTimeout(timer.current);
+        timer.current = setTimeout(() => {
+            setDraging(false);
+        }, 300);
+    };
+
     function handleTrackMouseDown(e) {
         if (disabled) return;
-
+        setDraging(true);
         e.preventDefault();
         const clientPos = getClientPosition(e);
         const rect = container.current.getBoundingClientRect();
@@ -305,7 +318,7 @@ const Slider = ({
                                 'left-1/2 -translate-x-1/2': i > 0 && i !== _dots,
                                 '-left-1/2 translate-x-[-80%] pr-1': i === _dots
                             },
-                            { '!font-normal': onusMode, '!text-onus-white font-semibold': Number(labelX) === Number(x) && onusMode },
+                            { 'font-normal': onusMode, '!text-txtPrimary dark:!text-txtPrimary-dark !font-medium': Number(labelX) === Number(x) && onusMode },
                             { 'dark:!text-white !text-txtPrimary font-semibold': Number(labelX) === Number(x) && !onusMode }
                         )}
                     >
@@ -319,8 +332,14 @@ const Slider = ({
         return { dot, label };
     };
 
+    const getLabelPercent = (index) => {
+        if (!xStart) return Number(index).toFixed(0);
+        const formatX = index === 50 ? 0 : index > 50 ? (index - 50) * 2 : -(50 - index) * 2;
+        return formatX.toFixed(0);
+    };
+
     return (
-        <>
+        <div className="px-2">
             {useLabel && positionLabel === 'top' && (
                 <>
                     <div className="relative w-full flex items-center justify-between">
@@ -341,6 +360,7 @@ const Slider = ({
                     style={handleStyle}
                     onTouchStart={handleMouseDown}
                     onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
                     onClick={function (e) {
                         e.stopPropagation();
                         e.nativeEvent.stopImmediatePropagation();
@@ -353,8 +373,10 @@ const Slider = ({
                         onusMode={onusMode}
                         naoMode={naoMode}
                         className={naoMode ? '!flex justify-center items-center' : ''}
+                        useTooltip={x !== xmin && x !== xmax && useTooltip && draging}
+                        x={getLabelPercent(x)}
                     >
-                        {naoMode && <img src={getS3Url('/images/nao/ic_nao.png')} width={22} height={22} alt="" />}
+                        {/* {naoMode && <img src={getS3Url('/images/nao/ic_nao.png')} width={22} height={22} alt="" />} */}
                         {customPercentLabel
                             ? customPercentLabel(pos)
                             : showPercentLabel && (
@@ -373,7 +395,7 @@ const Slider = ({
                     <div className="h-[12px] w-full" />
                 </>
             )}
-        </>
+        </div>
     );
 };
 

@@ -7,7 +7,7 @@ const CheckBox = ({ active, boxContainerClassName, label, labelClassName, onChan
         <div onClick={onCheck} className={classNames('flex items-center select-none cursor-pointer space-x-3 w-max', className)}>
             <div
                 className={classNames(
-                    'w-6 h-6 flex items-center justify-center rounded-[3px] border border-divider dark:border-divider-dark cursor-pointer ',
+                    'w-4 h-4 flex items-center justify-center rounded-[3px] border border-divider dark:border-divider-dark cursor-pointer ',
                     {
                         'hover:!border-dominant ': !onusMode,
                         '!bg-dominant border-dominant': !onusMode && active,
@@ -15,13 +15,13 @@ const CheckBox = ({ active, boxContainerClassName, label, labelClassName, onChan
                     },
                     {
                         'rounded-[3.2px]': onusMode,
-                        'bg-onus-bg !border-onus-line rounded-[3.2px]': onusMode && !active,
-                        '!bg-onus-base !border-onus-base': onusMode && active
+                        'bg-gray-13 dark:bg-dark-4 !border-divider dark:!border-divider-dark rounded-[3.2px]': onusMode && !active,
+                        '!bg-teal !border-teal': onusMode && active
                     },
                     boxContainerClassName
                 )}
             >
-                {isDisable ? <Check size={18} className="text-txtDisabled dark:text-txtDisabled-dark" /> : active && <Check size={18} className="text-white" />}
+                {isDisable ? <Check size={16} className="text-txtDisabled dark:text-txtDisabled-dark" /> : active && <Check size={16} className="text-white" />}
             </div>
             {label && <div className={classNames('text-sm text-txtSecondary dark:text-txtSecondary-dark', labelClassName)}>{label}</div>}
         </div>

@@ -9,7 +9,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import { keyBy, map } from 'lodash';
 import { getUsdRate } from 'redux/actions/market';
 import { sumBy } from 'lodash/math';
-import SortIcon from 'components/screens/Mobile/SortIcon';
+import SortIcon from 'components/screens/Nao_futures/SortIcon';
 import SvgLock from 'components/svg/SvgLock';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
@@ -320,7 +320,7 @@ const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
             <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs leading-4'>
                 {title}
             </span>
-            <SortIcon direction={sortDirection} />
+            <SortIcon className="text-gray-1 dark:text-gray-7" color="currentColor" activeColor="currentColor" direction={sortDirection} />
         </div>
     )
 }

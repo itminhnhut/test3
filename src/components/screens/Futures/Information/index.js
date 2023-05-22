@@ -8,6 +8,9 @@ import { ExchangeOrderEnum } from 'redux/actions/const';
 import styled from 'styled-components';
 import { createSelector } from 'reselect';
 import { useRouter } from 'next/router'
+import colors from 'styles/colors';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 
 const getPairPrice = createSelector(
     [
@@ -86,7 +89,8 @@ export default function OrderInformation({ pair }) {
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
     const assetConfig = useSelector(state => state.utils.assetConfig);
     const timesync = useSelector(state => state.utils.timesync)
-
+    const [theme] = useDarkMode();
+    const isDark = theme === THEME_MODE.DARK;
 
     const getDecimalPrice = (config) => {
         const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
@@ -221,11 +225,11 @@ export default function OrderInformation({ pair }) {
     }
 
     return (
-        <div className={'py-4 px-4'}>
+        <div className={'py-4 px-4 overflow-y-auto h-[calc(100%-70px)]'}>
             <p className="text-lg my-4 leading-6 font-semibold">
                 {t('futures:trading_rules')}
             </p>
-            <div className="bg-[#243042] rounded-[8px]">
+            <div className="bg-gray-12 dark:bg-dark-4 rounded-[8px]">
                 {ITEMS_WITH_TOOLTIPS.map(({
                     title,
                     tooltip,
@@ -234,54 +238,57 @@ export default function OrderInformation({ pair }) {
                     <div
                         key={index}
                         className={classNames('px-3 w-full', {
-                            'divide-y divide-[#36445A]': !(index === ITEMS_WITH_TOOLTIPS.length - 1)
+                            'divide-y border-divider dark:border-divider-dark': !(index === ITEMS_WITH_TOOLTIPS.length - 1)
                         })}
                     >
-                        <div className="py-[13px] flex  w-full w-100">
+                        <div className="py-[13px] flex w-full">
                             {title === 'funding_countdown' ?
                                 <>
-                                    <Tooltip id={'funding_countdown'} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                        className={`!mx-7 !px-3 !py-5 max-w-[300px] !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-none`}
+                                    <Tooltip id={'funding_countdown'} place="bottom" effect="solid"
+                                        className={`!mx-7 !px-3 !py-5 w-[calc(100%-3.5rem)] !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg after:!left-10`}
                                         overridePosition={(e) => ({
                                             left: 0,
                                             top: e.top
                                         })}
+                                        arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                                     >
                                         <div>
                                             <label
-                                                className="font-medium text-white text-sm leading-[18px]">Funding</label>
+                                                className="font-medium text-white dark:text-txtPrimary-dark text-sm leading-[18px]">Funding</label>
                                             <div
-                                                className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:funding_rate_des')}</div>
+                                                className="mt-3 text-3 font-normal text-white dark:text-txtPrimary-dark leading-[18px]">{t('futures:funding_rate_des')}</div>
                                         </div>
                                     </Tooltip>
-                                    <Tooltip id={'countdown-tooltip'} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                        className={`!mx-7 !px-3 !py-5 !bg-onus-bg2 max-w-[300px] !opacity-100 !rounded-lg after:!border-none`}
+                                    <Tooltip id={'countdown-tooltip'} place="bottom" effect="solid"
+                                        className={`!mx-7 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 max-w-[300px] !opacity-100 !rounded-lg`}
                                         overridePosition={(e) => ({
                                             left: e.left - 50,
                                             top: e.top
                                         })}
+                                        arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                                     >
                                         <div>
                                             <label
-                                                className="font-medium text-white text-sm leading-[18px]">{t('futures:countdown')}</label>
+                                                className="font-medium text-white dark:text-txtPrimary-dark text-sm leading-[18px]">{t('futures:countdown')}</label>
                                             <div
-                                                className="mt-3 text-3 font-normal text-white leading-[18px]">{t('common:countdown_tooltip')}</div>
+                                                className="mt-3 text-3 font-normal text-white dark:text-txtPrimary-dark leading-[18px]">{t('common:countdown_tooltip')}</div>
                                         </div>
                                     </Tooltip>
                                 </>
                                 :
-                                <Tooltip id={title} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                    className={`!mx-7 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2`}
+                                <Tooltip id={title} place="top" effect="solid"
+                                    className={`!mx-7 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg`}
                                     overridePosition={(e) => ({
                                         left: 0,
                                         top: e.top
                                     })}
+                                    arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                                 >
                                     <div>
                                         <label
-                                            className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label>
+                                            className="font-medium text-white dark:text-txtPrimary-dark text-sm leading-[18px]">{t('futures:' + title)}</label>
                                         <div
-                                            className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
+                                            className="mt-3 text-3 font-normal text-white dark:text-txtPrimary-dark leading-[18px]">{t('futures:' + tooltip)}</div>
                                     </div>
                                 </Tooltip>
                             }
@@ -290,13 +297,13 @@ export default function OrderInformation({ pair }) {
                                     <div className="flex items-center space-x-1">
                                         <Label className=""> Funding
                                             <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
-                                                <img src={getS3Url('/images/icon/ic_help.png')} className="min-w-[14px] min-h-[14px] max-w-[14px] max-h-[14px]" height={14} width={14} />
+                                                <QuestionMarkIcon color="currentColor" size={14} />
                                             </div>
                                         </Label>
-                                        <span className="text-onus-grey ">/</span>
+                                        <span className="text-gray-1 dark:text-txtSecondary-dark">/</span>
                                         <Label className="">{t('futures:countdown')}
                                             <div className="flex px-2" data-tip="" data-for={'countdown-tooltip'} >
-                                                <img src={getS3Url('/images/icon/ic_help.png')} className="min-w-[14px] min-h-[14px] max-w-[14px] max-h-[14px]" height={14} width={14} />
+                                                <QuestionMarkIcon color="currentColor" size={14} />
                                             </div>
                                         </Label>
                                     </div>
@@ -306,7 +313,7 @@ export default function OrderInformation({ pair }) {
                                         <Label className="">
                                             {t('futures:' + title)}
                                             <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
-                                                <img src={getS3Url('/images/icon/ic_help.png')} className="min-w-[14px] min-h-[14px] max-w-[14px] max-h-[14px]" height={14} width={14} />
+                                                <QuestionMarkIcon color="currentColor" size={14} />
                                             </div>
                                         </Label>
                                         <Span className="">{renderContent(title)}</Span>
@@ -314,23 +321,23 @@ export default function OrderInformation({ pair }) {
 
                             </Row>
                         </div>
-                        <div className="divide-y divide-[#36445A]"></div>
+                        <div className="divide-y border-divider dark:border-divider-dark"></div>
                     </div>
                 ))}
             </div>
-            <div onClick={onViewAll} className="text-onus-base text-sm font-medium mt-6">{t('futures:view_all_trading_rule')}</div>
+            <div onClick={onViewAll} className="text-teal text-sm font-medium mt-6">{t('futures:view_all_trading_rule')}</div>
         </div>
     );
 }
 
 const Row = styled.div.attrs({
-    className: 'flex items-center justify-between border-b border-onus-input2 last:border-0 w-full'
+    className: 'flex items-center justify-between border-b border-divider dark:border-divider-dark last:border-0 w-full'
 })``;
 
 const Label = styled.div.attrs(({ isTabOpen }) => ({
-    className: `text-gray-1 text-left text-onus-grey font-medium text-sm leading-5 text-gray font-normal flex items-center`
+    className: `text-left text-gray-1 dark:text-txtSecondary-dark font-medium text-sm leading-5 font-normal flex items-center`
 }))``;
 
 const Span = styled.div.attrs(({ isTabOpen }) => ({
-    className: `font-medium text-white leading-[22px] text-sm text-right `
+    className: `font-medium text-txtPrimary dark:text-txtPrimary-dark leading-[22px] text-sm text-right `
 }))``;

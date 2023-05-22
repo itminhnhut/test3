@@ -60,8 +60,8 @@ export const NoDataLightIcon = ({ size }) => {
                     <stop offset=".008" stop-color="#C6CEDE" />
                     <stop offset=".22" stop-color="#D1D8E4" />
                     <stop offset=".315" stop-color="#D8DEE8" />
-                    <stop offset=".852" stop-color="#F7F8FA" stop-opacity=".513" />
-                    <stop offset=".977" stop-color="#fff" stop-opacity=".4" />
+                    <stop offset=".852" stop-color="#F7F8FA" stopOpacity=".513" />
+                    <stop offset=".977" stop-color="#fff" stopOpacity=".4" />
                 </linearGradient>
                 <linearGradient id={tempId_02} x1="103.243" y1="56.27" x2="146.839" y2="48.191" gradientUnits="objectBoundingBox">
                     <stop offset=".008" stop-color="#C6CEDE" />
@@ -122,12 +122,12 @@ export const NoDataDarkIcon = ({ size }) => {
                 <linearGradient id={id_01} x1="81.945" y1="122.473" x2="101.632" y2="29.207" gradientUnits="userSpaceOnUse">
                     <stop offset=".01" stop-color="#9FA4AB" />
                     <stop offset=".26" stop-color="#9FA4AB" />
-                    <stop offset=".35" stop-color="#A2A7AE" stop-opacity=".96" />
-                    <stop offset=".46" stop-color="#ABAFB6" stop-opacity=".86" />
-                    <stop offset=".6" stop-color="#BABDC2" stop-opacity=".7" />
-                    <stop offset=".74" stop-color="#CFD1D4" stop-opacity=".47" />
-                    <stop offset=".89" stop-color="#E9EAEB" stop-opacity=".18" />
-                    <stop offset=".98" stop-color="#F9F9F9" stop-opacity="0" />
+                    <stop offset=".35" stop-color="#A2A7AE" stopOpacity=".96" />
+                    <stop offset=".46" stop-color="#ABAFB6" stopOpacity=".86" />
+                    <stop offset=".6" stop-color="#BABDC2" stopOpacity=".7" />
+                    <stop offset=".74" stop-color="#CFD1D4" stopOpacity=".47" />
+                    <stop offset=".89" stop-color="#E9EAEB" stopOpacity=".18" />
+                    <stop offset=".98" stop-color="#F9F9F9" stopOpacity="0" />
                 </linearGradient>
                 <linearGradient id={id_02} x1="94.976" y1="50.994" x2="146.389" y2="50.994" gradientUnits="userSpaceOnUse">
                     <stop offset=".01" stop-color="#9FA4AB" />
