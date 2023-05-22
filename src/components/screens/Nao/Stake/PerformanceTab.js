@@ -115,10 +115,12 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         const totalStaked = dataSource?.totalStaked ?? 0;
         const pool = availableStaked / totalStaked;
         const percent = (availableStaked / totalStaked) * 100;
+        const totalEstUSDT = Object.values(dataSource?.poolRevenueThisWeekUSD ?? {}).reduce((a, b) => a + b, 0);
         return {
             percent: percent || 0,
             estimate: dataSource?.poolRevenueThisWeek,
             estimateUSD: dataSource?.poolRevenueThisWeekUSD,
+            totalEstUSDT: totalEstUSDT,
             totalStaked,
             availableStaked,
             totalProfit: dataSource?.totalProfit
@@ -265,7 +267,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         {t('nao:pool:per_est_revenue')}
                     </label>
                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark pt-2">
-                        {t('nao:pool:equivalent')} ${formatNumber(data.estimateUSD, 2)}
+                        {t('nao:pool:equivalent')} ${formatNumber(data.totalEstUSDT, 4)}
                     </div>
                     <div className="mt-4 flex flex-col space-y-4">
                         <div className="w-full py-0.5">
@@ -277,11 +279,11 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         <div className="w-full py-0.5">
                             <EstimateInterest assetId={1} logoPath={`/images/coins/64/${1}.png`} />
                         </div>
-                        {data.estimate?.[86] && data.estimate?.[86] > 0 && (
+                        {data.estimate?.[86] && data.estimate?.[86] > 0 ? (
                             <div className="w-full py-0.5">
                                 <EstimateInterest assetId={86} logoPath={'/images/nao/ic_onus.png'} />
                             </div>
-                        )}
+                        ) : null}
                         <div className="w-full py-0.5">
                             <EstimateInterest assetId={22} logoPath={`/images/coins/64/${22}.png`} />
                         </div>
@@ -321,11 +323,11 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                                     <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={1} logoPath={`/images/coins/64/${1}.png`} />
                                                     </div>
-                                                    {item.interest?.[86] && item.interest?.[86] > 0 && (
+                                                    {item.interest?.[86] && item.interest?.[86] > 0 ? (
                                                         <div className="w-full py-0.5">
                                                             <HistoryInterest item={item} assetId={86} logoPath={'/images/nao/ic_onus.png'} />
                                                         </div>
-                                                    )}
+                                                    ) : null}
                                                     <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={22} logoPath={`/images/coins/64/${22}.png`} />
                                                     </div>
