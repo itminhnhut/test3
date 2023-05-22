@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, Fragment } from 'react';
 import { CardNao, TextLiner, ButtonNao, Divider, Progressbar, Tooltip } from 'components/screens/Nao/NaoStyle';
-import { formatNumber, getS3Url, formatTime } from 'redux/actions/utils';
+import { formatNumber, getS3Url, formatTime, RefCurrency } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableNoData from 'components/common/table.old/TableNoData';
 import fetchApi from 'utils/fetch-api';
@@ -169,8 +169,17 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         <>
             <div>
                 <TextLiner className="pb-1 !text-xl text-txtPrimary dark:text-txtPrimary-dark">{t('nao:pool:per_overview')}</TextLiner>
-                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">{t('nao:pool:per_description')}</div>
-                <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end mt-6 mb-8">
+                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm flex items-center justify-between">
+                    <span>{t('nao:pool:per_description')}</span>
+                    <RangePopover
+                        language={language}
+                        active={days.find((d) => d.value === filter.day)}
+                        onChange={handleChangeDateRange}
+                        className="flex order-last"
+                        popoverClassName={'lg:mr-2 '}
+                    />
+                </div>
+                {/* <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end mt-6 mb-8">
                     <RangePopover
                         language={language}
                         active={days.find((d) => d.value === filter.day)}
@@ -200,7 +209,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             Futures USDT
                         </button>
                     </div>
-                </div>
+                </div> */}
                 <CardNao className="mt-6 !p-4 rounded-xl border border-divider dark:border-none">
                     <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium leading-6 ">{t('nao:pool:total_staked')}</label>
                     <div className="mt-4">
@@ -227,7 +236,8 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         <div className="text-xl font-semibold mr-2">≈ {formatNumber(data.totalProfit, 0)} VNDC</div>
                     </div>
                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark pt-0.5">
-                        {t('nao:pool:equivalent')} ${formatNumber(data.totalProfit, 2)}{' '}
+                        <span>{t('nao:pool:equivalent')}</span>&nbsp;
+                        <RefCurrency price={3862} quoteAsset={'VNDC'} />
                     </div>
 
                     <hr className="border-divider dark:border-divider-dark my-4" />
@@ -279,7 +289,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
             <div className="mt-12">
                 <TextLiner className="pb-1">{t('common:transaction_history')}</TextLiner>
                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">{t('nao:pool:history_description')}</div>
-                <Tabs tab={tab} className='divide-x divide-divider dark:divide-divider-dark'>
+                <Tabs tab={tab} className="divide-x divide-divider dark:divide-divider-dark">
                     <TabItem active={tab === 0} onClick={() => onSetTab(0)}>
                         {t('nao:pool:profit')}
                     </TabItem>
