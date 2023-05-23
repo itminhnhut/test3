@@ -18,26 +18,26 @@ import styled from 'styled-components';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import Image from 'next/image';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
-import SwapWarning from 'components/svg/SwapWarning';
 import useDebounce from 'hooks/useDebounce';
 
 const regex = /^[0-9]*$/; // chỉ cho phép nhập các ký tự từ 0 đến 9 hoặc giá trị rỗng
 
 const initState = {
-    selectedBank: {},
     bankNumber: '',
-    helperTextBankNumber: ''
+    isSuccess: false,
+    selectedBank: {},
+    helperTextBankNumber: '',
+    result: { modalShow: false, title: '', msg: '', type: '' }
 };
 
 const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, fetchListUserBank }) => {
+    const [loading, setLoading] = useState(false);
+    const [result, setResult] = useState(initState.result);
+    const [isSuccess, setIsSuccess] = useState(initState.isSuccess);
+    const [listBankAvailable, setListBankAvailable] = useState([]);
     const [bankNumber, setBankNumber] = useState(initState.bankNumber);
     const [selectedBank, setSelectedBank] = useState(initState.selectedBank);
-    const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState(null);
     const [helperTextBankNumber, setHelperTextBankNumber] = useState(initState.helperTextBankNumber);
-    const [listBankAvailable, setListBankAvailable] = useState([]);
-
-    const useRefResetSearch = useRef(false);
 
     useEffect(() => {
         fetchAPI({
@@ -54,64 +54,66 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
             .finally(() => {});
     }, []);
 
-    const handleBtnAdd = () => {
-        setLoading(true);
+    useEffect(() => {
+        if (!isSuccess) return;
+        onBackdropCb();
+        const timer = setTimeout(() => {
+            setResult((prev) => ({
+                ...prev,
+                type: 'success',
+                title: t('common:success'),
+                modalShow: true
+            }));
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [isSuccess]);
 
-        fetchAPI({
-            url: API_ADD_USER_BANK_ACCOUNT,
-            options: {
-                method: 'POST'
-            },
-            params: {
-                bankCode: selectedBank?.bank_code,
-                accountNumber: bankNumber
-            }
-        })
-            .then(({ status, data }) => {
-                let isSuccess = status === ApiStatus.SUCCESS;
-                setResult({
-                    isSuccess,
-                    msg: isSuccess ? '' : t('payment-method:bank_account_not_found')
-                });
-                if (isSuccess) {
-                    fetchListUserBank();
-                    setSelectedBank(initState.selectedBank);
-                    setBankNumber(initState.bankNumber);
-                    setHelperTextBankNumber(initState.helperTextBankNumber);
-                    useRefResetSearch.current = true;
-                    onBackdropCb();
+    const handleBtnAdd = async () => {
+        try {
+            setLoading(true);
+            const { status, data } = await fetchAPI({
+                url: API_ADD_USER_BANK_ACCOUNT,
+                options: {
+                    method: 'POST'
+                },
+                params: {
+                    bankCode: selectedBank?.bank_code,
+                    accountNumber: bankNumber
                 }
-            })
-            .catch((e) => {
-                setResult({
-                    isSuccess: false,
-                    msg: t('error:COMMON_ERROR')
-                });
-            })
-            .finally(() => {
-                setLoading(false);
             });
+            const isSuccess = status === ApiStatus.SUCCESS;
+
+            if (isSuccess && data) {
+                fetchListUserBank();
+                setSelectedBank(initState.selectedBank);
+                setBankNumber(initState.bankNumber);
+                setHelperTextBankNumber(initState.helperTextBankNumber);
+                setIsSuccess((prev) => !prev);
+            } else {
+                setResult({
+                    type: 'error',
+                    modalShow: true,
+                    title: t('payment-method:error_add'),
+                    msg: t('payment-method:bank_account_not_found')
+                });
+            }
+        } catch (error) {
+            setResult({
+                modalShow: true,
+                type: 'error',
+                title: t('payment-method:error_add'),
+                msg: t('error:COMMON_ERROR')
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const onCloseAlert = () => {
-        setHelperTextBankNumber('');
-        setResult(null);
+        setResult(initState.result);
+        setIsSuccess(initState.isSuccess);
+        setHelperTextBankNumber(initState.helperTextBankNumber);
     };
-
-    const renderAlertNotification = useCallback(() => {
-        if (!result) return null;
-
-        return (
-            <AlertModalV2
-                isVisible={result}
-                // isVisible={true}
-                onClose={onCloseAlert}
-                type={result.isSuccess ? 'success' : 'error'}
-                title={result.isSuccess ? t('common:success') : t('payment-method:error_add')}
-                message={result.isSuccess ? '' : result.msg}
-            />
-        );
-    }, [result]);
 
     const onBlurInputBankNumber = (e) => {
         if (!bankNumber) {
@@ -132,6 +134,19 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
             setHelperTextBankNumber('');
         }
     };
+
+    const renderAlertNotification = useCallback(() => {
+        return (
+            <AlertModalV2
+                isVisible={result.modalShow}
+                // isVisible={true}
+                onClose={onCloseAlert}
+                type={result.type}
+                title={result.title}
+                message={result.msg}
+            />
+        );
+    }, [result.modalShow]);
 
     return (
         <>
@@ -179,11 +194,11 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
                         <span className="text-sm">{t('payment-method:bank_name')}</span>
                         <BankNameInput
                             t={t}
-                            listData={listBankAvailable}
-                            selected={selectedBank}
-                            isResetSearch={useRefResetSearch}
-                            onChange={(bank) => setSelectedBank(bank)}
                             isDark={isDark}
+                            selected={selectedBank}
+                            isResetSearch={isSuccess}
+                            listData={listBankAvailable}
+                            onChange={(bank) => setSelectedBank(bank)}
                         />
                     </div>
                     {/* Bank number */}
@@ -191,14 +206,14 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
                         <span className="text-sm">{t('payment-method:account_number')}</span>
                         <InputV2
                             // type="number"
+                            allowClear
                             className="!pb-0"
                             value={bankNumber}
+                            error={helperTextBankNumber}
+                            onBlur={onBlurInputBankNumber}
+                            onFocus={() => setHelperTextBankNumber('')}
                             onChange={(value) => onChangeBankNumber(value)}
                             placeholder={t('payment-method:input_bank_account')}
-                            allowClear
-                            onBlur={onBlurInputBankNumber}
-                            error={helperTextBankNumber}
-                            onFocus={() => setHelperTextBankNumber('')}
                         />
                     </div>
                 </div>
