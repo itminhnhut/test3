@@ -16,6 +16,7 @@ import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import Tooltip from 'components/common/Tooltip';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const CONTAINER_ID = 'nami-mobile-tv';
 const CHART_VERSION = '1.0.9';
@@ -99,8 +100,29 @@ export class MobileTradingView extends React.PureComponent {
             this.handleActiveTime(this.props.initTimeFrame);
         }
 
-        if (prevProps.ordersList !== this.props.ordersList && !this.firstTime) {
+        if (prevProps.ordersList !== this.props.ordersList && !this.firstTime && this.props?.isShowSlTPLine) {
             this.rawOrders();
+        }
+        if (prevProps?.isShowSlTPLine !== this.props?.isShowSlTPLine && !this.firstTime) {
+            if (this.props?.isShowSlTPLine) {
+                this.rawOrders();
+            } else {
+                this.oldOrdersList = [];
+                Object.keys(this.drawnOrder).map((line) => {
+                    this.drawnOrder[line].remove();
+                    delete this.drawnOrder[line];
+                });
+
+                Object.keys(this.drawnSl).map((line) => {
+                    this.drawnSl[line].remove();
+                    delete this.drawnSl[line];
+                });
+
+                Object.keys(this.drawnTp).map((line) => {
+                    this.drawnTp[line].remove();
+                    delete this.drawnTp[line];
+                });
+            }
         }
         if (prevProps.fullChart !== this.props.fullChart) {
             this.initWidget(this.props.symbol, this.props.fullChart);
@@ -460,7 +482,7 @@ export class MobileTradingView extends React.PureComponent {
                 editorFontsList: ['Inter', 'Sans'],
                 volumePaneSize: 'tiny'
             },
-            custom_css_url: '/library/trading_view/customized_mobile_chart.css?version=5.0.1'
+            custom_css_url: '/library/trading_view/customized_mobile_chart.css?version=5.0.2'
         };
 
         // Clear to solve config when load saved chart
@@ -495,7 +517,7 @@ export class MobileTradingView extends React.PureComponent {
             // if (this.props.isVndcFutures) {
             if (this.timer) clearTimeout(this.timer);
             this.timer = setTimeout(() => {
-                this.rawOrders();
+                if (this.props?.isShowSlTPLine) this.rawOrders();
                 this.drawHighLowArrows();
                 this.firstTime = false;
                 this.widget
@@ -724,7 +746,7 @@ const Funding = ({ symbol }) => {
 
     return (
         <>
-            {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}
+            {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} symbol={symbol} />}
             <div className="flex items-center px-4 pt-3 pb-4 space-x-6 border-b-4 border-divider/70 dark:border-divider-dark/50">
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
                     <div className="flex items-center space-x-1" onClick={() => setShowModal(true)}>
@@ -777,11 +799,12 @@ const Funding = ({ symbol }) => {
     );
 }
 
-const ModalFundingRate = ({ onClose, t }) => {
+const ModalFundingRate = ({ onClose, t ,symbol}) => {
     const router = useRouter();
+    const [currentTheme] = useDarkMode();
 
     const onRedirect = () => {
-        router.push(`/${router.locale}/futures/funding-history?theme=dark&source=frame`);
+        router.push(`/${router.locale}/futures/funding-history?theme=${currentTheme}&source=frame&symbol=${symbol}`);
     };
 
     const onDetail = () => {

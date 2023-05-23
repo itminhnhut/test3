@@ -12,10 +12,10 @@ const NaoFooter = memo(({noSpacingTop}) => {
         let url = '';
         switch (key) {
             case 'term':
-                url = 'https://nao.namifutures.com/terms-of-futures';
+                url = 'https://nami.exchange/terms-of-futures';
                 break;
             case 'privacy':
-                url = 'https://nao.namifutures.com/privacy';
+                url = 'https://nami.exchange/privacy';
                 break;
             case 'facebook':
                 url = 'https://www.facebook.com/groups/nami.exchange';

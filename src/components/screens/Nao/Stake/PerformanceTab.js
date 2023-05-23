@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, Fragment } from 'react';
 import { CardNao, TextLiner, ButtonNao, Divider, Progressbar, Tooltip } from 'components/screens/Nao/NaoStyle';
-import { formatNumber, getS3Url, formatTime } from 'redux/actions/utils';
+import { formatNumber, getS3Url, formatTime, RefCurrency } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableNoData from 'components/common/table.old/TableNoData';
 import fetchApi from 'utils/fetch-api';
@@ -115,10 +115,12 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         const totalStaked = dataSource?.totalStaked ?? 0;
         const pool = availableStaked / totalStaked;
         const percent = (availableStaked / totalStaked) * 100;
+        const totalEstUSDT = Object.values(dataSource?.poolRevenueThisWeekUSD ?? {}).reduce((a, b) => a + b, 0);
         return {
             percent: percent || 0,
             estimate: dataSource?.poolRevenueThisWeek,
             estimateUSD: dataSource?.poolRevenueThisWeekUSD,
+            totalEstUSDT: totalEstUSDT * (percent / 100 || 0),
             totalStaked,
             availableStaked,
             totalProfit: dataSource?.totalProfit
@@ -129,7 +131,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         return (
             <div className="flex items-center w-full">
                 <img src={getS3Url(logoPath)} width={24} height={24} alt="" />
-                <div className="ml-2 flex-1">
+                <div className="ml-3 flex-1">
                     <div className="flex justify-between text-sm font-semibold">
                         <div className="">{assetConfig[assetId]?.assetCode}</div>
                         <div className="">
@@ -138,7 +140,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     </div>
                     <div className="flex justify-between text-xs text-txtSecondary dark:text-txtSecondary-dark">
                         <div className="">{assetConfig[assetId]?.assetName}</div>
-                        <div className="">${formatNumber((data.estimateUSD?.[assetId] || 0) * (data.percent / 100 || 0), 0)}</div>
+                        <div className="">${formatNumber((data.estimateUSD?.[assetId] || 0) * (data.percent / 100 || 0), 4)}</div>
                     </div>
                 </div>
             </div>
@@ -150,14 +152,14 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
             <div>
                 <div className="flex items-center w-full">
                     <img src={getS3Url(logoPath)} width={20} height={20} alt="" />
-                    <div className="ml-2 flex-1">
+                    <div className="ml-3 flex-1">
                         <div className="flex justify-between text-sm font-semibold">
                             <div className="">{assetConfig[assetId]?.assetCode}</div>
                             <div className="">{formatNumber(item.interest?.[assetId] || 0, assetConfig[assetId]?.assetDigit ?? 8)}</div>
                         </div>
                         <div className="flex justify-between text-xs text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="">{assetConfig[assetId]?.assetName}</div>
-                            <div className=""> ${formatNumber(item.interestUSD?.[assetId] || 0, 0)}</div>
+                            <div className=""> ${formatNumber(item.interestUSD?.[assetId] || 0, 4)}</div>
                         </div>
                     </div>
                 </div>
@@ -169,8 +171,17 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         <>
             <div>
                 <TextLiner className="pb-1 !text-xl text-txtPrimary dark:text-txtPrimary-dark">{t('nao:pool:per_overview')}</TextLiner>
-                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">{t('nao:pool:per_description')}</div>
-                <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end mt-6 mb-8">
+                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm flex items-center justify-between">
+                    <span>{t('nao:pool:per_description')}</span>
+                    <RangePopover
+                        language={language}
+                        active={days.find((d) => d.value === filter.day)}
+                        onChange={handleChangeDateRange}
+                        className="flex order-last"
+                        popoverClassName={'lg:mr-2 '}
+                    />
+                </div>
+                {/* <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end mt-6 mb-8">
                     <RangePopover
                         language={language}
                         active={days.find((d) => d.value === filter.day)}
@@ -200,7 +211,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             Futures USDT
                         </button>
                     </div>
-                </div>
+                </div> */}
                 <CardNao className="mt-6 !p-4 rounded-xl border border-divider dark:border-none">
                     <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium leading-6 ">{t('nao:pool:total_staked')}</label>
                     <div className="mt-4">
@@ -227,7 +238,8 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         <div className="text-xl font-semibold mr-2">≈ {formatNumber(data.totalProfit, 0)} VNDC</div>
                     </div>
                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark pt-0.5">
-                        {t('nao:pool:equivalent')} ${formatNumber(data.totalProfit, 2)}{' '}
+                        <span>{t('nao:pool:equivalent')}</span>&nbsp;
+                        <RefCurrency price={data.totalProfit} quoteAsset={'VNDC'} />
                     </div>
 
                     <hr className="border-divider dark:border-divider-dark my-4" />
@@ -255,7 +267,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         {t('nao:pool:per_est_revenue')}
                     </label>
                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark pt-2">
-                        {t('nao:pool:equivalent')} ${formatNumber(data.estimateUSD, 2)}
+                        {t('nao:pool:equivalent')} ${formatNumber(data.totalEstUSDT, 4)}
                     </div>
                     <div className="mt-4 flex flex-col space-y-4">
                         <div className="w-full py-0.5">
@@ -267,9 +279,11 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         <div className="w-full py-0.5">
                             <EstimateInterest assetId={1} logoPath={`/images/coins/64/${1}.png`} />
                         </div>
-                        <div className="w-full py-0.5">
-                            <EstimateInterest assetId={86} logoPath={'/images/nao/ic_onus.png'} />
-                        </div>
+                        {data.estimate?.[86] && data.estimate?.[86] > 0 ? (
+                            <div className="w-full py-0.5">
+                                <EstimateInterest assetId={86} logoPath={'/images/nao/ic_onus.png'} />
+                            </div>
+                        ) : null}
                         <div className="w-full py-0.5">
                             <EstimateInterest assetId={22} logoPath={`/images/coins/64/${22}.png`} />
                         </div>
@@ -279,7 +293,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
             <div className="mt-12">
                 <TextLiner className="pb-1">{t('common:transaction_history')}</TextLiner>
                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">{t('nao:pool:history_description')}</div>
-                <Tabs tab={tab} className='divide-x divide-divider dark:divide-divider-dark'>
+                <Tabs tab={tab} className="divide-x divide-divider dark:divide-divider-dark">
                     <TabItem active={tab === 0} onClick={() => onSetTab(0)}>
                         {t('nao:pool:profit')}
                     </TabItem>
@@ -293,11 +307,15 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             {listHitory.length > 0 ? (
                                 <div className="grid sm:grid-cols-2 gap-3">
                                     {listHitory.map((item, index) => {
+                                        const sumUSDT = Object.values(item.interestUSD).reduce((a, b) => a + b, 0);
                                         return (
                                             <CardNao key={index} className="rounded-xl border border-divider dark:border-none">
                                                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
                                                     {t('nao:pool:week', { value: listHitory.length - index })} {formatTime(item.fromTime, 'dd/MM/yyyy')} -{' '}
                                                     {formatTime(item.toTime, 'dd/MM/yyyy')}
+                                                </div>
+                                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm pt-1 mb-6">
+                                                    {t('nao:pool:equivalent')} ${formatNumber(sumUSDT, 4)}
                                                 </div>
                                                 <div className="mt-1 flex flex-col space-y-4">
                                                     <div className="w-full py-0.5">
@@ -309,9 +327,11 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                                     <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={1} logoPath={`/images/coins/64/${1}.png`} />
                                                     </div>
-                                                    <div className="w-full py-0.5">
-                                                        <HistoryInterest item={item} assetId={86} logoPath={'/images/nao/ic_onus.png'} />
-                                                    </div>
+                                                    {item.interest?.[86] && item.interest?.[86] > 0 ? (
+                                                        <div className="w-full py-0.5">
+                                                            <HistoryInterest item={item} assetId={86} logoPath={'/images/nao/ic_onus.png'} />
+                                                        </div>
+                                                    ) : null}
                                                     <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={22} logoPath={`/images/coins/64/${22}.png`} />
                                                     </div>

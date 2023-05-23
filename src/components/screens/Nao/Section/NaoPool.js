@@ -58,6 +58,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
     const router = useRouter();
     const assetConfig = useSelector((state) => getAssets(state));
     const [actIdx, setActIdx] = useState(0);
+    const isMobile = width < 820;
 
     const onNavigate = (isNext) => {
         if (sliderRef.current) {
@@ -67,8 +68,12 @@ const NaoPool = ({ dataSource, assetNao }) => {
 
     const HistoryPriceItem = ({ s3Url, total, digitsTotal, usdPrice, digitsUsdPrice = 3, isUSDT = false, assetName, assetSymbol }) => (
         <div className="flex items-center w-full">
-            {!isUSDT ? <img src={getS3Url(s3Url)} width={20} height={20} alt="" /> : <AssetLogo assetId={22} size={20} />}
-            <div className="ml-2 flex-1">
+            {!isUSDT ? (
+                <img src={getS3Url(s3Url)} width={isMobile ? 24 : 32} height={isMobile ? 24 : 32} alt="" />
+            ) : (
+                <AssetLogo assetId={22} size={isMobile ? 24 : 32} />
+            )}
+            <div className="ml-3 flex-1">
                 <div className="flex justify-between text-sm font-semibold">
                     <div className="">{assetSymbol}</div>
                     <div className="">{formatNumber(total, digitsTotal)}</div>
@@ -98,14 +103,14 @@ const NaoPool = ({ dataSource, assetNao }) => {
             const dataFilter = listHitory.slice(i * size, (i + 1) * size);
             result.push(
                 <SwiperSlide key={i}>
-                    <div className="flex  w-full">
+                    <div className="flex w-full">
                         {dataFilter.map((item, index) => {
                             const sumUSDT = Object.values(item.interestUSD).reduce((a, b) => a + b, 0);
                             weekNumber--;
                             return (
                                 <CardHistoryPrice index={index}>
                                     <div className="w-full">
-                                        <div className="flex flex-col w-full lg:w-auto">
+                                        <div className="flex flex-col sm:flex-row w-full sm:space-x-8 lg:w-auto">
                                             <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6">
                                                 {t('nao:pool:week', { value: weekNumber })} {formatTime(item.fromTime, 'dd/MM/yyyy')} -{' '}
                                                 {formatTime(item.toTime, 'dd/MM/yyyy')}
@@ -114,8 +119,8 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                                 {t('nao:pool:equivalent')}: <SubPrice price={sumUSDT} digitsPrice={assetConfig[22]?.assetDigit ?? 3} />
                                             </span>
                                         </div>
-                                        <div className="mt-1">
-                                            <div className="w-full my-2">
+                                        <div className="pt-6 sm:pt-8 flex flex-col space-y-4 sm:space-y-6">
+                                            <div className="w-full sm:p-0.5">
                                                 <HistoryPriceItem
                                                     s3Url={'/images/nao/ic_nao.png'}
                                                     total={item?.interest?.[447]}
@@ -125,7 +130,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                                     assetSymbol={assetConfig[447]?.assetCode}
                                                 />
                                             </div>
-                                            <div className="w-full my-2">
+                                            <div className="w-full sm:p-0.5">
                                                 <HistoryPriceItem
                                                     s3Url={'/images/nao/ic_vndc.png'}
                                                     total={item?.interest?.[72]}
@@ -135,7 +140,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                                     assetSymbol={assetConfig[72]?.assetCode}
                                                 />
                                             </div>
-                                            <div className="w-full my-2">
+                                            <div className="w-full sm:p-0.5">
                                                 <HistoryPriceItem
                                                     s3Url={`/images/coins/64/${1}.png`}
                                                     total={item?.interest?.[1]}
@@ -145,17 +150,19 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                                     assetSymbol={assetConfig[1]?.assetCode}
                                                 />
                                             </div>
-                                            <div className="w-full my-2">
-                                                <HistoryPriceItem
-                                                    s3Url={`/images/nao/ic_onus.png`}
-                                                    total={item?.interest?.[86]}
-                                                    digitsTotal={assetConfig[86]?.assetDigit ?? 0}
-                                                    usdPrice={item?.interestUSD?.[86]}
-                                                    assetName={assetConfig[86]?.assetName}
-                                                    assetSymbol={assetConfig[86]?.assetCode}
-                                                />
-                                            </div>
-                                            <div className="w-full my-2">
+                                            {item?.interest?.[86] > 0 && (
+                                                <div className="w-full sm:p-0.5">
+                                                    <HistoryPriceItem
+                                                        s3Url={`/images/nao/ic_onus.png`}
+                                                        total={item?.interest?.[86]}
+                                                        digitsTotal={assetConfig[86]?.assetDigit ?? 0}
+                                                        usdPrice={item?.interestUSD?.[86]}
+                                                        assetName={assetConfig[86]?.assetName}
+                                                        assetSymbol={assetConfig[86]?.assetCode}
+                                                    />
+                                                </div>
+                                            )}
+                                            <div className="w-full sm:p-0.5">
                                                 <HistoryPriceItem
                                                     s3Url={`/images/nao/ic_onus.png`}
                                                     total={item?.interest?.[22]}
@@ -239,8 +246,12 @@ const NaoPool = ({ dataSource, assetNao }) => {
 
     const PoolPriceItem = ({ s3Url, price, usdPrice, digitsPrice, digitsUsdPrice = 3, isUSDT = false, assetName, assetSymbol }) => (
         <div className="flex items-center w-full">
-            {!isUSDT ? <img src={getS3Url(s3Url)} width={20} height={20} alt="" /> : <AssetLogo assetId={22} size={20} />}
-            <div className="ml-2 flex-1">
+            {!isUSDT ? (
+                <img src={getS3Url(s3Url)} width={isMobile ? 24 : 32} height={isMobile ? 24 : 32} alt="" />
+            ) : (
+                <AssetLogo assetId={22} size={isMobile ? 24 : 32} />
+            )}
+            <div className="ml-3 flex-1">
                 <div className="flex justify-between text-sm font-semibold">
                     <div className="">{assetSymbol}</div>
                     <div className="">{formatNumber(price, digitsPrice)}</div>
@@ -298,8 +309,8 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         </div>
                         <SubPrice price={Object.values(data?.estimateUsd || {}).reduce((a, b) => a + b, 0)} digitsPrice={assetConfig[22]?.assetDigit ?? 3} />
                     </div>
-                    <div className="flex items-center w-full flex-wrap">
-                        <div className="w-full my-2">
+                    <div className="flex items-center w-full flex-wrap space-y-4 sm:space-y-6 mt-6 sm:mt-8">
+                        <div className="w-full sm:p-0.5">
                             <PoolPriceItem
                                 digitsPrice={assetConfig[447]?.assetDigit ?? 2}
                                 s3Url={'/images/nao/ic_nao.png'}
@@ -309,7 +320,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 assetSymbol={assetConfig[447]?.assetCode}
                             />
                         </div>
-                        <div className="w-full my-2">
+                        <div className="w-full sm:p-0.5">
                             <PoolPriceItem
                                 digitsPrice={assetConfig[72]?.assetDigit ?? 0}
                                 s3Url={'/images/nao/ic_vndc.png'}
@@ -319,7 +330,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 assetSymbol={assetConfig[72]?.assetCode}
                             />
                         </div>
-                        <div className="w-full my-2">
+                        <div className="w-full sm:p-0.5">
                             <PoolPriceItem
                                 digitsPrice={assetConfig[1]?.assetDigit ?? 0}
                                 s3Url={`/images/coins/64/${1}.png`}
@@ -329,17 +340,19 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 assetSymbol={assetConfig[1]?.assetCode}
                             />
                         </div>
-                        <div className="w-full my-2">
-                            <PoolPriceItem
-                                digitsPrice={assetConfig[86]?.assetDigit ?? 0}
-                                s3Url={'/images/nao/ic_onus.png'}
-                                price={data.estimate?.[86]}
-                                usdPrice={data.estimateUsd?.[86]}
-                                assetName={assetConfig[86]?.assetName}
-                                assetSymbol={assetConfig[86]?.assetCode}
-                            />
-                        </div>
-                        <div className="w-full my-2">
+                        {data.estimate?.[86] > 0 && (
+                            <div className="w-full sm:p-0.5">
+                                <PoolPriceItem
+                                    digitsPrice={assetConfig[86]?.assetDigit ?? 0}
+                                    s3Url={'/images/nao/ic_onus.png'}
+                                    price={data.estimate?.[86]}
+                                    usdPrice={data.estimateUsd?.[86]}
+                                    assetName={assetConfig[86]?.assetName}
+                                    assetSymbol={assetConfig[86]?.assetCode}
+                                />
+                            </div>
+                        )}
+                        <div className="w-full sm:p-0.5">
                             <PoolPriceItem
                                 digitsPrice={assetConfig[22]?.assetDigit ?? 0}
                                 s3Url={'/images/nao/ic_onus.png'}
@@ -382,7 +395,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             </div>
                         )}
                     </div>
-                    <div className="pt-4 sm:pt-5">
+                    <div className="pt-4 sm:pt-0">
                         {listHitory.length > 0 ? (
                             <Swiper
                                 onSlideChange={({ activeIndex }) => setActIdx(activeIndex)}

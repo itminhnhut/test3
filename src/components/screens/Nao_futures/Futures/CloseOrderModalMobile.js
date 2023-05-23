@@ -3,19 +3,14 @@ import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
 import { checkInFundingTime, checkLargeVolume, countDecimals, formatNumber, getS3Url, getType } from 'redux/actions/utils';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Switcher from 'components/common/Switcher';
 import TradingInput from 'components/trade/TradingInput';
 import { ChevronDown, Minus, Plus } from 'react-feather';
 import Slider from 'components/trade/InputSlider';
 import colors from 'styles/colors';
 import Selectbox from './ModifyOrder/Selectbox';
-import {
-    getProfitVndc,
-    getTypesLabel,
-    validator,
-    VndcFutureOrderType
-} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { getProfitVndc, getTypesLabel, validator, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { IconLoading } from 'components/common/Icons';
@@ -27,32 +22,22 @@ import { createSelector } from 'reselect';
 import find from 'lodash/find';
 import Tooltip from 'components/common/Tooltip';
 import InfoOutlined from 'components/svg/InfoOutlined';
+import { getOrdersList } from 'redux/actions/futures';
 
-const getPairConfig = createSelector(
-    [
-        state => state?.futures?.pairConfigs,
-        (utils, params) => params
-    ],
-    (pairConfigs, params) => {
-        return find(pairConfigs, { ...params });
-    }
-);
+const getPairConfig = createSelector([(state) => state?.futures?.pairConfigs, (utils, params) => params], (pairConfigs, params) => {
+    return find(pairConfigs, { ...params });
+});
 
-const CloseOrderModalMobile = ({
-    onClose,
-    pairPrice,
-    order,
-    forceFetchOrder
-}) => {
+const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) => {
+    const dispatch = useDispatch();
     const { t } = useTranslation();
     const lastPrice = pairPrice?.lastPrice;
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
-    const pairConfig = useSelector(state => getPairConfig(state, { pair: order?.symbol }));
+    const pairConfig = useSelector((state) => getPairConfig(state, { pair: order?.symbol }));
     const assetConfig = useSelector((state) => state.utils.assetConfig);
     const [partialClose, setPartialClose] = useState(false);
     const [volume, setVolume] = useState();
-    const [type, setType] = useState(String(order?.type)
-        .toUpperCase());
+    const [type, setType] = useState(String(order?.type).toUpperCase());
     const [price, setPrice] = useState(lastPrice);
     const isChangeSlide = useRef(false);
     const [percent, setPercent] = useState(1);
@@ -67,41 +52,33 @@ const CloseOrderModalMobile = ({
     const side = order?.side;
 
     const getDecimalPrice = (config) => {
-        const decimalScalePrice =
-            config?.filters.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
+        const decimalScalePrice = config?.filters.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
         return countDecimals(decimalScalePrice?.tickSize);
     };
 
     const configSymbol = useMemo(() => {
         const symbol = allPairConfigs.find((rs) => rs.symbol === order?.symbol);
         const isVndcFutures = symbol?.quoteAsset === 'VNDC';
-        const decimalSymbol =
-            assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)
-                ?.assetDigit ?? 0;
+        const decimalSymbol = assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
         const decimalScalePrice = getDecimalPrice(symbol);
         return {
             decimalSymbol,
             decimalScalePrice,
             isVndcFutures,
-            quoteAsset: symbol?.quoteAsset,
+            quoteAsset: symbol?.quoteAsset
         };
     }, [order]);
 
     const minQuoteQty = useMemo(() => {
         const initValue = configSymbol.isVndcFutures ? 100000 : 5;
-        return pairConfig ? pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional
-            : initValue;
+        return pairConfig ? pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional : initValue;
     }, [pairConfig, configSymbol]);
 
     const maxQuoteQty = useMemo(() => {
-        const pendingVol = order?.metadata?.partial_close_metadata?.partial_close_orders?.reduce((pre, {
-            close_volume = 0,
-            status
-        }) => {
+        const pendingVol = order?.metadata?.partial_close_metadata?.partial_close_orders?.reduce((pre, { close_volume = 0, status }) => {
             return pre + (status === VndcFutureOrderType.Status.PENDING ? close_volume : 0);
         }, 0);
         return order_value - (pendingVol ?? 0);
-
     }, [order]);
 
     useEffect(() => {
@@ -114,8 +91,7 @@ const CloseOrderModalMobile = ({
 
     useEffect(() => {
         setPrice(lastPrice);
-        setType(String(order?.type)
-            .toUpperCase());
+        setType(String(order?.type).toUpperCase());
     }, [showCustomized]);
 
     const arrDot = useMemo(() => {
@@ -145,9 +121,7 @@ const CloseOrderModalMobile = ({
             }
             return i;
         });
-        const value = ((+maxQuoteQty * (_x ? _x : x)) / 100).toFixed(
-            configSymbol.decimalSymbol
-        );
+        const value = ((+maxQuoteQty * (_x ? _x : x)) / 100).toFixed(configSymbol.decimalSymbol);
         setVolume(+value);
         setPercent(_x ? _x : x);
     };
@@ -157,7 +131,7 @@ const CloseOrderModalMobile = ({
         return pairConfig?.orderTypes?.reduce((prev, curr) => {
             options.push({
                 title: getTypesLabel(curr, t),
-                value: curr,
+                value: curr
             });
             return options;
         }, []);
@@ -195,6 +169,10 @@ const CloseOrderModalMobile = ({
         return validator('price', price, type, _side, lastPrice, pairConfig, configSymbol.decimalScalePrice, t);
     };
 
+    const getOrders = () => {
+        dispatch(getOrdersList({ product: 2 }));
+    };
+
     const onConfirm = async () => {
         if (isError) return;
         const params = {
@@ -204,7 +182,8 @@ const CloseOrderModalMobile = ({
             useQuoteQty: true,
             closeVolume: +volume,
             special_mode: 1,
-            product: 2
+            product: 2,
+            type: order?.status === VndcFutureOrderType.Status.PENDING ? 'CANCEL_ORDER' : 'CLOSE_POSITION'
         };
         let isLargeVolume = false;
         const isPartialClose = partialClose && percent < 100;
@@ -222,31 +201,31 @@ const CloseOrderModalMobile = ({
         }
         setLoading(true);
         try {
-            const {
-                status,
-                data,
-                message
-            } = await fetchApi({
+            const { status, data, message } = await fetchApi({
                 url: isPartialClose ? API_PARTIAL_CLOSE_ORDER : API_GET_FUTURES_ORDER,
                 options: { method: isPartialClose ? 'POST' : 'DELETE' },
-                params: params,
+                params: params
             });
             if (status === ApiStatus.SUCCESS) {
                 if (isPartialClose) {
-                    context.alert.show('success',
+                    context.alert.show(
+                        'success',
                         t('futures:mobile:adjust_margin:add_volume_success'),
                         t('futures:close_order:request_successfully'),
-                        notice, null,
+                        notice,
+                        null,
                         () => {
                             onClose();
                             // if (forceFetchOrder) forceFetchOrder()
                         }
                     );
                 } else {
-                    context.alert.show('success',
+                    context.alert.show(
+                        'success',
                         t('futures:close_order:modal_title', { value: order?.displaying_id }),
                         t('futures:close_order:request_successfully', { value: order?.displaying_id }),
-                        notice, null,
+                        notice,
+                        null,
                         () => {
                             onClose();
                             if (forceFetchOrder) forceFetchOrder();
@@ -255,15 +234,13 @@ const CloseOrderModalMobile = ({
                 }
             } else {
                 const requestId = data?.requestId && `(${data?.requestId.substring(0, 8)})`;
-                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`), requestId);
+                context.alert.show('error', t('common:failed'), t(`error:futures:ORDER_ALREADY_ACTIVE`), requestId, getOrders, null, {
+                    confirmTitle: t('common:reload')
+                });
             }
         } catch (e) {
             if (e.message === 'Network Error' || !navigator?.onLine) {
-                context.alert.show(
-                    'error',
-                    t('common:failed'),
-                    t('error:futures:NETWORK_ERROR')
-                );
+                context.alert.show('error', t('common:failed'), t('error:futures:NETWORK_ERROR'));
             }
         } finally {
             setLoading(false);
@@ -272,18 +249,22 @@ const CloseOrderModalMobile = ({
 
     const getLabel = (type) => {
         if (type !== FuturesOrderTypes.Market) return t('common:price');
-        return t('common:price') + ' ' + String(getTypesLabel(type, t))
-            .toLowerCase();
+        return t('common:price') + ' ' + String(getTypesLabel(type, t)).toLowerCase();
     };
 
     const changeClass = `w-5 h-5 flex items-center justify-center rounded-md`;
-    const isError = ((maxQuoteQty > volume || volume > maxQuoteQty) && partialClose && (volume > maxQuoteQty || !volume || volume < minQuoteQty ||
-        (!_validator()?.isValid && showCustomized && type !== FuturesOrderTypes.Market))) || loading;
+    const isError =
+        ((maxQuoteQty > volume || volume > maxQuoteQty) &&
+            partialClose &&
+            (volume > maxQuoteQty || !volume || volume < minQuoteQty || (!_validator()?.isValid && showCustomized && type !== FuturesOrderTypes.Market))) ||
+        loading;
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}>
             <div className="flex flex-col ">
-                <div className="text-lg text-txtPrimary dark:text-txtPrimary-dark font-bold leading-6 mb-3">{t('futures:mobile:adjust_margin:close_position')}</div>
+                <div className="text-lg text-txtPrimary dark:text-txtPrimary-dark font-bold leading-6 mb-3">
+                    {t('futures:mobile:adjust_margin:close_position')}
+                </div>
                 <div className="text-green-2 font-semibold relative w-max bottom-[-13px] bg-bgPrimary dark:bg-bgPrimary-dark px-[6px] left-[9px]">
                     {order?.symbol} {order?.leverage}x
                 </div>
@@ -368,6 +349,7 @@ const CloseOrderModalMobile = ({
                                     </div>
                                     <Slider
                                         useLabel
+                                        useTooltip
                                         positionLabel="top"
                                         onusMode
                                         labelSuffix="%"
@@ -385,7 +367,11 @@ const CloseOrderModalMobile = ({
                                 <div className="mt-6 flex flex-col space-y-4">
                                     <div className="text-sm font-semibold flex items-center space-x-2" onClick={() => setShowCustomized(!showCustomized)}>
                                         <span> {t('futures:mobile:adjust_margin:advanced_custom')} </span>
-                                        <ChevronDown color={isDark ? colors.gray[7] : colors.gray[1]} size={16} className={`${showCustomized ? 'rotate-180' : ''} transition-all`} />
+                                        <ChevronDown
+                                            color={isDark ? colors.gray[7] : colors.gray[1]}
+                                            size={16}
+                                            className={`${showCustomized ? 'rotate-180' : ''} transition-all`}
+                                        />
                                     </div>
                                     {showCustomized && (
                                         <div className="flex items-center space-x-4">
@@ -463,7 +449,7 @@ const CloseOrderModalMobile = ({
                                             data-for="pending-vol"
                                             id="tooltip-pending-vol"
                                         >
-                                            <InfoOutlined color='currentColor' size={12} />
+                                            <InfoOutlined color="currentColor" size={12} />
                                         </div>
                                     </div>
                                     <div className="flex items-center">
