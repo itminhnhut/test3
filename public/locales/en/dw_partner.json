@@ -27,8 +27,9 @@
     "will_transfer": "You will transfer",
     "will_received": "You will receive",
     "verify": "Verify",
+    "verify_smart_otp": "Nami Smart OTP  Verification",
     "otp_code_send_to_email": "Please enter the 6-digit code sent to your email.",
-    "otp_code_send_to_smartOtp": "Vui lòng nhập mã Smart OTP được cung cấp trong ứng dụng Nami Exchange để xác nhận giao dịch",
+    "otp_code_send_to_smartOtp": "Please enter the 6-digit code sent to your email in order to proceed with the Nami Smart OTP setting.",
     "email_verification_code": "Email verification code",
     "not_received_otp": "Not receiving?",
     "resend_otp": "Resend",
@@ -142,8 +143,9 @@
     "otp_code_send_to_phone": "Enter the 6 digit code sent to your phone.",
     "add_phone_success": "Congrats! You have successfully verified your phone number. You can now start to trade via partner",
     "resend_otp_success": "A new OTP has been sent to your phone number.",
-    "disabled_smart_otp_title": "Disabled Smart OTP feature",
-    "disabled_smart_otp_des": "The Smart OTP feature has been disabled due to entering the wrong Smart OTP code more than 5 times. Please switch to another authentication method to continue.",
+    "disabled_smart_otp_title": "Deactivation",
+    "disabled_smart_otp_des": "Smart OTP feature has been deactivated due to incorrect Smart OTP input 5 times. Please verify transactions with another OTP methods or reactivate Smart OTP to continue using.",
+    "verify_by_email": "Email authentification",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
         "max_amount": "Maximum amount is {{amount}} {{asset}}",
@@ -159,7 +161,7 @@
         "not_found_order": "Order #{{displayingId}} not found or being processed, please reload or contact support.",
         "invalid_otp": "OTP is invalid. Please try again.",
         "invalid_secret": "Please confirm PIN code in app first.",
-        "invalid_smart_otp": "Otp is invalid {{timesErr}} times. Please try again."
+        "invalid_smart_otp": "Verification code is incorrect {{timesErr}}/5, please try again"
     },
     "filter": {
         "a_day": "1 day",

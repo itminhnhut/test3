@@ -1,19 +1,16 @@
 import classNames from 'classnames';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import OtpInput from 'react-otp-input';
-import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Copy from 'components/svg/Copy';
 
-import { Check, X } from 'react-feather';
-import { useRouter } from 'next/router';
+import { Check} from 'react-feather';
 import Countdown from 'react-countdown';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { ApiResultCreateOrder, ApiStatus } from 'redux/actions/const';
 import Spinner from 'components/svg/Spinner';
 import { MODE_OTP } from 'constants/constants';
-import { mapKeys, mapValues } from 'lodash';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
 const OTP_REQUIRED_LENGTH = 6;
@@ -120,7 +117,7 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
             {state.modes.map((mode) => (
                 <div key={mode}>
                     <div className={classNames('mb-6', { '!mb-8': isTfaEnabled })}>
-                        {mode !== MODE_OTP.TFA && <div className="txtPri-3"> {mode === MODE_OTP.SMART_OTP ? "Xác minh Smart OTP" : t('dw_partner:verify')}</div>}
+                        {mode !== MODE_OTP.TFA && <div className="txtPri-3"> {mode === MODE_OTP.SMART_OTP ? t('dw_partner:verify_smart_otp') : t('dw_partner:verify')}</div>}
                         {mode !== MODE_OTP.TFA && <div className="txtSecond-2 mt-4">{t(`dw_partner:otp_code_send_to_${mode}`)}</div>}
                     </div>
 

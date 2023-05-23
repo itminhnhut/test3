@@ -92,7 +92,7 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
         return toast({
             text: errorMessageMapper(t, errStatus, dataErr),
             type: 'warning',
-            duration: 200
+            duration: 2000
         });
     };
 
@@ -106,9 +106,9 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
                 },
                 params: {
                     assetId: selectedAsset?.assetId,
-                    amount: '150000',
+                    amount,
                     network: selectedNetwork?.network,
-                    withdrawTo: address || "0xD5B2F0Ef97de5DF5c640280eFC35445aa088F4b5",
+                    withdrawTo: address,
                     tag: memo,
                     otp
                 }
@@ -161,7 +161,7 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
                     // CONFIRM PHASE
                     phase === PHASE_CONFIRM.INFO && (
                         <>
-                            <div className="text-center mb-4">
+                            <div className="text-center mb-8">
                                 <p className="text-2xl font-semibold">{t('wallet:withdraw_confirmation')}</p>
                             </div>
                             <div className="space-y-2">
@@ -239,7 +239,7 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
             <AlertModalV2
                 isVisible={showAlertDisableSmartOtp}
                 onClose={() => setShowAlertDisableSmartOtp(false)}
-                textButton="Xác thực bằng Email"
+                textButton={t('dw_partner:verify_by_email')}
                 onConfirm={() => {
                     handlePostOrder(null);
                     setShowAlertDisableSmartOtp(false)

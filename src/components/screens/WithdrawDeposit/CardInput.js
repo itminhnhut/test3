@@ -354,7 +354,7 @@ const CardInput = () => {
             <AlertModalV2
                 isVisible={state.showAlertDisableSmartOtp}
                 onClose={() => setState({showAlertDisableSmartOtp: false})}
-                textButton="Xác thực bằng Email"
+                textButton={t('dw_partner:verify_by_email')}
                 onConfirm={() => {
                      setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false })
                      onMakeOrderHandler()
