@@ -115,10 +115,12 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         const totalStaked = dataSource?.totalStaked ?? 0;
         const pool = availableStaked / totalStaked;
         const percent = (availableStaked / totalStaked) * 100;
+        const totalEstUSDT = Object.values(dataSource?.poolRevenueThisWeekUSD ?? {}).reduce((a, b) => a + b, 0);
         return {
             percent: percent || 0,
             estimate: dataSource?.poolRevenueThisWeek,
             estimateUSD: dataSource?.poolRevenueThisWeekUSD,
+            totalEstUSDT: totalEstUSDT * (percent / 100 || 0),
             totalStaked,
             availableStaked,
             totalProfit: dataSource?.totalProfit
@@ -138,7 +140,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     </div>
                     <div className="flex justify-between text-xs text-txtSecondary dark:text-txtSecondary-dark">
                         <div className="">{assetConfig[assetId]?.assetName}</div>
-                        <div className="">${formatNumber((data.estimateUSD?.[assetId] || 0) * (data.percent / 100 || 0), 0)}</div>
+                        <div className="">${formatNumber((data.estimateUSD?.[assetId] || 0) * (data.percent / 100 || 0), 4)}</div>
                     </div>
                 </div>
             </div>
@@ -157,7 +159,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         </div>
                         <div className="flex justify-between text-xs text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="">{assetConfig[assetId]?.assetName}</div>
-                            <div className=""> ${formatNumber(item.interestUSD?.[assetId] || 0, 0)}</div>
+                            <div className=""> ${formatNumber(item.interestUSD?.[assetId] || 0, 4)}</div>
                         </div>
                     </div>
                 </div>
@@ -265,7 +267,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         {t('nao:pool:per_est_revenue')}
                     </label>
                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark pt-2">
-                        {t('nao:pool:equivalent')} ${formatNumber(data.estimateUSD, 2)}
+                        {t('nao:pool:equivalent')} ${formatNumber(data.totalEstUSDT, 4)}
                     </div>
                     <div className="mt-4 flex flex-col space-y-4">
                         <div className="w-full py-0.5">
@@ -277,9 +279,11 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         <div className="w-full py-0.5">
                             <EstimateInterest assetId={1} logoPath={`/images/coins/64/${1}.png`} />
                         </div>
-                        <div className="w-full py-0.5">
-                            <EstimateInterest assetId={86} logoPath={'/images/nao/ic_onus.png'} />
-                        </div>
+                        {data.estimate?.[86] && data.estimate?.[86] > 0 ? (
+                            <div className="w-full py-0.5">
+                                <EstimateInterest assetId={86} logoPath={'/images/nao/ic_onus.png'} />
+                            </div>
+                        ) : null}
                         <div className="w-full py-0.5">
                             <EstimateInterest assetId={22} logoPath={`/images/coins/64/${22}.png`} />
                         </div>
@@ -303,11 +307,15 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             {listHitory.length > 0 ? (
                                 <div className="grid sm:grid-cols-2 gap-3">
                                     {listHitory.map((item, index) => {
+                                        const sumUSDT = Object.values(item.interestUSD).reduce((a, b) => a + b, 0);
                                         return (
                                             <CardNao key={index} className="rounded-xl border border-divider dark:border-none">
                                                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
                                                     {t('nao:pool:week', { value: listHitory.length - index })} {formatTime(item.fromTime, 'dd/MM/yyyy')} -{' '}
                                                     {formatTime(item.toTime, 'dd/MM/yyyy')}
+                                                </div>
+                                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm pt-1 mb-6">
+                                                    {t('nao:pool:equivalent')} ${formatNumber(sumUSDT, 4)}
                                                 </div>
                                                 <div className="mt-1 flex flex-col space-y-4">
                                                     <div className="w-full py-0.5">
@@ -319,9 +327,11 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                                     <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={1} logoPath={`/images/coins/64/${1}.png`} />
                                                     </div>
-                                                    <div className="w-full py-0.5">
-                                                        <HistoryInterest item={item} assetId={86} logoPath={'/images/nao/ic_onus.png'} />
-                                                    </div>
+                                                    {item.interest?.[86] && item.interest?.[86] > 0 ? (
+                                                        <div className="w-full py-0.5">
+                                                            <HistoryInterest item={item} assetId={86} logoPath={'/images/nao/ic_onus.png'} />
+                                                        </div>
+                                                    ) : null}
                                                     <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={22} logoPath={`/images/coins/64/${22}.png`} />
                                                     </div>
