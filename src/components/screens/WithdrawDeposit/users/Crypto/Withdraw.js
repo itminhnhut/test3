@@ -452,8 +452,8 @@ const CryptoWithdraw = ({ assetId }) => {
                 otpModes={otpModes}
                 selectedAsset={selectedAsset}
                 selectedNetwork={state.selectedNetwork}
-                open={true}
-                // open={state.openWithdrawConfirm}
+                // open={true}
+                open={state.openWithdrawConfirm}
                 closeModal={() => setState({ openWithdrawConfirm: false })}
                 address={state.address}
                 memo={state.memo}
