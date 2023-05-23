@@ -61,12 +61,12 @@ export default function FundingHistory(props) {
 
     return (
         <MaldivesLayout>
-            {isApp && (
+            {isApp && !router.query?.head && (
                 <div className="p-4 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
                     <ChevronLeft onClick={() => router.back()} className="text-txtPrimary dark:text-white" />
                 </div>
             )}
-            <Background className={isApp ? 'mt-12' : ''} isDark={currentTheme === THEME_MODE.DARK}>
+            <Background className={isApp && !router.query?.head ? 'mt-12' : ''} isDark={currentTheme === THEME_MODE.DARK}>
                 <div className={'max-w-screen-v3 2xl:max-w-screen-xxl m-auto'}>
                     <div className="text-xl sm:text-[2rem] sm:leading-[2.375rem] font-semibold">{t('futures:information')}</div>
                     <div className="sm:space-x-3 mt-4 sm:mt-6 mb-6 sm:mb-[3.75rem] flex flex-wrap text-sm sm:text-base">
