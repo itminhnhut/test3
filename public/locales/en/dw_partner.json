@@ -105,7 +105,7 @@
     "total_commissions": "Total commission",
     "commission_rate": "Rate",
     "commission_rate_description": "Times commission generated / Number of completed orders",
-    "total_volume": "Total volume",
+    "total_volume": "Total volume <0>Buy</0><1>/Sell</1>",
     "notice_chart_details": "Click on each column for details",
     "buy_volume": "Buy volume",
     "sell_volume": "Sell volume",

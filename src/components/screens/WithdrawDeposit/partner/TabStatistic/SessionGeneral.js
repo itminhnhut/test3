@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'next-i18next';
+import { Trans, useTranslation } from 'next-i18next';
 import CardWrapper from 'components/common/CardWrapper';
 import { convertDateToMs, formatAbbreviateNumber, formatNanNumber, formatPercentage, getS3Url } from 'redux/actions/utils';
 import useFetchApi from 'hooks/useFetchApi';
@@ -67,7 +67,13 @@ const SessionGeneral = () => {
                         </div>
                     </div>
                     <div className="w-1/2 flex flex-col items-end justify-center">
-                        <h1 className="txtSecond-3">{t('dw_partner:total_volume')}</h1>
+                        <h1 className="txtSecond-3">
+                            <Trans i18nKey="dw_partner:total_volume">
+                                <span className="text-teal" />
+
+                                <span className="text-txtPrimary dark:text-txtPrimary-dark" />
+                            </Trans>
+                        </h1>
                         <div className="pt-4 txtPri-6 flex">
                             <span className="text-green-3 dark:text-green-2">
                                 {loading ? <Skeletor width="50px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}

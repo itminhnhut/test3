@@ -104,7 +104,7 @@
     "total_commissions": "Tổng hoa hồng",
     "commission_rate": "Tỷ lệ nhận hoa hồng",
     "commission_rate_description": "Số lần phát sinh hoa hồng / Số lệnh hoàn tất",
-    "total_volume": "Tổng khối lượng",
+    "total_volume": "Tổng khối lượng <0>Mua</0><1>/Bán</1>",
     "notice_chart_details": "Nhấn vào từng cột để xem chi tiết",
     "buy_volume": "Khối lượng mua",
     "sell_volume": "Khối lượng bán",
