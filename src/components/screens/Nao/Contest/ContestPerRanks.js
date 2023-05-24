@@ -38,7 +38,8 @@ const ContestPerRanks = ({
     top_ranks_per,
     showPnl,
     currencies,
-    hasTabCurrency
+    hasTabCurrency,
+    userID
 }) => {
     const [tab, setTab] = useState(sort);
     const [quoteAsset, setQuoteAsset] = useState(q);
@@ -215,7 +216,7 @@ const ContestPerRanks = ({
                                             <span>{capitalize(item?.name)}</span>
                                             {item?.is_onus_master && <TickFbIcon size={16} />}
                                         </div>
-                                        <span className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">{item?.onus_user_id}</span>
+                                        <span className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">{item?.[userID]}</span>
                                     </div>
                                 </div>
                                 <div className="text-5xl sm:text-6xl font-semibold pb-0 italic">{item?.[rank] > 0 ? `#${index + 1}` : '-'}</div>
@@ -276,7 +277,7 @@ const ContestPerRanks = ({
                                                         <label className="font-semibold capitalize">{capitalize(item?.name)}</label>
                                                         {item?.is_onus_master && <TickFbIcon size={16} />}
                                                     </div>
-                                                    <div className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">ID: {item?.onus_user_id}</div>
+                                                    <div className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">ID: {item?.[userID]}</div>
                                                 </div>
                                             </div>
                                             <div className="min-w-[31px] text-txtSecondary dark:text-txtSecondary-dark">
@@ -353,7 +354,7 @@ const ContestPerRanks = ({
                         cellRender={renderRank}
                     />
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
-                    <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'ID NAO Futures'} fieldName="onus_user_id" />
+                    <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'User ID'} fieldName={userID} />
                     <Column
                         minWidth={150}
                         align="right"

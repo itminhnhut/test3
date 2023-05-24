@@ -200,11 +200,35 @@ export const seasons = [
         total_rewards: '1,000,000,000 VNDC',
         quoteAsset: 'VNDC',
         time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
-        active: true,
+        active: false,
         top_ranks_per: 20,
         top_ranks_team: 10,
         lastUpdated: true,
         hasTabCurrency: true
+    },
+    {
+        season: 10,
+        start: '2023-05-31T17:00:00.000Z',
+        end: '2023-06-30T17:00:00.000Z',
+        contest_id: 13,
+        title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 7', en: 'NAO Futures VNDC – Nami Championship Season 7' },
+        title: { vi: 'NAO Futures VNDC', en: 'NAO Futures VNDC' },
+        title_champion: { vi: 'Nami Championship mùa 7', en: 'Nami Championship Season 7' },
+        minVolumeInd: {
+            vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để được xếp hạng',
+            en: 'Traders need to meet the Basic Conditions to be ranked. For details',
+            isHtml: false
+        },
+        rules: {
+            vi: 'https://goonus.io/onus-x-nami-giai-dau-nao-futures-vndc-usdt-nami-championship-mua-6',
+            en: 'https://goonus.io/en/onus-x-nami-nao-futures-vndc-usdt-tournament-nami-championship-season-6'
+        },
+        total_rewards: '200,000,000 VNDC',
+        quoteAsset: 'VNDC',
+        // time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
+        active: true,
+        top_ranks_per: 20,
+        lastUpdated: true,
     }
 ];
 
@@ -238,6 +262,8 @@ const Contest = (props) => {
     const [tab, setTab] = useState(initState.tab);
     const [data, setData] = useState([]);
     const [loadingSpecial, setLoadingSpecial] = useState(initState.loadingSpecial);
+    const showPnl = ![9, 10, 11, 12, 13].includes(props?.contest_id);
+    const userID = props?.contest_id >= 13 ? 'code' : 'onus_user_id';
 
     const handleChangTab = async (value) => {
         setTab(value);
@@ -331,8 +357,6 @@ const Contest = (props) => {
     //     if (props?.lastUpdated) renderLastUpdated(props?.contest_id);
     // }, [props?.contest_id, props?.lastUpdated]);
 
-    const showPnl = ![9, 10, 11, 12].includes(props?.contest_id);
-
     const params = useMemo(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -378,15 +402,18 @@ const Contest = (props) => {
         return (
             <>
                 {props.top_ranks_master && <ContestMasterRank {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort="pnl" />}
-                <ContestTeamRanks
-                    {...props}
-                    onShowDetail={onShowDetail}
-                    lastUpdatedTime={lastUpdatedTime}
-                    params={params}
-                    sort={params.team}
-                    showPnl={showPnl}
-                    currencies={currencies}
-                />
+                {props.top_ranks_team && (
+                    <ContestTeamRanks
+                        {...props}
+                        onShowDetail={onShowDetail}
+                        lastUpdatedTime={lastUpdatedTime}
+                        params={params}
+                        sort={params.team}
+                        showPnl={showPnl}
+                        currencies={currencies}
+                        userID={userID}
+                    />
+                )}
                 <ContestPerRanks
                     {...props}
                     lastUpdatedTime={lastUpdatedTime}
@@ -394,6 +421,7 @@ const Contest = (props) => {
                     sort={params.individual}
                     showPnl={showPnl}
                     currencies={currencies}
+                    userID={userID}
                 />
             </>
         );
@@ -417,7 +445,7 @@ const Contest = (props) => {
     };
     return (
         <LayoutNaoToken isHeader={false}>
-            {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} />}
+            {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} userID={userID} />}
             {showInvitations && (
                 <InvitationsDetail
                     {...props}
