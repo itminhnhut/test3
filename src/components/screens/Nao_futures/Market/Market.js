@@ -28,6 +28,8 @@ import { orderBy } from 'lodash';
 import Tag from 'components/common/Tag'
 import { roundTo } from 'round-to';
 import dynamic from 'next/dynamic';
+import { TRADING_MODE } from 'redux/actions/const';
+
 const TABS = {
     FAVOURITE: 'FAVOURITE',
     FUTURES: 'FUTURES',
@@ -128,7 +130,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
 
 
     useEffect(() => {
-        dispatch(getFuturesFavoritePairs())
+        dispatch(getFuturesFavoritePairs(TRADING_MODE.NAO))
         // TODO: move this logic to redux store
         fetchAPI({
             url: API_GET_REFERENCE_CURRENCY,

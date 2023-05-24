@@ -52,8 +52,8 @@ export const setFuturesOrderTypes =
         });
     };
 
-export const getFuturesFavoritePairs = () => async (dispatch) => {
-    const favoritePairs = await favoriteAction('get', TRADING_MODE.FUTURES);
+export const getFuturesFavoritePairs = (mode) => async (dispatch) => {
+    const favoritePairs = await favoriteAction('get', mode ?? TRADING_MODE.FUTURES);
     if (Array.isArray(favoritePairs)) {
         dispatch({
             type: SET_FUTURES_FAVORITE_PAIRS,
