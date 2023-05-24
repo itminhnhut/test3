@@ -228,7 +228,7 @@ export const seasons = [
         // time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
         active: true,
         top_ranks_per: 20,
-        lastUpdated: true,
+        lastUpdated: true
     }
 ];
 
@@ -465,7 +465,14 @@ const Contest = (props) => {
                     </div>
                     <div className="bg-gray-13 dark:bg-dark rounded-t-3xl">
                         <div className="px-4 pb-20 sm:pb-[120px] max-w-[72.5rem] w-full m-auto">
-                            <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} currencies={currencies} />
+                            <ContestInfo
+                                {...props}
+                                ref={refInfo}
+                                onShowDetail={onShowDetail}
+                                onShowInvitations={onShowInvitations}
+                                currencies={currencies}
+                                userID={userID}
+                            />
                             {props?.season == SEASON_SPECIAL ? (
                                 <div>
                                     {renderTab()}

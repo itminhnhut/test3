@@ -43,7 +43,7 @@ import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 //     ],
 // };
 
-const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, contest_id, time_to_create, currencies, quoteAsset: q, hasTabCurrency }, ref) => {
+const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, contest_id, time_to_create, currencies, quoteAsset: q, hasTabCurrency, userID }, ref) => {
     const { t } = useTranslation();
     const user = useSelector((state) => state.auth.user) || null;
     const [userData, setUserData] = useState(null);
@@ -155,7 +155,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                     <CardNao className={`!p-6 lg:!max-w-[375px] ${previous && contest_id !== 10 ? '' : '!justify-center space-y-3'}`}>
                         <label className="text-xl sm:text-2xl text-teal font-semibold leading-8 capitalize">{capitalize(userData?.name)}</label>
                         <div className=" text-txtSecondary dark:text-txtSecondary-dark flex flex-col items-start">
-                            {previous && contest_id !== 10 && <div className="leading-6">ID: {userData?.onus_user_id}</div>}
+                            {previous && contest_id !== 10 && <div className="leading-6">ID: {userData?.[userID]}</div>}
                             {/* <span className="text-gray-15 dark:text-gray-7 mx-2 sm:hidden">•</span> */}
                             <div className="flex text-txtSecondary dark:text-txtSecondary-dark leading-6 mt-1">
                                 {t('nao:contest:team_label')}:&nbsp;
@@ -187,7 +187,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                             <div className="flex items-center justify-between md:space-x-6 flex-wrap md:flex-nowrap">
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">ID</label>
-                                    <div className="font-semibold leading-8 text-right">{userData?.onus_user_id}</div>
+                                    <div className="font-semibold leading-8 text-right">{userData?.[userID]}</div>
                                 </div>
 
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
