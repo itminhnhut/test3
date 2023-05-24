@@ -27,6 +27,7 @@ const useMakeOrder = ({ setState, input }) => {
     const onMakeOrderHandler = async (otp) => {
         try {
             setState({ loadingConfirm: true });
+
             const orderResponse = await createNewOrder({
                 assetId,
                 bankAccountId: side === SIDE.BUY ? partnerBank?._id : accountBank?._id,
@@ -36,12 +37,19 @@ const useMakeOrder = ({ setState, input }) => {
                 otp
             });
 
+            console.log("____orderResponse: ", orderResponse);
+
             if (orderResponse && (orderResponse.status === ApiStatus.SUCCESS || orderResponse.status === ApiResultCreateOrder.TOO_MUCH_REQUEST)) {
-                if (orderResponse.data.remaining_time) {
-                    setState({ showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time });
+                // ____________here
+                if(orderResponse.data.use_smart_otp) {
+                    setState({showOtp: true, isUseSmartOtp: true })
                 } else {
-                    onMakeOrderSuccess(orderResponse.data);
-                    return;
+                    if (orderResponse.data.remaining_time) {
+                        setState({ showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time, isUseSmartOtp: false });
+                    } else {
+                        onMakeOrderSuccess(orderResponse.data);
+                        return;
+                    }
                 }
             } else {
                 if (orderResponse?.status === ApiResultCreateOrder.INVALID_OTP) {
@@ -60,11 +68,19 @@ const useMakeOrder = ({ setState, input }) => {
                             visible: true,
                             type: ORDER_TYPES.ERROR_EXCEEDING_LIMIT
                         });
+                    } else if(orderResponse?.status === ApiResultCreateOrder.SECRET_INVALID) {
+                        toast({ text: t('dw_partner:error.invalid_secret'), type: 'warning' });
+                    } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID) {
+                        toast({ text: t('dw_partner:error.invalid_smart_otp', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
+                    } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID_EXCEED_TIME) {
+                        setState({ showAlertDisableSmartOtp: true, isUseSmartOtp: false })
                     } else toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }
             }
+
             setState({ loadingConfirm: false });
-            sell;
+            return orderResponse
+            // sell;
         } catch (error) {
             console.log('error:', error);
             setState({ loadingConfirm: false });

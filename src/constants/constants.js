@@ -265,5 +265,6 @@ export const BINANCE_LEVERAGE_MARGIN = [
 export const MODE_OTP = {
     PHONE: 'phone',
     EMAIL: 'email',
-    TFA: 'tfa'
+    TFA: 'tfa',
+    SMART_OTP: 'smartOtp'
 };

@@ -1,19 +1,16 @@
 import classNames from 'classnames';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import OtpInput from 'react-otp-input';
-import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Copy from 'components/svg/Copy';
 
-import { Check, X } from 'react-feather';
-import { useRouter } from 'next/router';
+import { Check} from 'react-feather';
 import Countdown from 'react-countdown';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { ApiResultCreateOrder, ApiStatus } from 'redux/actions/const';
 import Spinner from 'components/svg/Spinner';
 import { MODE_OTP } from 'constants/constants';
-import { mapKeys, mapValues } from 'lodash';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
 const OTP_REQUIRED_LENGTH = 6;
@@ -45,7 +42,7 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
         if (isTfaEnabled && isUse2fa) {
             listModeAvailable.push('tfa');
         }
-        setState({ modes: listModeAvailable });
+        setState({ modes: listModeAvailable, isError: false });
     }, [isTfaEnabled, isUse2fa, modeOtp]);
 
     const isValidInput = useCallback(
@@ -69,7 +66,7 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
         // change focus to first tfa input
         if (mode !== MODE_OTP.TFA && formatVal.length === OTP_REQUIRED_LENGTH && isTfaEnabled) {
             const input = parentTfaRef.current?.firstChild?.firstChild?.firstChild;
-            input.focus();
+            input?.focus();
         }
 
         if (isValidInput(newOtp)) {
@@ -81,9 +78,11 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
         try {
             const response = await onConfirm(otp);
             // Lưu ý: Hàm onConfirm cần trả về Response
-            if (response?.status === ApiResultCreateOrder.INVALID_OTP || response.status !== ApiStatus.SUCCESS) {
-                onFocusFirstInput();
-                setState({ otp: INITAL_OTP_STATE, isError: true });
+            if(response) {
+                if (response?.status === ApiResultCreateOrder.INVALID_OTP || response.status !== ApiStatus.SUCCESS) {
+                    onFocusFirstInput();
+                    setState({ otp: INITAL_OTP_STATE, isError: true });
+                }
             }
         } catch (error) {
             onFocusFirstInput();
@@ -118,13 +117,14 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
             {state.modes.map((mode) => (
                 <div key={mode}>
                     <div className={classNames('mb-6', { '!mb-8': isTfaEnabled })}>
-                        {mode !== MODE_OTP.TFA && <div className="txtPri-3"> {t('dw_partner:verify')}</div>}
+                        {mode !== MODE_OTP.TFA && <div className="txtPri-3"> {mode === MODE_OTP.SMART_OTP ? t('dw_partner:verify_smart_otp') : t('dw_partner:verify')}</div>}
                         {mode !== MODE_OTP.TFA && <div className="txtSecond-2 mt-4">{t(`dw_partner:otp_code_send_to_${mode}`)}</div>}
                     </div>
 
                     {isTfaEnabled && (
                         <div className="text-sm font-medium mb-4">
-                            {mode === 'email' ? t('dw_partner:email_verification_code') : t('dw_partner:verify_2fa')}
+                            {mode === MODE_OTP.EMAIL && t('dw_partner:email_verification_code')}
+                            {mode === MODE_OTP.TFA && t('dw_partner:verify_2fa')}
                         </div>
                     )}
 
@@ -145,19 +145,18 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
                                     '!border-red': state.isError
                                 }
                             )}
-                            shouldAutoFocus={mode !== MODE_OTP.PHONE}
+                            shouldAutoFocus={mode !== MODE_OTP.TFA}
                             hasErrored={state.isError}
                             errorStyle={classNames('border-red border')}
                         />
                     </div>
 
                     <div
-                        className={classNames('flex items-center', {
-                            'justify-between': mode !== MODE_OTP.TFA,
-                            'justify-end': mode === MODE_OTP.TFA
+                        className={classNames('flex items-center justify-between', {
+                            '!justify-end': mode === MODE_OTP.TFA || mode === MODE_OTP.SMART_OTP
                         })}
                     >
-                        {mode !== MODE_OTP.TFA && (
+                        {(mode !== MODE_OTP.TFA && mode !== MODE_OTP.SMART_OTP) && (
                             <div className="flex items-center space-x-2">
                                 <span className="txtSecond-2">{t('dw_partner:not_received_otp')}</span>
                                 <Countdown
