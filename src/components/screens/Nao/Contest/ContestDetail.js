@@ -355,7 +355,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     </div>
                                 </div>
                                 {dataSource?.[rank] ? (
-                                    <div className="text-5xl font-semibold pb-0">
+                                    <div className="text-6xl font-semibold pb-0">
                                         #{dataSource?.[rank]}
                                     </div>
                                 ) : null}
