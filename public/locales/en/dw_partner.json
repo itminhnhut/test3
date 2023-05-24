@@ -104,7 +104,7 @@
     "report_commission": "Dashboard",
     "total_commissions": "Total commission",
     "commission_rate": "Rate",
-    "commission_rate_description": "Commission Generated Rate = Number of orders generated commission / Total number of success",
+    "commission_rate_description": "Times commission generated / Number of completed orders",
     "total_volume": "Total volume",
     "notice_chart_details": "Click on each column for details",
     "buy_volume": "Buy volume",

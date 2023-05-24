@@ -36,7 +36,7 @@ const SessionGeneral = () => {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
                 <div className="font-semibold text-[20px] leading-6">{t('dw_partner:report_commission')}</div>
-                <FilterTimeTab filter={filter} setFilter={setFilter} />
+                <FilterTimeTab isTabAll filter={filter} setFilter={setFilter} />
             </div>
 
             {/* Body */}
