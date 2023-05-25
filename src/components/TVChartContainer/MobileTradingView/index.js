@@ -520,10 +520,8 @@ export class MobileTradingView extends React.PureComponent {
         this.widget = new widget(widgetOptions);
         this.widget.onChartReady(() => {
             // Load saved chart
-            setTimeout(() => {
-                this.loadSavedChart();
-                this.syncIndicators();
-            }, 0);
+            this.loadSavedChart();
+            this.syncIndicators();
             this.widget.applyOverrides({
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
                 'scalesProperties.lineColor': this.chartBg,
