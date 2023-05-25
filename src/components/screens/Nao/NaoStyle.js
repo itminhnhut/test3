@@ -524,40 +524,40 @@ export const TabItemNao = styled.div.attrs(({ active }) => ({
     } */
 `;
 
-export const VoteStatus = ({ iconClassName = '', className = '', status, statusText = '' }) => {
+export const VoteStatus = ({ iconClassName = '', className = '', status, statusText = '', textClassName = '' }) => {
     const renderStatus = () => {
         switch (status) {
             case 'Processing':
                 return (
                     <>
                         <WarningFilledIcon className={iconClassName} />
-                        <span className="font-semibold">{statusText}</span>
+                        <span className={`font-semibold ${textClassName}`}>{statusText}</span>
                     </>
                 );
             case 'Executed':
                 return (
                     <>
                         <CheckCircle className={iconClassName} />
-                        <span className="font-semibold">{statusText}</span>
+                        <span className={`font-semibold ${textClassName}`}>{statusText}</span>
                     </>
                 );
             case 'Failed':
                 return (
                     <>
                         <CrossCircle className={iconClassName} />
-                        <span className="font-semibold">{statusText}</span>
+                        <span className={`font-semibold ${textClassName}`}>{statusText}</span>
                     </>
                 );
             case 'Canceled':
                 return (
                     <>
                         <RemoveCircleIcon className={iconClassName} />
-                        <span className="font-semibold">{statusText}</span>
+                        <span className={`font-semibold ${textClassName}`}>{statusText}</span>
                     </>
                 );
             default:
                 return null;
         }
     };
-    return <div className={`flex space-x-2 items-center ${className}`}>{renderStatus()}</div>;
+    return <div className={`flex space-x-1 sm:space-x-2 items-center ${className}`}>{renderStatus()}</div>;
 };

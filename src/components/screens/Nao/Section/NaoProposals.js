@@ -70,10 +70,10 @@ const Proposal = ({ proposal, language, assetNao }) => {
             <div className="flex flex-col xl:flex-row flex-wrap xl:items-center justify-between gap-4">
                 <div className="flex flex-row flex-1 items-center xl:max-w-[520px]">
                     <VoteStatus
-                        iconClassName="w-5 h-5"
+                        iconClassName="w-5 h-5 min-w-[20px]"
                         status={status}
                         statusText={voteName && voteName[language]}
-                        className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-sm sm:text-base ml-4"
+                        className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-sm sm:text-base !space-x-3 sm:!space-x-4"
                     />
                 </div>
                 <div className="xl:min-w-[450px] pt-2 sm:pt-0">
@@ -84,7 +84,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                                 {totalVoteYes && formatNumber(totalVoteYes, assetNao?.assetDigit ?? 0)}
                             </span>
                         </div>
-                        <VoteStatus status={status} statusText={statusText} className="text-sm" />
+                        <VoteStatus status={status} statusText={statusText} className="text-sm" textClassName="!font-normal whitespace-nowrap" />
                     </div>
                     <div className="bg-gray-11 dark:bg-dark-1 relative rounded-lg mb-3">
                         <img src={getS3Url('/images/nao/ic_caret_down.png')} className="absolute bottom-2 inset-x-1/2" />
