@@ -1,4 +1,4 @@
-import { CardNao, Progressbar, TextLiner } from 'components/screens/Nao/NaoStyle';
+import { CardNao, Progressbar, TextLiner, VoteStatus } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -69,12 +69,12 @@ const Proposal = ({ proposal, language, assetNao }) => {
         <CardNao className="!px-6 sm:!px-8 !py-6 !sm:min-h-0 !min-h-0 cursor-pointer" onClick={() => isAuth && router.push(`/nao/vote/${_id}`)}>
             <div className="flex flex-col xl:flex-row flex-wrap xl:items-center justify-between gap-4">
                 <div className="flex flex-row flex-1 items-center xl:max-w-[520px]">
-                    {status === 'Processing' && <SvgProgress className="md:w-6 md:h-6 w-[14px] h-[14px] flex-shrink-0" />}
-                    {status === 'Executed' && <CheckCircle className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />}
-                    {status === 'Failed' && <CrossCircle fill="blue" className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />}
-                    {status === 'Canceled' && <SvgCancelCircle className="md:!w-5 md:!h-5 !w-[12px] !h-[12px] flex-shrink-0" />}
-
-                    <span className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-sm sm:text-base ml-4">{voteName && voteName[language]}</span>
+                    <VoteStatus
+                        iconClassName="w-5 h-5"
+                        status={status}
+                        statusText={voteName && voteName[language]}
+                        className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-sm sm:text-base ml-4"
+                    />
                 </div>
                 <div className="xl:min-w-[450px] pt-2 sm:pt-0">
                     <div className="flex flex-row justify-between mb-3">
@@ -84,25 +84,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                                 {totalVoteYes && formatNumber(totalVoteYes, assetNao?.assetDigit ?? 0)}
                             </span>
                         </div>
-                        {status === 'Executed' && (
-                            <div className="flex flex-row justify-start items-center gap-2 whitespace-nowrap">
-                                <CheckCircle className="w-4 h-4 flex-shrink-0" />
-
-                                <span className="text-sm">{statusText}</span>
-                            </div>
-                        )}
-                        {status === 'Failed' && (
-                            <div className="flex flex-row justify-start items-center gap-2 whitespace-nowrap">
-                                <CrossCircle className="w-4 h-4 flex-shrink-0" />
-                                <span className="text-sm">{statusText}</span>
-                            </div>
-                        )}
-                        {status === 'Canceled' && (
-                            <div className="flex flex-row justify-start items-center gap-2 whitespace-nowrap">
-                                <SvgCancelCircle className="!w-[12px] !h-[12px]" />
-                                <span className="text-sm">{statusText}</span>
-                            </div>
-                        )}
+                        <VoteStatus status={status} statusText={statusText} className="text-sm" />
                     </div>
                     <div className="bg-gray-11 dark:bg-dark-1 relative rounded-lg mb-3">
                         <img src={getS3Url('/images/nao/ic_caret_down.png')} className="absolute bottom-2 inset-x-1/2" />

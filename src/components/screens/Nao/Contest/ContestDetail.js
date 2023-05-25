@@ -30,7 +30,7 @@ const statusGroup = {
     ENABLE: 1
 };
 
-const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules }) => {
+const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules, userID }) => {
     const quoteAsset = rowData?.quoteAsset ?? 'VNDC';
     const context = useContext(AlertContext);
     const { t } = useTranslation();
@@ -81,7 +81,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 options: { method: 'POST' },
                 params: {
                     contest_id: contest_id,
-                    invite_onus_user_id: user.onus_user_id
+                    invite_onus_user_id: user?.[userID]
                 }
             });
             if (!index) return;
@@ -128,7 +128,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
     };
 
     const validatorLeader = (item) => {
-        return ((item?.status === statusMember.PENDING || item?.status === statusMember.DENIED) && isLeader) || !item?.onus_user_id;
+        return ((item?.status === statusMember.PENDING || item?.status === statusMember.DENIED) && isLeader) || !item?.[userID];
     };
 
     const renderActions = (e, item) => {
@@ -177,7 +177,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
             members[member.current?.rowIndx] = data;
             _dataSource.members = members;
             setDataSource(_dataSource);
-            if (member.current?.status === statusMember.DENIED) onCancelInvite(member.current?.onus_user_id);
+            if (member.current?.status === statusMember.DENIED) onCancelInvite(member.current?.[userID]);
         }
         setShowAddMemberModal(!showAddMemberModal);
     };
@@ -231,7 +231,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
         return (
             <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark flex items-center justify-center">
-                    {item?.onus_user_id && (
+                    {item?.[userID] && (
                         <ImageNao
                             className="rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
                             src={item?.avatar}
@@ -355,7 +355,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     </div>
                                 </div>
                                 {dataSource?.[rank] ? (
-                                    <div className="text-5xl font-semibold pb-0">
+                                    <div className="text-6xl font-semibold pb-0">
                                         #{dataSource?.[rank]}
                                     </div>
                                 ) : null}
@@ -440,7 +440,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                 <div className="flex flex-col text-sm space-y-2">
                                                     <div className="flex items-center justify-between leading-6">
                                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">ID </div>
-                                                        <div className="font-semibold">{item?.onus_user_id ?? '-'}</div>
+                                                        <div className="font-semibold">{item?.[userID] ?? '-'}</div>
                                                     </div>
                                                     {validatorLeader(item) && (
                                                         <div className="flex items-center justify-between leading-6">
@@ -506,7 +506,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 fieldName="name"
                                 cellRender={renderName}
                             />
-                            <Column minWidth={200} ellipsis className="text-txtSecondary dark:text-txtSecondary-dark" title={'ID NAO Futures'} fieldName="onus_user_id" />
+                            <Column minWidth={200} ellipsis className="text-txtSecondary dark:text-txtSecondary-dark" title={'User ID'} fieldName={userID} />
                             <Column
                                 visible={visibleStatus}
                                 minWidth={isPending.group ? 140 : 160}

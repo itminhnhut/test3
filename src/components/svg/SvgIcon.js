@@ -1019,22 +1019,26 @@ const USAFlagIcon = ({ size = 24 }) => (
         </defs>
     </svg>
 );
-const NotInterestedIcon = ({size}) => {
+const NotInterestedIcon = ({ size }) => {
     const [currentTheme] = useDarkMode();
     const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E';
 
     return (
-    <svg width={size || 80} height={size || 80} viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#k3bfy9rdta)">
-            <path d="M40 73.333C58.4 73.333 73.333 58.4 73.333 40S58.4 6.666 40 6.666 6.667 21.6 6.667 40C6.667 58.4 21.6 73.333 40 73.333zm0-60c14.733 0 26.667 11.934 26.667 26.667 0 6.166-2.1 11.833-5.634 16.333L23.667 18.967A26.341 26.341 0 0 1 40 13.333zM18.967 23.666l37.366 37.367A26.341 26.341 0 0 1 40 66.666c-14.733 0-26.667-11.933-26.667-26.666 0-6.167 2.1-11.834 5.634-16.334z" fill={defaultColor}/>
-        </g>
-        <defs>
-            <clipPath id="k3bfy9rdta">
-                <path fill="#fff" d="M0 0h80v80H0z"/>
-            </clipPath>
-        </defs>
-    </svg>
-)}
+        <svg width={size || 80} height={size || 80} viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#k3bfy9rdta)">
+                <path
+                    d="M40 73.333C58.4 73.333 73.333 58.4 73.333 40S58.4 6.666 40 6.666 6.667 21.6 6.667 40C6.667 58.4 21.6 73.333 40 73.333zm0-60c14.733 0 26.667 11.934 26.667 26.667 0 6.166-2.1 11.833-5.634 16.333L23.667 18.967A26.341 26.341 0 0 1 40 13.333zM18.967 23.666l37.366 37.367A26.341 26.341 0 0 1 40 66.666c-14.733 0-26.667-11.933-26.667-26.666 0-6.167 2.1-11.834 5.634-16.334z"
+                    fill={defaultColor}
+                />
+            </g>
+            <defs>
+                <clipPath id="k3bfy9rdta">
+                    <path fill="#fff" d="M0 0h80v80H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
 
 const SaveAltIcon = ({ size = 24, color = 'currentColor' }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1104,6 +1108,44 @@ const TelegramIcon = ({ size = 24, ...props }) => (
             </linearGradient>
             <clipPath id="imvo5tb4ca">
                 <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+export const SocialFireIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M13.813 2.896a.295.295 0 0 0-.493.167c-.092.547-.284 1.435-.647 2.251 0 0-.718-3.946-5.496-5.302a.295.295 0 0 0-.373.326c.173 1.173.486 4.481-.851 7.65-.696-1.414-1.808-1.966-2.515-2.18a.295.295 0 0 0-.362.391c.619 1.542-.771 3.468-.771 6.095a7.706 7.706 0 1 0 15.412 0c0-5.23-2.82-8.38-3.904-9.398z"
+            fill="#FFC632"
+        />
+        <path
+            d="M15.262 13.583c-.033-2.519-1.03-4.26-1.57-5.022a.318.318 0 0 0-.543.043c-.166.33-.432.747-.794.964 0 0-1.533-1.236-1.605-3.088a.317.317 0 0 0-.42-.286c-.812.276-2.535 1.204-2.952 4.16-.342-.617-1.154-.797-1.676-.847a.317.317 0 0 0-.339.391c.398 1.553-.604 2.48-.604 3.815a5.252 5.252 0 0 0 5.237 5.252c2.938.009 5.305-2.445 5.266-5.382z"
+            fill="#F93636"
+        />
+    </svg>
+);
+
+export const WarningFilledIcon = ({ size = 16, ...props }) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M8.59 1.688c-.231-.436-.949-.436-1.18 0l-6 11.334A.666.666 0 0 0 2 14h12a.665.665 0 0 0 .589-.978l-6-11.334zM8.666 12H7.333v-1.333h1.334V12zM7.333 9.334V6h1.334v3.334H7.333z"
+            fill="#FFC632"
+        />
+    </svg>
+);
+
+export const RemoveCircleIcon = ({ size = 16, ...props }) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clipPath="url(#4oup610i4a)">
+            <path
+                d="M8 1.332a6.67 6.67 0 0 0-6.667 6.667A6.67 6.67 0 0 0 8 14.665 6.67 6.67 0 0 0 14.667 8 6.67 6.67 0 0 0 8 1.332zm3.333 7.333H4.667V7.332h6.666v1.333z"
+                fill="#8694B3"
+            />
+        </g>
+        <defs>
+            <clipPath id="4oup610i4a">
+                <rect width="16" height="16" rx="8" fill="#fff" />
             </clipPath>
         </defs>
     </svg>

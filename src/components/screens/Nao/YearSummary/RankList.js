@@ -204,11 +204,7 @@ import { format } from 'date-fns';
 //     last_time_update: 1672504200040
 // };
 
-function RankList({
-    url = '',
-    information = [],
-    rankFieldName = ''
-}) {
+function RankList({ url = '', information = [], rankFieldName = '', version }) {
     const [data, setData] = useState({
         users: [],
         last_time_update: 0
@@ -223,19 +219,15 @@ function RankList({
             options: {
                 method: 'GET'
             }
-        })
-            .then((res) => {
-                if (res.status === 'ok') {
-                    setData(res.data);
-                }
-            });
+        }).then((res) => {
+            if (res.status === 'ok') {
+                setData(res.data);
+            }
+        });
     }, []);
 
-    const {
-        rank1User,
-        restUsers
-    } = useMemo(() => {
-        const users = data.users || []
+    const { rank1User, restUsers } = useMemo(() => {
+        const users = data.users || [];
         return {
             rank1User: users[0] || {},
             restUsers: users.slice(1)
@@ -251,32 +243,29 @@ function RankList({
                     backgroundSize: 'cover'
                 }}
             >
-                <div className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
-                    {data}
-                </div>
+                <div className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">{data}</div>
             </div>
         );
     };
 
     const renderUser = (name, record) => {
-        return <div className='flex items-center'>
-            <ImageNao className='rounded-full w-6 h-6 object-cover' src={record.avatar} alt={name} />
-            <span className='font-bold ml-3'>{name}</span>
-        </div>;
+        return (
+            <div className="flex items-center">
+                <ImageNao className="rounded-full w-6 h-6 object-cover" src={record.avatar} alt={name} />
+                <span className="font-bold ml-3">{name}</span>
+            </div>
+        );
     };
 
     return (
         <div>
-            <Rank1Card
-                record={rank1User}
-                information={information}
-            />
+            <Rank1Card record={rank1User} information={information} />
 
             {width <= 640 ? (
                 <div className="mt-3 text-sm sm:text-base">
                     {restUsers.map((record, index) => {
                         return (
-                            <CardNao key={record._id} className="mt-5 !py-[1.125rem] !px-3 ">
+                            <CardNao key={record._id} className="mt-3 !py-[1.125rem] !px-3 ">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center space-x-2">
                                         <ImageNao
@@ -295,9 +284,8 @@ function RankList({
                                     </div>
                                     {renderRank(record[rankFieldName] || index + 2)}
                                 </div>
-                                <div className="h-8"></div>
-                                <div className="flex-1">
-                                    <div className="space-y-3 mt-3">
+                                <div className="flex-1 mt-8">
+                                    <div className="space-y-2">
                                         {information.map((item) => {
                                             const value = record[item.valueKey];
                                             return (
@@ -315,28 +303,34 @@ function RankList({
                 </div>
             ) : (
                 <Table loading={false} noItemsMessage={t('nao:contest:no_rank')} dataSource={restUsers}>
-                    <Column minWidth={50}
-                            className='text-txtSecondary dark:text-txtSecondary-dark' title={t('nao:contest:rank')}
-                            fieldName={rankFieldName} cellRender={renderRank} />
-                    <Column minWidth={200} title={t('nao:contest:name')} fieldName='name'
-                            cellRender={renderUser} />
-                    <Column minWidth={150} className='text-txtPrimary dark:text-txtPrimary-dark capitalize' title={'ID ONUS Futures'}
-                            fieldName='onus_user_id' />
-                    {information.map(item => {
-                        return <Column
-                            key={item.valueKey}
-                            minWidth={150}
-                            align='right'
-                            title={item.label}
-                            fieldName={item.valueKey}
-                            cellRender={item.render}
-                        />;
+                    <Column
+                        minWidth={50}
+                        className="text-txtSecondary dark:text-txtSecondary-dark"
+                        title={t('nao:contest:rank')}
+                        fieldName={rankFieldName}
+                        cellRender={renderRank}
+                    />
+                    <Column minWidth={200} title={t('nao:contest:name')} fieldName="name" cellRender={renderUser} />
+                    <Column
+                        minWidth={150}
+                        className="text-txtPrimary dark:text-txtPrimary-dark capitalize"
+                        title={`user ID`}
+                        fieldName="onus_user_id"
+                    />
+                    {information.map((item) => {
+                        return (
+                            <Column key={item.valueKey} minWidth={150} align="right" title={item.label} fieldName={item.valueKey} cellRender={item.render} />
+                        );
                     })}
                 </Table>
             )}
-            <div className='text-txtSecondary dark:text-txtSecondary-dark text-xs sm:text-sm mt-6'>
-                <span>{t('nao:year_summary:last_time_update')}{': '}</span><span>{format(new Date(data.last_time_update), 'HH:mm:ss dd/MM/yyy')}</span>
-                </div>
+            <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs sm:text-sm mt-4">
+                <span>
+                    {t('nao:year_summary:last_time_update')}
+                    {': '}
+                </span>
+                <span>{format(new Date(data.last_time_update), 'HH:mm:ss dd/MM/yyy')}</span>
+            </div>
         </div>
     );
 }
