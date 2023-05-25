@@ -3,17 +3,20 @@ import SvgActivity from 'components/svg/Activity';
 import colors from 'styles/colors';
 import Reload from 'components/svg/Reload';
 import { IconFullScreenChart } from 'components/common/Icons';
-import classnames from 'classnames'
+import classnames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 export const mainIndicators = [
     {
         value: 'Moving Average',
-        label: 'MA'
+        label: 'MA',
+        input: [[7], [34], [89]]
     },
     {
         value: 'Moving Average Exponential',
-        label: 'EMA'
+        label: 'EMA',
+        overrides: [{ 'ma.color': '#4021D0' }, { 'ma.color': '#E4758F' }, { 'ma.color': '#EDAF54' }],
+        input: [[7], [34], [89]]
     },
     {
         value: 'Bollinger Bands',
@@ -32,7 +35,7 @@ export const subIndicators = [
     {
         value: 'Relative Strength Index',
         label: 'RSI'
-    },
+    }
     // 'KDJ'
 ];
 
@@ -50,11 +53,11 @@ const IndicatorBars = ({
     const setIndicator = (item, key) => {
         let value = '';
         if (key === 'main') {
-            value = mainIndicator === item ? '' : item;
-            setMainIndicator(value);
+            value = mainIndicator === item.value ? '' : item.value;
+            setMainIndicator(value, item);
         } else {
-            value = subIndicator === item ? '' : item;
-            setSubIndicator(value);
+            value = subIndicator === item.value ? '' : item.value;
+            setSubIndicator(value, item);
         }
     };
     const [currentTheme] = useDarkMode();
@@ -74,7 +77,7 @@ const IndicatorBars = ({
                     <div
                         key={item.value}
                         className={mainIndicator === item.value ? 'text-txtPrimary dark:text-txtPrimary-dark' : ''}
-                        onClick={() => setIndicator(item.value, 'main')}
+                        onClick={() => setIndicator(item, 'main')}
                     >
                         {item.label}
                     </div>
@@ -84,7 +87,7 @@ const IndicatorBars = ({
                     <div
                         key={item.value}
                         className={subIndicator === item.value ? 'text-txtPrimary dark:text-txtPrimary-dark' : ''}
-                        onClick={() => setIndicator(item.value, 'sub')}
+                        onClick={() => setIndicator(item, 'sub')}
                     >
                         {item.label}
                     </div>

@@ -242,13 +242,13 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                 </CardNao>
                             </div>
                         )}
-                        <CardNao className="mt-3 text-xs p-4 !bg-gray-13 dark:!bg-dark-4 mb-[7rem]">
+                        {/* <CardNao className="mt-3 text-xs p-4 !bg-gray-13 dark:!bg-dark-4 mb-[7rem]">
                             <div className="flex items-center space-x-2">
                                 <BxsInfoCircle size={16} color={colors.gray[7]} />
                                 <span className="font-semibold text-sm">{t('nao:note')}</span>
                             </div>
                             <div className="text-txtSecondary dark:text-txtSecondary-dark mt-2">{t(`nao:pool:description_${isLock ? 'lock' : 'unlock'}`)}</div>
-                        </CardNao>
+                        </CardNao> */}
                         <div className="fixed left-0 bottom-0 w-full pb-12 pt-8 px-4 border-t border-divider dark:border-divider-dark bg-white dark:bg-dark">
                             <ButtonNao
                                 onClick={onSave}
