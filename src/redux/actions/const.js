@@ -66,7 +66,8 @@ export const TokenConfigV1 = {
 
 export const TRADING_MODE = {
     EXCHANGE: 1,
-    FUTURES: 2
+    FUTURES: 2,
+    NAO: 3
 };
 
 export const customModalStyles = {
