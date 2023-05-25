@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import Card from './common/Card';
 import Skeletor from 'components/common/Skeletor';
+import { Trans } from 'next-i18next';
 
 const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) => {
     const router = useRouter();
@@ -116,11 +117,15 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                             <div className="text-teal p-1 rounded-full bg-teal/10">
                                 <MoneyIcon size={16} />
                             </div>
-                            <div>{t('dw_partner:total_volume')}</div>
+                            <div>
+                                <Trans i18nKey="dw_partner:total_volume">
+                                    <span />
+                                    <span />
+                                </Trans>
+                                {/* {t('dw_partner:total_volume')} */}
+                            </div>
                         </div>
-                        <div className="txtPri-3 uppercase">
-                            {numeral(partner?.analyticMetadata?.totalValue).format('0a')} VND
-                        </div>
+                        <div className="txtPri-3 uppercase">{numeral(partner?.analyticMetadata?.totalValue).format('0a')} VND</div>
                     </Card>
                 </div>
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">

@@ -103,7 +103,7 @@
     "no_pending_transactions": "No open orders",
     "report_commission": "Dashboard",
     "total_commissions": "Total commission",
-    "commission_rate": "Rate",
+    "commission_rate": "Commission generated rate",
     "commission_rate_description": "Times commission generated / Number of completed orders",
     "total_volume": "Total volume <0>Buy</0><1>/Sell</1>",
     "notice_chart_details": "Click on each column for details",
