@@ -220,8 +220,8 @@ export const seasons = [
             isHtml: false
         },
         rules: {
-            vi: 'https://goonus.io/onus-x-nami-giai-dau-nao-futures-vndc-usdt-nami-championship-mua-6',
-            en: 'https://goonus.io/en/onus-x-nami-nao-futures-vndc-usdt-tournament-nami-championship-season-6'
+            vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-7',
+            en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-7'
         },
         total_rewards: '200,000,000 VNDC',
         quoteAsset: 'VNDC',

@@ -28,7 +28,8 @@ const ContesRules = ({
     title_champion,
     rules,
     total_rewards,
-    title_detail
+    title_detail,
+    top_ranks_team
 }) => {
     const {
         t,
@@ -132,7 +133,7 @@ const ContesRules = ({
                 </div>
 
                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base pt-6 sm:pt-8">
-                    {t('nao:contest:description')}
+                    {t(`nao:contest:description${!!top_ranks_team ? '' : '_individual'}`)}
                     <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
                 <div className="sm_only:!w-full w-fit sm:px-20 rounded-md bg-gray-12 dark:bg-dark-2 py-3 flex flex-row items-center justify-center mt-8 sm:mt-4">
