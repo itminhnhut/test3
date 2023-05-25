@@ -73,7 +73,7 @@ const useMakeOrder = ({ setState, input }) => {
                     } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID) {
                         toast({ text: t('dw_partner:error.invalid_smart_otp', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
                     } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID_EXCEED_TIME) {
-                        setState({ showAlertDisableSmartOtp: true, isUseSmartOtp: false })
+                        setState({ showAlertDisableSmartOtp: true })
                     } else toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }
             }

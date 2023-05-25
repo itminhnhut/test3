@@ -81,11 +81,6 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
         setPhase(PHASE_CONFIRM.INFO);
     };
 
-    const postData = async (otp) => {
-        const result = await withdrawHelper(selectedAsset?.assetId ?? '72', amount ?? 0, selectedNetwork?.network ?? 'ETH', address ?? '', memo, otp);
-        return result;
-    };
-
     const alertErr = (errStatus, dataErr) => {
         console.log("______alertErr: ", errStatus, dataErr)
 
@@ -126,10 +121,14 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
                     setOtpMode(MODE_OTP.EMAIL);
                 } else {
                     setShowAlert(true);
-                    if (onClose) onClose();
+                    // if (onClose) onClose();
                 }
             } else if(status === WITHDRAW_RESULT.EXCEEDED_SMART_OTP) {
                 setShowAlertDisableSmartOtp(true)
+            } else if(status === WITHDRAW_RESULT.TOO_MUCH_REQUEST) {
+                setExpiredTime(Date.now() + data.remaining_time);
+                setPhase(PHASE_CONFIRM.OTP);
+                setOtpMode(MODE_OTP.EMAIL);
             } else if (status === ApiStatus.ERROR) {
                 if(!isObject(res.data)) alertErr(res?.data)
                 else alertErr()
@@ -146,7 +145,7 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
         <>
             <AlertModalV2
                 isVisible={showAlert}
-                onClose={() => setShowAlert(false)}
+                onClose={() => {setShowAlert(false); setTimeout(onClose, 200);}}
                 type="success"
                 title={t('wallet:withdraw_prompt:title_success')}
                 message={t('wallet:withdraw_prompt:desc_success')}
@@ -238,7 +237,10 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
             </ModalV2>
             <AlertModalV2
                 isVisible={showAlertDisableSmartOtp}
-                onClose={() => setShowAlertDisableSmartOtp(false)}
+                onClose={() => {
+                    setShowAlertDisableSmartOtp(false);
+                    setPhase(PHASE_CONFIRM.INFO);
+                }}
                 textButton={t('dw_partner:verify_by_email')}
                 onConfirm={() => {
                     handlePostOrder(null);

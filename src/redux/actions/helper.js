@@ -36,6 +36,7 @@ export const WITHDRAW_RESULT = {
     AMOUNT_EXCEEDED: 'invalid_max_amount',
     TOO_MUCH_REQUEST: 'TOO_MUCH_REQUEST',
     SECRET_INVALID: 'SECRET_INVALID',
+    // invalid_smart_otp: 'invalid_smart_otp',
 
     INVALID_KYC_STATUS: 'invalid_kyc_status',
     InvalidUser: 'invalid_user',
