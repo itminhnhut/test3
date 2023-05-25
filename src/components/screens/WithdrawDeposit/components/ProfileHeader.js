@@ -122,7 +122,6 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                                     <span />
                                     <span />
                                 </Trans>
-                                {/* {t('dw_partner:total_volume')} */}
                             </div>
                         </div>
                         <div className="txtPri-3 uppercase">{numeral(partner?.analyticMetadata?.totalValue).format('0a')} VND</div>
