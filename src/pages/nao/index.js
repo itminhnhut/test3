@@ -92,9 +92,9 @@ const NaoDashboard = () => {
                         <NaoProposals listProposal={listProposal} assetNao={assetNao} />
 
                         <section id="nao_pool" className="pb-20 pt-12 sm:pt-20 sm:pb-[120px]">
-                            {/* <SectionNao noBg className="px-3 sm:px-10 rounded-xl min-w-full sm:min-w-[372px] flex flex-col justify-between flex-1 relative bg-bgPrimary dark:bg-bgPrimary-dark">
+                            <SectionNao noBg className="px-3 sm:px-10 rounded-xl min-w-full sm:min-w-[372px] flex flex-col justify-between flex-1 relative bg-bgPrimary dark:bg-bgPrimary-dark">
                                 <ContesRules season={current?.season ?? 1} seasons={seasons} {...current} inHome={true} />
-                            </SectionNao> */}
+                            </SectionNao>
                         </section>
                     </div>
                 </div>
