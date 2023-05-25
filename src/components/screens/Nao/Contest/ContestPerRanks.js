@@ -24,6 +24,8 @@ import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
 import TickFbIcon from 'components/svg/TickFbIcon';
+import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
+import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 
 const ContestPerRanks = ({
     previous,
@@ -111,7 +113,7 @@ const ContestPerRanks = ({
     const renderName = (data, item) => {
         return (
             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-[50%] bg-[#273446] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
                         className="rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
                         src={item?.avatar}
@@ -129,15 +131,18 @@ const ContestPerRanks = ({
     const renderRank = (data, item) => {
         const _rank = data || '-';
         return (
-            <div className="min-w-[24px] text-center">
+            <div className="w-6 h-6 flex-shrink-0 text-center relative font-SourceCodePro">
                 {data && data <= top_ranks_per ? (
-                    <img
-                        src={getS3Url(`/images/nao/contest/ic_top_${item?.rowIndex + 4}.png`)}
-                        className="min-w-[24px] min-h-[24px]"
-                        width="24"
-                        height="24"
-                        alt=""
-                    />
+                    <>
+                        <img
+                            src={getS3Url("/images/nao/contest/ic_top_teal.png")}
+                            className="w-6 h-6"
+                            width="24"
+                            height="24"
+                            alt=""
+                        />
+                        <span className='font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white'>{item?.rowIndex + 4}</span>
+                    </>
                 ) : (
                     <span>{_rank}</span>
                 )}
@@ -148,41 +153,44 @@ const ContestPerRanks = ({
     return (
         <section className="contest_individual_ranks pt-[4.125rem]">
             {minVolumeInd && (
-                <Tooltip
-                    className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
-                    backgroundColor={colors.nao.tooltip}
-                    arrowColor="transparent"
-                    id="tooltip-personal-rank"
-                >
+                <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-personal-rank">
                     <div
-                        className="font-medium text-sm text-nao-grey2 "
+                        className="text-sm"
                         dangerouslySetInnerHTML={{
                             __html: minVolumeInd?.isHtml ? t('nao:contest:tooltip_personal', { value: minVolumeInd[language] }) : minVolumeInd[language]
                         }}
                     ></div>
                 </Tooltip>
             )}
-            <div className="flex justify-between flex-wrap gap-4">
+            <div className="flex justify-between flex-wrap gap-4 text-sm sm:text-base">
                 <div className="flex items-center space-x-4">
-                    <TextLiner>{t('nao:contest:individual_ranking')}</TextLiner>
+                    <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:individual_ranking')}</TextLiner>
                     {minVolumeInd && (
-                        <img
-                            data-tip={''}
-                            data-for="tooltip-personal-rank"
-                            className="cursor-pointer"
-                            src={getS3Url('/images/nao/ic_info.png')}
-                            width="20"
-                            height="20"
-                            alt=""
-                        />
+                        <div data-tip={''} data-for="tooltip-personal-rank" className="cursor-pointer">
+                            <QuestionMarkIcon isFilled size={16} />
+                        </div>
                     )}
                 </div>
-                <div className="flex items-center gap-3 text-sm">
-                    <ButtonNao onClick={() => onFilter('volume')} className={`px-4 py-2 !rounded-md ${tab === 'volume' ? 'font-semibold' : '!bg-nao-bg3'}`}>
+                <div className="flex items-center gap-3">
+                    <ButtonNao
+                        onClick={() => onFilter('volume')}
+                        className={`px-4 py-2 !rounded-md ${
+                            tab === 'volume'
+                                ? 'font-semibold'
+                                : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
+                        }`}
+                    >
                         {t('nao:contest:volume')}
                     </ButtonNao>
                     {showPnl && (
-                        <ButtonNao onClick={() => onFilter('pnl')} className={`px-4 py-2 !rounded-md   ${tab === 'pnl' ? 'font-semibold' : '!bg-nao-bg3'}`}>
+                        <ButtonNao
+                            onClick={() => onFilter('pnl')}
+                            className={`px-4 py-2 !rounded-md   ${
+                                tab === 'pnl'
+                                    ? 'font-semibold'
+                                    : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
+                            }`}
+                        >
                             {t('nao:contest:per_pnl')}
                         </ButtonNao>
                     )}
@@ -198,59 +206,56 @@ const ContestPerRanks = ({
                 </TabsNao>
             )}
             {top3.length > 0 && (
-                <div className="flex flex-wrap gap-5 sm:gap-[22px] mt-[2.75rem]">
+                <div className="flex flex-wrap gap-5 sm:gap-[22px] mt-[2.75rem] text-sm sm:text-base">
                     {top3.map((item, index) => (
-                        <CardNao key={index} className="!p-5 !bg-transparent border border-nao-border2">
+                        <CardNao key={index} className="!p-3 sm:!p-5 border border-divider dark:border-divider-dark">
                             <div className="flex items-center justify-between flex-1 gap-5">
                                 <div className="flex items-center space-x-4">
-                                    <div className="w-[3rem] h-[3rem] rounded-[50%] relative">
+                                    <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal">
                                         <ImageNao
+                                            className="object-cover w-14 h-14 rounded-full"
                                             src={item?.avatar}
-                                            className="min-w-[3rem] min-h-[3rem] max-w-[3rem] max-h-[3rem] rounded-[50%] object-cover"
                                             alt=""
                                         />
-                                        {/*{item?.[rank] > 0 && <img className="absolute bottom-0 -translate-x-1/2 translate-y-3 left-1/2" src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}*/}
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col">
-                                        <div className="flex items-center gap-2 text-lg font-semibold leading-8 capitalize">
+                                        <div className="flex items-center gap-2 text-lg font-semibold capitalize">
                                             <span>{capitalize(item?.name)}</span>
                                             {item?.is_onus_master && <TickFbIcon size={16} />}
                                         </div>
-                                        <span className="text-sm font-medium cursor-pointer text-onus-grey">{item?.onus_user_id}</span>
+                                        <span className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">{item?.onus_user_id}</span>
                                     </div>
                                 </div>
-                                <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>
-                                    {item?.[rank] > 0 ? `#${index + 1}` : '-'}
-                                </TextLiner>
+                                <div className="text-5xl font-semibold pb-0">{item?.[rank] > 0 ? `#${index + 1}` : '-'}</div>
                             </div>
-                            <div className="h-[1px] bg-nao-grey/[0.2] w-full my-6"></div>
+                            <div className="h-0 w-full my-4"></div>
                             <div className="flex flex-col mt-auto space-y-1 rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-sm text-onus-grey">{t('nao:contest:volume')}</div>
-                                    <span className="font-semibold leading-8">
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
+                                    <span className="font-semibold">
                                         {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                     </span>
                                 </div>
                                 {!previous && (
-                                    <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-onus-grey">{t('common:ext_gate:time')}</div>
-                                        <span className="font-semibold leading-8">
+                                    <div className="flex items-center justify-between gap-2 pt-3">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</div>
+                                        <span className="font-semibold">
                                             {formatNumber(item?.time, 2)} {t('common:hours')}
                                         </span>
                                     </div>
                                 )}
                                 {tab === 'pnl' ? (
-                                    <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-onus-grey">{t('nao:contest:per_pnl')}</div>
-                                        <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
+                                    <div className="flex items-center justify-between gap-2 pt-3">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
+                                        <span className={`font-semibold ${getColor(item.pnl)}`}>
                                             {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}
                                             {formatNumber(item?.pnl, 2, 0, true)}%
                                         </span>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-onus-grey">{t('nao:contest:total_trades')}</div>
-                                        <span className={`font-semibold leading-8`}>{formatNumber(item?.total_order)}</span>
+                                    <div className="flex items-center justify-between gap-2 pt-3">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_trades')}</div>
+                                        <span className={`font-semibold`}>{formatNumber(item?.total_order)}</span>
                                     </div>
                                 )}
                             </div>
@@ -259,95 +264,108 @@ const ContestPerRanks = ({
                 </div>
             )}
             {width <= 640 ? (
-                <CardNao noBg className="mt-5 !py-[18px] !px-3">
-                    <div className="flex mx-3 gap-4 sm:gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
-                        <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
-                        <div>{t('nao:contest:information')}</div>
-                    </div>
-                    <div className="mt-3">
-                        {Array.isArray(dataSource) && dataSource?.length > 0 ? (
-                            dataSource.map((item, index) => {
-                                return (
-                                    <div key={index} className={`flex gap-4 sm:gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
-                                        <div className="min-w-[31px] text-nao-grey text-sm font-medium">
-                                            {loading ? (
-                                                <Skeletor width={24} height={24} circle />
-                                            ) : item?.[rank] && item?.[rank] <= top_ranks_per ? (
-                                                <img
-                                                    src={getS3Url(`/images/nao/contest/ic_top_${index + 4}.png`)}
-                                                    className="min-w-[24px] min-h-[24px]"
-                                                    width="24"
-                                                    height="24"
+                <>
+                    {Array.isArray(dataSource) && dataSource?.length > 0 ? (
+                        dataSource.map((item, index) => {
+                            return (
+                                <CardNao key={index} className={`flex gap-4 sm:gap-6 p-3 mt-5`}>
+                                    <div className="flex-1 text-sm sm:text-base">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center space-x-3">
+                                                <ImageNao
+                                                    className="rounded-[50%] object-cover w-9 h-9 flex-shrink-0"
+                                                    src={item?.avatar}
+                                                    width="36"
+                                                    height="36"
                                                     alt=""
                                                 />
-                                            ) : (
-                                                item?.[rank] || '-'
-                                            )}
-                                        </div>
-                                        <div className="flex-1 text-sm">
-                                            <div className="flex items-center justify-between">
                                                 <div>
                                                     <div className="flex items-center space-x-2">
-                                                        <label className="font-semibold leading-6 capitalize">{capitalize(item?.name)}</label>
+                                                        <label className="font-semibold capitalize">{capitalize(item?.name)}</label>
                                                         {item?.is_onus_master && <TickFbIcon size={16} />}
                                                     </div>
-                                                    <div className="font-medium leading-6 cursor-pointer text-nao-grey">ID: {item?.onus_user_id}</div>
-                                                </div>
-                                                <div className="">
-                                                    <ImageNao
-                                                        className="rounded-[50%] object-cover min-w-[2.75rem] min-h-[2.75rem] max-w-[2.75rem] max-h-[2.75rem]"
-                                                        src={item?.avatar}
-                                                        alt=""
-                                                    />
+                                                    <div className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">ID: {item?.onus_user_id}</div>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center justify-between pt-2 font-medium">
-                                                <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
-                                                <span className="text-right">
-                                                    {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                                </span>
-                                            </div>
-                                            {!previous && (
-                                                <div className="flex items-center justify-between pt-1 font-medium">
-                                                    <label className="leading-6 text-nao-grey">{t('common:ext_gate:time')}</label>
-                                                    <span className="text-right">
-                                                        {formatNumber(item?.time, 2)} {t('common:hours')}
-                                                    </span>
-                                                </div>
-                                            )}
-                                            <div className="flex items-center justify-between pt-1 font-medium">
-                                                <label className="leading-6 text-nao-grey">
-                                                    {t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
-                                                </label>
-                                                {tab === 'pnl' ? (
-                                                    <span className={`text-right ${getColor(item?.pnl)}`}>
-                                                        {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
-                                                    </span>
+                                            <div className="min-w-[31px] text-txtSecondary dark:text-txtSecondary-dark">
+                                                {loading ? (
+                                                    <Skeletor width={24} height={24} circle />
+                                                ) : item?.[rank] && item?.[rank] <= top_ranks_per ? (
+                                                    <div className="w-6 h-6 flex-shrink-0 text-center relative font-SourceCodePro">
+                                                        <img
+                                                            src={getS3Url('/images/nao/contest/ic_top_teal.png')}
+                                                            className="w-6 h-6"
+                                                            width="24"
+                                                            height="24"
+                                                            alt=""
+                                                        />
+                                                        <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
+                                                            {index + 4}
+                                                        </span>
+                                                    </div>
                                                 ) : (
-                                                    <span className={`text-right`}>{formatNumber(item?.total_order)}</span>
+                                                    item?.[rank] || '-'
                                                 )}
                                             </div>
                                         </div>
+                                        <div className="h-8"></div>
+                                        <div className="flex items-center justify-between">
+                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
+                                            <span className="text-right">
+                                                {formatNumber(item?.total_volume, 0)} {quoteAsset}
+                                            </span>
+                                        </div>
+                                        {!previous && (
+                                            <div className="flex items-center justify-between pt-3">
+                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</label>
+                                                <span className="text-right">
+                                                    {formatNumber(item?.time, 2)} {t('common:hours')}
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div className="flex items-center justify-between pt-3">
+                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                {t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
+                                            </label>
+                                            {tab === 'pnl' ? (
+                                                <span className={`text-right ${getColor(item?.pnl)}`}>
+                                                    {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
+                                                </span>
+                                            ) : (
+                                                <span className={`text-right`}>{formatNumber(item?.total_order)}</span>
+                                            )}
+                                        </div>
                                     </div>
-                                );
-                            })
-                        ) : (
-                            <div className={`flex items-center justify-center flex-col m-auto`}>
-                                <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
-                                <div className="mt-1 text-xs text-nao-grey">{t('nao:contest:no_rank')}</div>
+                                </CardNao>
+                            );
+                        })
+                    ) : (
+                        <div className={`flex items-center justify-center flex-col m-auto`}>
+                            <div className="block dark:hidden">
+                                <NoDataLightIcon />
                             </div>
-                        )}
-                    </div>
-                </CardNao>
+                            <div className="hidden dark:block">
+                                <NoDataDarkIcon />
+                            </div>
+                            <div className="mt-1 text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:no_rank')}</div>
+                        </div>
+                    )}
+                </>
             ) : (
-                <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource}>
-                    <Column minWidth={50} className="font-medium text-nao-grey" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
+                <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} classWrapper="!text-sm sm:!text-base">
+                    <Column
+                        minWidth={50}
+                        className="text-txtSecondary dark:text-txtSecondary-dark"
+                        title={t('nao:contest:rank')}
+                        fieldName={rank}
+                        cellRender={renderRank}
+                    />
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
-                    <Column minWidth={150} className="text-nao-text" title={'ID NAO Futures'} fieldName="onus_user_id" />
+                    <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'ID NAO Futures'} fieldName="onus_user_id" />
                     <Column
                         minWidth={150}
                         align="right"
-                        className="font-medium"
+                        className=""
                         title={`${t('nao:contest:volume')} (${quoteAsset})`}
                         decimal={0}
                         fieldName="total_volume"
@@ -356,7 +374,7 @@ const ContestPerRanks = ({
                         minWidth={150}
                         visible={!previous}
                         align="right"
-                        className="font-medium"
+                        className=""
                         title={t('common:ext_gate:time')}
                         decimal={2}
                         fieldName="time"
@@ -367,7 +385,7 @@ const ContestPerRanks = ({
                             maxWidth={120}
                             minWidth={100}
                             align="right"
-                            className="font-medium"
+                            className=""
                             title={t('nao:contest:per_pnl')}
                             fieldName="pnl"
                             cellRender={renderPnl}
@@ -377,7 +395,7 @@ const ContestPerRanks = ({
                             maxWidth={120}
                             minWidth={100}
                             align="right"
-                            className="font-medium"
+                            className=""
                             title={t('nao:contest:total_trades')}
                             fieldName="total_order"
                             decimal={0}
@@ -386,7 +404,7 @@ const ContestPerRanks = ({
                 </Table>
             )}
             {lastUpdated && lastUpdatedTime.current && (
-                <div className="mt-6 text-sm font-medium leading-6 text-nao-grey">
+                <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                     {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
                 </div>
             )}

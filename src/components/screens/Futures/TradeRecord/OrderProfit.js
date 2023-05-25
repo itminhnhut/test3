@@ -60,7 +60,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
                 <div className={isMobile ? 'flex items-center justify-end leading-[1.125rem] font-medium' : 'text-xs font-normal w-full flex justify-end'}>
                     {onusMode ?
                         <>
-                            <IconArrowOnus className={`w-[7px] mr-[2px] ${profit > 0 ? '' : 'rotate-180'}`} color={profit > 0 ? colors.onus.green : colors.onus.red} />
+                            <IconArrowOnus className={`w-[7px] mr-[2px] ${profit > 0 ? '' : 'rotate-180'}`} color='currentColor' />
                             {percent + '%'}
                         </>
                         :

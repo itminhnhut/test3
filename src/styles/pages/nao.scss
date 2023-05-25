@@ -1,5 +1,6 @@
 .text-nao-gradient  {
-    background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%);
+    // background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%);
+    @apply bg-teal;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -13,7 +14,7 @@
 //https://codepen.io/tippingpointdev/pen/gOxqZqy?editors=1100
 .nao-gradient-border-mask {
     position: relative;
-    background: linear-gradient(45deg, rgba(9, 61, 209, 0.15) , rgba(73, 232, 213, 0.15));
+    @apply bg-teal;
     border-radius: 0.75rem;
 }
 
@@ -38,7 +39,7 @@
     font-style: normal;
     line-height: 50px;
 
-    background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%);
+    @apply bg-teal;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 

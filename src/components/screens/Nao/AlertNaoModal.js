@@ -45,13 +45,13 @@ const AlertModal = memo(forwardRef((props, ref) => {
     const getImage = (type) => {
         switch (type) {
             case 'success':
-                return '/images/icon/ic_success.png';
+                return '/images/icon/ic_success_outlined.png';
             case 'error':
-                return '/images/icon/ic_error.png';
+                return '/images/icon/ic_error_outlined.png';
             case 'warning':
-                return '/images/icon/ic_warning.png';
+                return '/images/icon/ic_warning_triangle.png';
             case 'expired':
-                return '/images/icon/ic_expired.png';
+                return '/images/icon/ic_expired_outlined.png';
             default:
                 return '/images/icon/success.png';
         }
@@ -79,7 +79,7 @@ const AlertModal = memo(forwardRef((props, ref) => {
                 <div className='text-[20px] font-semibold mb-[12px]'>
                     {options.current.title}
                 </div>
-                <div className='mb-3 text-center text-onus-grey font-normal'>
+                <div className='mb-3 text-center text-txtSecondary dark:text-txtSecondary-dark font-normal'>
                     {options.current.messages}
                 </div>
                 <div className='text-gray-1 mb-[30px] text-center'>

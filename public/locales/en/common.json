@@ -436,5 +436,7 @@
         "more": "More",
         "download": "Download",
         "reward_received": "Reward received successfully"
-    }
+    },
+    "wallet": "{{wallet}} Wallet",
+    "reload": "Reload"
 }

@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import LayoutNaoToken from "components/common/layouts/LayoutNaoToken";
-import { ButtonNao, CardNao } from "src/components/screens/Nao/NaoStyle";
 import Portal from "components/hoc/Portal";
 import classNames from "classnames";
 import {
@@ -10,11 +9,14 @@ import {
     getS3Url,
 } from "redux/actions/utils";
 import {
+    ButtonNaoVariants,
     Progressbar,
     useOutsideAlerter,
+    ButtonNao,
+    CardNao
 } from "components/screens/Nao/NaoStyle";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import SvgSuccessfulCircle from "src/components/svg/SuccessfulCircle";
+import SvgSuccessfulCircle from "components/svg/SuccessfulCircle";
 import FetchApi from "utils/fetch-api";
 import { API_USER_POOL, API_USER_VOTE } from "redux/actions/apis";
 import { useRouter } from "next/router";
@@ -23,7 +25,7 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import SvgCancelCircle from "src/components/svg/CancelCircle";
 import SvgTimeIC from "src/components/svg/TimeIC";
-import LoadingPage from "components/screens/Mobile/LoadingPage";
+import LoadingPage from "components/screens/Nao_futures/LoadingPage";
 
 const getAssetNao = createSelector(
     [(state) => state.utils.assetConfig, (utils, params) => params],
@@ -119,20 +121,19 @@ export default function Vote() {
         return (
             <>
                 <div className="text-[1.375rem] leading-8 lg:text-xl lg:col-span-2 sm:col-span-3">
-                    <h5 className="text-nao-white sm:text-xl lg:text-2xl pt-10 font-semibold mb-5">
-                        {t("nao:vote:nao_description")}
+                    <h5 className="text-txtPrimary dark:text-txtPrimary-dark sm:text-xl lg:text-2xl pt-10 font-semibold mb-5">
+                        {t('nao:vote:nao_description')}
                     </h5>
                     <div
-                        className="description text-nao-grey text-sm lg:text-[1rem] leading-7 mb-5"
+                        className="description text-txtPrimary dark:text-txtPrimary-dark text-sm lg:text-[1rem] leading-7 mb-5"
                         dangerouslySetInnerHTML={{
-                            __html:
-                                voteDescription && voteDescription[language],
+                            __html: voteDescription && voteDescription[language]
                         }}
                     ></div>
                     <div
-                        className="description text-nao-grey text-sm lg:text-[1rem] leading-7"
+                        className="description text-txtPrimary dark:text-txtPrimary-dark text-sm lg:text-[1rem] leading-7"
                         dangerouslySetInnerHTML={{
-                            __html: t("nao:vote:vote_notice"),
+                            __html: t('nao:vote:vote_notice')
                         }}
                     ></div>
                 </div>
@@ -147,7 +148,7 @@ export default function Vote() {
             return (
                 <ButtonNao
                     disabled
-                    className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
+                    className="w-full py-2 !rounded-md text-sm font-semibold leading-6"
                 >
                     {t("nao:vote:vote_ended")}
                 </ButtonNao>
@@ -170,7 +171,7 @@ export default function Vote() {
             return (
                 <ButtonNao
                     disabled
-                    className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
+                    className="w-full py-2 !rounded-md text-sm font-semibold leading-6"
                 >
                     {t("nao:vote:voted")}
                 </ButtonNao>
@@ -197,7 +198,7 @@ export default function Vote() {
         <LayoutNaoToken>
             <div className="grid lg:grid-cols-3 gap-8 pr-3 justify-between pt-10 items-start flex-wrap">
                 <div className="lg:col-span-2 sm:col-span-3">
-                    <h3 className="lg:text-[2.125rem] lg:leading-[3rem] text-[1.625rem] leading-[2.3755rem] font-semibold pb-[6px] max-w-[700px] text-nao-white">
+                    <h3 className="lg:text-[2.125rem] lg:leading-[3rem] text-[1.625rem] leading-[2.3755rem] font-semibold pb-[6px] max-w-[700px] text-gray-15 dark:text-gray-7">
                         {voteName && voteName[language]}
                     </h3>
 
@@ -207,7 +208,7 @@ export default function Vote() {
                     <CardNao className="!min-h-0 gap-7 lg:w-full !min-w-[280px]">
                         <div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-[0.875rem] text-nao-text">
+                                <span className="text-[0.875rem] text-txtPrimary dark:text-txtPrimary-dark">
                                     {t("nao:vote:voted_for")}
                                 </span>
                                 <div className="flex flex-row">
@@ -225,17 +226,17 @@ export default function Vote() {
                                     />
                                 </div>
                             </div>
-                            <div className="bg-black mt-3 rounded-lg mb-3">
+                            <div className="bg-gray-11 dark:bg-dark-1 mt-3 rounded-lg mb-3">
                                 <Progressbar
                                     percent={(totalVoteYes / totalPool) * 100}
                                     height={6}
                                 />
                             </div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-nao-grey text-[0.75rem] leading-6">
+                                <span className="text-txtSecondary dark:text-gray-4 text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
-                                <span className="text-[0.75rem] text-nao-text">{`${formatNumber(
+                                <span className="text-[0.75rem] text-txtPrimary dark:text-txtPrimary-dark">{`${formatNumber(
                                     (totalVoteYes / totalPool) * 100,
                                     2
                                 )}%`}</span>
@@ -243,7 +244,7 @@ export default function Vote() {
                         </div>
                         <div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-[0.875rem] text-nao-text">
+                                <span className="text-[0.875rem] text-txtPrimary dark:text-txtPrimary-dark">
                                     {t("nao:vote:rejected")}
                                 </span>
                                 <div className="flex flex-row">
@@ -261,7 +262,7 @@ export default function Vote() {
                                     />
                                 </div>
                             </div>
-                            <div className="bg-black mt-3 rounded-lg mb-3 ">
+                            <div className="bg-gray-11 dark:bg-dark-1 mt-3 rounded-lg mb-3 ">
                                 <Progressbar
                                     percent={(totalVoteNo / totalPool) * 100}
                                     height={6}
@@ -269,17 +270,17 @@ export default function Vote() {
                                 />
                             </div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-nao-grey text-[0.75rem] leading-6">
+                                <span className="text-txtSecondary dark:text-gray-4 text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
-                                <span className="text-[0.75rem] text-nao-text">{`${formatNumber(
+                                <span className="text-[0.75rem] text-txtPrimary dark:text-txtPrimary-dark">{`${formatNumber(
                                     (totalVoteNo / totalPool) * 100,
                                     2
                                 )}%`}</span>
                             </div>
                         </div>
                         <div className="flex flex-row justify-between">
-                            <span className="text-[0.875rem] text-nao-text">
+                            <span className="text-[0.875rem] text-txtPrimary dark:text-txtPrimary-dark">
                                 {t("common:status")}
                             </span>
                             <div className="flex flex-row items-center">
@@ -323,7 +324,7 @@ export default function Vote() {
                             </div>
                         </div>
                         <div className="flex flex-row justify-between">
-                            <span className="text-[0.875rem] text-nao-text">
+                            <span className="text-[0.875rem] text-txtPrimary dark:text-txtPrimary-dark">
                                 {" "}
                                 {t("nao:vote:your_vote")}
                             </span>
@@ -391,7 +392,7 @@ const VoteProposalModal = ({
         <Portal portalId="PORTAL_MODAL">
             <div
                 className={classNames(
-                    "flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden rounded-lg",
+                    "flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-black-800/[0.6] dark:bg-black-800/[0.8] overflow-hidden rounded-lg",
                     "ease-in-out transition-all flex items-end duration-300 z-30"
                 )}
             >
@@ -399,30 +400,30 @@ const VoteProposalModal = ({
                     ref={wrapperRef}
                     className="lg:w-[500px] min-h-0 mx-auto mt-[200px]"
                 >
-                    <div className="rounded-lg pt-10 px-6 pb-[50px] bg-nao-bgModal mx-4 flex flex-col items-center justify-between gap-5">
+                    <div className="rounded-lg pt-10 px-6 pb-[50px] bg-bgPrimary dark:bg-bgPrimary-dark mx-4 flex flex-col items-center justify-between gap-5">
                         <div className="w-full flex flex-row items-center">
-                            <h3 className="text-[1.375rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
+                            <h3 className="text-[1.375rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-gray-15 dark:text-gray-7">
                                 {t("nao:vote:vote_for_proposal")}
                             </h3>
                         </div>
-                        <p className="text-nao-grey text-[0.875rem] leading-6">
+                        <p className="text-txtSecondary dark:text-txtSecondary-dark text-[0.875rem] leading-6">
                             {summary}
                         </p>
                         <CardNao className="!min-h-0 w-full">
                             <div className="flex flex-row justify-between">
                                 <div className="">
-                                    <span className="font-semibold text-nao-white leading-6">
+                                    <span className="font-semibold text-gray-15 dark:text-gray-7 leading-6">
                                         {t("nao:vote:voting_power")}
                                     </span>
                                     <p
-                                        className="text-sm text-nao-text leading-6"
+                                        className="text-sm text-txtPrimary dark:text-txtPrimary-dark leading-6"
                                         style={{ lineHeight: "24px" }}
                                     >
                                         {formatTime(new Date(), "dd/MM/yyyy")}
                                     </p>
                                 </div>
                                 <div className="flex flex-row gap-1 items-center">
-                                    <span className="text-nao-white text-lg lg:text-3xl font-semibold">
+                                    <span className="text-gray-15 dark:text-gray-7 text-lg lg:text-3xl font-semibold">
                                         {formatNumber(numberOfNao, 2)}
                                     </span>
                                     <img
@@ -436,7 +437,8 @@ const VoteProposalModal = ({
                         {numberOfNao > 0.1 ? (
                             <div className=" w-full flex justify-between gap-2">
                                 <ButtonNao
-                                    className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
+                                    className="w-full py-2 !rounded-md text-sm font-semibold leading-6"
+                                    variant={ButtonNaoVariants.DANGER}
                                     onClick={() => handleSubmitVote(false)}
                                 >
                                     {t("nao:vote:reject")}
@@ -450,13 +452,13 @@ const VoteProposalModal = ({
                             </div>
                         ) : (
                             <div className=" w-full flex justify-between gap-2">
-                                <ButtonNao className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]">
+                                <ButtonNao className="w-full py-2 !rounded-md text-sm font-semibold leading-6" disabled>
                                     {t("nao:vote:nao_too_small")}
                                 </ButtonNao>
                             </div>
                         )}
 
-                        <p className="text-nao-grey text-sm">
+                        <p className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
                             {t("nao:vote:vote_remind")}
                         </p>
                     </div>
@@ -473,7 +475,7 @@ const VoteSuccessModal = ({ onClose, summary, type }) => {
         <Portal portalId="PORTAL_MODAL">
             <div
                 className={classNames(
-                    "flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden",
+                    "flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-black-800/[0.6] dark:bg-black-800/[0.8] overflow-hidden",
                     "ease-in-out transition-all flex items-end duration-300 z-30"
                 )}
             >
@@ -481,19 +483,19 @@ const VoteSuccessModal = ({ onClose, summary, type }) => {
                     ref={wrapperRef}
                     className="lg:w-[500px] min-h-0 mx-auto mt-[200px]"
                 >
-                    <div className="rounded bg-nao-bgModal mx-4 pt-10 px-6 pb-[50px] flex flex-col items-center justify-between gap-8">
+                    <div className="rounded bg-bgPrimary dark:bg-bgPrimary-dark mx-4 pt-10 px-6 pb-[50px] flex flex-col items-center justify-between gap-8">
                         {/* <div className="w-full items-center"> */}
                         <div className="m-auto">
                             <SvgSuccessfulCircle className="w-[80px] h-[80px]" />
                         </div>
-                        <h3 className="text-[1.375rem] lg:text-[1.5rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
+                        <h3 className="text-[1.375rem] lg:text-[1.5rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-gray-15 dark:text-gray-7">
                             {type
                                 ? t("nao:vote:voted_successfully")
                                 : t("nao:vote:rejected_successfully")}
                         </h3>
-                        <p className="text-nao-grey text-center">{summary}</p>
+                        <p className="text-txtSecondary dark:text-txtSecondary-dark text-center">{summary}</p>
                         <ButtonNao
-                            className="py-2 px-7 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
+                            className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
                             onClick={onClose}
                         >
                             {t("common:close")}

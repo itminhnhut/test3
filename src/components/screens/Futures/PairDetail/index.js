@@ -678,7 +678,7 @@ const RIGHT_ITEMS_WITH_TOOLTIPS = [
 ];
 
 const Row = styled.div.attrs({
-    className: 'flex items-center justify-between border-b border-onus-input2 last:border-0 w-full'
+    className: 'flex items-center justify-between border-b border-divider dark:border-divider-dark last:border-0 w-full'
 })``;
 
 const Span = styled.div.attrs(({ isTabOpen }) => ({

@@ -254,7 +254,6 @@ export const MOBILE_NAV_DATA = [
                 url: '/swap',
                 child_lv2: []
             },
-
             {
                 key: 6,
                 title: 'Referral',
