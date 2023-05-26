@@ -118,26 +118,27 @@ const OrderBook = (props) => {
     const divide = orderBookMode === ORDER_BOOK_MODE.ALL ? 2 : 1;
 
     const MAX_LENGTH = Math.floor((height - 145) / divide / 20);
-    let asks = [];
-    let bids = [];
 
     const originAsks = orderBook?.asks?.length > 0 ? orderBy(orderBook?.asks, [(e) => +e[0]]) : [];
     const originBids = orderBook?.bids?.length > 0 ? orderBy(orderBook?.bids, [(e) => +e[0]], 'desc') : [];
 
-    for (let i = 0; i < Math.min(MAX_LENGTH, orderBook?.asks?.length || 0); i++) {
-        if (originAsks[i]) {
-            asks.push(originAsks[i]);
-        } else {
-            asks.push([0, 0]);
-        }
-    }
-    for (let i = 0; i < Math.min(MAX_LENGTH, orderBook?.bids?.length || 0); i++) {
-        if (originBids[i]) {
-            bids.push(originBids[i]);
-        } else {
-            bids.push([0, 0]);
-        }
-    }
+    let asks = originAsks;
+    let bids = originBids;
+
+    // for (let i = 0; i < Math.min(MAX_LENGTH, orderBook?.asks?.length || 0); i++) {
+    //     if (originAsks[i]) {
+    //         asks.push(originAsks[i]);
+    //     } else {
+    //         asks.push([0, 0]);
+    //     }
+    // }
+    // for (let i = 0; i < Math.min(MAX_LENGTH, orderBook?.bids?.length || 0); i++) {
+    //     if (originBids[i]) {
+    //         bids.push(originBids[i]);
+    //     } else {
+    //         bids.push([0, 0]);
+    //     }
+    // }
 
     // const handleTickSize = (data, type) => {
     //     const _data = data.map((e) => {
@@ -157,8 +158,9 @@ const OrderBook = (props) => {
     asks = reverse(asks);
     asks = handleTickSize(asks, tickSize, 'ask');
     bids = handleTickSize(bids, tickSize, 'bids');
-    asks = orderBy(asks, [(e) => +e[0]], ['desc']);
-    bids = orderBy(bids, [(e) => -e[0]]);
+    asks = orderBy(asks.slice(0, MAX_LENGTH), [(e) => +e[0]], ['desc']);
+    bids = orderBy(bids.slice(0, MAX_LENGTH), [(e) => -e[0]]);
+
     const maxAsk = maxBy(asks, (o) => {
         return o[1];
     });
@@ -246,7 +248,7 @@ const OrderBook = (props) => {
                             return (
                                 <div
                                     onClick={() => {
-                                        setTickSize(item);
+                                        setTickSize(Number(item));
                                         popover.current.close();
                                     }}
                                     key={index}
