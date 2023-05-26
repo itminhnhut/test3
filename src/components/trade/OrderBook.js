@@ -244,7 +244,7 @@ const OrderBook = (props) => {
                             return (
                                 <div
                                     onClick={() => {
-                                        setTickSize(item);
+                                        setTickSize(Number(item));
                                         popover.current.close();
                                     }}
                                     key={index}
