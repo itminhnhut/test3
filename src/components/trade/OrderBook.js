@@ -103,8 +103,10 @@ const OrderBook = (props) => {
     }, [symbol]);
 
     useEffect(() => {
+        if (exchangeConfig.length <= 0) return;
         const currentExchangeConfig = exchangeConfig.find((e) => e.symbol === getSymbolString(symbol));
         const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, currentExchangeConfig || []);
+        if (!priceFilter) return;
         const result = [];
         for (let i = 0; i < 5; i++) {
             result.push(exponentialToDecimal(+priceFilter?.tickSize * 10 ** i));

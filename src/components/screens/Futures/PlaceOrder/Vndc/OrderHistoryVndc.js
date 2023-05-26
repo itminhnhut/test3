@@ -42,7 +42,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 dataIndex: 'id',
                 title: 'ID / ' + t('common:time'),
                 align: 'left',
-                width: 192,
+                width: 200,
                 render: (_row, item) => (
                     <div className="text-txtPrimary dark:text-gray-4 font-normal text-sm h-full">
                         <div>{formatTime(item.closed_at, 'HH:mm:ss dd/MM/yyyy')}</div>
@@ -56,7 +56,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 dataIndex: 'symbol',
                 title: t('common:pair'),
                 align: 'left',
-                width: 224,
+                width: 170,
                 render: (_row, item) => {
                     let specialOrder;
                     if (item?.metadata?.dca_order_metadata) {
@@ -113,7 +113,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 key: 'sltp',
                 title: `${t('futures:stop_loss')} / ${t('futures:take_profit')}`,
                 align: 'left',
-                width: 224,
+                width: 150,
                 render: (_row, item) => (
                     <div className="flex items-center">
                         <div className="flex flex-col gap-1 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
@@ -144,7 +144,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                     if (item.reason_close_code === 5) return '_';
                     return (
                         <OrderProfit
-                            className="w-full"
+                            className="w-full !text-sm"
                             key={item.displaying_id}
                             order={item}
                             initPairPrice={item.close_price}
@@ -162,7 +162,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 title: t('futures:order_table:volume'),
                 align: 'right',
                 width: 148,
-                render: (_row, item) => formatNumber(item?.order_value, item?.decimalScalePrice, 0, true),
+                render: (_row, item) => <span className="text-sm">{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</span>,
                 sortable: false
             },
             {
@@ -171,7 +171,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 title: t('futures:order_table:open_price'),
                 align: 'right',
                 width: 148,
-                render: (_row, item) => formatNumber(item?.open_price, item?.decimalScalePrice, 0, true),
+                render: (_row, item) => <span className="text-sm">{formatNumber(item?.open_price, item?.decimalScalePrice, 0, true)}</span>,
                 sortable: false
             },
             {
@@ -180,7 +180,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 title: t('futures:order_table:close_price'),
                 align: 'right',
                 width: 148,
-                render: (_row, item) => formatNumber(item?.close_price, item?.decimalScalePrice, 0, true),
+                render: (_row, item) => <span className="text-sm">{formatNumber(item?.close_price, item?.decimalScalePrice, 0, true)}</span>,
                 sortable: false
             },
             {
@@ -188,7 +188,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 title: t('futures:mobile:reason_close'),
                 align: 'right',
                 width: 148,
-                render: (_row, item) => renderReasonClose(item),
+                render: (_row, item) => <span className="text-sm">{renderReasonClose(item)}</span>,
                 sortable: false
             }
         ],
@@ -378,7 +378,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                         'padding-top': '0px !important',
                         'padding-bottom': '0px !important'
                     },
-                    padding: '14px 16px',
+                    padding: '14px 16px'
                 }}
             />
         </>

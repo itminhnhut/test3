@@ -244,7 +244,7 @@ const ReTable = memo(
                                     onClick={() => {
                                         !c?.preventSort && setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] });
                                         if (cbSort) cbSort(!sorter?.[`${c.key}`]);
-                                        if (customSort) customSort({...sorter, [`${c.key}`]: !sorter?.[`${c.key}`]})
+                                        if (customSort) customSort({ ...sorter, [`${c.key}`]: !sorter?.[`${c.key}`] });
                                     }}
                                 >
                                     {c.title} {!c?.preventSort && <Sorter isUp={sorted ? undefined : sorter?.[`${c.key}`]} />}
@@ -437,30 +437,83 @@ const ReTableWrapperV2 = styled.div`
             /* box-shadow: ${({ isDark }) => (isDark ? 'inset -10px 0 8px -8px #263459' : 'inset -10px 0 8px -8px #f2f4f6')} !important; */
         }
     }
+
     .rc-table-cell-fix-left,
     .rc-table-cell-fix-right,
     .rc-table-cell-fix-right-first,
     .rc-table-cell-fix-right-last {
         z-index: 99;
-        /* box-shadow: ${({ isDark }) => (isDark ? '-1px 0 0 #263459' : '-1px 0 0 #f2f4f6')} !important; */
         background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important;
         &:after {
-            border-left: ${({ noBorder, isDark }) => (noBorder ? 'none !important' : `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT}`)};
+            border-right: ${({ noBorder, isDark }) => (noBorder ? 'none !important' : `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT}`)};
             z-index: 10;
             width: 1px;
             visibility: visible;
-            left: 0 !important;
+            left: 0;
             min-height: ${({ height }) => `${height}px`};
-            /* box-shadow: none !important; */
+        }
+    }
+    /* 
+    .rc-table-cell-fix-left-first::after,
+    .rc-table-cell-fix-left-last::after,
+    .rc-table-cell-fix-right-first::after,
+    .rc-table-cell-fix-right-last::after {
+        visibility: ${({ shadowWithFixedCol }) => (shadowWithFixedCol ? 'visible' : 'invisible')} !important;
+        min-height: 100% !important;
+        width: 8px !important;
+    } */
+
+    .rc-table-ping-right {
+        .rc-table-thead {
+            .rc-table-cell-fix-left,
+            .rc-table-cell-fix-right,
+            .rc-table-cell-fix-right-first,
+            .rc-table-cell-fix-right-last {
+                &:after {
+                    visibility: ${({ shadowWithFixedCol }) => (shadowWithFixedCol ? 'visible' : 'invisible')} !important;
+                    min-height: ${({ height }) => `${height}px`};
+                    width: 8px !important;
+                    left: 8px !important;
+                    box-shadow: ${({ isDark }) => (isDark ? '-12px 0 20px 0 rgba(0, 0, 0, 0.9)' : '-12px 0 20px 0 rgba(0, 0, 0, 0.2)')} !important;
+                }
+            }
+        }
+        .rc-table-cell-fix-right-first::after,
+        .rc-table-cell-fix-right-last::after {
+            border-right: 0 !important;
+            box-shadow: none !important;
         }
     }
 
-    .rc-table-cell-fix-left {
-        z-index: 15;
-        ::after {
-            visibility: ${({ shadowWithFixedCol }) => (shadowWithFixedCol ? 'visible' : 'hidden')};
-            box-shadow: none;
+    .rc-table-ping-left,
+    .rc-table-ping-right {
+        tbody::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 20px;
+            -webkit-transform: translateX(100%);
+            -ms-transform: translateX(100%);
+            transform: translateX(100%);
+            -webkit-transition: -webkit-box-shadow 0.3s;
+            transition: -webkit-box-shadow 0.3s;
+            -o-transition: box-shadow 0.3s;
+            transition: box-shadow 0.3s;
+            transition: box-shadow 0.3s, -webkit-box-shadow 0.3s;
+            pointer-events: none;
+            left: -40px !important;
         }
+
+        .rc-table-cell-fix-left-first::after,
+        .rc-table-cell-fix-left-last::after {
+            box-shadow: ${({ isDark }) => (isDark ? '14px 0px 20px 0px rgba(0,0,0,0.9)' : '20px 0 20px 0 rgba(0, 0, 0, 0.3)')};
+            left: -20px !important;
+        }
+    }
+    .rc-table-ping-left tbody::after {
+        box-shadow: ${({ isDark }) => (isDark ? '20px 0px 20px 0px rgba(0,0,0,0.9)' : '12px 0 20px 0 rgba(0, 0, 0, 0.3)')};
+        left: -40px !important;
     }
 
     .before-remove-box-shadow {
@@ -481,14 +534,14 @@ const ReTableWrapperV2 = styled.div`
 
     .rc-table-ping-right .rc-table-cell-fix-right-first::after,
     .rc-table-ping-right .rc-table-cell-fix-right-last::after {
-        box-shadow: none !important;
+        /* box-shadow: none !important; */
     }
 
     // Fix border red action in Safari
     .rc-table-cell-fix-right-first,
     .rc-table-cell-fix-right-last {
-        // box-shadow: -1px 0 0 transparent !important;
-        box-shadow: none !important;
+        /* box-shadow: -1px 0 0 transparent !important; */
+        /* box-shadow: none !important; */
     }
 
     table {
@@ -563,7 +616,7 @@ const ReTableWrapperV2 = styled.div`
             transition: all .2s ease;
 
             :hover {
-                // box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
+                /* box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05); */
             }
         }
     }
