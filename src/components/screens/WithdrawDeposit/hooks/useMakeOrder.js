@@ -24,7 +24,7 @@ const useMakeOrder = ({ setState, input }) => {
         router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + order.displayingId);
     };
 
-    const onMakeOrderHandler = async (otp) => {
+    const onMakeOrderHandler = async (otp, locale) => {
         try {
             setState({ loadingConfirm: true });
 
@@ -34,7 +34,8 @@ const useMakeOrder = ({ setState, input }) => {
                 partnerId: partner?.partnerId,
                 quantity: input,
                 side,
-                otp
+                otp,
+                locale
             });
 
             console.log("____orderResponse: ", orderResponse);
@@ -69,11 +70,11 @@ const useMakeOrder = ({ setState, input }) => {
                             type: ORDER_TYPES.ERROR_EXCEEDING_LIMIT
                         });
                     } else if(orderResponse?.status === ApiResultCreateOrder.SECRET_INVALID) {
-                        toast({ text: t('dw_partner:error.invalid_secret'), type: 'warning' });
+                        toast({ text: t('dw_partner:error.invalid_secret', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
                     } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID) {
                         toast({ text: t('dw_partner:error.invalid_smart_otp', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
                     } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID_EXCEED_TIME) {
-                        setState({ showAlertDisableSmartOtp: true, isUseSmartOtp: false })
+                        setState({ showAlertDisableSmartOtp: true })
                     } else toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }
             }
