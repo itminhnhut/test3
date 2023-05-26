@@ -13,6 +13,7 @@ import { isMobile } from 'react-device-detect';
 import { useSelector } from 'react-redux';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import Skeletor from '../Skeletor';
+import Head from 'next/head';
 
 const NavBar = dynamic(() => import('src/components/common/NavBar/NavBar'), {
     ssr: false,
@@ -58,6 +59,11 @@ const MadivesLayout = ({
 
     return (
         <>
+            {isApp && (
+                <Head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
+                </Head>
+            )}
             <div
                 className={`mal-layouts flex flex-col `}
                 // style={
