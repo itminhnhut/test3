@@ -365,8 +365,8 @@ const OrderDetail = ({ id }) => {
                                             <div className="text-right">
                                                 {general.pending ? (
                                                     <div
-                                                        className={`bg-onus-bg3 px-4 py-1 rounded-full text-xs ${
-                                                            general?.cancelled ? 'text-onus-grey' : 'text-yellow-2 bg-yellow-2/[0.15]'
+                                                        className={`bg-gray-12 dark:bg-dark-2 px-4 py-1 rounded-full text-xs ${
+                                                            general?.cancelled ? 'text-txtSecondary dark:text-txtSecondary-dark' : 'text-yellow-2 bg-yellow-2/[0.15]'
                                                         }`}
                                                     >
                                                         {t(`futures:mobile:${general?.cancelled ? 'cancelled_order' : 'pending_order'}`)}

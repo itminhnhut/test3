@@ -25,6 +25,8 @@ import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
 import TickFbIcon from 'components/svg/TickFbIcon';
 import RePagination from 'components/common/ReTable/RePagination';
+import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
+import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 
 const ContestTeamRanks = ({
     onShowDetail,
@@ -52,8 +54,15 @@ const ContestTeamRanks = ({
     const router = useRouter();
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const lastUpdatedTime = useRef(null);
     const mount = useRef(false);
+    const isMobile = width <= 640;
+
+    useEffect(() => {
+        setPage(1);
+        setPageSize(10);
+    }, [isMobile]);
 
     useEffect(() => {
         setLoading(true);
@@ -109,10 +118,17 @@ const ContestTeamRanks = ({
         setTab(key);
     };
 
+    const onReadMore = () => {
+        setPageSize((old) => {
+            const newSize = pageSize + 10;
+            return newSize >= dataSource.length ? dataSource.length : newSize;
+        });
+    };
+
     const renderTeam = (data, item) => {
         return (
             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-[50%] bg-[#273446] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
                         className="object-cover rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
                         src={item?.avatar}
@@ -132,21 +148,20 @@ const ContestTeamRanks = ({
     };
 
     const renderActions = (e) => {
-        return <div className="text-nao-grey underline text-xs cursor-pointer">{t('nao:contest:details')}</div>;
+        return <div className="text-teal font-semibold text-sm sm:text-base cursor-pointer">{t('nao:contest:details')}</div>;
     };
 
     const renderRank = (data, item) => {
         const _rank = data || '-';
         return (
-            <div className="min-w-[24px] text-center">
+            <div className="w-6 h-6 flex-shrink-0 text-center relative font-SourceCodePro">
                 {data && data <= top_ranks_team ? (
-                    <img
-                        src={getS3Url(`/images/nao/contest/ic_top_${item?.rowIndex + 4}.png`)}
-                        className="min-w-[24px] min-h-[24px]"
-                        width="24"
-                        height="24"
-                        alt=""
-                    />
+                    <>
+                        <img src={getS3Url('/images/nao/contest/ic_top_teal.png')} className="w-6 h-6" width="24" height="24" alt="" />
+                        <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
+                            {item?.rowIndex + 4}
+                        </span>
+                    </>
                 ) : (
                     <span>{_rank}</span>
                 )}
@@ -154,16 +169,11 @@ const ContestTeamRanks = ({
         );
     };
     return (
-        <section className="contest_individual_ranks pt-[4.125rem]">
+        <section className="contest_individual_ranks pt-8">
             {minVolumeTeam && (
-                <Tooltip
-                    className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
-                    backgroundColor={colors.nao.tooltip}
-                    arrowColor="transparent"
-                    id="tooltip-team-rank"
-                >
+                <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-team-rank">
                     <div
-                        className="font-medium text-sm text-nao-grey2 "
+                        className="text-sm"
                         dangerouslySetInnerHTML={{
                             __html: minVolumeTeam?.isHtml ? t('nao:contest:tooltip_team', { value: minVolumeTeam[language] }) : minVolumeTeam[language]
                         }}
@@ -172,29 +182,46 @@ const ContestTeamRanks = ({
             )}
             <div className="flex justify-between flex-wrap gap-4">
                 <div className="flex items-center space-x-4">
-                    <TextLiner>{t('nao:contest:team_ranking')}</TextLiner>
+                    <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:team_ranking')}</TextLiner>
                     {minVolumeTeam && (
-                        <img
-                            data-tip={''}
-                            data-for="tooltip-team-rank"
-                            className="cursor-pointer"
-                            src={getS3Url('/images/nao/ic_info.png')}
-                            width="20"
-                            height="20"
-                            alt=""
-                        />
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark cursor-pointer" data-tip={''} data-for="tooltip-team-rank">
+                            <QuestionMarkIcon size={16} isFilled />
+                        </div>
+                        // <img
+                        //     data-tip={''}
+                        //     data-for="tooltip-team-rank"
+                        //     className="cursor-pointer"
+                        //     src={getS3Url('/images/nao/ic_info.png')}
+                        //     width="20"
+                        //     height="20"
+                        //     alt=""
+                        // />
                     )}
                 </div>
-                <div className="flex items-center gap-3 text-sm">
-                    <ButtonNao onClick={() => onFilter('volume')} className={`px-4 py-2 !rounded-md ${tab === 'volume' ? 'font-semibold' : '!bg-nao-bg3'}`}>
-                        {t('nao:contest:volume')}
-                    </ButtonNao>
-                    {showPnl && (
-                        <ButtonNao onClick={() => onFilter('pnl')} className={`px-4 py-2 !rounded-md   ${tab === 'pnl' ? 'font-semibold' : '!bg-nao-bg3'}`}>
+                {showPnl && (
+                    <div className="flex items-center gap-3 text-sm">
+                        <ButtonNao
+                            onClick={() => onFilter('volume')}
+                            className={`px-4 py-2 !rounded-md ${
+                                tab === 'volume'
+                                    ? 'font-semibold'
+                                    : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
+                            }`}
+                        >
+                            {t('nao:contest:volume')}
+                        </ButtonNao>
+                        <ButtonNao
+                            onClick={() => onFilter('pnl')}
+                            className={`px-4 py-2 !rounded-md ${
+                                tab === 'pnl'
+                                    ? 'font-semibold'
+                                    : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
+                            }`}
+                        >
                             {t('nao:contest:per_pnl')}
                         </ButtonNao>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
             {hasTabCurrency && (
                 <TabsNao>
@@ -206,204 +233,220 @@ const ContestTeamRanks = ({
                 </TabsNao>
             )}
             {top3.length > 0 && (
-                <div className="flex flex-wrap gap-5 sm:gap-[1.375rem] mt-[2.75rem]">
+                <div className="flex flex-wrap gap-3 sm:gap-6 sm:mt-6 mt-8 text-sm sm:text-base">
                     {top3.map((item, index) => (
-                        <CardNao onClick={() => onShowDetail(item, tab, quoteAsset)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
+                        <CardNao key={index} className="!p-4 sm:!p-5">
                             <div className="flex items-center justify-between flex-1 gap-5">
                                 <div className="flex items-center space-x-4">
-                                    <div className="w-[3rem] h-[3rem] rounded-[50%] relative">
-                                        <ImageNao
-                                            src={item?.avatar}
-                                            className="min-w-[3rem] min-h-[3rem] max-w-[3rem] max-h-[3rem] rounded-[50%] object-cover"
-                                            alt=""
-                                        />
+                                    <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
+                                        <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
                                     </div>
-                                    <div className="sm:space-y-[2px] flex flex-col">
-                                        <div className="flex items-center gap-2 text-lg font-semibold leading-8 capitalize">
+                                    <div className="space-y-1 flex flex-col">
+                                        <div className="flex items-center gap-2 font-semibold capitalize">
                                             <span>{capitalize(item?.name)}</span>
                                             {item?.is_group_master && <TickFbIcon size={18} />}
                                             {/* {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />} */}
                                         </div>
-                                        <span className="text-onus-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
+                                        <span className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer capitalize">
+                                            {capitalize(item?.leader_name)}
+                                        </span>
                                     </div>
                                 </div>
-                                <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>
-                                    {item?.[rank] > 0 ? `#${index + 1}` : '-'}
-                                </TextLiner>
+                                <div className="text-5xl sm:text-6xl pb-0 font-semibold italic">{item?.[rank] > 0 ? `#${index + 1}` : '-'}</div>
                             </div>
-                            <div className="h-[1px] bg-nao-grey/[0.2] w-full my-6"></div>
+                            <div className="h-8"></div>
                             <div className="rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-sm text-onus-grey">{t('nao:contest:volume')}</div>
-                                    <span className="font-semibold leading-8">
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
+                                    <span className="font-semibold">
                                         {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                     </span>
                                 </div>
                                 {tab === 'pnl' ? (
-                                    <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-onus-grey">{t('nao:contest:per_pnl')}</div>
-                                        <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
+                                    <div className="flex items-center justify-between gap-2 mt-2 sm:mt-4">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
+                                        <span className={`font-semibold ${getColor(item.pnl)}`}>
                                             {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}
                                             {formatNumber(item?.pnl, 2, 0, true)}%
                                         </span>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-onus-grey">{t('nao:contest:total_trades')}</div>
-                                        <span className={`font-semibold leading-8`}>{formatNumber(item?.total_order)}</span>
+                                    <div className="flex items-center justify-between gap-2 mt-2 sm:mt-4">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_trades')}</div>
+                                        <span className={`font-semibold`}>{formatNumber(item?.total_order)}</span>
                                     </div>
                                 )}
+                            </div>
+                            <div className="py-2 sm:py-3 text-teal font-semibold text-center">
+                                <span onClick={() => onShowDetail(item, tab, quoteAsset)} className="cursor-pointer">
+                                    {t('nao:contest:details')}
+                                </span>
                             </div>
                         </CardNao>
                     ))}
                 </div>
             )}
-            {width <= 640 ? (
-                <CardNao noBg className="mt-5 !py-[1.125rem] !px-3">
-                    <div className="flex mx-3 gap-4 sm:gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
-                        <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
-                        <div>{t('nao:contest:information')}</div>
-                    </div>
-                    <div className="mt-3">
+            {isMobile ? (
+                <>
+                    <div className="">
                         {Array.isArray(dataSource) && dataSource?.length > 0 ? (
-                            dataSource?.slice((page - 1) * 10, page * 10).map((item, index) => {
+                            dataSource?.slice((page - 1) * pageSize, page * pageSize).map((item, index) => {
                                 return (
-                                    <div
-                                        onClick={() => onShowDetail(item, tab, quoteAsset)}
-                                        key={index}
-                                        className={`flex gap-4 sm:gap-6 p-3 cursor-pointer ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}
-                                    >
-                                        <div className="min-w-[31px] text-nao-grey text-sm font-medium ">
-                                            {loading ? (
-                                                <Skeletor width={24} height={24} circle />
-                                            ) : item?.[rank] && item?.[rank] <= top_ranks_team ? (
-                                                <img
-                                                    src={getS3Url(`/images/nao/contest/ic_top_${index + 4}.png`)}
-                                                    className="min-w-[24px] min-h-[24px]"
-                                                    width="24"
-                                                    height="24"
-                                                    alt=""
-                                                />
-                                            ) : (
-                                                item?.[rank] || '-'
-                                            )}
-                                        </div>
+                                    <CardNao onClick={() => onShowDetail(item, tab, quoteAsset)} key={index} className="mt-3 !p-4">
                                         <div className="text-sm flex-1">
                                             <div className="flex items-center justify-between">
-                                                <div>
-                                                    <div className="font-semibold leading-6 uppercase flex items-center space-x-2">
-                                                        <span>{item?.name} </span>
-                                                        {item?.is_group_master && <TickFbIcon size={16} />}
-                                                    </div>
-                                                    <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">
-                                                        {capitalize(item?.leader_name)}
-                                                    </div>
-                                                </div>
-                                                <div className="">
+                                                <div className="flex items-center space-x-2">
                                                     <ImageNao
-                                                        className="rounded-[50%] object-cover min-w-[2.275rem] min-h-[2.275rem] max-w-[2.275rem] max-h-[2.275rem]"
+                                                        className="rounded-[50%] object-cover w-9 h-9 flex-shrink-0"
                                                         src={item?.avatar}
-                                                        width="24"
-                                                        height="24"
+                                                        width="36"
+                                                        height="36"
                                                         alt=""
                                                     />
+                                                    <span className="font-semibold">{item?.name} </span>
+                                                    {item?.is_group_master && <TickFbIcon size={16} />}
+                                                </div>
+                                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm ">
+                                                    {loading ? (
+                                                        <Skeletor width={24} height={24} circle />
+                                                    ) : item?.[rank] && item?.[rank] <= top_ranks_team ? (
+                                                        <div className="w-6 h-6 flex-shrink-0 text-center relative font-SourceCodePro">
+                                                            <img
+                                                                src={getS3Url('/images/nao/contest/ic_top_teal.png')}
+                                                                className="w-6 h-6"
+                                                                width="24"
+                                                                height="24"
+                                                                alt=""
+                                                            />
+                                                            <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
+                                                                {index + 4}
+                                                            </span>
+                                                        </div>
+                                                    ) : (
+                                                        item?.[rank] || '-'
+                                                    )}
                                                 </div>
                                             </div>
-
-                                            <div className="flex items-center font-medium justify-between pt-2">
-                                                <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
-                                                <span className="text-right">
+                                            <div className="h-8"></div>
+                                            <div className="flex items-center justify-between">
+                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:captain')}</label>
+                                                <span className="text-right font-semibold capitalize">{capitalize(item?.leader_name)}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between pt-3">
+                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
+                                                <span className="text-right font-semibold">
                                                     {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                                 </span>
                                             </div>
-                                            <div className="flex items-center font-medium justify-between pt-1">
-                                                <label className="leading-6 text-nao-grey">
+                                            <div className="flex items-center justify-between pt-3">
+                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">
                                                     {t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
                                                 </label>
                                                 {tab === 'pnl' ? (
-                                                    <span className={`text-right ${getColor(item?.pnl)}`}>
+                                                    <span className={`text-right font-semibold ${getColor(item?.pnl)}`}>
                                                         {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
                                                     </span>
                                                 ) : (
-                                                    <span className={`text-right`}>{formatNumber(item?.total_order)}</span>
+                                                    <span className={`text-right font-semibold`}>{formatNumber(item?.total_order)}</span>
                                                 )}
                                             </div>
                                             <div
                                                 onClick={() => onShowDetail(item, tab, quoteAsset)}
-                                                className="underline text-sm font-medium text-nao-grey pt-1 cursor-pointer select-none"
+                                                className="text-sm font-semibold text-teal py-2 cursor-pointer select-none text-center"
                                             >
                                                 {t('nao:contest:details')}
                                             </div>
                                         </div>
-                                    </div>
+                                    </CardNao>
                                 );
                             })
                         ) : (
-                            <div className={`flex items-center justify-center flex-col m-auto`}>
-                                <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
-                                <div className="text-xs text-nao-grey mt-1">{t('nao:contest:no_rank')}</div>
+                            <div className={`flex items-center justify-center flex-col m-auto pt-8`}>
+                                <div className="block dark:hidden">
+                                    <NoDataLightIcon />
+                                </div>
+                                <div className="hidden dark:block">
+                                    <NoDataDarkIcon />
+                                </div>
+                                <div className="text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark mt-1">{t('nao:contest:no_rank')}</div>
                             </div>
                         )}
                     </div>
-                </CardNao>
+                </>
             ) : (
-                <Table
-                    loading={loading}
-                    noItemsMessage={t('nao:contest:no_rank')}
-                    dataSource={dataSource.slice((page - 1) * 10, page * 10)}
-                    onRowClick={(e) => onShowDetail(e, tab, quoteAsset)}
-                >
-                    <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
-                    <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
-                    <Column
-                        minWidth={150}
-                        className="text-nao-text capitalize"
-                        title={t('nao:contest:captain')}
-                        fieldName="leader_name"
-                        cellRender={renderLeader}
-                    />
-                    <Column
-                        minWidth={150}
-                        align="right"
-                        className="font-medium"
-                        title={`${t('nao:contest:volume')} (${quoteAsset})`}
-                        decimal={0}
-                        fieldName="total_volume"
-                    />
-
-                    {tab === 'pnl' ? (
+                <div className="dark:bg-dark-4 rounded-xl">
+                    <Table
+                        loading={loading}
+                        noItemsMessage={t('nao:contest:no_rank')}
+                        dataSource={dataSource.slice((page - 1) * 10, page * 10)}
+                        onRowClick={(e) => onShowDetail(e, tab, quoteAsset)}
+                    >
                         <Column
-                            maxWidth={120}
-                            minWidth={100}
-                            align="right"
-                            className="font-medium"
-                            title={t('nao:contest:per_pnl')}
-                            fieldName="pnl"
-                            cellRender={renderPnl}
+                            minWidth={50}
+                            className="text-txtSecondary dark:text-txtSecondary-dark"
+                            title={t('nao:contest:rank')}
+                            fieldName={rank}
+                            cellRender={renderRank}
                         />
-                    ) : (
+                        <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                         <Column
-                            maxWidth={120}
-                            minWidth={100}
+                            minWidth={150}
+                            className="text-txtPrimary dark:text-txtPrimary-dark capitalize"
+                            title={t('nao:contest:captain')}
+                            fieldName="leader_name"
+                            cellRender={renderLeader}
+                        />
+                        <Column
+                            minWidth={150}
                             align="right"
-                            className="font-medium"
-                            title={t('nao:contest:total_trades')}
-                            fieldName="total_order"
+                            className=""
+                            title={`${t('nao:contest:volume')} (${quoteAsset})`}
                             decimal={0}
+                            fieldName="total_volume"
                         />
+
+                        {tab === 'pnl' ? (
+                            <Column
+                                maxWidth={120}
+                                minWidth={100}
+                                align="right"
+                                className=""
+                                title={t('nao:contest:per_pnl')}
+                                fieldName="pnl"
+                                cellRender={renderPnl}
+                            />
+                        ) : (
+                            <Column
+                                maxWidth={120}
+                                minWidth={100}
+                                align="right"
+                                className=""
+                                title={t('nao:contest:total_trades')}
+                                fieldName="total_order"
+                                decimal={0}
+                            />
+                        )}
+                        <Column maxWidth={100} minWidth={100} align="right" className="" title={''} cellRender={renderActions} />
+                        {/* formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY') */}
+                    </Table>
+                    {total > 1 && (
+                        <div className="w-full hidden sm:flex justify-center py-8">
+                            <RePagination onusMode total={total} current={page} pageSize={10} onChange={(page) => setPage(page)} name="" />
+                        </div>
                     )}
-                    <Column maxWidth={100} minWidth={100} align="right" className="font-medium" title={''} cellRender={renderActions} />
-                    {/* formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY') */}
-                </Table>
+                </div>
             )}
+
             {lastUpdated && lastUpdatedTime.current && (
-                <div className="mt-6 text-sm text-nao-grey font-medium leading-6">
+                <div className="mt-4 text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                     {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
                 </div>
             )}
-            <div className="w-full flex justify-center mt-6">
-                <RePagination onusMode total={total} current={page} pageSize={10} onChange={(page) => setPage(page)} name="" />
-            </div>
+            {isMobile && pageSize < dataSource.length && (
+                <div className="w-fit block sm:hidden m-auto text-teal font-semibold mt-6" onClick={onReadMore}>
+                    {t('common:read_more')}
+                </div>
+            )}
         </section>
     );
 };

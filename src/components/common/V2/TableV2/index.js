@@ -42,9 +42,9 @@ const index = ({
         const cols = !isAdd ? filterdData : filterdData.concat([{ fixed: 'right', width: 0 }]);
         return loading
             ? columns.map((column) => ({
-                ...column,
-                render: () => <Skeletor width={100} height={20} />
-            }))
+                  ...column,
+                  render: () => <Skeletor width={100} height={20} />
+              }))
             : cols;
     }, [columns, ref.current, loading]);
 
@@ -63,6 +63,7 @@ const index = ({
     return (
         <div className={className}>
             <ReTable
+                fontSize={16}
                 reference={ref}
                 useRowHover={useRowHover}
                 data={loading ? loader : data}
@@ -78,7 +79,7 @@ const index = ({
                 isNamiV2
                 height={height}
                 loading={loading}
-                emptyText={<NoData loading={loading} isSearch={!!isSearch} className="" />}
+                emptyText={<NoData loading={loading} isSearch={!!isSearch} className="!text-base" />}
                 onRowClick={onRowClick}
                 {...props}
             />

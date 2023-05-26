@@ -17,7 +17,7 @@ import { usePrevious } from 'react-use';
 import { roundTo } from 'round-to';
 
 import FuturesPairDetailItem from './PairDetailItem';
-import FuturesPairList from '../PairList';
+// import FuturesPairList from '../PairList';
 import InfoSlider from 'components/markets/InfoSlider';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -31,6 +31,8 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import { ArrowDropDownIcon, BxsBookIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import PriceChangePercent from 'components/common/PriceChangePercent';
+import dynamic from 'next/dynamic';
+const FuturesPairList = dynamic(() => import('components/screens/Futures/PairList'), { ssr: false });
 
 const getPairPrice = createSelector([(state) => state.futures, (state, pair) => pair], (futures, pair) => futures.marketWatch[pair]);
 
@@ -41,7 +43,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     const [lastPriceMinW, setLastPriceMinW] = useState(0);
 
     const [activePairList, setActivePairList] = useState(false);
-    const [pairListMode, setPairListMode] = useState('');
+    const [pairListMode, setPairListMode] = useState(pairConfig?.quoteAsset);
     const [isShowModalInfo, setIsShowModalInfo] = useState(false);
     const [isShowModalPriceList, setIsShowModalPriceList] = useState(false);
     // state, vars for information modal (Trading rules)
@@ -307,6 +309,10 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
         }
     }, [router.query, pairPrice?.symbol, itemsPriceRef, itemsPriceMinW]);
 
+    useEffect(() => {
+        setPairListMode(pairConfig?.quoteAsset);
+    }, [pairConfig?.quoteAsset]);
+
     const RenderInfoModal = () => {
         const renderContent = (title) => {
             if (!currentExchangeConfig?.config) return '-';
@@ -545,8 +551,8 @@ const PopoverFunding = ({ visible, onClose, isFunding, symbol }) => {
     const onDetail = () => {
         const url =
             router.locale === 'en'
-                ? 'https://nami.exchange/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures'
-                : 'https://nami.exchange/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures';
+                ? 'https://nami.exchange/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-nao-futures'
+                : 'https://nami.exchange/vi/support/announcement/thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures';
         window.open(url);
     };
 
@@ -672,7 +678,7 @@ const RIGHT_ITEMS_WITH_TOOLTIPS = [
 ];
 
 const Row = styled.div.attrs({
-    className: 'flex items-center justify-between border-b border-onus-input2 last:border-0 w-full'
+    className: 'flex items-center justify-between border-b border-divider dark:border-divider-dark last:border-0 w-full'
 })``;
 
 const Span = styled.div.attrs(({ isTabOpen }) => ({

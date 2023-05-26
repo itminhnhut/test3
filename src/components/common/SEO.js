@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-const APP_URL = process.env.APP_URL
+const APP_URL = process.env.NEXT_PUBLIC_WEB_V1
 
 const socialTags = (props) => {
     const {
@@ -17,9 +17,12 @@ const socialTags = (props) => {
         {name: 'twitter:title', content: title},
         {name: 'twitter:description', content: description},
         {name: 'twitter:creator', content: '@Nami'},
-        {name: 'twitter:image:src', content: image},
+        {name: 'twitter:image', content: image},
+        {name: 'twitter:image:alt', content: "Nami Exchange"},
         {name: 'twitter:card', content: 'summary_large_image'},
+
         {name: 'og:title', content: title},
+        {name: 'og:type', content: "website"},
         {name: 'og:url', content: APP_URL + url},
         {name: 'og:image', content: image},
         {name: 'og:image:alt', content: 'Nami Exchange'},
@@ -31,11 +34,12 @@ const socialTags = (props) => {
 };
 
 const SEO = (props) => {
+
     const {
         title,
         description,
         keywords,
-        image
+        image,
     } = props;
     return <Head>
         <title>{title}</title>

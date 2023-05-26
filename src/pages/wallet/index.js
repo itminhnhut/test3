@@ -16,7 +16,7 @@ export const WALLET_SCREENS = {
     // STAKING: 'staking',
     PARTNERS: 'partners',
     // FARMING: 'farming',
-    TRANSACTION_HISTORY: 'transaction-history'
+    TRANSACTION_HISTORY: 'transaction-history/all'
 };
 
 export const EXCHANGE_ACTION = {

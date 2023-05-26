@@ -9,6 +9,8 @@ import { formatTime } from 'utils/reference-utils';
 import { truncate } from 'utils/helpers';
 
 import useWindowSize from 'hooks/useWindowSize';
+import NoData from 'components/common/V2/TableV2/NoData';
+import TickFbIcon from 'components/svg/TickFbIcon';
 
 const CONFIG_RANK = {
     vol_5: {
@@ -16,28 +18,28 @@ const CONFIG_RANK = {
         des: { vi: 'KLGD tối thiểu', en: 'Minimum Volume' },
         total: '03',
         total_klgd: '500,000,000,000 VNDC',
-        bg_champ: getS3Url('/images/contest/bg_first.png')
+        bg_champ: '/images/contest/bg_ip_14.png'
     },
     vol_3: {
         title: { vi: 'iPad Pro M2 11 inch WiFi', en: 'iPad Pro M2 11 inch WiFi' },
         des: { vi: 'KLGD tối thiểu', en: 'Minimum Volume' },
         total: '05',
         total_klgd: '300,000,000,000 VNDC',
-        bg_champ: getS3Url('/images/contest/bg_second.png')
+        bg_champ: '/images/contest/bg_ipad.png'
     },
     vol_2: {
         title: { vi: 'Apple Watch Series 7 LTE 41mm', en: 'Apple Watch Series 7 LTE 41mm' },
         des: { vi: 'KLGD tối thiểu', en: 'Minimum Volume' },
         total: '10',
         total_klgd: '200,000,000,000 VNDC',
-        bg_champ: getS3Url('/images/contest/bg_three.png')
+        bg_champ: '/images/contest/bg_watch_s7.png'
     },
     vol_1: {
         title: { vi: 'Apple Watch SE 2022 LTE 44mm', en: 'Apple Watch SE 2022 LTE 44mm' },
         des: { vi: 'KLGD tối thiểu', en: 'Minimum Volume' },
         total: '20',
         total_klgd: '100,000,000,000 VNDC',
-        bg_champ: getS3Url('/images/contest/bg_four.png')
+        bg_champ: '/images/contest/bg_watch_se.png'
     }
 };
 
@@ -56,10 +58,10 @@ const ListRankings = ({ isList, type, data, loading }) => {
     const renderRank = (data, item) => {
         return (
             <div className="flex items-center relative">
-                <div className="absolute w-6 h-6">
-                    <Image src={getS3Url('/images/contest/ic_avatar.png')} width="24px" height="24px" />
-                </div>
-                <div className="text-[#E6E6E6] font-semibold shadow-rank_id text-xs absolute flex w-6 justify-center">{data?.[type]?.rank}</div>
+                <img src={getS3Url('/images/nao/contest/ic_top_teal.png')} className="w-6 h-6" width="24" height="24" alt="" />
+                <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
+                    {data?.[type]?.rank}
+                </span>
             </div>
         );
     };
@@ -67,7 +69,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
     const renderTeam = (data) => {
         return (
             <div className="flex flex-row">
-                <div className="w-6 h-6 rounded-full bg-[#273446] mr-6"></div>
+                <div className="w-6 h-6 rounded-full bg-hover dark:bg-hover-dark mr-6"></div>
                 <div className="text-sm font-semibold leading-6">{data}</div>
             </div>
         );
@@ -83,8 +85,8 @@ const ListRankings = ({ isList, type, data, loading }) => {
 
     const empty = () => {
         return (
-            <div className={`pt-[148px] lg:pt-[172px] flex items-start justify-center flex-col m-auto`}>
-                <div className="text-tiny font-medium text-nao-grey">{t('nao:contest:no_rank')}</div>
+            <div className={`pt-12 sm:py-8`}>
+                <NoData textClassName="!text-sm" isAuth text={t('nao:contest:no_rank')} />
             </div>
         );
     };
@@ -93,42 +95,48 @@ const ListRankings = ({ isList, type, data, loading }) => {
         return (
             <>
                 {data?.users?.length > 0 ? (
-                    <div className="pt-[148px] lg:pt-[172px] flex flex-row justify-between flex-wrap gap-y-6">
+                    <div className="pt-6 sm:pt-8 flex flex-row justify-between flex-wrap gap-3 sm:gap-6">
                         {data?.users?.map((item, index) => {
                             return (
-                                <div key={index} className="sm:w-[48%] w-full lg:w-[346px] rounded-t-xl border-b-0 bg-rank bg-no-repeat bg-100%">
-                                    <div className="sm:bg-cover sm:w-[100%] h-[74px] bg-rank-header relative flex items-center rounded-t-xl">
-                                        <img
-                                            className="rounded-full w-12 h-12 absolute left-4 bottom-0 translate-y-6"
-                                            src={item?.avatar ? item?.avatar : getS3Url('/images/contest/img_name.png')}
-                                        />
-                                        <div className="text-[32px] font-semibold text-nao-green absolute right-4">#{index + 1}</div>
+                                <CardNao key={index} className="!p-4 sm:!p-6">
+                                    <div className="flex items-center justify-between flex-1 gap-5">
+                                        <div className="flex items-center space-x-4">
+                                            <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
+                                                <ImageNao
+                                                    className="object-cover w-14 h-14 rounded-full"
+                                                    src={item?.avatar ? item?.avatar : getS3Url('/images/contest/img_name.png')}
+                                                    alt=""
+                                                />
+                                            </div>
+                                            <div className="space-y-1 flex flex-col text-sm sm:text-base">
+                                                <div className="flex items-center gap-2 font-semibold capitalize">
+                                                    <span>{capitalize(item?.name)}</span>
+                                                    {item?.is_group_master && <TickFbIcon size={18} />}
+                                                </div>
+                                                <span className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer">{item?.onus_user_id}</span>
+                                            </div>
+                                        </div>
+                                        <div className="text-5xl sm:text-6xl pb-0 font-semibold italic">#{item?.special_rank_metadata?.[type]?.rank ?? 1}</div>
                                     </div>
-                                    <div className="mt-8 px-4">
-                                        <div className="leading-8">
-                                            <div className="font-semibold">{item.name}</div>
+                                    <div className="mt-7 text-sm sm:text-base">
+                                        <div className="flex items-center justify-between gap-2">
+                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
+                                            <span className="font-semibold">{formatNumber(item?.total_volume, 0)} VNDC</span>
                                         </div>
-                                        <div className="text-nao-text font-normal text-sm ">{item.onus_user_id}</div>
-                                        <div className="bg-rank-line h-[1px] my-6"></div>
-
-                                        <div className="flex flex-row justify-between items-center">
-                                            <div className="text-nao-grey font-normal leading-6 text-sm">{t('nao:contest:volume')}</div>
-                                            <div className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)}</div>
-                                        </div>
-                                        <div className="flex flex-row justify-between items-center mt-1">
-                                            <div className="text-nao-grey font-normal leading-6 text-sm">{t('nao:contest:total_trades')}</div>
-                                            <div className="text-nao-green font-semibold leading-8">{formatNumber(item?.total_order, 0)}</div>
+                                        <div className="flex items-center justify-between gap-2 mt-2 sm:mt-4">
+                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_trades')}</div>
+                                            <span className={`font-semibold`}>{formatNumber(item?.total_order)}</span>
                                         </div>
                                     </div>
-                                </div>
+                                </CardNao>
                             );
                         })}
                     </div>
                 ) : (
                     empty()
                 )}
-                <div className="mt-6 text-xs text-nao-grey font-medium">
-                    {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(data?.last_time_update, 'HH:mm:ss DD/MM/YYYY')}
+                <div className="mt-3 text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                    {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(data?.last_time_update, 'HH:mm DD/MM/YYYY')}
                 </div>
             </>
         );
@@ -136,8 +144,8 @@ const ListRankings = ({ isList, type, data, loading }) => {
 
     const renderLastUpdate = () => {
         return (
-            <div className="mt-4 lg:mt-6 text-xs text-nao-grey font-medium">
-                {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(data?.last_time_update, 'HH:mm:ss DD/MM/YYYY')}
+            <div className="mt-3 text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(data?.last_time_update, 'HH:mm DD/MM/YYYY')}
             </div>
         );
     };
@@ -147,10 +155,10 @@ const ListRankings = ({ isList, type, data, loading }) => {
             <>
                 <div className="lg:inline hidden">
                     {data?.users?.length > 0 ? (
-                        <Table classWrapper="mt-[172px]" loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={data?.users || []}>
+                        <Table classWrapper="mt-8" loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={data?.users || []}>
                             <Column
                                 minWidth={90}
-                                className="text-nao-grey font-medium"
+                                className="text-txtSecondary dark:text-txtSecondary-dark font-medium"
                                 title={t('nao:contest:rank')}
                                 fieldName="special_rank_metadata"
                                 cellRender={renderRank}
@@ -160,7 +168,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                 title={t('nao:contest:id_onus_futures')}
                                 minWidth={150}
                                 sortable={true}
-                                className="text-nao-text capitalize"
+                                className="text-txtPrimary dark:text-txtPrimary-dark capitalize"
                                 fieldName="onus_user_id"
                             />
                             <Column
@@ -193,43 +201,42 @@ const ListRankings = ({ isList, type, data, loading }) => {
         return (
             <>
                 {data?.users?.length > 0 ? (
-                    <CardNao noBg className="mt-[168px] !py-[1.125rem] !px-3 inline lg:hidden">
-                        <div className="flex mx-3 gap-4 sm:gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
-                            <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
-                            <div>{t('nao:contest:information')}</div>
-                        </div>
-                        <div className="mt-3">
-                            {data?.users?.map((item, index) => {
-                                return (
-                                    <div key={index} className={`flex gap-4 sm:gap-6 p-3 cursor-pointer ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
-                                        <div className="mr-[20px] mt-3">{renderRank(item, index)}</div>
-                                        <div className="w-full">
-                                            <div className="flex flex-row justify-between">
-                                                <div className="leading-6 text-sm">
-                                                    <div className="font-semibold ">{item.name}</div>
-                                                    <div className="text-nao-text font-medium">ID: {truncate(item.onus_user_id, 15)}</div>
+                    <div className="mt-3 flex flex-col space-y-3">
+                        {data?.users?.map((item, index) => {
+                            return (
+                                <CardNao key={index} className="!p-6">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center space-x-3">
+                                            <Image
+                                                className="!rounded-full"
+                                                width="36"
+                                                height="36"
+                                                src={`${item.avatar ? item.avatar : getS3Url('/images/nao/ic_nao_large.png')}`}
+                                            />
+                                            <div className="space-y-1">
+                                                <div className="font-semibold text-sm flex space-x-1">
+                                                    <span>{item.name}</span>
+                                                    {item?.is_group_master && <TickFbIcon size={18} />}
                                                 </div>
-                                                <Image
-                                                    className="!rounded-full"
-                                                    width="44px"
-                                                    height="44px"
-                                                    src={`${item.avatar ? item.avatar : getS3Url('/images/nao/ic_nao_large.png')}`}
-                                                />
-                                            </div>
-                                            <div className="mt-4 flex flex-row justify-between items-center text-sm leading-6 font-medium">
-                                                <div className="text-nao-text ">{t('nao:contest:volume')}</div>
-                                                <div className="">{formatNumber(item?.total_volume, 0)} VNDC</div>
-                                            </div>
-                                            <div className="mt-1 flex flex-row justify-between items-center text-sm leading-6 font-medium">
-                                                <div className="text-nao-text ">{t('nao:contest:total_trades')}</div>
-                                                <div className="text-right">{formatNumber(item?.total_order, 0)}</div>
+                                                <div className="text-txtSecondary-dark text-xs">{item.onus_user_id}</div>
                                             </div>
                                         </div>
+                                        <div className="">{renderRank(item?.special_rank_metadata, index)}</div>
                                     </div>
-                                );
-                            })}
-                        </div>
-                    </CardNao>
+                                    <div className="w-full">
+                                        <div className="mt-4 flex flex-row justify-between items-center text-sm leading-6 font-medium">
+                                            <div className="text-txtSecondary-dark">{t('nao:contest:volume')}</div>
+                                            <div className="">{formatNumber(item?.total_volume, 0)} VNDC</div>
+                                        </div>
+                                        <div className="mt-1 flex flex-row justify-between items-center text-sm leading-6 font-medium">
+                                            <div className="text-txtSecondary-dark">{t('nao:contest:total_trades')}</div>
+                                            <div className="text-right">{formatNumber(item?.total_order, 0)}</div>
+                                        </div>
+                                    </div>
+                                </CardNao>
+                            );
+                        })}
+                    </div>
                 ) : (
                     empty()
                 )}
@@ -243,16 +250,17 @@ const ListRankings = ({ isList, type, data, loading }) => {
     };
 
     return (
-        <div className="w-full max-w-[1160px] h-full bg-nao-grey3 rounded-3xl px-3 py-3 lg:px-8 lg:pb-8 relative mt-[230px]">
-            <div className="w-full h-[274px] absolute left-0 top-0 -translate-y-2/4">
-                <div className="flex justify-center">
-                    <Image src={config.bg_champ} width="306px" height="198px" />
-                </div>
-                <div className="flex flex-row font-semibold leading-8 mt-4 justify-center">
-                    <span className="text-nao-green mr-1">{config?.total}</span> {config.title[language]}
-                </div>
-                <div className="text-nao-text text-sm font-normal text-center mt-1 leading-3">
-                    {config.des[language]}: {config.total_klgd}
+        <div className="w-full h-full mt-20 sm:mt-[120px] first:mt-12 sm:first:mt-20">
+            <div className="w-full flex flex-col sm:flex-row items-center sm:space-x-20 sm:border-b dark:border-b-gray-7">
+                <Image src={getS3Url(config.bg_champ)} width="390px" height="252px" />
+                <div className="mt-4 sm:mt-0 text-center sm:text-left">
+                    <div className="text-xl sm:text-6xl flex font-semibold justify-center space-x-1">
+                        <span className="text-teal">{config?.total}</span>
+                        <span>{config.title[language]}</span>
+                    </div>
+                    <div className="text-sm sm:text-base mt-2 dark:text-txtSecondary-dark">
+                        {config.des[language]}: {config.total_klgd}
+                    </div>
                 </div>
             </div>
 

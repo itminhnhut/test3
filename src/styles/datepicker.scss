@@ -145,15 +145,28 @@
 }
 
 .rdrDayToday .rdrDayNumber span:after{
-    content: '';
-    position: absolute;
-    bottom: 4px;
-    left: 50%;
-    transform: translate(-50%, 0);
-    width: 18px;
-    height: 2px;
-    border-radius: 2px;
-    background: currentColor;
+    // content: '';
+    // position: absolute;
+    // bottom: 4px;
+    // left: 50%;
+    // transform: translate(-50%, 0);
+    // width: 18px;
+    // height: 2px;
+    // border-radius: 2px;
+    // background: currentColor;
+}
+
+.rdrDayToday .rdrDayNumber > span {
+    @apply text-green-3 dark:text-green-2;
+    // content: '';
+    // position: absolute;
+    // bottom: 4px;
+    // left: 50%;
+    // transform: translate(-50%, 0);
+    // width: 18px;
+    // height: 2px;
+    // border-radius: 2px;
+    // background: currentColor;
 }
 
 .rdrDayToday:not(.rdrDayPassive) ~ .rdrDayNumber span:after,.rdrDayToday:not(.rdrDayPassive) .rdrStartEdge ~ .rdrDayNumber span:after,.rdrDayToday:not(.rdrDayPassive) .rdrEndEdge ~ .rdrDayNumber span:after,.rdrDayToday:not(.rdrDayPassive) .rdrSelected ~ .rdrDayNumber span:after{
@@ -182,7 +195,7 @@
 }
 
 .rdrInRange ~ .rdrDayNumber > span {
-    color: currentColor !important;
+    // color: currentColor !important;
 }
 
 .rdrSelected{
@@ -206,12 +219,14 @@
 
 .rdrDayStartOfMonth .rdrInRange, .rdrDayStartOfMonth .rdrEndEdge, .rdrDayStartOfWeek .rdrInRange, .rdrDayStartOfWeek .rdrEndEdge{
     @apply rounded-l;
-    left: 2px;
+    // left: 2px;
+    left: 0px;
 }
 
 .rdrDayEndOfMonth .rdrInRange,  .rdrDayEndOfMonth .rdrStartEdge,  .rdrDayEndOfWeek .rdrInRange,  .rdrDayEndOfWeek .rdrStartEdge{
     @apply rounded-r;
-    right: 2px;
+    // right: 2px;
+    right: 0px;
 }
 
 .rdrDayStartOfMonth .rdrDayInPreview, .rdrDayStartOfMonth .rdrDayEndPreview, .rdrDayStartOfWeek .rdrDayInPreview, .rdrDayStartOfWeek .rdrDayEndPreview{
@@ -227,14 +242,15 @@
 }
 
 .rdrDayStartPreview, .rdrDayInPreview, .rdrDayEndPreview{
-    background: rgba(255, 255, 255, 0.09);
+    @apply bg-black bg-opacity-[0.09] dark:bg-white dark:bg-opacity-[0.09];
     position: absolute;
-    top: 3px;
+    top: 5px;
     left: 0px;
     right: 0px;
-    bottom: 3px;
+    bottom: 5px;
     pointer-events: none;
-    border: 0px solid currentColor;
+    // border: 0px solid currentColor;
+    border: none;
     z-index: 1;
 }
 
@@ -260,7 +276,7 @@
     right: 0px;
 }
 
-.rdrDefinedRangesWrapper{
+.rdrDefinedRangeapper{
     display: none;
 }
 

@@ -10,13 +10,14 @@ import { getMarketWatch, getFuturesMarketWatch } from 'redux/actions/market';
 import { compact, uniqBy, find, filter, sortBy } from 'lodash';
 import { useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
-import LoadingPage from 'components/screens/Mobile/LoadingPage';
+import LoadingPage from 'components/screens/Nao_futures/LoadingPage';
 import { SkeletonHomeIntroduce } from 'components/screens/Home/Skeleton';
 import { getS3Url } from 'redux/actions/utils';
 import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRefWindowSize } from 'hooks/useWindowSize';
 import Skeletor from '../components/common/Skeletor';
+import { useAsync } from 'react-use';
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
@@ -79,7 +80,7 @@ const Index = () => {
                 isVisible={state.showQR}
                 title={t('modal:scan_qr_to_download')}
                 onBackdropCb={() => setState({ showQR: false })}
-                className="sm:max-w-[488px]  !bg-hover-1 "
+                className="sm:max-w-[488px] dark:!bg-bgContainer-dark  !bg-hover-1 "
             >
                 <div className={`mb-6 text-sm font-bold`}>
                     <div className="text-2xl dark:text-txtPrimary-dark font-semibold">{t('modal:scan_qr_to_download')}</div>
@@ -89,14 +90,19 @@ const Index = () => {
                         <QRCode value={`${APP_URL}#nami_exchange_download_app`} eyeRadius={6} size={150} />
                     </div>
                     <div className="absolute w-full h-full z-0">
-                        <Image layout="fill" className="rounded-xl" src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)} />
+                        <Image
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-xl"
+                            src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)}
+                        />
                     </div>
                 </div>
             </ModalV2>
         );
     }, [state.showQR]);
 
-    useEffect(async () => {
+    useAsync(async () => {
         if (!(futuresConfigs && futuresConfigs.length)) return;
         const originPairs = await getFuturesMarketWatch();
         let pairs = originPairs;
@@ -108,7 +114,7 @@ const Index = () => {
                     p.is_new_listing = true;
                     p.listing_time = config?.createdAt ? new Date(config?.createdAt).getTime() : 0;
                 }
-
+                p.leverage = config?.leverageConfig;
                 if (p?.vq > 1000) return p;
                 return null;
             })
@@ -155,7 +161,7 @@ const Index = () => {
     return (
         <MaldivesLayout navMode={NAVBAR_USE_TYPE.FLUENT}>
             <div className="homepage">
-                <HomeIntroduce trendData={state.trendData} t={t} />
+                <HomeIntroduce width={width} trendData={state.trendData} t={t} />
                 <HomeMarketTrend trendData={state.trendData} />
                 <HomeNews />
                 <HomeAdditional t={t} width={width} currentTheme={currentTheme} />

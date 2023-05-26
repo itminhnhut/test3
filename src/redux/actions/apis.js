@@ -57,12 +57,20 @@ export const API_REVEAL_DEPOSIT_TOKEN_ADDRESS = API_V3_PREFIX + 'payment/deposit
 export const POST_WALLET_TRANSFER = API_PREFIX + 'wallet/transfer';
 export const API_PUSH_ORDER_BINANCE = API_PREFIX + 'request_check_deposit_binance'; // post => data: { currency }
 export const API_SET_ASSET_AS_FEE = API_PREFIX + 'user/set_fee_currency';
+export const API_GET_WALLET_TRANSACTION_HISTORY = API_V3_PREFIX + 'wallet/history/transaction';
+export const API_GET_WALLET_TRANSFER_HISTORY = API_V3_PREFIX + 'wallet/history/transaction/transfer_history';
+export const API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY = API_V3_PREFIX + 'wallet/history/category';
 
 // Payment
 export const API_GET_PAYMENT_CONFIG = API_V3_PREFIX + 'payment/config';
 export const API_WITHDRAW_v3 = API_V3_PREFIX + 'payment/withdraw';
 export const API_GET_DEPWDL_HISTORY = API_V3_PREFIX + 'payment/deposit_withdraw_history';
 export const API_WITHDRAW_V4 = API_V3_PREFIX + 'payment/withdraw_v4';
+export const API_DEFAULT_BANK_USER = API_V3_PREFIX + 'payment/default_user_bank_accounts';
+export const API_GET_USER_BANK_LIST = API_V3_PREFIX + 'payment/user_bank_accounts';
+export const API_GET_BANK_ACCOUNT_NAME = API_V3_PREFIX + 'payment/bank_account_name';
+export const API_GET_BANK_AVAILABLE = API_V3_PREFIX + 'payment/available_banks';
+export const API_ADD_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/user_bank_accounts';
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'futures/ticker';
@@ -112,7 +120,7 @@ export const API_SET_USER_AVATAR = API_PREFIX + 'user/set_avatar';
 //NOTE Notification
 export const API_MARK_NOTIFICATIONS_READ = API_V3_PREFIX + 'notifications/mark-read';
 export const API_GET_NOTIFICATIONS = API_V3_PREFIX + 'notifications/';
-export const API_GET_NOTIFICATIONS_UNREAD_COUNT = API_PREFIX + 'notifications/count_unread'
+export const API_GET_NOTIFICATIONS_UNREAD_COUNT = API_PREFIX + 'notifications/count_unread';
 
 export const API_WATCH_LIST = API_PREFIX + 'market/watch_list';
 export const API_METRIC_VIEW = API_V3_PREFIX + 'spot/view';
@@ -199,6 +207,7 @@ export const API_AUTH_USER_OTP = (service) => `${API_PREFIX}authenticated/${serv
 export const API_FUTURES_CAMPAIGN_STATUS = API_PREFIX + 'futures_campaign/onboarding/status';
 export const API_FUTURES_CAMPAIGN_ATTEND = API_PREFIX + 'futures_campaign/onboarding/attend';
 export const API_FUTURES_CAMPAIGN_WITHDRAW_STATUS = API_PREFIX + 'futures_campaign/onboarding/withdrawStatus';
+export const API_FUTURES_CAMPAIGN_TRANSFER_STATUS = API_PREFIX + 'futures_campaign/onboarding/transferStatus';
 
 //NAO token
 export const API_NAO_DASHBOARD_STATISTIC = API_V3_PREFIX + 'nao-dashboard/statistic';
@@ -257,12 +266,16 @@ export const API_REFERRAL_COMMISSION_LOG = API_PREFIX + 'user/commission_log';
 //setting futures
 export const API_GET_FUTURES_SETTING = API_PREFIX + 'futures/setting';
 
+//setting Nao futures
+export const API_GET_NAO_FUTURES_SETTING = API_PREFIX + 'nao/setting';
+
 //portfolio
 export const API_PORTFOLIO_OVERVIEW = API_V3_PREFIX + 'portfolio/futures/overview';
 export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + 'portfolio/futures/account';
 export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + 'portfolio/futures/summary';
 
 // new referral
+export const API_POST_PARTNER = API_V3_PREFIX + 'users/partner';
 export const API_NEW_REFERRAL_CONFIG = API_V3_PREFIX + 'users/referral/commission-config';
 export const API_NEW_REFERRAL = API_V3_PREFIX + 'users/referral';
 export const API_NEW_REFERRAL_ADD_REF = API_V3_PREFIX + 'users/referral';
@@ -279,10 +292,48 @@ export const API_PARTNER_REGISTER = API_V3_PREFIX + 'users/partner';
 export const API_CHECK_REFERRAL = API_V3_PREFIX + 'users/referral/is-exist';
 
 //referal
-export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends';
+// export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends'; V1
+export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends-v2';
 export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + 'users/referral/commission-history';
+export const API_GET_REFERRAL_FRIENDS_BY_CODE = API_V3_PREFIX + 'users/referral/:code/friends-detail';
 
 // convert small balance to Nami
 export const API_GET_NAMI_RATE = API_V3_PREFIX + 'convert/nami_asset_value';
 export const API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE = API_V3_PREFIX + 'convert/nami_pre_order';
 export const API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE = API_V3_PREFIX + 'convert/nami_confirm_order';
+
+// withdraw-deposit Partner
+export const API_GET_PARTNERS = API_V3_PREFIX + 'dw_partner_new/partner';
+export const API_GET_DEFAULT_PARTNER = API_V3_PREFIX + 'dw_partner_new/default_partner';
+export const API_GET_PARTNER_BANKS = API_V3_PREFIX + 'payment/partner_bank_accounts';
+export const API_GET_HISTORY_DW_PARTNERS = API_V3_PREFIX + 'dw_partner_new/partner_order';
+export const API_GET_OPENING_ORDER = API_V3_PREFIX + 'dw_partner_new/partner_order_opening';
+export const API_GET_ORDER_PRICE = API_V3_PREFIX + 'dw_partner_new/partner_order_price';
+export const API_GET_PARTNER_PROFILE = API_V3_PREFIX + 'dw_partner_new/partner_detail';
+export const API_GET_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/user_bank_accounts';
+export const API_GET_ORDER_DETAILS = API_V3_PREFIX + 'dw_partner_new/partner_order_detail';
+export const API_CREATE_ORDER = API_V3_PREFIX + 'dw_partner_new/partner_order_v4';
+export const API_SET_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/default_user_bank_accounts';
+export const API_SET_PARTNER_ORDER_CONFIG = API_V3_PREFIX + 'dw_partner_new/partner_order_config';
+export const API_MARK_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner_new/mark_partner_order';
+export const API_PROCESS_ORDER = API_V3_PREFIX + 'dw_partner_new/process_partner_order';
+export const API_RATING_ORDER = API_V3_PREFIX + 'dw_partner_new/rating_partner_order';
+export const API_APPROVE_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner_new/approve_partner_order';
+
+export const API_REJECT_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner_new/reject_partner_order';
+export const API_RESOLVE_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner_new/complete_dispute_partner_order';
+export const API_UPLOAD_IMAGE_S3 = API_PREFIX + 'partner/disputed_upload';
+export const API_UPLOAD_IMAGE_SERVER_DW = API_V3_PREFIX + 'dw_partner_new/partner_order_upload';
+export const API_CHECK_LIMIT_WITHDRAW = API_V3_PREFIX + 'spot/partner_order_limit';
+
+export const API_GET_COMMISSION_REPORT_PARTNER = API_V3_PREFIX + 'dw_partner_new/partner_commission_report';
+export const API_GET_COMMISSION_STATISTIC_PARTNER = API_V3_PREFIX + 'dw_partner_new/partner_commission_statistic';
+export const API_GET_COMMISSION_HISTORY_PARTNER = API_V3_PREFIX + 'wallet/history/transaction';
+export const API_CHECK_PHONE_NUMBER_DUPLICATE = API_PREFIX + 'user/check_phone_duplicate';
+export const API_SET_PHONE_REQUEST = API_PREFIX + 'user/set_phone_request';
+export const API_SET_PHONE_VERIFY = API_PREFIX + 'user/set_phone_verify';
+
+// internal
+export const API_INTERNAL_FIND_USER = API_V3_PREFIX + 'spot/internal-find-user';
+export const API_INTERNAL_TRANSFER= API_V3_PREFIX + 'spot/internal-transfer';
+export const API_INTERNAL_TRANSFER_HISTORY = API_V3_PREFIX + 'spot/internal-transfer-history';

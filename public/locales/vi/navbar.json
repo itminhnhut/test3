@@ -31,11 +31,15 @@
             "task_center": "Trung tâm nhiệm vụ",
             "referral": "Giới thiệu",
             "api_mng": "Quản lý API",
-            "logout": "Đăng xuất"
+            "logout": "Đăng xuất",
+            "partner": "Đối tác",
+            "payment_method": "Phương thức thanh toán",
+            "daily_reward": "Thưởng giao dịch hàng ngày"
         }
     },
     "submenu": {
         "convert": "Nami Swap",
+        "nami_insurance":"Nami Insurance",
         "convert_description": "Giao dịch crypto chỉ với một lần click",
         "spot": "Giao dịch Spot",
         "spot_description": "Giao dịch {{pairsLength}} token được niêm yết với thanh khoản cao",
@@ -55,6 +59,7 @@
         "farming": "Farming",
         "farming_description": "Farm NAMI và nhận nhiều token tiềm năng",
         "referral": "Báo cáo hoa hồng",
+        "profile_referral": "Giới thiệu",
         "referral_description": "Nhận hoa hồng lên tới 20% từ giao dịch của bạn bè",
         "transfer": "Chuyển đổi",
         "transfer_description": "Chuyển đổi nhanh từ ví Exchange sang ví Futures chỉ với một lần chạm",
@@ -73,7 +78,11 @@
         "task_center": "Trung tâm nhiệm vụ",
         "api_mng": "Quản lý API",
         "logout": "Đăng xuất",
-        "user": "Quản lý người dùng"
+        "user": "Quản lý người dùng",
+        "profile": "Thông tin cá nhân",
+        "partner": "Đối tác",
+        "payment_method": "Phương thức thanh toán",
+        "daily_reward": "Thưởng giao dịch hàng ngày"
     },
     "menu_grid": {
         "deposit": "Nạp",
@@ -108,7 +117,7 @@
     "language": "Ngôn ngữ",
     "no_noti": "Bạn chưa có thông báo mới nào",
     "noti": "Thông báo",
-    "mark_read":"Đọc tất cả",
+    "mark_read": "Đọc tất cả",
     "unread_noti": "thông báo chưa đọc",
     "read_all_noti": "Bạn không còn thông báo nào",
     "not_verified": "Chưa được xác minh",

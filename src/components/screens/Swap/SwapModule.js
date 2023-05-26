@@ -12,7 +12,17 @@ import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { useAsync, useDebounce } from 'react-use';
 import { Trans, useTranslation } from 'next-i18next';
 import { find, orderBy, uniqBy } from 'lodash';
-import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, countDecimals, walletLinkBuilder, safeToFixed } from 'redux/actions/utils';
+import {
+    formatPrice,
+    formatSwapRate,
+    formatWallet,
+    getDecimalScale,
+    getLoginUrl,
+    countDecimals,
+    walletLinkBuilder,
+    safeToFixed,
+    dwLinkBuilder
+} from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { ApiStatus } from 'redux/actions/const';
 import { PATHS } from 'constants/paths';
@@ -30,13 +40,16 @@ import { CloseIcon, SyncAltIcon, ArrowDropDownIcon } from 'components/svg/SvgIco
 import NoData from 'components/common/V2/TableV2/NoData';
 import styled from 'styled-components';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
+import { TYPE_DW } from '../WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { formatNumber } from 'utils/reference-utils';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
 
 const DEFAULT_PAIR = {
-    fromAsset: 'USDT',
-    toAsset: 'BTC'
+    fromAsset: 'VNDC',
+    toAsset: 'USDT'
 };
 const REJECT_PREORDER = ['BROKER_ERROR', 'PRICE_CHANGED', 'INVALID_SWAP_REQUEST_ID', 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET'];
 
@@ -304,11 +317,13 @@ const SwapModule = ({ width, pair }) => {
         if (!auth) {
             // router.push(getLoginUrl('sso', 'login'));
         } else {
-            router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: state?.fromAsset || 'USDT' }));
+            // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: state?.fromAsset || 'USDT' }));
+            router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, state?.fromAsset));
         }
     }, [state.fromAsset, auth]);
 
     const renderFromInput = useCallback(() => {
+        const decimalInput = getDecimalScale(+config.filters?.[0].stepSize);
         return (
             <div className="flex items-center justify-between bg-transparent font-semibold text-base">
                 <div className="flex items-center justify-between">
@@ -321,8 +336,8 @@ const SwapModule = ({ width, pair }) => {
                         onFocus={() => setState({ focus: 'from', inputHighlighted: 'from' })}
                         onBlur={() => setState({ inputHighlighted: null })}
                         onValueChange={({ value }) => setState({ fromAmount: value })}
-                        placeholder="0.0000"
-                        decimalScale={getDecimalScale(+config.filters?.[0].stepSize)}
+                        placeholder={(0).toFixed(decimalInput >= 0 ? decimalInput : 4)}
+                        decimalScale={decimalInput}
                     />
 
                     <button className={`border-r border-r-divider dark:border-r-divider-dark mr-3 pr-3 ${!!state.fromAmount ? 'visible' : 'invisible'}`}>
@@ -358,20 +373,25 @@ const SwapModule = ({ width, pair }) => {
 
         for (let i = 0; i < data?.length; ++i) {
             const { fromAsset, available, filters } = data?.[i];
-            const assetName = find(assetConfig, { assetCode: fromAsset })?.assetName;
+            const currentAssetConfig = find(assetConfig, { assetCode: fromAsset });
 
             assetItems.push(
-                <AssetItem key={`asset_item___${i}`} isChoosed={state.fromAsset === fromAsset} onClick={() => onClickFromAsset(fromAsset)}>
+                <AssetItem
+                    key={`asset_item___${i}`}
+                    isChoosed={state.fromAsset === fromAsset}
+                    onClick={() => onClickFromAsset(fromAsset)}
+                    isDisabled={!available}
+                >
                     <div className={`flex items-center  `}>
-                        <div className={`${!available && 'opacity-20'}`}>
+                        <div className={`${!available && 'opacity-20'} w-5 h-5`}>
                             <AssetLogo assetCode={fromAsset} size={20} />
                         </div>
                         <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
                             <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{fromAsset}</span>
-                            <span className="text-xs leading-4 text-left">{assetName}</span>
+                            <span className="text-xs leading-4 text-left">{currentAssetConfig?.assetName}</span>
                         </p>
                     </div>
-                    <div> {available ? formatWallet(available) : '0.0000'}</div>
+                    <div> {available ? formatNumber(available, currentAssetConfig?.assetDigit) : '0.0000'}</div>
                 </AssetItem>
             );
         }
@@ -413,7 +433,7 @@ const SwapModule = ({ width, pair }) => {
                         onFocus={() => setState({ focus: 'to', inputHighlighted: 'to' })}
                         onBlur={() => setState({ inputHighlighted: null })}
                         onValueChange={({ value }) => setState({ toAmount: value })}
-                        placeholder="0.0000"
+                        placeholder={(0).toFixed(find(assetConfig, { assetCode: state?.toAsset })?.assetDigit ?? 4)}
                     />
                 </div>
                 <div
@@ -440,20 +460,20 @@ const SwapModule = ({ width, pair }) => {
 
         for (let i = 0; i < data?.length; ++i) {
             const { toAsset, available, filters } = data?.[i];
-            const assetName = find(assetConfig, { assetCode: toAsset })?.assetName;
+            const currentAssetConfig = find(assetConfig, { assetCode: toAsset });
 
             assetItems.push(
-                <AssetItem key={`to_asset_item___${i}`} isChoosed={state.toAsset === toAsset} onClick={() => onClickToAsset(toAsset)}>
-                    <div className={`flex items-center  `}>
-                        <div className={`${!available && 'opacity-20'}`}>
+                <AssetItem key={`to_asset_item___${i}`} isChoosed={state.toAsset === toAsset} onClick={() => onClickToAsset(toAsset)} isDisabled={false}>
+                    <div className="flex items-center">
+                        <div className="w-5 h-5">
                             <AssetLogo assetCode={toAsset} size={20} />
                         </div>
-                        <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
-                            <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{toAsset}</span>
-                            <span className="text-xs leading-4 text-left">{assetName}</span>
+                        <p>
+                            <span className={`mx-2 text-txtPrimary dark:text-txtPrimary-dark`}>{toAsset}</span>
+                            <span className="text-xs leading-4 text-left">{currentAssetConfig?.assetName}</span>
                         </p>
                     </div>
-                    <div> {available ? formatWallet(available) : '0.0000'}</div>
+                    <div> {available ? formatNumber(available, currentAssetConfig?.assetDigit) : '0.0000'}</div>
                 </AssetItem>
             );
         }
@@ -489,7 +509,7 @@ const SwapModule = ({ width, pair }) => {
             const leftUnit = state.changeEstRatePosition ? state.toAsset : state.fromAsset;
             const rightUnit = state.changeEstRatePosition ? state.fromAsset : state.toAsset;
 
-            if (state.loadingEstRate) {
+            if (state.loadingEstRate && !state.loadingPreOrder) {
                 return <Skeletor width={100} />;
             }
 
@@ -604,7 +624,7 @@ const SwapModule = ({ width, pair }) => {
     const renderPreOrderModal = useCallback(() => {
         const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
         return (
-            <ModalV2 className="!max-w-[488px]" isVisible={state.openModal} onBackdropCb={onCloseSwapModal}>
+            <ModalV2 loading={state.processingOrder} className="!max-w-[488px]" isVisible={state.openModal} onBackdropCb={onCloseSwapModal}>
                 <div className="my-6 text-left font-semibold text-[24px] leading-[30px] text-dark-2 dark:text-gray-4 hover:bg-transparent">
                     {t('convert:confirm')}
                 </div>
@@ -625,7 +645,9 @@ const SwapModule = ({ width, pair }) => {
                 </div>
                 <div className="flex items-end justify-between mt-4 text-base">
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('convert:rate')}:</span>
-                    {state.preOrder?.fromAsset === config?.displayPriceAsset ? (
+                    {state.loadingEstRate ? (
+                        <Skeletor width={100} />
+                    ) : state.preOrder?.fromAsset === config?.displayPriceAsset ? (
                         <span className="font-semibold">
                             1 {state.preOrder?.toAsset} = {formatPrice(state.preOrder?.displayingPrice)} {state.preOrder?.fromAsset}
                         </span>
@@ -642,6 +664,7 @@ const SwapModule = ({ width, pair }) => {
                 </div>
                 <div className="mt-10 w-full flex flex-row items-center justify-between">
                     <ButtonV2
+                        loading={state.processingOrder}
                         onClick={() =>
                             swapTimer
                                 ? onConfirmOrder(state.preOrder?.preOrderId)
@@ -653,10 +676,12 @@ const SwapModule = ({ width, pair }) => {
                 </div>
             </ModalV2>
         );
-    }, [state.openModal, state.preOrder, state.fromAmount, state.toAsset, state.fromAmount, swapTimer, config]);
+    }, [state.openModal, state.preOrder, state.fromAmount, state.toAsset, state.fromAmount, state.processingOrder, swapTimer, config]);
 
     const onOpenAlertResultSwap = ({ msg, type, title, duration }) => {
-        set((prevState) => ({ ...prevState, resultSwap: { msg, type, title, duration } }));
+        setTimeout(() => {
+            set((prevState) => ({ ...prevState, resultSwap: { msg, type, title, duration } }));
+        }, 100);
     };
 
     const onCloseAlertResultSwap = () => {
@@ -664,7 +689,7 @@ const SwapModule = ({ width, pair }) => {
     };
 
     const renderAlertNotification = useCallback(() => {
-        if (!state?.resultSwap) return null;
+        if (!state?.resultSwap || !state.resultSwap) return null;
 
         setTimeout(() => {
             onCloseAlertResultSwap();
@@ -754,10 +779,14 @@ const SwapModule = ({ width, pair }) => {
 
     useEffect(() => {
         let result = uniqBy(state.swapConfigs, 'fromAsset').filter((e) => e?.fromAsset?.toLowerCase()?.includes(state.search?.toLowerCase())) || [];
-        result = result.map((r) => ({
-            ...r,
-            available: wallets?.[r.fromAssetId]?.value - wallets?.[r?.fromAssetId]?.locked_value
-        }));
+        result = result.map((r) => {
+            const available = wallets?.[r.fromAssetId]?.value - wallets?.[r?.fromAssetId]?.locked_value;
+            return {
+                ...r,
+                available: isNaN(available) ? 0 : available
+            };
+        });
+
         result = orderBy(result, ['available', 'fromAsset'], ['desc', 'asc']);
         setState({ fromAssetList: result });
     }, [state.swapConfigs, state.search, wallets]);
@@ -765,10 +794,14 @@ const SwapModule = ({ width, pair }) => {
     useEffect(() => {
         if (!state.swapConfigs?.length) return;
         let result = state.swapConfigs.filter((e) => e?.toAsset?.toLowerCase()?.includes(state.search?.toLowerCase()) && e.fromAsset === state.fromAsset);
-        result = result.map((e) => ({
-            ...e,
-            available: wallets?.[e.toAssetId]?.value - wallets?.[e?.toAssetId]?.locked_value
-        }));
+        result = result.map((e) => {
+            const available = wallets?.[e.toAssetId]?.value - wallets?.[e?.toAssetId]?.locked_value;
+            return {
+                ...e,
+                available: isNaN(available) ? 0 : available
+            };
+        });
+
         result = orderBy(result, ['available', 'toAsset'], ['desc', 'asc']);
         setState({ toAssetList: result });
     }, [state.swapConfigs, state.search, state.fromAsset, wallets]);
@@ -837,7 +870,9 @@ const SwapModule = ({ width, pair }) => {
                                     <span>{t('common:from')}</span>
                                     <div className="flex gap-2 items-center">
                                         <span>
-                                            {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)}
+                                            {/* {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)} */}
+                                            {t('common:available_balance')}:{' '}
+                                            {formatNumber(availabelAsset?.fromAsset, find(assetConfig, { assetCode: state?.fromAsset })?.assetDigit || 0)}
                                         </span>
                                         <button
                                             onClick={(e) => {
@@ -868,7 +903,9 @@ const SwapModule = ({ width, pair }) => {
                                 <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
                                     <span>{t('common:to')}</span>
                                     <span>
-                                        {t('common:available_balance')}: {formatWallet(availabelAsset?.toAsset)}
+                                        {/* {t('common:available_balance')}: {formatWallet(availabelAsset?.toAsset)} */}
+                                        {t('common:available_balance')}:{' '}
+                                        {formatNumber(availabelAsset?.toAsset, find(assetConfig, { assetCode: state?.toAsset })?.assetDigit || 0)}
                                     </span>
                                 </div>
                                 {renderToInput()}
@@ -909,19 +946,19 @@ const Input = styled.div.attrs(({ isFocus }) => ({
 }))``;
 
 const AssetList = styled.div.attrs(({ AssetListRef }) => ({
-    className: `absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl 
+    className: `absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl
     border border-divider dark:border-divider-dark bg-white dark:bg-dark-4
     shadow-card_light dark:shadow-popover`,
     ref: AssetListRef
 }))``;
 
-const AssetItem = styled.li.attrs(({ key, className, isChoosed, onClick }) => ({
+const AssetItem = styled.li.attrs(({ key, className, isChoosed, onClick, isDisabled }) => ({
     className: `text-txtSecondary dark:text-txtSecondary-dark text-left text-base
-    px-4 py-4 flex items-center justify-between cursor-pointer font-normal first:mt-0 mt-3 
-    hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark
+    px-4 py-4 flex items-center justify-between cursor-not-allowed font-normal first:mt-0 mt-3
+    ${!isDisabled && 'hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark !cursor-pointer'}
     ${isChoosed && 'bg-hover dark:bg-hover-dark'} ${className}`,
     key: key,
-    onClick: onClick
+    onClick: isDisabled ? null : onClick
 }))``;
 
 export default SwapModule;

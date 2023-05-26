@@ -2,13 +2,13 @@ import { useTranslation } from 'next-i18next';
 import React, { useMemo, useState } from 'react';
 import { Line } from 'components/screens/NewReference/mobile';
 import RefCard from 'components/screens/NewReference/RefCard';
-import Link from 'next/link'
+import Link from 'next/link';
 import { theme } from '../../../../../../tailwind.config';
 
 const title = {
     en: 'FAQ',
     vi: 'Câu hỏi thường gặp'
-}
+};
 
 const QnAData = [
     {
@@ -116,7 +116,9 @@ const QnA = ({ id, t, language }) => {
                 <div className="text-teal underline font-medium text-sm text-center mt-8">
                     <Link href={policyLink}>
                         <a target="_blank">
-                            {language === 'vi' ? 'Xem thêm: Chính sách đối tác kinh doanh Nami Exchange' : "Read more: Nami Exchange's policy on business partners"}
+                            {language === 'vi'
+                                ? 'Xem thêm: Chính sách đối tác kinh doanh Nami Exchange'
+                                : "Read more: Nami Exchange's policy on business partners"}
                         </a>
                     </Link>
                 </div>

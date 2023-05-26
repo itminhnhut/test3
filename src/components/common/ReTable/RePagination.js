@@ -67,7 +67,7 @@ const PaginationWrapper = styled.div`
     .rc-pagination-item,
     .rc-pagination-prev button,
     .rc-pagination-next button {
-        border: none;
+        border: none !important;
         background-color: transparent;
 
         a {
@@ -85,13 +85,16 @@ const PaginationWrapper = styled.div`
     .rc-pagination-item a,
     .rc-pagination-prev button,
     .rc-pagination-next button {
-        color: ${({ isDark }) => (isDark ? '#F2F4F6' : '#223050')};
+        color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.darkBlue)};
+        border-radius: 50%;
+        height: 100%;
     }
 
     .rc-pagination-item-active a,
     .rc-pagination-item:focus a,
     .rc-pagination-item:hover a {
-        color: #093dd1 !important;
+        color: ${colors.white} !important;
+        background-color: ${colors.teal};
     }
 
     .rc-pagination-jump-prev button:after,
@@ -101,7 +104,11 @@ const PaginationWrapper = styled.div`
 
     .rc-pagination-next button:after,
     .rc-pagination-prev button:after {
-        margin-top: -0.3rem;
+        background-color: ${({ isDark }) => (isDark ? colors.dark[2] : colors.white)};
+        border-radius: 50%;
+        width: 1.75rem;
+        height: 1.75rem;
+        line-height: 0.9;
     }
 
     .rc-pagination-prev .rc-pagination-item-link,
@@ -112,34 +119,33 @@ const PaginationWrapper = styled.div`
     .rc-pagination-disabled .rc-pagination-item-link,
     .rc-pagination-disabled:hover .rc-pagination-item-link,
     .rc-pagination-disabled:focus .rc-pagination-item-link {
-        color: ${({ isDark }) => (isDark ? '#F2F4F6' : '#223050')};
+        color: ${({ isDark }) => (isDark ? '#3e4351' : '#545454')};
+        opacity: 0.5;
     }
 
-    .rc-pagination-prev:focus .rc-pagination-item-link,
-    .rc-pagination-next:focus .rc-pagination-item-link,
-    .rc-pagination-prev:hover .rc-pagination-item-link,
-    .rc-pagination-next:hover .rc-pagination-item-link {
-        color: #093dd1;
-        border-color: #093dd1;
-    }
-    .rc-pagination-item a,
-    .rc-pagination-prev button,
-    .rc-pagination-next button {
-        color: #fff;
+    .rc-pagination-prev:focus:not(.rc-pagination-disabled) .rc-pagination-item-link,
+    .rc-pagination-next:focus:not(.rc-pagination-disabled) .rc-pagination-item-link,
+    .rc-pagination-prev:hover:not(.rc-pagination-disabled) .rc-pagination-item-link,
+    .rc-pagination-next:hover:not(.rc-pagination-disabled) .rc-pagination-item-link {
+        color: ${colors.white};
+        border-color: ${colors.teal};
+        ::after {
+            background-color: ${colors.teal};
+        }
     }
 `;
 
 const NamiV2PaginationWrapper = styled.div`
     .rc-pagination-item-link,
     .rc-pagination-item {
-        height: 36px;
-        width: 36px;
-        border-radius: 100px;
+        height: 36px !important;
+        width: 36px !important;
+        border-radius: 100px !important;
         display: flex;
         align-content: center;
         justify-content: center;
         align-items: center;
-        border: none;
+        border: none !important;
         background-color: transparent;
         margin-right: 16px;
     }

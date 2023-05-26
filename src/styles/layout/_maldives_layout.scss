@@ -18,7 +18,7 @@
 }
 
 .layout-onus {
-    @apply relative h-full bg-onus dark:bg-onus text-onus;
+    @apply relative h-full bg-white dark:bg-dark text-txtPrimary dark:text-txtPrimary-dark;
 
     min-width: 320px;
     overflow-x: hidden;

@@ -11,7 +11,7 @@ const LuckyEndedModal = ({ visible = true, onClose }) => {
         <Portal portalId='PORTAL_MODAL'>
             <div
                 className={classNames(
-                    'flex flex-col items-center justify-center fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden',
+                    'flex flex-col items-center justify-center fixed top-0 right-0 h-full w-full z-[20] bg-black-800/[0.6] dark:bg-black-800/[0.8] overflow-hidden',
                     { invisible: !visible },
                     { visible: visible },
                 )}

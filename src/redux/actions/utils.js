@@ -37,6 +37,13 @@ import { CopyIcon, CheckedIcon } from 'components/svg/SvgIcon';
 import { useSelector } from 'react-redux';
 import utilsSelectors from 'redux/selectors/utilsSelectors';
 import { useRouter } from 'next/router';
+import { log } from 'utils';
+import { cloneDeep } from 'lodash';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE as SIDE_DW } from 'redux/reducers/withdrawDeposit';
+import moment from 'moment-timezone';
+import usePrevious from 'hooks/usePrevious';
+import classNames from 'classnames';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -158,7 +165,7 @@ export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
 
         const referral = sessionStorage && sessionStorage.getItem('refCode') ? sessionStorage.getItem('refCode') : _options.referral;
 
-        const theme = localStorage?.getItem('theme') ?? 'light';
+        const theme = localStorage?.getItem('theme') ?? 'dark';
 
         let language = 'vi';
         if (!currentUrl.includes('/vi')) language = 'en';
@@ -205,6 +212,15 @@ export function formatTime(value, f = 'yyyy-MM-dd HH:mm') {
     }
 }
 
+export function formatTimePartner(t, value) {
+    if (!value) return '';
+    return value >= 60 * 60 * 1000 // 1 hour
+        ? `${formatTime(value, 'h:mm')} ${t('common:hour')}`
+        : value >= 60 * 1000 // 1 minute
+        ? `${formatTime(value, 'm')} ${t('common:minute')}`
+        : `${formatTime(value, 's')} ${t('common:second')}`;
+}
+
 export function getTimeAgo(value, options) {
     if (!value) return;
     const date = value instanceof Date ? value : new Date(value);
@@ -221,6 +237,16 @@ export function formatBalance(value, digits = 2, acceptNegative = false) {
     return numeral(+value).format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
 }
 
+export const formatBalanceFiat = (value, assetCode, acceptNegative = false) => {
+    const isVNDC = assetCode === 'VNDC';
+    const isUSDT = assetCode === 'USDT';
+    return formatBalance(isVNDC ? Math.round(value) : value, isVNDC ? 0 : isUSDT ? 4 : 0, acceptNegative);
+};
+
+export const getExactBalanceFiat = (balance, assetCode) => {
+    const digit = assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : 0;
+    return roundByExactDigit(balance, digit);
+};
 // Hiển thị cho phí spot tính bằng VNDC, USDT, ATS
 export function formatSpotFee(value) {
     if (isNil(value)) return '0';
@@ -243,13 +269,16 @@ export function formatWallet(value, additionDigits = 2, acceptNegative = false) 
 }
 
 export function formatPrice(price = 0, configs = [], assetCode = '') {
+    price = exponentialToDecimal(price);
     if (isArray(configs)) {
         const asset = configs.find((e) => e.assetCode?.toUpperCase() === assetCode?.toUpperCase());
         if (asset) {
+            if (price <= 1e-6) return formatNumber2(price, asset.assetDigit);
             return numeral(+price).format(`0,0.[${'0'.repeat(asset.assetDigit)}]`);
         }
     }
     if (isNumber(configs)) {
+        if (price <= 1e-6) return formatNumber2(price, configs);
         return numeral(+price).format(`0,0.[${'0'.repeat(configs)}]`);
     }
 
@@ -259,6 +288,13 @@ export function formatPrice(price = 0, configs = [], assetCode = '') {
 export function formatSpotPrice(price = 0, symbol = '') {
     return numeral(+price).format(`0,0.[${'0'.repeat(getDecimalSpotPrice(symbol))}]`);
 }
+
+export const formatPhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) return;
+    let phone = phoneNumber?.toString();
+    if (phone?.length !== 10) return phoneNumber;
+    return phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+};
 
 export function randomString(length = 15) {
     let result = '';
@@ -285,12 +321,73 @@ export function formatNumberToText(value = 0) {
 }
 
 export function formatNumber(value, digits = 2, forceDigits = 0, acceptNegative = false) {
+    value = exponentialToDecimal(value);
     const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''}`;
-    if (isNil(value)) return defaultValue;
-    if (Math.abs(+value) < 1e-9) return defaultValue;
-    if (!acceptNegative && +value < 0) return defaultValue;
+    if (isNil(value) || (!acceptNegative && +value < 0)) return defaultValue;
+    if (Math.abs(+value) <= 1e-6) return formatNumber2(value, forceDigits || digits);
     return numeral(+value).format(`0,0.${'0'.repeat(forceDigits)}${digits > 0 ? `[${'0'.repeat(digits)}]` : ''}`, Math.floor);
 }
+
+export function formatNumber2(number, decimalScale = 8, thousandSeparator = true) {
+    if (!number) {
+        return '';
+    }
+    if (thousandSeparator) {
+        // Can't use toLocaleString because it's not available on Android
+        const parts = number.toString().split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        if (parts[1]) {
+            parts[1] = parts[1].substring(0, decimalScale);
+        }
+        if (decimalScale === 0) return parts[0];
+        return parts.join('.');
+    } else {
+        return numberToString(number, decimalScale);
+    }
+}
+
+export function numberToString(number, decimalScale = 8, cutPaddingDecimalsZero = true) {
+    if (!number) {
+        return '';
+    }
+    let result = Number(number).toFixed(decimalScale);
+    if (decimalScale > 0 && cutPaddingDecimalsZero) {
+        return result.replace(/\.?0+$/, '');
+    } else {
+        return result;
+    }
+}
+
+export const exponentialToDecimal = (exponential) => {
+    let decimal = exponential?.toString().toLowerCase() || '';
+    if (decimal.includes('e+')) {
+        const exponentialSplitted = decimal.split('e+');
+        let postfix = '';
+        for (let i = 0; i < +exponentialSplitted[1] - (exponentialSplitted[0].includes('.') ? exponentialSplitted[0].split('.')[1].length : 0); i++) {
+            postfix += '0';
+        }
+        const addCommas = (text) => {
+            let j = 3;
+            let textLength = text.length;
+            while (j < textLength) {
+                text = `${text.slice(0, textLength - j)},${text.slice(textLength - j, textLength)}`;
+                textLength++;
+                j += 3 + 1;
+            }
+            return text;
+        };
+        decimal = addCommas(exponentialSplitted[0].replace('.', '') + postfix);
+    }
+    if (decimal.toLowerCase().includes('e-')) {
+        const exponentialSplitted = decimal.split('e-');
+        let prefix = '0.';
+        for (let i = 0; i < +exponentialSplitted[1] - 1; i++) {
+            prefix += '0';
+        }
+        decimal = prefix + exponentialSplitted[0].replace('.', '');
+    }
+    return decimal;
+};
 
 export function scrollFocusInput() {
     if (typeof window !== 'undefined') {
@@ -398,6 +495,15 @@ export const getAssetId = (assetCode) => {
 export const getAssetFromCode = (assetCode) => {
     const configs = store().getState()?.utils?.assetConfig || null;
     const assetConfig = find(configs, { assetCode });
+    if (assetConfig) {
+        return assetConfig;
+    }
+    return null;
+};
+
+export const getAssetFromId = (assetId) => {
+    const configs = store().getState()?.utils?.assetConfig || null;
+    const assetConfig = find(configs, { id: assetId });
     if (assetConfig) {
         return assetConfig;
     }
@@ -789,6 +895,19 @@ export function walletLinkBuilder(walletType, action, payload) {
     }
 }
 
+export function dwLinkBuilder(type, side, assetId) {
+    // Deposit: BUY
+    // Withdraw: SELL
+    switch (type) {
+        case TYPE_DW.CRYPTO:
+            return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
+        case TYPE_DW.PARTNER:
+            return `${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId || 'USDT'}`;
+        default:
+            return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
+    }
+}
+
 export function setTransferModal(payload) {
     // source look like
     // payload = {
@@ -845,7 +964,7 @@ export const secondToMinutesAndSeconds = (time) => {
 
 export const getPriceColor = (value, onusMode = false) => {
     if (onusMode) {
-        return value === 0 ? '' : value < 0 ? 'text-onus-red' : 'text-onus-green';
+        return value === 0 ? '' : value < 0 ? 'text-red-2' : 'text-green-2';
     } else {
         return value === 0 ? '' : value < 0 ? 'text-red-2 dark:text-red' : 'text-green-3 dark:text-teal';
     }
@@ -1092,7 +1211,7 @@ export const copy = (text, cb) => {
     }
 };
 
-export const CopyText = memo(({ text = '', setText, value, className = '', size = 16, label }) => {
+export const CopyText = memo(({ text = '', setText, value, className = '', size = 16, label, CustomCopyIcon, textClass, copyClass, checkedClass }) => {
     const [copied, setCopied] = useState(false);
     const title = label ?? text;
     useEffect(() => {
@@ -1106,6 +1225,13 @@ export const CopyText = memo(({ text = '', setText, value, className = '', size 
             }, 3000);
     }, [copied]);
 
+    const renderCopyIcon = () => {
+        if (CustomCopyIcon) {
+            return <CustomCopyIcon size={size} className={copyClass}  />;
+        }
+        return <CopyIcon size={size} />;
+    };
+
     return (
         <div
             className={`flex items-center space-x-2 cursor-pointer ${className}`}
@@ -1116,8 +1242,8 @@ export const CopyText = memo(({ text = '', setText, value, className = '', size 
                 })
             }
         >
-            <span>{title}</span>
-            {!copied ? <CopyIcon size={size} /> : <CheckedIcon size={size} color={colors.teal} />}
+            <span className={textClass}>{title}</span>
+            {!copied ? renderCopyIcon() : <CheckedIcon size={size} color={colors.teal} className={checkedClass} />}
         </div>
     );
 });
@@ -1183,4 +1309,111 @@ export const getOffsetEl = (el) => {
     const height = clone.offsetHeight;
     clone.remove();
     return { w: width, h: height };
+};
+
+export function parseUnormStr(input) {
+    //Đổi chữ hoa thành chữ thường
+    let slug = input.toLowerCase();
+
+    //Đổi ký tự có dấu thành không dấu
+    slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+    slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+    slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+    slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+    slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+    slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+    slug = slug.replace(/đ/gi, 'd');
+
+    // Một vài bộ encode coi các dấu mũ, dấu chữ như một kí tự riêng biệt nên thêm hai dòng này
+    slug = slug.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/gi, ''); // ̀ ́ ̃ ̉ ̣  huyền, sắc, ngã, hỏi, nặng
+    slug = slug.replace(/\u02C6|\u0306|\u031B/gi, ''); // ˆ ̆ ̛  Â, Ê, Ă, Ơ, Ư
+
+    // Bỏ dấu câu, kí tự đặc biệt
+    slug = slug.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, ' ');
+    slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, ' ');
+
+    // Bỏ các khoảng trắng liền nhau
+    slug = slug.replace(/ + /g, ' ');
+    slug = slug.trim();
+
+    return slug;
+}
+
+export const filterSearch = (originDataset, keys, searchValue) => {
+    if (!searchValue) return originDataset;
+
+    return originDataset.filter((item) => {
+        for (const key of keys) {
+            if (parseUnormStr(item[key]).includes(parseUnormStr(searchValue))) return true;
+        }
+        return false;
+    });
+    // const lowercaseSearch = searchValue.toLowerCase();
+    // const copyDataSet = cloneDeep(originDataset);
+    // return copyDataSet.filter((item) => keys.reduce((result, key) => result || (item?.[key] && item[key].toLowerCase().includes(lowercaseSearch)), false));
+};
+
+export const saveFile = (file, name) => {
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+};
+
+export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+export const roundByExactDigit = (value, digit) => Math.floor(value * Math.pow(10, digit)) / Math.pow(10, digit);
+
+export const searchSort = (Arr = [], fieldNames = [], strSearch) => {
+    const formatStr = (e) => {
+        return fieldNames.reduce((acc, key) => {
+            return e[acc] + ' ' + e[key];
+        });
+    };
+
+    if (!strSearch) return Arr;
+    return Arr.filter((item) => String(formatStr(item)).toLowerCase().includes(strSearch.toLowerCase())).sort((a, b) => {
+        if (formatStr(a).toLowerCase().indexOf(strSearch.toLowerCase()) > formatStr(b).toLowerCase().indexOf(strSearch.toLowerCase())) {
+            return 1;
+        } else if (formatStr(a).toLowerCase().indexOf(strSearch.toLowerCase()) < formatStr(b).toLowerCase().indexOf(strSearch.toLowerCase())) {
+            return -1;
+        } else {
+            if (formatStr(a) > formatStr(b)) return 1;
+            else return -1;
+        }
+    });
+};
+
+export const LastPrice = memo(({ price, className, style }) => {
+    const prevPrice = usePrevious(price);
+    return (
+        <div
+            style={style}
+            className={classNames(
+                '',
+                {
+                    'text-red': price < prevPrice,
+                    'text-teal': price >= prevPrice
+                },
+                className
+            )}
+        >
+            {formatPrice(price)}
+        </div>
+    );
+});
+
+export function formatNanNumber(value, digits = 0) {
+    const formatedNumber = formatNumber(value, digits);
+    return `${formatedNumber === 'NaN' ? 0 : formatedNumber}`;
+}
+
+export const convertDateToMs = (date = 0, type = 'startOf') => {
+    if (type === 'startOf') {
+        return moment.utc(moment(+date).startOf('day')).unix() * 1000;
+    }
+    return moment.utc(moment(+date).endOf('day')).unix() * 1000;
 };

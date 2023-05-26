@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { keyBy, range } from 'lodash';
 import AssetLogo from 'components/wallet/AssetLogo';
 import format from 'date-fns/format';
-import { formatWallet, shortHashAddress } from 'redux/actions/utils';
+import { formatNumber, formatWallet, shortHashAddress } from 'redux/actions/utils';
 import TagV2 from 'components/common/V2/TagV2';
 import { useTranslation } from 'next-i18next';
 import Skeletor from 'components/common/Skeletor';
@@ -55,8 +55,9 @@ export default function () {
         {
             key: 'txId',
             dataIndex: 'txId',
-            title: 'TxHash',
+            title: 'ID',
             align: 'left',
+            width: 220,
             render: (txHash) => {
                 return txHash ? shortHashAddress(txHash, 6, 6) : '--';
             }
@@ -66,6 +67,7 @@ export default function () {
             dataIndex: 'assetId',
             title: t('common:asset'),
             align: 'left',
+            width: 148,
             render: (assetId) => {
                 const assetConfig = mapAssetConfig[assetId];
                 return (
@@ -80,13 +82,15 @@ export default function () {
             key: 'network',
             dataIndex: 'network',
             title: t('wallet:network'),
-            align: 'left'
+            align: 'left',
+            width: 148,
         },
         {
             key: 'time',
             dataIndex: 'executeAt',
             title: t('common:time'),
             align: 'left',
+            width: 126,
             render: (time) => time && format(new Date(time), 'dd/MM/yyyy')
         },
         {
@@ -94,13 +98,18 @@ export default function () {
             dataIndex: 'amount',
             title: t('common:amount'),
             align: 'right',
-            render: (amount) => formatWallet(amount)
+            width: 220,
+            render: (amount, item) => {
+                const config = mapAssetConfig[item?.assetId] || {};
+                return formatNumber(amount, config?.assetDigit);
+            }
         },
         {
             key: 'withdraw_to',
             dataIndex: ['to', 'address'],
             title: t('common:to'),
             align: 'right',
+            width: 220,
             render: (address) => {
                 return address ? shortHashAddress(address, 6, 6) : '--';
             }
@@ -110,6 +119,7 @@ export default function () {
             dataIndex: 'status',
             title: t('common:status'),
             align: 'right',
+            width: 230,
             render: (status) =>
                 ({
                     [DepWdlStatus.Success]: (
@@ -119,7 +129,7 @@ export default function () {
                     ),
                     [DepWdlStatus.Pending]: (
                         <TagV2 icon={false} className="ml-auto" type="warning">
-                            {t('common:pending')}
+                            {t('common:processing')}
                         </TagV2>
                     ),
                     [DepWdlStatus.Declined]: (
@@ -153,15 +163,15 @@ export default function () {
             value: null
         },
         {
-            label: t('common:success'),
+            label: t('dw_partner:complete'),
             value: DepWdlStatus.Success
         },
         {
-            label: t('common:pending'),
+            label: t('common:processing'),
             value: DepWdlStatus.Pending
         },
         {
-            label: t('common:declined'),
+            label: t('common:denined'),
             value: DepWdlStatus.Declined
         }
     ];
@@ -201,6 +211,10 @@ export default function () {
                     limit={10}
                     page={currentPage}
                     onChangePage={setCurrentPage}
+                    tableStyle={{
+                        rowHeight: '64px',
+                        fontSize: '1rem'
+                    }}
                 />
             </div>
         </>

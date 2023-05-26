@@ -56,7 +56,8 @@ function onChangeWallet(socket, dispatch) {
         FUTURES: 2,
         P2P: 3,
         POOL: 4,
-        EARN: 5
+        EARN: 5,
+        NAO_FUTURES: 9
     };
 
     const WalletMap = [
@@ -66,6 +67,7 @@ function onChangeWallet(socket, dispatch) {
         'P2P',
         'POOL',
         'EARN',
+        'NAO_FUTURES'
     ];
 
     Object.values(WalletType)
@@ -75,7 +77,7 @@ function onChangeWallet(socket, dispatch) {
                 dispatch({
                     type: types.UPDATE_WALLET,
                     payload: data,
-                    walletType: WalletMap[_type],
+                    walletType: WalletMap[_type === 9 ? 6 : _type]
                 });
             });
         });

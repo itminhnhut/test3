@@ -5,7 +5,7 @@ import TransferModal from 'components/wallet/TransferModal';
 import useApp from 'hooks/useApp';
 import { PORTAL_MODAL_ID } from 'constants/constants';
 import Head from 'next/head';
-import AlertModal from 'components/screens/Mobile/AlertModal';
+import AlertModal from 'components/screens/Nao_futures/AlertModal';
 import { useDispatch } from 'react-redux';
 import { reloadData } from 'redux/actions/heath';
 
@@ -100,7 +100,7 @@ const LayoutMobile = ({
             >
                 <ReactNotifications className="fixed z-[9000] pointer-events-none w-full h-full"/>
                 <div
-                    className="relative flex-1 bg-onus dark:bg-onus"
+                    className="relative flex-1 bg-bgPrimary dark:bg-bgPrimary-dark"
                 >
                     <AlertContext.Provider value={{
                         alert: alert.current,

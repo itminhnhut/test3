@@ -17,12 +17,14 @@ import DynamicNoSsr from 'components/DynamicNoSsr';
 import dynamic from 'next/dynamic';
 import Emitter from 'redux/actions/emitter';
 import 'react-grid-layout/css/styles.css';
-import { getOrdersList } from 'redux/actions/futures';
+import { getOrdersList, fetchFuturesSetting } from 'redux/actions/futures';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
 import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
 import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTermsModal';
 import classNames from 'classnames';
+import DefaultMobileView from 'src/components/common/DefaultMobileView';
+import { FuturesSettings } from 'redux/reducers/futures';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -50,6 +52,8 @@ const initFuturesComponent = {
     isShowOpenOrders: true,
     isShowPlaceOrder: true,
     isShowAssets: true
+    // [FuturesSettings.order_confirm]: true,
+    // [FuturesSettings.show_sl_tp_order_line]: true
 };
 
 const Futures = () => {
@@ -65,7 +69,7 @@ const Futures = () => {
     const ordersList = useSelector((state) => state?.futures?.ordersList);
     const router = useRouter();
     const { width } = useWindowSize();
-    const isMediumDevices = width >= BREAK_POINTS.md;
+    const isMediumDevices = width >= BREAK_POINTS.lg;
     const [filterLayout, setFilterLayout] = useState({ ...initFuturesComponent });
 
     // Memmoized Variable
@@ -100,7 +104,10 @@ const Futures = () => {
     };
 
     useEffect(() => {
-        if (auth) getOrders();
+        if (auth) {
+            dispatch(fetchFuturesSetting());
+            getOrders();
+        }
     }, [auth]);
 
     const getOrders = () => {
@@ -193,9 +200,14 @@ const Futures = () => {
         setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
     }, [pairConfig, userSettings, state.layouts]);
 
-    const resetDefault = () => {
-        localStorage.setItem('settingLayoutFutures', JSON.stringify(initFuturesComponent));
-        setFilterLayout({ ...initFuturesComponent });
+    useEffect(() => {
+        const settings = localStorage.getItem('settingLayoutFutures');
+        if (!settings) localStorage.setItem('settingLayoutFutures', JSON.stringify(initFuturesComponent));
+    }, []);
+
+    const resetDefault = (params) => {
+        localStorage.setItem('settingLayoutFutures', JSON.stringify({ ...initFuturesComponent, ...params }));
+        setFilterLayout({ ...initFuturesComponent, ...params });
     };
 
     const decimals = useMemo(() => {
@@ -208,7 +220,7 @@ const Futures = () => {
 
     return (
         <>
-            <FuturesTermsModal />
+            {isMediumDevices && <FuturesTermsModal />}
             <FuturesPageTitle pair={state.pair} price={state.pairPrice?.lastPrice} pricePrecision={pairConfig?.pricePrecision} />
             <DynamicNoSsr>
                 <MaldivesLayout
@@ -223,7 +235,7 @@ const Futures = () => {
                     resetDefault={resetDefault}
                 >
                     <div className="w-full">
-                        {isMediumDevices && (
+                        {isMediumDevices ? (
                             <GridLayout
                                 className="layout"
                                 layouts={state.layouts}
@@ -274,7 +286,7 @@ const Futures = () => {
                                     <FuturesChart
                                         chartKey="futures_containter_chart"
                                         pair={pairConfig?.pair}
-                                        initTimeFrame="1D"
+                                        initTimeFrame=""
                                         isVndcFutures={state.isVndcFutures}
                                         ordersList={ordersList}
                                     />
@@ -320,6 +332,8 @@ const Futures = () => {
                                     <FuturesMarginRatioVndc pairConfig={pairConfig} auth={auth} lastPrice={state.pairPrice?.lastPrice} decimals={decimals} />
                                 </div>
                             </GridLayout>
+                        ) : (
+                            <DefaultMobileView />
                         )}
                     </div>
                 </MaldivesLayout>

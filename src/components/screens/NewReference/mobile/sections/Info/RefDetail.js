@@ -14,6 +14,8 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { CheckIcon } from '../FriendList';
 import colors from 'styles/colors';
+import { useDispatch } from 'react-redux';
+import { getMe } from 'redux/actions/user';
 
 const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
     let vh = window.innerHeight * 0.01;
@@ -26,6 +28,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
     const [doRefresh, setDoRefresh] = useState(false);
     const [code, setCode] = useState('');
     const [currentNote, setCurrentNote] = useState('');
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (!isShow) return;
@@ -63,6 +66,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                 1800
             );
             // setDoRefresh(!doRefresh)
+            await dispatch(getMe(true));
             setRefs(
                 refs.map((e) => {
                     if (e.code === code) e.status = 1;
@@ -118,9 +122,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                         <div
                                             className={classNames(
                                                 'px-3 py-1 rounded-[100px] font-normal text-xs flex items-center',
-                                                data.status
-                                                    ? 'text-teal bg-teal bg-opacity-10'
-                                                    : 'text-gray-7 bg-dark-4 bg-opacity-50'
+                                                data.status ? 'text-teal bg-teal bg-opacity-10' : 'text-gray-7 bg-dark-4 bg-opacity-50'
                                             )}
                                         >
                                             {data.status ? <CheckIcon className={'mr-1'} /> : null}
@@ -198,13 +200,13 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
     );
 };
 
-export const FriendListIcon = ({ size= 12, color = '#718096' }) => (
+export const FriendListIcon = ({ size = 12, color = '#718096' }) => (
     <svg width={size} height={size} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 3h6.5M4 6h6.5M4 9h6.5M1.5 3h.005M1.5 6h.005M1.5 9h.005" stroke={color} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
-export const NoteIcon = ({ size= 12, color = '#8694B3' }) => (
+export const NoteIcon = ({ size = 12, color = '#8694B3' }) => (
     <svg width={size} height={size} viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             d="M13.196 4.934c.252-.252.39-.587.39-.943s-.138-.69-.39-.942L12.139 1.99a1.324 1.324 0 0 0-.943-.39c-.356 0-.69.138-.942.39L3.166 9.057V12h2.942l7.088-7.066zm-2-2 1.058 1.057-1.06 1.056-1.057-1.057 1.059-1.056zm-6.697 7.733V9.61L9.193 4.93 10.25 5.99l-4.693 4.678H4.5zm-1.333 2.666h10.667v1.334H3.166v-1.334z"

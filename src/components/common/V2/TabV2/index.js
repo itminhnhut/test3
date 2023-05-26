@@ -9,10 +9,12 @@ const TabV2 = ({ activeTabKey, tabs, onChangeTab, isOverflow }) => {
                 const isActive = tab.key === activeTabKey;
                 return (
                     <Tab
-                        className={`border ${isActive ? 'border-teal ' : 'border-divider dark:border-divider-dark '}`}
-                        onClick={isActive ? undefined : () => onChangeTab(tab.key)}
+                        className={`border flex ${isActive ? 'border-teal ' : 'border-divider dark:border-divider-dark '}`}
+                        onClick={() => onChangeTab(tab.key)}
                         key={tab.key}
                         active={isActive}
+                        disabled={isActive}
+                        id={tab.key}
                     >
                         {tab.children}
                     </Tab>
@@ -31,7 +33,7 @@ const TabWrapper = styled.div.attrs({ className: 'flex gap-4 items-center' })`
             : 'overflow-x: auto;padding-bottom:16px;'};
 `;
 
-const Tab = styled.div`
+const Tab = styled.button`
     color: ${({ active }) => (active ? colors.teal : colors.darkBlue5)};
     padding: 8px 16px;
     border-radius: 10000px;

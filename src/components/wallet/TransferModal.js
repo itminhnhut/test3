@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatNumber, formatWallet, getLoginUrl, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
-import { WalletType } from 'redux/actions/const';
+import { dwLinkBuilder, formatNumber, formatWallet, getLoginUrl, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
+import { ApiStatus, WalletType } from 'redux/actions/const';
 import { useTranslation } from 'next-i18next';
-import { POST_WALLET_TRANSFER } from 'redux/actions/apis';
+import { API_FUTURES_CAMPAIGN_TRANSFER_STATUS, POST_WALLET_TRANSFER } from 'redux/actions/apis';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { getUserFuturesBalance, getUserPartnersBalance, getWallet } from 'redux/actions/user';
-import { orderBy, setWith } from 'lodash';
+import { orderBy } from 'lodash';
 
 import Axios from 'axios';
+import axios from 'axios';
 import useOutsideClick from 'hooks/useOutsideClick';
 import NumberFormat from 'react-number-format';
 import AssetLogo from 'components/wallet/AssetLogo';
@@ -21,11 +22,14 @@ import CheckSuccess from 'components/svg/CheckSuccess';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
-import { EXCHANGE_ACTION, WALLET_SCREENS } from 'pages/wallet';
+import { EXCHANGE_ACTION } from 'pages/wallet';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import SwapWarning from 'components/svg/SwapWarning';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import Notice from 'components/svg/Notice';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -57,7 +61,8 @@ export const WalletTypeV1 = {
     FUTURES: 2,
     P2P: 3,
     POOL: 4,
-    PARTNERS: 8
+    PARTNERS: 8,
+    NAO_FUTURES: 9
 };
 
 export const MinTransferFromBroker = {
@@ -82,20 +87,29 @@ const INITIAL_STATE = {
     // ...
 };
 
-const getTitleWallet = (wallet, t) => {
+const getTitleWallet = (wallet, t, language) => {
     let _strTitleWallet = '';
     switch (wallet) {
-        case WalletType.PARTNERS:
-            _strTitleWallet = t('common:partners');
+        case WalletType.SPOT:
+            _strTitleWallet = t('common:wallet', { wallet: 'Nami Spot' });
+            break;
+        case WalletType.FUTURES:
+            _strTitleWallet = t('common:wallet', { wallet: 'Nami Futures' });
             break;
         case WalletType.BROKER:
+            _strTitleWallet = t('common:wallet', { wallet: language === 'vi' ? 'hoa hồng Nami' : 'Nami Commission' });
+            break;
+        case WalletType.NAO_FUTURES:
+            _strTitleWallet = t('common:wallet', { wallet: 'NAO Futures' });
+            break;
+        case WalletType.PARTNERS:
             _strTitleWallet = t('common:partners');
             break;
         default:
             _strTitleWallet = wallet;
             break;
     }
-    _strTitleWallet = _strTitleWallet.charAt(0).toUpperCase() + _strTitleWallet.slice(1).toLowerCase();
+    // _strTitleWallet = _strTitleWallet.charAt(0).toUpperCase() + _strTitleWallet.slice(1).toLowerCase();
 
     return _strTitleWallet;
 };
@@ -170,17 +184,50 @@ const TransferModal = ({ isMobile, alert }) => {
 
     const currentWallet = useMemo(() => {
         let _ = state.allWallets?.find((o) => o?.assetCode === state.asset);
-        const available = _?.wallet?.value - _?.wallet?.locked_value;
+        let available = _?.wallet?.value - _?.wallet?.locked_value;
+        if (state?.maxValue > 0) {
+            available = Math.min(available, state.maxValue);
+        }
 
         return {
             ..._,
             available
         };
-    }, [state.asset, state.allWallets, isVisible]);
+    }, [state.asset, state.allWallets, state.maxValue, isVisible]);
 
     const assetDigit = useMemo(() => {
         return assetConfig.find((i) => i.assetCode === state.asset)?.assetDigit ?? 0;
     }, [state.asset, assetConfig]);
+
+    const getWithdrawstatusInfo = async (asset) => {
+        const WalletCurrency = {
+            VNDC: 72,
+            USDT: 22
+        };
+        const { data } = await axios.get(API_FUTURES_CAMPAIGN_TRANSFER_STATUS, { params: { currency: WalletCurrency[asset] } });
+        if (data?.status === ApiStatus.SUCCESS) {
+            const { status, value } = data.data;
+            if (status === 'limited') {
+                setState({
+                    maxValue: value,
+                    limitData: data.data
+                });
+            } else {
+                setState({
+                    maxValue: -1,
+                    limitData: null
+                });
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (state.fromWallet === WalletType.FUTURES && ['USDT', 'VNDC'].includes(state.asset)) {
+            getWithdrawstatusInfo(state.asset);
+        } else {
+            setState({ maxValue: -1 });
+        }
+    }, [state.fromWallet, state.asset]);
 
     // Helper
     const onTransfer = async (currency, from_wallet, to_wallet, amount, utils) => {
@@ -200,8 +247,8 @@ const TransferModal = ({ isMobile, alert }) => {
                 const message = t('wallet:transfer_success', {
                     amount: formatWallet(+amount, currentWallet?.assetDigit),
                     assetCode: utils?.assetName,
-                    selectedSource: getTitleWallet(state.fromWallet, t),
-                    selectedDestination: getTitleWallet(state.toWallet, t)
+                    selectedSource: getTitleWallet(state.fromWallet, t, language),
+                    selectedDestination: getTitleWallet(state.toWallet, t, language)
                 });
 
                 setState({ message });
@@ -250,7 +297,10 @@ const TransferModal = ({ isMobile, alert }) => {
         } catch (e) {
             console.error('Swap error: ', e);
         } finally {
-            setState({ isPlacingOrder: false, amount: '' });
+            setState({
+                isPlacingOrder: false,
+                amount: ''
+            });
         }
     };
 
@@ -489,7 +539,7 @@ const TransferModal = ({ isMobile, alert }) => {
                         <div
                             key={`transfer_asset__list_${wallet?.assetCode}_${state.asset}`}
                             className={`px-4 py-3 flex items-center justify-between cursor-pointer first:mt-0 mt-3
-                                hover:bg-hover-1 dark:hover:bg-hover-dark 
+                                hover:bg-hover-1 dark:hover:bg-hover-dark
                                 ${state.asset === wallet?.assetCode ? 'bg-hover-1 dark:bg-hover-dark' : ''}`}
                             onClick={() =>
                                 state.asset !== wallet?.assetCode &&
@@ -504,10 +554,7 @@ const TransferModal = ({ isMobile, alert }) => {
                                 <span className="ml-2">{wallet?.assetCode}</span>
                             </div>
                             <div className="flex items-center">
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                                    {formatAvl(available, _assetDigit)}
-                                    {/* {available && available > 0 ? formatWallet(available, wallet?.assetDigit) : '0.0000'} */}
-                                </span>
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{formatAvl(available, _assetDigit)}</span>
                             </div>
                         </div>
                     );
@@ -571,6 +618,36 @@ const TransferModal = ({ isMobile, alert }) => {
             </ButtonV2>
         );
     }, [state.errors, state.amount, state.fromWallet, state.toWallet, state.isPlacingOrder, state.asset, currentWallet, auth]);
+
+    const renderNotice = useCallback(() => {
+        const data = state?.limitData;
+        if (state?.limitData?.status === 'limited') {
+            return (
+                <div className="mt-4 px-8 py-4 rounded bg-gray-10 dark:bg-bgContainer-dark">
+                    <div className="flex items-center text-txtPrimary dark:text-txtPrimary-dark gap-2">
+                        <Notice color={isDarkMode ? '#8694B2' : '#768394'} />
+                        {t('wallet:transfer_limit:notice')}
+                    </div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                        {t('wallet:transfer_limit:description', {
+                            volume: data?.volume_threshold,
+                            asset: state.asset,
+                            campaign: data?.promotion_description?.[language || 'en']
+                        })}
+                    </div>
+                    <div className="mt-6 text-txtPrimary dark:text-txtPrimary-dark">
+                        {t('wallet:transfer_limit:volume', {
+                            volume: data?.volume,
+                            asset: state.asset,
+                            campaign: data?.promotion_description?.[language || 'en']
+                        })}
+                    </div>
+                </div>
+            );
+        }
+
+        return null;
+    }, [auth, state.fromWallet, state.toWallet, state.asset, state.limitData]);
 
     const renderHelperText = useCallback(() => {
         let error = null;
@@ -741,7 +818,8 @@ const TransferModal = ({ isMobile, alert }) => {
                         {renderAvailableWallet()}
                         <AddCircleColorIcon
                             className="cursor-pointer"
-                            onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
+                            // onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
+                            onClick={() => handleKycRequest(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))}
                         />
                     </div>
                 </div>
@@ -758,6 +836,7 @@ const TransferModal = ({ isMobile, alert }) => {
                 </div>
             </div>
             {/* {renderIssues()} */}
+            {renderNotice()}
             {renderHelperText()}
             {renderTransferButton()}
             {renderAlertNotification()}

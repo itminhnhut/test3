@@ -213,8 +213,14 @@ body {
     }
 
     .txtPri-5 {
-        // [size, leading]: [16px, 24px] -> [24px, 30px],
-        @apply font-semibold text-base md:text-2xl
+        // [size, leading]: [20px, 26px],
+        @apply font-semibold text-[18px] leading-[26px]
+        text-gray-15 dark:text-gray-4 tracking-normal;
+    }
+
+    .txtPri-6 {
+        // [size, leading]: [32px, 38px],
+        @apply font-semibold text-[32px] leading-[38px]
         text-gray-15 dark:text-gray-4 tracking-normal;
     }
 
@@ -233,6 +239,12 @@ body {
     .txtSecond-3 {
         // [size, leading]: [14px, 20px], #768394 -> #8694b2
         @apply font-normal text-[14px] leading-[20px]
+        text-gray-1 dark:text-gray-7 tracking-normal;
+    }
+
+    .txtSecond-4 {
+        // [size, leading]: [16px, 24px], #768394 -> #8694b2
+        @apply font-normal text-base
         text-gray-1 dark:text-gray-7 tracking-normal;
     }
 
@@ -809,17 +821,20 @@ input[type='number'] {
 
         /* Track */
         &::-webkit-scrollbar-track {
-            background: #0e1d32 !important;
+            @apply bg-gray-11 dark:bg-darkBlue-6 rounded-md;
         }
 
         /* Handle */
         &::-webkit-scrollbar-thumb {
-            background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
+            @apply bg-teal;
+            background: #47cc85 !important;
+            // background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
         }
 
         /* Handle on hover */
         &::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
+            @apply bg-teal;
+            background: #47cc85 !important;
         }
     }
 }
@@ -835,18 +850,20 @@ input[type='number'] {
 
     /* Track */
     &::-webkit-scrollbar-track {
-        background: #0e1d32 !important;
+       @apply bg-gray-11 dark:bg-darkBlue-6 rounded-md;
     }
 
     /* Handle */
     &::-webkit-scrollbar-thumb {
-        background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
+        @apply bg-teal;
+        background-color: #47cc85 !important;
         background-clip: padding-box;
     }
 
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
+        @apply bg-teal;
+        background-color: #47cc85 !important;
     }
 }
 

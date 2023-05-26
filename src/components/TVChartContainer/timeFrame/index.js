@@ -8,7 +8,7 @@ import { TrendIcon, TuneIcon } from 'components/svg/SvgIcon';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Button from 'components/common/V2/ButtonV2/Button';
 import FullScreen from 'components/svg/FullScreen';
-import TextButton from 'components/common/V2/ButtonV2/TextButton'
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
 const ListTimeFrame = [
     { value: '1', text: '1m' },
@@ -40,15 +40,15 @@ export const CandleChart = (
 
 export const CandleChartOnus = (
     <svg width="14" height="22" viewBox="0 0 14 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11.457 21L11.457 3.5" stroke="#8492A7" stroke-width="1.02225" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M2.54297 21L2.54297 0.999999" stroke="#8492A7" stroke-width="1.02225" stroke-linecap="round" stroke-linejoin="round" />
-        <rect x="0.511127" y="4.5121" width="4.06892" height="12.9777" rx="0.76669" fill="#1B222D" stroke="#8492A7" stroke-width="1.02225" />
-        <rect x="9.42128" y="8.51308" width="4.06892" height="8.97775" rx="0.76669" fill="#1B222D" stroke="#8492A7" stroke-width="1.02225" />
+        <path d="M11.457 21L11.457 3.5" stroke="currentColor" strokeWidth="1.02225" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M2.54297 21L2.54297 0.999999" stroke="currentColor" strokeWidth="1.02225" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="0.511127" y="4.5121" width="4.06892" height="12.9777" rx="0.76669" stroke="currentColor" strokeWidth="1.02225" />
+        <rect x="9.42128" y="8.51308" width="4.06892" height="8.97775" rx="0.76669" stroke="currentColor" strokeWidth="1.02225" />
     </svg>
 );
 
 export const AreaChart = (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="20" height="20" fill="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="20" height="20" fill="currentColor" className='!fill-current'>
         <path d="M12.5 17.207L18.707 11h2l3.647-3.646-.708-.708L20.293 10h-2L12.5 15.793l-3-3-4.854 4.853.708.708L9.5 14.207z" />
         <path d="M9 16h1v1H9zm1 1h1v1h-1zm-1 1h1v1H9zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1H9zm2 0h1v1h-1zm-3-3h1v1H8zm-1 1h1v1H7zm-1 1h1v1H6zm2 0h1v1H8zm-1 1h1v1H7zm-2 0h1v1H5zm17-9h1v1h-1zm1-1h1v1h-1zm0 2h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-5-7h1v1h-1zm2 0h1v1h-1zm1-1h1v1h-1zm-2 2h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-2-6h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-3-3h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1z" />
     </svg>
@@ -103,15 +103,15 @@ export default class TimeFrame extends Component {
         this.updateTimeFrame(initTimeFrame);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { initTimeFrame } = this.props;
-        if (initTimeFrame && initTimeFrame !== prevProps.initTimeFrame) {
-            this.updateTimeFrame(this.props.initTimeFrame);
-        }
-        if (prevProps?.symbol !== this.props.symbol) {
-            this.setState({ selectedTime: '60' });
-        }
-    }
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     const { initTimeFrame } = this.props;
+    //     if (initTimeFrame && initTimeFrame !== prevProps.initTimeFrame) {
+    //         this.updateTimeFrame(this.props.initTimeFrame);
+    //     }
+    //     if (prevProps?.symbol !== this.props.symbol) {
+    //         this.setState({ selectedTime: '60' });
+    //     }
+    // }
 
     updateTimeFrame = (initTimeFrame) => {
         const { chartType, handleActiveTime } = this.props;
@@ -266,7 +266,9 @@ export default class TimeFrame extends Component {
                             >
                                 <Popover.Panel className="absolute z-10 mt-2">
                                     <div className="overflow-hidden rounded-lg shadow-lg bg-white dark:bg-darkBlue-3 border-[0.5px] border-divider dark:border-divider-dark p-4">
-                                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-xs mb-4">{this.t('common:select_intervals')}</div>
+                                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-xs mb-4">
+                                            {this.t('common:select_intervals')}
+                                        </div>
                                         <div className="w-64 relative grid grid-cols-5 gap-3">
                                             {ListTimeFrame.map((item, index) => {
                                                 const { value, text } = item;
@@ -328,7 +330,7 @@ export default class TimeFrame extends Component {
                                                             close();
                                                         }}
                                                         key={index}
-                                                        className={`h-8 px-2 flex content-start items-center cursor-pointer w-full text-xs text-center rounded-sm 
+                                                        className={`h-8 px-2 flex content-start items-center cursor-pointer w-full text-xs text-center rounded-sm
                                                                 text-txtSecondary dark:text-txtSecondary-dark
                                                                 dark:hover:bg-hover-dark
                                                                 ${isActive ? 'bg-gray-6 dark:text-white dark:bg-transparent font-semibold' : ''}

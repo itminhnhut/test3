@@ -16,7 +16,8 @@ const colors = {
         3: '#1f2f46',
         4: '#141921',
         5: '#262b34',
-        6: '#000000'
+        12: '#eeeff0',
+        13: '#f2f4f5'
     },
 
     divider: {
@@ -61,8 +62,7 @@ const colors = {
         3: '#30bf73',
         4: '#19a65b',
         5: '#e6faef',
-        6: '#4ae17b',
-        7: '#a3f5c7'
+        6: '#4ae17b'
     },
     red: {
         1: '#cc1f1f',
@@ -80,7 +80,6 @@ const colors = {
     purple: {
         1: '#7c99f7'
     },
-
     onus: {
         bg: '#1B222D',
         bg2: '#36445A',

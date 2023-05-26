@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState, useRef } from 'react';
-import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { Trans, useTranslation } from 'next-i18next';
 import { SECRET_STRING } from 'utils';
 import { useDispatch } from 'react-redux';
@@ -19,6 +19,8 @@ import styled from 'styled-components';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Types from 'components/screens/Account/types';
 import EstBalance from 'components/common/EstBalance';
+import { TYPE_DW } from '../WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const INITIAL_STATE = {
     // ...
@@ -66,15 +68,10 @@ const OverviewWallet = (props) => {
             const key = `overview__spot_${i}`;
             items.push(
                 <button
-                    onClick={() =>
-                        onHandleClick(
-                            'deposit_exchange',
-                            walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
-                                type: 'crypto',
-                                asset: allAssets[i]?.assetCode
-                            })
-                        )
-                    }
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, allAssets[i]?.assetCode));
+                    }}
                     className="mr-3"
                 >
                     <AssetLogo assetCode={allAssets[i]?.assetCode} size={30} />
@@ -189,12 +186,13 @@ const OverviewWallet = (props) => {
                 if (href) {
                     router.push(href);
                 } else {
-                    router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }));
+                    router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY));
                 }
                 break;
             case WITHDRAW + EXCHANGE:
                 flag.current = true;
-                router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }));
+                router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL));
+                // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }));
                 break;
             case TRANSFER + EXCHANGE:
                 flag.current = true;
@@ -239,14 +237,10 @@ const OverviewWallet = (props) => {
     const ListButton = ({ className }) => {
         return (
             <div className={className}>
-                <ButtonV2 className="px-6" onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}>
+                <ButtonV2 className="px-6" onClick={() => router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))}>
                     {t('common:deposit')}
                 </ButtonV2>
-                <ButtonV2
-                    onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
-                    className="px-6"
-                    variants="secondary"
-                >
+                <ButtonV2 onClick={() => router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL))} className="px-6" variants="secondary">
                     {t('common:withdraw')}
                 </ButtonV2>
                 <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" variants="secondary">
@@ -262,7 +256,7 @@ const OverviewWallet = (props) => {
                 style={{
                     backgroundImage: `url(${getS3Url(`/images/screen/wallet/overview_background${currentTheme === THEME_MODE.DARK ? '_dark' : ''}.png`)})`
                 }}
-                addClass={`mt-8 p-4 md:p-8 bg-cover 
+                addClass={`mt-8 p-4 md:p-8 bg-cover
             ${currentTheme === THEME_MODE.DARK ? ' border border-divider-dark' : '  shadow-card_light backdrop-blur-[60px] bg-[#ffffff66] border-none'}`}
             >
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between tracking-normal">
@@ -453,28 +447,6 @@ const CardWallet = styled.div.attrs(({ onClick, isSmallScreen }) => ({
      `,
     onClick: onClick
 }))``;
-
-const ModalConvertSmallBalance = ({ isShowModalConvertSmallBalance }) => {
-    return (
-        <ModalV2 isVisible={keys.length !== 0 && isShowAction[keys[0]]} onBackdropCb={onBackdropCb} wrapClassName="px-6" isMobile={true} onHandleClick>
-            <div className="mt-2 text-left">
-                {listActions.map((item, idx) => (
-                    <div key={`action_btn_` + item + '_'} className="first:mt-0 mt-3">
-                        <ButtonV2 variants="text" className="w-auto" onClick={() => onHandleClick(item + keys[0])}>
-                            {item === DEPOSIT
-                                ? t('common:deposit')
-                                : item === WITHDRAW
-                                    ? t('common:withdraw')
-                                    : item === TRANSFER
-                                        ? t('common:transfer')
-                                        : null}
-                        </ButtonV2>
-                    </div>
-                ))}
-            </div>
-        </ModalV2>
-    )
-}
 
 const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
     const keys = Object.keys(isShowAction);

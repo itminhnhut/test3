@@ -13,6 +13,7 @@ import colors from 'styles/colors';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import classNames from 'classnames';
 
 const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, language }) => {
     const router = useRouter();
@@ -42,19 +43,20 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <div className="font-semibold text-3xl lg:text-xl mb-6">{t('navbar:footer_title')}</div>
                             <div className="flex items-center">
                                 <ButtonV2
-                                    onClick={() => window.open(getLoginUrl('sso', 'register'),'_self')}
-                                    className=" w-[151px] !h-[48px] !py-[13px] rounded-md !text-sm"
+                                    onClick={() => window.open(getLoginUrl('sso', 'register'), '_self')}
+                                    className={classNames(
+                                        'rounded-md',
+                                        { 'w-[151px] !h-12 font-medium': width > 1200 },
+                                        {
+                                            'font-semibold !text-sm': width <= 1200
+                                        }
+                                    )}
                                 >
                                     {t('common:create_account')}
                                 </ButtonV2>
-                                {/* {width < 1200 && (
-                                    <ButtonV2 variants="text" onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')} className="ml-4 w-[171px]">
-                                        {t('common:sign_in')}
-                                    </ButtonV2>
-                                )} */}
                             </div>
 
-                            {width < 1200 && <hr className="border-divider dark:border-divider-dark mt-6" />}
+                            {width < 1200 && <hr className="border-divider dark:border-divider-dark my-6" />}
                         </div>
                     )}
                 </div>
@@ -65,7 +67,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             className={`mal-footer___pocket__links___group__item__expander ${active?.about ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { about: !active.about } })}
                         >
-                            {language === LANGUAGE_TAG.VI ? 'Về Nami' : 'About Nami'} Foundation
+                            {language === LANGUAGE_TAG.VI ? 'Về chúng tôi' : 'About Us'}
                             <SvgIcon
                                 name="chevron_down"
                                 size={16}
@@ -253,18 +255,10 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                 {language === LANGUAGE_TAG.VI ? 'Lịch sử Funding' : 'Funding Rate History'}
                             </Link>
                             <a className="cursor-pointer">Support@nami.exchange</a>
-
-                            <a onClick={() => window.fcWidget.open()} className="cursor-pointer invisible">
-                                {language === LANGUAGE_TAG.VI ? 'Gửi yêu cầu hỗ trợ' : 'Send Ticket'}
-                            </a>
-                            {/*</Link>*/}
-                            {/* <Link href="/">
-                                <a className="invisible">{language === LANGUAGE_TAG.VI ? 'Cẩm nang Nami' : "Nami's Handbook"}</a>
-                            </Link> */}
                         </div>
                     </div>
 
-                    <div className="mal-footer___pocket__links___group__item  mb-6">
+                    <div className="mal-footer___pocket__links___group__item">
                         {width >= 1200 ? (
                             <ScanQr t={t} />
                         ) : (
