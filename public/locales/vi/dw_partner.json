@@ -161,7 +161,7 @@
         "missing_phone": "Trường thông tin bắt buộc",
         "not_found_order": "Không tìm thấy lệnh #{{displayingId}} hoặc đang được xử lý, vui lòng tải lại hoặc liên hệ hỗ trợ",
         "invalid_otp": "Mã OTP không hợp lệ. Vui lòng thử lại.",
-        "invalid_secret": "Smart OTP không hợp lệ, vui lòng thử lại.",
+        "invalid_secret": "Mã xác thực không chính xác {{timesErr}}/5, vui lòng lấy OTP từ ứng dụng Nami Exchange.",
         "invalid_smart_otp": "Mã xác thực không chính xác {{timesErr}}/5, vui lòng nhập lại."
     },
     "filter": {

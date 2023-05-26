@@ -70,8 +70,7 @@ const useMakeOrder = ({ setState, input }) => {
                             type: ORDER_TYPES.ERROR_EXCEEDING_LIMIT
                         });
                     } else if(orderResponse?.status === ApiResultCreateOrder.SECRET_INVALID) {
-                        // toast({ text: t('dw_partner:error.invalid_secret'), type: 'warning' });
-                        toast({ text: t('dw_partner:error.invalid_smart_otp', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
+                        toast({ text: t('dw_partner:error.invalid_secret', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
                     } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID) {
                         toast({ text: t('dw_partner:error.invalid_smart_otp', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
                     } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID_EXCEED_TIME) {

@@ -161,7 +161,7 @@
         "missing_phone": "This field is required",
         "not_found_order": "Order #{{displayingId}} not found or being processed, please reload or contact support.",
         "invalid_otp": "OTP is invalid. Please try again.",
-        "invalid_secret": "Smart OTP is invalid, please try again.",
+        "invalid_secret": "Verification code is incorrect {{timesErr}}/5, please get OTP from Nami Exchange App.",
         "invalid_smart_otp": "Verification code is incorrect {{timesErr}}/5, please try again"
     },
     "filter": {

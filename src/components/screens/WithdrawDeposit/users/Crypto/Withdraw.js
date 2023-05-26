@@ -49,8 +49,7 @@ const errorMessageMapper = (t, error, data) => {
         case WITHDRAW_RESULT.SOTP_INVALID:
             return t('dw_partner:error.invalid_smart_otp', { timesErr: data?.count ?? 1 });
         case WITHDRAW_RESULT.SECRET_INVALID:
-            return t('dw_partner:error.invalid_smart_otp', { timesErr: data?.count ?? 1 });
-            // return t('dw_partner:error.invalid_secret')
+            return t('dw_partner:error.invalid_secret', {timesErr: data?.count ?? 1})
         case WITHDRAW_RESULT.Unknown:
         default:
             return t('error:UNKNOWN_ERROR');
