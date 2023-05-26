@@ -24,7 +24,7 @@ const useMakeOrder = ({ setState, input }) => {
         router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + order.displayingId);
     };
 
-    const onMakeOrderHandler = async (otp) => {
+    const onMakeOrderHandler = async (otp, locale) => {
         try {
             setState({ loadingConfirm: true });
 
@@ -34,7 +34,8 @@ const useMakeOrder = ({ setState, input }) => {
                 partnerId: partner?.partnerId,
                 quantity: input,
                 side,
-                otp
+                otp,
+                locale
             });
 
             console.log("____orderResponse: ", orderResponse);
