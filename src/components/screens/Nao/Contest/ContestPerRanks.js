@@ -26,6 +26,7 @@ import { useRouter } from 'next/router';
 import TickFbIcon from 'components/svg/TickFbIcon';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
+import RePagination from 'components/common/ReTable/RePagination';
 
 const ContestPerRanks = ({
     previous,
@@ -54,6 +55,16 @@ const ContestPerRanks = ({
     const router = useRouter();
     const lastUpdatedTime = useRef(null);
     const mount = useRef(false);
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(limit);
+    const isMobile = width <= 640;
+    const limit = isMobile ? 10 : 20;
+
+    useEffect(() => {
+        setPage(1);
+        setPageSize(limit);
+    }, [isMobile]);
 
     useEffect(() => {
         getRanks(sort);
@@ -63,6 +74,13 @@ const ContestPerRanks = ({
     useEffect(() => {
         if (mount.current) getRanks(tab);
     }, [quoteAsset]);
+
+    const onReadMore = () => {
+        setPageSize((old) => {
+            const newSize = pageSize + limit;
+            return newSize >= dataSource.length ? dataSource.length : newSize;
+        });
+    };
 
     const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
 
@@ -77,6 +95,7 @@ const ContestPerRanks = ({
                 params: { contest_id, quoteAsset }
             });
             const data = originalData?.users;
+            setTotal(data.length);
             if (data && status === ApiStatus.SUCCESS) {
                 if (originalData?.last_time_update) lastUpdatedTime.current = originalData?.last_time_update;
                 const dataFilter = data.filter((rs) => rs?.[_rank] > 0 && rs?.[_rank] < 4);
@@ -146,6 +165,8 @@ const ContestPerRanks = ({
             </div>
         );
     };
+
+    const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
         <section className="contest_individual_ranks pt-20">
@@ -259,7 +280,7 @@ const ContestPerRanks = ({
             {width <= 640 ? (
                 <>
                     {Array.isArray(dataSource) && dataSource?.length > 0 ? (
-                        dataSource.map((item, index) => {
+                        dataFilter.map((item, index) => {
                             return (
                                 <CardNao key={index} className={`flex gap-4 sm:gap-6 p-4 mt-3`}>
                                     <div className="flex-1 text-sm sm:text-base">
@@ -345,60 +366,77 @@ const ContestPerRanks = ({
                     )}
                 </>
             ) : (
-                <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} classWrapper="!text-sm sm:!text-base">
-                    <Column
-                        minWidth={50}
-                        className="text-txtSecondary dark:text-txtSecondary-dark"
-                        title={t('nao:contest:rank')}
-                        fieldName={rank}
-                        cellRender={renderRank}
-                    />
-                    <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
-                    <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'User ID'} fieldName={userID} />
-                    <Column
-                        minWidth={150}
-                        align="right"
-                        className=""
-                        title={`${t('nao:contest:volume')} (${quoteAsset})`}
-                        decimal={0}
-                        fieldName="total_volume"
-                    />
-                    <Column
-                        minWidth={150}
-                        visible={!previous}
-                        align="right"
-                        className=""
-                        title={t('common:ext_gate:time')}
-                        decimal={2}
-                        fieldName="time"
-                        suffix={t('common:hours')}
-                    />
-                    {tab === 'pnl' ? (
+                <div className="dark:bg-dark-4 rounded-xl">
+                    <Table
+                        loading={loading}
+                        noItemsMessage={t('nao:contest:no_rank')}
+                        dataSource={dataFilter}
+                        classWrapper="!text-sm sm:!text-base"
+                    >
                         <Column
-                            maxWidth={120}
-                            minWidth={100}
-                            align="right"
-                            className=""
-                            title={t('nao:contest:per_pnl')}
-                            fieldName="pnl"
-                            cellRender={renderPnl}
+                            minWidth={50}
+                            className="text-txtSecondary dark:text-txtSecondary-dark"
+                            title={t('nao:contest:rank')}
+                            fieldName={rank}
+                            cellRender={renderRank}
                         />
-                    ) : (
+                        <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
+                        <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'User ID'} fieldName={userID} />
                         <Column
-                            maxWidth={120}
-                            minWidth={100}
+                            minWidth={150}
                             align="right"
                             className=""
-                            title={t('nao:contest:total_trades')}
-                            fieldName="total_order"
+                            title={`${t('nao:contest:volume')} (${quoteAsset})`}
                             decimal={0}
+                            fieldName="total_volume"
                         />
+                        <Column
+                            minWidth={150}
+                            visible={!previous}
+                            align="right"
+                            className=""
+                            title={t('common:ext_gate:time')}
+                            decimal={2}
+                            fieldName="time"
+                            suffix={t('common:hours')}
+                        />
+                        {tab === 'pnl' ? (
+                            <Column
+                                maxWidth={120}
+                                minWidth={100}
+                                align="right"
+                                className=""
+                                title={t('nao:contest:per_pnl')}
+                                fieldName="pnl"
+                                cellRender={renderPnl}
+                            />
+                        ) : (
+                            <Column
+                                maxWidth={120}
+                                minWidth={100}
+                                align="right"
+                                className=""
+                                title={t('nao:contest:total_trades')}
+                                fieldName="total_order"
+                                decimal={0}
+                            />
+                        )}
+                    </Table>
+                    {total > 1 && (
+                        <div className="w-full hidden sm:flex justify-center py-8">
+                            <RePagination onusMode total={total} current={page} pageSize={pageSize} onChange={(page) => setPage(page)} name="" />
+                        </div>
                     )}
-                </Table>
+                </div>
             )}
             {lastUpdated && lastUpdatedTime.current && (
                 <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                     {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
+                </div>
+            )}
+            {isMobile && pageSize < dataSource.length && (
+                <div className="w-fit block sm:hidden m-auto text-teal font-semibold mt-6" onClick={onReadMore}>
+                    {t('common:read_more')}
                 </div>
             )}
         </section>
