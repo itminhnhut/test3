@@ -1,6 +1,12 @@
 import { groupBy, map, orderBy, sumBy } from 'lodash';
 import { getDecimalScale } from 'redux/actions/utils';
 
+export function roundBy(val, roundByValue, functionName) {
+    const dirtyValue = Math[functionName](+val / roundByValue) * roundByValue;
+    // Fix calculation 0.045000000000000005
+    return +dirtyValue.toFixed(12);
+}
+
 export const handleTickSize = (data, tickSize, type = null) => {
     let _exp = -2
 
@@ -13,18 +19,16 @@ export const handleTickSize = (data, tickSize, type = null) => {
             _exp = `${tickSize}`.substring(1)?.length || 1
         }
     }
-
     const _data = data.map((e) => {
-        let rate
+        let rate = roundBy(e[0], tickSize, type === 'ask' ? 'ceil' : 'floor'); //sync mobile
+        // if (type === 'ask') {
+        //     rate = decimalAdjust('ceil', +e[0], _exp)
+        // } else {
+        //     rate = decimalAdjust('floor', +e[0], _exp)
+        // }
 
-        if (type === 'ask') {
-            rate = decimalAdjust('ceil', +e[0], _exp)
-        } else {
-            rate = decimalAdjust('floor', +e[0], _exp)
-        }
-
-        return { rate, rateRaw: +e[0], amount: +e[1] }
-    })
+        return { rate, rateRaw: +e[0], amount: +e[1] };
+    });
     const group = groupBy(_data, 'rate')
     const output = []
     map(group, (objs, key) => {
