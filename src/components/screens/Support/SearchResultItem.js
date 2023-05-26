@@ -9,11 +9,13 @@ import { formatTime } from 'redux/actions/utils';
 import Parse from 'html-react-parser';
 import _ from 'lodash';
 import { stripHtml } from "string-strip-html";
+import useApp from 'hooks/useApp';
 
 const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
     const { width } = useWindowSize()
-    const isMobile = width < 640
-    const { t, i18n: { language } } = useTranslation()
+    const isMobile = width < 640;
+    const { t, i18n: { language }} = useTranslation();
+    const isApp = useApp();
 
     // ? Memmoized
     const getTopics = (topic) => {
@@ -53,7 +55,8 @@ const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
 
 
 
-    const buildArticleUrl = () => {
+    const buildArticleUrl = (article) => {
+      return PATHS.SUPPORT.ANNOUNCEMENT + `/announcement/${article?.slug}${isApp ? '?source=app' : ''}`;
         const isFaq = !!article?.tags.filter(o => o.slug === 'faq' || o.slug.includes('faq-'))?.length
 
         if (isFaq) {
@@ -70,7 +73,7 @@ const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
     return (
         <div className="mb-8 sm:mb-12">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <Link href={buildArticleUrl()}>
+                <Link href={buildArticleUrl(article)} >
                     <a target={isMobile?'_self':'_blank'} className="text-txtPrimary dark:text-gray-4 font-semibold text-base cursor-pointer hover:text-txtTextBtn dark:hover:text-teal">
                         {loading ?
                             <div className="!min-w-[200px] lg:!w-[500px] xl:!w-[800px]"><Skeletor className="!w-full" />
