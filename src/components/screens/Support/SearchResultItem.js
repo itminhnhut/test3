@@ -67,13 +67,11 @@ const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
         }
     }
 
-    console.log(article)
-
     return (
         <div className="mb-8 sm:mb-12">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <Link href={buildArticleUrl()}>
-                    <a target='_blank' className="text-txtPrimary dark:text-gray-4 font-semibold text-base cursor-pointer hover:text-txtTextBtn dark:hover:text-teal">
+                    <a target={isMobile?'_self':'_blank'} className="text-txtPrimary dark:text-gray-4 font-semibold text-base cursor-pointer hover:text-txtTextBtn dark:hover:text-teal">
                         {loading ?
                             <div className="!min-w-[200px] lg:!w-[500px] xl:!w-[800px]"><Skeletor className="!w-full" />
                             </div> : getHighlightedText(article?.title, keyword)}
