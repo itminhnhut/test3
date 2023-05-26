@@ -19,6 +19,7 @@ import FetchApi from 'utils/fetch-api';
 import { ModalConfirm } from './DetailOrder';
 import { MODE } from './constants';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import Tooltip from 'components/common/Tooltip';
 
 const ModalOtp = dynamic(() => import('./components/ModalOtp'));
 const DWAddPhoneNumber = dynamic(() => import('components/common/DWAddPhoneNumber'));
@@ -170,6 +171,12 @@ const CardInput = () => {
 
     return (
         <>
+            <Tooltip place="top" effect="solid" isV3 id="min_amount_description">
+                <div className="max-w-[300px] py-2 text-sm z-50">{t('dw_partner:min_amount_description')}</div>
+            </Tooltip>
+            <Tooltip place="top" effect="solid" isV3 id="max_amount_description">
+                <div className="max-w-[300px] py-2 text-sm z-50">{t('dw_partner:max_amount_description')}</div>
+            </Tooltip>
             <Card className="w-full">
                 <div className="mb-4">
                     <div className="w-full mb-2 flex justify-between ">
@@ -255,7 +262,9 @@ const CardInput = () => {
                         </div>
                     </div>
                     <div className="flex items-center justify-between ">
-                        <div className="txtSecond-2">{t('dw_partner:min_amount')}</div>
+                        <div data-tip="" className="inline-flex !cursor-default" data-for="min_amount_description">
+                            <div className="txtSecond-2 nami-underline-dotted">{t('dw_partner:min_amount')}</div>
+                        </div>
                         <div className="txtPri-1 flex items-center">
                             {loadingRate ? <Skeletor width="50px" /> : formatBalanceFiat(minimumAllowed, assetCode)}
 
@@ -263,7 +272,9 @@ const CardInput = () => {
                         </div>
                     </div>
                     <div className="flex items-center justify-between ">
-                        <div className="txtSecond-2">{t('dw_partner:max_amount')}</div>
+                        <div data-tip="" className="inline-flex !cursor-default" data-for="max_amount_description">
+                            <div className="txtSecond-2 nami-underline-dotted">{t('dw_partner:max_amount')}</div>
+                        </div>
                         <div className="txtPri-1 flex items-center">
                             {loadingRate ? <Skeletor width="50px" /> : formatBalanceFiat(maximumAllowed, assetCode)}
 
@@ -356,8 +367,8 @@ const CardInput = () => {
                 onClose={() => setState({showAlertDisableSmartOtp: false, showOtp: false})}
                 textButton={t('dw_partner:verify_by_email')}
                 onConfirm={() => {
-                     setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false })
-                     onMakeOrderHandler()
+                    setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false });
+                    onMakeOrderHandler();
                 }}
                 type="error"
                 title={t('dw_partner:disabled_smart_otp_title')}
