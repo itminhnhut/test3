@@ -158,7 +158,7 @@ const OrderBook = (props) => {
     asks = reverse(asks);
     asks = handleTickSize(asks, tickSize, 'ask');
     bids = handleTickSize(bids, tickSize, 'bids');
-    asks = orderBy(asks.slice(0, MAX_LENGTH), [(e) => +e[0]], ['desc']);
+    asks = orderBy(asks.slice(-MAX_LENGTH), [(e) => +e[0]], ['desc']);
     bids = orderBy(bids.slice(0, MAX_LENGTH), [(e) => -e[0]]);
 
     const maxAsk = maxBy(asks, (o) => {
