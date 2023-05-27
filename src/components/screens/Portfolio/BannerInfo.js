@@ -1,10 +1,9 @@
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import FetchApi from 'utils/fetch-api';
-import { API_GET_VIP, API_PORTFOLIO_OVERVIEW, API_PORTFOLIO_ACCOUNT } from 'redux/actions/apis';
-import { formatPrice, formatTime, getLoginUrl, walletLinkBuilder } from 'src/redux/actions/utils';
-import { Progressbar } from 'components/screens/NewReference/mobile/sections/Info';
-import { FEE_TABLE } from 'constants/constants';
+import { API_GET_VIP } from 'redux/actions/apis';
+import { formatTime, getLoginUrl, walletLinkBuilder } from 'src/redux/actions/utils';
+import { FEE_TABLE, FUTURES_PRODUCT, PRODUCT } from 'constants/constants';
 import SvgAddCircle from 'components/svg/SvgAddCircle';
 import colors from 'styles/colors';
 import router from 'next/router';
@@ -13,97 +12,97 @@ import { EXCHANGE_ACTION } from 'pages/wallet';
 
 import 'react-loading-skeleton/dist/skeleton.css';
 import Skeletor from 'components/common/Skeletor';
+import TextCopyable from '../Account/TextCopyable';
+import SvgWalletFutures from 'components/svg/SvgWalletFutures';
+import { FutureNaoIcon } from 'components/svg/SvgIcon';
+import Image from 'next/image';
+import { isNumber } from 'lodash';
 
-const BannerInfo = ({ currency, setCurrency, user, t, isMobile, isDark }) => {
+const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, firstTimeTrade, loadingOverview }) => {
     // Handle for Header tab:
-    const [userData, setUserData] = useState(null);
+    const [vipLevel, setVipLevel] = useState(0);
+
+    const getVip = async () => {
+        try {
+            const { data } = await FetchApi({
+                url: API_GET_VIP
+            });
+
+            setVipLevel(data?.level);
+        } catch (error) {
+            console.log(`Cant get user vip level: ${error}`);
+        }
+    };
 
     useEffect(() => {
-        FetchApi({
-            url: API_PORTFOLIO_OVERVIEW,
-            options: {
-                method: 'GET'
-            },
-            params: {
-                currency: currency === 'VNDC' ? 72 : 22
-            }
-        }).then(async ({ data, status }) => {
-            if (status === 200) {
-                const res = await FetchApi({
-                    url: API_GET_VIP,
-                    options: {
-                        method: 'GET'
-                    }
-                });
-                if (res.data) setUserData({ ...data[0], nami: res.data });
-                else setUserData({ ...data[0] });
-            } else {
-                setUserData(null);
-            }
-        });
-    }, [currency]);
+        getVip();
+    }, []);
 
-    const level = +userData?.nami?.level || 0;
-    const nextLevel = level >= 9 ? 9 : level + 1;
-
-    const handleDepositIconBtn = useCallback(() => {
-        if (!user) {
-            router.push(getLoginUrl('sso', 'login'));
-        } else {
-            router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: currency || 'USDT' }));
-        }
-    }, [currency, user]);
+    // const handleDepositIconBtn = useCallback(() => {
+    //     if (!user) {
+    //         router.push(getLoginUrl('sso', 'login'));
+    //     } else {
+    //         router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: currency || 'USDT' }));
+    //     }
+    // }, [currency, user]);
 
     const renderUserGeneralInfo = () => (
-        <div className={`${isMobile ? 'pt-[104px]' : 'ml-8'} flex flex-col items-start justify-center gap-y-2  text-sm md:text-base`}>
+        <div className={`${isMobile ? 'pt-[104px]' : 'ml-8'} flex flex-col items-start justify-center gap-y-2 text-sm md:text-base`}>
             <span className="text-xl md:text-2xl">{user?.name ?? user?.username ?? user?.email ?? t('common:unknown')}</span>
             <div className="flex items-center">
-                <span className="text-green-2">VIP {level}</span>
+                {isNumber(vipLevel) ? <span className="text-green-2">VIP {vipLevel}</span> : <Skeletor width={50} />}
+
                 <div className="w-1 h-1 rounded-full bg-gray-7 mx-2"></div>
-                {user?.code}
+                <TextCopyable text={user?.code} copyIconColor="#fff" />
             </div>
             <div className="flex items-center">
                 <span className="mr-2 font-normal text-gray-7">Giao dịch từ:</span>
-                {userData?.trading_from ? formatTime(new Date(userData.trading_from * 1000), 'dd/MM/yyyy').toString() : 'Chưa thực hiện giao dịch'}{' '}
-                {userData?.trading_exp && `(${Math.round(userData.trading_exp / 3600).toString()} giờ)`}
+                {loadingOverview ? (
+                    <Skeletor width={170}/>
+                ) : (
+                    <div className='flex'>
+                        {firstTimeTrade ? formatTime(firstTimeTrade, 'dd/MM/yyyy').toString() : 'Chưa thực hiện giao dịch'}{' '}
+                        {firstTimeTrade && `(${Math.floor((new Date() - new Date(firstTimeTrade)) / (1000 * 60 * 60))} giờ)`}
+                    </div>
+                )}
             </div>
         </div>
     );
 
-    const renderProgressInfo = () => (
-        <div className="w-full md:max-w-[548px]">
-            <div className={`border-b dark:border-divider-dark h-6 mb-6 ${isMobile ? 'border-divider' : 'border-divider-dark'}`}></div>
-            <div className="flex justify-between w-full py-2 md:py-0 text-sm">
-                <span className="font-normal text-gray-7">Số dư Nami</span>
-                <div className="text-green-2 flex gap-2 leading-[18px] md:text-base">
-                    Mua NAMI
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleDepositIconBtn();
-                        }}
-                    >
-                        <SvgAddCircle size={13.3} color={colors.teal} className="cursor-pointer" />
-                    </button>
-                </div>
-            </div>
-            <div className={`w-full h-2 my-3 flex justify-between items-center rounded-xl ${isMobile ? 'bg-gray-12 dark:bg-dark-2' : 'bg-white'}`}>
-                <Progressbar
-                    background={isMobile && isDark ? colors.green[2] : colors.green[3]}
-                    percent={((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100}
-                    height={8}
-                    className={'rounded-xl'}
-                />
-            </div>
-            <div className="flex justify-between w-full text-green-3 md:text-green-2 dark:text-green-2 font-normal">
-                <span>{`VIP ${level}: ${formatPrice(userData?.nami?.metadata?.namiBalance || 0, 0)} NAMI / ${Math.round(
-                    ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100
-                )}%`}</span>
-                <span>{`VIP ${nextLevel}: ${formatPrice(FEE_TABLE[nextLevel]?.nami_holding || 0, 0)} NAMI`}</span>
-            </div>
-        </div>
-    );
+    // const renderProgressInfo = () => (
+    //     <div className="w-full md:max-w-[548px]">
+    //         <div className={`border-b dark:border-divider-dark h-6 mb-6 ${isMobile ? 'border-divider' : 'border-divider-dark'}`}></div>
+    //         <div className="flex justify-between w-full py-2 md:py-0 text-sm">
+    //             <span className="font-normal text-gray-7">Số dư Nami</span>
+    //             <div className="text-green-2 flex gap-2 leading-[18px] md:text-base">
+    //                 Mua NAMI
+    //                 <button
+    //                     onClick={(e) => {
+    //                         e.preventDefault();
+    //                         e.stopPropagation();
+    //                         handleDepositIconBtn();
+    //                     }}
+    //                 >
+    //                     <SvgAddCircle size={13.3} color={colors.teal} className="cursor-pointer" />
+    //                 </button>
+    //             </div>
+    //         </div>
+    //         <div className={`w-full h-2 my-3 flex justify-between items-center rounded-xl ${isMobile ? 'bg-gray-12 dark:bg-dark-2' : 'bg-white'}`}>
+    //             <Progressbar
+    //                 background={isMobile && isDark ? colors.green[2] : colors.green[3]}
+    //                 percent={((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100}
+    //                 height={8}
+    //                 className={'rounded-xl'}
+    //             />
+    //         </div>
+    //         <div className="flex justify-between w-full text-green-3 md:text-green-2 dark:text-green-2 font-normal">
+    //             <span>{`VIP ${vipLevel}: ${formatPrice(userData?.nami?.metadata?.namiBalance || 0, 0)} NAMI / ${Math.round(
+    //                 ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100
+    //             )}%`}</span>
+    //             <span>{`VIP ${nextLevel}: ${formatPrice(FEE_TABLE[nextLevel]?.nami_holding || 0, 0)} NAMI`}</span>
+    //         </div>
+    //     </div>
+    // );
 
     return (
         <div>
@@ -119,7 +118,7 @@ const BannerInfo = ({ currency, setCurrency, user, t, isMobile, isDark }) => {
                     >
                         <div className="h-full pt-[68px] pb-[72px] text-gray-4 font-semibold">
                             <span className="text-3xl leading-[36px]">Futures Portfolio</span>
-                            <GroupButtonCurrency currency={currency} setCurrency={setCurrency} />
+                            {/* <GroupButtonCurrency currency={currency} setCurrency={setCurrency} /> */}
                         </div>
                     </div>
                     {/* Mobile: Content infor */}
@@ -140,33 +139,40 @@ const BannerInfo = ({ currency, setCurrency, user, t, isMobile, isDark }) => {
                     </div>
                 </div>
             ) : (
-                <div
-                    style={{
-                        backgroundImage: `url(/images/screen/portfolio/banner_desktop.png)`
-                    }}
-                    className="w-full bg-dark-6 px-4 md:px-28 bg-cover bg-center relative"
-                >
+                <div className="w-full bg-black-800 px-4 md:px-28">
                     <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
-                        <div className="h-full py-[68px] md:py-20 text-gray-4 font-semibold">
+                        <div
+                            style={{ backgroundImage: `url(/images/screen/portfolio/banner_desktop.png)` }}
+                            className="h-full pt-20 pb-[174px] text-gray-4 font-semibold bg-cover bg-center relative"
+                        >
                             <span className="text-[32px] leading-[38px]">Futures Portfolio</span>
 
                             {/* Avatar div */}
-                            <div className="block md:flex mt-12 md:mt-10">
-                                <div className="w-[104px] h-[104px] md:w-[120px] md:h-[120px] relative">
-                                    {user?.avatar ? (
-                                        <img className="w-full h-auto rounded-full" src={user?.avatar} />
-                                    ) : (
-                                        <Skeletor circle width={120} height={120} containerClassName="avatar-skeleton" />
-                                    )}
-                                </div>
+                            <div className="block md:flex mt-20">
+                                {/* <div className="w-[104px] h-[104px] md:w-[120px] md:h-[120px] relative"> */}
+                                {user?.avatar ? (
+                                    <div className="flex relative items-center">
+                                        <Image
+                                            width="120"
+                                            height="120"
+                                            objectFit="fill"
+                                            className="rounded-full"
+                                            src={user?.avatar || '/images/default_avatar.png'}
+                                        />
+                                        {/* <img src={user?.avatar || '/images/default_avatar.png'} className="h-full w-20 h-20 rounded-full object-fit" /> */}
+                                    </div>
+                                ) : (
+                                    <Skeletor circle width={120} height={120} containerClassName="avatar-skeleton" />
+                                )}
+                                {/* </div> */}
                                 {renderUserGeneralInfo()}
                             </div>
 
                             {/* Progress div */}
-                            {renderProgressInfo()}
+                            {/* {renderProgressInfo()} */}
 
                             {/* Group button currency */}
-                            <GroupButtonCurrency currency={currency} setCurrency={setCurrency} />
+                            <GroupButtonProduct className="mt-12" typeProduct={typeProduct} setTypeProduct={setTypeProduct} />
                         </div>
                     </div>
                 </div>
@@ -175,25 +181,29 @@ const BannerInfo = ({ currency, setCurrency, user, t, isMobile, isDark }) => {
     );
 };
 
-const GroupButtonCurrency = ({ className, currency, setCurrency }) => (
-    <div className={`flex mt-6 md:mt-[50px] text-sm md:text-base ${className}`}>
-        <button
-            onClick={() => setCurrency('VNDC')}
-            className={`border border-divider-dark rounded-l-md px-4 md:px-9 py-2 md:py-3 ${
-                currency === 'VNDC' ? 'font-semibold bg-dark-2 ' : 'text-gray-7 border-r-none'
-            }`}
-        >
-            VNDC
-        </button>
-        <button
-            onClick={() => setCurrency('USDT')}
-            className={`border border-divider-dark rounded-r-md px-4 md:px-9 py-2 md:py-3 ${
-                currency === 'USDT' ? 'font-semibold bg-dark-2 ' : 'text-gray-7 border-l-none'
-            }`}
-        >
-            USDT
-        </button>
-    </div>
-);
+const GroupButtonProduct = ({ className, typeProduct, setTypeProduct }) => {
+    return (
+        <div className={`flex items-center justify-start gap-x-3 ${className}`}>
+            <button
+                onClick={() => setTypeProduct(FUTURES_PRODUCT.NAMI.id)}
+                className={`border rounded-[800px] px-5 py-3 flex items-center justify-center gap-x-2 transition-all ease-in-out duration-75 ${
+                    typeProduct === FUTURES_PRODUCT.NAMI.id ? 'font-semibold bg-teal-blur border-teal text-teal' : 'border-divider-dark'
+                }`}
+            >
+                <SvgWalletFutures size={20} />
+                {FUTURES_PRODUCT.NAMI.name}
+            </button>
+            <button
+                onClick={() => setTypeProduct(FUTURES_PRODUCT.NAO.id)}
+                className={`border rounded-[800px] px-5 py-3 flex items-center justify-center gap-x-2 transition-all ease-in-out duration-75 ${
+                    typeProduct === FUTURES_PRODUCT.NAO.id ? 'font-semibold bg-teal-blur border-teal text-teal' : 'border-divider-dark'
+                }`}
+            >
+                <FutureNaoIcon />
+                {FUTURES_PRODUCT.NAO.name}
+            </button>
+        </div>
+    );
+};
 
 export default BannerInfo;

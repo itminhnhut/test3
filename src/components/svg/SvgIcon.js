@@ -869,8 +869,8 @@ const ArrowForwardIcon = ({ size = 24, color = '#fff', className }) => (
     </svg>
 );
 
-const CalendarFillIcon = ({ size = 24, color = 'currentColor' }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+const CalendarFillIcon = ({ size = 24, color = 'currentColor', className = '' }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
         <path
             d="M3.333 14.667h9.334c.735 0 1.333-.598 1.333-1.334V4c0-.735-.598-1.333-1.333-1.333h-1.334V1.333H10v1.334H6V1.333H4.667v1.334H3.333C2.598 2.667 2 3.265 2 4v9.333c0 .736.598 1.334 1.333 1.334zm0-10h9.334V6H3.333V4.667z"
             fill={color}
@@ -1151,6 +1151,20 @@ export const RemoveCircleIcon = ({ size = 16, ...props }) => (
     </svg>
 );
 
+const FutureNaoIcon = ({size = 20, ...props}) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.96 2a7.967 7.967 0 0 0-4.407 1.338H8.44a2.342 2.342 0 0 1 2.042 1.183l1.337 2.309 1.83 3.182-1.852 3.19h2.666a2.342 2.342 0 0 0 2.043-1.183l1.469-2.499a8.007 8.007 0 0 0-2.513-5.354A7.997 7.997 0 0 0 9.96 2z" fill="#3FEED9"/>
+        <path d="M3.08 14a8.03 8.03 0 0 0 3.386 3.184l-1.475-2.513a2.379 2.379 0 0 1 0-2.365L6.333 9.99l1.844-3.19h3.688l-1.342-2.315A2.352 2.352 0 0 0 8.473 3.3H5.588A8.018 8.018 0 0 0 3.08 14z" fill="#40C2EB"/>
+        <path d="M16.943 13.986a7.92 7.92 0 0 0 1.04-4.485l-1.476 2.5a2.35 2.35 0 0 1-2.006 1.176H8.144L6.3 10.001l-1.343 2.316a2.369 2.369 0 0 0 0 2.36l1.476 2.5a8.055 8.055 0 0 0 5.887.476 8.027 8.027 0 0 0 4.623-3.667z" fill="#1A6AD2"/>
+    </svg>
+)
+
+export const HelpIcon = ({size = 16, color = '#E2E8F0', ...props}) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 1.334a6.674 6.674 0 0 0-6.666 6.667 6.674 6.674 0 0 0 6.667 6.666 6.674 6.674 0 0 0 6.666-6.666 6.674 6.674 0 0 0-6.666-6.667zm.667 10.667H7.334v-1.334h1.333v1.334zm.651-3.257c-.13.105-.257.206-.357.306-.272.271-.293.518-.294.529v.088H7.334v-.111c0-.079.02-.785.684-1.45.13-.13.291-.261.46-.399.49-.396.811-.686.811-1.084a1.29 1.29 0 0 0-2.578 0H5.378a2.626 2.626 0 0 1 2.623-2.622 2.626 2.626 0 0 1 2.622 2.622c0 1.065-.786 1.7-1.305 2.121z" fill={color}/>
+    </svg>
+)
+
 export {
     FutureInsurance,
     ArrowDownIcon,
@@ -1225,5 +1239,6 @@ export {
     SaveAltIcon,
     FacebookIcon,
     TwitterIcon,
-    TelegramIcon
+    TelegramIcon,
+    FutureNaoIcon
 };

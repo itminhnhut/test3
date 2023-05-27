@@ -1407,7 +1407,7 @@ export const LastPrice = memo(({ price, className, style }) => {
 });
 
 export function formatNanNumber(value, digits = 0) {
-    const formatedNumber = formatNumber(value, digits);
+    const formatedNumber = formatPrice(value, digits);
     return `${formatedNumber === 'NaN' ? 0 : formatedNumber}`;
 }
 

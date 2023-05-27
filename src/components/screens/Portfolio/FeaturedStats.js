@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import Button from '../../common/Button';
 import FuturePortfolio from './FuturePortfolio';
@@ -11,7 +11,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useWindowSize from 'hooks/useWindowSize';
 import GroupFilterTime, { listTimeFilter } from 'components/common/GroupFilterTime';
 import PriceChangePercent from 'components/common/PriceChangePercent';
-import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import { ArrowDropDownIcon, HelpIcon } from 'components/svg/SvgIcon';
 
 import PnlChanging from './charts/PnlChanging';
 import TradingPair from './charts/TradingPair';
@@ -19,55 +19,109 @@ import PositionInfo from './PositionInfo';
 import TopPositionTable from './TopPositionTable';
 import BannerInfo from './BannerInfo';
 import { WIDTH_MD } from '../Wallet';
+import HelpCircle from 'components/svg/HelpCircle';
+import colors from 'styles/colors';
+import Tooltip from 'components/common/Tooltip';
+import { formatPrice, formatNanNumber } from 'redux/actions/utils';
+import Skeletor from 'components/common/Skeletor';
+import { getUsdRate } from 'redux/actions/market';
+import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
+import { formatNumber } from 'utils/reference-utils';
 
-const FeaturedStats = ({ user, t, isMobile, isDark }) => {
+const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loadingOverview, typeCurrency }) => {
     const [curOverviewFilter, setCurOverviewFilter] = useState(listTimeFilter[0].value);
     const [isCollapse, setIsCollapse] = useState(false);
 
-    const renderSumVolumns = () => (
-        <div className={isMobile ? 'w-1/2 flex flex-col justify-center items-center flex-1 py-4' : 'flex-auto px-6 py-4'}>
-            <span>Tổng KLGD</span>
-            <div className="txtPri-5 mt-2 md:mt-4">4,567,890,234</div>
-            <div className="mt-1 md:mt-2">12,008 USDT</div>
-        </div>
-    );
+    const [vndcUsdRate, setVndcUsdRate] = useState();
+    useEffect(() => {
+        getUsdRate().then((usdRates) => {
+            setVndcUsdRate(usdRates[typeCurrency]);
+        });
+    }, []);
 
-    const renderSumPnl = () => (
-        <div className={isMobile ? 'w-1/2 flex flex-col justify-center items-center flex-1 py-4' : 'flex-auto px-6 py-4'}>
-            <span>Tổng lợi nhuận</span>
-            <div className="!text-green-3 !dark:text-green-2 txtPri-5 mt-2 md:mt-4">+200,000,000</div>
-            <PriceChangePercent priceChangePercent={1.93} className="!justify-start text-xs leading-[16px] md:text-base mt-1 md:mt-2" />
-        </div>
-    );
+    const isVnd = typeCurrency === ALLOWED_ASSET_ID.VNDC;
 
-    const renderOtherSummary = () => (
-        <div className="flex-auto md:px-6 py-4">
-            <div className="flex items-center justify-between">
-                <span>Tổng ký quỹ</span>
-                <div>
-                    <span className="txtPri-1">4,567,890</span>
-                    <span className="txtSecond-2">{` (12,008 USDT)`}</span>
+    const renderSumVolumns = useCallback(() => {
+        const totalVolume = dataOverview?.totalVolume?.value;
+        const swapValue = isVnd ? formatNanNumber(totalVolume * vndcUsdRate, 4) + ' USDT' : formatNanNumber(totalVolume / vndcUsdRate, 0) + ' VNDC';
+        return (
+            <div className={isMobile ? 'w-1/2 flex flex-col justify-center items-center flex-1 py-4' : 'flex-auto px-6 py-4'}>
+                <span>Tổng KLGD</span>
+                <div className="txtPri-3 mt-2 md:mt-4">
+                    {loadingOverview ? <Skeletor width={150} /> : formatNanNumber(totalVolume, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
+                </div>
+                <div className="mt-1 md:mt-2">{loadingOverview ? <Skeletor width={150} /> : swapValue}</div>
+            </div>
+        );
+    }, [isMobile, loadingOverview, dataOverview, vndcUsdRate]);
+
+    const renderSumPnl = useCallback(() => {
+        const totalPnl = dataOverview?.totalPnl?.value;
+        const sign = totalPnl > 0 ? '+ ' : '';
+
+        return (
+            <div className={isMobile ? 'w-1/2 flex flex-col justify-center items-center flex-1 py-4' : 'flex-auto px-6 py-4'}>
+                <span>Tổng lợi nhuận</span>
+                <div className={`${totalPnl >= 0 ? '!text-green-3 !dark:text-green-2' : '!text-red-2 !dark:text-red'} txtPri-3 mt-2 md:mt-4`}>
+                    {loadingOverview ? <Skeletor width={150} /> : `${sign} ${formatNanNumber(totalPnl, isVnd ? 0 : 4)}`}
+                </div>
+                {loadingOverview ? (
+                    <Skeletor width={50} />
+                ) : (
+                    <PriceChangePercent
+                        priceChangePercent={totalPnl / dataOverview?.totalMargin?.value}
+                        className="!justify-start text-xs leading-[16px] md:text-base mt-1 md:mt-2"
+                    />
+                )}
+            </div>
+        );
+    }, [isMobile, loadingOverview, dataOverview, vndcUsdRate]);
+
+    const renderOtherSummary = useCallback(() => {
+        const totalMargin = dataOverview?.totalMargin?.value;
+        const swapValue = isVnd ? formatNanNumber(totalMargin * vndcUsdRate, 4) + ' USDT' : formatNanNumber(totalMargin / vndcUsdRate, 0) + ' VNDC';
+        const avgLeverage = formatNanNumber(dataOverview?.avgLeverage?.value, 0)
+console.log("___-avgLeverage: ", avgLeverage);
+
+        return (
+            <div className="flex-auto md:px-6 py-4">
+                <div className="flex items-center justify-between">
+                    <span>Tổng ký quỹ</span>
+                    {loadingOverview ? (
+                        <Skeletor width={200} />
+                    ) : (
+                        <div>
+                            <span className="txtPri-1">{formatNanNumber(totalMargin, isVnd ? 0 : 4)}</span>
+                            <span className="txtSecond-2">{` (${swapValue})`}</span>
+                        </div>
+                    )}
+                </div>
+                <div className="flex items-center justify-between mt-3">
+                    <span>Tổng số vị thế</span>
+                    {loadingOverview ? (
+                        <Skeletor width={200} />
+                    ) : (
+                    <div>
+                        <span className="txtPri-1">{dataOverview?.totalPositions?.value}</span>
+                        <span className="txtSecond-2">{` (${dataOverview?.countLongPositions?.doc_count} mua - ${dataOverview?.countShortPositions?.doc_count} bán)`}</span>
+                    </div>
+                    )}
+                </div>
+                <div className="flex items-center justify-between mt-3">
+                    <span>Đòn bẩy trung bình</span>
+                    {loadingOverview ? <Skeletor width={50} /> :<span className="txtPri-1">{avgLeverage ? `${avgLeverage}X` : '_'}</span>}
                 </div>
             </div>
-            <div className="flex items-center justify-between mt-3">
-                <span>Tổng số vị thế</span>
-                <div>
-                    <span className="txtPri-1">180</span>
-                    <span className="txtSecond-2">{` (90 mua - 90 bán)`}</span>
-                </div>
-            </div>
-            <div className="flex items-center justify-between mt-3">
-                <span>Đòn bẩy trung bình</span>
-                <span className="txtPri-1">10x</span>
-            </div>
-        </div>
-    );
+        );
+    });
 
     return (
-        <div>
-            <div className="flex items-center justify-between">
-                <div className="text-base md:text-2xl font-semibold">Chỉ số nổi bật</div>
-                {isMobile ? (
+        <div className={className}>
+            <Tooltip id={'key_statistic'} place="top" className="max-w-[520px]" />
+            <div className="flex items-center cursor-pointer w-max" data-tip={t('portfolio:key_statistic')} data-for="key_statistic">
+                <div className="text-base md:text-2xl font-semibold pr-2">Chỉ số nổi bật</div>
+                <HelpIcon color="currentColor" />
+                {/* {isMobile ? (
                     <ArrowDropDownIcon
                         onClick={() => setIsCollapse((prev) => !prev)}
                         isFilled
@@ -76,9 +130,9 @@ const FeaturedStats = ({ user, t, isMobile, isDark }) => {
                     />
                 ) : (
                     <GroupFilterTime className="hidden md:flex" curFilter={curOverviewFilter} setCurFilter={setCurOverviewFilter} GroupKey="Overview" t={t} />
-                )}
+                )} */}
             </div>
-            <GroupFilterTime className={`md:hidden mt-4`} curFilter={curOverviewFilter} setCurFilter={setCurOverviewFilter} GroupKey="Overview" t={t} />
+            {/* <GroupFilterTime className={`md:hidden mt-4`} curFilter={curOverviewFilter} setCurFilter={setCurOverviewFilter} GroupKey="Overview" t={t} /> */}
 
             {/* Cards */}
             {isMobile ? (

@@ -248,6 +248,10 @@ body {
         text-gray-1 dark:text-gray-7 tracking-normal;
     }
 
+    .bg-teal-blur {
+        background-color: rgba(71, 204, 133, 0.1);
+    }
+
     .value-up {
         @apply text-teal;
     }
