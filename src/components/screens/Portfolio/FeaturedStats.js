@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useWindowSize from 'hooks/useWindowSize';
-import GroupFilterTime, { listTimeFilter } from 'components/common/GroupFilterTime';
+import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
 import PriceChangePercent from 'components/common/PriceChangePercent';
 import { ArrowDropDownIcon, HelpIcon } from 'components/svg/SvgIcon';
 
@@ -27,6 +27,8 @@ import Skeletor from 'components/common/Skeletor';
 import { getUsdRate } from 'redux/actions/market';
 import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
 import { formatNumber } from 'utils/reference-utils';
+import classNames from 'classnames';
+import HeaderTooltip from './HeaderTooltip';
 
 const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loadingOverview, typeCurrency }) => {
     const [curOverviewFilter, setCurOverviewFilter] = useState(listTimeFilter[0].value);
@@ -62,11 +64,20 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
         return (
             <div className={isMobile ? 'w-1/2 flex flex-col justify-center items-center flex-1 py-4' : 'flex-auto px-6 py-4'}>
                 <span>Tổng lợi nhuận</span>
-                <div className={`${totalPnl >= 0 ? '!text-green-3 !dark:text-green-2' : '!text-red-2 !dark:text-red'} txtPri-3 mt-2 md:mt-4`}>
+                <div
+                    className={classNames('txtPri-3 mt-2 md:mt-4', {
+                        '!text-green-3 !dark:text-green-2': totalPnl > 0,
+                        '!text-red-2 !dark:text-red': totalPnl < 0
+                    })}
+                >
                     {loadingOverview ? <Skeletor width={150} /> : `${sign} ${formatNanNumber(totalPnl, isVnd ? 0 : 4)}`}
                 </div>
                 {loadingOverview ? (
                     <Skeletor width={50} />
+                ) : totalPnl === 0 ? (
+                    <div className='mt-1 md:mt-2'>
+                        0%
+                    </div>
                 ) : (
                     <PriceChangePercent
                         priceChangePercent={totalPnl / dataOverview?.totalMargin?.value}
@@ -80,8 +91,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
     const renderOtherSummary = useCallback(() => {
         const totalMargin = dataOverview?.totalMargin?.value;
         const swapValue = isVnd ? formatNanNumber(totalMargin * vndcUsdRate, 4) + ' USDT' : formatNanNumber(totalMargin / vndcUsdRate, 0) + ' VNDC';
-        const avgLeverage = formatNanNumber(dataOverview?.avgLeverage?.value, 0)
-console.log("___-avgLeverage: ", avgLeverage);
+        const avgLeverage = formatNanNumber(dataOverview?.avgLeverage?.value, 0);
 
         return (
             <div className="flex-auto md:px-6 py-4">
@@ -101,15 +111,15 @@ console.log("___-avgLeverage: ", avgLeverage);
                     {loadingOverview ? (
                         <Skeletor width={200} />
                     ) : (
-                    <div>
-                        <span className="txtPri-1">{dataOverview?.totalPositions?.value}</span>
-                        <span className="txtSecond-2">{` (${dataOverview?.countLongPositions?.doc_count} mua - ${dataOverview?.countShortPositions?.doc_count} bán)`}</span>
-                    </div>
+                        <div>
+                            <span className="txtPri-1">{dataOverview?.totalPositions?.value}</span>
+                            <span className="txtSecond-2">{` (${dataOverview?.countLongPositions?.doc_count} mua - ${dataOverview?.countShortPositions?.doc_count} bán)`}</span>
+                        </div>
                     )}
                 </div>
                 <div className="flex items-center justify-between mt-3">
                     <span>Đòn bẩy trung bình</span>
-                    {loadingOverview ? <Skeletor width={50} /> :<span className="txtPri-1">{avgLeverage ? `${avgLeverage}X` : '_'}</span>}
+                    {loadingOverview ? <Skeletor width={50} /> : <span className="txtPri-1">{avgLeverage ? `${avgLeverage}X` : '-'}</span>}
                 </div>
             </div>
         );
@@ -117,10 +127,12 @@ console.log("___-avgLeverage: ", avgLeverage);
 
     return (
         <div className={className}>
+            <HeaderTooltip title='Chỉ số nổi bật' tooltipContent={t('portfolio:key_statistic')} tooltipId={'key_statistic_tooltip'}/>
+
             <Tooltip id={'key_statistic'} place="top" className="max-w-[520px]" />
-            <div className="flex items-center cursor-pointer w-max" data-tip={t('portfolio:key_statistic')} data-for="key_statistic">
+            {/* <div className="flex items-center cursor-pointer w-max" data-tip={t('portfolio:key_statistic')} data-for="key_statistic">
                 <div className="text-base md:text-2xl font-semibold pr-2">Chỉ số nổi bật</div>
-                <HelpIcon color="currentColor" />
+                <HelpIcon color="currentColor" /> */}
                 {/* {isMobile ? (
                     <ArrowDropDownIcon
                         onClick={() => setIsCollapse((prev) => !prev)}
@@ -129,10 +141,10 @@ console.log("___-avgLeverage: ", avgLeverage);
                         className={`md:hidden cursor-pointer select-none transition-transform duration-75 ${isCollapse && 'rotate-180'}`}
                     />
                 ) : (
-                    <GroupFilterTime className="hidden md:flex" curFilter={curOverviewFilter} setCurFilter={setCurOverviewFilter} GroupKey="Overview" t={t} />
+                    <GroupTextFilter className="hidden md:flex" curFilter={curOverviewFilter} setCurFilter={setCurOverviewFilter} GroupKey="Overview" t={t} />
                 )} */}
-            </div>
-            {/* <GroupFilterTime className={`md:hidden mt-4`} curFilter={curOverviewFilter} setCurFilter={setCurOverviewFilter} GroupKey="Overview" t={t} /> */}
+            {/* </div> */}
+            {/* <GroupTextFilter className={`md:hidden mt-4`} curFilter={curOverviewFilter} setCurFilter={setCurOverviewFilter} GroupKey="Overview" t={t} /> */}
 
             {/* Cards */}
             {isMobile ? (

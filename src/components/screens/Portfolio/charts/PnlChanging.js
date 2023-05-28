@@ -5,60 +5,95 @@ import colors from 'styles/colors';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
 import Note from 'components/common/Note';
-import GroupFilterTime, { listTimeFilter } from 'components/common/GroupFilterTime';
-import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
+import { ArrowDropDownIcon, HelpIcon } from 'components/svg/SvgIcon';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 
 import ChartJS from './ChartJS';
 import { indexOf } from 'lodash';
-const { subDays } = require('date-fns');
+import Tooltip from 'components/common/Tooltip';
+import HeaderTooltip from '../HeaderTooltip';
+import TableNoData from 'components/common/table.old/TableNoData';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import Spiner from 'components/common/V2/LoaderV2/Spiner';
+import { useRouter } from 'next/router';
+const { subDays, format } = require('date-fns');
 
-const PnlChanging = ({ t, isMobile, isDark }) => {
+const PnlChanging = ({
+    t,
+    isMobile,
+    isDark,
+    isNeverTrade = false,
+    loadingPnlChanging = false,
+    dataPnl = { labels: [], values: [] },
+    filter = { startDate: null, endDate: null }
+}) => {
+    const router = useRouter();
     const [curPnlFilter, setCurPnlFilter] = useState(listTimeFilter[0].value);
-    const [pnlLabels, setPnlLabels] = useState([]);
-
+    const [chartData, setChartData] = useState({ labels: [], profitValues: [], lossValues: [] });
     useEffect(() => {
-        const curDate = new Date();
-        const newLabels = [formatTime(curDate, 'dd/MM')];
-        switch (curPnlFilter) {
-            case 1: // 1 Tuan
-                for (let i = 1; i < 7; i++) {
-                    // Lấy ngày hôm trước i ngày
-                    const pastDay = subDays(new Date(), 1);
+        if (dataPnl?.labels?.length > 0) {
+            const { labels, values } = dataPnl;
+            const interval = 86400000;
 
-                    // Định dạng ngày theo format 'dd/MM'
-                    newLabels.push(formatTime(pastDay, 'dd/MM'));
+            const tempLabels = [];
+            const tempProfitValues = [];
+            const tempLossValues = [];
+
+            if (filter.startDate) {
+                for (let i = labels[0].rawDate - interval; i >= filter.startDate - interval; i -= interval) {
+                    tempLabels.unshift(i);
+                    tempProfitValues.push(0);
+                    tempLossValues.push(0);
                 }
-                break;
-            case 2: // 1 Thang
-                break;
-            case 3: // all
-                break;
-            default:
-                break;
-        }
-        setPnlLabels(newLabels);
-    }, [curPnlFilter]);
+            }
 
-    const minDuong = 500;
-    const maxDuong = 30000;
-    const minAm = -30000;
-    const maxAm = -500;
+            for (let i = 0; i < labels.length; i++) {
+                const curLabel = labels[i];
+                if (i === 0) {
+                    tempLabels.push(curLabel.rawDate);
+                    tempProfitValues.push(values[i].profit);
+                    tempLossValues.push(values[i].loss);
+                    continue;
+                }
+
+                const lastLabel = tempLabels[tempLabels.length - 1];
+                for (let j = 1; j < (curLabel.rawDate - lastLabel) / interval; j++) {
+                    tempLabels.push(lastLabel + j * interval);
+                    tempProfitValues.push(0);
+                }
+
+                tempLabels.push(curLabel.rawDate);
+                tempProfitValues.push(values[i].profit);
+                tempLossValues.push(values[i].loss);
+            }
+
+            if (filter.endDate) {
+                for (let i = labels[labels.length - 1].rawDate + interval; i <= filter.endDate; i += interval) {
+                    tempLabels.push(i);
+                    tempProfitValues.push(0);
+                    tempLossValues.push(0);
+                }
+            }
+
+            setChartData({ labels: tempLabels, profitValues: tempProfitValues, lossValues: tempLossValues });
+        }
+    }, [dataPnl, filter]);
 
     const pnlChartData = {
-        labels: pnlLabels,
+        labels: chartData.labels.map((label) => format(label, 'dd/MM')),
         datasets: [
             {
                 fill: false,
                 label: false,
-                data: Array.from({ length: pnlLabels.length }, () => [minDuong, Math.floor(Math.random() * (maxDuong - minDuong + 1)) + minDuong]),
+                data: chartData.profitValues,
                 backgroundColor: colors.green[6],
                 stack: 'pnl'
             },
             {
                 fill: false,
                 label: false,
-                data: Array.from({ length: pnlLabels.length }, () => [Math.floor(Math.random() * (maxAm - minAm + 1)) + minAm, maxAm]),
+                data: chartData.lossValues,
                 backgroundColor: colors.red[2],
                 stack: 'pnl'
             }
@@ -189,7 +224,7 @@ const PnlChanging = ({ t, isMobile, isDark }) => {
     ];
 
     return (
-        <div className={`mt-12 md:p-8 bg-transparent  ${isMobile ? '' : 'border border-divider dark:border-transparent rounded-xl dark:bg-dark-4'}`}>
+        <div className={`mt-12 md:p-8 bg-transparent transition-all ${isMobile ? '' : 'border border-divider dark:border-transparent rounded-xl dark:bg-dark-4'}`}>
             {isMobile ? (
                 <CollapseV2
                     className="w-full"
@@ -199,7 +234,7 @@ const PnlChanging = ({ t, isMobile, isDark }) => {
                     labelClassname="text-base font-semibold"
                 >
                     <div>
-                        <GroupFilterTime className={`mt-4`} curFilter={curPnlFilter} setCurFilter={setCurPnlFilter} GroupKey="Profit_changing" t={t} />
+                        <GroupTextFilter className={`mt-4`} curFilter={curPnlFilter} setCurFilter={setCurPnlFilter} GroupKey="Profit_changing" t={t} />
                     </div>
                     <div className="mt-6">
                         <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
@@ -207,19 +242,34 @@ const PnlChanging = ({ t, isMobile, isDark }) => {
                 </CollapseV2>
             ) : (
                 <>
-                    <div className="flex items-center justify-between w-full">
-                        <div className="text-2xl font-semibold">Biến động lợi nhuận</div>
-                        <GroupFilterTime curFilter={curPnlFilter} setCurFilter={setCurPnlFilter} GroupKey="Profit_changing" t={t} />
-                    </div>
-
-                    <div className=" w-full max-h-[450px] mt-8">
-                        <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
-                    </div>
-                    {/* Chu thich */}
-                    <div className="flex items-center gap-x-4 mt-9">
-                        <Note iconClassName="bg-green-6" title={'Lợi nhuận tăng'} />
-                        <Note iconClassName="bg-red-2" title={'Lợi nhuận giảm'} />
-                    </div>
+                    <HeaderTooltip
+                        title="Biến động lợi nhuận"
+                        tooltipContent={[t('portfolio:pnl_changing.des_01'), t('portfolio:pnl_changing.des_02')]}
+                        tooltipId={'pnl_changing_tooltip'}
+                    />
+                    {loadingPnlChanging ? (
+                        <div className='flex items-center justify-center w-full min-h-[504px]'>
+                            <Spiner isDark={isDark} />
+                        </div>
+                    ) : isNeverTrade ? (
+                        <div className="flex flex-col justify-center items-center">
+                            <TableNoData className="!py-8" title="Bạn hiện không có biến động lợi nhuận" />
+                            <ButtonV2 className="w-auto !px-6" onClick={() => router.push('./futures/BTCVNDC')}>
+                                {'Giao dịch ngay'}
+                            </ButtonV2>
+                        </div>
+                    ) : (
+                        <div>
+                            <div className=" w-full max-h-[450px] mt-8">
+                                <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
+                            </div>
+                            {/* Chu thich */}
+                            <div className="flex items-center gap-x-4 mt-9">
+                                <Note iconClassName="bg-green-6" title={'Lợi nhuận tăng'} />
+                                <Note iconClassName="bg-red-2" title={'Lợi nhuận giảm'} />
+                            </div>
+                        </div>
+                    )}
                 </>
             )}
         </div>

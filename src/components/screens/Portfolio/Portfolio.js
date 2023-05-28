@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useWindowSize from 'hooks/useWindowSize';
-import GroupFilterTime, { listTimeFilter } from 'components/common/GroupFilterTime';
+import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
 import PriceChangePercent from 'components/common/PriceChangePercent';
 import PnlChanging from './charts/PnlChanging';
 import TradingPair from './charts/TradingPair';
@@ -20,7 +20,7 @@ import { WIDTH_MD } from '../Wallet';
 import FeaturedStats from './FeaturedStats';
 import { FUTURES_PRODUCT } from 'constants/constants';
 import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
-import { API_FUTURES_STATISTIC_OVERVIEW } from 'redux/actions/apis';
+import { API_FUTURES_STATISTIC_OVERVIEW, API_FUTURES_STATISTIC_PNL } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
 import { ApiStatus } from 'redux/actions/const';
 import FilterTimeTab from 'components/common/FilterTimeTab';
@@ -65,21 +65,23 @@ const Portfolio = () => {
             key: 'selection'
     }});
 
-    // Data
+    // Data Overview
     const [dataOverview, setDataOverview] = useState({
         firstTimeTrade: "2023-04-21T07:39:35.002Z",
         overallStatistic: {}
     })
     const [loadingOverview, setLoadingOverview] = useState(false)
 
-    const fetchStatisticOverview = async () => {
+    const fetchDataOverview = async () => {
         try {
             setLoadingOverview(true)
             const { data } = await FetchApi({
                 url: API_FUTURES_STATISTIC_OVERVIEW,
                 params: {
                     currency: typeCurrency,
-                    product: typeProduct
+                    product: typeProduct,
+                    from: filter?.range?.startDate,
+                    to: filter?.range?.endDate,
                 }
             })
 
@@ -92,10 +94,32 @@ const Portfolio = () => {
             setLoadingOverview(false)
         }
     }
+    // Data chart Pnl changing
+    const [dataPnlChanging, setDataPnlChanging] = useState({ labels: [], values: [] })
+    const [loadingPnlChanging, setLoadingPnlChanging] = useState(false)
+    const fetchDataPnlChanging = async () => {
+        try {
+            setLoadingPnlChanging(true)
+            const { data } = await FetchApi({
+                url: API_FUTURES_STATISTIC_PNL,
+                params: {
+                    currency: typeCurrency,
+                    product: typeProduct,
+                    from: filter?.range?.startDate,
+                    to: filter?.range?.endDate,
+                }
+            })
+            setDataPnlChanging(data)
+        } catch (error) {
+        } finally {
+            setLoadingPnlChanging(false)
+        }
+    }
 
     useEffect(() => {
-        fetchStatisticOverview();
-    }, [typeProduct, typeCurrency]);
+        fetchDataOverview();
+        fetchDataPnlChanging();
+    }, [typeProduct, typeCurrency, filter]);
 
     return (
         <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal text-xs leading-[16px] md:text-base">
@@ -121,8 +145,8 @@ const Portfolio = () => {
                         <GroupButtonCurrency typeCurrency={typeCurrency} setTypeCurrency={setTypeCurrency} />
                         <FilterTimeTab filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll timeFilter={TIME_FILTER} isV2={true}/>
                     </div>
-                    {/* Chi so noi bat */}
 
+                    {/* Chi so noi bat */}
                     <FeaturedStats
                         className="mt-12" t={t} isMobile={isMobile}
                         dataOverview={dataOverview?.overallStatistic}
@@ -131,7 +155,7 @@ const Portfolio = () => {
                     />
 
                     {/* Bien dong loi nhuan */}
-                    {/* <PnlChanging t={t} isMobile={isMobile} isDark={isDark} /> */}
+                    <PnlChanging t={t} isMobile={isMobile} isDark={isDark} dataPnl={dataPnlChanging} filter={filter.range} isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value} loadingPnlChanging={loadingPnlChanging}/>
 
                     {/* Cap giao dich || Vi the mua - Vi the ban */}
                     {/* <div className="mt-12 grid grid-cols-2 gap-x-8">

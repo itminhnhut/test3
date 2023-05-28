@@ -1,3 +1,9 @@
 {
-    "key_statistic": "Các chỉ số nổi bật được thống kê dựa trên các vị thế đã đóng hoàn toàn và lệnh của các vị thế đống từng phần."
+    "key_statistic": "Các chỉ số nổi bật được thống kê dựa trên các vị thế đã đóng hoàn toàn và lệnh của các vị thế đống từng phần.",
+    "pnl_changing": {
+        "des_01": "Lorem ipsum dolor sit amet consectetur.",
+        "des_02": "Ornare commodo egestas odio lorem bibendum dictum. Ipsum."
+    },
+    "profit": "Lãi",
+    "loss": "Lỗ"
 }

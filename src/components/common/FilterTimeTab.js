@@ -10,7 +10,7 @@ const FilterTimeTab = ({ filter, setFilter, className, positionCalendar, isTabAl
     const { t } = useTranslation();
 
     useEffect(() => {
-        if (timeTab === timeFilter[0].value) {
+        if (timeTab === 'all') {
             setFilter({
                 range: {
                     startDate: null,
@@ -22,13 +22,13 @@ const FilterTimeTab = ({ filter, setFilter, className, positionCalendar, isTabAl
             const date = new Date();
             let interval = null;
             switch (timeTab) {
-                case timeFilter[1].value:
+                case 'd':
                     date.setDate(date.getDate() - 0);
                     break;
-                case timeFilter[2].value:
+                case 'w':
                     date.setDate(date.getDate() - 6);
                     break;
-                case timeFilter[3].value:
+                case 'm':
                     date.setDate(date.getDate() - 30);
                     interval = 'w';
                     break;
@@ -39,7 +39,7 @@ const FilterTimeTab = ({ filter, setFilter, className, positionCalendar, isTabAl
             setFilter({
                 range: {
                     startDate: date.getTime(),
-                    endDate: new Date(),
+                    endDate: Date.now(),
                     key: 'selection',
                     interval
                 }

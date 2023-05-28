@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import GroupFilterTime, { listTimeFilter } from 'components/common/GroupFilterTime';
+import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
 
 const deltaClipPath = 0.8;
 
@@ -17,7 +17,7 @@ const PositionInfo = ({ type = 'buy', t, api = '' }) => {
         <div className="p-8 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4 static">
             <div className="flex items-center justify-between w-full">
                 <div className="text-2xl font-semibold">{t(`common:position:${type.toLowerCase()}`)}</div>
-                <GroupFilterTime curFilter={curFilter} setCurFilter={setCurFilter} GroupKey={type + '_filter_'} t={t} />
+                <GroupTextFilter curFilter={curFilter} setCurFilter={setCurFilter} GroupKey={type + '_filter_'} t={t} />
             </div>
             <div className="mt-12 mb-6 text-2xl font-semibold">{t(`common:position:sum_${type.toLowerCase()}`)}: 50</div>
 

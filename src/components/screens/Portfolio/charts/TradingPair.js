@@ -5,18 +5,39 @@ import colors from 'styles/colors';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
 import Note from 'components/common/Note';
-import GroupFilterTime, { listTimeFilter } from 'components/common/GroupFilterTime';
+import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
 import ChartJS from './ChartJS';
 import { indexOf } from 'lodash';
+import { HelpIcon } from 'components/svg/SvgIcon';
+import Tooltip from 'components/common/Tooltip';
+import HeaderTooltip from '../HeaderTooltip';
+import classNames from 'classnames';
 const { subDays } = require('date-fns');
 
 // note: white always in the tail of list <=> Others
 const listDoughnutColorsLight = [colors.green[6], colors.purple[1], colors.green[7], colors.yellow[5], colors.gray[12]];
 const listDoughnutColorsDark = [colors.green[6], colors.purple[1], colors.green[7], colors.yellow[5], '#fff'];
 
+const FILTER_PNL = [
+    {
+        localized: 'common:all',
+        value: 1
+    },
+    {
+        localized: 'portfolio:profit',
+        value: 2
+    },
+    {
+        localized: 'portfolio:loss',
+        value: 3
+    }
+];
+
 const TradingPair = ({ isDark, t }) => {
     const [labels, setLabels] = useState([]);
     const [curFilter, setCurFilter] = useState(listTimeFilter[0].value);
+
+    const [filterPnl, setFilterPnl] = useState(FILTER_PNL[0].value);
 
     useEffect(() => {
         switch (curFilter) {
@@ -120,9 +141,9 @@ const TradingPair = ({ isDark, t }) => {
 
     return (
         <div className="p-8 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4">
-            <div className="flex items-center justify-between w-full">
-                <div className="text-2xl font-semibold">Cặp giao dịch</div>
-                <GroupFilterTime curFilter={curFilter} setCurFilter={setCurFilter} GroupKey="Trading_pair" t={t} />
+            <div className="flex items-center justify-between">
+                <HeaderTooltip title="Cặp giao dịch" tooltipContent={'This is tooltip content'} tooltipId={'trading_pair_tooltip'} />
+                <GroupTextFilter curFilter={filterPnl} setCurFilter={setFilterPnl} GroupKey={'trading_pairs_filter'} t={t} listFilter={FILTER_PNL} />
             </div>
             <div className="flex items-center justify-center w-full">
                 <div className="min-w-[352px] mt-8">

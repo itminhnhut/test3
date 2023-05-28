@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import GroupFilterTime, { listTimeFilter } from 'components/common/GroupFilterTime';
+import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
 import React from 'react';
 import {
     formatPrice,
@@ -281,7 +281,7 @@ const TopPositionTable = () => {
         <div className="mt-12 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4">
             <div className="flex items-center justify-between w-full p-8">
                 <div className="text-2xl font-semibold">Top {LIMIT_ROW} vị thế</div>
-                <GroupFilterTime curFilter={curFilter} setCurFilter={setCurFilter} GroupKey="Profit_changing" t={t} />
+                <GroupTextFilter curFilter={curFilter} setCurFilter={setCurFilter} GroupKey="Profit_changing" t={t} />
             </div>
             <div className="relative flex tracking-normal">
                 <Tabs isMobile tab={curTab} className="gap-6 border-b border-divider dark:border-divider-dark px-8">
