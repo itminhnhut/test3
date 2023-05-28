@@ -20,7 +20,7 @@ import { WIDTH_MD } from '../Wallet';
 import FeaturedStats from './FeaturedStats';
 import { FUTURES_PRODUCT } from 'constants/constants';
 import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
-import { API_FUTURES_STATISTIC_OVERVIEW, API_FUTURES_STATISTIC_PNL } from 'redux/actions/apis';
+import { API_FUTURES_STATISTIC_OVERVIEW, API_FUTURES_STATISTIC_PAIRS, API_FUTURES_STATISTIC_PNL } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
 import { ApiStatus } from 'redux/actions/const';
 import FilterTimeTab from 'components/common/FilterTimeTab';
@@ -57,64 +57,66 @@ const Portfolio = () => {
     const isDark = currentTheme === THEME_MODE.DARK;
 
     // Statement
-    const [typeProduct, setTypeProduct] = useState(FUTURES_PRODUCT.NAMI.id)
-    const [typeCurrency, setTypeCurrency] = useState(ALLOWED_ASSET_ID.VNDC)
-    const [filter, setFilter] = useState({ range: {
+    const [typeProduct, setTypeProduct] = useState(FUTURES_PRODUCT.NAMI.id);
+    const [typeCurrency, setTypeCurrency] = useState(ALLOWED_ASSET_ID.VNDC);
+    const [filter, setFilter] = useState({
+        range: {
             startDate: null,
             endDate: null,
             key: 'selection'
-    }});
+        }
+    });
 
     // Data Overview
     const [dataOverview, setDataOverview] = useState({
-        firstTimeTrade: "2023-04-21T07:39:35.002Z",
+        firstTimeTrade: '2023-04-21T07:39:35.002Z',
         overallStatistic: {}
-    })
-    const [loadingOverview, setLoadingOverview] = useState(false)
+    });
+    const [loadingOverview, setLoadingOverview] = useState(false);
 
     const fetchDataOverview = async () => {
         try {
-            setLoadingOverview(true)
+            setLoadingOverview(true);
             const { data } = await FetchApi({
                 url: API_FUTURES_STATISTIC_OVERVIEW,
                 params: {
                     currency: typeCurrency,
                     product: typeProduct,
                     from: filter?.range?.startDate,
-                    to: filter?.range?.endDate,
+                    to: filter?.range?.endDate
                 }
-            })
+            });
 
             setDataOverview({
                 firstTimeTrade: data?.firstPosition?.created_at,
                 overallStatistic: data?.overallStatistic
-            })
+            });
         } catch (error) {
         } finally {
-            setLoadingOverview(false)
+            setLoadingOverview(false);
         }
-    }
+    };
     // Data chart Pnl changing
-    const [dataPnlChanging, setDataPnlChanging] = useState({ labels: [], values: [] })
-    const [loadingPnlChanging, setLoadingPnlChanging] = useState(false)
+    const [dataPnlChanging, setDataPnlChanging] = useState({ labels: [], values: [] });
+    const [loadingPnlChanging, setLoadingPnlChanging] = useState(false);
     const fetchDataPnlChanging = async () => {
         try {
-            setLoadingPnlChanging(true)
+            setLoadingPnlChanging(true);
             const { data } = await FetchApi({
                 url: API_FUTURES_STATISTIC_PNL,
                 params: {
                     currency: typeCurrency,
                     product: typeProduct,
                     from: filter?.range?.startDate,
-                    to: filter?.range?.endDate,
+                    to: filter?.range?.endDate
                 }
-            })
-            setDataPnlChanging(data)
+            });
+            setDataPnlChanging(data);
         } catch (error) {
         } finally {
-            setLoadingPnlChanging(false)
+            setLoadingPnlChanging(false);
         }
-    }
+    };
 
     useEffect(() => {
         fetchDataOverview();
@@ -123,8 +125,6 @@ const Portfolio = () => {
 
     return (
         <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal text-xs leading-[16px] md:text-base">
-            {/* {renderTabs(mainTabs, type, setType)} */}
-
             {/* Banner infor */}
             <BannerInfo
                 setTypeCurrency={setTypeCurrency}
@@ -141,33 +141,64 @@ const Portfolio = () => {
             {/* Content */}
             <div className="w-full px-4 md:px-28">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto pt-20 pb-[120px]">
-                    <div className='flex items-center justify-between'>
+                    <div className="flex items-center justify-between">
                         <GroupButtonCurrency typeCurrency={typeCurrency} setTypeCurrency={setTypeCurrency} />
-                        <FilterTimeTab filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll timeFilter={TIME_FILTER} isV2={true}/>
+                        <FilterTimeTab filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll timeFilter={TIME_FILTER} isV2={true} />
                     </div>
 
                     {/* Chi so noi bat */}
                     <FeaturedStats
-                        className="mt-12" t={t} isMobile={isMobile}
+                        className="mt-12"
+                        t={t}
+                        isMobile={isMobile}
                         dataOverview={dataOverview?.overallStatistic}
                         loadingOverview={loadingOverview}
                         typeCurrency={typeCurrency}
                     />
 
                     {/* Bien dong loi nhuan */}
-                    <PnlChanging t={t} isMobile={isMobile} isDark={isDark} dataPnl={dataPnlChanging} filter={filter.range} isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value} loadingPnlChanging={loadingPnlChanging}/>
+                    <PnlChanging
+                        t={t}
+                        isMobile={isMobile}
+                        isDark={isDark}
+                        dataPnl={dataPnlChanging}
+                        filter={filter.range}
+                        isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                        loadingPnlChanging={loadingPnlChanging}
+                    />
 
                     {/* Cap giao dich || Vi the mua - Vi the ban */}
-                    {/* <div className="mt-12 grid grid-cols-2 gap-x-8">
-                        <TradingPair isDark={isDark} t={t} />
+                    <div className="mt-12 grid grid-cols-2 gap-x-8">
+                        <TradingPair
+                            isDark={isDark}
+                            t={t}
+                            typeProduct={typeProduct}
+                            typeCurrency={typeCurrency}
+                            filter={filter}
+                            isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                        />
                         <div className="grid grid-rows-2 gap-y-8">
-                            <PositionInfo type="buy" t={t} />
-                            <PositionInfo type="sell" t={t} />
+                            <PositionInfo
+                                type="buy"
+                                t={t}
+                                total={dataOverview?.overallStatistic?.countShortPositions?.doc_count}
+                                totalLoss={dataOverview?.overallStatistic?.countLossShortPositions?.doc_count}
+                                totalProfit={dataOverview?.overallStatistic?.countProfitShortPositions?.doc_count}
+                                isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                            />
+                            <PositionInfo
+                                type="sell"
+                                t={t}
+                                total={dataOverview?.overallStatistic?.countLongPositions?.doc_count}
+                                totalLoss={dataOverview?.overallStatistic?.countLossLongPositions?.doc_count}
+                                totalProfit={dataOverview?.overallStatistic?.countProfitLongPositions?.doc_count}
+                                isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                            />
                         </div>
-                    </div> */}
+                    </div>
 
                     {/* Table top 5 positions */}
-                    {/* <TopPositionTable /> */}
+                    <TopPositionTable typeProduct={typeProduct} typeCurrency={typeCurrency} filter={filter} />
                 </div>
             </div>
         </div>
@@ -199,16 +230,16 @@ const GroupButtonCurrency = ({ className, typeCurrency, setTypeCurrency }) => (
     <div className={`flex mt-0 text-sm md:text-base ${className}`}>
         <button
             onClick={() => setTypeCurrency(ALLOWED_ASSET_ID.VNDC)}
-            className={`border border-divider-dark rounded-l-md px-4 md:px-9 py-2 md:py-3 ${
-                typeCurrency === ALLOWED_ASSET_ID.VNDC  ? 'font-semibold bg-dark-2 ' : 'text-gray-7 border-r-none'
+            className={`border border-divider dark:border-divider-dark rounded-l-md px-4 md:px-9 py-2 md:py-3 ${
+                typeCurrency === ALLOWED_ASSET_ID.VNDC ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-r-none'
             }`}
         >
             VNDC
         </button>
         <button
             onClick={() => setTypeCurrency(ALLOWED_ASSET_ID.USDT)}
-            className={`border border-divider-dark rounded-r-md px-4 md:px-9 py-2 md:py-3 ${
-                typeCurrency === ALLOWED_ASSET_ID.USDT ? 'font-semibold bg-dark-2 ' : 'text-gray-7 border-l-none'
+            className={`border border-divider dark:border-divider-dark rounded-r-md px-4 md:px-9 py-2 md:py-3 ${
+                typeCurrency === ALLOWED_ASSET_ID.USDT ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-l-none'
             }`}
         >
             USDT

@@ -75,9 +75,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                 {loadingOverview ? (
                     <Skeletor width={50} />
                 ) : totalPnl === 0 ? (
-                    <div className='mt-1 md:mt-2'>
-                        0%
-                    </div>
+                    <div className="mt-1 md:mt-2">0%</div>
                 ) : (
                     <PriceChangePercent
                         priceChangePercent={totalPnl / dataOverview?.totalMargin?.value}
@@ -127,13 +125,13 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
 
     return (
         <div className={className}>
-            <HeaderTooltip title='Chỉ số nổi bật' tooltipContent={t('portfolio:key_statistic')} tooltipId={'key_statistic_tooltip'}/>
+            <HeaderTooltip title="Chỉ số nổi bật" tooltipContent={t('portfolio:key_statistic')} tooltipId={'key_statistic_tooltip'} />
 
             <Tooltip id={'key_statistic'} place="top" className="max-w-[520px]" />
             {/* <div className="flex items-center cursor-pointer w-max" data-tip={t('portfolio:key_statistic')} data-for="key_statistic">
                 <div className="text-base md:text-2xl font-semibold pr-2">Chỉ số nổi bật</div>
                 <HelpIcon color="currentColor" /> */}
-                {/* {isMobile ? (
+            {/* {isMobile ? (
                     <ArrowDropDownIcon
                         onClick={() => setIsCollapse((prev) => !prev)}
                         isFilled
@@ -157,7 +155,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                     {renderOtherSummary()}
                 </div>
             ) : (
-                <div className=" text-gray-1 dark:text-gray-7 mt-8 border border-divider dark:border-transparent rounded-xl flex px-6 py-3 bg-transparent dark:bg-dark-4">
+                <div className=" text-gray-1 dark:text-gray-7 mt-8 rounded-xl flex px-6 py-3 bg-gray-12 dark:bg-dark-4">
                     {renderSumVolumns()}
                     <div className="vertical-divider"></div>
                     {renderSumPnl()}

@@ -224,7 +224,7 @@ const PnlChanging = ({
     ];
 
     return (
-        <div className={`mt-12 md:p-8 bg-transparent transition-all ${isMobile ? '' : 'border border-divider dark:border-transparent rounded-xl dark:bg-dark-4'}`}>
+        <div className={`mt-12 md:p-8 bg-transparent transition-all ${isMobile ? '' : 'rounded-xl bg-gray-12 dark:bg-dark-4'}`}>
             {isMobile ? (
                 <CollapseV2
                     className="w-full"
