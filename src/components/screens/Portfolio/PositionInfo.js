@@ -7,7 +7,6 @@ const deltaClipPath = 0.8;
 
 const PositionInfo = ({ type = 'buy', t, api = '', total, totalLoss, totalProfit, isNeverTrade }) => {
     const percentClipPath = (totalLoss / total) * 100;
-    console.log('____percentClipPath: ', percentClipPath);
     return (
         <div className="p-8 rounded-xl bg-gray-12 dark:bg-dark-4 static">
             <HeaderTooltip

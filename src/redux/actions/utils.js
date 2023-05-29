@@ -1417,3 +1417,7 @@ export const convertDateToMs = (date = 0, type = 'startOf') => {
     }
     return moment.utc(moment(+date).endOf('day')).unix() * 1000;
 };
+
+export const formatPair = (pair = 'BTCVNDC') => {
+    return `${pair?.slice(0, -4)}/${pair?.slice(-4)}`
+}

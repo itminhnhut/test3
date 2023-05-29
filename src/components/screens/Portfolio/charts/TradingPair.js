@@ -12,10 +12,11 @@ import { HelpIcon } from 'components/svg/SvgIcon';
 import Tooltip from 'components/common/Tooltip';
 import HeaderTooltip from '../HeaderTooltip';
 import classNames from 'classnames';
-import { formatNanNumber } from 'redux/actions/utils';
+import { formatNanNumber, formatPair } from 'redux/actions/utils';
 import { API_FUTURES_STATISTIC_PAIRS } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
+import { ALLOWED_ASSET_ID } from 'components/screens/WithdrawDeposit/constants';
 const { subDays } = require('date-fns');
 
 // note: white always in the tail of list <=> Others
@@ -70,7 +71,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
 
     // mock data
     // console.log("___________dataTradingPairs?.symbolsCount?.buckets?.map(obj => obj?.key)", dataTradingPairs?.symbolsCount?.buckets?.map(obj => obj?.key));
-    const labels = dataTradingPairs?.symbolsCount?.buckets?.map((obj) => obj?.key) ?? [];
+    const labels = dataTradingPairs?.symbolsCount?.buckets?.map((obj) => formatPair(obj?.key)) ?? [];
     const mockData = {
         labels,
         datasets: [
@@ -86,6 +87,8 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
         return (prev += cur?.doc_count);
     }, 0);
 
+    const isVndc = typeCurrency === ALLOWED_ASSET_ID.VNDC
+
     const options = {
         responsive: true,
         maintainAspectRatio: true,
@@ -99,9 +102,15 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                         return context[0].label;
                     },
                     label: function (context) {
+                        console.log("______context: ", dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.margin?.value)
+                        const index = context.dataIndex;
                         const total = ' - Số lượng: ' + context.raw;
                         const rate = ' - Tỷ lệ: ' + context.raw / totalPosition;
-                        const pnl = ` - Lợi nhuận: +2,500,000 (+84%)`;
+                        const profit = dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.profit?.value
+                        const margin = dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.margin?.value
+                        const sign = profit > 0 ? '+' : ''
+
+                        const pnl = ` - Lợi nhuận: ${sign}${formatNanNumber(profit, isVndc ? 0 : 4)} (${sign}${formatNanNumber(profit * 100 / margin, 2)}%)`;
                         return [total, rate, pnl];
                     },
                 },
@@ -175,11 +184,11 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
             </div>
             {/* Chu thich */}
             <div className={`flex items-center gap-x-4 mt-9 py-1 justify-center ${isNeverTrade && 'hidden'}`}>
-                {dataTradingPairs?.symbolsCount?.buckets?.map((label, idx) => (
+                {labels.map((label, idx) => (
                     <Note
-                        key={'note_' + label?.key}
+                        key={'note_' + label}
                         style={{ backgroundColor: isDark ? listDoughnutColorsDark[idx] : listDoughnutColorsLight[idx] }}
-                        title={label?.key}
+                        title={label}
                     />
                 ))}
             </div>
