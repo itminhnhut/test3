@@ -7,6 +7,7 @@
         "futures": "Futures",
         "markets": "Markets",
         "utilities": "Utilities",
+        "events": "Events",
         "support": "Support",
         "api": "API",
         "fee": "Fee Structure",

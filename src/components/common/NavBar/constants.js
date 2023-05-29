@@ -64,7 +64,7 @@ export const NAV_DATA = [
                 isNew: false,
                 url: '/reference',
                 child_lv2: []
-            },
+            }
             // {
             //     key: 4,
             //     title: 'Nami Insurance',
@@ -120,6 +120,14 @@ export const NAV_DATA = [
     },
     {
         key: 4,
+        title: 'Events',
+        localized: 'events',
+        isNew: false,
+        url: '/events',
+        child_lv1: []
+    },
+    {
+        key: 5,
         title: 'Support Center',
         localized: 'support_center',
         isNew: false,
