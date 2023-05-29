@@ -165,6 +165,7 @@ const Portfolio = () => {
                         filter={filter.range}
                         isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
                         loadingPnlChanging={loadingPnlChanging}
+                        isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                     />
 
                     {/* Cap giao dich || Vi the mua - Vi the ban */}
@@ -176,23 +177,30 @@ const Portfolio = () => {
                             typeCurrency={typeCurrency}
                             filter={filter}
                             isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                            isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                         />
                         <div className="grid grid-rows-2 gap-y-8">
                             <PositionInfo
                                 type="buy"
                                 t={t}
                                 total={dataOverview?.overallStatistic?.countShortPositions?.doc_count}
-                                totalLoss={dataOverview?.overallStatistic?.countLossShortPositions?.doc_count}
-                                totalProfit={dataOverview?.overallStatistic?.countProfitShortPositions?.doc_count}
+                                totalLoss={dataOverview?.overallStatistic?.countLossShortPositions?.total?.value}
+                                totalProfit={dataOverview?.overallStatistic?.countProfitShortPositions?.total?.value}
+                                totalLossPosition={dataOverview?.overallStatistic?.countLossShortPositions?.doc_count}
+                                totalProfitPosition={dataOverview?.overallStatistic?.countProfitShortPositions?.doc_count}
                                 isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                                isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                             />
                             <PositionInfo
                                 type="sell"
                                 t={t}
                                 total={dataOverview?.overallStatistic?.countLongPositions?.doc_count}
-                                totalLoss={dataOverview?.overallStatistic?.countLossLongPositions?.doc_count}
-                                totalProfit={dataOverview?.overallStatistic?.countProfitLongPositions?.doc_count}
+                                totalLoss={dataOverview?.overallStatistic?.countLossLongPositions?.total?.value}
+                                totalProfit={dataOverview?.overallStatistic?.countProfitLongPositions?.total?.value}
+                                totalLossPosition={dataOverview?.overallStatistic?.countLossShortPositions?.doc_count}
+                                totalProfitPosition={dataOverview?.overallStatistic?.countProfitShortPositions?.doc_count}
                                 isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                                isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                             />
                         </div>
                     </div>

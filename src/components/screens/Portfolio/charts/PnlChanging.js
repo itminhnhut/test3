@@ -17,6 +17,7 @@ import TableNoData from 'components/common/table.old/TableNoData';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import { useRouter } from 'next/router';
+import { formatNanNumber } from 'redux/actions/utils';
 const { subDays, format } = require('date-fns');
 
 const PnlChanging = ({
@@ -26,7 +27,8 @@ const PnlChanging = ({
     isNeverTrade = false,
     loadingPnlChanging = false,
     dataPnl = { labels: [], values: [] },
-    filter = { startDate: null, endDate: null }
+    filter = { startDate: null, endDate: null },
+    isVndc = true
 }) => {
     const router = useRouter();
     const [curPnlFilter, setCurPnlFilter] = useState(listTimeFilter[0].value);
@@ -109,32 +111,36 @@ const PnlChanging = ({
         borderSkipped: false,
         plugins: {
             tooltip: {
-                // callbacks: {
-                //     label: function (context) {
-                //         const descriptions = {
-                //             1: 'Mức PNL: ',
-                //             2: ['Tài sản :', 'Vốn: '],
-                //             3: ['Lượng tiền nạp: ', 'Lượng tiền rút: '],
-                //             4: ['Tài sản: ', 'Vốn: ']
-                //         };
-                //         const index = context.dataIndex;
-                //         const text1 =
-                //             descriptions[chart5Config.tab] + (chartData[0][index] >= 0 ? '+' : '') + formatPrice(chartData[0][index], 0) + ' ' + props.currency;
-                //         if (chart5Config.tab === 1) return text1;
-                //         const text2 = descriptions[chart5Config.tab][0] + formatPrice(chartData[0][index], 0) + ' ' + props.currency ?? null;
-                //         const text3 = descriptions[chart5Config.tab][1] + formatPrice(chartData[1][index], 0) + ' ' + props.currency ?? null;
-                //         return [text2, text3];
-                //     },
-                //     // filter: function (context) {
-                //     //     return context.datasetIndex === 0
-                //     // },
-                //     labelTextColor: function (context) {
-                //         return colors.darkBlue;
-                //     }
-                // },
-                // backgroundColor: colors.white,
-                // displayColors: false,
-                // titleColor: colors.gray[2]
+                enabled: !isNeverTrade,
+                usePointStyle: true,
+                callbacks: {
+                    title: function (context) {
+                        return context[0].label;
+                    },
+                    label: function (context) {
+                        const { dataIndex, label, raw } = context;
+                        let pnl = 0;
+                        let ratePnl = 0;
+                        if (raw >= 0) {
+                            pnl = chartData?.profitValues?.[dataIndex];
+                            const margin = 1;
+                            ratePnl = pnl / margin;
+                        } else {
+                            pnl = chartData?.lossValues?.[dataIndex];
+                            const margin = 1;
+                            ratePnl = pnl / margin;
+                        }
+                        return [` - Lợi nhuận: ${raw > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`];
+                    }
+                },
+                backgroundColor: isDark ? colors.dark['2'] : colors.gray['15'],
+                padding: 12,
+                titleColor: isDark ? colors.gray['7'] : colors.gray['1'],
+                titleFont: { weight: 'normal', size: 14, paddingBottom: 12, lineHeight: 1.43 },
+                titleAlign: 'left',
+                displayColors: false,
+                bodyColor: isDark ? colors.gray['4'] : colors.gray['2'],
+                bodyFont: { size: 16, lineHeight: 1.5 }
             }
         },
         scales: {
@@ -149,8 +155,8 @@ const PnlChanging = ({
                 },
                 grid: {
                     display: false,
-                    drawBorder: false
-                    // borderColor: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT
+                    drawBorder: false,
+                    // borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT
                 }
             },
             y: {
@@ -167,8 +173,8 @@ const PnlChanging = ({
                 },
                 grid: {
                     drawTicks: false,
-                    borderDash: [1, 4],
-                    borderDashOffset: 1,
+                    borderDash: [2, 4],
+                    borderDashOffset: 2,
                     // color: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT,
                     // borderDash: [1, 4],
                     // // color: colors.divider.DEFAULT,
@@ -248,7 +254,7 @@ const PnlChanging = ({
                         tooltipId={'pnl_changing_tooltip'}
                     />
                     {loadingPnlChanging ? (
-                        <div className='flex items-center justify-center w-full min-h-[504px]'>
+                        <div className="flex items-center justify-center w-full min-h-[504px]">
                             <Spiner isDark={isDark} />
                         </div>
                     ) : isNeverTrade ? (

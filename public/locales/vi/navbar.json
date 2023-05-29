@@ -34,12 +34,13 @@
             "logout": "Đăng xuất",
             "partner": "Đối tác",
             "payment_method": "Phương thức thanh toán",
-            "daily_reward": "Thưởng giao dịch hàng ngày"
+            "daily_reward": "Thưởng giao dịch hàng ngày",
+            "futures_portfolio": "Thống kê Futures"
         }
     },
     "submenu": {
         "convert": "Nami Swap",
-        "nami_insurance":"Nami Insurance",
+        "nami_insurance": "Nami Insurance",
         "convert_description": "Giao dịch crypto chỉ với một lần click",
         "spot": "Giao dịch Spot",
         "spot_description": "Giao dịch {{pairsLength}} token được niêm yết với thanh khoản cao",
@@ -82,7 +83,8 @@
         "profile": "Thông tin cá nhân",
         "partner": "Đối tác",
         "payment_method": "Phương thức thanh toán",
-        "daily_reward": "Thưởng giao dịch hàng ngày"
+        "daily_reward": "Thưởng giao dịch hàng ngày",
+        "futures_portfolio": "Thống kê Futures"
     },
     "menu_grid": {
         "deposit": "Nạp",

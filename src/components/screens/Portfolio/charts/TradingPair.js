@@ -38,7 +38,7 @@ const FILTER_PNL = [
     }
 ];
 
-const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrade = true }) => {
+const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrade = true, isVndc = true }) => {
     const [filterPnl, setFilterPnl] = useState(FILTER_PNL[0].value);
 
     // Data trading pairs
@@ -77,9 +77,15 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
         datasets: [
             {
                 label: 'Trading Pair Volumns',
-                data: isNeverTrade ? [1] :  dataTradingPairs?.symbolsCount?.buckets?.map((obj) => obj?.doc_count),
-                backgroundColor: isNeverTrade ? (isDark ? [colors.dark['6']] : [colors.dark['7']]) :  isDark ? listDoughnutColorsDark.slice(0, labels.length) : listDoughnutColorsLight.slice(0, labels.length),
-                borderWidth: 0,
+                data: isNeverTrade ? [1] : dataTradingPairs?.symbolsCount?.buckets?.map((obj) => obj?.doc_count),
+                backgroundColor: isNeverTrade
+                    ? isDark
+                        ? [colors.dark['6']]
+                        : [colors.dark['7']]
+                    : isDark
+                    ? listDoughnutColorsDark.slice(0, labels.length)
+                    : listDoughnutColorsLight.slice(0, labels.length),
+                borderWidth: 0
             }
         ]
     };
@@ -87,47 +93,47 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
         return (prev += cur?.doc_count);
     }, 0);
 
-    const isVndc = typeCurrency === ALLOWED_ASSET_ID.VNDC
-
     const options = {
         responsive: true,
         maintainAspectRatio: true,
         cutout: '90%',
         plugins: {
-            tooltip: {
-                enabled: !isNeverTrade,
-                usePointStyle: true,
-                callbacks: {
-                    title: function (context) {
-                        return context[0].label;
-                    },
-                    label: function (context) {
-                        console.log("______context: ", dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.margin?.value)
-                        const index = context.dataIndex;
-                        const total = ' - Số lượng: ' + context.raw;
-                        const rate = ' - Tỷ lệ: ' + context.raw / totalPosition;
-                        const profit = dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.profit?.value
-                        const margin = dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.margin?.value
-                        const sign = profit > 0 ? '+' : ''
-
-                        const pnl = ` - Lợi nhuận: ${sign}${formatNanNumber(profit, isVndc ? 0 : 4)} (${sign}${formatNanNumber(profit * 100 / margin, 2)}%)`;
-                        return [total, rate, pnl];
-                    },
-                },
-                backgroundColor: isDark ? colors.dark['2'] : colors.gray['15'],
-                padding: 12,
-                titleColor: isDark ? colors.gray['7'] : colors.gray['1'],
-                titleFont: { weight: 'normal', size: 14, paddingBottom: 12, lineHeight: 1.43 },
-                titleAlign: 'left',
-                displayColors: false,
-                bodyColor: isDark ? colors.gray['4'] : colors.gray['2'],
-                bodyFont: { size: 16, lineHeight: 1.5 },
-            }
             // tooltip: {
-            //     enabled: false,
-            //     position: 'nearest',
-            //     external: (context) =>{ externalTooltipHandler(context, isDark);}
+            //     enabled: !isNeverTrade,
+            //     usePointStyle: true,
+            //     callbacks: {
+            //         title: function (context) {
+            //             return context[0].label;
+            //         },
+            //         label: function (context) {
+            //             console.log("______context: ", dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.margin?.value)
+            //             const index = context.dataIndex;
+            //             const total = ' - Số lượng: ' + context.raw;
+            //             const rate = ' - Tỷ lệ: ' + context.raw / totalPosition;
+            //             const profit = dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.profit?.value
+            //             const margin = dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.margin?.value
+            //             const sign = profit > 0 ? '+' : ''
+
+            //             const pnl = ` - Lợi nhuận: ${sign}${formatNanNumber(profit, isVndc ? 0 : 4)} (${sign}${formatNanNumber(profit * 100 / margin, 2)}%)`;
+            //             return [total, rate, pnl];
+            //         },
+            //     },
+            //     backgroundColor: isDark ? colors.dark['2'] : colors.gray['15'],
+            //     padding: 12,
+            //     titleColor: isDark ? colors.gray['7'] : colors.gray['1'],
+            //     titleFont: { weight: 'normal', size: 14, paddingBottom: 12, lineHeight: 1.43 },
+            //     titleAlign: 'left',
+            //     displayColors: false,
+            //     bodyColor: isDark ? colors.gray['4'] : colors.gray['2'],
+            //     bodyFont: { size: 16, lineHeight: 1.5 },
             // }
+            tooltip: {
+                enabled: false,
+                position: 'nearest',
+                external: (context) => {
+                    externalTooltipHandler(context, isDark, isVndc, totalPosition, dataTradingPairs?.symbolsCount?.buckets);
+                }
+            }
         }
     };
 
@@ -227,10 +233,28 @@ const getOrCreateTooltip = (chart, isDark) => {
     return tooltipEl;
 };
 
-const externalTooltipHandler = (context, isDark) => {
+const generateThead = (isDark, label) => {
+    const tableHead = document.createElement('thead');
+    const tr = document.createElement('tr');
+    tr.style.borderWidth = 0;
+    const th = document.createElement('th');
+    th.style.borderWidth = 0;
+    th.style.textAlign = 'left';
+    th.style.color = isDark ? colors.gray['7'] : colors.gray['1'];
+    th.style.fontSize = '14px';
+    th.style.fontWeight = 'normal';
+    th.style.paddingBottom = '12px';
+    const text = document.createTextNode(label);
+
+    th.appendChild(text);
+    tr.appendChild(th);
+    tableHead.appendChild(tr);
+    return tableHead;
+};
+
+const externalTooltipHandler = (context, isDark, isVndc, totalPosition, data) => {
     // Tooltip Element
     const { chart, tooltip } = context;
-    console.log('______-tooltip: ', isDark);
     const tooltipEl = getOrCreateTooltip(chart, isDark);
 
     // Hide if no tooltip
@@ -241,57 +265,56 @@ const externalTooltipHandler = (context, isDark) => {
 
     // Set Text
     if (tooltip.body) {
-        const titleLines = tooltip.title || [];
-        const bodyLines = tooltip.body.map((b) => b.lines);
-
         // begin:
         const { label, raw } = tooltip.dataPoints[0];
 
+        const curData = data.find((obj) => obj.key?.slice(0, -4) === label.split('/')[0]);
+        const rate = formatNanNumber(raw * 100 / totalPosition, 2);
+        const profit = curData?.profit?.value;
+        const margin = curData?.margin?.value;
+        const sign = profit > 0 ? '+' : '';
+
+        const pnl = `${sign}${formatNanNumber(profit, isVndc ? 0 : 4)} (${sign}${formatNanNumber((profit * 100) / margin, 2)}%)`;
+
         // Generate header
-        const tableHead = document.createElement('thead');
-        tableHead.style.paddingBottom = '12px';
-
-        const tr = document.createElement('tr');
-        tr.style.borderWidth = 0;
-        const th = document.createElement('th');
-        th.style.borderWidth = 0;
-        th.style.textAlign = 'left';
-        th.style.color = isDark ? colors.gray['7'] : colors.gray['1'];
-        th.style.fontSize = '14px';
-        th.style.fontWeight = 'normal';
-        const text = document.createTextNode(label);
-
-        th.appendChild(text);
-        tr.appendChild(th);
-        tableHead.appendChild(tr);
+        const tableHead = generateThead(isDark, label);
 
         const tableBody = document.createElement('tbody');
-        bodyLines.forEach((body, i) => {
-            const colors = tooltip.labelColors[i];
+        const ulElement = document.createElement('ul');
+        ulElement.className = 'list-disc marker:text-xs ml-5 text-base !leading-[24px]';
 
-            const span = document.createElement('span');
-            span.style.background = colors.backgroundColor;
-            span.style.borderColor = colors.borderColor;
-            span.style.borderWidth = '2px';
-            span.style.marginRight = '10px';
-            span.style.height = '10px';
-            span.style.width = '10px';
-            span.style.display = 'inline-block';
+        // Create first <li> element
+        const liElement1 = document.createElement('li');
+        liElement1.textContent = `Tổng vị thế: ${totalPosition}`;
+        ulElement.appendChild(liElement1);
 
-            const tr = document.createElement('tr');
-            tr.style.backgroundColor = 'inherit';
-            tr.style.borderWidth = 0;
+        // Create second <li> element
+        const liElement2 = document.createElement('li');
+        liElement2.textContent = `Tỷ lệ: ${rate}%`;
+        ulElement.appendChild(liElement2);
 
-            const td = document.createElement('td');
-            td.style.borderWidth = 0;
+        const liElement3 = document.createElement('li');
+        liElement3.textContent = `Lợi nhuận: `;
+        const spanElement = document.createElement('span');
+        spanElement.className = 'red-2 font-semibold';
+        spanElement.style.color = profit > 0 ? colors.green['2'] : colors.red['2']
+        spanElement.textContent = pnl
+        liElement3.appendChild(spanElement);
+        ulElement.appendChild(liElement3);
 
-            const text = document.createTextNode(body);
+        const tr = document.createElement('tr');
+        tr.style.backgroundColor = 'inherit';
+        tr.style.borderWidth = 0;
 
-            td.appendChild(span);
-            td.appendChild(text);
-            tr.appendChild(td);
-            tableBody.appendChild(tr);
-        });
+        const td = document.createElement('td');
+        td.style.borderWidth = 0;
+
+        // const text = document.createTextNode(body);
+
+        td.appendChild(ulElement);
+        // td.appendChild(text);
+        tr.appendChild(td);
+        tableBody.appendChild(tr);
 
         const tableRoot = tooltipEl.querySelector('table');
 

@@ -105,7 +105,7 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
     // );
 
     return (
-        <div>
+        <div >
             {isMobile ? (
                 <div>
                     {/* Mobile: banner image */}
@@ -139,11 +139,12 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
                     </div>
                 </div>
             ) : (
-                <div className="w-full bg-black-800 px-4 md:px-28">
+                <div
+                style={{ backgroundImage: `url(/images/screen/portfolio/banner_desktop.png)` }}
+                className="w-full bg-black-800 px-4 md:px-28 bg-cover bg-center">
                     <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                         <div
-                            style={{ backgroundImage: `url(/images/screen/portfolio/banner_desktop.png)` }}
-                            className="h-full pt-20 pb-[174px] text-gray-4 font-semibold bg-cover bg-center relative"
+                            className="h-full pt-20 pb-[174px] text-gray-4 font-semibold relative"
                         >
                             <span className="text-[32px] leading-[38px]">Futures Portfolio</span>
 
