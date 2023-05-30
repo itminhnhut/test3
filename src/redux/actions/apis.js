@@ -296,7 +296,7 @@ export const API_CHECK_REFERRAL = API_V3_PREFIX + 'users/referral/is-exist';
 export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends-v2';
 export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + 'users/referral/commission-history';
 export const API_GET_REFERRAL_FRIENDS_BY_CODE = API_V3_PREFIX + 'users/referral/:code/friends-detail';
-export const API_GET_CONTEST_REFERRAL = API_V3_PREFIX + '/users/referral/getTopReferral';
+export const API_GET_CONTEST_REFERRAL = API_V3_PREFIX + 'users/referral/getTopReferral';
 
 
 
