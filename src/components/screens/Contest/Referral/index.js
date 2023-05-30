@@ -43,7 +43,7 @@ const index = (props) => {
         <MadivesLayout>
             {!isMobile && <Background isDark={isDark} className="h-screen absolute top-0 w-full z-0 max-h-[746px] 2xl:max-h-[1080px]" />}
             <ContesRules seasons={seasons} {...props} />
-            <div className="container pb-[7.5rem] relative mt-[57px] lg:mt-[-4.25rem]">
+            <div className="container pb-[7.5rem] relative mt-[57px] lg:mt-0">
                 <ContestPerRanks {...props} userID={'code'} />
             </div>
         </MadivesLayout>

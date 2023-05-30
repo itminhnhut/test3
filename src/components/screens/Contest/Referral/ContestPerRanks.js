@@ -72,16 +72,8 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
 
     const renderName = (data, item) => {
         return (
-            <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
-                    <ImageNao
-                        className="rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
-                        src={item?.avatar}
-                        width="32"
-                        height="32"
-                        alt=""
-                    />
-                </div>
+            <div className="flex items-center space-x-3">
+                <ImageNao className="rounded-full object-cover w-6 h-6" src={item?.avatar} alt="" width={24} height={24} />
                 <div>{capitalize(data)}</div>
                 {item?.is_onus_master && <TickFbIcon size={16} />}
             </div>
@@ -121,7 +113,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                 </Tooltip>
             )}
             <div className="flex justify-between flex-wrap gap-4 text-sm sm:text-base mb-8">
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
                     <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:individual_ranking')}</TextLiner>
                     {minVolumeInd && (
                         <div data-tip={''} data-for="tooltip-personal-rank" className="cursor-pointer">
@@ -142,7 +134,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col">
                                         <div className="flex items-center gap-2 text-lg font-semibold capitalize">
-                                            <span title={capitalize(item?.name)} className="max-w-[200px] truncate">
+                                            <span title={capitalize(item?.name)} className="xl:max-w-[200px] truncate">
                                                 {capitalize(item?.name)}
                                             </span>
                                             {item?.is_onus_master && <TickFbIcon size={16} />}
@@ -182,7 +174,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                                                     <div className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">ID: {item?.[userID]}</div>
                                                 </div>
                                             </div>
-                                            <div className="min-w-[31px] text-txtSecondary dark:text-txtSecondary-dark">
+                                            <div className="min-w-[24px] text-txtSecondary dark:text-txtSecondary-dark">
                                                 {loading ? (
                                                     <Skeletor width={24} height={24} circle />
                                                 ) : item?.[rank] && item?.[rank] <= top_ranks_per ? (
@@ -230,7 +222,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                         noItemsMessage={t('nao:contest:no_rank')}
                         dataSource={dataFilter}
                         classWrapper="!text-sm sm:!text-base !mt-0"
-                        classHeader="!py-6 dark:!pt-10"
+                        classHeader="!py-6 dark:!pt-10 !text-sm"
                     >
                         <Column
                             minWidth={50}
@@ -239,9 +231,9 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                             fieldName={rank}
                             cellRender={renderRank}
                         />
-                        <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
+                        <Column minWidth={300} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                         <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'User ID'} fieldName={userID} />
-                        <Column minWidth={150} align="left" className="" title={t('nao:contest:referral:score')} decimal={0} fieldName="total" />
+                        <Column minWidth={100} align="left" className="" title={t('nao:contest:referral:score')} decimal={0} fieldName="total" />
                     </Table>
                     {total > 1 && (
                         <div className="w-full hidden sm:flex justify-center py-8">
