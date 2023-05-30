@@ -17,9 +17,22 @@ import { ChevronLeft, ChevronRight } from 'react-feather';
 import { differenceInMonths, subMonths } from 'date-fns';
 import toast from 'utils/toast';
 
-const FilterTimeTabV2 = ({ filter, setFilter, className, positionCalendar, isTabAll = false, timeFilter = TIME_FILTER, isMobile = false, isDark, maxMonths  }) => {
+const FilterTimeTabV2 = ({
+    filter,
+    setFilter,
+    className,
+    positionCalendar,
+    isTabAll = false,
+    timeFilter = TIME_FILTER,
+    defaultFilter = null,
+    isMobile = false,
+    isDark,
+    maxMonths
+}) => {
     const [showPicker, setShowPicker] = useState(false);
-    const [timeTab, setTimeTab] = useState(isTabAll ? timeFilter[0].value : timeFilter[1].value);
+    const [timeTab, setTimeTab] = useState(defaultFilter ? defaultFilter : isTabAll ? timeFilter[0].value : timeFilter[1].value);
+    const [prevState, setPrevState] = useState(null);
+
     const {
         t,
         i18n: { language }
@@ -55,8 +68,8 @@ const FilterTimeTabV2 = ({ filter, setFilter, className, positionCalendar, isTab
             date.toLocaleDateString();
             setFilter({
                 range: {
-                    startDate: convertDateToMs(date.getTime()),// date.getTime(),
-                    endDate: convertDateToMs(Date.now(), 'endOf'),// Date.now(),
+                    startDate: convertDateToMs(date.getTime()), // date.getTime(),
+                    endDate: convertDateToMs(Date.now(), 'endOf'), // Date.now(),
                     key: 'selection',
                     interval
                 }
@@ -108,14 +121,15 @@ const FilterTimeTabV2 = ({ filter, setFilter, className, positionCalendar, isTab
         if (Math.abs(monthsDifference) >= 3) {
             toast({ text: 'Phạm vi được chọn không được vượt quá 3 tháng', type: 'error', className: '!max-w-[358px] !min-w-[358px] !mx-auto' });
             throw 'error';
-        } else
+        } else {
             setFilter({
                 range: {
-                    startDate: new Date(e?.selection?.startDate ?? null).getTime(),
-                    endDate: new Date(e?.selection?.endDate ?? null).getTime(),
+                    startDate: convertDateToMs(e?.selection?.startDate?.getTime()), // date.getTime(),
+                    endDate: convertDateToMs(e?.selection?.endDate?.getTime(), 'endOf'),
                     key: 'selection'
                 }
             });
+        }
     };
 
     const onConfirm = () => {

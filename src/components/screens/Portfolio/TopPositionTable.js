@@ -136,7 +136,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                     return (
                         <div className="flex items-center gap-x-1">
                             <span className={v > 0 ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>{sign + formatNanNumber(v, isVndc ? 0 : 4)}</span>
-                            <PriceChangePercent priceChangePercent={v / item?.margin} className="!justify-start text-base" />
+                            <PriceChangePercent priceChangePercent={v / item?.margin} className="!justify-start !text-base" />
                         </div>
                     );
                     // return (

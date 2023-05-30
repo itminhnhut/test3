@@ -151,6 +151,7 @@ const Portfolio = () => {
                             isMobile={isMobile}
                             isDark={isDark}
                             maxMonths={2}
+                            defaultFilter={'all'}
                         />
                     </div>
                     {/* Chi so noi bat */}
