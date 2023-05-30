@@ -5,12 +5,13 @@ import { formatNanNumber, formatPrice } from 'redux/actions/utils';
 import Tooltip from 'components/common/Tooltip';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import colors from 'styles/colors';
+import { isNaN } from 'lodash';
 
 const deltaClipPath = 0.8;
 
 const TooltipProfit = ({ type, totalProfit, totalProfitPosition, isVndc, t, ...rest }) => (
     <Tooltip {...rest} id={`${type}_profit_tooltip`} place="top" className="max-w-[520px] !p-3">
-        <div>
+        <div className="text-base">
             <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">Lệnh lãi</div>
             <ul className="list-disc marker:text-xs ml-5 mt-2">
                 <li>{`Tổng vị thế: ${totalProfitPosition}`}</li>
@@ -24,8 +25,8 @@ const TooltipProfit = ({ type, totalProfit, totalProfitPosition, isVndc, t, ...r
 
 const TooltipLoss = ({ type, totalLoss, totalLossPosition, isVndc, t, ...rest }) => (
     <Tooltip {...rest} id={`${type}_loss_tooltip`} place="top" className="max-w-[520px] !p-3">
-        <div>
-            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">Lệnh lỗ</div>
+        <div className="text-base">
+            <div className="text-txtSecondary dark:text-txtSecondary-dark">Lệnh lỗ</div>
             <ul className="list-disc marker:text-xs ml-5 mt-2">
                 <li>{`Tổng vị thế: ${totalLossPosition}`}</li>
                 <li>
@@ -70,11 +71,11 @@ const PositionInfo = ({
                 >
                     <div>
                         <div className="mt-6 md:mt-12 mb-6 text-lg md:text-2xl font-semibold">
-                            {t(`common:position:sum_${type.toLowerCase()}`)}: {total}
+                            {t(`common:position:sum_${type.toLowerCase()}`)}: {isNeverTrade ? '-' : total}
                         </div>
 
-                        {isNeverTrade ? (
-                            <div className="w-full h-2 bg-dark-7 dark:bg-dark-6" />
+                        {isNeverTrade || isNaN(percentClipPath) ? (
+                            <div className="w-full h-2 bg-bgBtnV2-disabled dark:bg-dark-6" />
                         ) : percentClipPath === 100 ? (
                             <>
                                 <div className="w-full h-2 bg-red-2" data-for={`${type}_loss_tooltip`} data-tip="" />
@@ -154,8 +155,8 @@ const PositionInfo = ({
                             </div>
                         )}
                         <div className="flex items-center justify-between mt-2 md:mt-3 py-1.5 txtSecond-5">
-                            <div>Lệnh lỗ: {formatNanNumber((totalLossPosition / total) * 100, 2)}%</div>
-                            <div>Lệnh lãi: {formatNanNumber((totalProfitPosition / total) * 100, 2)}%</div>
+                            <div>Lệnh lỗ: {isNeverTrade ? '-' : `${formatNanNumber((totalLossPosition / total) * 100, 2)}%`}</div>
+                            <div>Lệnh lãi: {isNeverTrade ? '-' : `${formatNanNumber((totalProfitPosition / total) * 100, 2)}%`}</div>
                         </div>
                     </div>
                 </CollapseV2>
@@ -168,11 +169,11 @@ const PositionInfo = ({
                         tooltipId={`${type}_position_tooltip`}
                     />
                     <div className="mt-6 md:mt-12 mb-6 text-lg md:text-2xl font-semibold">
-                        {t(`common:position:sum_${type.toLowerCase()}`)}: {total}
+                        {t(`common:position:sum_${type.toLowerCase()}`)}: {isNeverTrade ? '-' :total}
                     </div>
 
-                    {isNeverTrade ? (
-                        <div className="w-full h-2 bg-dark-7 dark:bg-dark-6" />
+                    {isNeverTrade || isNaN(percentClipPath) ? (
+                        <div className="w-full h-2 bg-bgBtnV2-disabled dark:bg-dark-6" />
                     ) : percentClipPath === 100 ? (
                         <>
                             <div className="w-full h-2 bg-red-2" data-for={`${type}_loss_tooltip`} data-tip="" />
@@ -252,8 +253,8 @@ const PositionInfo = ({
                         </div>
                     )}
                     <div className="flex items-center justify-between mt-2 md:mt-3 py-1.5 txtSecond-5">
-                        <div>Lệnh lỗ: {formatNanNumber((totalLossPosition / total) * 100, 2)}%</div>
-                        <div>Lệnh lãi: {formatNanNumber((totalProfitPosition / total) * 100, 2)}%</div>
+                        <div>Lệnh lỗ: {isNeverTrade ? '-' : `${formatNanNumber((totalLossPosition / total) * 100, 2)}%`}</div>
+                        <div>Lệnh lãi: {isNeverTrade ? '-' : `${formatNanNumber((totalProfitPosition / total) * 100, 2)}%`}</div>
                     </div>
                 </>
             )}

@@ -50,7 +50,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
         return (
             <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4' : 'flex-auto px-6 py-4'}>
                 <span>Tổng KLGD</span>
-                <div className="text-base md:text-xl font-semibold text-gray-15 dark:text-gray-4 mt-2 md:mt-4">
+                <div className="text-base md:text-2xl font-semibold text-gray-15 dark:text-gray-4 mt-2 md:mt-4">
                     {loadingOverview ? <Skeletor width={150} /> : formatNanNumber(totalVolume, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
                 </div>
                 <div className="mt-1 md:mt-2">{loadingOverview ? <Skeletor width={150} /> : swapValue}</div>
@@ -66,7 +66,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
             <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4' : 'flex-auto px-6 py-4'}>
                 <span>Tổng lợi nhuận</span>
                 <div
-                    className={classNames('text-base md:text-xl font-semibold mt-2 md:mt-4', {
+                    className={classNames('text-base md:text-2xl font-semibold mt-2 md:mt-4 text-gray-15 dark:text-gray-4', {
                         '!text-green-3 !dark:text-green-2': totalPnl > 0,
                         '!text-red-2 !dark:text-red': totalPnl < 0
                     })}

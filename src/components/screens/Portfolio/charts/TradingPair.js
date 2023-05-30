@@ -60,7 +60,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
             });
             setDataTradingPairs(data);
         } catch (error) {
-            console.log('________________', error);
+            console.log('______ERROR', error);
         } finally {
             setLoadingTradingPairs(false);
         }
@@ -83,7 +83,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                     labels.length === 0
                         ? isDark
                             ? [colors.dark['6']]
-                            : [colors.dark['7']]
+                            : ['#b5c0c9']
                         : isDark
                         ? listDoughnutColorsDark.slice(0, labels.length)
                         : listDoughnutColorsLight.slice(0, labels.length),

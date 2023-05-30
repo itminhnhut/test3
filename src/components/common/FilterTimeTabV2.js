@@ -16,6 +16,7 @@ import styled from 'styled-components';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import { differenceInMonths, subMonths } from 'date-fns';
 import toast from 'utils/toast';
+import { isNumber } from 'lodash';
 
 const FilterTimeTabV2 = ({
     filter,
@@ -31,8 +32,8 @@ const FilterTimeTabV2 = ({
 }) => {
     const [showPicker, setShowPicker] = useState(false);
     const [timeTab, setTimeTab] = useState(defaultFilter ? defaultFilter : isTabAll ? timeFilter[0].value : timeFilter[1].value);
-    const [prevState, setPrevState] = useState(null);
-
+    const [isCustomDay, setIsCustomDay] = useState(false);
+    const [prevFilter, setPrevFilter] = useState(null);
     const {
         t,
         i18n: { language }
@@ -122,13 +123,21 @@ const FilterTimeTabV2 = ({
             toast({ text: 'Phạm vi được chọn không được vượt quá 3 tháng', type: 'error', className: '!max-w-[358px] !min-w-[358px] !mx-auto' });
             throw 'error';
         } else {
+            const startDate = e?.selection?.startDate;
+            const endDate = e?.selection?.endDate;
+
             setFilter({
                 range: {
-                    startDate: convertDateToMs(e?.selection?.startDate?.getTime()), // date.getTime(),
-                    endDate: convertDateToMs(e?.selection?.endDate?.getTime(), 'endOf'),
+                    startDate: startDate
+                        ? convertDateToMs(isNumber(startDate) ? startDate : startDate.getTime())
+                        : maxMonths
+                        ? convertDateToMs(subMonths(new Date(), maxMonths))
+                        : null, // date.getTime(),
+                    endDate: endDate ? convertDateToMs(isNumber(endDate) ? endDate : endDate.getTime(), 'endOf') : null,
                     key: 'selection'
                 }
             });
+            setIsCustomDay(true);
         }
     };
 
@@ -146,7 +155,10 @@ const FilterTimeTabV2 = ({
                         return (
                             <div
                                 key={item.value}
-                                onClick={() => setTimeTab(item.value)}
+                                onClick={() => {
+                                    setTimeTab(item.value);
+                                    setIsCustomDay(false);
+                                }}
                                 className={classNames(' border rounded-full cursor-pointer font-normal whitespace-nowrap', {
                                     'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== item.value,
                                     'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === item.value,
@@ -179,9 +191,19 @@ const FilterTimeTabV2 = ({
                             month={isMobile ? 1 : 2}
                             hasShadow
                             position={positionCalendar || 'right'}
+                            onClickOutside={() => {
+                                // TODO: not reload setTimeTab when not choose custom confirm
+                                setTimeTab(prevFilter);
+                                setIsCustomDay(false);
+                            }}
                             text={
                                 <div
-                                    onClick={() => setTimeTab('custom')}
+                                    onClick={() =>
+                                        setTimeTab((prev) => {
+                                            setPrevFilter(prev);
+                                            return 'custom';
+                                        })
+                                    }
                                     className={classNames('border rounded-full cursor-pointer font-normal select-none flex items-center', {
                                         'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== 'custom',
                                         'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === 'custom',
@@ -190,7 +212,9 @@ const FilterTimeTabV2 = ({
                                     })}
                                 >
                                     {!isMobile && <CalendarFillIcon className="mr-2" color={timeTab === 'custom' ? colors.teal : '#8694b2'} size={20} />}
-                                    {t('dw_partner:filter.custom')}
+                                    {isCustomDay
+                                        ? `${formatTime(filter?.range?.startDate, 'dd/MM/yyyy')} - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}`
+                                        : t('dw_partner:filter.custom')}
                                 </div>
                             }
                         />

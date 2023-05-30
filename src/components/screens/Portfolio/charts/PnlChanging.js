@@ -231,7 +231,7 @@ const PnlChanging = ({
                         </div>
                     ) : isNeverTrade ? (
                         <div className="flex flex-col justify-center items-center">
-                            <TableNoData className="!py-8" title="Bạn hiện không có biến động lợi nhuận" />
+                            <TableNoData titleClassname='!text-base !text-gray-1 dark:!text-gray-7' className="!py-8" title="Bạn hiện không có biến động lợi nhuận" />
                             <ButtonV2 className="w-auto !px-6" onClick={() => router.push('./futures/BTCVNDC')}>
                                 {'Giao dịch ngay'}
                             </ButtonV2>

@@ -14,8 +14,9 @@ import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import styled from 'styled-components';
+import { isFunction } from 'lodash';
 
-const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0' }) => {
+const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside  }) => {
     const [showPicker, setShowPicker] = useState(false);
     const wrapperRef = useRef(null);
 
@@ -33,6 +34,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
 
     const handleOutside = () => {
         if (showPicker) {
+            if(isFunction(onClickOutside)) onClickOutside()
             if (!isCalendar) {
                 setDate(initDate);
             }

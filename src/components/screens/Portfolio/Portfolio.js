@@ -69,6 +69,7 @@ const Portfolio = () => {
         firstTimeTrade: '2023-04-21T07:39:35.002Z',
         overallStatistic: {}
     });
+    const [isNeverTrade, setIsNeverTrade] = useState(false)
     const [loadingOverview, setLoadingOverview] = useState(false);
     const fetchDataOverview = async () => {
         try {
@@ -88,6 +89,8 @@ const Portfolio = () => {
                 firstTimeTrade: data?.firstPosition?.created_at,
                 overallStatistic: data?.overallStatistic
             });
+
+            if(!data?.firstPosition?.created_at) setIsNeverTrade(true)
         } catch (error) {
         } finally {
             setLoadingOverview(false);
@@ -174,7 +177,7 @@ const Portfolio = () => {
                         isDark={isDark}
                         dataPnl={dataPnlChanging}
                         filter={filter?.range}
-                        isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                        isNeverTrade={isNeverTrade || !dataOverview?.overallStatistic?.totalVolume?.value}
                         loadingPnlChanging={loadingPnlChanging}
                         isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                     />
@@ -188,7 +191,7 @@ const Portfolio = () => {
                             typeProduct={typeProduct}
                             typeCurrency={typeCurrency}
                             filter={filter}
-                            isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                            isNeverTrade={isNeverTrade}
                             isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                             isMobile={isMobile}
                         />
@@ -202,7 +205,7 @@ const Portfolio = () => {
                                 totalProfit={dataOverview?.overallStatistic?.countProfitLongPositions?.total?.value}
                                 totalLossPosition={dataOverview?.overallStatistic?.countLossLongPositions?.doc_count}
                                 totalProfitPosition={dataOverview?.overallStatistic?.countProfitLongPositions?.doc_count}
-                                isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                                isNeverTrade={isNeverTrade}
                                 isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                                 isMobile={isMobile}
                                 isDark={isDark}
@@ -215,7 +218,7 @@ const Portfolio = () => {
                                 totalProfit={dataOverview?.overallStatistic?.countProfitShortPositions?.total?.value}
                                 totalLossPosition={dataOverview?.overallStatistic?.countLossShortPositions?.doc_count}
                                 totalProfitPosition={dataOverview?.overallStatistic?.countProfitShortPositions?.doc_count}
-                                isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                                isNeverTrade={isNeverTrade}
                                 isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                                 isMobile={isMobile}
                                 isDark={isDark}
