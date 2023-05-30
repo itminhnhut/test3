@@ -234,7 +234,11 @@
         "id_onus_futures": "ID Onus Futures",
         "contest_ranking": "Contest Ranking",
         "contest_special": "Special Awards",
-        "tournament": "Tournament"
+        "tournament": "Tournament",
+        "referral": {
+            "description": "Compete as an individual to win a reward of ",
+            "score": "Score"
+        }
     },
     "year_summary": {
         "title": "NAO Futures {{version}} Achievements",

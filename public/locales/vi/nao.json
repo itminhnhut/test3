@@ -234,7 +234,11 @@
         "id_onus_futures": "ID",
         "contest_ranking": "BXH giải đấu",
         "contest_special": "BXH đặc biệt",
-        "tournament": "Giải đấu"
+        "tournament": "Giải đấu",
+        "referral": {
+            "description": "Tranh giải cá nhân với tổng giải thưởng ",
+            "score": "Điểm"
+        }
     },
     "year_summary": {
         "title": "Tổng kết NAO Futures {{version}}",

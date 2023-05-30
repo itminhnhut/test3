@@ -60,6 +60,19 @@ body {
 //  height: 100%;
 //}
 
+
+@layer components {
+    .container {
+        @apply max-w-screen-v3 2xl:max-w-screen-xxl m-auto;
+
+        @media (max-width: 1216px) {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+    }
+}
+
+
 body {
     @apply text-txtPrimary dark:text-txtPrimary-dark;
 
