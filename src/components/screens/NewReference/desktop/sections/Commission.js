@@ -50,10 +50,11 @@ const languages = {
 };
 
 const KING = {
-    EXCHANGE: { vi: 'Exchange ', en: 'Exchange ' },
-    FUTURES: { vi: 'Futures', en: 'Futures' },
-    STAKING: { vi: 'Daily Staking', en: 'Daily Staking' },
-    SWAP: { vi: 'Quy đổi', en: 'Swap' }
+    SPOT: { vi: 'Nami Spot', en: 'Nami Spot' },
+    FUTURES: { vi: 'Nami Futures', en: 'Nami Futures' },
+    STAKING: { vi: 'Nami Daily Staking', en: 'Nami Daily Staking' },
+    SWAP: { vi: 'Quy đổi', en: 'Swap' },
+    NAO_FUTURES: { vi: 'NAO Futures', en: 'NAO Futures' }
 };
 
 const Commission = ({ t, language, id }) => {
@@ -150,7 +151,7 @@ const Commission = ({ t, language, id }) => {
                         <div className="flex w-full justify-between items-center text-txtSecondary dark:text-txtSecondary-dark text-sm">
                             <div>{formatTime(data.createdAt, 'dd/MM/yyyy HH:mm:ss')}</div>
                             <div>
-                                {t('reference:referral.type_commission')}: <span className="capitalize">{KING[data.kind]?.[language] || '--'}</span>
+                                {t('reference:referral.type_commission')}: <span className="capitalize">{KING[data?.kind]?.[language] || '--'}</span>
                             </div>
                         </div>
                     </div>

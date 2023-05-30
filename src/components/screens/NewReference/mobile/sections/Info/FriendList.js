@@ -12,7 +12,6 @@ import PopupModal from 'src/components/screens/NewReference/PopupModal';
 import { NoData } from 'components/screens/NewReference/mobile';
 
 import { formatTime } from 'redux/actions/utils';
-import { useDebounce } from 'react-use';
 import { Search } from 'react-feather';
 import classNames from 'classnames';
 import colors from 'styles/colors';
@@ -26,7 +25,6 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(false);
     const [friendList, setFriendList] = useState([]);
-    const [debounceSearch, setDebounceSearch] = useState('');
 
     const hasNext = useRef(false);
 
