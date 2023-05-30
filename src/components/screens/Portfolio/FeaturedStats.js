@@ -99,9 +99,9 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                     {loadingOverview ? (
                         <Skeletor width={200} />
                     ) : (
-                        <div>
-                            <span className="txtPri-1">{formatNanNumber(totalMargin, isVnd ? 0 : 4)}</span>
-                            <span className="txtSecond-2">{` (${swapValue})`}</span>
+                        <div className='text-right'>
+                            <span className="txtPri-1 whitespace-nowrap">{formatNanNumber(totalMargin, isVnd ? 0 : 4)}</span>
+                            <span className="txtSecond-2 whitespace-nowrap">{` (${swapValue})`}</span>
                         </div>
                     )}
                 </div>
@@ -110,7 +110,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                     {loadingOverview ? (
                         <Skeletor width={200} />
                     ) : (
-                        <div>
+                        <div className='text-right'>
                             <span className="txtPri-1">{dataOverview?.totalPositions?.value}</span>
                             <span className="txtSecond-2">{` (${dataOverview?.countLongPositions?.doc_count} mua - ${dataOverview?.countShortPositions?.doc_count} bán)`}</span>
                         </div>

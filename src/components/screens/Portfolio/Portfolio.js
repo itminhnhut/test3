@@ -26,6 +26,7 @@ import { ApiStatus } from 'redux/actions/const';
 import FilterTimeTab from 'components/common/FilterTimeTab';
 import FilterTimeTabV2 from 'components/common/FilterTimeTabV2';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
+import GroupButtonCurrency from './GroupButtonCurrency';
 
 const TIME_FILTER = [
     {
@@ -61,13 +62,7 @@ const Portfolio = () => {
     // Statement
     const [typeProduct, setTypeProduct] = useState(FUTURES_PRODUCT.NAMI.id);
     const [typeCurrency, setTypeCurrency] = useState(ALLOWED_ASSET_ID.VNDC);
-    const [filter, setFilter] = useState({
-        range: {
-            startDate: null,
-            endDate: null,
-            key: 'selection'
-        }
-    });
+    const [filter, setFilter] = useState();
 
     // Data Overview
     const [dataOverview, setDataOverview] = useState({
@@ -75,10 +70,10 @@ const Portfolio = () => {
         overallStatistic: {}
     });
     const [loadingOverview, setLoadingOverview] = useState(false);
-
     const fetchDataOverview = async () => {
         try {
             setLoadingOverview(true);
+
             const { data } = await FetchApi({
                 url: API_FUTURES_STATISTIC_OVERVIEW,
                 params: {
@@ -121,6 +116,7 @@ const Portfolio = () => {
     };
 
     useEffect(() => {
+        if(!filter) return;
         fetchDataOverview();
         fetchDataPnlChanging();
     }, [typeProduct, typeCurrency, filter]);
@@ -139,15 +135,24 @@ const Portfolio = () => {
                 firstTimeTrade={dataOverview.firstTimeTrade}
                 loadingOverview={loadingOverview}
             />
-
             {/* Content */}
-            <div className="w-full px-4">
+            <div className="w-full px-4 relative">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto pt-20">
-                    <div className="flex items-center justify-between">
-                        <GroupButtonCurrency typeCurrency={typeCurrency} setTypeCurrency={setTypeCurrency} />
-                        <FilterTimeTabV2 filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll timeFilter={TIME_FILTER} isMobile={isMobile} />
+                <div className="flex items-center md:justify-between">
+                        <GroupButtonCurrency typeCurrency={typeCurrency} setTypeCurrency={setTypeCurrency} isMobile={isMobile} />
+                        <div className="vertical-divider !h-9 md:hidden"></div>
+                        <FilterTimeTabV2
+                            className="md:ml-4"
+                            filter={filter}
+                            setFilter={setFilter}
+                            positionCalendar="right"
+                            isTabAll
+                            timeFilter={TIME_FILTER}
+                            isMobile={isMobile}
+                            isDark={isDark}
+                            maxMonths={2}
+                        />
                     </div>
-
                     {/* Chi so noi bat */}
                     <FeaturedStats
                         className="mt-12"
@@ -167,7 +172,7 @@ const Portfolio = () => {
                         isMobile={isMobile}
                         isDark={isDark}
                         dataPnl={dataPnlChanging}
-                        filter={filter.range}
+                        filter={filter?.range}
                         isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
                         loadingPnlChanging={loadingPnlChanging}
                         isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
@@ -259,25 +264,4 @@ export const renderTabs = (tabs, tabType, setTabType, haveUnderline = true) => {
 
 export const renderApexChart = (data, { height = '100%', width }) => (
     <Chart key="nami" options={data.options} series={data.series} type={data.type} height={height} width="100%" />
-);
-
-const GroupButtonCurrency = ({ className, typeCurrency, setTypeCurrency }) => (
-    <div className={`flex mt-0 text-sm md:text-base ${className}`}>
-        <button
-            onClick={() => setTypeCurrency(ALLOWED_ASSET_ID.VNDC)}
-            className={`border border-divider dark:border-divider-dark rounded-l-md px-4 md:px-9 py-2 md:py-3 ${
-                typeCurrency === ALLOWED_ASSET_ID.VNDC ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-r-none'
-            }`}
-        >
-            VNDC
-        </button>
-        <button
-            onClick={() => setTypeCurrency(ALLOWED_ASSET_ID.USDT)}
-            className={`border border-divider dark:border-divider-dark rounded-r-md px-4 md:px-9 py-2 md:py-3 ${
-                typeCurrency === ALLOWED_ASSET_ID.USDT ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-l-none'
-            }`}
-        >
-            USDT
-        </button>
-    </div>
 );

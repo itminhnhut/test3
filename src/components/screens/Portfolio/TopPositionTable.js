@@ -81,6 +81,8 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
     };
 
     useEffect(() => {
+        if(!filter) return;
+
         fetchTopPosition();
     }, [typeProduct, typeCurrency, filter]);
 

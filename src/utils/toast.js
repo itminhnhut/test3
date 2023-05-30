@@ -72,9 +72,9 @@ const NamiToast = ({ render, text, type }) => {
     );
 };
 
-const toast = ({ text = '', render = undefined, type = 'default', duration = 5000 }) => {
+const toast = ({ text = '', render = undefined, type = 'default', duration = 5000, className='' }) => {
     return rcToast(<NamiToast render={render} text={text} type={type} />, {
-        className: 'flex items-center justify-between min-w-[375px] max-w-[756px]',
+        className: `flex items-center justify-between min-w-[375px] max-w-[756px] ${className}`,
         bodyClassName: 'flex items-center justify-center',
         autoClose: duration,
         // pauseOnHover: true,

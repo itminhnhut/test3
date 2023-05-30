@@ -26,7 +26,7 @@ const PnlChanging = ({
     isDark,
     isNeverTrade = false,
     loadingPnlChanging = false,
-    dataPnl = { labels: [], values: [] },
+    dataPnl = { labels: [], values: [], interval: 'day' },
     filter = { startDate: null, endDate: null },
     isVndc = true
 }) => {
@@ -34,56 +34,22 @@ const PnlChanging = ({
     const [chartData, setChartData] = useState({ labels: [], values: [], margins: [] });
     useEffect(() => {
         if (dataPnl?.labels?.length > 0) {
-            const { labels, values } = dataPnl;
-            const interval = 86400000;
-
-            const tempLabels = [];
-            const tempValues = [];
-            const tempMargins = [];
-
-            if (filter.startDate) {
-                for (let i = labels[0].rawDate - interval; i >= filter.startDate - interval; i -= interval) {
-                    tempLabels.unshift(i);
-                    tempValues.push(0);
-                    tempMargins.push(0)
-                }
-            }
-
-            for (let i = 0; i < labels.length; i++) {
-                const curLabel = labels[i];
-                if (i === 0) {
-                    tempLabels.push(curLabel.rawDate);
-                    tempValues.push(values[i].profit + values[i].loss);
-                    tempMargins.push(values[i].margin)
-                    continue;
-                }
-
-                const lastLabel = tempLabels[tempLabels.length - 1];
-                for (let j = 1; j < (curLabel.rawDate - lastLabel) / interval; j++) {
-                    tempLabels.push(lastLabel + j * interval);
-                    tempValues.push(0);
-                    tempMargins.push(0)
-                }
-
-                tempLabels.push(curLabel.rawDate);
-                tempValues.push(values[i].profit + values[i].loss);
-                tempMargins.push(values[i].margin)
-            }
-
-            if (filter.endDate) {
-                for (let i = labels[labels.length - 1].rawDate + interval; i <= filter.endDate; i += interval) {
-                    tempLabels.push(i);
-                    tempValues.push(0);
-                    tempMargins.push(0)
-                }
-            }
-
-            setChartData({ labels: tempLabels, values: tempValues, margins: tempMargins });
+            setChartData({
+                labels: dataPnl.labels.map((obj) => obj.date),
+                values: dataPnl.values.map((obj) => obj.pnl),
+                margin: dataPnl.values.map((obj) => obj.margin)
+            });
         }
     }, [dataPnl, filter]);
 
     const pnlChartData = {
-        labels: chartData.labels.map((label) => format(label, 'dd/MM')),
+        labels: chartData.labels.map((label) => {
+            try {
+                return format(new Date(label), 'dd/MM')
+            } catch (error) {
+                return label
+            }
+        }),
         datasets: [
             {
                 fill: false,

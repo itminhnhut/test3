@@ -282,7 +282,7 @@ const externalTooltipHandler = (context, isDark, isVndc, totalPosition, data) =>
         // begin:
         const { label, raw } = tooltip.dataPoints[0];
 
-        const curData = data.find((obj) => obj.key?.slice(0, -4) === label.split('/')[0]);
+        const curData = data?.find((obj) => obj.key?.slice(0, -4) === label.split('/')[0]);
         const rate = formatNanNumber((raw * 100) / totalPosition, 2);
         const profit = curData?.profit?.value;
         const margin = curData?.margin?.value;

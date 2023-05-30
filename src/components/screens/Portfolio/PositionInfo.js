@@ -15,7 +15,7 @@ const TooltipProfit = ({ type, totalProfit, totalProfitPosition, isVndc, t, ...r
             <ul className="list-disc marker:text-xs ml-5 mt-2">
                 <li>{`Tổng vị thế: ${totalProfitPosition}`}</li>
                 <li>
-                    {'Tổng lãi: '} <span className="red-2 font-semibold">{formatNanNumber(totalProfit, isVndc ? 0 : 4)}</span>
+                    {'Tổng lãi: '} <span className="text-green-3 dark:text-green-2 font-semibold">+{formatNanNumber(totalProfit, isVndc ? 0 : 4)}</span>
                 </li>
             </ul>
         </div>
@@ -29,7 +29,7 @@ const TooltipLoss = ({ type, totalLoss, totalLossPosition, isVndc, t, ...rest })
             <ul className="list-disc marker:text-xs ml-5 mt-2">
                 <li>{`Tổng vị thế: ${totalLossPosition}`}</li>
                 <li>
-                    {'Tổng lỗ: '} <span className="red-2 font-semibold">{formatNanNumber(totalLoss, isVndc ? 0 : 4)}</span>
+                    {'Tổng lỗ: '} <span className="text-red-2 font-semibold">{formatNanNumber(totalLoss, isVndc ? 0 : 4)}</span>
                 </li>
             </ul>
         </div>

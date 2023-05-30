@@ -85,11 +85,14 @@ const OverviewWallet = (props) => {
     const renderOverviewEstBalance = useCallback(() => {
         return (
             <>
-                <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
+                <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary flex items-center gap-x-3">
                     {isHideAsset
                         ? SECRET_STRING
                         : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + partnersEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}{' '}
                     BTC
+                    <button className="hidden md:block" onClick={() => router.push('/portfolio')}>
+                        <PortfolioIcon  />
+                    </button>
                 </div>
                 <div className="font-normal text-sm md:text-base mt-1">
                     {isHideAsset
@@ -268,7 +271,9 @@ const OverviewWallet = (props) => {
                             </div>
                             <div>{renderOverviewEstBalance()}</div>
                             {/* <FuturePortfolioIcon size={24} /> */}
-                            <PortfolioIcon className="md:hidden" />
+                            <button className="md:hidden" onClick={() => router.push('/portfolio')}>
+                                <PortfolioIcon  />
+                            </button>
                         </div>
                     </div>
                     <div className="hidden md:block">

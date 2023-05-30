@@ -29,9 +29,10 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
                 url: API_GET_VIP
             });
 
-            setVipLevel(data?.level);
+            setVipLevel(data?.level || 0);
         } catch (error) {
             console.log(`Cant get user vip level: ${error}`);
+            setVipLevel(0);
         }
     };
 
@@ -59,7 +60,7 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
             <div className="flex items-center">
                 <span className="mr-2 font-normal text-gray-7">Giao dịch từ:</span>
                 {loadingOverview ? (
-                    <Skeletor width={170} height={17}/>
+                    <Skeletor width={170} height={17} />
                 ) : (
                     <div className="flex">
                         {firstTimeTrade ? formatTime(firstTimeTrade, 'dd/MM/yyyy').toString() : 'Chưa thực hiện giao dịch'}{' '}
@@ -143,16 +144,16 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
 
                         {renderUserGeneralInfo()}
                     </div>
-                    <Tabs tab={typeProduct} className="gap-6 border-b border-divider dark:border-divider-dark mt-8">
+                    <Tabs tab={typeProduct} className="gap-x-6 border-b border-divider dark:border-divider-dark mt-8">
                         {Object.keys(FUTURES_PRODUCT).map((key) => (
                             <TabItem
+                                isActive={FUTURES_PRODUCT[key].id === typeProduct}
                                 key={FUTURES_PRODUCT[key].id}
-                                V2
-                                className="text-left !px-0 !text-base !w-auto first:ml-4 md:first:ml-0 flex items-center gap-x-2"
+                                className="w-1/2 px-0 first:ml-4 last:mr-4 flex items-center gap-x-2 !text-sm justify-center"
                                 value={FUTURES_PRODUCT[key].id}
                                 onClick={(isClick) => isClick && setTypeProduct(FUTURES_PRODUCT[key].id)}
                             >
-                                {key === 'NAMI' ? <SvgWalletFutures size={20} /> : <FutureNaoIcon />}
+                                {key === 'NAMI' ? <SvgWalletFutures size={16} /> : <FutureNaoIcon size={16} />}
                                 {FUTURES_PRODUCT[key].name}
                             </TabItem>
                         ))}
