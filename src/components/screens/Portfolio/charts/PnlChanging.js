@@ -6,7 +6,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
 import Note from 'components/common/Note';
 import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
-import { ArrowDropDownIcon, HelpIcon } from 'components/svg/SvgIcon';
+import { ArrowDropDownIcon, BxsInfoCircle, HelpIcon } from 'components/svg/SvgIcon';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 
 import ChartJS from './ChartJS';
@@ -31,22 +31,21 @@ const PnlChanging = ({
     isVndc = true
 }) => {
     const router = useRouter();
-    const [curPnlFilter, setCurPnlFilter] = useState(listTimeFilter[0].value);
-    const [chartData, setChartData] = useState({ labels: [], profitValues: [], lossValues: [] });
+    const [chartData, setChartData] = useState({ labels: [], values: [], margins: [] });
     useEffect(() => {
         if (dataPnl?.labels?.length > 0) {
             const { labels, values } = dataPnl;
             const interval = 86400000;
 
             const tempLabels = [];
-            const tempProfitValues = [];
-            const tempLossValues = [];
+            const tempValues = [];
+            const tempMargins = [];
 
             if (filter.startDate) {
                 for (let i = labels[0].rawDate - interval; i >= filter.startDate - interval; i -= interval) {
                     tempLabels.unshift(i);
-                    tempProfitValues.push(0);
-                    tempLossValues.push(0);
+                    tempValues.push(0);
+                    tempMargins.push(0)
                 }
             }
 
@@ -54,31 +53,32 @@ const PnlChanging = ({
                 const curLabel = labels[i];
                 if (i === 0) {
                     tempLabels.push(curLabel.rawDate);
-                    tempProfitValues.push(values[i].profit);
-                    tempLossValues.push(values[i].loss);
+                    tempValues.push(values[i].profit + values[i].loss);
+                    tempMargins.push(values[i].margin)
                     continue;
                 }
 
                 const lastLabel = tempLabels[tempLabels.length - 1];
                 for (let j = 1; j < (curLabel.rawDate - lastLabel) / interval; j++) {
                     tempLabels.push(lastLabel + j * interval);
-                    tempProfitValues.push(0);
+                    tempValues.push(0);
+                    tempMargins.push(0)
                 }
 
                 tempLabels.push(curLabel.rawDate);
-                tempProfitValues.push(values[i].profit);
-                tempLossValues.push(values[i].loss);
+                tempValues.push(values[i].profit + values[i].loss);
+                tempMargins.push(values[i].margin)
             }
 
             if (filter.endDate) {
                 for (let i = labels[labels.length - 1].rawDate + interval; i <= filter.endDate; i += interval) {
                     tempLabels.push(i);
-                    tempProfitValues.push(0);
-                    tempLossValues.push(0);
+                    tempValues.push(0);
+                    tempMargins.push(0)
                 }
             }
 
-            setChartData({ labels: tempLabels, profitValues: tempProfitValues, lossValues: tempLossValues });
+            setChartData({ labels: tempLabels, values: tempValues, margins: tempMargins });
         }
     }, [dataPnl, filter]);
 
@@ -88,17 +88,17 @@ const PnlChanging = ({
             {
                 fill: false,
                 label: false,
-                data: chartData.profitValues,
-                backgroundColor: colors.green[6],
-                stack: 'pnl'
-            },
-            {
-                fill: false,
-                label: false,
-                data: chartData.lossValues,
-                backgroundColor: colors.red[2],
+                data: chartData.values,
+                backgroundColor: chartData.values?.map((value) => (value > 0 ? colors.green[6] : colors.red[2])),
                 stack: 'pnl'
             }
+            // {
+            //     fill: false,
+            //     label: false,
+            //     data: chartData.lossValues,
+            //     backgroundColor: colors.red[2],
+            //     stack: 'pnl'
+            // }
         ]
     };
 
@@ -119,17 +119,9 @@ const PnlChanging = ({
                     },
                     label: function (context) {
                         const { dataIndex, label, raw } = context;
-                        let pnl = 0;
-                        let ratePnl = 0;
-                        if (raw >= 0) {
-                            pnl = chartData?.profitValues?.[dataIndex];
-                            const margin = 1;
-                            ratePnl = pnl / margin;
-                        } else {
-                            pnl = chartData?.lossValues?.[dataIndex];
-                            const margin = 1;
-                            ratePnl = pnl / margin;
-                        }
+                        let margin = chartData?.margins?.[dataIndex] ?? 1;
+                        let pnl = chartData?.values?.[dataIndex];
+                        let ratePnl = pnl / margin;
                         return [` - Lợi nhuận: ${raw > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`];
                     }
                 },
@@ -155,7 +147,7 @@ const PnlChanging = ({
                 },
                 grid: {
                     display: false,
-                    drawBorder: false,
+                    drawBorder: false
                     // borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT
                 }
             },
@@ -236,19 +228,33 @@ const PnlChanging = ({
                     className="w-full"
                     divLabelClassname="w-full justify-between"
                     chrevronStyled={{ size: 24, color: isDark ? '#E2E8F0' : '#1E1E1E' }}
-                    label="Biến động lợi nhuận"
+                    label={
+                        <HeaderTooltip
+                            isMobile
+                            title="Biến động lợi nhuận"
+                            tooltipContent={[t('portfolio:pnl_changing.des_01'), t('portfolio:pnl_changing.des_02')]}
+                            tooltipId={'pnl_changing_tooltip'}
+                        />
+                    }
                     labelClassname="text-base font-semibold"
                 >
-                    <div>
-                        <GroupTextFilter className={`mt-4`} curFilter={curPnlFilter} setCurFilter={setCurPnlFilter} GroupKey="Profit_changing" t={t} />
-                    </div>
                     <div className="mt-6">
                         <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
+                    </div>
+                    {/* Chu thich */}
+                    <div className="flex items-center gap-x-4 mt-9">
+                        <Note iconClassName="bg-green-6" title={'Lợi nhuận tăng'} />
+                        <Note iconClassName="bg-red-2" title={'Lợi nhuận giảm'} />
+                    </div>
+                    <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4">
+                        <BxsInfoCircle />
+                        <span>Nhấn vào từng cột xem thống kê chi tiết theo ngày</span>
                     </div>
                 </CollapseV2>
             ) : (
                 <>
                     <HeaderTooltip
+                        isMobile
                         title="Biến động lợi nhuận"
                         tooltipContent={[t('portfolio:pnl_changing.des_01'), t('portfolio:pnl_changing.des_02')]}
                         tooltipId={'pnl_changing_tooltip'}

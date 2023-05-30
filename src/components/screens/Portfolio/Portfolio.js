@@ -24,6 +24,8 @@ import { API_FUTURES_STATISTIC_OVERVIEW, API_FUTURES_STATISTIC_PAIRS, API_FUTURE
 import FetchApi from 'utils/fetch-api';
 import { ApiStatus } from 'redux/actions/const';
 import FilterTimeTab from 'components/common/FilterTimeTab';
+import FilterTimeTabV2 from 'components/common/FilterTimeTabV2';
+import { BxsInfoCircle } from 'components/svg/SvgIcon';
 
 const TIME_FILTER = [
     {
@@ -124,7 +126,7 @@ const Portfolio = () => {
     }, [typeProduct, typeCurrency, filter]);
 
     return (
-        <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal text-xs leading-[16px] md:text-base">
+        <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal text-xs leading-[16px] md:text-base pb-[120px]">
             {/* Banner infor */}
             <BannerInfo
                 setTypeCurrency={setTypeCurrency}
@@ -139,22 +141,25 @@ const Portfolio = () => {
             />
 
             {/* Content */}
-            <div className="w-full px-4 md:px-28">
-                <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto pt-20 pb-[120px]">
+            <div className="w-full px-4">
+                <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto pt-20">
                     <div className="flex items-center justify-between">
                         <GroupButtonCurrency typeCurrency={typeCurrency} setTypeCurrency={setTypeCurrency} />
-                        <FilterTimeTab filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll timeFilter={TIME_FILTER} isV2={true} />
+                        <FilterTimeTabV2 filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll timeFilter={TIME_FILTER} isMobile={isMobile} />
                     </div>
 
                     {/* Chi so noi bat */}
                     <FeaturedStats
                         className="mt-12"
                         t={t}
+                        isDark={isDark}
                         isMobile={isMobile}
                         dataOverview={dataOverview?.overallStatistic}
                         loadingOverview={loadingOverview}
                         typeCurrency={typeCurrency}
                     />
+
+                    {isMobile && <div className="w-full border-b border-divider dark:border-divider-dark mt-[47px]"></div>}
 
                     {/* Bien dong loi nhuan */}
                     <PnlChanging
@@ -169,7 +174,8 @@ const Portfolio = () => {
                     />
 
                     {/* Cap giao dich || Vi the mua - Vi the ban */}
-                    <div className="mt-12 grid grid-cols-2 gap-x-8">
+                    {isMobile && <div className="w-full border-b border-divider dark:border-divider-dark mt-[47px]"></div>}
+                    <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-x-8">
                         <TradingPair
                             isDark={isDark}
                             t={t}
@@ -178,10 +184,25 @@ const Portfolio = () => {
                             filter={filter}
                             isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
                             isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
+                            isMobile={isMobile}
                         />
-                        <div className="grid grid-rows-2 gap-y-8">
+                        {isMobile && <div className="w-full border-b border-divider dark:border-divider-dark my-12"></div>}
+                        <div className={`${isMobile ? 'flex flex-col' : 'grid grid-rows-2'} gap-y-8`}>
                             <PositionInfo
                                 type="buy"
+                                t={t}
+                                total={dataOverview?.overallStatistic?.countLongPositions?.doc_count}
+                                totalLoss={dataOverview?.overallStatistic?.countLossLongPositions?.total?.value}
+                                totalProfit={dataOverview?.overallStatistic?.countProfitLongPositions?.total?.value}
+                                totalLossPosition={dataOverview?.overallStatistic?.countLossLongPositions?.doc_count}
+                                totalProfitPosition={dataOverview?.overallStatistic?.countProfitLongPositions?.doc_count}
+                                isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
+                                isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
+                                isMobile={isMobile}
+                                isDark={isDark}
+                            />
+                            <PositionInfo
+                                type="sell"
                                 t={t}
                                 total={dataOverview?.overallStatistic?.countShortPositions?.doc_count}
                                 totalLoss={dataOverview?.overallStatistic?.countLossShortPositions?.total?.value}
@@ -190,24 +211,30 @@ const Portfolio = () => {
                                 totalProfitPosition={dataOverview?.overallStatistic?.countProfitShortPositions?.doc_count}
                                 isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
                                 isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
-                            />
-                            <PositionInfo
-                                type="sell"
-                                t={t}
-                                total={dataOverview?.overallStatistic?.countLongPositions?.doc_count}
-                                totalLoss={dataOverview?.overallStatistic?.countLossLongPositions?.total?.value}
-                                totalProfit={dataOverview?.overallStatistic?.countProfitLongPositions?.total?.value}
-                                totalLossPosition={dataOverview?.overallStatistic?.countLossShortPositions?.doc_count}
-                                totalProfitPosition={dataOverview?.overallStatistic?.countProfitShortPositions?.doc_count}
-                                isNeverTrade={!dataOverview?.overallStatistic?.totalVolume?.value}
-                                isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
+                                isMobile={isMobile}
+                                isDark={isDark}
                             />
                         </div>
+                        {isMobile && (
+                            <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4">
+                                <BxsInfoCircle />
+                                <span>Nhấn vào từng phần để xem thống kê chi tiết</span>
+                            </div>
+                        )}
                     </div>
-
-                    {/* Table top 5 positions */}
-                    <TopPositionTable typeProduct={typeProduct} typeCurrency={typeCurrency} filter={filter} />
                 </div>
+            </div>
+            {/* Table top 5 positions */}
+            <div className="w-full md:px-4">
+                {isMobile && <div className="w-full border-b border-divider dark:border-divider-dark mt-[47px]"></div>}
+                <TopPositionTable
+                    className={!isMobile && 'max-w-screen-v3 2xl:max-w-screen-xxl m-auto pt-20 pb-[120px]'}
+                    typeProduct={typeProduct}
+                    typeCurrency={typeCurrency}
+                    filter={filter}
+                    isMobile={isMobile}
+                    isDark={isDark}
+                />
             </div>
         </div>
     );

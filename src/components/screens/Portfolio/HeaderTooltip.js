@@ -3,10 +3,10 @@ import { HelpIcon } from 'components/svg/SvgIcon';
 import { isArray } from 'lodash';
 import React from 'react';
 
-const HeaderTooltip = ({ className, tooltipId, title, tooltipContent }) => {
+const HeaderTooltip = ({ className, tooltipId, title, tooltipContent, isMobile = false }) => {
     return (
         <div className={className}>
-            <Tooltip id={tooltipId} place="top" className="max-w-[520px] !px-6 !py-3">
+            <Tooltip id={tooltipId} place={isMobile ? 'right' : 'top'} className={`max-w-[${isMobile ? 300 : 520}px] !px-6 !py-3`}>
                 {isArray(tooltipContent) && (
                     <ul className="list-disc marker:text-xs ml-1">
                         {tooltipContent.map((item) => (

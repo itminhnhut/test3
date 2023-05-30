@@ -8,7 +8,7 @@ import Note from 'components/common/Note';
 import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
 import ChartJS from './ChartJS';
 import { indexOf } from 'lodash';
-import { HelpIcon } from 'components/svg/SvgIcon';
+import { BxsInfoCircle, HelpIcon } from 'components/svg/SvgIcon';
 import Tooltip from 'components/common/Tooltip';
 import HeaderTooltip from '../HeaderTooltip';
 import classNames from 'classnames';
@@ -18,6 +18,7 @@ import FetchApi from 'utils/fetch-api';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import { ALLOWED_ASSET_ID } from 'components/screens/WithdrawDeposit/constants';
 const { subDays } = require('date-fns');
+import CollapseV2 from 'components/common/V2/CollapseV2';
 
 // note: white always in the tail of list <=> Others
 const listDoughnutColorsLight = [colors.green[6], colors.purple[1], colors.green[7], colors.yellow[5], colors.gray[12]];
@@ -38,7 +39,7 @@ const FILTER_PNL = [
     }
 ];
 
-const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrade = true, isVndc = true }) => {
+const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrade = true, isVndc = true, isMobile }) => {
     const [filterPnl, setFilterPnl] = useState(FILTER_PNL[0].value);
 
     // Data trading pairs
@@ -77,18 +78,20 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
         datasets: [
             {
                 label: 'Trading Pair Volumns',
-                data: isNeverTrade ? [1] : dataTradingPairs?.symbolsCount?.buckets?.map((obj) => obj?.doc_count),
-                backgroundColor: isNeverTrade
-                    ? isDark
-                        ? [colors.dark['6']]
-                        : [colors.dark['7']]
-                    : isDark
-                    ? listDoughnutColorsDark.slice(0, labels.length)
-                    : listDoughnutColorsLight.slice(0, labels.length),
+                data: labels.length === 0 ? [1] : dataTradingPairs?.symbolsCount?.buckets?.map((obj) => obj?.doc_count),
+                backgroundColor:
+                    labels.length === 0
+                        ? isDark
+                            ? [colors.dark['6']]
+                            : [colors.dark['7']]
+                        : isDark
+                        ? listDoughnutColorsDark.slice(0, labels.length)
+                        : listDoughnutColorsLight.slice(0, labels.length),
                 borderWidth: 0
             }
         ]
     };
+
     const totalPosition = dataTradingPairs?.symbolsCount?.buckets?.reduce((prev, cur) => {
         return (prev += cur?.doc_count);
     }, 0);
@@ -96,37 +99,8 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
     const options = {
         responsive: true,
         maintainAspectRatio: true,
-        cutout: '90%',
+        cutout: '87%',
         plugins: {
-            // tooltip: {
-            //     enabled: !isNeverTrade,
-            //     usePointStyle: true,
-            //     callbacks: {
-            //         title: function (context) {
-            //             return context[0].label;
-            //         },
-            //         label: function (context) {
-            //             console.log("______context: ", dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.margin?.value)
-            //             const index = context.dataIndex;
-            //             const total = ' - Số lượng: ' + context.raw;
-            //             const rate = ' - Tỷ lệ: ' + context.raw / totalPosition;
-            //             const profit = dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.profit?.value
-            //             const margin = dataTradingPairs?.symbolsCount?.buckets?.[context.dataIndex]?.margin?.value
-            //             const sign = profit > 0 ? '+' : ''
-
-            //             const pnl = ` - Lợi nhuận: ${sign}${formatNanNumber(profit, isVndc ? 0 : 4)} (${sign}${formatNanNumber(profit * 100 / margin, 2)}%)`;
-            //             return [total, rate, pnl];
-            //         },
-            //     },
-            //     backgroundColor: isDark ? colors.dark['2'] : colors.gray['15'],
-            //     padding: 12,
-            //     titleColor: isDark ? colors.gray['7'] : colors.gray['1'],
-            //     titleFont: { weight: 'normal', size: 14, paddingBottom: 12, lineHeight: 1.43 },
-            //     titleAlign: 'left',
-            //     displayColors: false,
-            //     bodyColor: isDark ? colors.gray['4'] : colors.gray['2'],
-            //     bodyFont: { size: 16, lineHeight: 1.5 },
-            // }
             tooltip: {
                 enabled: false,
                 position: 'nearest',
@@ -170,15 +144,55 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
         }
     ];
 
+    if (isMobile) {
+        return (
+            <CollapseV2
+                className="w-full"
+                divLabelClassname="w-full justify-between"
+                chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
+                label={<HeaderTooltip isMobile title="Cặp giao dịch" tooltipContent={'This is tooltip content'} tooltipId={'trading_pair_tooltip'} />}
+                labelClassname="text-base font-semibold"
+            >
+                <div className={` ${isMobile ? '' : 'p-8 rounded-xl bg-gray-12 dark:bg-dark-4'}`}>
+                    <GroupTextFilter curFilter={filterPnl} setCurFilter={setFilterPnl} GroupKey={'trading_pairs_filter'} t={t} listFilter={FILTER_PNL} />
+                    <div className="flex items-center justify-center w-full mt-8">
+                        <div className={`min-w-[200px] max-w-[312px] w-full`}>
+                            {loadingTradingPairs ? (
+                                <div className="flex items-center justify-center w-full min-h-[312px]">
+                                    <Spiner isDark={isDark} />
+                                </div>
+                            ) : (
+                                <ChartJS type="doughnut" data={mockData} options={options} plugins={plugins} />
+                            )}
+                        </div>
+                    </div>
+                    {/* Chu thich */}
+                    <div className={`flex items-center gap-x-4 mt-9 py-1 justify-center ${labels.length === 0 && 'hidden'}`}>
+                        {labels.map((label, idx) => (
+                            <Note
+                                key={'note_' + label}
+                                style={{ backgroundColor: isDark ? listDoughnutColorsDark[idx] : listDoughnutColorsLight[idx] }}
+                                title={label}
+                            />
+                        ))}
+                    </div>
+                    <div id="notice" className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4">
+                        <BxsInfoCircle />
+                        <span>Nhấn vào từng mảng để xem thống kê chi tiết</span>
+                    </div>
+                </div>
+            </CollapseV2>
+        );
+    }
+
     return (
         <div className="p-8 rounded-xl bg-gray-12 dark:bg-dark-4">
             <div className="flex items-center justify-between">
                 <HeaderTooltip title="Cặp giao dịch" tooltipContent={'This is tooltip content'} tooltipId={'trading_pair_tooltip'} />
                 <GroupTextFilter curFilter={filterPnl} setCurFilter={setFilterPnl} GroupKey={'trading_pairs_filter'} t={t} listFilter={FILTER_PNL} />
             </div>
-            <th></th>
-            <div className="flex items-center justify-center w-full">
-                <div className="min-w-[352px] mt-8">
+            <div className="flex items-center justify-center w-full h-auto">
+                <div className={`min-w-[352px] mt-8`}>
                     {loadingTradingPairs ? (
                         <div className="flex items-center justify-center w-full min-h-[350px]">
                             <Spiner isDark={isDark} />
@@ -189,7 +203,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                 </div>
             </div>
             {/* Chu thich */}
-            <div className={`flex items-center gap-x-4 mt-9 py-1 justify-center ${isNeverTrade && 'hidden'}`}>
+            <div className={`flex items-center gap-x-4 mt-9 py-1 justify-center ${labels.length === 0 && 'hidden'}`}>
                 {labels.map((label, idx) => (
                     <Note
                         key={'note_' + label}
@@ -269,7 +283,7 @@ const externalTooltipHandler = (context, isDark, isVndc, totalPosition, data) =>
         const { label, raw } = tooltip.dataPoints[0];
 
         const curData = data.find((obj) => obj.key?.slice(0, -4) === label.split('/')[0]);
-        const rate = formatNanNumber(raw * 100 / totalPosition, 2);
+        const rate = formatNanNumber((raw * 100) / totalPosition, 2);
         const profit = curData?.profit?.value;
         const margin = curData?.margin?.value;
         const sign = profit > 0 ? '+' : '';
@@ -285,7 +299,7 @@ const externalTooltipHandler = (context, isDark, isVndc, totalPosition, data) =>
 
         // Create first <li> element
         const liElement1 = document.createElement('li');
-        liElement1.textContent = `Tổng vị thế: ${totalPosition}`;
+        liElement1.textContent = `Tổng vị thế: ${curData?.doc_count}`;
         ulElement.appendChild(liElement1);
 
         // Create second <li> element
@@ -297,8 +311,8 @@ const externalTooltipHandler = (context, isDark, isVndc, totalPosition, data) =>
         liElement3.textContent = `Lợi nhuận: `;
         const spanElement = document.createElement('span');
         spanElement.className = 'red-2 font-semibold';
-        spanElement.style.color = profit > 0 ? colors.green['2'] : colors.red['2']
-        spanElement.textContent = pnl
+        spanElement.style.color = profit > 0 ? colors.green['2'] : colors.red['2'];
+        spanElement.textContent = pnl;
         liElement3.appendChild(spanElement);
         ulElement.appendChild(liElement3);
 

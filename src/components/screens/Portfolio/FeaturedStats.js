@@ -11,7 +11,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useWindowSize from 'hooks/useWindowSize';
 import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
 import PriceChangePercent from 'components/common/PriceChangePercent';
-import { ArrowDropDownIcon, HelpIcon } from 'components/svg/SvgIcon';
+import { ArrowDropDownIcon, BxsInfoCircle, HelpIcon } from 'components/svg/SvgIcon';
 
 import PnlChanging from './charts/PnlChanging';
 import TradingPair from './charts/TradingPair';
@@ -29,6 +29,7 @@ import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
 import { formatNumber } from 'utils/reference-utils';
 import classNames from 'classnames';
 import HeaderTooltip from './HeaderTooltip';
+import CollapseV2 from 'components/common/V2/CollapseV2';
 
 const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loadingOverview, typeCurrency }) => {
     const [curOverviewFilter, setCurOverviewFilter] = useState(listTimeFilter[0].value);
@@ -47,9 +48,9 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
         const totalVolume = dataOverview?.totalVolume?.value;
         const swapValue = isVnd ? formatNanNumber(totalVolume * vndcUsdRate, 4) + ' USDT' : formatNanNumber(totalVolume / vndcUsdRate, 0) + ' VNDC';
         return (
-            <div className={isMobile ? 'w-1/2 flex flex-col justify-center items-center flex-1 py-4' : 'flex-auto px-6 py-4'}>
+            <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4' : 'flex-auto px-6 py-4'}>
                 <span>Tổng KLGD</span>
-                <div className="txtPri-3 mt-2 md:mt-4">
+                <div className="text-base md:text-xl font-semibold text-gray-15 dark:text-gray-4 mt-2 md:mt-4">
                     {loadingOverview ? <Skeletor width={150} /> : formatNanNumber(totalVolume, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
                 </div>
                 <div className="mt-1 md:mt-2">{loadingOverview ? <Skeletor width={150} /> : swapValue}</div>
@@ -62,10 +63,10 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
         const sign = totalPnl > 0 ? '+ ' : '';
 
         return (
-            <div className={isMobile ? 'w-1/2 flex flex-col justify-center items-center flex-1 py-4' : 'flex-auto px-6 py-4'}>
+            <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4' : 'flex-auto px-6 py-4'}>
                 <span>Tổng lợi nhuận</span>
                 <div
-                    className={classNames('txtPri-3 mt-2 md:mt-4', {
+                    className={classNames('text-base md:text-xl font-semibold mt-2 md:mt-4', {
                         '!text-green-3 !dark:text-green-2': totalPnl > 0,
                         '!text-red-2 !dark:text-red': totalPnl < 0
                     })}
@@ -92,7 +93,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
         const avgLeverage = formatNanNumber(dataOverview?.avgLeverage?.value, 0);
 
         return (
-            <div className="flex-auto md:px-6 py-4">
+            <div className={isMobile ? 'mt-4 p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4' : 'flex-auto md:px-6 py-4'}>
                 <div className="flex items-center justify-between">
                     <span>Tổng ký quỹ</span>
                     {loadingOverview ? (
@@ -125,8 +126,6 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
 
     return (
         <div className={className}>
-            <HeaderTooltip title="Chỉ số nổi bật" tooltipContent={t('portfolio:key_statistic')} tooltipId={'key_statistic_tooltip'} />
-
             <Tooltip id={'key_statistic'} place="top" className="max-w-[520px]" />
             {/* <div className="flex items-center cursor-pointer w-max" data-tip={t('portfolio:key_statistic')} data-for="key_statistic">
                 <div className="text-base md:text-2xl font-semibold pr-2">Chỉ số nổi bật</div>
@@ -146,24 +145,51 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
 
             {/* Cards */}
             {isMobile ? (
-                <div className="mt-6 text-gray-1 dark:text-gray-7">
-                    <div className="border border-divider dark:border-divider-dark rounded-xl flex">
-                        {renderSumVolumns()}
-                        <div className="vertical-divider !mx-2"></div>
-                        {renderSumPnl()}
+                <CollapseV2
+                    className="w-full"
+                    divLabelClassname="w-full justify-between"
+                    chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
+                    label={
+                        <HeaderTooltip
+                            isMobile={isMobile}
+                            title="Chỉ số nổi bật"
+                            tooltipContent={t('portfolio:key_statistic')}
+                            tooltipId={'key_statistic_tooltip'}
+                        />
+                    }
+                    labelClassname="text-base font-semibold"
+                >
+                    {/* <div>
+                        <GroupTextFilter className={`mt-4`} curFilter={curPnlFilter} setCurFilter={setCurPnlFilter} GroupKey="Profit_changing" t={t} />
+                    </div> */}
+                    <div className="mt-6">
+                        <div className="mt-6 text-gray-1 dark:text-gray-7">
+                            <div className="grid grid-cols-2 gap-x-3">
+                                {renderSumVolumns()}
+                                {renderSumPnl()}
+                            </div>
+                            {renderOtherSummary()}
+                        </div>
                     </div>
-                    {renderOtherSummary()}
-                </div>
+                </CollapseV2>
             ) : (
-                <div className=" text-gray-1 dark:text-gray-7 mt-8 rounded-xl flex px-6 py-3 bg-gray-12 dark:bg-dark-4">
-                    {renderSumVolumns()}
-                    <div className="vertical-divider"></div>
-                    {renderSumPnl()}
-                    <div className="vertical-divider"></div>
+                <>
+                    <HeaderTooltip
+                        isMobile={isMobile}
+                        title="Chỉ số nổi bật"
+                        tooltipContent={t('portfolio:key_statistic')}
+                        tooltipId={'key_statistic_tooltip'}
+                    />
+                    <div className=" text-gray-1 dark:text-gray-7 mt-8 rounded-xl flex px-6 py-3 bg-gray-12 dark:bg-dark-4">
+                        {renderSumVolumns()}
+                        <div className="vertical-divider"></div>
+                        {renderSumPnl()}
+                        <div className="vertical-divider"></div>
 
-                    {/* Card 3 */}
-                    {renderOtherSummary()}
-                </div>
+                        {/* Card 3 */}
+                        {renderOtherSummary()}
+                    </div>
+                </>
             )}
         </div>
     );

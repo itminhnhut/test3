@@ -17,6 +17,7 @@ import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import { FutureNaoIcon } from 'components/svg/SvgIcon';
 import Image from 'next/image';
 import { isNumber } from 'lodash';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
 const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, firstTimeTrade, loadingOverview }) => {
     // Handle for Header tab:
@@ -58,9 +59,9 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
             <div className="flex items-center">
                 <span className="mr-2 font-normal text-gray-7">Giao dịch từ:</span>
                 {loadingOverview ? (
-                    <Skeletor width={170}/>
+                    <Skeletor width={170} height={17}/>
                 ) : (
-                    <div className='flex'>
+                    <div className="flex">
                         {firstTimeTrade ? formatTime(firstTimeTrade, 'dd/MM/yyyy').toString() : 'Chưa thực hiện giao dịch'}{' '}
                         {firstTimeTrade && `(${Math.floor((new Date() - new Date(firstTimeTrade)) / (1000 * 60 * 60))} giờ)`}
                     </div>
@@ -105,7 +106,7 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
     // );
 
     return (
-        <div >
+        <div>
             {isMobile ? (
                 <div>
                     {/* Mobile: banner image */}
@@ -124,28 +125,46 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
                     {/* Mobile: Content infor */}
                     <div className="relative px-4 font-semibold">
                         {/* Avatar */}
-                        <div className="absolute top-[-24px] w-[104px] h-[104px]">
+                        <div className="absolute -translate-y-1/2 w-[104px] h-[104px]">
                             {user?.avatar ? (
-                                <img className="w-full h-auto rounded-full" src={user?.avatar} />
+                                <div className="flex relative items-center">
+                                    <Image
+                                        width="104"
+                                        height="104"
+                                        objectFit="fill"
+                                        className="rounded-full"
+                                        src={user?.avatar || '/images/default_avatar.png'}
+                                    />
+                                </div>
                             ) : (
-                                <Skeletor circle width={104} height={104} containerClassName="avatar-skeleton" />
+                                <Skeletor circle width={120} height={120} containerClassName="avatar-skeleton" />
                             )}
                         </div>
 
                         {renderUserGeneralInfo()}
-
-                        {/* Progress div */}
-                        {renderProgressInfo()}
                     </div>
+                    <Tabs tab={typeProduct} className="gap-6 border-b border-divider dark:border-divider-dark mt-8">
+                        {Object.keys(FUTURES_PRODUCT).map((key) => (
+                            <TabItem
+                                key={FUTURES_PRODUCT[key].id}
+                                V2
+                                className="text-left !px-0 !text-base !w-auto first:ml-4 md:first:ml-0 flex items-center gap-x-2"
+                                value={FUTURES_PRODUCT[key].id}
+                                onClick={(isClick) => isClick && setTypeProduct(FUTURES_PRODUCT[key].id)}
+                            >
+                                {key === 'NAMI' ? <SvgWalletFutures size={20} /> : <FutureNaoIcon />}
+                                {FUTURES_PRODUCT[key].name}
+                            </TabItem>
+                        ))}
+                    </Tabs>
                 </div>
             ) : (
                 <div
-                style={{ backgroundImage: `url(/images/screen/portfolio/banner_desktop.png)` }}
-                className="w-full bg-black-800 px-4 md:px-28 bg-cover bg-center">
+                    style={{ backgroundImage: `url(/images/screen/portfolio/banner_desktop.png)` }}
+                    className="w-full bg-black-800 px-4 md:px-28 bg-cover bg-center"
+                >
                     <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
-                        <div
-                            className="h-full pt-20 pb-[174px] text-gray-4 font-semibold relative"
-                        >
+                        <div className="h-full pt-20 pb-[174px] text-gray-4 font-semibold relative">
                             <span className="text-[32px] leading-[38px]">Futures Portfolio</span>
 
                             {/* Avatar div */}
@@ -168,9 +187,6 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
                                 {/* </div> */}
                                 {renderUserGeneralInfo()}
                             </div>
-
-                            {/* Progress div */}
-                            {/* {renderProgressInfo()} */}
 
                             {/* Group button currency */}
                             <GroupButtonProduct className="mt-12" typeProduct={typeProduct} setTypeProduct={setTypeProduct} />
