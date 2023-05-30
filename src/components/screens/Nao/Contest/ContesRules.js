@@ -47,14 +47,14 @@ const ContesRules = ({
         if (now < CONTEST_TIME.START) {
             return (
                 <>
-                    <div className={classNames('font-light text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
+                    <div className={classNames('font-light text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
                         {t('nao:contest:start_in')}
                     </div>
                     <Countdown
                         date={CONTEST_TIME.START} // countdown 60s
                         renderer={({ formatted: { days, hours, minutes, seconds } }) => (
                             <div
-                                className={classNames('text-sm sm:text-base flex', classNameCountdown)}
+                                className={classNames('text-sm mb:text-base flex', classNameCountdown)}
                                 dangerouslySetInnerHTML={{
                                     __html: t('nao:contest:date', {
                                         days,
@@ -71,14 +71,14 @@ const ContesRules = ({
         } else if (now >= CONTEST_TIME.START && now < CONTEST_TIME.END) {
             return (
                 <>
-                    <div className={classNames('font-light text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
+                    <div className={classNames('font-light text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
                         {t('nao:contest:end_in')}
                     </div>
                     <Countdown
                         date={CONTEST_TIME.END} // countdown 60s
                         renderer={({ formatted: { days, hours, minutes, seconds } }) => (
                             <div
-                                className={classNames('text-sm sm:text-base flex', classNameCountdown)}
+                                className={classNames('text-sm mb:text-base flex', classNameCountdown)}
                                 dangerouslySetInnerHTML={{
                                     __html: t('nao:contest:date', {
                                         days,
@@ -95,7 +95,7 @@ const ContesRules = ({
         } else {
             return (
                 <>
-                    <div className="text-sm sm:text-base flex text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:ended')}</div>
+                    <div className="text-sm mb:text-base flex text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:ended')}</div>
                 </>
             );
         }
@@ -124,32 +124,32 @@ const ContesRules = ({
     }, [seasons]);
 
     return (
-        <section className="contest_rules pb-12 py-6 sm:py-20 w-full flex flex-col sm:flex-row sm:justify-between">
-            <div className="text-center sm:text-left flex flex-col flex-wrap sm:block">
-                <div className="font-semibold text-xl sm:text-2xl text-teal">{t('nao:contest:tournament')}</div>
-                <div className="font-semibold text-xl sm:text-6xl pt-3 sm:pt-4">
+        <section className={classNames('contest_rules py-6 mb:py-20 w-full flex flex-col mb:flex-row mb:justify-between', !inHome && 'mb:dark:pb-14 pb-12 dark:pb-6')}>
+            <div className="text-center mb:text-left flex flex-col flex-wrap mb:block">
+                <div className="font-semibold text-xl mb:text-2xl text-teal">{t('nao:contest:tournament')}</div>
+                <div className="font-semibold text-xl mb:text-6xl pt-3 mb:pt-4">
                     <div>{title?.[language]}</div>
-                    <div className="whitespace-nowrap">{title_champion?.[language]}</div>
+                    <div className="">{title_champion?.[language]}</div>
                 </div>
 
-                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base pt-6 sm:pt-8">
+                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm mb:text-base pt-6 mb:pt-8">
                     {t(`nao:contest:description${!!top_ranks_team ? '' : '_individual'}`)}
                     <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
-                <div className="sm_only:!w-full w-fit sm:px-20 rounded-md bg-gray-12 dark:bg-dark-2 py-3 flex flex-row items-center justify-center mt-8 sm:mt-4">
+                <div className="mb_only:!w-full w-fit mb:px-20 rounded-md bg-gray-12 dark:bg-dark-2 py-3 flex flex-row items-center justify-center mt-8 mb:mt-4">
                     {renderCountDown('!font-normal mr-3', '!font-semibold')}
                 </div>
-                <div className="flex flex-row mt-3 sm:mt-7 justify-center sm:justify-start w-full">
+                <div className="flex flex-row mt-3 mb:mt-7 justify-center mb:justify-start w-full">
                     {inHome ? (
                         <ButtonNao
                             onClick={() => router.push('/contest')}
-                            className="!h-11 sm:h-12 px-6 text-sm sm:test-base font-semibold w-max !rounded-md mr-3 sm_only:flex-1 sm_only:px-1"
+                            className="!h-11 mb:h-12 px-6 text-sm mb:test-base font-semibold w-max !rounded-md mr-3 mb:mr-4 mb_only:flex-1 mb_only:px-1"
                             primary
                         >
                             {t('nao:contest:ranking')}
                         </ButtonNao>
                     ) : (
-                        <ButtonNao onClick={onRedirect} className="!h-11 sm:h-12 px-6 text-sm sm:text-base font-semibold w-max !rounded-md mr-3 sm_only:flex-1">
+                        <ButtonNao onClick={onRedirect} className="!h-11 mb:h-12 px-6 text-sm mb:text-base font-semibold w-max !rounded-md mr-3 mb_only:flex-1">
                             {t('nao:contest:detail_rules')}
                         </ButtonNao>
                     )}
@@ -160,20 +160,20 @@ const ContesRules = ({
                     )}
                 </div>
             </div>
-            <div className="mt-10 sm:mt-0 text-center">
+            <div className="mt-10 mb:mt-0 text-center leading-[0]">
                 {season === seasonConfig ? (
                     <Image
                         src={getS3Url('/images/contest/bg_contest_v1.png')}
-                        width="544px"
-                        height="354px"
+                        width={544}
+                        height={354}
                         title={title_champion?.[language]}
                         alt={title_champion?.[language]}
                     />
                 ) : (
                     <Image
                         src={'/images/nao/contest/ic_contest_info.webp'}
-                        width="300px"
-                        height="292px"
+                        width={354}
+                        height={354}
                         title={title_champion?.[language]}
                         alt={title_champion?.[language]}
                     />
@@ -191,17 +191,17 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
         const end = new Date(item?.end).getTime();
         if (now < start && now < end) {
             return (
-                <div className="text-yellow-2 bg-yellow-2/[0.15] px-2 py-1 !pl-3 sm:!pl-2  rounded-r-[80px] sm:rounded-[80px]">{t('nao:coming_soon_2')}</div>
+                <div className="text-yellow-2 bg-yellow-2/[0.15] px-2 py-1 !pl-3 mb:!pl-2  rounded-r-[80px] mb:rounded-[80px]">{t('nao:coming_soon_2')}</div>
             );
         } else if (now > start && now < end) {
             return (
-                <div className="flex items-center space-x-1 bg-teal/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-r-[80px] sm:rounded-[80px] w-max">
+                <div className="flex items-center space-x-1 bg-teal/[0.1] px-2 py-1 !pl-3 mb:!pl-2 rounded-r-[80px] mb:rounded-[80px] w-max">
                     <img src={getS3Url('/images/nao/ic_nao_large.png')} width={16} height={16} />
                     <div className="text-teal ">{t('nao:going_on')}</div>
                 </div>
             );
         } else {
-            return <div className="text-gray-7 bg-gray-7/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-r-[80px] sm:rounded-[80px]">{t('nao:ended')}</div>;
+            return <div className="text-gray-7 bg-gray-7/[0.1] px-2 py-1 !pl-3 mb:!pl-2 rounded-r-[80px] mb:rounded-[80px]">{t('nao:ended')}</div>;
         }
     };
 
@@ -212,13 +212,13 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
     }, [seasonsFilter]);
 
     return (
-        <Popover className="relative flex sm_only:flex-1 sm_only:flex-grow-[1.5]">
+        <Popover className="relative flex mb_only:flex-1 mb_only:flex-grow-[1.5]">
             {({ open, close }) => (
                 <>
                     <Popover.Button className="w-full">
                         <ButtonNao
                             variant={ButtonNaoVariants.SECONDARY}
-                            className="!h-11 sm:h-12 px-6 text-sm sm:test-base font-semibold w-full !rounded-md flex items-center space-x-2 tournaments sm_only:px-1"
+                            className="!h-11 mb:h-12 px-6 text-sm mb:test-base font-semibold w-full !rounded-md flex items-center space-x-2 tournaments mb_only:px-1"
                         >
                             <span>{t('nao:contest:tournaments')}</span>
                             <ArrowDropDownIcon
@@ -241,11 +241,11 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
                             style={{
                                 transform: `translateX(calc(-50% - ${offset / 3}px))`
                             }}
-                            className={`absolute top-14 min-w-[90vw] overflow-hidden sm:min-w-max sm:!translate-x-0 left-1/2 sm:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full`}
+                            className={`absolute top-14 min-w-[90vw] overflow-hidden mb:min-w-max mb:!translate-x-0 left-1/2 mb:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full`}
                         >
                             <div
                                 className={`${
-                                    inHome ? 'sm:max-h-[250px]' : 'sm:max-h-[300px]'
+                                    inHome ? 'mb:max-h-[250px]' : 'mb:max-h-[300px]'
                                 } py-1 shadow-onlyLight text-sm flex flex-col rounded-xl border border-divider dark:border-divider-dark text-left max-h-[400px] overflow-y-auto`}
                             >
                                 {seasonsFilter.map((item, index) => (
@@ -255,10 +255,10 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
                                             close();
                                         }}
                                         key={index}
-                                        className="px-3 sm:px-4 sm:space-x-2 py-2 hover:bg-hover-1 dark:hover:bg-hover-dark cursor-pointer flex sm:items-center flex-col space-y-2 sm:space-y-0 sm:flex-row"
+                                        className="px-3 mb:px-4 mb:space-x-2 py-2 hover:bg-hover-1 dark:hover:bg-hover-dark cursor-pointer flex mb:items-center flex-col space-y-2 mb:space-y-0 mb:flex-row"
                                     >
-                                        <div className="-ml-4 sm:ml-0 text-[10px] leading-[12px] sm:text-sm whitespace-nowrap w-max">{progress(item)}</div>
-                                        <span className="sm:text-base">{item?.title_detail?.[language]} </span>
+                                        <div className="-ml-4 mb:ml-0 text-[10px] leading-[12px] mb:text-sm whitespace-nowrap w-max">{progress(item)}</div>
+                                        <span className="mb:text-base">{item?.title_detail?.[language]} </span>
                                     </div>
                                 ))}
                             </div>
@@ -299,17 +299,17 @@ const TournamentList = ({ t, seasonsFilter, router, season, language }) => {
     };
 
     return (
-        <div className="relative flex sm_only:flex-1 sm_only:flex-grow-[1.5]">
+        <div className="relative flex mb_only:flex-1 mb_only:flex-grow-[1.5]">
             {showTournaments && (
                 <Modal
                     onusMode={true}
                     isVisible={true}
                     onBackdropCb={() => setShowTournaments(false)}
-                    onusClassName="!px-0 pb-[3.75rem] !overflow-hidden text-sm sm:text-base"
+                    onusClassName="!px-0 pb-[3.75rem] !overflow-hidden text-sm mb:text-base"
                     containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
                 >
                     <SvgCross className="ml-auto mr-7" color="currentColor" size={24} onClick={() => setShowTournaments(false)} />
-                    <div className="!px-6 mt-6 text-xl sm:text-2xl font-semibold">{t('nao:contest:tournaments')}</div>
+                    <div className="!px-6 mt-6 text-xl mb:text-2xl font-semibold">{t('nao:contest:tournaments')}</div>
                     <div className="scrollbar-nao form-team mt-8 overflow-y-auto max-h-[calc(100%-4rem)]">
                         {seasonsFilter.map((item, index) => (
                             <div
@@ -318,9 +318,9 @@ const TournamentList = ({ t, seasonsFilter, router, season, language }) => {
                                     setShowTournaments(false);
                                 }}
                                 key={index}
-                                className="px-6 py-3 hover:bg-hover-1 dark:hover:bg-hover-dark cursor-pointer flex items-center space-x-3 sm:flex-row"
+                                className="px-6 py-3 hover:bg-hover-1 dark:hover:bg-hover-dark cursor-pointer flex items-center space-x-3 mb:flex-row"
                             >
-                                <div className="text-xs sm:text-sm whitespace-nowrap w-max min-w-[7rem]">{Progress(item)}</div>
+                                <div className="text-xs mb:text-sm whitespace-nowrap w-max min-w-[7rem]">{Progress(item)}</div>
                                 <span className="">{item?.title_detail?.[language]} </span>
                             </div>
                         ))}
@@ -329,7 +329,7 @@ const TournamentList = ({ t, seasonsFilter, router, season, language }) => {
             )}
             <ButtonNao
                 variant={ButtonNaoVariants.SECONDARY}
-                className="!h-11 sm:h-12 px-4 text-sm font-semibold w-full !rounded-md flex items-center space-x-2 tournaments sm_only:px-1"
+                className="!h-11 mb:h-12 px-4 text-sm font-semibold w-full !rounded-md flex items-center space-x-2 tournaments mb_only:px-1"
                 onClick={() => setShowTournaments(true)}
             >
                 <span>{t('nao:contest:tournaments')}</span>

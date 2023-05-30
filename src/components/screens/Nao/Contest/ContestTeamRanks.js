@@ -169,7 +169,7 @@ const ContestTeamRanks = ({
         );
     };
     return (
-        <section className="contest_individual_ranks pt-8">
+        <section className="contest_individual_ranks py-6 sm:pb-14">
             {minVolumeTeam && (
                 <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-team-rank">
                     <div
@@ -198,7 +198,7 @@ const ContestTeamRanks = ({
                         // />
                     )}
                 </div>
-                {showPnl && (
+                {/* {showPnl && (
                     <div className="flex items-center gap-3 text-sm">
                         <ButtonNao
                             onClick={() => onFilter('volume')}
@@ -221,12 +221,12 @@ const ContestTeamRanks = ({
                             {t('nao:contest:per_pnl')}
                         </ButtonNao>
                     </div>
-                )}
+                )} */}
             </div>
             {hasTabCurrency && (
                 <TabsNao>
                     {currencies.map((rs) => (
-                        <TabItemNao onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
+                        <TabItemNao key={rs.value} onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
                             {rs.label}
                         </TabItemNao>
                     ))}
@@ -374,7 +374,7 @@ const ContestTeamRanks = ({
                     </div>
                 </>
             ) : (
-                <div className="dark:bg-dark-4 rounded-xl">
+                <div className="dark:bg-dark-4 bg-white rounded-xl">
                     <Table
                         loading={loading}
                         noItemsMessage={t('nao:contest:no_rank')}

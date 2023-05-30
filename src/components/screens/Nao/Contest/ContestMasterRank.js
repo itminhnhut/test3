@@ -81,7 +81,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
             <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
-                        className="object-cover rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
+                        className="object-cover rounded-[50%] min-w-[1.5rem] min-h-[1.5rem] max-w-[1.5rem] max-h-[1.5rem]"
                         src={item?.avatar}
                         width="32"
                         height="32"
@@ -127,7 +127,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
     const showData = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
-        <section className="contest_individual_ranks pt-20 text-sm sm:text-base">
+        <section className="contest_individual_ranks py-6 sm:pb-14 text-sm sm:text-base">
             {minVolumeTeam && (
                 <Tooltip
                     className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
@@ -177,11 +177,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                         >
                             <div className="flex items-center space-x-3">
                                 <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
-                                    <ImageNao
-                                        className="object-cover w-14 h-14 rounded-full"
-                                        src={item?.avatar}
-                                        alt=""
-                                    />
+                                    <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
                                 </div>
                                 <div>
                                     <div className="flex items-center space-x-2">

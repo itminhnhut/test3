@@ -135,10 +135,10 @@ const ContestPerRanks = ({
             <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
-                        className="rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
+                        className="rounded-[50%] object-cover min-w-[1.5rem] min-h-[1.5rem] max-w-[1.5rem] max-h-[1.5rem]"
                         src={item?.avatar}
-                        width="32"
-                        height="32"
+                        width="24"
+                        height="24"
                         alt=""
                     />
                 </div>
@@ -169,7 +169,7 @@ const ContestPerRanks = ({
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
-        <section className="contest_individual_ranks pt-20">
+        <section className="contest_individual_ranks py-6 sm:pb-0">
             {minVolumeInd && (
                 <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-personal-rank">
                     <div
@@ -189,7 +189,7 @@ const ContestPerRanks = ({
                         </div>
                     )}
                 </div>
-                {showPnl && (
+                {/* {showPnl && (
                     <div className="flex items-center gap-3">
                         <ButtonNao
                             onClick={() => onFilter('volume')}
@@ -212,12 +212,12 @@ const ContestPerRanks = ({
                             {t('nao:contest:per_pnl')}
                         </ButtonNao>
                     </div>
-                )}
+                )} */}
             </div>
             {hasTabCurrency && (
                 <TabsNao>
                     {currencies.map((rs) => (
-                        <TabItemNao onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
+                        <TabItemNao key={rs.value} onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
                             {rs.label}
                         </TabItemNao>
                     ))}
@@ -367,12 +367,7 @@ const ContestPerRanks = ({
                 </>
             ) : (
                 <div className="dark:bg-dark-4 rounded-xl">
-                    <Table
-                        loading={loading}
-                        noItemsMessage={t('nao:contest:no_rank')}
-                        dataSource={dataFilter}
-                        classWrapper="!text-sm sm:!text-base"
-                    >
+                    <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataFilter} classWrapper="!text-sm sm:!text-base">
                         <Column
                             minWidth={50}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
@@ -380,10 +375,10 @@ const ContestPerRanks = ({
                             fieldName={rank}
                             cellRender={renderRank}
                         />
-                        <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
-                        <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'User ID'} fieldName={userID} />
+                        <Column minWidth={300} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
+                        <Column minWidth={200} className="text-txtPrimary dark:text-txtPrimary-dark" title={'User ID'} fieldName={userID} />
                         <Column
-                            minWidth={150}
+                            minWidth={120}
                             align="right"
                             className=""
                             title={`${t('nao:contest:volume')} (${quoteAsset})`}
@@ -391,7 +386,7 @@ const ContestPerRanks = ({
                             fieldName="total_volume"
                         />
                         <Column
-                            minWidth={150}
+                            minWidth={120}
                             visible={!previous}
                             align="right"
                             className=""
@@ -402,8 +397,8 @@ const ContestPerRanks = ({
                         />
                         {tab === 'pnl' ? (
                             <Column
-                                maxWidth={120}
-                                minWidth={100}
+                                maxWidth={100}
+                                minWidth={80}
                                 align="right"
                                 className=""
                                 title={t('nao:contest:per_pnl')}
@@ -412,8 +407,8 @@ const ContestPerRanks = ({
                             />
                         ) : (
                             <Column
-                                maxWidth={120}
-                                minWidth={100}
+                                maxWidth={100}
+                                minWidth={80}
                                 align="right"
                                 className=""
                                 title={t('nao:contest:total_trades')}
@@ -422,11 +417,11 @@ const ContestPerRanks = ({
                             />
                         )}
                     </Table>
-                    {total > 1 && (
+                    {/* {total > 1 && (
                         <div className="w-full hidden sm:flex justify-center py-8">
                             <RePagination onusMode total={total} current={page} pageSize={pageSize} onChange={(page) => setPage(page)} name="" />
                         </div>
-                    )}
+                    )} */}
                 </div>
             )}
             {lastUpdated && lastUpdatedTime.current && (

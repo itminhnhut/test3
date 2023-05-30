@@ -133,7 +133,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
 
     return (
         <>
-            <section className="contest_info pt-6">
+            <section className="contest_info py-6 sm:mb-14">
                 <div className="flex items-center justify-between">
                     <TextLiner>{t('nao:contest:personal')}</TextLiner>
                     {!userData?.group_name && isValidCreate && (
@@ -151,7 +151,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                         ))}
                     </TabsNao>
                 )}
-                <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-9 mb-12 sm:mt-6 text-sm sm:text-base">
+                <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-9 sm:mt-6 text-sm sm:text-base">
                     <CardNao className={`!p-6 lg:!max-w-[375px] ${previous && contest_id !== 10 ? '' : '!justify-center space-y-3'}`}>
                         <label className="text-xl sm:text-2xl text-teal font-semibold leading-8 capitalize">{capitalize(userData?.name)}</label>
                         <div className=" text-txtSecondary dark:text-txtSecondary-dark flex flex-col items-start">

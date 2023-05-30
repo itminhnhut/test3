@@ -370,7 +370,7 @@ const Contest = (props) => {
 
     const renderTab = () => {
         return (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 py-6">
                 <div
                     onClick={() => handleChangTab(initState.tab1)}
                     className={classNames(
@@ -435,7 +435,7 @@ const Contest = (props) => {
     };
     const renderContentTab2 = () => {
         return (
-            <section id="content2" className={`${tab === initState?.tab2 ? 'inline' : 'hidden'}`}>
+            <section id="content2" className={`${tab === initState?.tab2 ? 'inline sm_only:pb-6' : 'hidden'}`}>
                 <ListRankings data={KLGD5?.data || []} loading={loadingSpecial} />
                 <ListRankings isList type="vol_3" data={KLGD3?.data || []} rank_metadata="vol_3" loading={loadingSpecial} />
                 <ListRankings isList type="vol_2" data={KLGD2?.data || []} rank_metadata="vol_2" loading={loadingSpecial} />
@@ -456,15 +456,15 @@ const Contest = (props) => {
                 />
             )}
             <div className="min-h-screen">
-                <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
+                <div className="px-4 nao:px-0 max-w-[72.5rem] w-full m-auto !mt-0">
                     <NaoHeader />
                 </div>
                 <div className="nao_section">
-                    <div className="px-4 sm_only:pt-6 max-w-[72.5rem] w-full m-auto">
+                    <div className="px-4 nao:px-0 sm_only:pt-6 max-w-[72.5rem] w-full m-auto">
                         <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
                     </div>
                     <div className="bg-gray-13 dark:bg-dark rounded-t-3xl">
-                        <div className="px-4 pb-20 sm:pb-[120px] max-w-[72.5rem] w-full m-auto">
+                        <div className="px-4 pb-14 sm:pb-[120px] max-w-[72.5rem] nao:px-0 w-full m-auto">
                             <ContestInfo
                                 {...props}
                                 ref={refInfo}
