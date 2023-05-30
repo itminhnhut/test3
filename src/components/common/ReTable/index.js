@@ -442,7 +442,7 @@ const ReTableWrapperV2 = styled.div`
     .rc-table-cell-fix-right,
     .rc-table-cell-fix-right-first,
     .rc-table-cell-fix-right-last {
-        z-index: 99;
+        z-index: 20;
         background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important;
         &:after {
             border-right: ${({ noBorder, isDark }) => (noBorder ? 'none !important' : `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT}`)};
