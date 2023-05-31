@@ -21,8 +21,8 @@ const { subDays } = require('date-fns');
 import CollapseV2 from 'components/common/V2/CollapseV2';
 
 // note: white always in the tail of list <=> Others
-const listDoughnutColorsLight = [colors.green[6], colors.purple[1], colors.green[7], colors.yellow[5], colors.gray[12]];
-const listDoughnutColorsDark = [colors.green[6], colors.purple[1], colors.green[7], colors.yellow[5], '#fff'];
+const listDoughnutColorsLight = [colors.yellow[5], colors.green[6], colors.purple[1], colors.green[7], '#fff'];
+const listDoughnutColorsDark = [colors.yellow[5], colors.green[6], colors.purple[1], colors.green[7], '#fff'];
 
 const FILTER_PNL = [
     {
@@ -72,7 +72,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
 
     // mock data
     // console.log("___________dataTradingPairs?.symbolsCount?.buckets?.map(obj => obj?.key)", dataTradingPairs?.symbolsCount?.buckets?.map(obj => obj?.key));
-    const labels = dataTradingPairs?.symbolsCount?.buckets?.map((obj) => formatPair(obj?.key)) ?? [];
+    const labels = dataTradingPairs?.symbolsCount?.buckets?.map((obj) => formatPair(obj?.key, t)) ?? [];
     const mockData = {
         labels,
         datasets: [
@@ -153,7 +153,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                 label={<HeaderTooltip isMobile title="Cặp giao dịch" tooltipContent={'This is tooltip content'} tooltipId={'trading_pair_tooltip'} />}
                 labelClassname="text-base font-semibold"
             >
-                <div className={` ${isMobile ? '' : 'p-8 rounded-xl bg-gray-12 dark:bg-dark-4'}`}>
+                <div className={` ${isMobile ? '' : 'p-8 rounded-xl bg-gray-13 dark:bg-dark-4'}`}>
                     <GroupTextFilter curFilter={filterPnl} setCurFilter={setFilterPnl} GroupKey={'trading_pairs_filter'} t={t} listFilter={FILTER_PNL} />
                     <div className="flex items-center justify-center w-full mt-8">
                         <div className={`min-w-[200px] max-w-[312px] w-full`}>
@@ -176,7 +176,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                             />
                         ))}
                     </div>
-                    <div id="notice" className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4">
+                    <div id="notice" className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
                         <BxsInfoCircle />
                         <span>Nhấn vào từng mảng để xem thống kê chi tiết</span>
                     </div>
@@ -186,7 +186,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
     }
 
     return (
-        <div className="p-8 rounded-xl bg-gray-12 dark:bg-dark-4">
+        <div className="p-8 rounded-xl bg-gray-13 dark:bg-dark-4">
             <div className="flex items-center justify-between">
                 <HeaderTooltip title="Cặp giao dịch" tooltipContent={'This is tooltip content'} tooltipId={'trading_pair_tooltip'} />
                 <GroupTextFilter curFilter={filterPnl} setCurFilter={setFilterPnl} GroupKey={'trading_pairs_filter'} t={t} listFilter={FILTER_PNL} />
@@ -203,7 +203,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                 </div>
             </div>
             {/* Chu thich */}
-            <div className={`flex items-center gap-x-4 mt-9 py-1 justify-center ${labels.length === 0 && 'hidden'}`}>
+            <div className={`flex items-center gap-4 mt-9 py-1 justify-center flex-wrap ${labels.length === 0 && 'hidden'}`}>
                 {labels.map((label, idx) => (
                     <Note
                         key={'note_' + label}

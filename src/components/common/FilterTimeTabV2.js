@@ -89,6 +89,9 @@ const FilterTimeTabV2 = ({
 
     const handleOutside = () => {
         if (showPicker) {
+            setTimeTab(prevFilter);
+            setIsCustomDay(false);
+
             setDate(filter?.range);
             setShowPicker(false);
         }
@@ -173,7 +176,13 @@ const FilterTimeTabV2 = ({
 
                     {isMobile ? (
                         <div
-                            onClick={() => setShowPicker(true)}
+                            onClick={() => {
+                                setTimeTab((prev) => {
+                                    setPrevFilter(prev);
+                                    setShowPicker(true);
+                                    return 'custom';
+                                });
+                            }}
                             className={classNames('border rounded-full cursor-pointer font-normal select-none flex items-center', {
                                 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== 'custom',
                                 'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === 'custom',
@@ -182,7 +191,11 @@ const FilterTimeTabV2 = ({
                             })}
                         >
                             {!isMobile && <CalendarFillIcon className="mr-2" color={timeTab === 'custom' ? colors.teal : '#8694b2'} size={20} />}
-                            {t('dw_partner:filter.custom')}
+                            <span className="whitespace-nowrap">
+                                {isCustomDay
+                                    ? `${formatTime(filter?.range?.startDate, 'dd/MM/yyyy')} - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}`
+                                    : t('dw_partner:filter.custom')}
+                            </span>
                         </div>
                     ) : (
                         <DatePickerV2
@@ -212,9 +225,11 @@ const FilterTimeTabV2 = ({
                                     })}
                                 >
                                     {!isMobile && <CalendarFillIcon className="mr-2" color={timeTab === 'custom' ? colors.teal : '#8694b2'} size={20} />}
-                                    {isCustomDay
-                                        ? `${formatTime(filter?.range?.startDate, 'dd/MM/yyyy')} - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}`
-                                        : t('dw_partner:filter.custom')}
+                                    <span className="whitespace-nowrap">
+                                        {isCustomDay
+                                            ? `${formatTime(filter?.range?.startDate, 'dd/MM/yyyy')} - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}`
+                                            : t('dw_partner:filter.custom')}
+                                    </span>
                                 </div>
                             }
                         />
@@ -223,7 +238,7 @@ const FilterTimeTabV2 = ({
             </div>
             <ModalV2 isVisible={showPicker} onBackdropCb={handleOutside} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
                 <h1 className="mt-6 text-xl font-semibold text-gray-15 dark:text-gray-4">Thời gian</h1>
-                <div className={classNames('date-range-picker flex flex-col justify-center mt-2 w-full !bg-transparent')}>
+                <div className={classNames('date-range-picker flex flex-col justify-center mt-2 w-full !bg-transparent !border-none !shadow-none')}>
                     <DateRangePicker
                         className={classNames(`h-full px-[10px] w-full`)}
                         date={date}

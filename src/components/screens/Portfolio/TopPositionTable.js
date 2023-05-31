@@ -41,6 +41,8 @@ import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
 import FuturesLeverage from 'components/common/FuturesLeverage';
 import Skeletor from 'components/common/Skeletor';
 import CollapseV2 from 'components/common/V2/CollapseV2';
+import ModalV2 from 'components/common/V2/ModalV2';
+import MCard from 'components/common/MCard';
 
 const LIST_TABS = [
     { id: 1, localized: 'common:position:max_profit' },
@@ -56,6 +58,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
     const [loadingTopPosition, setLoadingTopPosition] = useState(false);
     const [curTab, setCurTab] = useState(LIST_TABS[0].id);
     const [dataTable, setDataTable] = useState([]);
+    const [showDetails, setShowDetails] = useState(null);
 
     useEffect(() => {
         setDataTable(curTab === LIST_TABS[0].id ? dataTopPosition?.top5Profit || [] : dataTopPosition?.top5Loss || []);
@@ -81,7 +84,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
     };
 
     useEffect(() => {
-        if(!filter) return;
+        if (!filter) return;
 
         fetchTopPosition();
     }, [typeProduct, typeCurrency, filter]);
@@ -161,12 +164,12 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                 render: (v, item) => formatNumber(v, item?.decimalScalePrice, 0, true)
             },
             {
-                key: 'volume',
-                dataIndex: 'volume',
+                key: 'order_value',
+                dataIndex: 'order_value',
                 title: t('futures:order_table:volume'),
                 align: 'right',
                 width: 163,
-                render: (_row, item) => formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)
+                render: (v, item) => formatNumber(v, item?.decimalScalePrice, 0, true)
             },
             {
                 key: 'displaying_id',
@@ -174,7 +177,6 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                 title: t('futures:mobile:transaction_histories:id'),
                 align: 'right',
                 width: 136,
-                fixed: 'right',
                 render: (v) => `ID #${v}`
             }
         ],
@@ -183,89 +185,103 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
 
     if (isMobile)
         return (
-            <CollapseV2
-                className="w-full mt-12"
-                divLabelClassname="w-full justify-between"
-                chrevronStyled={{ size: 24, style: {marginRight: 16}, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
-                label={
-                    <HeaderTooltip
-                        isMobile
-                        className='ml-4'
-                        title={`Top ${LIMIT_ROW} vị thế`}
-                        tooltipContent={'This is tooltip content'}
-                        tooltipId="top_position_tooltip"
-                    />
-                }
-                labelClassname="text-base font-semibold"
-            >
-                <div className={`${className}`}>
-                    <div className="relative flex tracking-normal">
-                        <Tabs isMobile tab={curTab} className="mt-6 md:mt-0 md:px-6 gap-x-6 border-b border-divider dark:border-divider-dark">
-                            {LIST_TABS.map((e) => {
-                                return (
-                                    <TabItem
-                                        isActive={e?.id === curTab}
-                                        key={'top_position_tabs_' + e?.id}
-                                        className="text-center w-1/2 px-0 first:ml-4 last:mr-4"
-                                        value={e.id}
-                                        onClick={() => setCurTab(e.id)}
-                                    >
-                                        {t(`${e.title ?? e.localized}`)}
-                                    </TabItem>
-                                );
-                            })}
-                        </Tabs>
-                    </div>
-                    <div className="px-4 mt-6 mb-20 text-gray-1 dark:text-gray-7">
-                        {loadingTopPosition ? (
-                            Array(LIMIT_ROW)
-                                .fill()
-                                .map((_, i) => (
-                                    <div className="last:border-none border-b border-divider dark:border-divider-dark py-4" key={'sekeletor_table_' + i}>
-                                        <div className="flex justify-between items-center text-sm font-semibold">
-                                            <Skeletor width={100} height={17} />
-                                            <Skeletor width={140} height={17} />
-                                        </div>
-                                        <div className="flex justify-between items-center text-xs mt-2">
-                                            <Skeletor width={110} height={12} />
-                                            <Skeletor width={50} height={12} />
-                                        </div>
-                                    </div>
-                                ))
-                        ) : dataTable.length > 0 ? (
-                            dataTable.map((item) => {
-                                const { displaying_id, opened_at, symbol, leverage, profit, margin, side, type } = item;
-                                const sign = profit > 0 ? '+' : '';
-                                return (
-                                    <div className="last:border-none border-b border-divider dark:border-divider-dark py-4" key={'mobile_row_' + displaying_id}>
-                                        <div className="flex justify-between items-center text-sm font-semibold">
-                                            <div className="whitespace-nowrap flex items-center">
-                                                <span className="xt-gray-15 dark:text-gray-4">{symbol?.slice(0, -4)}</span>
-                                                <span className="mr-2">{`/${symbol?.slice(-4)}`}</span>
-                                                <FuturesLeverage className="text-[10px] leading-[12px]" value={leverage} />
+            <>
+                <CollapseV2
+                    className="w-full mt-12"
+                    divLabelClassname="w-full justify-between"
+                    chrevronStyled={{ size: 24, style: { marginRight: 16 }, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
+                    label={
+                        <HeaderTooltip
+                            isMobile
+                            className="ml-4"
+                            title={`Top ${LIMIT_ROW} vị thế`}
+                            tooltipContent={'This is tooltip content'}
+                            tooltipId="top_position_tooltip"
+                        />
+                    }
+                    labelClassname="text-base font-semibold"
+                >
+                    <div className={`${className}`}>
+                        <div className="relative flex tracking-normal">
+                            <Tabs isMobile tab={curTab} className="mt-6 md:mt-0 md:px-6 gap-x-6 border-b border-divider dark:border-divider-dark">
+                                {LIST_TABS.map((e) => {
+                                    return (
+                                        <TabItem
+                                            isActive={e?.id === curTab}
+                                            key={'top_position_tabs_' + e?.id}
+                                            className="text-center w-1/2 px-0 first:ml-4 last:mr-4"
+                                            value={e.id}
+                                            onClick={() => setCurTab(e.id)}
+                                        >
+                                            {t(`${e.title ?? e.localized}`)}
+                                        </TabItem>
+                                    );
+                                })}
+                            </Tabs>
+                        </div>
+                        <div className="mt-6 mb-20 text-gray-1 dark:text-gray-7">
+                            {loadingTopPosition ? (
+                                Array(LIMIT_ROW)
+                                    .fill()
+                                    .map((_, i) => (
+                                        <div
+                                            className="px-4 last:border-none border-b border-divider dark:border-divider-dark py-4"
+                                            key={'sekeletor_table_' + i}
+                                        >
+                                            <div className="flex justify-between items-center text-sm font-semibold">
+                                                <Skeletor width={100} height={17} />
+                                                <Skeletor width={140} height={17} />
                                             </div>
-                                            <div className="flex items-center">
-                                                <span className={sign ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
-                                                    {sign + formatNanNumber(profit, isVndc ? 0 : 4)}
+                                            <div className="flex justify-between items-center text-xs mt-2">
+                                                <Skeletor width={110} height={12} />
+                                                <Skeletor width={50} height={12} />
+                                            </div>
+                                        </div>
+                                    ))
+                            ) : dataTable.length > 0 ? (
+                                dataTable.map((item) => {
+                                    const { displaying_id, opened_at, symbol, leverage, profit, margin, side, type } = item;
+                                    const sign = profit > 0 ? '+' : '';
+                                    return (
+                                        <div
+                                            onClick={() => setShowDetails(item)}
+                                            className="px-4 last:border-none cursor-pointer border-b border-divider dark:border-divider-dark py-4 hover:bg-gray-13 dark:hover:bg-hover-dark"
+                                            key={'mobile_row_' + curTab + displaying_id}
+                                        >
+                                            <div className="flex justify-between items-center text-sm font-semibold">
+                                                <div className="whitespace-nowrap flex items-center">
+                                                    <span className="xt-gray-15 dark:text-gray-4">{symbol?.slice(0, -4)}</span>
+                                                    <span className="mr-2">{`/${symbol?.slice(-4)}`}</span>
+                                                    <FuturesLeverage className="text-[10px] leading-[12px]" value={leverage} />
+                                                </div>
+                                                <div className="flex items-center">
+                                                    <span className={sign ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
+                                                        {sign + formatNanNumber(profit, isVndc ? 0 : 4)}
+                                                    </span>
+                                                    <PriceChangePercent priceChangePercent={profit / margin} className="!justify-start !text-sm" />
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-between items-center text-xs mt-2">
+                                                <span className="whitespace-nowrap">{formatTime(opened_at, 'HH:mm:ss dd/MM/yyyy')}</span>
+                                                <span className={side?.toUpperCase() === 'BUY' ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
+                                                    {t(`common:${side?.toLowerCase()}`)} / {t(`common:${type?.toLowerCase()}`)}
                                                 </span>
-                                                <PriceChangePercent priceChangePercent={profit / margin} className="!justify-start !text-sm" />
                                             </div>
                                         </div>
-                                        <div className="flex justify-between items-center text-xs mt-2">
-                                            <span className="whitespace-nowrap">{formatTime(opened_at, 'HH:mm:ss dd/MM/yyyy')}</span>
-                                            <span className={side?.toUpperCase() === 'BUY' ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
-                                                {t(`common:${side?.toLowerCase()}`)} / {t(`common:${type?.toLowerCase()}`)}
-                                            </span>
-                                        </div>
-                                    </div>
-                                );
-                            })
-                        ) : (
-                            <NoData className="mt-12" />
-                        )}
+                                    );
+                                })
+                            ) : (
+                                <NoData className="mt-12" />
+                            )}
+                        </div>
                     </div>
-                </div>
-            </CollapseV2>
+                </CollapseV2>
+                <ModalV2 isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
+                    <h1 className="mt-6 text-xl font-semibold text-gray-15 dark:text-gray-4">Chi tiết lệnh</h1>
+                    {showDetails && <ModalDetailsPosition value={showDetails} isVndc={isVndc} t={t} />}
+                </ModalV2>
+                {/* <ModalDetailsPosition isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)}  /> */}
+            </>
         );
 
     return (
@@ -294,73 +310,65 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                     })}
                 </Tabs>
             </div>
-            {isMobile ? (
-                <div className="px-4 mt-6 mb-20 text-gray-1 dark:text-gray-7">
-                    {loadingTopPosition ? (
-                        Array(LIMIT_ROW)
-                            .fill()
-                            .map((_, i) => (
-                                <div className="last:border-none border-b border-divider dark:border-divider-dark py-4" key={'sekeletor_table_' + i}>
-                                    <div className="flex justify-between items-center text-sm font-semibold">
-                                        <Skeletor width={100} height={17} />
-                                        <Skeletor width={140} height={17} />
-                                    </div>
-                                    <div className="flex justify-between items-center text-xs mt-2">
-                                        <Skeletor width={110} height={12} />
-                                        <Skeletor width={50} height={12} />
-                                    </div>
-                                </div>
-                            ))
-                    ) : dataTable.length > 0 ? (
-                        dataTable.map((item) => {
-                            const { displaying_id, opened_at, symbol, leverage, profit, margin, side, type } = item;
-                            const sign = profit > 0 ? '+' : '';
-                            return (
-                                <div className="last:border-none border-b border-divider dark:border-divider-dark py-4" key={'mobile_row_' + displaying_id}>
-                                    <div className="flex justify-between items-center text-sm font-semibold">
-                                        <div className="whitespace-nowrap flex items-center">
-                                            <span className="xt-gray-15 dark:text-gray-4">{symbol?.slice(0, -4)}</span>
-                                            <span className="mr-2">{`/${symbol?.slice(-4)}`}</span>
-                                            <FuturesLeverage className="text-[10px] leading-[12px]" value={leverage} />
-                                        </div>
-                                        <div className="flex items-center">
-                                            <span className={sign ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
-                                                {sign + formatNanNumber(profit, isVndc ? 0 : 4)}
-                                            </span>
-                                            <PriceChangePercent priceChangePercent={profit / margin} className="!justify-start !text-sm" />
-                                        </div>
-                                    </div>
-                                    <div className="flex justify-between items-center text-xs mt-2">
-                                        <span className="whitespace-nowrap">{formatTime(opened_at, 'HH:mm:ss dd/MM/yyyy')}</span>
-                                        <span className={side?.toUpperCase() === 'BUY' ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
-                                            {t(`common:${side?.toLowerCase()}`)} / {t(`common:${type?.toLowerCase()}`)}
-                                        </span>
-                                    </div>
-                                </div>
-                            );
-                        })
-                    ) : (
-                        <NoData className="mt-12" />
-                    )}
+            <TableV2
+                sort={['profit', 'margin', 'order_value']}
+                loading={loadingTopPosition}
+                useRowHover
+                data={dataTable || []}
+                columns={columns}
+                rowKey={(item) => `${item?.key}`}
+                scroll={{ x: true }}
+                limit={LIMIT_ROW}
+                skip={0}
+                pagingClassName="border-none"
+                height={350}
+                tableStyle={{ fontSize: '16px', padding: '16px' }}
+                className="pb-1 rounded-b-xl border-t border-divider dark:border-divider-dark"
+                // className="bg-white dark:bg-transparent pt-8 border border-divider dark:border-divider-dark rounded-xl"
+            />
+        </div>
+    );
+};
+
+const ModalDetailsPosition = ({ value, isVndc, t }) => {
+    if (!value) return;
+
+    const { displaying_id, opened_at, symbol, leverage, profit, margin, side, type, decimalScalePrice, order_value } = value;
+    const sign = profit > 0 ? '+' : '';
+
+    return (
+        <div>
+            <div className="flex justify-between items-center text-sm font-semibold mt-6">
+                <div className="whitespace-nowrap flex items-center">
+                    <span className="xt-gray-15 dark:text-gray-4">{symbol?.slice(0, -4)}</span>
+                    <span className="mr-2">{`/${symbol?.slice(-4)}`}</span>
+                    <FuturesLeverage className="text-[10px] leading-[12px]" value={leverage} />
                 </div>
-            ) : (
-                <TableV2
-                    sort={['profit', 'margin', 'volume']}
-                    loading={loadingTopPosition}
-                    useRowHover
-                    data={dataTable || []}
-                    columns={columns}
-                    rowKey={(item) => `${item?.key}`}
-                    scroll={{ x: true }}
-                    limit={LIMIT_ROW}
-                    skip={0}
-                    pagingClassName="border-none"
-                    height={350}
-                    tableStyle={{ fontSize: '16px', padding: '16px' }}
-                    className="pb-1 rounded-b-xl border-t border-divider dark:border-divider-dark"
-                    // className="bg-white dark:bg-transparent pt-8 border border-divider dark:border-divider-dark rounded-xl"
-                />
-            )}
+                <div className="flex items-center">
+                    <span className={sign ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>{sign + formatNanNumber(profit, isVndc ? 0 : 4)}</span>
+                    <PriceChangePercent priceChangePercent={profit / margin} className="!justify-start !text-sm" />
+                </div>
+            </div>
+            <div className="flex justify-between items-center text-xs mt-2">
+                <span className="whitespace-nowrap">{formatTime(opened_at, 'HH:mm:ss dd/MM/yyyy')}</span>
+                <span className={side?.toUpperCase() === 'BUY' ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
+                    {t(`common:${side?.toLowerCase()}`)} / {t(`common:${type?.toLowerCase()}`)}
+                </span>
+            </div>
+            <MCard addClass={'mt-6 !p-4 !text-sm !font-semibold'}>
+                <div className="flex justify-between items-center">
+                    <div className="txtSecond-3">Ký quỹ</div>
+                    <div>{formatNumber(margin, decimalScalePrice, 0, true)}</div>
+                </div>
+                <div className="flex justify-between items-center mt-2.5">
+                    <div className="txtSecond-3">Khối lượng</div>
+                    <div>{formatNumber(order_value, decimalScalePrice, 0, true)}</div>
+                </div>
+                <div className="flex justify-between items-center mt-2.5">
+                    <div className="txtSecond-3">ID vị thế</div>
+                    <div>{`ID #${displaying_id}`}</div>
+                </div>
+            </MCard>
         </div>
     );
 };

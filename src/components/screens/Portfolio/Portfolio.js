@@ -27,6 +27,8 @@ import FilterTimeTab from 'components/common/FilterTimeTab';
 import FilterTimeTabV2 from 'components/common/FilterTimeTabV2';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
 import GroupButtonCurrency from './GroupButtonCurrency';
+import ModalV2 from 'components/common/V2/ModalV2';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const TIME_FILTER = [
     {
@@ -69,7 +71,7 @@ const Portfolio = () => {
         firstTimeTrade: '2023-04-21T07:39:35.002Z',
         overallStatistic: {}
     });
-    const [isNeverTrade, setIsNeverTrade] = useState(false)
+    const [isNeverTrade, setIsNeverTrade] = useState(false);
     const [loadingOverview, setLoadingOverview] = useState(false);
     const fetchDataOverview = async () => {
         try {
@@ -90,7 +92,7 @@ const Portfolio = () => {
                 overallStatistic: data?.overallStatistic
             });
 
-            if(!data?.firstPosition?.created_at) setIsNeverTrade(true)
+            if (!data?.firstPosition?.created_at) setIsNeverTrade(true);
         } catch (error) {
         } finally {
             setLoadingOverview(false);
@@ -119,13 +121,13 @@ const Portfolio = () => {
     };
 
     useEffect(() => {
-        if(!filter) return;
+        if (!filter) return;
         fetchDataOverview();
         fetchDataPnlChanging();
     }, [typeProduct, typeCurrency, filter]);
 
     return (
-        <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal text-xs leading-[16px] md:text-base pb-[120px]">
+        <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal text-xs leading-[16px] md:text-base pb-20 md:pb-[120px]">
             {/* Banner infor */}
             <BannerInfo
                 setTypeCurrency={setTypeCurrency}
@@ -141,7 +143,7 @@ const Portfolio = () => {
             {/* Content */}
             <div className="w-full px-4 relative">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto pt-20">
-                <div className="flex items-center md:justify-between">
+                    <div className="flex items-center md:justify-between">
                         <GroupButtonCurrency typeCurrency={typeCurrency} setTypeCurrency={setTypeCurrency} isMobile={isMobile} />
                         <div className="vertical-divider !h-9 md:hidden"></div>
                         <FilterTimeTabV2
@@ -237,13 +239,18 @@ const Portfolio = () => {
             <div className="w-full md:px-4">
                 {isMobile && <div className="w-full border-b border-divider dark:border-divider-dark mt-[47px]"></div>}
                 <TopPositionTable
-                    className={!isMobile && 'max-w-screen-v3 2xl:max-w-screen-xxl m-auto pt-20 pb-[120px]'}
+                    className={!isMobile && 'max-w-screen-v3 2xl:max-w-screen-xxl m-auto pb-[120px]'}
                     typeProduct={typeProduct}
                     typeCurrency={typeCurrency}
                     filter={filter}
                     isMobile={isMobile}
                     isDark={isDark}
                 />
+            </div>
+            <div className={`fixed px-4 left-0 bottom-0 w-full bg-white dark:bg-dark-dark border-t border-divider dark:border-divider-dark ${(!isMobile || dataOverview?.overallStatistic?.totalVolume?.value) && 'hidden'}`} >
+                <ButtonV2 onClick={() => router.push('./futures/BTCVNDC')} className="mt-8 mb-8">
+                    {t('common:luckydraw.trade')}
+                </ButtonV2>
             </div>
         </div>
     );

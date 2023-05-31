@@ -53,7 +53,7 @@ const PositionInfo = ({
 }) => {
     const percentClipPath = (totalLossPosition / total) * 100;
     return (
-        <div className="py-6 px-4 md:p-8 rounded-xl bg-gray-12 dark:bg-dark-4 static">
+        <div className="py-6 px-4 md:p-8 rounded-xl bg-gray-13 dark:bg-dark-4 static">
             {isMobile ? (
                 <CollapseV2
                     key={`Collapse_${type}`}

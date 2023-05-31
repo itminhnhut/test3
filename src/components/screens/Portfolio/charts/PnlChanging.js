@@ -89,7 +89,7 @@ const PnlChanging = ({
                         let pnl = chartData?.values?.[dataIndex];
                         let ratePnl = pnl / margin;
                         return [` - Lợi nhuận: ${raw > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`];
-                    }
+                    },
                 },
                 backgroundColor: isDark ? colors.dark['2'] : colors.gray['15'],
                 padding: 12,
@@ -98,7 +98,8 @@ const PnlChanging = ({
                 titleAlign: 'left',
                 displayColors: false,
                 bodyColor: isDark ? colors.gray['4'] : colors.gray['2'],
-                bodyFont: { size: 16, lineHeight: 1.5 }
+                bodyFont: { size: 16, lineHeight: 1.5 },
+                caretSize: 5
             }
         },
         scales: {
@@ -119,6 +120,7 @@ const PnlChanging = ({
             },
             y: {
                 beginAtZero: true,
+                stacked: true,
                 ticks: {
                     color: colors.darkBlue5,
                     callback: function (value, index, ticks) {
@@ -188,7 +190,7 @@ const PnlChanging = ({
     ];
 
     return (
-        <div className={`mt-12 md:p-8 bg-transparent transition-all ${isMobile ? '' : 'rounded-xl bg-gray-12 dark:bg-dark-4'}`}>
+        <div className={`mt-12 md:p-8 transition-all ${isMobile ? 'bg-transparent' : 'rounded-xl bg-gray-13 dark:bg-dark-4'}`}>
             {isMobile ? (
                 <CollapseV2
                     className="w-full"
@@ -212,7 +214,7 @@ const PnlChanging = ({
                         <Note iconClassName="bg-green-6" title={'Lợi nhuận tăng'} />
                         <Note iconClassName="bg-red-2" title={'Lợi nhuận giảm'} />
                     </div>
-                    <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4">
+                    <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
                         <BxsInfoCircle />
                         <span>Nhấn vào từng cột xem thống kê chi tiết theo ngày</span>
                     </div>
