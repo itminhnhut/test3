@@ -112,6 +112,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                     ></div>
                 </Tooltip>
             )}
+            <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-friends"></Tooltip>
             <div className="flex justify-between flex-wrap gap-4 text-sm sm:text-base mb-8">
                 <div className="flex items-center space-x-2">
                     <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:referral:ranking')}</TextLiner>
@@ -196,7 +197,9 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-between">
-                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:referral:number_of_friends')}</label>
+                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                {t('nao:contest:referral:number_of_friends')}
+                                            </label>
                                             <span className="text-right">{formatNumber(item?.total, 0)}</span>
                                         </div>
                                     </div>
@@ -233,7 +236,25 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                         />
                         <Column minWidth={300} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                         <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'Nami ID'} fieldName={userID} />
-                        <Column minWidth={100} align="left" className="" title={t('nao:contest:referral:number_of_friends')} decimal={0} fieldName="total" />
+                        <Column
+                            minWidth={100}
+                            align="left"
+                            className=""
+                            title={
+                                <div className="flex itmes-center space-x-2">
+                                    <span>{t('nao:contest:referral:number_of_friends')}</span>
+                                    <div
+                                        data-tip={t('nao:contest:referral:tooltip_friends')}
+                                        data-for="tooltip-friends"
+                                        className="cursor-pointer flex items-center justify-center"
+                                    >
+                                        <QuestionMarkIcon isFilled size={16} />
+                                    </div>
+                                </div>
+                            }
+                            decimal={0}
+                            fieldName="total"
+                        />
                     </Table>
                     {total > 1 && (
                         <div className="w-full hidden sm:flex justify-center py-8">

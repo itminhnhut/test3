@@ -17,8 +17,8 @@ export const seasons = [
         // title: { vi: 'NAO Futures', en: 'NAO Futures' },
         title_champion: { vi: 'Đua TOP giới thiệu tháng 06/2023', en: 'Top Referral 06/2023' },
         minVolumeInd: {
-            vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để xếp hạng, xem chi tiết tại "Thể lệ chi tiết"',
-            en: 'Traders need to meet the Basic Conditions to be ranked, see detail at "Detail Rules"',
+            vi: 'Người dùng cần đạt đủ Điều kiện cơ bản về số lượng bạn bè để được xếp hạng, đọc thêm tại "Thể lệ chi tiết".',
+            en: 'User need to meet basic requirements of number of friends to be ranked, read more at "Detail Rules"',
             isHtml: false
         },
         rules: {

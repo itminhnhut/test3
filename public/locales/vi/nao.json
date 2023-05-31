@@ -239,7 +239,8 @@
             "description": "Tranh giải cá nhân với tổng giải thưởng ",
             "score": "Điểm",
             "ranking": "Bảng xếp hạng",
-            "number_of_friends": "Số bạn bè"
+            "number_of_friends": "Số bạn bè",
+            "tooltip_friends": "Bạn bè cần hoàn tất KYC trong thời gian diễn ra chương trình, đọc thêm tại “Thể lệ chi tiết”"
         }
     },
     "year_summary": {
