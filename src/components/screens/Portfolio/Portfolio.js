@@ -247,7 +247,7 @@ const Portfolio = () => {
                     isDark={isDark}
                 />
             </div>
-            <div className={`fixed px-4 left-0 bottom-0 w-full bg-white dark:bg-dark-dark border-t border-divider dark:border-divider-dark ${(!isMobile || dataOverview?.overallStatistic?.totalVolume?.value) && 'hidden'}`} >
+            <div className={`fixed px-4 left-0 bottom-0 w-full bg-white dark:bg-dark-dark border-t border-divider dark:border-divider-dark ${(!isMobile || !isNeverTrade) && 'hidden'}`} >
                 <ButtonV2 onClick={() => router.push('./futures/BTCVNDC')} className="mt-8 mb-8">
                     {t('common:luckydraw.trade')}
                 </ButtonV2>
