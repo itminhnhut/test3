@@ -149,7 +149,7 @@ const ContesRules = ({
                             {t('nao:contest:ranking')}
                         </ButtonNao>
                     ) : (
-                        <ButtonNao onClick={onRedirect} className="!h-11 mb:h-12 px-6 text-sm mb:text-base font-semibold w-max !rounded-md mr-3 mb_only:flex-1">
+                        <ButtonNao onClick={onRedirect} className="!h-11 mb:h-12 px-6 text-sm mb:text-base font-semibold w-max !rounded-md mr-3 mb:mr-4 mb_only:flex-1">
                             {t('nao:contest:detail_rules')}
                         </ButtonNao>
                     )}

@@ -181,7 +181,7 @@ const ContestPerRanks = ({
                 </Tooltip>
             )}
             <div className="flex justify-between flex-wrap gap-4 text-sm sm:text-base">
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
                     <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:individual_ranking')}</TextLiner>
                     {minVolumeInd && (
                         <div data-tip={''} data-for="tooltip-personal-rank" className="cursor-pointer">
@@ -224,7 +224,7 @@ const ContestPerRanks = ({
                 </TabsNao>
             )}
             {top3.length > 0 && (
-                <div className="flex flex-wrap gap-3 sm:gap-6 mt-6 sm:mt-11 text-sm sm:text-base">
+                <div className="flex flex-wrap gap-3 sm:gap-6 mt-6 text-sm sm:text-base">
                     {top3.map((item, index) => (
                         <CardNao key={index} className="!p-4 sm:!p-5">
                             <div className="flex items-center justify-between flex-1 gap-5">

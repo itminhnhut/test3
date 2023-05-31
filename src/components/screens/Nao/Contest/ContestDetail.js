@@ -230,7 +230,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
     const renderName = (data, item) => {
         return (
             <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark flex items-center justify-center">
+                <div className="w-6 h-6 rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark flex items-center justify-center">
                     {item?.[userID] && (
                         <ImageNao
                             className="rounded-[50%] min-w-[1.5rem] min-h-[1.5rem] max-w-[1.5rem] max-h-[1.5rem]"
@@ -278,13 +278,13 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
             >
                 <SvgCross size={24} onClick={onClose} color="currentColor" className="ml-auto cursor-pointer" />
                 <div className="w-full h-6"></div>
-                <div className="pb-3 sm:pb-0 px-4 scrollbar-nao overflow-y-auto h-full text-sm sm:text-base">
+                <div className="pb-3 sm:pb-0 scrollbar-nao overflow-y-auto h-full text-sm sm:text-base">
                     <div className="flex sm:items-center sm:justify-between flex-wrap lg:flex-row flex-col">
                         {isMobile ? (
                             <div className="flex flex-col items-center justify-center">
                                 <div className="flex items-center space-x-[10px]">
                                     {dataSource?.[rank] ? (
-                                        <span className="font-semibold text-5xl pb-0 italic" liner>
+                                        <span className="font-semibold text-5xl pb-0 italic pr-1" liner>
                                             #{dataSource?.[rank]}
                                         </span>
                                     ) : null}
@@ -356,7 +356,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     </div>
                                 </div>
                                 {dataSource?.[rank] ? (
-                                    <div className="text-6xl font-semibold pb-0 italic">
+                                    <div className="text-6xl font-semibold pb-0 pr-1 italic">
                                         #{dataSource?.[rank]}
                                     </div>
                                 ) : null}

@@ -133,7 +133,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
 
     return (
         <>
-            <section className="contest_info py-6 sm:mb-14">
+            <section className="contest_info py-6 sm:pb-14">
                 <div className="flex items-center justify-between">
                     <TextLiner>{t('nao:contest:personal')}</TextLiner>
                     {!userData?.group_name && isValidCreate && (
