@@ -6,6 +6,9 @@ import Tooltip from 'components/common/Tooltip';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import colors from 'styles/colors';
 import { isNaN } from 'lodash';
+import ModalV2 from 'components/common/V2/ModalV2';
+import MCard from 'components/common/MCard';
+import { formatNumber } from 'utils/reference-utils';
 
 const deltaClipPath = 0.8;
 
@@ -52,6 +55,8 @@ const PositionInfo = ({
     isDark
 }) => {
     const percentClipPath = (totalLossPosition / total) * 100;
+    const [showDetails, setShowDetails] = useState(false);
+
     return (
         <div className="py-6 px-4 md:p-8 rounded-xl bg-gray-13 dark:bg-dark-4 static">
             {isMobile ? (
@@ -78,79 +83,25 @@ const PositionInfo = ({
                             <div className="w-full h-2 bg-bgBtnV2-disabled dark:bg-dark-6" />
                         ) : percentClipPath === 100 ? (
                             <>
-                                <div className="w-full h-2 bg-red-2" data-for={`${type}_loss_tooltip`} data-tip="" />
-                                <TooltipLoss totalLoss={totalLoss} totalLossPosition={totalLossPosition} isVndc={isVndc} type={type} t={t} />
+                                <div className="w-full h-2 bg-red-2" data-for={`${type}_loss_tooltip`} onClick={() => setShowDetails(true)} />
                             </>
                         ) : percentClipPath === 0 ? (
                             <>
-                                <div className="w-full h-2 bg-green-3 dark:bg-green-2" data-for={`${type}_profit_tooltip`} data-tip="" />
-                                <TooltipProfit totalProfit={totalProfit} totalProfitPosition={totalProfitPosition} isVndc={isVndc} type={type} t={t} />
+                                <div className="w-full h-2 bg-green-3 dark:bg-green-2" onClick={() => setShowDetails(true)} />
                             </>
                         ) : (
-                            <div className="w-full h-2 relative" id={`${type}_bar`}>
+                            <div className="w-full h-2 relative" onClick={() => setShowDetails(true)}>
                                 <div
                                     style={{
                                         clipPath: `polygon(0 0,${percentClipPath}% 0, ${percentClipPath - deltaClipPath}% 100%, 0% 100%)`
                                     }}
                                     className="h-full bg-red-2 w-full absolute right-0"
-                                    data-for={`${type}_loss_tooltip`}
-                                    data-tip=""
                                 />
                                 <div
                                     style={{
                                         clipPath: `polygon(${percentClipPath + deltaClipPath}% 0, 100% 0, 100% 100%, ${percentClipPath}% 100%)`
                                     }}
                                     className="h-full bg-green-3 dark:bg-green-2 w-full absolute left-0"
-                                    data-for={`${type}_profit_tooltip`}
-                                    data-tip=""
-                                />
-                                <TooltipLoss
-                                    overridePosition={(e) => {
-                                        var element = document.getElementById(`${type}_bar`);
-                                        var positionInfo = element.getBoundingClientRect();
-                                        var width = positionInfo.width;
-                                        var widthLoss = (width * percentClipPath) / 100;
-                                        var widthProfit = width - widthLoss;
-                                        let delta;
-                                        if (percentClipPath < 50) {
-                                            delta = widthLoss / 2 + (widthProfit - width / 2);
-                                        } else {
-                                            delta = width / 2 - widthLoss / 2;
-                                        }
-                                        return {
-                                            left: e.left - delta,
-                                            top: e.top
-                                        };
-                                    }}
-                                    totalLoss={totalLoss}
-                                    totalLossPosition={totalLossPosition}
-                                    isVndc={isVndc}
-                                    type={type}
-                                    t={t}
-                                />
-                                <TooltipProfit
-                                    overridePosition={(e) => {
-                                        var element = document.getElementById(`${type}_bar`);
-                                        var positionInfo = element.getBoundingClientRect();
-                                        var width = positionInfo.width;
-                                        var widthLoss = (width * percentClipPath) / 100;
-                                        var widthProfit = width - widthLoss;
-                                        let delta;
-                                        if (percentClipPath < 50) {
-                                            delta = width / 2 - widthProfit / 2;
-                                        } else {
-                                            delta = widthProfit / 2 + (widthLoss - width / 2);
-                                        }
-                                        return {
-                                            left: e.left + delta,
-                                            top: e.top
-                                        };
-                                    }}
-                                    totalProfit={totalProfit}
-                                    totalProfitPosition={totalProfitPosition}
-                                    isVndc={isVndc}
-                                    type={type}
-                                    t={t}
                                 />
                             </div>
                         )}
@@ -169,7 +120,7 @@ const PositionInfo = ({
                         tooltipId={`${type}_position_tooltip`}
                     />
                     <div className="mt-6 md:mt-12 mb-6 text-lg md:text-2xl font-semibold">
-                        {t(`common:position:sum_${type.toLowerCase()}`)}: {isNeverTrade ? '-' :total}
+                        {t(`common:position:sum_${type.toLowerCase()}`)}: {isNeverTrade ? '-' : total}
                     </div>
 
                     {isNeverTrade || isNaN(percentClipPath) ? (
@@ -258,6 +209,36 @@ const PositionInfo = ({
                     </div>
                 </>
             )}
+            <ModalV2 isVisible={showDetails} onBackdropCb={() => setShowDetails(false)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
+                <div className="text-gray-15 dark:text-gray-4 text-sm font-semibold">
+                    <h1 className="mt-6 text-xl">Thống kê lệnh {t(`common:position:${type.toLowerCase()}`)}</h1>
+                    <span className="txtSecond-5 mt-2">{`Tổng lệnh ${type}: ${total} lệnh`}</span>
+
+                    <h1 className="my-6 text-base font-semibold">Lệnh lỗ</h1>
+                    <MCard addClass={'!p-4'}>
+                        <div className="flex items-center justify-between">
+                            <span className="txtSecond-3">Tổng vị thế</span>
+                            <span>{formatNumber(totalLossPosition, 0)}</span>
+                        </div>
+                        <div className="flex items-center justify-between mt-3">
+                            <span className="txtSecond-3">Tổng lỗ</span>
+                            <span className={totalLoss < 0 && 'text-red-2'}>{formatNanNumber(totalLoss, isVndc ? 0 : 4)}</span>
+                        </div>
+                    </MCard>
+
+                    <h1 className="mt-8 mb-6 text-base">Lệnh lãi</h1>
+                    <MCard addClass={'!p-4'}>
+                        <div className="flex items-center justify-between">
+                            <span className="txtSecond-3">Tổng vị thế</span>
+                            <span>{formatNumber(totalProfitPosition, 0)}</span>
+                        </div>
+                        <div className="flex items-center justify-between mt-3">
+                            <span className="txtSecond-3">Tổng lãi</span>
+                            <span className={totalProfit > 0 && 'text-green-3 dark:text-green-2'}>+{formatNanNumber(totalProfit, isVndc ? 0 : 4)}</span>
+                        </div>
+                    </MCard>
+                </div>
+            </ModalV2>
         </div>
     );
 };

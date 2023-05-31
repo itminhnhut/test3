@@ -19,6 +19,8 @@ import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import { ALLOWED_ASSET_ID } from 'components/screens/WithdrawDeposit/constants';
 const { subDays } = require('date-fns');
 import CollapseV2 from 'components/common/V2/CollapseV2';
+import ModalV2 from 'components/common/V2/ModalV2';
+import MCard from 'components/common/MCard';
 
 // note: white always in the tail of list <=> Others
 const listDoughnutColorsLight = [colors.yellow[5], colors.green[6], colors.purple[1], colors.green[7], '#fff'];
@@ -45,6 +47,8 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
     // Data trading pairs
     const [dataTradingPairs, setDataTradingPairs] = useState();
     const [loadingTradingPairs, setLoadingTradingPairs] = useState(false);
+    const [showDetails, setShowDetails] = useState(null);
+
     const fetchDataTradingPairs = async () => {
         try {
             setLoadingTradingPairs(true);
@@ -100,12 +104,17 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
         responsive: true,
         maintainAspectRatio: true,
         cutout: '87%',
+        onClick: (evt, item) => {
+            const curPair = dataTradingPairs?.symbolsCount?.buckets[item[0].index];
+            console.log('_________________here: ', curPair);
+            setShowDetails(curPair);
+        },
         plugins: {
             tooltip: {
                 enabled: false,
                 position: 'nearest',
                 external: (context) => {
-                    externalTooltipHandler(context, isDark, isVndc, totalPosition, dataTradingPairs?.symbolsCount?.buckets);
+                    if (!isMobile) externalTooltipHandler(context, isDark, isVndc, totalPosition, dataTradingPairs?.symbolsCount?.buckets);
                 }
             }
         }
@@ -146,42 +155,74 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
 
     if (isMobile) {
         return (
-            <CollapseV2
-                className="w-full"
-                divLabelClassname="w-full justify-between"
-                chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
-                label={<HeaderTooltip isMobile title="Cặp giao dịch" tooltipContent={'This is tooltip content'} tooltipId={'trading_pair_tooltip'} />}
-                labelClassname="text-base font-semibold"
-            >
-                <div className={` ${isMobile ? '' : 'p-8 rounded-xl bg-gray-13 dark:bg-dark-4'}`}>
-                    <GroupTextFilter curFilter={filterPnl} setCurFilter={setFilterPnl} GroupKey={'trading_pairs_filter'} t={t} listFilter={FILTER_PNL} />
-                    <div className="flex items-center justify-center w-full mt-8">
-                        <div className={`min-w-[200px] max-w-[312px] w-full`}>
-                            {loadingTradingPairs ? (
-                                <div className="flex items-center justify-center w-full min-h-[312px]">
-                                    <Spiner isDark={isDark} />
-                                </div>
-                            ) : (
-                                <ChartJS type="doughnut" data={mockData} options={options} plugins={plugins} />
-                            )}
+            <>
+                <CollapseV2
+                    className="w-full"
+                    divLabelClassname="w-full justify-between"
+                    chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
+                    label={<HeaderTooltip isMobile title="Cặp giao dịch" tooltipContent={'This is tooltip content'} tooltipId={'trading_pair_tooltip'} />}
+                    labelClassname="text-base font-semibold"
+                >
+                    <div className={` ${isMobile ? '' : 'p-8 rounded-xl bg-gray-13 dark:bg-dark-4'}`}>
+                        <GroupTextFilter curFilter={filterPnl} setCurFilter={setFilterPnl} GroupKey={'trading_pairs_filter'} t={t} listFilter={FILTER_PNL} />
+                        <div className="flex items-center justify-center w-full mt-8">
+                            <div className={`min-w-[200px] max-w-[312px] w-full`}>
+                                {loadingTradingPairs ? (
+                                    <div className="flex items-center justify-center w-full min-h-[312px]">
+                                        <Spiner isDark={isDark} />
+                                    </div>
+                                ) : (
+                                    <ChartJS type="doughnut" data={mockData} options={options} plugins={plugins} />
+                                )}
+                            </div>
+                        </div>
+                        {/* Chu thich */}
+                        <div className={`flex items-center gap-x-4 mt-9 py-1 justify-center ${labels.length === 0 && 'hidden'}`}>
+                            {labels.map((label, idx) => (
+                                <Note
+                                    key={'note_' + label}
+                                    style={{ backgroundColor: isDark ? listDoughnutColorsDark[idx] : listDoughnutColorsLight[idx] }}
+                                    title={label}
+                                />
+                            ))}
+                        </div>
+                        <div id="notice" className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
+                            <BxsInfoCircle />
+                            <span>Nhấn vào từng mảng để xem thống kê chi tiết</span>
                         </div>
                     </div>
-                    {/* Chu thich */}
-                    <div className={`flex items-center gap-x-4 mt-9 py-1 justify-center ${labels.length === 0 && 'hidden'}`}>
-                        {labels.map((label, idx) => (
-                            <Note
-                                key={'note_' + label}
-                                style={{ backgroundColor: isDark ? listDoughnutColorsDark[idx] : listDoughnutColorsLight[idx] }}
-                                title={label}
-                            />
-                        ))}
-                    </div>
-                    <div id="notice" className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
-                        <BxsInfoCircle />
-                        <span>Nhấn vào từng mảng để xem thống kê chi tiết</span>
-                    </div>
-                </div>
-            </CollapseV2>
+                </CollapseV2>
+                <ModalV2 isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
+                    <h1 className="mt-6 text-xl font-semibold text-gray-15 dark:text-gray-4">Thống kê cặp giao dịch</h1>
+                    {showDetails && (
+                        <MCard addClass={'!p-4 !font-semibold !mt-6'}>
+                            <div className="flex items-center justify-between">
+                                <span className="txtSecond-3">Cặp giao dịch</span>
+                                <div className="whitespace-nowrap font-semibold flex items-center">
+                                    <span className="txtPri-1">{showDetails?.key?.slice(0, -4)}</span>
+                                    <span className="txtSecond-2 !font-semibold">{`/${showDetails?.key?.slice(-4)}`}</span>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between mt-2.5">
+                                <span className="txtSecond-3">Số lượng</span>
+                                <span>{formatNanNumber(showDetails?.doc_count, 0)}</span>
+                            </div>
+                            <div className="flex items-center justify-between mt-2.5">
+                                <span className="txtSecond-3">Tỷ lệ</span>
+                                <span>{formatNanNumber((showDetails?.doc_count * 100) / totalPosition, 2)}</span>
+                            </div>
+                            <div className="flex items-center justify-between mt-2.5">
+                                <span className="txtSecond-3">Lợi nhuận</span>
+                                <span className={showDetails?.profit?.value > 0 ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
+                                    {`${showDetails?.profit?.value > 0 ? '+' : ''}${formatNanNumber(showDetails?.profit?.value, isVndc ? 0 : 4)} (${
+                                        showDetails?.profit?.value > 0 ? '+' : ''
+                                    }${formatNanNumber((showDetails?.profit?.value * 100) / showDetails?.margin?.value, 2)}%)`}
+                                </span>
+                            </div>
+                        </MCard>
+                    )}
+                </ModalV2>
+            </>
         );
     }
 
