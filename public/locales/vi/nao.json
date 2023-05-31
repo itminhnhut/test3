@@ -169,7 +169,7 @@
         "team": "Tên đội",
         "team_label": "Đội",
         "total_trades": "Số lệnh",
-        "name": "Tên",
+        "name": "Họ và tên",
         "captain": "Đội trưởng",
         "information": "Thông tin",
         "team_ranking": "Bảng xếp hạng đội nhóm",
@@ -237,7 +237,9 @@
         "tournament": "Giải đấu",
         "referral": {
             "description": "Tranh giải cá nhân với tổng giải thưởng ",
-            "score": "Điểm"
+            "score": "Điểm",
+            "ranking": "Bảng xếp hạng",
+            "number_of_friends": "Số bạn bè"
         }
     },
     "year_summary": {

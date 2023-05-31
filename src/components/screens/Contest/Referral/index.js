@@ -13,9 +13,9 @@ export const seasons = [
         start: '2023-06-04T17:00:00.000Z',
         end: '2023-06-30T17:00:00.000Z',
         contestId: 'contest0623',
-        title_detail: { vi: 'NAO Futures - Đua Top Giới thiệu người dùng mùa 1', en: 'NAO Futures - Nami Referral Championship Season 1' },
-        title: { vi: 'NAO Futures', en: 'NAO Futures' },
-        title_champion: { vi: 'Đua Top Giới thiệu người dùng mùa 1', en: 'Nami Referral Championship Season 1' },
+        // title_detail: { vi: 'Đua TOP giới thiệu tháng 06/2023', en: 'Top Referral 06/2023' },
+        // title: { vi: 'NAO Futures', en: 'NAO Futures' },
+        title_champion: { vi: 'Đua TOP giới thiệu tháng 06/2023', en: 'Top Referral 06/2023' },
         minVolumeInd: {
             vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để xếp hạng, xem chi tiết tại "Thể lệ chi tiết"',
             en: 'Traders need to meet the Basic Conditions to be ranked, see detail at "Detail Rules"',

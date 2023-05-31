@@ -114,7 +114,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
             )}
             <div className="flex justify-between flex-wrap gap-4 text-sm sm:text-base mb-8">
                 <div className="flex items-center space-x-2">
-                    <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:individual_ranking')}</TextLiner>
+                    <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:referral:ranking')}</TextLiner>
                     {minVolumeInd && (
                         <div data-tip={''} data-for="tooltip-personal-rank" className="cursor-pointer">
                             <QuestionMarkIcon isFilled size={16} />
@@ -134,7 +134,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col">
                                         <div className="flex items-center gap-2 text-lg font-semibold capitalize">
-                                            <span title={capitalize(item?.name)} className="xl:max-w-[200px] truncate">
+                                            <span title={capitalize(item?.name)} className="sm_only:max-w-[200px] xl:max-w-[200px] truncate">
                                                 {capitalize(item?.name)}
                                             </span>
                                             {item?.is_onus_master && <TickFbIcon size={16} />}
@@ -146,7 +146,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                             </div>
                             <div className="flex flex-col mt-auto space-y-1 rounded-lg">
                                 <div className="flex items-center justify-between space-x-2">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:referral:score')}</div>
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:referral:number_of_friends')}</div>
                                     <span className="font-semibold">{formatNumber(item?.total, 0)}</span>
                                 </div>
                             </div>
@@ -196,7 +196,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-between">
-                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:referral:score')}</label>
+                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:referral:number_of_friends')}</label>
                                             <span className="text-right">{formatNumber(item?.total, 0)}</span>
                                         </div>
                                     </div>
@@ -232,8 +232,8 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                             cellRender={renderRank}
                         />
                         <Column minWidth={300} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
-                        <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'User ID'} fieldName={userID} />
-                        <Column minWidth={100} align="left" className="" title={t('nao:contest:referral:score')} decimal={0} fieldName="total" />
+                        <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'Nami ID'} fieldName={userID} />
+                        <Column minWidth={100} align="left" className="" title={t('nao:contest:referral:number_of_friends')} decimal={0} fieldName="total" />
                     </Table>
                     {total > 1 && (
                         <div className="w-full hidden sm:flex justify-center py-8">

@@ -237,7 +237,9 @@
         "tournament": "Tournament",
         "referral": {
             "description": "Compete as an individual to win a reward of ",
-            "score": "Score"
+            "score": "Score",
+            "ranking": "Ranking",
+            "number_of_friends": "Number of friends"
         }
     },
     "year_summary": {
