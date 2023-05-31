@@ -38,6 +38,19 @@ const ContesRules = ({
     const router = useRouter();
     const { width } = useWindowSize();
     const isMobile = width && width <= 640;
+    const renderTimer = (formatted, isOver = false) => (
+        <div className="flex items-center space-x-2">
+            {Object.keys(formatted).map((time) => {
+                return (
+                    <div className="rounded-lg min-w-[68px] px-2 py-4 flex flex-col items-center justify-center bg-gray-12 dark:bg-dark-4">
+                        <span className="text-2xl font-semibold">{isOver ? '-' : formatted[time]}</span>
+                        <span className="text-sm uppercase">{t(`common:${time}`)}</span>
+                    </div>
+                );
+            })}
+        </div>
+    );
+
     const renderCountDown = (classNameContainer, classNameCountdown) => {
         const CONTEST_TIME = {
             START: new Date(start).getTime(),
@@ -47,23 +60,12 @@ const ContesRules = ({
         if (now < CONTEST_TIME.START) {
             return (
                 <>
-                    <div className={classNames('font-light text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
-                        {t('nao:contest:start_in')}
+                    <div className={classNames('font-light text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark mb_only:w-full mb_only:mb-2', classNameContainer)}>
+                        {t('nao:contest:start_in')}:
                     </div>
                     <Countdown
                         date={CONTEST_TIME.START} // countdown 60s
-                        renderer={({ formatted: { days, hours, minutes, seconds } }) => (
-                            <div
-                                className={classNames('text-sm mb:text-base flex', classNameCountdown)}
-                                dangerouslySetInnerHTML={{
-                                    __html: t('nao:contest:date', {
-                                        days,
-                                        hours,
-                                        minutes
-                                    })
-                                }}
-                            ></div>
-                        )}
+                        renderer={({ formatted }) => renderTimer(formatted)}
                         onComplete={() => setIsLoadingEmail(false)}
                     />
                 </>
@@ -71,23 +73,12 @@ const ContesRules = ({
         } else if (now >= CONTEST_TIME.START && now < CONTEST_TIME.END) {
             return (
                 <>
-                    <div className={classNames('font-light text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
-                        {t('nao:contest:end_in')}
+                    <div className={classNames('font-light text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark mb_only:w-full mb_only:mb-2', classNameContainer)}>
+                        {t('nao:contest:end_in')}:
                     </div>
                     <Countdown
                         date={CONTEST_TIME.END} // countdown 60s
-                        renderer={({ formatted: { days, hours, minutes, seconds } }) => (
-                            <div
-                                className={classNames('text-sm mb:text-base flex', classNameCountdown)}
-                                dangerouslySetInnerHTML={{
-                                    __html: t('nao:contest:date', {
-                                        days,
-                                        hours,
-                                        minutes
-                                    })
-                                }}
-                            ></div>
-                        )}
+                        renderer={({ formatted }) => renderTimer(formatted)}
                         onComplete={() => setIsLoadingEmail(false)}
                     />
                 </>
@@ -95,7 +86,12 @@ const ContesRules = ({
         } else {
             return (
                 <>
-                    <div className="text-sm mb:text-base flex text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:ended')}</div>
+                    <div className={classNames("font-light text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark mb_only:w-full mb_only:mb-2", classNameContainer)}>{t('nao:contest:ended')}: </div>
+                    <Countdown
+                        date={CONTEST_TIME.END} // countdown 60s
+                        renderer={({ formatted }) => renderTimer(formatted, true)}
+                        // onComplete={() => setIsLoadingEmail(false)}
+                    />
                 </>
             );
         }
@@ -124,7 +120,12 @@ const ContesRules = ({
     }, [seasons]);
 
     return (
-        <section className={classNames('contest_rules py-6 mb:py-20 w-full flex flex-col mb:flex-row mb:justify-between', !inHome && 'mb:dark:pb-14 pb-12 dark:pb-6')}>
+        <section
+            className={classNames(
+                'contest_rules py-6 mb:py-20 w-full flex flex-col mb:flex-row mb:justify-between',
+                !inHome && 'mb:dark:pb-14 pb-12 dark:pb-6'
+            )}
+        >
             <div className="text-center mb:text-left flex flex-col flex-wrap mb:block">
                 <div className="font-semibold text-xl mb:text-2xl text-teal">{t('nao:contest:tournament')}</div>
                 <div className="font-semibold text-xl mb:text-6xl pt-3 mb:pt-4">
@@ -136,7 +137,7 @@ const ContesRules = ({
                     {t(`nao:contest:description${!!top_ranks_team ? '' : '_individual'}`)}
                     <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
-                <div className="mb_only:!w-full w-fit mb:px-20 rounded-md bg-gray-12 dark:bg-dark-2 py-3 flex flex-row items-center justify-center mt-8 mb:mt-4">
+                <div className="mb_only:!w-full w-fit rounded-md py-3 flex flex-wrap items-center justify-center mt-8 mb:mt-4">
                     {renderCountDown('!font-normal mr-3', '!font-semibold')}
                 </div>
                 <div className="flex flex-row mt-3 mb:mt-7 justify-center mb:justify-start w-full">
@@ -149,7 +150,10 @@ const ContesRules = ({
                             {t('nao:contest:ranking')}
                         </ButtonNao>
                     ) : (
-                        <ButtonNao onClick={onRedirect} className="!h-11 mb:h-12 px-6 text-sm mb:text-base font-semibold w-max !rounded-md mr-3 mb:mr-4 mb_only:flex-1">
+                        <ButtonNao
+                            onClick={onRedirect}
+                            className="!h-11 mb:h-12 px-6 text-sm mb:text-base font-semibold w-max !rounded-md mr-3 mb:mr-4 mb_only:flex-1"
+                        >
                             {t('nao:contest:detail_rules')}
                         </ButtonNao>
                     )}
@@ -160,20 +164,20 @@ const ContesRules = ({
                     )}
                 </div>
             </div>
-            <div className="mt-10 mb:mt-0 text-center leading-[0]">
+            <div className="mt-10 mb:mt-0 text-center leading-[0] xl:flex-shrink-0">
                 {season === seasonConfig ? (
                     <Image
-                        src={getS3Url('/images/contest/bg_contest_v1.png')}
-                        width={544}
-                        height={354}
+                        src={'/images/contest/bg_contest_v1.png'}
+                        width={625}
+                        height={400}
                         title={title_champion?.[language]}
                         alt={title_champion?.[language]}
                     />
                 ) : (
                     <Image
                         src={'/images/nao/contest/ic_contest_info.webp'}
-                        width={354}
-                        height={354}
+                        width={400}
+                        height={400}
                         title={title_champion?.[language]}
                         alt={title_champion?.[language]}
                     />

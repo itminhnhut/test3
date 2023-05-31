@@ -245,10 +245,10 @@ const ContestPerRanks = ({
                             <div className="h-0 w-full my-4"></div>
                             <div className="flex flex-col mt-auto space-y-1 rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
-                                    <span className="font-semibold">
-                                        {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                    </span>
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                        {t('nao:contest:volume')} ( {quoteAsset})
+                                    </div>
+                                    <span className="font-semibold">{formatNumber(item?.total_volume, 0)}</span>
                                 </div>
                                 {!previous && (
                                     <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
@@ -324,10 +324,10 @@ const ContestPerRanks = ({
                                         </div>
                                         <div className="h-8"></div>
                                         <div className="flex items-center justify-between">
-                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
-                                            <span className="text-right">
-                                                {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                            </span>
+                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                {t('nao:contest:volume')} ({quoteAsset})
+                                            </label>
+                                            <span className="text-right">{formatNumber(item?.total_volume, 0)}</span>
                                         </div>
                                         {!previous && (
                                             <div className="flex items-center justify-between pt-3">

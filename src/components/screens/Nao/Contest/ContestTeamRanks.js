@@ -257,10 +257,10 @@ const ContestTeamRanks = ({
                             <div className="h-8"></div>
                             <div className="rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
-                                    <span className="font-semibold">
-                                        {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                    </span>
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                        {t('nao:contest:volume')} ({quoteAsset})
+                                    </div>
+                                    <span className="font-semibold">{formatNumber(item?.total_volume, 0)}</span>
                                 </div>
                                 {tab === 'pnl' ? (
                                     <div className="flex items-center justify-between gap-2 mt-2 sm:mt-4">
@@ -333,10 +333,10 @@ const ContestTeamRanks = ({
                                                 <span className="text-right font-semibold capitalize">{capitalize(item?.leader_name)}</span>
                                             </div>
                                             <div className="flex items-center justify-between pt-3">
-                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
-                                                <span className="text-right font-semibold">
-                                                    {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                                </span>
+                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                    {t('nao:contest:volume')} ({quoteAsset})
+                                                </label>
+                                                <span className="text-right font-semibold">{formatNumber(item?.total_volume, 0)}</span>
                                             </div>
                                             <div className="flex items-center justify-between pt-3">
                                                 <label className="text-txtSecondary dark:text-txtSecondary-dark">
