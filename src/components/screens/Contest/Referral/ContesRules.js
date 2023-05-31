@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { ButtonNao, ButtonNaoVariants, CardNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
@@ -20,6 +20,20 @@ const ContesRules = ({ season, start, end, seasons, title, title_champion, rules
     const router = useRouter();
     const { width } = useWindowSize();
     const isMobile = width && width <= 640;
+
+    const renderTimer = (formatted) => (
+        <div className="flex items-center space-x-2">
+            {Object.keys(formatted).map((time) => {
+                return (
+                    <div className="rounded-lg min-w-[68px] py-4 flex flex-col items-center justify-center bg-gray-12 dark:bg-dark-4">
+                        <span className="text-2xl font-semibold">{formatted[time]}</span>
+                        <span className="text-sm uppercase">{t(`common:${time}`)}</span>
+                    </div>
+                );
+            })}
+        </div>
+    );
+
     const renderCountDown = (classNameContainer, classNameCountdown) => {
         const CONTEST_TIME = {
             START: new Date(start).getTime(),
@@ -30,23 +44,12 @@ const ContesRules = ({ season, start, end, seasons, title, title_champion, rules
             return (
                 <>
                     <div className={classNames('font-light text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
-                        {t('nao:contest:start_in')}
+                        {t('nao:contest:start_in')}:
                     </div>
                     <Countdown
                         date={CONTEST_TIME.START} // countdown 60s
-                        renderer={({ formatted: { days, hours, minutes, seconds } }) => (
-                            <div
-                                className={classNames('text-sm sm:text-base flex', classNameCountdown)}
-                                dangerouslySetInnerHTML={{
-                                    __html: t('nao:contest:date', {
-                                        days,
-                                        hours,
-                                        minutes
-                                    })
-                                }}
-                            ></div>
-                        )}
-                        onComplete={() => setIsLoadingEmail(false)}
+                        renderer={({ formatted }) => renderTimer(formatted)}
+                        // onComplete={() => setIsLoadingEmail(false)}
                     />
                 </>
             );
@@ -54,23 +57,12 @@ const ContesRules = ({ season, start, end, seasons, title, title_champion, rules
             return (
                 <>
                     <div className={classNames('font-light text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
-                        {t('nao:contest:end_in')}
+                        {t('nao:contest:end_in')}:
                     </div>
                     <Countdown
                         date={CONTEST_TIME.END} // countdown 60s
-                        renderer={({ formatted: { days, hours, minutes, seconds } }) => (
-                            <div
-                                className={classNames('text-sm sm:text-base flex', classNameCountdown)}
-                                dangerouslySetInnerHTML={{
-                                    __html: t('nao:contest:date', {
-                                        days,
-                                        hours,
-                                        minutes
-                                    })
-                                }}
-                            ></div>
-                        )}
-                        onComplete={() => setIsLoadingEmail(false)}
+                        renderer={({ formatted }) => renderTimer(formatted)}
+                        // onComplete={() => setIsLoadingEmail(false)}
                     />
                 </>
             );
@@ -118,22 +110,23 @@ const ContesRules = ({ season, start, end, seasons, title, title_champion, rules
                         {t(`nao:contest:referral:description`)}
                         <span className="text-teal font-semibold">{total_rewards}</span>
                     </div>
-                    <div className="sm_only:!w-full w-fit sm:px-4 rounded-md bg-gray-12 dark:bg-dark-2 sm:dark:bg-dark-4 py-3 flex flex-row items-center justify-center mt-8 sm:mt-6">
-                        {renderCountDown('!font-normal mr-3', '!font-semibold')}
+                    <div className="sm_only:!w-full w-fit flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3 mt-5 sm:mt-4">
+                        {renderCountDown('!font-normal', '!font-semibold')}
                     </div>
-                    <div className="flex space-x-4 mt-3 sm:mt-7 justify-center sm:justify-start w-full">
+                    <div className="flex space-x-4 mt-8 sm:mt-10 justify-center sm:justify-start w-full">
                         <ButtonNao onClick={onRedirect} className="px-6 w-max sm_only:flex-1">
                             {t('nao:contest:detail_rules')}
                         </ButtonNao>
-                        {isMobile ? (
-                            <TournamentList t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
-                        ) : (
-                            <DropdownPreSeason t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
-                        )}
+                        {seasonsFilter.length > 1 &&
+                            (isMobile ? (
+                                <TournamentList t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
+                            ) : (
+                                <DropdownPreSeason t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
+                            ))}
                     </div>
                 </div>
                 <img
-                    src={getS3Url('/images/contest/referral/ic_banner.png')}
+                    src={getS3Url('/images/contest/referral/ic_banner_v2.png')}
                     className="lg:absolute 2xl:relative right-0 sm:h-[480px] lg:h-[380px] xl:h-[582px] pt-12 lg:pt-0"
                     height={582}
                     title={title_champion?.[language]}
