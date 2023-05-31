@@ -25,7 +25,7 @@ const ContesRules = ({ season, start, end, seasons, title, title_champion, rules
         <div className="flex items-center space-x-2">
             {Object.keys(formatted).map((time) => {
                 return (
-                    <div className="rounded-lg min-w-[68px] py-4 flex flex-col items-center justify-center bg-gray-12 dark:bg-dark-4">
+                    <div className="rounded-lg min-w-[68px] px-2 py-4 flex flex-col items-center justify-center bg-gray-12 dark:bg-dark-4">
                         <span className="text-2xl font-semibold">{formatted[time]}</span>
                         <span className="text-sm uppercase">{t(`common:${time}`)}</span>
                     </div>
