@@ -133,7 +133,7 @@ const ContestPerRanks = ({
     const renderName = (data, item) => {
         return (
             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
+                <div className="w-6 h-6 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
                         className="rounded-[50%] object-cover min-w-[1.5rem] min-h-[1.5rem] max-w-[1.5rem] max-h-[1.5rem]"
                         src={item?.avatar}
