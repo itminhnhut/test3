@@ -35,11 +35,12 @@
             "partner": "Đối tác",
             "payment_method": "Phương thức thanh toán",
             "daily_reward": "Thưởng giao dịch hàng ngày"
-        }
+        },
+        "top_referral": "Đua TOP giới thiệu"
     },
     "submenu": {
         "convert": "Nami Swap",
-        "nami_insurance":"Nami Insurance",
+        "nami_insurance": "Nami Insurance",
         "convert_description": "Giao dịch crypto chỉ với một lần click",
         "spot": "Giao dịch Spot",
         "spot_description": "Giao dịch {{pairsLength}} token được niêm yết với thanh khoản cao",
