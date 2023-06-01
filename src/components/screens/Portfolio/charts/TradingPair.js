@@ -187,7 +187,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                             </div>
                         </div>
                         {/* Chu thich */}
-                        <div className={`flex items-center gap-x-4 mt-9 py-1 justify-center ${labels.length === 0 && 'hidden'}`}>
+                        <div className={`flex items-center gap-4 mt-9 py-1 justify-center flex-wrap ${labels.length === 0 && 'hidden'}`}>
                             {labels.map((label, idx) => (
                                 <Note
                                     key={'note_' + label}

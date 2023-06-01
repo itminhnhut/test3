@@ -92,7 +92,7 @@ const Portfolio = () => {
                 overallStatistic: data?.overallStatistic
             });
 
-            if (!data?.firstPosition?.created_at) setIsNeverTrade(true);
+            setIsNeverTrade(!data?.firstPosition?.created_at);
         } catch (error) {
         } finally {
             setLoadingOverview(false);
