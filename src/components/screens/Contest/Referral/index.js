@@ -22,8 +22,8 @@ export const seasons = [
             isHtml: false
         },
         rules: {
-            vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-7',
-            en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-7'
+            vi: 'https://nami.exchange/vi/support/announcement/su-kien/cong-bo-chuong-trinh-dua-top-gioi-thieu-thang-6-2023',
+            en: 'https://nami.exchange/support/announcement/events/launching-the-top-referral-tournament-of-june-2023'
         },
         total_rewards: '50,000,000 VNDC',
         quoteAsset: 'VNDC',
