@@ -224,9 +224,9 @@ const ContestPerRanks = ({
                 </TabsNao>
             )}
             {top3.length > 0 && (
-                <div className="flex flex-wrap gap-3 sm:gap-6 mt-6 sm:mt-11 text-sm sm:text-base">
+                <div className="flex flex-wrap gap-3 sm:gap-6 mt-6 sm:mt-11 text-sm sm:text-base w-full">
                     {top3.map((item, index) => (
-                        <CardNao key={index} className="!p-4 sm:!p-5">
+                        <CardNao key={index} className="!p-4 lg:!p-5 !min-w-max">
                             <div className="flex items-center justify-between flex-1 gap-5">
                                 <div className="flex items-center space-x-4">
                                     <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
@@ -234,7 +234,9 @@ const ContestPerRanks = ({
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col">
                                         <div className="flex items-center gap-2 text-lg font-semibold capitalize">
-                                            <span>{capitalize(item?.name)}</span>
+                                            <span title={capitalize(item?.name)} className="lg:max-w-[150px]">
+                                                {capitalize(item?.name)}
+                                            </span>
                                             {item?.is_onus_master && <TickFbIcon size={16} />}
                                         </div>
                                         <span className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">{item?.[userID]}</span>
@@ -367,12 +369,7 @@ const ContestPerRanks = ({
                 </>
             ) : (
                 <div className="dark:bg-dark-4 rounded-xl">
-                    <Table
-                        loading={loading}
-                        noItemsMessage={t('nao:contest:no_rank')}
-                        dataSource={dataFilter}
-                        classWrapper="!text-sm sm:!text-base"
-                    >
+                    <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataFilter} classWrapper="!text-sm sm:!text-base">
                         <Column
                             minWidth={50}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
@@ -380,7 +377,7 @@ const ContestPerRanks = ({
                             fieldName={rank}
                             cellRender={renderRank}
                         />
-                        <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
+                        <Column minWidth={280} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                         <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'User ID'} fieldName={userID} />
                         <Column
                             minWidth={150}
