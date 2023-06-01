@@ -499,7 +499,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                         <Table dataSource={dataSource?.members ?? []} classWrapper="border border-divider dark:border-none">
                             <Column minWidth={50} className="text-txtSecondary dark:text-txtSecondary-dark font-semibold" title={t('nao:contest:no')} fieldName={'index'} />
                             <Column
-                                minWidth={220}
+                                minWidth={280}
                                 ellipsis
                                 className="font-semibold capitalize"
                                 title={t('nao:contest:name')}

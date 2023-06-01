@@ -147,7 +147,7 @@
         "second": "hai",
         "third": "ba",
         "description": "Tranh giải cá nhân và đội nhóm với tổng giải thưởng ",
-        "description_individual": "Tranh giải cá nhân với tổng giải thưởng ",
+        "description_individual": "Tranh giải cá nhân với tổng giải thưởng xấp xỉ ",
         "detail_rules": "Thể lệ chi tiết",
         "ranking": "Bảng xếp hạng",
         "start_in": "Bắt đầu sau",
@@ -234,7 +234,13 @@
         "id_onus_futures": "ID",
         "contest_ranking": "BXH giải đấu",
         "contest_special": "BXH đặc biệt",
-        "tournament": "Giải đấu"
+        "tournament": "Giải đấu",
+        "weekly_ranking": "Bảng xếp hạng tuần",
+        "weekly_ranking_desc": "Người dùng đủ điều kiện sẽ được xét hạng và tranh giải thưởng hàng tuần trị giá {{value}}. Đọc thêm tại “Thể lệ chi tiết”.",
+        "rules": "Thể lệ",
+        "week": "Tuần {{value}}",
+        "start_time": "Thời gian bắt đầu",
+        "end_time": "Thời gian kết thúc"
     },
     "year_summary": {
         "title": "Tổng kết NAO Futures {{version}}",

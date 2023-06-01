@@ -19,6 +19,8 @@ import { SocialFireIcon } from '../../../svg/SvgIcon';
 import classNames from 'classnames';
 import NaoHeader from '../NaoHeader';
 import NaoFooter from '../NaoFooter';
+import ContestWeekRanks from 'components/screens/Nao/Contest/ContestWeekRanks';
+
 const ListRankings = dynamic(() => import('./ListRankings'));
 const currencies = [
     { label: 'VNDC', value: 'VNDC' },
@@ -208,9 +210,10 @@ export const seasons = [
     },
     {
         season: 10,
-        start: '2023-05-31T17:00:00.000Z',
-        end: '2023-06-30T17:00:00.000Z',
+        start: '2023-06-04T17:00:00.000Z',
+        end: '2023-07-02T17:00:00.000Z',
         contest_id: 13,
+        weeklyContestId: 1,
         title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 7', en: 'NAO Futures VNDC – Nami Championship Season 7' },
         title: { vi: 'NAO Futures VNDC', en: 'NAO Futures VNDC' },
         title_champion: { vi: 'Nami Championship mùa 7', en: 'Nami Championship Season 7' },
@@ -223,11 +226,12 @@ export const seasons = [
             vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-7',
             en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-7'
         },
-        total_rewards: '200,000,000 VNDC',
+        total_rewards: '500,000,000 VNDC',
+        total_weekly_rewards: '66,000,000 VNDC',
         quoteAsset: 'VNDC',
         // time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
         active: true,
-        top_ranks_per: 20,
+        top_ranks_week: 20,
         lastUpdated: true
     }
 ];
@@ -414,15 +418,18 @@ const Contest = (props) => {
                         userID={userID}
                     />
                 )}
-                <ContestPerRanks
-                    {...props}
-                    lastUpdatedTime={lastUpdatedTime}
-                    params={params}
-                    sort={params.individual}
-                    showPnl={showPnl}
-                    currencies={currencies}
-                    userID={userID}
-                />
+                {props.top_ranks_per && (
+                    <ContestPerRanks
+                        {...props}
+                        lastUpdatedTime={lastUpdatedTime}
+                        params={params}
+                        sort={params.individual}
+                        showPnl={showPnl}
+                        currencies={currencies}
+                        userID={userID}
+                    />
+                )}
+                {props.top_ranks_week && <ContestWeekRanks {...props} lastUpdatedTime={lastUpdatedTime} userID={userID} />}
             </>
         );
     };

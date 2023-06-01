@@ -1,48 +1,32 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import {
-    TextLiner,
-    CardNao,
-    ButtonNao,
-    Table,
-    Column,
-    getColor,
-    renderPnl,
-    Tooltip,
-    capitalize,
-    ImageNao,
-    TabsNao,
-    TabItemNao
-} from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, Table, Column, getColor, renderPnl, Tooltip, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
-import { API_CONTEST_GET_RANK_MEMBERS_PNL, API_CONTEST_GET_RANK_MEMBERS_VOLUME } from 'redux/actions/apis';
+import { API_CONTEST_GET_RANK_WEEKLY_VOLUME, API_CONTEST_GET_RANK_MEMBERS_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { formatNumber, getS3Url, getLoginUrl } from 'redux/actions/utils';
-import colors from 'styles/colors';
+import { formatNumber, getS3Url, formatTime } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
-import { formatTime } from 'utils/reference-utils';
-import { useRouter } from 'next/router';
 import TickFbIcon from 'components/svg/TickFbIcon';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import RePagination from 'components/common/ReTable/RePagination';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import { addDays, endOfDay, endOfWeek } from 'date-fns';
 
-const ContestPerRanks = ({
+const ContestWeekRanks = ({
     previous,
-    contest_id,
-    minVolumeInd,
+    weeklyContestId,
+    total_weekly_rewards,
     quoteAsset: q,
     lastUpdated,
-    sort,
-    params,
-    top_ranks_per,
-    showPnl,
-    currencies,
-    hasTabCurrency,
-    userID
+    top_ranks_week,
+    userID,
+    minVolumeInd,
+    start,
+    end
 }) => {
-    const [tab, setTab] = useState(sort);
+    const [tab, setTab] = useState(0);
     const [quoteAsset, setQuoteAsset] = useState(q);
     const {
         t,
@@ -52,14 +36,13 @@ const ContestPerRanks = ({
     const [dataSource, setDataSource] = useState([]);
     const [top3, setTop3] = useState([]);
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
     const lastUpdatedTime = useRef(null);
-    const mount = useRef(false);
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(limit);
     const isMobile = width <= 640;
     const limit = isMobile ? 10 : 20;
+    const rank = 'individual_rank_volume';
 
     useEffect(() => {
         setPage(1);
@@ -67,13 +50,8 @@ const ContestPerRanks = ({
     }, [isMobile]);
 
     useEffect(() => {
-        getRanks(sort);
-        setTab(sort);
-    }, [contest_id]);
-
-    useEffect(() => {
-        if (mount.current) getRanks(tab);
-    }, [quoteAsset]);
+        getRanks(tab);
+    }, [weeklyContestId]);
 
     const onReadMore = () => {
         setPageSize((old) => {
@@ -82,23 +60,17 @@ const ContestPerRanks = ({
         });
     };
 
-    const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
-
     const getRanks = async (tab) => {
-        const _rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
-        // if (Date.now() < new Date('2022-07-07T17:00:00.000Z').getTime()) {
-        //     return
-        // }
         try {
             const { data: originalData, status } = await fetchApi({
-                url: tab === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
-                params: { contest_id, quoteAsset }
+                url: API_CONTEST_GET_RANK_WEEKLY_VOLUME,
+                params: { weeklyContestId, quoteAsset, weekId: tab + 1 }
             });
             const data = originalData?.users;
             setTotal(data.length);
             if (data && status === ApiStatus.SUCCESS) {
-                if (originalData?.last_time_update) lastUpdatedTime.current = originalData?.last_time_update;
-                const dataFilter = data.filter((rs) => rs?.[_rank] > 0 && rs?.[_rank] < 4);
+                lastUpdatedTime.current = originalData?.last_time_update;
+                const dataFilter = data.filter((rs) => rs?.[rank] > 0 && rs?.[rank] < 4);
                 const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length;
                 const _top3 = data.slice(0, sliceIndex);
                 const _dataSource = data.slice(sliceIndex);
@@ -108,7 +80,6 @@ const ContestPerRanks = ({
         } catch (e) {
             console.log(e);
         } finally {
-            mount.current = true;
             setLoading(false);
         }
     };
@@ -119,16 +90,6 @@ const ContestPerRanks = ({
         getRanks(key);
         setTab(key);
     };
-
-    useEffect(() => {
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const team = urlParams.get('team') !== 'pnl' ? 'volume' : 'pnl';
-        urlParams.set('individual', tab === 'pnl' ? 'pnl' : 'volume');
-        urlParams.set('team', team);
-        const url = `/${router.locale}/contest${router.query.season ? '/' + router.query.season : ''}?${urlParams.toString()}`;
-        window.history.pushState(null, null, url);
-    }, [tab, router]);
 
     const renderName = (data, item) => {
         return (
@@ -152,7 +113,7 @@ const ContestPerRanks = ({
         const _rank = data || '-';
         return (
             <div className="w-6 h-6 flex-shrink-0 text-center relative font-SourceCodePro">
-                {data && data <= top_ranks_per ? (
+                {data && data <= top_ranks_week ? (
                     <>
                         <img src={getS3Url('/images/nao/contest/ic_top_teal.png')} className="w-6 h-6" width="24" height="24" alt="" />
                         <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
@@ -166,65 +127,98 @@ const ContestPerRanks = ({
         );
     };
 
+    function getWeeksInRange(startDate, endDate) {
+        const day = 1000 * 60 * 60 * 24;
+
+        // Calculate the number of days between the start and end dates
+        const daysInRange = Math.ceil((endDate - startDate) / day);
+
+        // Calculate the number of weeks and the remaining days
+        const numWeeks = Math.floor(daysInRange / 7);
+        const remainingDays = daysInRange % 7;
+
+        // Initialize an array to hold the start and end dates of each week
+        const weeks = [];
+
+        // Loop through each week and calculate the start and end dates
+        for (let i = 0; i < numWeeks; i++) {
+            const _startOfWeek = addDays(new Date(startDate), i * 7);
+            const _endOfWeek = endOfWeek(_startOfWeek, { weekStartsOn: 1 });
+            weeks.push({ start: _startOfWeek, end: _endOfWeek });
+        }
+
+        // If there are remaining days, calculate the start and end dates for the final week
+        if (remainingDays > 0) {
+            const startOfFinalWeek = addDays(new Date(startDate), numWeeks * 7);
+            const endOfFinalWeek = endOfDay(addDays(startOfFinalWeek, remainingDays - 1));
+            weeks.push({ start: startOfFinalWeek, end: endOfFinalWeek });
+        }
+
+        // Return the number of weeks and the array of week start and end dates
+        return { numWeeks: weeks.length, weeks };
+    }
+
+    const weeks = useMemo(() => {
+        return getWeeksInRange(new Date(start), new Date(end));
+    }, [start]);
+
+    const renderWeeksTab = useCallback(() => {
+        let rs = [];
+        const now = Date.now();
+        for (let i = 0; i < weeks.numWeeks; i++) {
+            const start = new Date(weeks.weeks[i].start).getTime();
+            const end = new Date(weeks.weeks[i].end).getTime();
+            if (now > start && now < end) {
+                onFilter(i);
+            }
+            rs.push(
+                <TabItem key={i} isActive={tab === i} V2 value={i} onClick={() => onFilter(i)} className="!px-0 space-x-1">
+                    <span>{t('nao:contest:week', { value: i + 1 })}</span>
+                    <span className="lowercase">({now < start ? t('nao:coming_soon_2') : now > start && now < end ? t('nao:going_on') : t('nao:ended')})</span>
+                </TabItem>
+            );
+        }
+        return rs;
+    }, [weeks, tab]);
+
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
         <section className="contest_individual_ranks pt-20">
-            {minVolumeInd && (
-                <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-personal-rank">
-                    <div
-                        className="text-sm"
-                        dangerouslySetInnerHTML={{
-                            __html: minVolumeInd?.isHtml ? t('nao:contest:tooltip_personal', { value: minVolumeInd[language] }) : minVolumeInd[language]
-                        }}
-                    ></div>
-                </Tooltip>
-            )}
+            <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-weekly-rank">
+                <div
+                    className="text-sm"
+                    dangerouslySetInnerHTML={{
+                        __html: minVolumeInd?.isHtml ? t('nao:contest:tooltip_personal', { value: minVolumeInd[language] }) : minVolumeInd[language]
+                    }}
+                ></div>
+            </Tooltip>
             <div className="flex justify-between flex-wrap gap-4 text-sm sm:text-base">
                 <div className="flex items-center space-x-4">
-                    <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:individual_ranking')}</TextLiner>
-                    {minVolumeInd && (
-                        <div data-tip={''} data-for="tooltip-personal-rank" className="cursor-pointer">
-                            <QuestionMarkIcon isFilled size={16} />
-                        </div>
-                    )}
-                </div>
-                {showPnl && (
-                    <div className="flex items-center gap-3">
-                        <ButtonNao
-                            onClick={() => onFilter('volume')}
-                            className={`px-4 py-2 !rounded-md ${
-                                tab === 'volume'
-                                    ? 'font-semibold'
-                                    : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
-                            }`}
-                        >
-                            {t('nao:contest:volume')}
-                        </ButtonNao>
-                        <ButtonNao
-                            onClick={() => onFilter('pnl')}
-                            className={`px-4 py-2 !rounded-md   ${
-                                tab === 'pnl'
-                                    ? 'font-semibold'
-                                    : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
-                            }`}
-                        >
-                            {t('nao:contest:per_pnl')}
-                        </ButtonNao>
+                    <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:weekly_ranking')}</TextLiner>
+                    <div data-tip="" data-for="tooltip-weekly-rank" className="cursor-pointer">
+                        <QuestionMarkIcon isFilled size={16} />
                     </div>
-                )}
+                </div>
             </div>
-            {hasTabCurrency && (
-                <TabsNao>
-                    {currencies.map((rs) => (
-                        <TabItemNao onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
-                            {rs.label}
-                        </TabItemNao>
-                    ))}
-                </TabsNao>
-            )}
+
+            <div className="pt-6 sm:pt-8 text-sm sm:text-base">
+                <span className="font-semibold">{t('nao:contest:rules')}</span>:&nbsp;
+                <span>{t('nao:contest:weekly_ranking_desc', { value: total_weekly_rewards })}</span>
+            </div>
+
+            <div className="border-b border-divider dark:border-divider-dark pt-8 sm:pt-12 mb-6 sm:mb-8 w-full">
+                <Tabs tab={tab} className="text-sm sm:text-base space-x-6">
+                    {renderWeeksTab()}
+                </Tabs>
+            </div>
+
+            <div className="text-txtSecondary dark:text-txtSecondary-dark mb-6 sm:mb-8 text-sm sm:text-base">
+                {t('common:time')}: {`${formatTime(weeks.weeks[tab].start, 'dd/MM/yyyy')} - ${formatTime(addDays(weeks.weeks[tab].end, 1), 'dd/MM/yyyy')}`}
+            </div>
+
             {top3.length > 0 && (
-                <div className="flex flex-wrap gap-3 sm:gap-6 mt-6 sm:mt-11 text-sm sm:text-base">
+                <div className="flex flex-wrap gap-3 sm:gap-6 text-sm sm:text-base">
                     {top3.map((item, index) => (
                         <CardNao key={index} className="!p-4 sm:!p-5">
                             <div className="flex items-center justify-between flex-1 gap-5">
@@ -304,7 +298,7 @@ const ContestPerRanks = ({
                                             <div className="min-w-[31px] text-txtSecondary dark:text-txtSecondary-dark">
                                                 {loading ? (
                                                     <Skeletor width={24} height={24} circle />
-                                                ) : item?.[rank] && item?.[rank] <= top_ranks_per ? (
+                                                ) : item?.[rank] && item?.[rank] <= top_ranks_week ? (
                                                     <div className="w-6 h-6 flex-shrink-0 text-center relative font-SourceCodePro">
                                                         <img
                                                             src={getS3Url('/images/nao/contest/ic_top_teal.png')}
@@ -367,12 +361,7 @@ const ContestPerRanks = ({
                 </>
             ) : (
                 <div className="dark:bg-dark-4 rounded-xl">
-                    <Table
-                        loading={loading}
-                        noItemsMessage={t('nao:contest:no_rank')}
-                        dataSource={dataFilter}
-                        classWrapper="!text-sm sm:!text-base"
-                    >
+                    <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataFilter} classWrapper="!text-sm sm:!text-base">
                         <Column
                             minWidth={50}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
@@ -429,11 +418,11 @@ const ContestPerRanks = ({
                     )}
                 </div>
             )}
-            {lastUpdated && lastUpdatedTime.current && (
+            {lastUpdated && lastUpdatedTime.current ? (
                 <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                    {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
+                    {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss dd/MM/yyyy')}
                 </div>
-            )}
+            ) : null}
             {isMobile && pageSize < dataSource.length && (
                 <div className="w-fit block sm:hidden m-auto text-teal font-semibold mt-6" onClick={onReadMore}>
                     {t('common:read_more')}
@@ -443,4 +432,4 @@ const ContestPerRanks = ({
     );
 };
 
-export default ContestPerRanks;
+export default ContestWeekRanks;

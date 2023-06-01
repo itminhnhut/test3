@@ -234,7 +234,13 @@
         "id_onus_futures": "ID Onus Futures",
         "contest_ranking": "Contest Ranking",
         "contest_special": "Special Awards",
-        "tournament": "Tournament"
+        "tournament": "Tournament",
+        "weekly_ranking": "Weekly Ranking",
+        "weekly_ranking_desc": "Eligible users will be ranked and have a chance to win weekly prize of {{value}}. Read more at “Detailed Rules”.",
+        "rules": "Rules",
+        "week": "Week {{value}}",
+        "start_time": "Start time",
+        "end_time": "End time"
     },
     "year_summary": {
         "title": "NAO Futures {{version}} Achievements",

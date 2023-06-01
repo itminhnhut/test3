@@ -388,7 +388,7 @@ const ContestTeamRanks = ({
                             fieldName={rank}
                             cellRender={renderRank}
                         />
-                        <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
+                        <Column minWidth={280} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                         <Column
                             minWidth={150}
                             className="text-txtPrimary dark:text-txtPrimary-dark capitalize"
