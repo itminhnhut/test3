@@ -183,7 +183,7 @@ const ContestWeekRanks = ({ previous, contest_id, total_weekly_rewards, quoteAss
                 ></div>
             </Tooltip>
             <div className="flex justify-between flex-wrap gap-4 text-sm sm:text-base">
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
                     <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:weekly_ranking')}</TextLiner>
                     <div data-tip="" data-for="tooltip-weekly-rank" className="cursor-pointer">
                         <QuestionMarkIcon isFilled size={16} />
