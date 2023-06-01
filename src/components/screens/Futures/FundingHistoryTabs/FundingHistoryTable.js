@@ -537,7 +537,7 @@ const FilterChart = ({ value, onChange }) => {
         <PopoverV2
             ref={popover}
             label={
-                <div className="h-8 px-4 py-3 bg-dark-2 rounded-md flex items-center justify-between space-x-2 w-[100px]">
+                <div className="h-8 px-4 py-3 bg-gray-10 dark:bg-dark-2 rounded-md flex items-center justify-between space-x-2 w-[100px]">
                     <p className="text-xs truncate">{label[language]}</p>
                     <ChevronDown size={16} />
                 </div>
@@ -552,8 +552,8 @@ const FilterChart = ({ value, onChange }) => {
                             handleChangeFilter(item);
                             close();
                         }}
-                        className={classNames('cursor-pointer px-4 py-2 text-txtSecondary-dark hover:bg-hover-dark', {
-                            '!text-white': value === item.value
+                        className={classNames('cursor-pointer px-4 py-2 text-txtSecondary dark:text-txtSecondary-dark hover:bg-hover dark:hover:bg-hover-dark', {
+                            '!text-txtPrimary dark:!text-white': value === item.value
                         })}
                     >
                         {item[language]}

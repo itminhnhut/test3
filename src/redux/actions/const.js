@@ -836,7 +836,8 @@ export const UserSocketEvent = {
     FUTURE_DONE_CLOSING_ALL_ORDERS: 'future:done_closing_all_orders',
     FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error',
     FUTURE_PROCESSING_ORDER_ERROR_NAO: 'future:processing_order_error_nao',
-    PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER'
+    PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER',
+    SMART_OTP: 'SMART_OTP'
 };
 
 export const EarnOrder_Status = {

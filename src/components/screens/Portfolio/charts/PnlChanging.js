@@ -37,7 +37,10 @@ const PnlChanging = ({
     isVndc = true
 }) => {
     const router = useRouter();
-    const [pnlChartData, setPnlChartData] = useState({});
+    const [pnlChartData, setPnlChartData] = useState({
+        labels: [],
+        datasets: []
+    });
 
     useEffect(() => {
         if (dataPnl?.labels?.length > 0) {
@@ -58,13 +61,13 @@ const PnlChanging = ({
 
             let values = dataPnl.values.map((obj) => obj.pnl);
             setPnlChartData({
-                labels: labels,
+                labels: labels || [],
                 datasets: [
                     {
                         fill: false,
                         label: false,
-                        data: values,
-                        backgroundColor: values?.map((value) => (value > 0 ? colors.green[6] : colors.red[2])),
+                        data: values || [],
+                        backgroundColor: values?.map((value) => (value > 0 ? colors.green[6] : colors.red[2])) || [],
                         hoverBackgroundColor: values?.map((value) => (value > 0 ? '#2daf57' : '#d51d1d')),
                         stack: 'pnl'
                     }

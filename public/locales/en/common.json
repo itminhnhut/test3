@@ -118,7 +118,7 @@
     "feedback_sent_failed": "Something went wrong. Please try again later.",
     "feedback_send_contact": "If you have further questions, please contact us via support@nami.exchange or hotline: 19003098. See <1>FAQs</1>.",
     "otp_verify": "Please enter the verification code on the Google Authenticator to continue.",
-    "otp_verify_expired": "Code is invalid. Please try again.",
+    "otp_verify_expired": "The verification code is invalid, please try again.",
     "published_at": "Published on",
     "category": "Category",
     "share": "Share",

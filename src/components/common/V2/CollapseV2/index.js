@@ -38,6 +38,7 @@ const index = ({
     }, [active, reload]);
 
     useEffect(() => {
+        if (!wraper.current) return;
         setTimeout(() => {
             wraper.current.style.height = active ? list.current.clientHeight + 'px' : 0;
         }, 100);
@@ -61,10 +62,14 @@ const index = ({
         <div className={classNames('', className, { 'overflow-hidden': !flag })}>
             <div
                 onClick={handleOpen}
-                className={classNames('flex items-center space-x-2 cursor-pointer leading-5 font-semibold', {
-                    'mb-4': open && !isCustom ,
-                    'border-b border-divider dark:border-divider-dark pb-[23px]': isDividerBottom && !open
-                }, divLabelClassname)}
+                className={classNames(
+                    'flex items-center space-x-2 cursor-pointer leading-5 font-semibold',
+                    {
+                        'mb-4': open && !isCustom,
+                        'border-b border-divider dark:border-divider-dark pb-[23px]': isDividerBottom && !open
+                    },
+                    divLabelClassname
+                )}
             >
                 <label className={`cursor-pointer select-none ${labelClassname}`}>{label}</label>
                 {!isCustom && <ChevronDown size={16} {...chrevronStyled} className={`${open ? '!rotate-0' : ''} transition-all`} />}
