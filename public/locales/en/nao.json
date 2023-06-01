@@ -234,7 +234,14 @@
         "id_onus_futures": "ID Onus Futures",
         "contest_ranking": "Contest Ranking",
         "contest_special": "Special Awards",
-        "tournament": "Tournament"
+        "tournament": "Tournament",
+        "referral": {
+            "description": "Compete as an individual to win a reward of ",
+            "score": "Score",
+            "ranking": "Ranking",
+            "number_of_friends": "Number of friends",
+            "tooltip_friends": "Referred friends need to complete KYC during the program period, read more at “Detail Rules”"
+        }
     },
     "year_summary": {
         "title": "NAO Futures {{version}} Achievements",

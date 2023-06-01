@@ -169,7 +169,7 @@
         "team": "Tên đội",
         "team_label": "Đội",
         "total_trades": "Số lệnh",
-        "name": "Tên",
+        "name": "Họ và tên",
         "captain": "Đội trưởng",
         "information": "Thông tin",
         "team_ranking": "Bảng xếp hạng đội nhóm",
@@ -234,7 +234,14 @@
         "id_onus_futures": "ID",
         "contest_ranking": "BXH giải đấu",
         "contest_special": "BXH đặc biệt",
-        "tournament": "Giải đấu"
+        "tournament": "Giải đấu",
+        "referral": {
+            "description": "Tranh giải cá nhân với tổng giải thưởng ",
+            "score": "Điểm",
+            "ranking": "Bảng xếp hạng",
+            "number_of_friends": "Số bạn bè",
+            "tooltip_friends": "Bạn bè cần hoàn tất KYC trong thời gian diễn ra chương trình, đọc thêm tại “Thể lệ chi tiết”"
+        }
     },
     "year_summary": {
         "title": "Tổng kết NAO Futures {{version}}",

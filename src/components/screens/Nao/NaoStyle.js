@@ -60,7 +60,7 @@ export const ButtonNaoVariants = {
 };
 export const ButtonNao = styled.div.attrs(({ disabled, variant, active = true }) => ({
     className: classNames(
-        'text-center text-sm sm:text-base px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer py-[10px] sm:py-3',
+        'text-center text-sm sm:text-base px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer py-3',
         {
             'bg-bgBtnPrimary text-txtBtnPrimary': active && (!variant || variant === ButtonNaoVariants.PRIMARY), // default theme is primary
             'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': variant === ButtonNaoVariants.SECONDARY || active === false,
