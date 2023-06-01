@@ -45,8 +45,8 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import MCard from 'components/common/MCard';
 
 const LIST_TABS = [
-    { id: 1, localized: 'common:position:max_profit' },
-    { id: 2, localized: 'common:position:min_profit' }
+    { id: 1, localized: 'portfolio:highest' },
+    { id: 2, localized: 'portfolio:lowest' }
 ];
 
 const LIMIT_ROW = 5;
@@ -96,7 +96,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
             {
                 key: 'opened_at',
                 dataIndex: 'opened_at',
-                title: t('futures:order_table:open_at'),
+                title: t('common:time'),
                 align: 'left',
                 width: 210,
                 render: (v) => <span className="whitespace-nowrap">{formatTime(v, 'HH:mm:ss dd/MM/yyyy')}</span>
@@ -104,7 +104,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
             {
                 key: 'symbol',
                 dataIndex: 'symbol',
-                title: t('common:pair'),
+                title: t('portfolio:trading_pair'),
                 align: 'left',
                 width: 160,
                 render: (v, item) => (
@@ -130,7 +130,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
             {
                 key: 'profit',
                 dataIndex: 'profit',
-                title: 'PNL (ROE%)',
+                title: t('portfolio:pnl'),
                 align: 'left',
                 width: 230,
                 render: (v, item) => {
@@ -174,7 +174,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
             {
                 key: 'displaying_id',
                 dataIndex: 'displaying_id',
-                title: t('futures:mobile:transaction_histories:id'),
+                title: t('portfolio:position_id'),
                 align: 'right',
                 width: 136,
                 render: (v) => `ID #${v}`
@@ -271,13 +271,13 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                                     );
                                 })
                             ) : (
-                                <NoData className="mt-12" />
+                                <NoData className="mt-12" text={t('portfolio:no_position_recorded')} />
                             )}
                         </div>
                     </div>
                 </CollapseV2>
                 <ModalV2 isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
-                    <h1 className="mt-6 text-xl font-semibold text-gray-15 dark:text-gray-4">Chi tiết lệnh</h1>
+                    <h1 className="mt-6 text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:position_details')}</h1>
                     {showDetails && <ModalDetailsPosition value={showDetails} isVndc={isVndc} t={t} />}
                 </ModalV2>
                 {/* <ModalDetailsPosition isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)}  /> */}
@@ -289,8 +289,8 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
             <HeaderTooltip
                 isMobile
                 className={isMobile ? 'px-4' : 'px-6 py-8'}
-                title={`Top ${LIMIT_ROW} vị thế`}
-                tooltipContent={'This is tooltip content'}
+                title={t('portfolio:top_position', { maxPosition: LIMIT_ROW })}
+                tooltipContent={t('portfolio:top_position_tooltip')}
                 tooltipId="top_position_tooltip"
             />
             <div className="relative flex tracking-normal">
@@ -322,7 +322,8 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                 skip={0}
                 pagingClassName="border-none"
                 height={350}
-                tableStyle={{ fontSize: '16px', padding: '16px' }}
+                tableStyle={{ fontSize: '16px', padding: '16px', rcTableContent: { 'padding-bottom': '46px' } }}
+                textEmptyCustom={t('portfolio:no_position_recorded')}
                 className="pb-1 rounded-b-xl border-t border-divider dark:border-divider-dark"
                 // className="bg-white dark:bg-transparent pt-8 border border-divider dark:border-divider-dark rounded-xl"
             />
@@ -357,15 +358,15 @@ const ModalDetailsPosition = ({ value, isVndc, t }) => {
             </div>
             <MCard addClass={'mt-6 !p-4 !text-sm !font-semibold'}>
                 <div className="flex justify-between items-center">
-                    <div className="txtSecond-3">Ký quỹ</div>
+                    <div className="txtSecond-3">{t('futures:margin')}</div>
                     <div>{formatNumber(margin, decimalScalePrice, 0, true)}</div>
                 </div>
                 <div className="flex justify-between items-center mt-2.5">
-                    <div className="txtSecond-3">Khối lượng</div>
+                    <div className="txtSecond-3">{t('futures:order_table:volume')}</div>
                     <div>{formatNumber(order_value, decimalScalePrice, 0, true)}</div>
                 </div>
                 <div className="flex justify-between items-center mt-2.5">
-                    <div className="txtSecond-3">ID vị thế</div>
+                    <div className="txtSecond-3">{t('portfolio:position_id')}</div>
                     <div>{`ID #${displaying_id}`}</div>
                 </div>
             </MCard>

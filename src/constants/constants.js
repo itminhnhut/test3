@@ -270,6 +270,6 @@ export const MODE_OTP = {
 };
 
 export const FUTURES_PRODUCT = {
-    NAMI: { id: 0, name: 'NAMI Futures'},
+    NAMI: { id: 0, name: 'Nami Futures'},
     NAO: { id: 2, name: 'NAO Futures'}
 }

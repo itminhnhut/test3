@@ -62,6 +62,7 @@ const ReTable = memo(
         pagination,
         paginationProps,
         tableStyle,
+        rcTableContent,
         emptyText,
         useRowHover,
         isNamiV2,
@@ -426,6 +427,8 @@ const ReTableWrapperV2 = styled.div`
         .rc-table-tbody {
             min-height: ${({ height, empty }) => empty && `${height - 70}px`};
         }
+        ${({ rcTableContent }) => (rcTableContent ? { ...rcTableContent } : '')};
+
     }
 
     .rc-table-cell-fix-left,

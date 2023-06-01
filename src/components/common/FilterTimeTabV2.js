@@ -123,7 +123,11 @@ const FilterTimeTabV2 = ({
     const onChange = (e) => {
         const monthsDifference = differenceInMonths(e?.selection?.startDate, e?.selection?.endDate);
         if (Math.abs(monthsDifference) >= 3) {
-            toast({ text: 'Phạm vi được chọn không được vượt quá 3 tháng', type: 'error', className: '!max-w-[358px] !min-w-[358px] !mx-auto' });
+            toast({
+                text: t('portfolio:error.max_months_filter', { maxMonths: maxMonths }),
+                type: 'error',
+                className: '!max-w-[358px] !min-w-[358px] !mx-auto'
+            });
             throw 'error';
         } else {
             const startDate = e?.selection?.startDate;
@@ -194,7 +198,7 @@ const FilterTimeTabV2 = ({
                             <span className="whitespace-nowrap">
                                 {isCustomDay
                                     ? `${formatTime(filter?.range?.startDate, 'dd/MM/yyyy')} - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}`
-                                    : t('dw_partner:filter.custom')}
+                                    : t('signals:signal_filter')}
                             </span>
                         </div>
                     ) : (
@@ -228,7 +232,7 @@ const FilterTimeTabV2 = ({
                                     <span className="whitespace-nowrap">
                                         {isCustomDay
                                             ? `${formatTime(filter?.range?.startDate, 'dd/MM/yyyy')} - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}`
-                                            : t('dw_partner:filter.custom')}
+                                            : t('common:custom_2')}
                                     </span>
                                 </div>
                             }
@@ -261,7 +265,7 @@ const FilterTimeTabV2 = ({
                     />
                 </div>
                 <ButtonV2 onClick={onConfirm} className="mt-2 mb-8">
-                    {t('common:global_btn.confirm')}
+                    {t('common:global_btn.apply')}
                 </ButtonV2>
             </ModalV2>
         </Fragment>

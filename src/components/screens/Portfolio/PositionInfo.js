@@ -15,11 +15,11 @@ const deltaClipPath = 0.8;
 const TooltipProfit = ({ type, totalProfit, totalProfitPosition, isVndc, t, ...rest }) => (
     <Tooltip {...rest} id={`${type}_profit_tooltip`} place="top" className="max-w-[520px] !p-3">
         <div className="text-base">
-            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">Lệnh lãi</div>
+            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('portfolio:profit_position')}</div>
             <ul className="list-disc marker:text-xs ml-5 mt-2">
-                <li>{`Tổng vị thế: ${totalProfitPosition}`}</li>
+                <li>{`${t('common:amount')}: ${totalProfitPosition}`}</li>
                 <li>
-                    {'Tổng lãi: '} <span className="text-green-3 dark:text-green-2 font-semibold">+{formatNanNumber(totalProfit, isVndc ? 0 : 4)}</span>
+                    {`${t('portfolio:total_profit')}: `} <span className="text-green-3 dark:text-green-2 font-semibold">+{formatNanNumber(totalProfit, isVndc ? 0 : 4)}</span>
                 </li>
             </ul>
         </div>
@@ -29,11 +29,11 @@ const TooltipProfit = ({ type, totalProfit, totalProfitPosition, isVndc, t, ...r
 const TooltipLoss = ({ type, totalLoss, totalLossPosition, isVndc, t, ...rest }) => (
     <Tooltip {...rest} id={`${type}_loss_tooltip`} place="top" className="max-w-[520px] !p-3">
         <div className="text-base">
-            <div className="text-txtSecondary dark:text-txtSecondary-dark">Lệnh lỗ</div>
+            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('portfolio:loss_position')}</div>
             <ul className="list-disc marker:text-xs ml-5 mt-2">
-                <li>{`Tổng vị thế: ${totalLossPosition}`}</li>
+                <li>{`${t('common:amount')}: ${totalLossPosition}`}</li>
                 <li>
-                    {'Tổng lỗ: '} <span className="text-red-2 font-semibold">{formatNanNumber(totalLoss, isVndc ? 0 : 4)}</span>
+                    {`${t('portfolio:total_loss')}: `} <span className="text-red-2 font-semibold">{formatNanNumber(totalLoss, isVndc ? 0 : 4)}</span>
                 </li>
             </ul>
         </div>
@@ -52,7 +52,8 @@ const PositionInfo = ({
     isNeverTrade,
     isVndc = true,
     isMobile = false,
-    isDark
+    isDark,
+    setIsOpen
 }) => {
     const percentClipPath = (totalLossPosition / total) * 100;
     const [showDetails, setShowDetails] = useState(false);
@@ -67,12 +68,13 @@ const PositionInfo = ({
                     label={
                         <HeaderTooltip
                             isMobile
-                            title={t(`common:position:${type.toLowerCase()}`)}
-                            tooltipContent={'This is tooltip content'}
+                            title={t('portfolio:side_position', {side: t(`common:${type.toLowerCase()}`)})}
+                            tooltipContent={t('portfolio:side_position_tooltip')}
                             tooltipId={`${type}_position_tooltip`}
                         />
                     }
                     labelClassname="text-base font-semibold"
+                    setIsOpen={setIsOpen}
                 >
                     <div>
                         <div className="mt-6 md:mt-12 mb-6 text-lg md:text-2xl font-semibold">
@@ -106,8 +108,8 @@ const PositionInfo = ({
                             </div>
                         )}
                         <div className="flex items-center justify-between mt-2 md:mt-3 py-1.5 txtSecond-5">
-                            <div>Lệnh lỗ: {isNeverTrade ? '-' : `${formatNanNumber((totalLossPosition / total) * 100, 2)}%`}</div>
-                            <div>Lệnh lãi: {isNeverTrade ? '-' : `${formatNanNumber((totalProfitPosition / total) * 100, 2)}%`}</div>
+                            <div>{t('portfolio:total_loss')}: {isNeverTrade ? '-' : `${formatNanNumber((totalLossPosition / total) * 100, 2)}%`}</div>
+                            <div>{t('portfolio:total_profit')}: {isNeverTrade ? '-' : `${formatNanNumber((totalProfitPosition / total) * 100, 2)}%`}</div>
                         </div>
                     </div>
                 </CollapseV2>
@@ -115,8 +117,8 @@ const PositionInfo = ({
                 <>
                     <HeaderTooltip
                         isMobile
-                        title={t(`common:position:${type.toLowerCase()}`)}
-                        tooltipContent={'This is tooltip content'}
+                        title={t('portfolio:side_position', {side: t(`common:${type.toLowerCase()}`)})}
+                        tooltipContent={t('portfolio:side_position_tooltip')}
                         tooltipId={`${type}_position_tooltip`}
                     />
                     <div className="mt-6 md:mt-12 mb-6 text-lg md:text-2xl font-semibold">
@@ -204,36 +206,36 @@ const PositionInfo = ({
                         </div>
                     )}
                     <div className="flex items-center justify-between mt-2 md:mt-3 py-1.5 txtSecond-5">
-                        <div>Lệnh lỗ: {isNeverTrade ? '-' : `${formatNanNumber((totalLossPosition / total) * 100, 2)}%`}</div>
-                        <div>Lệnh lãi: {isNeverTrade ? '-' : `${formatNanNumber((totalProfitPosition / total) * 100, 2)}%`}</div>
+                        <div>{t('portfolio:total_loss')}: {isNeverTrade ? '-' : `${formatNanNumber((totalLossPosition / total) * 100, 2)}%`}</div>
+                        <div>{t('portfolio:total_profit')}: {isNeverTrade ? '-' : `${formatNanNumber((totalProfitPosition / total) * 100, 2)}%`}</div>
                     </div>
                 </>
             )}
             <ModalV2 isVisible={showDetails} onBackdropCb={() => setShowDetails(false)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
                 <div className="text-gray-15 dark:text-gray-4 text-sm font-semibold">
-                    <h1 className="mt-6 text-xl">Thống kê lệnh {t(`common:position:${type.toLowerCase()}`)}</h1>
+                    <h1 className="mt-6 text-xl">{t('portfolio:position_statistic_by_asset', {side: t(`common:${type}`)})}</h1>
                     <span className="txtSecond-5 mt-2">{`Tổng lệnh ${type}: ${total} lệnh`}</span>
 
-                    <h1 className="my-6 text-base font-semibold">Lệnh lỗ</h1>
+                    <h1 className="my-6 text-base font-semibold">{t('portfolio:total_loss')}</h1>
                     <MCard addClass={'!p-4'}>
                         <div className="flex items-center justify-between">
-                            <span className="txtSecond-3">Tổng vị thế</span>
+                            <span className="txtSecond-3">{t('common:amount')}</span>
                             <span>{formatNumber(totalLossPosition, 0)}</span>
                         </div>
                         <div className="flex items-center justify-between mt-3">
-                            <span className="txtSecond-3">Tổng lỗ</span>
+                            <span className="txtSecond-3">{t('portfolio:total_loss')}</span>
                             <span className={totalLoss < 0 && 'text-red-2'}>{formatNanNumber(totalLoss, isVndc ? 0 : 4)}</span>
                         </div>
                     </MCard>
 
-                    <h1 className="mt-8 mb-6 text-base">Lệnh lãi</h1>
+                    <h1 className="mt-8 mb-6 text-base">{t('portfolio:total_profit')}</h1>
                     <MCard addClass={'!p-4'}>
                         <div className="flex items-center justify-between">
-                            <span className="txtSecond-3">Tổng vị thế</span>
+                            <span className="txtSecond-3">{t('common:amount')}</span>
                             <span>{formatNumber(totalProfitPosition, 0)}</span>
                         </div>
                         <div className="flex items-center justify-between mt-3">
-                            <span className="txtSecond-3">Tổng lãi</span>
+                            <span className="txtSecond-3">{t('portfolio:total_profit')}</span>
                             <span className={totalProfit > 0 && 'text-green-3 dark:text-green-2'}>+{formatNanNumber(totalProfit, isVndc ? 0 : 4)}</span>
                         </div>
                     </MCard>

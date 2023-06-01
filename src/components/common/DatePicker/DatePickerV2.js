@@ -197,7 +197,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                         />
                     </DatePickerWrapper>
                     <ButtonV2 onClick={onConfirm} className="mx-6 mt-2 mb-8 w-auto">
-                        {t('common:global_btn.confirm')}
+                        {t('common:global_btn.apply')}
                     </ButtonV2>
                 </div>
             </Transition>

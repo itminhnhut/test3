@@ -2,8 +2,21 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import ChevronDown from 'components/svg/ChevronDown';
+import { isFunction } from 'lodash';
 
-const index = ({ children, className, label, isCustom, active, reload, divLabelClassname = '', labelClassname = '', chrevronStyled }) => {
+const index = ({
+    children,
+    className,
+    label,
+    isCustom,
+    active,
+    reload,
+    divLabelClassname = '',
+    labelClassname = '',
+    chrevronStyled,
+    setIsOpen,
+    isDividerBottom
+}) => {
     const [open, setOpen] = useState(false);
     const wraper = useRef();
     const list = useRef();
@@ -41,13 +54,17 @@ const index = ({ children, className, label, isCustom, active, reload, divLabelC
             !open ? 400 : 0
         );
         setOpen(!open);
+        if (isFunction(setIsOpen)) setIsOpen(!open);
     };
 
     return (
         <div className={classNames('', className, { 'overflow-hidden': !flag })}>
             <div
                 onClick={handleOpen}
-                className={classNames('flex items-center space-x-2 cursor-pointer leading-5 font-semibold', { 'mb-4': open && !isCustom }, divLabelClassname)}
+                className={classNames('flex items-center space-x-2 cursor-pointer leading-5 font-semibold', {
+                    'mb-4': open && !isCustom ,
+                    'border-b border-divider dark:border-divider-dark pb-[23px]': isDividerBottom && !open
+                }, divLabelClassname)}
             >
                 <label className={`cursor-pointer select-none ${labelClassname}`}>{label}</label>
                 {!isCustom && <ChevronDown size={16} {...chrevronStyled} className={`${open ? '!rotate-0' : ''} transition-all`} />}
@@ -55,6 +72,7 @@ const index = ({ children, className, label, isCustom, active, reload, divLabelC
             <Wraper className={classNames({ 'overflow-hidden': !flag })} ref={wraper}>
                 <div ref={list}>{children}</div>
             </Wraper>
+            {isDividerBottom && open && <div className={`w-full border-b border-divider dark:border-divider-dark mt-[47px]`}></div>}
         </div>
     );
 };

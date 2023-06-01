@@ -32,6 +32,10 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const TIME_FILTER = [
     {
+        localized: 'common:all',
+        value: 'all'
+    },
+    {
         localized: 'dw_partner:filter.a_week',
         value: 'w',
         format: 'dd/MM',
@@ -42,10 +46,6 @@ const TIME_FILTER = [
         value: 'm',
         format: 'dd/MM',
         interval: '1d'
-    },
-    {
-        localized: 'common:all',
-        value: 'all'
     }
 ];
 
@@ -126,6 +126,9 @@ const Portfolio = () => {
         fetchDataPnlChanging();
     }, [typeProduct, typeCurrency, filter]);
 
+    const [isOpenPositionInfo1, setIsOpenPositionInfo1] = useState(false);
+    const [isOpenPositionInfo2, setIsOpenPositionInfo2] = useState(false);
+
     return (
         <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal text-xs leading-[16px] md:text-base pb-20 md:pb-[120px]">
             {/* Banner infor */}
@@ -142,7 +145,7 @@ const Portfolio = () => {
             />
             {/* Content */}
             <div className="w-full px-4 relative">
-                <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto pt-20">
+                <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto pt-6 md:pt-20">
                     <div className="flex items-center md:justify-between">
                         <GroupButtonCurrency typeCurrency={typeCurrency} setTypeCurrency={setTypeCurrency} isMobile={isMobile} />
                         <div className="vertical-divider !h-9 md:hidden"></div>
@@ -161,7 +164,7 @@ const Portfolio = () => {
                     </div>
                     {/* Chi so noi bat */}
                     <FeaturedStats
-                        className="mt-12"
+                        className="mt-6 md:mt-12"
                         t={t}
                         isDark={isDark}
                         isMobile={isMobile}
@@ -169,8 +172,6 @@ const Portfolio = () => {
                         loadingOverview={loadingOverview}
                         typeCurrency={typeCurrency}
                     />
-
-                    {isMobile && <div className="w-full border-b border-divider dark:border-divider-dark mt-[47px]"></div>}
 
                     {/* Bien dong loi nhuan */}
                     <PnlChanging
@@ -185,7 +186,6 @@ const Portfolio = () => {
                     />
 
                     {/* Cap giao dich || Vi the mua - Vi the ban */}
-                    {isMobile && <div className="w-full border-b border-divider dark:border-divider-dark mt-[47px]"></div>}
                     <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-x-8">
                         <TradingPair
                             isDark={isDark}
@@ -197,8 +197,7 @@ const Portfolio = () => {
                             isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                             isMobile={isMobile}
                         />
-                        {isMobile && <div className="w-full border-b border-divider dark:border-divider-dark my-12"></div>}
-                        <div className={`${isMobile ? 'flex flex-col' : 'grid grid-rows-2'} gap-y-8`}>
+                        <div className={`${isMobile ? 'flex flex-col mt-12' : 'grid grid-rows-2'} gap-y-8`}>
                             <PositionInfo
                                 type="buy"
                                 t={t}
@@ -211,6 +210,7 @@ const Portfolio = () => {
                                 isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                                 isMobile={isMobile}
                                 isDark={isDark}
+                                setIsOpen={setIsOpenPositionInfo1}
                             />
                             <PositionInfo
                                 type="sell"
@@ -224,22 +224,29 @@ const Portfolio = () => {
                                 isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                                 isMobile={isMobile}
                                 isDark={isDark}
+                                setIsOpen={setIsOpenPositionInfo2}
                             />
                         </div>
-                        {isMobile && (
+                        {isMobile && (isOpenPositionInfo1 || isOpenPositionInfo2) && (
                             <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4">
                                 <BxsInfoCircle />
                                 <span>Nhấn vào từng phần để xem thống kê chi tiết</span>
                             </div>
+                        )}
+                        {isMobile && (
+                            <div
+                                className={`w-full border-b border-divider dark:border-divider-dark mt-[${
+                                    isOpenPositionInfo1 || isOpenPositionInfo2 ? 47 : 23
+                                }px]`}
+                            ></div>
                         )}
                     </div>
                 </div>
             </div>
             {/* Table top 5 positions */}
             <div className="w-full md:px-4">
-                {isMobile && <div className="w-full border-b border-divider dark:border-divider-dark mt-[47px]"></div>}
                 <TopPositionTable
-                    className={!isMobile && 'max-w-screen-v3 2xl:max-w-screen-xxl m-auto pb-[120px]'}
+                    className={!isMobile && 'max-w-screen-v3 2xl:max-w-screen-xxl m-auto'}
                     typeProduct={typeProduct}
                     typeCurrency={typeCurrency}
                     filter={filter}
@@ -247,9 +254,13 @@ const Portfolio = () => {
                     isDark={isDark}
                 />
             </div>
-            <div className={`fixed px-4 left-0 bottom-0 w-full bg-white dark:bg-dark-dark border-t border-divider dark:border-divider-dark ${(!isMobile || !isNeverTrade) && 'hidden'}`} >
+            <div
+                className={`fixed px-4 left-0 bottom-0 w-full bg-white dark:bg-dark-dark border-t border-divider dark:border-divider-dark ${
+                    (!isMobile || !isNeverTrade) && 'hidden'
+                }`}
+            >
                 <ButtonV2 onClick={() => router.push('./futures/BTCVNDC')} className="mt-8 mb-8">
-                    {t('common:luckydraw.trade')}
+                    {t('portfolio:trading_now')}
                 </ButtonV2>
             </div>
         </div>

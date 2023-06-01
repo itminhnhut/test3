@@ -31,7 +31,7 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
 
             setVipLevel(data?.level || 0);
         } catch (error) {
-            console.log(`Cant get user vip level: ${error}`);
+            console.log(`Can't get user vip level: ${error}`);
             setVipLevel(0);
         }
     };
@@ -48,8 +48,9 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
     //     }
     // }, [currency, user]);
 
+    const duringHours = Math.floor((new Date() - new Date(firstTimeTrade)) / (1000 * 60 * 60))
     const renderUserGeneralInfo = () => (
-        <div className={`${isMobile ? 'pt-[104px]' : 'ml-8'} flex flex-col items-start justify-center gap-y-2 text-sm md:text-base`}>
+        <div className={`${isMobile ? 'pt-[76px]' : 'ml-8'} flex flex-col items-start justify-center gap-y-2 text-sm md:text-base`}>
             <span className="text-xl md:text-2xl">{user?.name ?? user?.username ?? user?.email ?? t('common:unknown')}</span>
             <div className="flex items-center">
                 {isNumber(vipLevel) ? <span className="text-green-2">VIP {vipLevel}</span> : <Skeletor width={50} />}
@@ -58,53 +59,18 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
                 <TextCopyable text={user?.code} copyIconColor="#fff" />
             </div>
             <div className="flex items-center">
-                <span className="mr-2 font-normal text-gray-7">Giao dịch từ:</span>
+                <span className="mr-2 font-normal text-gray-7">{t('portfolio:trading_from')}</span>
                 {loadingOverview ? (
-                    <Skeletor width={170} height={17} />
+                    <Skeletor width={170} height={17} baseColor={colors.darkBlue3} highlightColor={colors.darkBlue4} />
                 ) : (
                     <div className="flex">
-                        {firstTimeTrade ? formatTime(firstTimeTrade, 'dd/MM/yyyy').toString() : 'Chưa thực hiện giao dịch'}{' '}
-                        {firstTimeTrade && `(${Math.floor((new Date() - new Date(firstTimeTrade)) / (1000 * 60 * 60))} giờ)`}
+                        {firstTimeTrade ? formatTime(firstTimeTrade, 'dd/MM/yyyy').toString() + ' ': '-'}
+                        {firstTimeTrade && `(${duringHours} ${duringHours > 1 ? t('common:hours') : t('common:hour')})`}
                     </div>
                 )}
             </div>
         </div>
     );
-
-    // const renderProgressInfo = () => (
-    //     <div className="w-full md:max-w-[548px]">
-    //         <div className={`border-b dark:border-divider-dark h-6 mb-6 ${isMobile ? 'border-divider' : 'border-divider-dark'}`}></div>
-    //         <div className="flex justify-between w-full py-2 md:py-0 text-sm">
-    //             <span className="font-normal text-gray-7">Số dư Nami</span>
-    //             <div className="text-green-2 flex gap-2 leading-[18px] md:text-base">
-    //                 Mua NAMI
-    //                 <button
-    //                     onClick={(e) => {
-    //                         e.preventDefault();
-    //                         e.stopPropagation();
-    //                         handleDepositIconBtn();
-    //                     }}
-    //                 >
-    //                     <SvgAddCircle size={13.3} color={colors.teal} className="cursor-pointer" />
-    //                 </button>
-    //             </div>
-    //         </div>
-    //         <div className={`w-full h-2 my-3 flex justify-between items-center rounded-xl ${isMobile ? 'bg-gray-12 dark:bg-dark-2' : 'bg-white'}`}>
-    //             <Progressbar
-    //                 background={isMobile && isDark ? colors.green[2] : colors.green[3]}
-    //                 percent={((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100}
-    //                 height={8}
-    //                 className={'rounded-xl'}
-    //             />
-    //         </div>
-    //         <div className="flex justify-between w-full text-green-3 md:text-green-2 dark:text-green-2 font-normal">
-    //             <span>{`VIP ${vipLevel}: ${formatPrice(userData?.nami?.metadata?.namiBalance || 0, 0)} NAMI / ${Math.round(
-    //                 ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100
-    //             )}%`}</span>
-    //             <span>{`VIP ${nextLevel}: ${formatPrice(FEE_TABLE[nextLevel]?.nami_holding || 0, 0)} NAMI`}</span>
-    //         </div>
-    //     </div>
-    // );
 
     return (
         <div>
@@ -119,7 +85,7 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
                         className="w-full  px-4 bg-cover bg-center relative"
                     >
                         <div className="h-full pt-[68px] pb-[72px] text-gray-4 font-semibold">
-                            <span className="text-3xl leading-[36px]">Futures Portfolio</span>
+                            <span className="text-3xl leading-[36px]">{t('navbar:menu.user.futures_portfolio')}</span>
                             {/* <GroupButtonCurrency currency={currency} setCurrency={setCurrency} /> */}
                         </div>
                     </div>
@@ -166,7 +132,7 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
                 >
                     <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                         <div className="h-full pt-20 pb-[174px] text-gray-4 font-semibold relative">
-                            <span className="text-[32px] leading-[38px]">Futures Portfolio</span>
+                            <span className="text-[32px] leading-[38px]">{t('navbar:menu.user.futures_portfolio')}</span>
 
                             {/* Avatar div */}
                             <div className="block md:flex mt-20">
@@ -225,3 +191,38 @@ const GroupButtonProduct = ({ className, typeProduct, setTypeProduct }) => {
 };
 
 export default BannerInfo;
+
+// const renderProgressInfo = () => (
+//     <div className="w-full md:max-w-[548px]">
+//         <div className={`border-b dark:border-divider-dark h-6 mb-6 ${isMobile ? 'border-divider' : 'border-divider-dark'}`}></div>
+//         <div className="flex justify-between w-full py-2 md:py-0 text-sm">
+//             <span className="font-normal text-gray-7">Số dư Nami</span>
+//             <div className="text-green-2 flex gap-2 leading-[18px] md:text-base">
+//                 Mua NAMI
+//                 <button
+//                     onClick={(e) => {
+//                         e.preventDefault();
+//                         e.stopPropagation();
+//                         handleDepositIconBtn();
+//                     }}
+//                 >
+//                     <SvgAddCircle size={13.3} color={colors.teal} className="cursor-pointer" />
+//                 </button>
+//             </div>
+//         </div>
+//         <div className={`w-full h-2 my-3 flex justify-between items-center rounded-xl ${isMobile ? 'bg-gray-12 dark:bg-dark-2' : 'bg-white'}`}>
+//             <Progressbar
+//                 background={isMobile && isDark ? colors.green[2] : colors.green[3]}
+//                 percent={((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100}
+//                 height={8}
+//                 className={'rounded-xl'}
+//             />
+//         </div>
+//         <div className="flex justify-between w-full text-green-3 md:text-green-2 dark:text-green-2 font-normal">
+//             <span>{`VIP ${vipLevel}: ${formatPrice(userData?.nami?.metadata?.namiBalance || 0, 0)} NAMI / ${Math.round(
+//                 ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100
+//             )}%`}</span>
+//             <span>{`VIP ${nextLevel}: ${formatPrice(FEE_TABLE[nextLevel]?.nami_holding || 0, 0)} NAMI`}</span>
+//         </div>
+//     </div>
+// );

@@ -1,9 +1,39 @@
 {
-    "key_statistic": "Các chỉ số nổi bật được thống kê dựa trên các vị thế đã đóng hoàn toàn và lệnh của các vị thế đống từng phần.",
-    "pnl_changing": {
-        "des_01": "Lorem ipsum dolor sit amet consectetur.",
-        "des_02": "Ornare commodo egestas odio lorem bibendum dictum. Ipsum."
-    },
+    "key_metrics_tooltip": "Được thống kê dựa trên các vị thế đã đóng bao gồm các lệnh đóng từng phần thành công.",
+    "pnl_changing_tooltip": "Lịch sử biến động lợi nhuận được ghi nhận kể từ 01/01/2023 vào 00:00 (UTC+7) mỗi ngày.",
+    "trading_pair_tooltip": "Tổng vị thế đã đóng bao gồm các lệnh đóng từng phần thành công theo từng tài sản.",
+    "side_position_tooltip": "Tổng vị thế {{side}} đã đóng bao gồm các lệnh đóng từng phần thành công theo từng tài sản.",
+    "top_position_tooltip": "Thống kê xếp hạng 5 vị thế có lợi nhuận cao nhất và thấp nhất dựa trên các vị thế đã đóng bao gồm các lệnh đóng từng phần thành công.",
     "profit": "Lãi",
-    "loss": "Lỗ"
+    "loss": "Lỗ",
+    "trading_from": "Giao dịch từ",
+    "key_metrics": "Chỉ số nổi bật",
+    "pnl": "Lợi nhuận",
+    "total_pnl": "Lợi nhuận",
+    "position": "Số vị thế",
+    "avg_leverage": "Đòn bẩy trung bình",
+    "historical_pnl": "Biến động lợi nhuận",
+    "trading_now": "Giao dịch ngay",
+    "click_column_for_details": "Nhấn vào từng cột xem thống kê chi tiết",
+    "click_array_for_details": "Nhấn vào từng mảng xem thống kê chi tiết",
+    "position_by_asset": "Vị thế theo tài sản",
+    "total_position": "Tổng vị thế",
+    "amount_position": "Số vị thế",
+    "others": "Khác",
+    "position_statistic_by_asset": "Thống kê vị thế theo tài sản",
+    "side_position": "Vị thế {{side}}",
+    "total_loss": "Tổng lỗ",
+    "total_profit": "Tổng lãi",
+    "loss_position": "Vị thế Lỗ",
+    "profit_position": "Vị thế Lãi",
+    "top_position": "Top {{maxPosition}} vị thế theo PnL",
+    "no_position_recorded": "Không có lịch sử được ghi nhận",
+    "highest": "Cao nhất",
+    "lowest": "Thấp nhất",
+    "trading_pair": "Cặp giao dịch",
+    "position_id": "ID Vị thế",
+    "position_details": "Chi tiết vị thế",
+    "error": {
+        "max_months_filter": "Chọn khoảng thời gian trong vòng {{maxMonths}} tháng"
+    }
 }

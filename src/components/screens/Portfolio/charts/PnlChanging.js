@@ -37,7 +37,7 @@ const PnlChanging = ({
             setChartData({
                 labels: dataPnl.labels.map((obj) => obj.date),
                 values: dataPnl.values.map((obj) => obj.pnl),
-                margin: dataPnl.values.map((obj) => obj.margin)
+                margins: dataPnl.values.map((obj) => obj.margin)
             });
         }
     }, [dataPnl, filter]);
@@ -88,7 +88,7 @@ const PnlChanging = ({
                         let margin = chartData?.margins?.[dataIndex] ?? 1;
                         let pnl = chartData?.values?.[dataIndex];
                         let ratePnl = pnl / margin;
-                        return [` - Lợi nhuận: ${raw > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`];
+                        return [` - ${t('portfolio:pnl')}: ${raw > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`];
                     },
                 },
                 backgroundColor: isDark ? colors.dark['2'] : colors.gray['15'],
@@ -124,7 +124,7 @@ const PnlChanging = ({
                 ticks: {
                     color: colors.darkBlue5,
                     callback: function (value, index, ticks) {
-                        return formatPrice(value) + 'K';
+                        return formatPrice(value);
                     },
                     crossAlign: 'far',
                     padding: 8,
@@ -199,32 +199,33 @@ const PnlChanging = ({
                     label={
                         <HeaderTooltip
                             isMobile
-                            title="Biến động lợi nhuận"
-                            tooltipContent={[t('portfolio:pnl_changing.des_01'), t('portfolio:pnl_changing.des_02')]}
+                            title={t('portfolio:historical_pnl')}
+                            tooltipContent={t('portfolio:pnl_changing_tooltip')}
                             tooltipId={'pnl_changing_tooltip'}
                         />
                     }
                     labelClassname="text-base font-semibold"
+                    isDividerBottom={true}
                 >
                     <div className="mt-6">
                         <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
                     </div>
                     {/* Chu thich */}
                     <div className="flex items-center gap-x-4 mt-9">
-                        <Note iconClassName="bg-green-6" title={'Lợi nhuận tăng'} />
-                        <Note iconClassName="bg-red-2" title={'Lợi nhuận giảm'} />
+                        <Note iconClassName="bg-green-6" title={t('portfolio:profit')} />
+                        <Note iconClassName="bg-red-2" title={t('portfolio:loss')} />
                     </div>
                     <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
                         <BxsInfoCircle />
-                        <span>Nhấn vào từng cột xem thống kê chi tiết theo ngày</span>
+                        <span>{t('portfolio:click_column_for_details')}</span>
                     </div>
                 </CollapseV2>
             ) : (
                 <>
                     <HeaderTooltip
                         isMobile
-                        title="Biến động lợi nhuận"
-                        tooltipContent={[t('portfolio:pnl_changing.des_01'), t('portfolio:pnl_changing.des_02')]}
+                        title={t('portfolio:historical_pnl')}
+                        tooltipContent={t('portfolio:pnl_changing_tooltip')}
                         tooltipId={'pnl_changing_tooltip'}
                     />
                     {loadingPnlChanging ? (
@@ -235,7 +236,7 @@ const PnlChanging = ({
                         <div className="flex flex-col justify-center items-center">
                             <TableNoData titleClassname='!text-base !text-gray-1 dark:!text-gray-7' className="!py-8" title="Bạn hiện không có biến động lợi nhuận" />
                             <ButtonV2 className="w-auto !px-6" onClick={() => router.push('./futures/BTCVNDC')}>
-                                {'Giao dịch ngay'}
+                                {t('portfolio:trading_now')}
                             </ButtonV2>
                         </div>
                     ) : (
@@ -245,8 +246,8 @@ const PnlChanging = ({
                             </div>
                             {/* Chu thich */}
                             <div className="flex items-center gap-x-4 mt-9">
-                                <Note iconClassName="bg-green-6" title={'Lợi nhuận tăng'} />
-                                <Note iconClassName="bg-red-2" title={'Lợi nhuận giảm'} />
+                                <Note iconClassName="bg-green-6" title={t('portfolio:profit')} />
+                                <Note iconClassName="bg-red-2" title={t('portfolio:loss')} />
                             </div>
                         </div>
                     )}

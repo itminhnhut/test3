@@ -1,9 +1,39 @@
 {
-    "key_statistic": "Các chỉ số nổi bật được thống kê dựa trên các vị thế đã đóng hoàn toàn và lệnh của các vị thế đống từng phần.",
-    "pnl_changing": {
-        "des_01": "Lorem ipsum dolor sit amet consectetur.",
-        "des_02": "Ornare commodo egestas odio lorem bibendum dictum. Ipsum."
-    },
+    "key_metrics_tooltip": "Statistically based on closed positions, including successfully partial closing orders.",
+    "pnl_changing_tooltip": "Historical PnL is recorded since 01/01/2023 at 00:00 (UTC+7) every day.",
+    "trading_pair_tooltip": "Statistically based on closed positions, including successfully partial closing orders by each asset.",
+    "side_position_tooltip": "Statistically based on closed {{side}} positions, including successfully partial closing orders by each asset.",
+    "top_position_tooltip": "Top 5 highest and lowest PnL positions, based on closed positions including successful partial close orders.",
     "profit": "Profit",
-    "loss": "Loss"
+    "loss": "Loss",
+    "trading_from": "Trading from",
+    "key_metrics": "Key Metrics",
+    "pnl": "PnL",
+    "total_pnl": "Total PnL",
+    "position": "Position",
+    "avg_leverage": "Avg. Leverage",
+    "historical_pnl": "Historical PnL",
+    "trading_now": "Trading Now",
+    "click_column_for_details": "Click on each column for details",
+    "click_array_for_details": "Click on each array for details",
+    "position_by_asset": "Position by Assets",
+    "total_position": "Total position",
+    "amount_position": "Total position",
+    "others": "Others",
+    "position_statistic_by_asset": "Position Statistics by Assets",
+    "side_position": "{{side}} Position",
+    "total_loss": "Total loss",
+    "total_profit": "Total profit",
+    "loss_position": "Loss position",
+    "profit_position": "Profit position",
+    "top_position": "Top {{maxPosition}} Positions by PnL",
+    "no_position_recorded": "No position recorded",
+    "highest": "Highest",
+    "lowest": "Lowest",
+    "trading_pair": "Symbol",
+    "position_id": "Position ID",
+    "position_details": "Position Details",
+    "error": {
+        "max_months_filter": "Select your time range within {{maxMonths}} months"
+    }
 }

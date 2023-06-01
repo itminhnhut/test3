@@ -1,62 +1,46 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import Button from '../../common/Button';
-import FuturePortfolio from './FuturePortfolio';
-import { ComponentTabWrapper, ComponentTabItem, ComponentTabUnderline } from './styledPortfolio';
-import dynamic from 'next/dynamic';
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'next-i18next';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import useWindowSize from 'hooks/useWindowSize';
-import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
 import PriceChangePercent from 'components/common/PriceChangePercent';
-import { ArrowDropDownIcon, BxsInfoCircle, HelpIcon } from 'components/svg/SvgIcon';
-
-import PnlChanging from './charts/PnlChanging';
-import TradingPair from './charts/TradingPair';
-import PositionInfo from './PositionInfo';
-import TopPositionTable from './TopPositionTable';
-import BannerInfo from './BannerInfo';
-import { WIDTH_MD } from '../Wallet';
-import HelpCircle from 'components/svg/HelpCircle';
 import colors from 'styles/colors';
 import Tooltip from 'components/common/Tooltip';
-import { formatPrice, formatNanNumber } from 'redux/actions/utils';
+import { formatNanNumber } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
-import { getUsdRate } from 'redux/actions/market';
 import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
-import { formatNumber } from 'utils/reference-utils';
 import classNames from 'classnames';
 import HeaderTooltip from './HeaderTooltip';
 import CollapseV2 from 'components/common/V2/CollapseV2';
+import { API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
+import FetchApi from 'utils/fetch-api';
 
 const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loadingOverview, typeCurrency }) => {
-    const [curOverviewFilter, setCurOverviewFilter] = useState(listTimeFilter[0].value);
-    const [isCollapse, setIsCollapse] = useState(false);
-
-    const [vndcUsdRate, setVndcUsdRate] = useState();
+    const [usdRate, setUsdRate] = useState();
     useEffect(() => {
-        getUsdRate().then((usdRates) => {
-            setVndcUsdRate(usdRates[typeCurrency]);
-        });
-    }, []);
+        FetchApi({
+            url: API_GET_REFERENCE_CURRENCY,
+            params: { base: 'VNDC,USDT', quote: 'USD' }
+        })
+            .then(({ data = [] }) => {
+                const baseCurrency = typeCurrency === ALLOWED_ASSET_ID.VNDC ? 'VNDC' : 'USDT';
+                setUsdRate(data.find((obj) => obj.base === baseCurrency)?.price);
+            })
+            .catch((err) => console.error(err));
+    }, [typeCurrency]);
 
     const isVnd = typeCurrency === ALLOWED_ASSET_ID.VNDC;
 
     const renderSumVolumns = useCallback(() => {
         const totalVolume = dataOverview?.totalVolume?.value;
-        const swapValue = isVnd ? formatNanNumber(totalVolume * vndcUsdRate, 4) + ' USDT' : formatNanNumber(totalVolume / vndcUsdRate, 0) + ' VNDC';
+        const swapValue = formatNanNumber(totalVolume * usdRate, 4) + ' USD';
         return (
             <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4' : 'flex-auto px-6 py-4'}>
-                <span>Tổng KLGD</span>
+                <span>{t('transaction-history:modal_detail.volume')}</span>
                 <div className="text-base md:text-2xl font-semibold text-gray-15 dark:text-gray-4 mt-2 md:mt-4">
                     {loadingOverview ? <Skeletor width={150} /> : formatNanNumber(totalVolume, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
                 </div>
                 <div className="mt-1 md:mt-2">{loadingOverview ? <Skeletor width={150} /> : swapValue}</div>
             </div>
         );
-    }, [isMobile, loadingOverview, dataOverview, vndcUsdRate]);
+    }, [isMobile, loadingOverview, dataOverview, usdRate]);
 
     const renderSumPnl = useCallback(() => {
         const totalPnl = dataOverview?.totalPnl?.value;
@@ -64,7 +48,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
 
         return (
             <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4' : 'flex-auto px-6 py-4'}>
-                <span>Tổng lợi nhuận</span>
+                <span>{t('portfolio:pnl')}</span>
                 <div
                     className={classNames('text-base md:text-2xl font-semibold mt-2 md:mt-4 text-gray-15 dark:text-gray-4', {
                         '!text-green-3 !dark:text-green-2': totalPnl > 0,
@@ -85,39 +69,39 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                 )}
             </div>
         );
-    }, [isMobile, loadingOverview, dataOverview, vndcUsdRate]);
+    }, [isMobile, loadingOverview, dataOverview]);
 
     const renderOtherSummary = useCallback(() => {
         const totalMargin = dataOverview?.totalMargin?.value;
-        const swapValue = isVnd ? formatNanNumber(totalMargin * vndcUsdRate, 4) + ' USDT' : formatNanNumber(totalMargin / vndcUsdRate, 0) + ' VNDC';
+        const swapValue = formatNanNumber(totalMargin * usdRate, 4) + ' USD';
         const avgLeverage = formatNanNumber(dataOverview?.avgLeverage?.value, 0);
 
         return (
             <div className={isMobile ? 'mt-4 p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4' : 'flex-auto md:px-6 py-4'}>
                 <div className="flex items-center justify-between">
-                    <span>Tổng ký quỹ</span>
+                    <span>{t('futures:margin')}</span>
                     {loadingOverview ? (
                         <Skeletor width={200} />
                     ) : (
-                        <div className='text-right'>
+                        <div className="text-right">
                             <span className="txtPri-1">{formatNanNumber(totalMargin, isVnd ? 0 : 4)}</span>
                             <span className="txtSecond-2">{` (${swapValue})`}</span>
                         </div>
                     )}
                 </div>
                 <div className="flex items-center justify-between mt-3">
-                    <span>Tổng số vị thế</span>
+                    <span>{t('portfolio:position')}</span>
                     {loadingOverview ? (
                         <Skeletor width={200} />
                     ) : (
-                        <div className='text-right'>
+                        <div className="text-right">
                             <span className="txtPri-1">{dataOverview?.totalPositions?.value}</span>
-                            <span className="txtSecond-2">{` (${dataOverview?.countLongPositions?.doc_count} mua - ${dataOverview?.countShortPositions?.doc_count} bán)`}</span>
+                            <span className="txtSecond-2">{` (${dataOverview?.countLongPositions?.doc_count} ${t('common:buy')} - ${dataOverview?.countShortPositions?.doc_count} ${t('common:sell')})`}</span>
                         </div>
                     )}
                 </div>
                 <div className="flex items-center justify-between mt-3">
-                    <span>Đòn bẩy trung bình</span>
+                    <span>{t('portfolio:avg_leverage')}</span>
                     {loadingOverview ? <Skeletor width={50} /> : <span className="txtPri-1">{avgLeverage ? `${avgLeverage}X` : '-'}</span>}
                 </div>
             </div>
@@ -127,23 +111,6 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
     return (
         <div className={className}>
             <Tooltip id={'key_statistic'} place="top" className="max-w-[520px]" />
-            {/* <div className="flex items-center cursor-pointer w-max" data-tip={t('portfolio:key_statistic')} data-for="key_statistic">
-                <div className="text-base md:text-2xl font-semibold pr-2">Chỉ số nổi bật</div>
-                <HelpIcon color="currentColor" /> */}
-            {/* {isMobile ? (
-                    <ArrowDropDownIcon
-                        onClick={() => setIsCollapse((prev) => !prev)}
-                        isFilled
-                        size={24}
-                        className={`md:hidden cursor-pointer select-none transition-transform duration-75 ${isCollapse && 'rotate-180'}`}
-                    />
-                ) : (
-                    <GroupTextFilter className="hidden md:flex" curFilter={curOverviewFilter} setCurFilter={setCurOverviewFilter} GroupKey="Overview" t={t} />
-                )} */}
-            {/* </div> */}
-            {/* <GroupTextFilter className={`md:hidden mt-4`} curFilter={curOverviewFilter} setCurFilter={setCurOverviewFilter} GroupKey="Overview" t={t} /> */}
-
-            {/* Cards */}
             {isMobile ? (
                 <CollapseV2
                     className="w-full"
@@ -152,16 +119,14 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                     label={
                         <HeaderTooltip
                             isMobile={isMobile}
-                            title="Chỉ số nổi bật"
-                            tooltipContent={t('portfolio:key_statistic')}
-                            tooltipId={'key_statistic_tooltip'}
+                            title={t('portfolio:key_metrics')}
+                            tooltipContent={t('portfolio:key_metrics_tooltip')}
+                            tooltipId={'key_metrics_tooltip'}
                         />
                     }
                     labelClassname="text-base font-semibold"
+                    isDividerBottom={true}
                 >
-                    {/* <div>
-                        <GroupTextFilter className={`mt-4`} curFilter={curPnlFilter} setCurFilter={setCurPnlFilter} GroupKey="Profit_changing" t={t} />
-                    </div> */}
                     <div className="mt-6">
                         <div className="mt-6 text-gray-1 dark:text-gray-7">
                             <div className="grid grid-cols-2 gap-x-3">
@@ -176,17 +141,15 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                 <>
                     <HeaderTooltip
                         isMobile={isMobile}
-                        title="Chỉ số nổi bật"
-                        tooltipContent={t('portfolio:key_statistic')}
-                        tooltipId={'key_statistic_tooltip'}
+                        title={t('portfolio:key_metrics')}
+                        tooltipContent={t('portfolio:key_metrics_tooltip')}
+                        tooltipId={'key_metrics_tooltip'}
                     />
                     <div className=" text-gray-1 dark:text-gray-7 mt-8 rounded-xl flex px-6 py-3 bg-gray-13 dark:bg-dark-4">
                         {renderSumVolumns()}
                         <div className="vertical-divider"></div>
                         {renderSumPnl()}
                         <div className="vertical-divider"></div>
-
-                        {/* Card 3 */}
                         {renderOtherSummary()}
                     </div>
                 </>

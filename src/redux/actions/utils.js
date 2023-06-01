@@ -1419,5 +1419,5 @@ export const convertDateToMs = (date = 0, type = 'startOf') => {
 };
 
 export const formatPair = (pair = 'BTCVNDC', t) => {
-    return pair === 'other' ? t('common:others') : `${pair?.slice(0, -4)}/${pair?.slice(-4)}`
+    return pair === 'other' ? t('common:others_2') : `${pair?.slice(0, -4)}/${pair?.slice(-4)}`
 }

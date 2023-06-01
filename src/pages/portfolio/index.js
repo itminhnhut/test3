@@ -47,27 +47,12 @@ const index = () => {
             )}
         </MaldivesLayout>
     );
-
-    return (
-        <DynamicNoSsr>
-            <MaldivesLayout
-                // useGridSettings
-                navStyle={{
-                    boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)'
-                }}
-                hideFooter
-                page="portfolio"
-            >
-                <Portfolio />
-            </MaldivesLayout>
-        </DynamicNoSsr>
-    );
 };
 
 export default index;
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'portfolio', 'navbar', 'home', 'modal', 'input', 'table', 'futures', 'dw_partner']))
+        ...(await serverSideTranslations(locale, ['common', 'portfolio', 'navbar', 'home', 'modal', 'input', 'table', 'futures', 'dw_partner', 'signals', 'transaction-history']))
     }
 });

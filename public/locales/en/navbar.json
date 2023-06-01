@@ -35,7 +35,7 @@
             "partner": "Partner",
             "payment_method": "Payment Method",
             "daily_reward": "Daily Trading Reward",
-            "futures_portfolio": "Futures portfolio"
+            "futures_portfolio": "Futures Statistics"
         }
     },
     "submenu": {
@@ -84,7 +84,7 @@
         "partner": "Partner",
         "payment_method": "Payment Method",
         "daily_reward": "Daily Trading Reward",
-        "futures_portfolio": "Futures portfolio"
+        "futures_portfolio": "Futures Statistics"
     },
     "menu_grid": {
         "deposit": "Deposit",
