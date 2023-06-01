@@ -126,7 +126,7 @@ const FilterTimeTabV2 = ({
             toast({
                 text: t('portfolio:error.max_months_filter', { maxMonths: maxMonths }),
                 type: 'error',
-                className: '!max-w-[358px] !min-w-[358px] !mx-auto'
+                className: '!max-w-[358px] !min-w-[358px] !mx-auto mt'
             });
             throw 'error';
         } else {
@@ -156,7 +156,7 @@ const FilterTimeTabV2 = ({
     return (
         <Fragment>
             <div className={isMobile && 'w-full overflow-hidden'}>
-                <div className={`flex gap-3 items-center ${isMobile && 'overflow-x-auto no-scrollbar'} h-full ${className}`}>
+                <div className={`flex gap-2 md:gap-3 items-center ${isMobile && 'overflow-x-auto no-scrollbar'} h-full ${className}`}>
                     {timeFilter.map((item, i) => {
                         if (i === 0 && !isTabAll) return null;
                         return (
@@ -241,7 +241,7 @@ const FilterTimeTabV2 = ({
                 </div>
             </div>
             <ModalV2 isVisible={showPicker} onBackdropCb={handleOutside} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
-                <h1 className="mt-6 text-xl font-semibold text-gray-15 dark:text-gray-4">{t('common:select_time')}</h1>
+                <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('common:select_time')}</h1>
                 <div className={classNames('date-range-picker flex flex-col justify-center mt-2 w-full !bg-transparent !border-none !shadow-none')}>
                     <DateRangePicker
                         className={classNames(`h-full px-[10px] w-full`)}

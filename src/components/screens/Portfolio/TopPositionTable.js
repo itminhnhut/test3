@@ -209,7 +209,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                                         <TabItem
                                             isActive={e?.id === curTab}
                                             key={'top_position_tabs_' + e?.id}
-                                            className="text-center w-1/2 px-0 first:ml-4 last:mr-4"
+                                            className="text-center w-1/2 px-0 first:ml-4 last:mr-4 !text-sm"
                                             value={e.id}
                                             onClick={() => setCurTab(e.id)}
                                         >
@@ -277,7 +277,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                     </div>
                 </CollapseV2>
                 <ModalV2 isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
-                    <h1 className="mt-6 text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:position_details')}</h1>
+                    <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:position_details')}</h1>
                     {showDetails && <ModalDetailsPosition value={showDetails} isVndc={isVndc} t={t} />}
                 </ModalV2>
                 {/* <ModalDetailsPosition isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)}  /> */}
@@ -300,7 +300,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                             <TabItem
                                 isActive={e?.id === curTab}
                                 key={'top_position_tabs_' + e?.id}
-                                className={isMobile ? 'text-center w-1/2 px-0 first:ml-4 last:mr-4' : 'text-left !px-0 !text-base !w-auto'}
+                                className={'text-left !px-0 !text-base !w-auto'}
                                 value={e.id}
                                 onClick={() => setCurTab(e.id)}
                             >

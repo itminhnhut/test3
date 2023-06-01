@@ -173,7 +173,7 @@ body {
     }
 
     .vertical-divider {
-        @apply border-divider dark:border-divider-dark h-auto mx-6 border-l-[1px];
+        @apply border-divider dark:border-divider-dark h-auto mx-4 md:mx-6 border-l-[1px];
     }
 
     .t-common {

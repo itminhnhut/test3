@@ -203,7 +203,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                     </div>
                 </CollapseV2>
                 <ModalV2 isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
-                    <h1 className="mt-6 text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:position_statistic_by_asset')}</h1>
+                    <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:position_statistic_by_asset')}</h1>
                     {showDetails && (
                         <MCard addClass={'!p-4 !font-semibold !mt-6'}>
                             <div className="flex items-center justify-between">

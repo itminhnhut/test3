@@ -18,6 +18,9 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import { useRouter } from 'next/router';
 import { formatNanNumber } from 'redux/actions/utils';
+import { isNumber } from 'lodash';
+import ModalV2 from 'components/common/V2/ModalV2';
+import MCard from 'components/common/MCard';
 const { subDays, format, addMonths, addWeeks } = require('date-fns');
 
 const INTERVAL = {
@@ -36,6 +39,7 @@ const PnlChanging = ({
     filter = { startDate: null, endDate: null },
     isVndc = true
 }) => {
+    const [showDetails, setShowDetails] = useState(null)
     const router = useRouter();
     const [pnlChartData, setPnlChartData] = useState({
         labels: [],
@@ -70,6 +74,10 @@ const PnlChanging = ({
         barPercentage: 0.15,
         borderRadius: 3,
         borderSkipped: false,
+        onClick: (evt, item) => {
+            if (!isMobile) return;
+            setShowDetails(item[0]?.index);
+        },
         plugins: {
             // tooltip: {
             //     enabled: !isNeverTrade,
@@ -109,7 +117,7 @@ const PnlChanging = ({
                 position: 'nearest',
                 external: (context) => {
                     if (!isMobile) {
-                        const { dataIndex, label } = context?.chart?.tooltip?.dataPoints?.['0'];
+                        const { dataIndex } = context?.chart?.tooltip?.dataPoints?.['0'];
 
                         const title = parseTitle(dataPnl.labels[dataIndex]?.date, dataPnl?.interval)
 
@@ -212,6 +220,7 @@ const PnlChanging = ({
     return (
         <div className={`mt-12 md:p-8 transition-all ${isMobile ? 'bg-transparent' : 'rounded-xl bg-gray-13 dark:bg-dark-4'}`}>
             {isMobile ? (
+                <>
                 <CollapseV2
                     className="w-full"
                     divLabelClassname="w-full justify-between"
@@ -240,6 +249,28 @@ const PnlChanging = ({
                         <span>{t('portfolio:click_column_for_details')}</span>
                     </div>
                 </CollapseV2>
+                <ModalV2 isVisible={isNumber(showDetails)} onBackdropCb={() => setShowDetails(null)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
+                    <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:historical_pnl_statistic')}</h1>
+                    {showDetails && (
+                        <MCard addClass={'!p-4 !font-semibold !mt-6'}>
+                            <div className="flex items-center justify-between">
+                                <span className="txtSecond-3">{t('common:day')}</span>
+                                <div className="whitespace-nowrap font-semibold flex items-center">
+                                    {parseTitle(dataPnl.labels[showDetails]?.date, dataPnl?.interval)}
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between mt-2.5">
+                                <span className="txtSecond-3">{t('portfolio:pnl')}</span>
+                                <span className={dataPnl?.values?.[showDetails]?.pnl > 0 ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
+                                    {`${dataPnl?.values?.[showDetails]?.pnl > 0 ? '+' : ''}${formatNanNumber(dataPnl?.values?.[showDetails]?.pnl, isVndc ? 0 : 4)} (${
+                                        dataPnl?.values?.[showDetails]?.pnl > 0 ? '+' : ''
+                                    }${formatNanNumber((dataPnl?.values?.[showDetails]?.pnl * 100) / dataPnl?.values?.[showDetails]?.margin, 2)}%)`}
+                                </span>
+                            </div>
+                        </MCard>
+                    )}
+                </ModalV2>
+                </>
             ) : (
                 <>
                     <HeaderTooltip

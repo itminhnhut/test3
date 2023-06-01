@@ -214,7 +214,7 @@ const PositionInfo = ({
             )}
             <ModalV2 isVisible={showDetails} onBackdropCb={() => setShowDetails(false)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
                 <div className="text-gray-15 dark:text-gray-4 text-sm font-semibold">
-                    <h1 className="mt-6 text-xl">{t('portfolio:position_statistic_by_side', {side: t(`common:${type}`)})}</h1>
+                    <h1 className="text-xl">{t('portfolio:position_statistic_by_side', {side: t(`common:${type}`)})}</h1>
                     <span className="txtSecond-5 mt-2">{`Tổng lệnh ${type}: ${total} lệnh`}</span>
 
                     <h1 className="my-6 text-base font-semibold">{t('portfolio:total_loss')}</h1>

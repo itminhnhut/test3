@@ -35,6 +35,7 @@
     "position_id": "ID Vị thế",
     "position_details": "Chi tiết vị thế",
     "no_pnl_recorded": "Không có dữ liệu được ghi nhận",
+    "historical_pnl_statistic": "Thống kê biến động lợi nhuận",
     "error": {
         "max_months_filter": "Chọn khoảng thời gian trong vòng {{maxMonths}} tháng"
     }

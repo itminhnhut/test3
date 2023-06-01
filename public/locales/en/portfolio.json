@@ -35,6 +35,7 @@
     "position_id": "Position ID",
     "position_details": "Position Details",
     "no_pnl_recorded": "No PnL recorded",
+    "historical_pnl_statistic": "Historical PnL Statistic",
     "error": {
         "max_months_filter": "Select your time range within {{maxMonths}} months"
     }
