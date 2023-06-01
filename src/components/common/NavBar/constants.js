@@ -125,6 +125,14 @@ export const NAV_DATA = [
         isNew: false,
         url: '/support',
         child_lv1: []
+    },
+    {
+        key: 'top_referral',
+        title: 'Top Referral',
+        localized: 'top_referral',
+        isNew: false,
+        url: '/contest/referral',
+        child_lv1: []
     }
 ];
 
@@ -331,6 +339,14 @@ export const MOBILE_NAV_DATA = [
         localized: 'support',
         isNew: false,
         url: '/',
+        child_lv1: []
+    },
+    {
+        key: 'top_referral',
+        title: 'Top Referral',
+        localized: 'top_referral',
+        isNew: false,
+        url: '/contest/referral',
         child_lv1: []
     }
 ];
