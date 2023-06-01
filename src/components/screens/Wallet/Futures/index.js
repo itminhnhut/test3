@@ -116,7 +116,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
             {
                 key: 'wallet.locked_value',
                 dataIndex: ['wallet', 'locked_value'],
-                title: t('common:in_order'),
+                title: t('wallet:locked'),
                 align: 'right',
                 width: 213,
                 render: (v, item) => {
@@ -234,7 +234,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
                     </span>
                 </div>
                 <div className="pl-4 border-l border-divider dark:border-divider-dark md:flex md:border-none md:items-center">
-                    <div className="txtSecond-1">{t('common:in_order')}: &nbsp;</div>
+                    <div className="txtSecond-1">{t('wallet:locked')}: &nbsp;</div>
                     <div className="mt-2 md:mt-0">
                         {isHideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
                     </div>
@@ -302,7 +302,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
             </ButtonV2>
 
             <div className="mt-12 md:mt-16 flex items-center justify-between">
-                <div className="t-common-v2 hidden md:block">Futures</div>
+                <div className="t-common-v2 hidden md:block">{t('wallet:nami_futures_short')}</div>
                 {isSmallScreen ? (
                     <div className="w-full flex items-center justify-between">
                         <SearchBoxV2
@@ -394,7 +394,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-3">
-                                            <span className="txtSecond-2">{t('common:in_order')}</span>
+                                            <span className="txtSecond-2">{t('wallet:locked')}</span>
                                             <span className="txtPri-1">
                                                 {isHideAsset
                                                     ? SECRET_STRING

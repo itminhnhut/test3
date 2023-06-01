@@ -285,7 +285,7 @@ const OverviewWallet = (props) => {
                 {/* Exchange */}
                 <CardWallet onClick={() => onHandleClick('details_exchange')} isSmallScreen={isSmallScreen}>
                     <AssetBalance
-                        title="Exchange"
+                        title={t('wallet:spot_short')}
                         icon={<FutureExchangeIcon size={isSmallScreen ? 24 : 32} />}
                         renderEstBalance={renderExchangeEstBalance}
                         isSmallScreen={isSmallScreen}
@@ -321,7 +321,7 @@ const OverviewWallet = (props) => {
                 </CardWallet>
                 <CardWallet onClick={() => onHandleClick('details_futures')} isSmallScreen={isSmallScreen}>
                     <AssetBalance
-                        title="Futures"
+                        title={t('wallet:nami_futures_short')}
                         icon={<SvgWalletFutures size={isSmallScreen ? 24 : 32} />}
                         renderEstBalance={renderFuturesEstBalance}
                         isSmallScreen={isSmallScreen}
@@ -343,7 +343,7 @@ const OverviewWallet = (props) => {
                 </CardWallet>
                 <CardWallet onClick={() => onHandleClick('details_partners')} isSmallScreen={isSmallScreen}>
                     <AssetBalance
-                        title={t('common:partners')}
+                        title={t('wallet:commission')}
                         icon={<PartnersIcon size={isSmallScreen ? 24 : 32} />}
                         renderEstBalance={renderPartnersEstBalance}
                         isSmallScreen={isSmallScreen}

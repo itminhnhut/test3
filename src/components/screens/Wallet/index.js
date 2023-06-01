@@ -527,20 +527,20 @@ const SCREEN_TAB_SERIES = [
     {
         key: 1,
         code: WALLET_SCREENS.EXCHANGE,
-        title: 'Exchange',
-        localized: null
+        title: 'Spot',
+        localized: 'wallet:spot_short'
     },
     {
         key: 2,
         code: WALLET_SCREENS.FUTURES,
-        title: 'Futures',
-        localized: null
+        title: 'Nami Futures',
+        localized: 'wallet:nami_futures_short'
     },
     {
         key: 3,
         code: WALLET_SCREENS.PARTNERS,
         title: 'Partners',
-        localized: 'common:partners'
+        localized: 'wallet:commission'
     }
     // {
     //     key: 3,

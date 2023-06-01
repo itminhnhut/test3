@@ -17,7 +17,7 @@ import colors from '../../styles/colors';
 import { useRouter } from 'next/router';
 import isNil from 'lodash/isNil';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { AddCircleColorIcon, ArrowDropDownIcon, PartnersIcon, SyncAltIcon } from 'components/svg/SvgIcon';
+import { AddCircleColorIcon, ArrowDownIcon, ArrowDropDownIcon, ArrowForwardIcon, CheckCircleIcon, PartnersIcon, SyncAltIcon } from 'components/svg/SvgIcon';
 import CheckSuccess from 'components/svg/CheckSuccess';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
@@ -30,6 +30,9 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Notice from 'components/svg/Notice';
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import classNames from 'classnames';
+import ArrowDown from 'components/svg/ArrowDown';
+import TradingInputV2 from 'components/trade/TradingInputV2';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -368,135 +371,133 @@ const TransferModal = ({ isMobile, alert }) => {
         }
     }, [state.fromWallet]);
 
-    const getWalletType = (walletType, isDisable) => {
+    const renderWalletWithType = ({ side, isOpenList, walletType, isDisable, isDropdown = true, dropList }) => {
         let iconMode = 'normal';
         if (isDisable) {
             iconMode = isDarkMode ? 'disabled_dm' : 'disabled_lm';
         }
-        switch (walletType) {
-            case WalletType.SPOT:
-                return (
-                    <div className="flex justify-center items-center">
-                        <span>
-                            <SvgWalletExchange size={20} mode={iconMode} />
+
+        const WALLET = {
+            [WalletType.SPOT]: { icon: <SvgWalletExchange size={20} mode={iconMode} />, type: t('wallet:spot_short') },
+            [WalletType.FUTURES]: { icon: <SvgWalletFutures size={20} mode={iconMode} />, type: t('wallet:nami_futures_short') },
+            [WalletType.BROKER]: { icon: <PartnersIcon size={20} mode={iconMode} />, type: t('wallet:commission') }
+        };
+
+        const renderWallet = () => {
+            if (!WALLET?.[walletType]) return WALLET[WalletType.SPOT];
+            return WALLET[walletType];
+        };
+
+        return (
+            <div className="flex w-full space-x-3 items-center ">
+                <div>{renderWallet().icon}</div>
+                {side && <div className="txtSecond-3 w-10 ">{side}</div>}
+
+                <div className="relative flex-grow text-sm font-semibold flex items-center">
+                    <span className={`${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{renderWallet().type}</span>
+
+                    {isDropdown && (
+                        <span
+                            className={classNames('ml-1 text-txtSecondary dark:text-txtSecondary-dark transition-transform duration-50', {
+                                'rotate-180': isOpenList
+                            })}
+                        >
+                            <ArrowDropDownIcon color="currentColor" size={16} />
                         </span>
-                        <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{t('wallet:spot_short')}</span>
-                    </div>
-                );
-            case WalletType.FUTURES:
-                return (
-                    <div className="flex justify-center items-center">
-                        <span>
-                            <SvgWalletFutures size={20} mode={iconMode} />
-                        </span>
-                        <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{t('wallet:futures_short')}</span>
-                    </div>
-                );
-            case WalletType.BROKER:
-                return (
-                    <div className="flex justify-center items-center">
-                        <span>
-                            <PartnersIcon size={20} mode={iconMode} />
-                        </span>
-                        <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{t('common:partners')}</span>
-                    </div>
-                );
-            default:
-                return (
-                    <div className="flex justify-center items-center">
-                        <span>
-                            <SvgWalletExchange size={20} />
-                        </span>
-                        <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{t('wallet:spot_short')}</span>
-                    </div>
-                );
-        }
+                    )}
+                    {dropList?.()}
+                </div>
+            </div>
+        );
     };
 
     // Render Handler
     const renderWalletSelect = useCallback(() => {
         return (
-            <div className="flex flex-col items-center justify-center sm:mt-8 sm:flex-row sm:items-center ">
+            <div className="px-4 py-3 rounded-md bg-dark-12 dark:bg-bgBtnV2-tonal_dark mt-6 ">
                 <div
-                    className="relative w-full p-4 sm:w-1/2 sm:pr-3.5 cursor-pointer select-none border border-divider dark:border-divider-dark rounded-xl"
+                    className="relative flex items-center w-full cursor-pointer select-none  rounded-xl"
                     ref={fromWalletRef}
                     onClick={() => setState({ openList: { fromWalletList: !state.openList?.fromWalletList } })}
                 >
-                    <div className="txtSecond-3 text-center">{t('common:from')}</div>
-                    <div className={'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}>
-                        {getWalletType(state.fromWallet)}
-                        <span className={`transition-transform duration-50 ${state.openList?.fromWalletList && 'rotate-180'}`}>
-                            <ArrowDropDownIcon size={16} />
-                        </span>
-                    </div>
-                    {state.openList?.fromWalletList && (
-                        <div className="absolute z-20 mt-2 rounded-xl border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
-                            {Object.keys(ALLOWED_WALLET_FROM).map((walletType) => {
-                                return (
-                                    <div
-                                        key={`wallet_type_from__${walletType}`}
-                                        className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
-                                        onClick={() => onSetWallet('fromWallet', walletType)}
-                                    >
-                                        {getWalletType(ALLOWED_WALLET_FROM[walletType])}
-                                        {ALLOWED_WALLET_FROM[walletType] === state.fromWallet && (
-                                            <CheckSuccess
-                                                size={14}
-                                                color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
-                                                checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}
-                                            />
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
+                    {renderWalletWithType({
+                        side: t('common:from'),
+                        isOpenList: state.openList?.fromWalletList,
+                        walletType: state.fromWallet,
+                        dropList: () =>
+                            state.openList?.fromWalletList && (
+                                <div className="shadow-card_light absolute z-20 mt-1 rounded-xl py-4 left-0 top-full w-full bg-bgPrimary dark:bg-dark-4 overflow-hidden gap-y-3">
+                                    {Object.keys(ALLOWED_WALLET_FROM).map((walletType) => {
+                                        return (
+                                            <div
+                                                key={`wallet_type_from__${walletType}`}
+                                                className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
+                                                onClick={() => onSetWallet('fromWallet', walletType)}
+                                            >
+                                                {renderWalletWithType({ walletType: ALLOWED_WALLET_FROM[walletType], isDropdown: false })}
+                                                {ALLOWED_WALLET_FROM[walletType] === state.fromWallet && (
+                                                    <CheckCircleIcon
+                                                        size={16}
+                                                        color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
+                                                        checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}
+                                                    />
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )
+                    })}
                 </div>
-                <button
-                    disabled={state.fromWallet === WalletType.BROKER}
-                    className={`mx-2 p-2  rounded-full bg-bgSecondary dark:bg-[#1C232E] rotate-90 cursor-pointer select-none
+                <div className="flex justify-between items-center w-full my-3">
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark rotate-90">
+                        <ArrowForwardIcon color="currentColor" size={16} />
+                    </div>
+                    <button
+                        disabled={state.fromWallet === WalletType.BROKER}
+                        className={`rounded-full hover:opacity-75 transition  cursor-pointer select-none
                     ${state.fromWallet === WalletType.BROKER && 'cursor-not-allowed'}
                     `}
-                    onClick={revertWallet}
-                >
-                    <SyncAltIcon size={20} />
-                </button>
+                        onClick={revertWallet}
+                    >
+                        <SyncAltIcon size={24} />
+                    </button>
+                </div>
 
                 <div
-                    className="relative w-full p-4 sm:w-1/2 sm:pr-3.5 cursor-pointer select-none border border-divider dark:border-divider-dark rounded-xl"
+                    className="relative w-full cursor-pointer select-none "
                     ref={toWalletRef}
                     onClick={() => setState({ openList: { toWalletList: !state.openList?.toWalletList } })}
                 >
-                    <div className="text-center txtSecond-3">{t('common:to')}</div>
-                    <div className={'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}>
-                        {getWalletType(state.toWallet)}
-                        <span className={`transition-transform duration-50 ${state.openList?.toWalletList && 'rotate-180'}`}>
-                            <ArrowDropDownIcon size={16} />
-                        </span>
-                    </div>
-                    {state.openList?.toWalletList && (
-                        <div className="absolute z-20 mt-2 rounded-xl border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
-                            {Object.keys(ALLOWED_WALLET_TO).map((walletType) => {
-                                const isDisable = state.fromWallet === walletType;
-                                return (
-                                    <div
-                                        key={`wallet_type_to__${walletType}`}
-                                        className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
-                                        onClick={() => !isDisable && onSetWallet('toWallet', walletType)}
-                                    >
-                                        {getWalletType(ALLOWED_WALLET_TO[walletType], isDisable)}
-                                        {ALLOWED_WALLET_TO[walletType] === state.toWallet && (
-                                            <CheckSuccess
-                                                size={14}
-                                                color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
-                                                checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}
-                                            />
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
+                    {renderWalletWithType({
+                        side: t('common:to'),
+                        isOpenList: state.openList?.toWalletList,
+                        walletType: state.toWallet,
+                        dropList: () =>
+                            state.openList?.toWalletList && (
+                                <div className="shadow-card_light absolute py-4 z-20 mt-1 rounded-xl left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
+                                    {Object.keys(ALLOWED_WALLET_TO).map((walletType) => {
+                                        const isDisable = state.fromWallet === walletType;
+                                        return (
+                                            <div
+                                                key={`wallet_type_to__${walletType}`}
+                                                className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
+                                                onClick={() => !isDisable && onSetWallet('toWallet', walletType)}
+                                            >
+                                                {renderWalletWithType({ walletType: ALLOWED_WALLET_TO[walletType], isDisable, isDropdown: false })}
+                                                {ALLOWED_WALLET_TO[walletType] === state.toWallet && (
+                                                    <CheckCircleIcon
+                                                        size={16}
+                                                        color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
+                                                        checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}
+                                                    />
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )
+                    })}
                 </div>
             </div>
         );
@@ -506,16 +507,18 @@ const TransferModal = ({ isMobile, alert }) => {
         return (
             <div
                 ref={assetListRef}
-                className="relative flex items-center cursor-pointer select-none"
+                className="rounded-md px-4 py-3 bg-dark-12 dark:bg-bgBtnV2-tonal_dark relative flex justify-between items-center cursor-pointer select-none w-full"
                 onClick={() => {
                     setState({ openList: { assetList: !state.openList?.assetList } });
                 }}
             >
-                <AssetLogo assetCode={state.asset} size={24} />
-                <div className="mx-2 font-semibold text-base">{state.asset}</div>
-                <span className={`transition-transform duration-50 ${state.openList?.assetList && 'rotate-180'}`}>
-                    <ArrowDropDownIcon size={16} />
-                </span>
+                <div className="flex items-center">
+                    <AssetLogo assetCode={state.asset} size={24} />
+                    <div className="ml-2 text-base">{state.asset}</div>
+                </div>
+                <div className={`text-txtSecondary dark:text-txtSecondary-dark transition-transform duration-50 ${state.openList?.assetList && 'rotate-180'}`}>
+                    <ArrowDropDownIcon color="currentColor" size={16} />
+                </div>
                 {renderAssetList()}
             </div>
         );
@@ -530,7 +533,7 @@ const TransferModal = ({ isMobile, alert }) => {
         if (!state.openList?.assetList) return null;
 
         return (
-            <div className="absolute right-0 top-[30px] z-20 py-4 rounded-lg border border-divider dark:border-divider-dark  w-[320px] overflow-hidden bg-bgPrimary dark:bg-bgPrimary-dark font-normal text-base">
+            <div className="absolute right-0 top-full mt-2 z-20 py-4 rounded-lg border border-divider dark:border-divider-dark  w-full overflow-hidden bg-bgPrimary dark:bg-bgContainer-dark font-normal text-base ">
                 {state.allWallets?.map((wallet, index) => {
                     const available = wallet?.wallet?.value - wallet?.wallet?.locked_value;
                     const _assetDigit = assetConfig.find((i) => i.assetCode === wallet?.assetCode)?.assetDigit ?? 0;
@@ -569,7 +572,7 @@ const TransferModal = ({ isMobile, alert }) => {
                 thousandSeparator
                 allowNegative={false}
                 placeholder={Number(0).toPrecision(assetDigit + 1)}
-                className="w-full text-left sm:text-[24px] font-semibold"
+                className="w-full text-left"
                 value={state.amount}
                 onValueChange={({ value }) => setState({ amount: value })}
                 onFocus={onFocus}
@@ -591,7 +594,7 @@ const TransferModal = ({ isMobile, alert }) => {
         const isInsufficient = currentWallet?.available < +state.amount;
         if (!auth) {
             return (
-                <HrefButton className="block mt-8 !w-full !max-w-none text-base !font-semibold" href={getLoginUrl('sso', 'login')} variants="primary">
+                <HrefButton className="block mt-10 !w-full !max-w-none text-base !font-semibold" href={getLoginUrl('sso', 'login')} variants="primary">
                     {t('common:sign_in')}
                 </HrefButton>
             );
@@ -607,12 +610,10 @@ const TransferModal = ({ isMobile, alert }) => {
                     !shouldDisable &&
                     !state.isPlacingOrder &&
                     onTransfer(currentWallet?.id, convertToWalletV1Type(state.fromWallet), convertToWalletV1Type(state.toWallet), +state.amount, {
-                        fromWallet: getWalletType(state.fromWallet),
-                        toWallet: getWalletType(state.toWallet),
                         assetName: state.asset
                     })
                 }
-                className="mt-8"
+                className="mt-10"
             >
                 {t('common:transfer')}
             </ButtonV2>
@@ -623,9 +624,12 @@ const TransferModal = ({ isMobile, alert }) => {
         const data = state?.limitData;
         if (state?.limitData?.status === 'limited') {
             return (
-                <div className="mt-4 px-8 py-4 rounded bg-gray-10 dark:bg-bgContainer-dark">
-                    <div className="flex items-center text-txtPrimary dark:text-txtPrimary-dark gap-2">
-                        <Notice color={isDarkMode ? '#8694B2' : '#768394'} />
+                <div className="mt-4 p-4 rounded bg-gray-10 dark:bg-bgContainer-dark">
+                    <div className="flex items-center text-txtPrimary dark:text-txtPrimary-dark font-semibold gap-2">
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                            <Notice color="currentColor" />
+                        </div>
+
                         {t('wallet:transfer_limit:notice')}
                     </div>
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">
@@ -649,7 +653,7 @@ const TransferModal = ({ isMobile, alert }) => {
         return null;
     }, [auth, state.fromWallet, state.toWallet, state.asset, state.limitData]);
 
-    const renderHelperText = useCallback(() => {
+    const validator = useMemo(() => {
         let error = null;
 
         for (const key of Object.keys(state.errors)) {
@@ -658,16 +662,8 @@ const TransferModal = ({ isMobile, alert }) => {
                 break;
             }
         }
-
-        if (!error) return null;
-
-        return (
-            <div className="flex items-center text-red pt-3 text-xs text-left leading-4  gap-1">
-                <SwapWarning size={12} fill={colors.red2} />
-                {error?.charAt(0)?.toUpperCase() + error?.slice(1)}
-            </div>
-        );
-    }, [auth, state.fromWallet, state.toWallet, state.amount, state.isPlacingOrder, state.errors]);
+        return { isValid: !Boolean(error), msg: error, isError: Boolean(error) };
+    }, [state.errors]);
 
     useEffect(() => {
         if (!!!isVisible) {
@@ -793,29 +789,25 @@ const TransferModal = ({ isMobile, alert }) => {
             isVisible={!!isVisible}
             onBackdropCb={onClose}
             wrapClassName={'p-8 h-full bg-white dark:bg-dark text-base rounded-xl'}
-            className="!w-[488px] bg-bgPrimary dark:bg-bgPrimary-dark !overflow-visible"
+            className="sm:!max-w-[488px] bg-bgPrimary dark:bg-bgPrimary-dark !overflow-visible"
             btnCloseclassName="!pt-0"
             noButton
         >
             <div className="flex items-center justify-between">
                 <span className="font-semibold text-2xl">{t('common:transfer')}</span>
             </div>
-            {renderWalletSelect()}
-            <div
-                className={`mt-[50px] relative p-4 sm:py-3.5 sm:px-5 rounded-xl border ${
-                    state?.errors?.minAmount || state?.errors?.insufficient
-                        ? 'border-red-2'
-                        : state.focus?.amount
-                        ? ' border-dominant'
-                        : ' border-divider dark:border-divider-dark hover:!border-dominant'
-                }
-                `}
-            >
-                <div className="flex items-center justify-between">
+            <div className="space-y-4 mb-8">
+                {renderWalletSelect()}
+                {renderAssetSelect()}
+            </div>
+            <div className="">
+                <div className="flex items-center justify-between mb-2">
                     <div className="txtSecond-3">{t('common:amount')}</div>
                     <div className="txtSecond-3 flex justify-center items-center gap-2">
                         <span>{t('common:available_balance')}: </span>
-                        {renderAvailableWallet()}
+                        <div onClick={onSetMax} className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">
+                            {renderAvailableWallet()}
+                        </div>
                         <AddCircleColorIcon
                             className="cursor-pointer"
                             // onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
@@ -823,21 +815,30 @@ const TransferModal = ({ isMobile, alert }) => {
                         />
                     </div>
                 </div>
-                <div className="mt-6 flex items-center">
-                    {renderAmountInput()}
-                    <div
-                        className="font-bold text-dominant text-sm cursor-pointer uppercase pr-3 mx-3 border-r border-divider dark:border-divider-dark"
-                        onClick={onSetMax}
-                    >
-                        {/* {t('common:max')} */}
-                        MAX
-                    </div>
-                    {renderAssetSelect()}
-                </div>
+
+                <TradingInputV2
+                    value={state.amount}
+                    allowNegative={false}
+                    thousandSeparator={true}
+                    containerClassName="bg-dark-12 dark:bg-bgBtnV2-tonal_dark !px-4 !py-3"
+                    inputClassName="!text-left !ml-0"
+                    onValueChange={({ value }) => setState({ amount: value })}
+                    errorTooltip={false}
+                    decimalScale={assetDigit}
+                    allowedDecimalSeparators={[',', '.']}
+                    clearAble
+                    validator={validator}
+                    placeHolder={'Nhập số lượng tài sản'}
+                    renderTail={
+                        <ButtonV2 variants="text" onClick={onSetMax} className="uppercase font-semibold text-teal text-sm">
+                            MAX
+                        </ButtonV2>
+                    }
+                />
             </div>
             {/* {renderIssues()} */}
             {renderNotice()}
-            {renderHelperText()}
+            {/* {renderHelperText()} */}
             {renderTransferButton()}
             {renderAlertNotification()}
         </ModalV2>
