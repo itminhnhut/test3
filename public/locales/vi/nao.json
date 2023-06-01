@@ -236,6 +236,7 @@
         "contest_special": "BXH đặc biệt",
         "tournament": "Giải đấu",
         "weekly_ranking": "Bảng xếp hạng tuần",
+        "monthly_ranking": "Bảng xếp hạng theo tháng",
         "weekly_ranking_desc": "Người dùng đủ điều kiện sẽ được xét hạng và tranh giải thưởng hàng tuần trị giá {{value}}. Đọc thêm tại “Thể lệ chi tiết”.",
         "rules": "Thể lệ",
         "week": "Tuần {{value}}",

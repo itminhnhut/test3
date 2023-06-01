@@ -40,7 +40,8 @@ const ContestPerRanks = ({
     showPnl,
     currencies,
     hasTabCurrency,
-    userID
+    userID,
+    top_ranks_week
 }) => {
     const [tab, setTab] = useState(sort);
     const [quoteAsset, setQuoteAsset] = useState(q);
@@ -182,14 +183,16 @@ const ContestPerRanks = ({
             )}
             <div className="flex justify-between flex-wrap gap-4 text-sm sm:text-base">
                 <div className="flex items-center space-x-2">
-                    <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:individual_ranking')}</TextLiner>
+                    <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">
+                        {t(`nao:contest:${top_ranks_week ? 'monthly_ranking' : 'individual_ranking'}`)}
+                    </TextLiner>
                     {minVolumeInd && (
                         <div data-tip={''} data-for="tooltip-personal-rank" className="cursor-pointer">
                             <QuestionMarkIcon isFilled size={16} />
                         </div>
                     )}
                 </div>
-                {/* {showPnl && (
+                {showPnl && (
                     <div className="flex items-center gap-3">
                         <ButtonNao
                             onClick={() => onFilter('volume')}
@@ -212,7 +215,7 @@ const ContestPerRanks = ({
                             {t('nao:contest:per_pnl')}
                         </ButtonNao>
                     </div>
-                )} */}
+                )}
             </div>
             {hasTabCurrency && (
                 <TabsNao>
@@ -417,11 +420,11 @@ const ContestPerRanks = ({
                             />
                         )}
                     </Table>
-                    {/* {total > 1 && (
+                    {total > 1 && (
                         <div className="w-full hidden sm:flex justify-center py-8">
                             <RePagination onusMode total={total} current={page} pageSize={pageSize} onChange={(page) => setPage(page)} name="" />
                         </div>
-                    )} */}
+                    )}
                 </div>
             )}
             {lastUpdated && lastUpdatedTime.current && (

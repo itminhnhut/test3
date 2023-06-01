@@ -198,7 +198,7 @@ const ContestTeamRanks = ({
                         // />
                     )}
                 </div>
-                {/* {showPnl && (
+                {showPnl && (
                     <div className="flex items-center gap-3 text-sm">
                         <ButtonNao
                             onClick={() => onFilter('volume')}
@@ -221,7 +221,7 @@ const ContestTeamRanks = ({
                             {t('nao:contest:per_pnl')}
                         </ButtonNao>
                     </div>
-                )} */}
+                )}
             </div>
             {hasTabCurrency && (
                 <TabsNao>

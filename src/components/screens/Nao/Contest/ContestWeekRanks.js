@@ -3,7 +3,7 @@ import { TextLiner, CardNao, Table, Column, getColor, renderPnl, Tooltip, capita
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
-import { API_CONTEST_GET_RANK_WEEKLY_VOLUME, API_CONTEST_GET_RANK_MEMBERS_VOLUME } from 'redux/actions/apis';
+import { API_CONTEST_GET_RANK_WEEKLY_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { formatNumber, getS3Url, formatTime } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
@@ -14,18 +14,7 @@ import RePagination from 'components/common/ReTable/RePagination';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import { addDays, endOfDay, endOfWeek } from 'date-fns';
 
-const ContestWeekRanks = ({
-    previous,
-    weeklyContestId,
-    total_weekly_rewards,
-    quoteAsset: q,
-    lastUpdated,
-    top_ranks_week,
-    userID,
-    minVolumeInd,
-    start,
-    end
-}) => {
+const ContestWeekRanks = ({ previous, contest_id, total_weekly_rewards, quoteAsset: q, lastUpdated, top_ranks_week, userID, minVolumeInd, start, end }) => {
     const [tab, setTab] = useState(0);
     const [quoteAsset, setQuoteAsset] = useState(q);
     const {
@@ -51,7 +40,7 @@ const ContestWeekRanks = ({
 
     useEffect(() => {
         getRanks(tab);
-    }, [weeklyContestId]);
+    }, [contest_id]);
 
     const onReadMore = () => {
         setPageSize((old) => {
@@ -64,7 +53,7 @@ const ContestWeekRanks = ({
         try {
             const { data: originalData, status } = await fetchApi({
                 url: API_CONTEST_GET_RANK_WEEKLY_VOLUME,
-                params: { weeklyContestId, quoteAsset, weekId: tab + 1 }
+                params: { contestId: contest_id, quoteAsset, weekId: tab + 1 }
             });
             const data = originalData?.users;
             setTotal(data.length);
@@ -184,7 +173,7 @@ const ContestWeekRanks = ({
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
-        <section className="contest_individual_ranks pt-20">
+        <section className="contest_individual_ranks pb-12 sm:pb-20">
             <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-weekly-rank">
                 <div
                     className="text-sm"

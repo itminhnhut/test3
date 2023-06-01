@@ -236,6 +236,7 @@
         "contest_special": "Special Awards",
         "tournament": "Tournament",
         "weekly_ranking": "Weekly Ranking",
+        "monthly_ranking": "Monthly Ranking",
         "weekly_ranking_desc": "Eligible users will be ranked and have a chance to win weekly prize of {{value}}. Read more at “Detailed Rules”.",
         "rules": "Rules",
         "week": "Week {{value}}",

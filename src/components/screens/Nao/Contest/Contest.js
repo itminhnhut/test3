@@ -213,7 +213,6 @@ export const seasons = [
         start: '2023-06-04T17:00:00.000Z',
         end: '2023-07-02T17:00:00.000Z',
         contest_id: 13,
-        weeklyContestId: 1,
         title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 7', en: 'NAO Futures VNDC – Nami Championship Season 7' },
         title: { vi: 'NAO Futures VNDC', en: 'NAO Futures VNDC' },
         title_champion: { vi: 'Nami Championship mùa 7', en: 'Nami Championship Season 7' },
@@ -231,6 +230,7 @@ export const seasons = [
         quoteAsset: 'VNDC',
         // time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
         active: true,
+        top_ranks_per: 20,
         top_ranks_week: 20,
         lastUpdated: true
     }
@@ -418,6 +418,9 @@ const Contest = (props) => {
                         userID={userID}
                     />
                 )}
+
+                {props.top_ranks_week && <ContestWeekRanks {...props} lastUpdatedTime={lastUpdatedTime} userID={userID} />}
+
                 {props.top_ranks_per && (
                     <ContestPerRanks
                         {...props}
@@ -429,7 +432,6 @@ const Contest = (props) => {
                         userID={userID}
                     />
                 )}
-                {props.top_ranks_week && <ContestWeekRanks {...props} lastUpdatedTime={lastUpdatedTime} userID={userID} />}
             </>
         );
     };
