@@ -25,7 +25,6 @@ const HeaderTooltip = ({ className, tooltipId, title, tooltipContent, isMobile =
                     // } else {
                     //     delta = width / 2 - widthLoss / 2;
                     // }
-                    console.log("____e: ", e);
                     if(e.left < 0) return {
                         left: e.left < 16 ? 16 : e.left,
                         top: e.top

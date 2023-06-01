@@ -76,7 +76,6 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
     }, [typeProduct, typeCurrency, filterPnl, filter]);
 
     // mock data
-    // console.log("___________dataTradingPairs?.symbolsCount?.buckets?.map(obj => obj?.key)", dataTradingPairs?.symbolsCount?.buckets?.map(obj => obj?.key));
     const labels = dataTradingPairs?.symbolsCount?.buckets?.map((obj) => formatPair(obj?.key, t)) ?? [];
     const mockData = {
         labels,

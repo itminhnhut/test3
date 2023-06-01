@@ -87,7 +87,6 @@ const PnlChanging = ({
             //             if (dataPnl?.interval === INTERVAL.DAY) return context[0].label;
             //             const { dataIndex } = context[0];
             //             const curDate = new Date(dataPnl.labels[dataIndex]?.date);
-            //             console.log('_____here: ', addMonths(curDate, 1), addWeeks(curDate, 1));
             //             if (dataPnl?.interval === INTERVAL.WEEK) return formatTime(curDate, 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM');
             //             if (dataPnl?.interval === INTERVAL.MONTH)
             //                 return formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
