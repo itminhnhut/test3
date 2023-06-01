@@ -13,6 +13,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import CheckCircle from 'components/svg/CheckCircle';
 import CrossCircle from 'components/svg/CrossCircle';
 import { WarningFilledIcon, RemoveCircleIcon } from 'components/svg/SvgIcon';
+import { IconArrowOnus } from 'components/common/Icons';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-xl sm:text-2xl font-semibold w-max text-txtPrimary dark:text-txtPrimary-dark'
@@ -214,7 +215,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                             key={indx}
                             {...item.props}
                             classHeader={classNames(
-                                'whitespace-nowrap mx-2 min-h-[10px]',
+                                'whitespace-nowrap mx-2 min-h-[10px] text-sm',
                                 { 'flex-1': indx !== 0 },
                                 { 'ml-0': indx === 0 },
                                 { 'mr-0': indx === _children.length - 1 }
@@ -223,7 +224,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                     ))}
                 </div>
                 <div
-                    className={classNames(' mt-3 overflow-none', {
+                    className={classNames(' my-3 overflow-none', {
                         'pr-[10px]': isScroll
                     })}
                 >
@@ -295,7 +296,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                             <div className="hidden dark:block">
                                 <NoDataDarkIcon />
                             </div>
-                            <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1">
+                            <div className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark mt-1">
                                 {noItemsMessage ? noItemsMessage : t('common:no_data')}
                             </div>
                         </div>
@@ -311,8 +312,12 @@ export const getColor = (value) => {
 };
 
 export const renderPnl = (data, item) => {
-    const prefix = !!data && data > 0 ? '+' : '';
-    return <div className={`${getColor(data)}`}>{prefix + formatNumber(data, 2, 0, true)}%</div>;
+    return (
+        <div className={classNames("flex items-center", getColor(data))}> 
+            <IconArrowOnus className={classNames('w-[7px] mr-1.5', data > 0 ? '' : 'rotate-180')} color="currentColor" /> 
+            {Math.abs(+data).toFixed(2)} %
+        </div>
+    );
 };
 
 export const useOutside = (ref, cb, container) => {
@@ -469,7 +474,7 @@ export const ImageNao = ({ src, fallBack, ...props }) => {
 };
 
 export const TabsNao = styled.div.attrs({
-    className: 'flex items-center space-x-4 relative mt-4'
+    className: 'flex items-center space-x-4 relative mt-6 sm:mt-8'
 })`
     /* &::after {
         content: '';
@@ -483,11 +488,10 @@ export const TabsNao = styled.div.attrs({
 
 export const TabItemNao = styled.div.attrs(({ active }) => ({
     className: classNames('py-2 px-5 cursor-pointer relative rounded-3xl border', {
-        '!border-teal text-teal': active,
+        '!border-teal text-teal font-semibold': active,
         ' border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark': !active
     })
 }))`
-    font-weight: 600;
     /* &::after {
         display: ${({ active }) => (active ? 'block' : 'none')};
         content: '';

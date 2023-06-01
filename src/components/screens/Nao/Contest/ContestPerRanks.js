@@ -133,12 +133,12 @@ const ContestPerRanks = ({
     const renderName = (data, item) => {
         return (
             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
+                <div className="w-6 h-6 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
-                        className="rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
+                        className="rounded-[50%] object-cover min-w-[1.5rem] min-h-[1.5rem] max-w-[1.5rem] max-h-[1.5rem]"
                         src={item?.avatar}
-                        width="32"
-                        height="32"
+                        width="24"
+                        height="24"
                         alt=""
                     />
                 </div>
@@ -169,7 +169,7 @@ const ContestPerRanks = ({
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
-        <section className="contest_individual_ranks pt-20">
+        <section className="contest_individual_ranks py-6 sm:pb-0">
             {minVolumeInd && (
                 <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-personal-rank">
                     <div
@@ -181,7 +181,7 @@ const ContestPerRanks = ({
                 </Tooltip>
             )}
             <div className="flex justify-between flex-wrap gap-4 text-sm sm:text-base">
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
                     <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:individual_ranking')}</TextLiner>
                     {minVolumeInd && (
                         <div data-tip={''} data-for="tooltip-personal-rank" className="cursor-pointer">
@@ -189,7 +189,7 @@ const ContestPerRanks = ({
                         </div>
                     )}
                 </div>
-                {showPnl && (
+                {/* {showPnl && (
                     <div className="flex items-center gap-3">
                         <ButtonNao
                             onClick={() => onFilter('volume')}
@@ -212,19 +212,19 @@ const ContestPerRanks = ({
                             {t('nao:contest:per_pnl')}
                         </ButtonNao>
                     </div>
-                )}
+                )} */}
             </div>
             {hasTabCurrency && (
                 <TabsNao>
                     {currencies.map((rs) => (
-                        <TabItemNao onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
+                        <TabItemNao key={rs.value} onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
                             {rs.label}
                         </TabItemNao>
                     ))}
                 </TabsNao>
             )}
             {top3.length > 0 && (
-                <div className="flex flex-wrap gap-3 sm:gap-6 mt-6 sm:mt-11 text-sm sm:text-base">
+                <div className="flex flex-wrap gap-3 sm:gap-6 mt-6 text-sm sm:text-base">
                     {top3.map((item, index) => (
                         <CardNao key={index} className="!p-4 sm:!p-5">
                             <div className="flex items-center justify-between flex-1 gap-5">
@@ -245,10 +245,10 @@ const ContestPerRanks = ({
                             <div className="h-0 w-full my-4"></div>
                             <div className="flex flex-col mt-auto space-y-1 rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
-                                    <span className="font-semibold">
-                                        {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                    </span>
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                        {t('nao:contest:volume')} ( {quoteAsset})
+                                    </div>
+                                    <span className="font-semibold">{formatNumber(item?.total_volume, 0)}</span>
                                 </div>
                                 {!previous && (
                                     <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
@@ -324,10 +324,10 @@ const ContestPerRanks = ({
                                         </div>
                                         <div className="h-8"></div>
                                         <div className="flex items-center justify-between">
-                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
-                                            <span className="text-right">
-                                                {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                            </span>
+                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                {t('nao:contest:volume')} ({quoteAsset})
+                                            </label>
+                                            <span className="text-right">{formatNumber(item?.total_volume, 0)}</span>
                                         </div>
                                         {!previous && (
                                             <div className="flex items-center justify-between pt-3">
@@ -367,12 +367,7 @@ const ContestPerRanks = ({
                 </>
             ) : (
                 <div className="dark:bg-dark-4 rounded-xl">
-                    <Table
-                        loading={loading}
-                        noItemsMessage={t('nao:contest:no_rank')}
-                        dataSource={dataFilter}
-                        classWrapper="!text-sm sm:!text-base"
-                    >
+                    <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataFilter} classWrapper="!text-sm sm:!text-base">
                         <Column
                             minWidth={50}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
@@ -383,7 +378,7 @@ const ContestPerRanks = ({
                         <Column minWidth={280} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                         <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'User ID'} fieldName={userID} />
                         <Column
-                            minWidth={150}
+                            minWidth={120}
                             align="right"
                             className=""
                             title={`${t('nao:contest:volume')} (${quoteAsset})`}
@@ -391,7 +386,7 @@ const ContestPerRanks = ({
                             fieldName="total_volume"
                         />
                         <Column
-                            minWidth={150}
+                            minWidth={120}
                             visible={!previous}
                             align="right"
                             className=""
@@ -402,8 +397,8 @@ const ContestPerRanks = ({
                         />
                         {tab === 'pnl' ? (
                             <Column
-                                maxWidth={120}
-                                minWidth={100}
+                                maxWidth={100}
+                                minWidth={80}
                                 align="right"
                                 className=""
                                 title={t('nao:contest:per_pnl')}
@@ -412,8 +407,8 @@ const ContestPerRanks = ({
                             />
                         ) : (
                             <Column
-                                maxWidth={120}
-                                minWidth={100}
+                                maxWidth={100}
+                                minWidth={80}
                                 align="right"
                                 className=""
                                 title={t('nao:contest:total_trades')}
@@ -422,11 +417,11 @@ const ContestPerRanks = ({
                             />
                         )}
                     </Table>
-                    {total > 1 && (
+                    {/* {total > 1 && (
                         <div className="w-full hidden sm:flex justify-center py-8">
                             <RePagination onusMode total={total} current={page} pageSize={pageSize} onChange={(page) => setPage(page)} name="" />
                         </div>
-                    )}
+                    )} */}
                 </div>
             )}
             {lastUpdated && lastUpdatedTime.current && (
