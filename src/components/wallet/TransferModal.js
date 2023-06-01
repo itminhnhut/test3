@@ -43,8 +43,8 @@ const DEFAULT_STATE = {
 const ALLOWED_WALLET_FROM = {
     SPOT: WalletType.SPOT,
     FUTURES: WalletType.FUTURES,
-    BROKER: WalletType.BROKER,
-    NAO_FUTURES: WalletType.NAO_FUTURES
+    NAO_FUTURES: WalletType.NAO_FUTURES,
+    BROKER: WalletType.BROKER
 };
 
 const ALLOWED_WALLET_TO = {

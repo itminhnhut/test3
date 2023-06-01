@@ -18,8 +18,8 @@ import { useTranslation } from 'next-i18next';
 import colors from 'styles/colors';
 import styled from 'styled-components';
 import { API_FARMING_SUMMARY, API_STAKING_SUMMARY } from 'redux/actions/apis';
-import { ApiStatus, WalletType } from 'redux/actions/const';
-import { useAsync } from 'react-use';
+import { ApiStatus, LOCAL_STORAGE_KEY, WalletType } from 'redux/actions/const';
+import { useAsync, useLocalStorage } from 'react-use';
 import { getFuturesMarketWatch, getMarketWatch, getUsdRate } from 'redux/actions/market';
 import useWindowFocus from 'hooks/useWindowFocus';
 import { PATHS } from 'constants/paths';
@@ -28,6 +28,7 @@ import { MIN_WALLET } from 'constants/constants';
 import PartnersWallet from './Partners';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import useWindowSize from 'hooks/useWindowSize';
+import NAOFuturesWallet from './NaoFutures';
 export const WIDTH_MD = 768;
 
 const INITIAL_STATE = {
@@ -58,6 +59,11 @@ const INITIAL_STATE = {
     futuresRefPrice: null,
     futuresMarketWatch: null,
 
+    allNAOFuturesAsset: null,
+    naoFuturesEstBtc: null,
+    naoFuturesRefPrice: null,
+    naoFuturesMarketWatch: null,
+
     allPartnersAsset: null,
     partnersEstBtc: null,
     partnersRefPrice: null,
@@ -71,12 +77,15 @@ const Wallet = () => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-    const [isHideAsset, setIsHideAsset] = useState(false);
+    // const [isHideAsset, _setIsHideAsset] = useState(false);
+
+    const [isHideAsset, setIsHideAsset] = useLocalStorage(LOCAL_STORAGE_KEY.HIDE_BALANCE, false);
 
     // Rdx
     const auth = useSelector((state) => state.auth?.user) || null;
     const allWallet = useSelector((state) => state.wallet?.SPOT) || null;
     const allFuturesWallet = useSelector((state) => state.wallet?.FUTURES) || null;
+    const allNAOFuturesWallet = useSelector((state) => state.wallet?.NAO_FUTURES) || null;
     const allPartnersWallet = useSelector((state) => state.wallet?.PARTNERS) || null;
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
 
@@ -113,15 +122,28 @@ const Wallet = () => {
                 });
             // console.log('namidev-DEBUG: ___ ', orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']))
         }
-        if (walletType === WalletType.SPOT) {
-            setState({ allAssets: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
-        }
-        if (walletType === WalletType.FUTURES) {
-            setState({ allFuturesAsset: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
-        }
-        if (walletType === WalletType.PARTNERS) {
-            setState({ allPartnersAsset: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
-        }
+
+        const stateKey = {
+            [WalletType.SPOT]: 'allAssets',
+            [WalletType.FUTURES]: 'allFuturesAsset',
+            [WalletType.NAO_FUTURES]: 'allNAOFuturesAsset',
+            [WalletType.PARTNERS]: 'allPartnersAsset'
+        }?.[walletType];
+        if (!stateKey) return;
+        setState({ [stateKey]: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
+
+        // if (walletType === WalletType.SPOT) {
+        //     setState({ allAssets: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
+        // }
+        // if (walletType === WalletType.FUTURES) {
+        //     setState({ allFuturesAsset: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
+        // }
+        // if (walletType === WalletType.NAO_FUTURES) {
+        //     setState({ allNAOFuturesAsset: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
+        // }
+        // if (walletType === WalletType.PARTNERS) {
+        //     setState({ allPartnersAsset: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
+        // }
     };
 
     const getStakingSummary = async () => {
@@ -273,6 +295,10 @@ const Wallet = () => {
     }, [allFuturesWallet, assetConfig]);
 
     useEffect(() => {
+        walletMapper(WalletType.NAO_FUTURES, allNAOFuturesWallet, assetConfig);
+    }, [allNAOFuturesWallet, assetConfig]);
+
+    useEffect(() => {
         walletMapper(WalletType.PARTNERS, allPartnersWallet, assetConfig);
     }, [allPartnersWallet, assetConfig]);
 
@@ -290,6 +316,7 @@ const Wallet = () => {
         const allAssetValue = state.usdRate;
         const exchangeList = [];
         const futuresList = [];
+        const naoFuturesList = [];
         const partnersList = [];
 
         state.allAssets?.map((asset) => {
@@ -316,6 +343,18 @@ const Wallet = () => {
             });
         });
 
+        state.allNAOFuturesAsset?.map((asset) => {
+            const assetValue = +allAssetValue?.[asset?.id] || 0;
+            naoFuturesList.push({
+                assetCode: asset?.assetCode,
+                usdRate: +assetValue,
+                available: +asset?.[AVAILBLE_KEY],
+                totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
+                totalValueUsd: +asset?.wallet?.value * assetValue,
+                totalLockedUsd: +asset?.wallet?.locked_value * assetValue
+            });
+        });
+
         state.allPartnersAsset?.map((asset) => {
             const assetValue = +allAssetValue?.[asset?.id] || 0;
             partnersList.push({
@@ -330,15 +369,19 @@ const Wallet = () => {
 
         // traditional
         const totalExchange = sumBy(exchangeList, 'totalUsd');
-        const totalFutures = sumBy(futuresList, 'totalUsd');
-        const totalPartners = sumBy(partnersList, 'totalUsd');
-
         const totalValueExchange = sumBy(exchangeList, 'totalValueUsd');
-        const totalValueFutures = sumBy(futuresList, 'totalValueUsd');
-        const totalValuePartners = sumBy(partnersList, 'totalValueUsd');
-
         const lockedExchange = sumBy(exchangeList, 'totalLockedUsd');
+
+        const totalFutures = sumBy(futuresList, 'totalUsd');
+        const totalValueFutures = sumBy(futuresList, 'totalValueUsd');
         const lockedFutures = sumBy(futuresList, 'totalLockedUsd');
+
+        const totalNAOFutures = sumBy(naoFuturesList, 'totalUsd');
+        const totalValueNAOFutures = sumBy(naoFuturesList, 'totalValueUsd');
+        const lockedNAOFutures = sumBy(naoFuturesList, 'totalLockedUsd');
+
+        const totalPartners = sumBy(partnersList, 'totalUsd');
+        const totalValuePartners = sumBy(partnersList, 'totalValueUsd');
         const lockedPartners = sumBy(partnersList, 'totalLockedUsd');
 
         // earn
@@ -389,12 +432,8 @@ const Wallet = () => {
                     value: totalExchange,
                     locked: lockedExchange,
                     assetDigit: 2
-                }
-            });
-        }
+                },
 
-        if (btcUsdRate > 0) {
-            setState({
                 futuresEstBtc: {
                     totalValue: totalValueFutures / btcUsdRate,
                     value: totalFutures / btcUsdRate,
@@ -407,6 +446,20 @@ const Wallet = () => {
                     locked: lockedFutures,
                     assetDigit: 2
                 },
+
+                naoFuturesEstBtc: {
+                    totalValue: totalValueNAOFutures / btcUsdRate,
+                    value: totalNAOFutures / btcUsdRate,
+                    locked: lockedNAOFutures / btcUsdRate,
+                    assetDigit: btcDigit
+                },
+                naoFuturesRefPrice: {
+                    totalValue: totalValueNAOFutures,
+                    value: totalNAOFutures,
+                    locked: lockedNAOFutures,
+                    assetDigit: 2
+                },
+
                 partnersEstBtc: {
                     totalValue: totalValuePartners / btcUsdRate,
                     value: totalPartners / btcUsdRate,
@@ -492,6 +545,17 @@ const Wallet = () => {
                                 setIsHideAsset={setIsHideAsset}
                             />
                         )}
+                        {state.screen === WALLET_SCREENS.NAO_FUTURES && (
+                            <NAOFuturesWallet
+                                estBtc={state.naoFuturesEstBtc}
+                                estUsd={state.naoFuturesRefPrice}
+                                usdRate={state.usdRate}
+                                marketWatch={state.futuresMarketWatch}
+                                isSmallScreen={isSmallScreen}
+                                isHideAsset={isHideAsset}
+                                setIsHideAsset={setIsHideAsset}
+                            />
+                        )}
                         {state.screen === WALLET_SCREENS.PARTNERS && (
                             <PartnersWallet
                                 estBtc={state.partnersEstBtc}
@@ -538,6 +602,12 @@ const SCREEN_TAB_SERIES = [
     },
     {
         key: 3,
+        code: WALLET_SCREENS.NAO_FUTURES,
+        title: 'NAO Futures',
+        localized: null
+    },
+    {
+        key: 4,
         code: WALLET_SCREENS.PARTNERS,
         title: 'Partners',
         localized: 'wallet:commission'
