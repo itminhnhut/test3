@@ -94,8 +94,8 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
     const columns = useMemo(
         () => [
             {
-                key: 'opened_at',
-                dataIndex: 'opened_at',
+                key: 'closed_at',
+                dataIndex: 'closed_at',
                 title: t('common:time'),
                 align: 'left',
                 width: 210,
@@ -240,7 +240,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                                     ))
                             ) : dataTable.length > 0 ? (
                                 dataTable.map((item) => {
-                                    const { displaying_id, opened_at, symbol, leverage, profit, margin, side, type } = item;
+                                    const { displaying_id, closed_at, symbol, leverage, profit, margin, side, type } = item;
                                     const sign = profit > 0 ? '+' : '';
                                     return (
                                         <div
@@ -262,7 +262,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                                                 </div>
                                             </div>
                                             <div className="flex justify-between items-center text-xs mt-2">
-                                                <span className="whitespace-nowrap">{formatTime(opened_at, 'HH:mm:ss dd/MM/yyyy')}</span>
+                                                <span className="whitespace-nowrap">{formatTime(closed_at, 'HH:mm:ss dd/MM/yyyy')}</span>
                                                 <span className={side?.toUpperCase() === 'BUY' ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
                                                     {t(`common:${side?.toLowerCase()}`)} / {t(`common:${type?.toLowerCase()}`)}
                                                 </span>
@@ -334,7 +334,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
 const ModalDetailsPosition = ({ value, isVndc, t }) => {
     if (!value) return;
 
-    const { displaying_id, opened_at, symbol, leverage, profit, margin, side, type, decimalScalePrice, order_value } = value;
+    const { displaying_id, closed_at, symbol, leverage, profit, margin, side, type, decimalScalePrice, order_value } = value;
     const sign = profit > 0 ? '+' : '';
 
     return (
@@ -351,7 +351,7 @@ const ModalDetailsPosition = ({ value, isVndc, t }) => {
                 </div>
             </div>
             <div className="flex justify-between items-center text-xs mt-2">
-                <span className="whitespace-nowrap">{formatTime(opened_at, 'HH:mm:ss dd/MM/yyyy')}</span>
+                <span className="whitespace-nowrap">{formatTime(closed_at, 'HH:mm:ss dd/MM/yyyy')}</span>
                 <span className={side?.toUpperCase() === 'BUY' ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
                     {t(`common:${side?.toLowerCase()}`)} / {t(`common:${type?.toLowerCase()}`)}
                 </span>

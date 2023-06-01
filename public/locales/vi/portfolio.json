@@ -21,6 +21,7 @@
     "amount_position": "Số vị thế",
     "others": "Khác",
     "position_statistic_by_asset": "Thống kê vị thế theo tài sản",
+    "position_statistic_by_side": "Thống kê vị thế {{side}}",
     "side_position": "Vị thế {{side}}",
     "total_loss": "Tổng lỗ",
     "total_profit": "Tổng lãi",
@@ -33,6 +34,7 @@
     "trading_pair": "Cặp giao dịch",
     "position_id": "ID Vị thế",
     "position_details": "Chi tiết vị thế",
+    "no_pnl_recorded": "Không có dữ liệu được ghi nhận",
     "error": {
         "max_months_filter": "Chọn khoảng thời gian trong vòng {{maxMonths}} tháng"
     }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
 import HeaderTooltip from './HeaderTooltip';
 import { formatNanNumber, formatPrice } from 'redux/actions/utils';
@@ -43,7 +43,6 @@ const TooltipLoss = ({ type, totalLoss, totalLossPosition, isVndc, t, ...rest })
 const PositionInfo = ({
     type = 'buy',
     t,
-    api = '',
     total,
     totalLoss,
     totalProfit,
@@ -55,7 +54,9 @@ const PositionInfo = ({
     isDark,
     setIsOpen
 }) => {
-    const percentClipPath = (totalLossPosition / total) * 100;
+    const percentClipPath = useMemo(() => {
+        return (totalLossPosition / total) * 100;
+    }, [totalLossPosition, total]);
     const [showDetails, setShowDetails] = useState(false);
 
     return (
@@ -69,7 +70,7 @@ const PositionInfo = ({
                         <HeaderTooltip
                             isMobile
                             title={t('portfolio:side_position', {side: t(`common:${type.toLowerCase()}`)})}
-                            tooltipContent={t('portfolio:side_position_tooltip')}
+                            tooltipContent={t('portfolio:side_position_tooltip', {side: t(`common:${type.toLowerCase()}`)})}
                             tooltipId={`${type}_position_tooltip`}
                         />
                     }
@@ -118,7 +119,7 @@ const PositionInfo = ({
                     <HeaderTooltip
                         isMobile
                         title={t('portfolio:side_position', {side: t(`common:${type.toLowerCase()}`)})}
-                        tooltipContent={t('portfolio:side_position_tooltip')}
+                        tooltipContent={t('portfolio:side_position_tooltip', {side: t(`common:${type.toLowerCase()}`)})}
                         tooltipId={`${type}_position_tooltip`}
                     />
                     <div className="mt-6 md:mt-12 mb-6 text-lg md:text-2xl font-semibold">
@@ -213,7 +214,7 @@ const PositionInfo = ({
             )}
             <ModalV2 isVisible={showDetails} onBackdropCb={() => setShowDetails(false)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
                 <div className="text-gray-15 dark:text-gray-4 text-sm font-semibold">
-                    <h1 className="mt-6 text-xl">{t('portfolio:position_statistic_by_asset', {side: t(`common:${type}`)})}</h1>
+                    <h1 className="mt-6 text-xl">{t('portfolio:position_statistic_by_side', {side: t(`common:${type}`)})}</h1>
                     <span className="txtSecond-5 mt-2">{`Tổng lệnh ${type}: ${total} lệnh`}</span>
 
                     <h1 className="my-6 text-base font-semibold">{t('portfolio:total_loss')}</h1>

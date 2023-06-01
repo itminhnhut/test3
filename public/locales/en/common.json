@@ -48,6 +48,7 @@
     "hours": "hours",
     "second": "second",
     "seconds": "seconds",
+    "week": "Week",
     "day": "day",
     "days": "days",
     "month": "month",
@@ -237,7 +238,8 @@
         "view_history": "View History",
         "reset": "Đặt lại",
         "view_portfolio": "Xem Portfolio",
-        "apply": "Apply"
+        "apply": "Apply",
+        "select_time": "Select time"
     },
     "global_notice": {
         "launchpad_maintain": "To provide the best experience for Investors, <span>Nami.Exchange</span> will suspend <span>Off-chain Deposit/Withdrawal</span> before and after 1 hour from the time of Launchpad. Investors can still use <span>On-Chain Deposit/Withdrawal</span>.",

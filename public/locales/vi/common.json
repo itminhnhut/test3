@@ -48,6 +48,7 @@
     "hours": "giờ",
     "second": "giây",
     "seconds": "giây",
+    "week": "Tuần",
     "day": "ngày",
     "days": "ngày",
     "month": "tháng",
@@ -237,7 +238,8 @@
         "view_history": "Xem lịch sử",
         "reset": "Đặt lại",
         "view_portfolio": "Xem Portfolio",
-        "apply": "Áp dụng"
+        "apply": "Áp dụng",
+        "select_time": "Chọn thời gian"
     },
     "global_notice": {
         "launchpad_maintain": "Để mang lại trải nghiệm tốt nhất cho nhà đầu tư, <span>Nami.Exchange</span> sẽ tạm dừng <span>Nạp/Rút Off-Chain</span> trước và sau 1 tiếng tính từ thời điểm Launchpad diễn ra. Nhà đầu tư vẫn có thể dùng <span>Nạp/Rút On-Chain</span>.",

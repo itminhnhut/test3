@@ -18,7 +18,13 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import { useRouter } from 'next/router';
 import { formatNanNumber } from 'redux/actions/utils';
-const { subDays, format } = require('date-fns');
+const { subDays, format, addMonths, addWeeks } = require('date-fns');
+
+const INTERVAL = {
+    DAY: 'day',
+    WEEK: 'week',
+    MONTH: 'month'
+};
 
 const PnlChanging = ({
     t,
@@ -32,41 +38,42 @@ const PnlChanging = ({
 }) => {
     const router = useRouter();
     const [chartData, setChartData] = useState({ labels: [], values: [], margins: [] });
+    const [pnlChartData, setPnlChartData] = useState({});
+
+    console.log('______debug pnl changing: ', isNeverTrade, dataPnl);
     useEffect(() => {
         if (dataPnl?.labels?.length > 0) {
-            setChartData({
-                labels: dataPnl.labels.map((obj) => obj.date),
-                values: dataPnl.values.map((obj) => obj.pnl),
-                margins: dataPnl.values.map((obj) => obj.margin)
+            let labels;
+            switch (dataPnl.interval) {
+                case INTERVAL.DAY:
+                    labels = dataPnl.labels.map((obj) => format(new Date(obj.date), 'dd/MM'));
+                    break;
+                case INTERVAL.WEEK:
+                    labels = dataPnl.labels.map((_, i) => `${t('common:week')} ${i + 1}`);
+                    break;
+                case INTERVAL.MONTH:
+                    labels = dataPnl.labels.map((obj) => formatTime(obj.date, 'MM/yyyy'));
+                    break;
+                default:
+                    break;
+            }
+
+            let values = dataPnl.values.map((obj) => obj.pnl);
+            setPnlChartData({
+                labels: labels,
+                datasets: [
+                    {
+                        fill: false,
+                        label: false,
+                        data: values,
+                        backgroundColor: values?.map((value) => (value > 0 ? colors.green[6] : colors.red[2])),
+                        hoverBackgroundColor: values?.map((value) => (value > 0 ? '#2daf57' : '#d51d1d')),
+                        stack: 'pnl'
+                    }
+                ]
             });
         }
-    }, [dataPnl, filter]);
-
-    const pnlChartData = {
-        labels: chartData.labels.map((label) => {
-            try {
-                return format(new Date(label), 'dd/MM')
-            } catch (error) {
-                return label
-            }
-        }),
-        datasets: [
-            {
-                fill: false,
-                label: false,
-                data: chartData.values,
-                backgroundColor: chartData.values?.map((value) => (value > 0 ? colors.green[6] : colors.red[2])),
-                stack: 'pnl'
-            }
-            // {
-            //     fill: false,
-            //     label: false,
-            //     data: chartData.lossValues,
-            //     backgroundColor: colors.red[2],
-            //     stack: 'pnl'
-            // }
-        ]
-    };
+    }, [dataPnl, filter, t]);
 
     const options = {
         responsive: true,
@@ -81,15 +88,23 @@ const PnlChanging = ({
                 usePointStyle: true,
                 callbacks: {
                     title: function (context) {
-                        return context[0].label;
+                        if (dataPnl?.interval === INTERVAL.DAY) return context[0].label;
+                        const { dataIndex } = context[0];
+                        const curDate = new Date(dataPnl.labels[dataIndex]?.date);
+                        console.log('_____here: ', addMonths(curDate, 1), addWeeks(curDate, 1));
+                        if (dataPnl?.interval === INTERVAL.WEEK) return formatTime(curDate, 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM');
+                        if (dataPnl?.interval === INTERVAL.MONTH)
+                            return formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
                     },
                     label: function (context) {
                         const { dataIndex, label, raw } = context;
-                        let margin = chartData?.margins?.[dataIndex] ?? 1;
-                        let pnl = chartData?.values?.[dataIndex];
+                        let margin = dataPnl.values[dataIndex].margin ?? 1;
+                        let pnl = dataPnl.values[dataIndex].pnl;
                         let ratePnl = pnl / margin;
-                        return [` - ${t('portfolio:pnl')}: ${raw > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`];
-                    },
+                        return [
+                            ` - ${t('portfolio:pnl')}: ${raw > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`
+                        ];
+                    }
                 },
                 backgroundColor: isDark ? colors.dark['2'] : colors.gray['15'],
                 padding: 12,
@@ -234,7 +249,7 @@ const PnlChanging = ({
                         </div>
                     ) : isNeverTrade ? (
                         <div className="flex flex-col justify-center items-center">
-                            <TableNoData titleClassname='!text-base !text-gray-1 dark:!text-gray-7' className="!py-8" title="Bạn hiện không có biến động lợi nhuận" />
+                            <TableNoData titleClassname="!text-base !text-gray-1 dark:!text-gray-7" className="!py-8" title={t('portfolio:no_pnl_recorded')} />
                             <ButtonV2 className="w-auto !px-6" onClick={() => router.push('./futures/BTCVNDC')}>
                                 {t('portfolio:trading_now')}
                             </ButtonV2>

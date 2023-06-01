@@ -21,6 +21,7 @@
     "amount_position": "Total position",
     "others": "Others",
     "position_statistic_by_asset": "Position Statistics by Assets",
+    "position_statistic_by_side": "{{side}} Position Statistic",
     "side_position": "{{side}} Position",
     "total_loss": "Total loss",
     "total_profit": "Total profit",
@@ -33,6 +34,7 @@
     "trading_pair": "Symbol",
     "position_id": "Position ID",
     "position_details": "Position Details",
+    "no_pnl_recorded": "No PnL recorded",
     "error": {
         "max_months_filter": "Select your time range within {{maxMonths}} months"
     }

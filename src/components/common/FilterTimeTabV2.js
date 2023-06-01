@@ -198,7 +198,7 @@ const FilterTimeTabV2 = ({
                             <span className="whitespace-nowrap">
                                 {isCustomDay
                                     ? `${formatTime(filter?.range?.startDate, 'dd/MM/yyyy')} - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}`
-                                    : t('signals:signal_filter')}
+                                    : t('common:custom_2')}
                             </span>
                         </div>
                     ) : (
@@ -241,7 +241,7 @@ const FilterTimeTabV2 = ({
                 </div>
             </div>
             <ModalV2 isVisible={showPicker} onBackdropCb={handleOutside} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
-                <h1 className="mt-6 text-xl font-semibold text-gray-15 dark:text-gray-4">Thời gian</h1>
+                <h1 className="mt-6 text-xl font-semibold text-gray-15 dark:text-gray-4">{t('common:select_time')}</h1>
                 <div className={classNames('date-range-picker flex flex-col justify-center mt-2 w-full !bg-transparent !border-none !shadow-none')}>
                     <DateRangePicker
                         className={classNames(`h-full px-[10px] w-full`)}

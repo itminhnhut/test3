@@ -102,6 +102,8 @@ const Portfolio = () => {
     const [dataPnlChanging, setDataPnlChanging] = useState({ labels: [], values: [] });
     const [loadingPnlChanging, setLoadingPnlChanging] = useState(false);
     const fetchDataPnlChanging = async () => {
+        console.log("_____________fetchDataPnlChanging");
+
         try {
             setLoadingPnlChanging(true);
             const { data } = await FetchApi({
@@ -113,6 +115,7 @@ const Portfolio = () => {
                     to: filter?.range?.endDate
                 }
             });
+
             setDataPnlChanging(data);
         } catch (error) {
         } finally {
@@ -158,7 +161,7 @@ const Portfolio = () => {
                             timeFilter={TIME_FILTER}
                             isMobile={isMobile}
                             isDark={isDark}
-                            maxMonths={2}
+                            maxMonths={3}
                             defaultFilter={'all'}
                         />
                     </div>
@@ -180,7 +183,7 @@ const Portfolio = () => {
                         isDark={isDark}
                         dataPnl={dataPnlChanging}
                         filter={filter?.range}
-                        isNeverTrade={isNeverTrade || !dataOverview?.overallStatistic?.totalVolume?.value}
+                        isNeverTrade={!!!dataOverview?.overallStatistic?.totalVolume?.value}
                         loadingPnlChanging={loadingPnlChanging}
                         isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                     />
