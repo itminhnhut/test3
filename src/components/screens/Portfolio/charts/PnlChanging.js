@@ -44,22 +44,9 @@ const PnlChanging = ({
 
     useEffect(() => {
         if (dataPnl?.labels?.length > 0) {
-            let labels;
-            switch (dataPnl.interval) {
-                case INTERVAL.DAY:
-                    labels = dataPnl.labels.map((obj) => format(new Date(obj.date), 'dd/MM'));
-                    break;
-                case INTERVAL.WEEK:
-                    labels = dataPnl.labels.map((_, i) => `${t('common:week')} ${i + 1}`);
-                    break;
-                case INTERVAL.MONTH:
-                    labels = dataPnl.labels.map((obj) => formatTime(obj.date, 'MM/yyyy'));
-                    break;
-                default:
-                    break;
-            }
-
+            let labels = dataPnl.labels.map((obj) => parseTitle(obj.date, dataPnl?.interval));
             let values = dataPnl.values.map((obj) => obj.pnl);
+
             setPnlChartData({
                 labels: labels || [],
                 datasets: [
@@ -124,21 +111,7 @@ const PnlChanging = ({
                     if (!isMobile) {
                         const { dataIndex, label } = context?.chart?.tooltip?.dataPoints?.['0'];
 
-                        let title = '';
-                        const curDate = new Date(dataPnl.labels[dataIndex]?.date);
-                        switch (dataPnl?.interval) {
-                            case INTERVAL.DAY:
-                                title = label;
-                                break;
-                            case INTERVAL.WEEK:
-                                title = formatTime(curDate, 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM');
-                                break;
-                            case INTERVAL.MONTH:
-                                title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
-                                break;
-                            default:
-                                break;
-                        }
+                        const title = parseTitle(dataPnl.labels[dataIndex]?.date, dataPnl?.interval)
 
                         let margin = dataPnl.values[dataIndex].margin ?? 1;
                         let pnl = dataPnl.values[dataIndex].pnl;
@@ -445,4 +418,23 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl)
     // tooltipCaretEl.style.top = caretY + 'px'; // Đặt vị trí dọc của caret
 
     tooltipEl.appendChild(tooltipCaretEl);
+};
+
+const parseTitle = (stringDate, interval) => {
+    let title = '';
+    const curDate = new Date(stringDate);
+    switch (interval) {
+        case INTERVAL.DAY:
+            title = formatTime(curDate, 'dd/MM') + ' - ' + formatTime(curDate, 'dd/MM');
+            break;
+        case INTERVAL.WEEK:
+            title = formatTime(curDate, 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM');
+            break;
+        case INTERVAL.MONTH:
+            title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
+            break;
+        default:
+            break;
+    }
+    return title
 };
