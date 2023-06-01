@@ -102,8 +102,6 @@ const Portfolio = () => {
     const [dataPnlChanging, setDataPnlChanging] = useState({ labels: [], values: [] });
     const [loadingPnlChanging, setLoadingPnlChanging] = useState(false);
     const fetchDataPnlChanging = async () => {
-        console.log("_____________fetchDataPnlChanging");
-
         try {
             setLoadingPnlChanging(true);
             const { data } = await FetchApi({

@@ -37,10 +37,8 @@ const PnlChanging = ({
     isVndc = true
 }) => {
     const router = useRouter();
-    const [chartData, setChartData] = useState({ labels: [], values: [], margins: [] });
     const [pnlChartData, setPnlChartData] = useState({});
 
-    console.log('______debug pnl changing: ', isNeverTrade, dataPnl);
     useEffect(() => {
         if (dataPnl?.labels?.length > 0) {
             let labels;
@@ -83,38 +81,69 @@ const PnlChanging = ({
         borderRadius: 3,
         borderSkipped: false,
         plugins: {
+            // tooltip: {
+            //     enabled: !isNeverTrade,
+            //     usePointStyle: true,
+            //     callbacks: {
+            //         title: function (context) {
+            //             if (dataPnl?.interval === INTERVAL.DAY) return context[0].label;
+            //             const { dataIndex } = context[0];
+            //             const curDate = new Date(dataPnl.labels[dataIndex]?.date);
+            //             console.log('_____here: ', addMonths(curDate, 1), addWeeks(curDate, 1));
+            //             if (dataPnl?.interval === INTERVAL.WEEK) return formatTime(curDate, 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM');
+            //             if (dataPnl?.interval === INTERVAL.MONTH)
+            //                 return formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
+            //         },
+            //         label: function (context) {
+            //             const { dataIndex, label, raw } = context;
+            //             let margin = dataPnl.values[dataIndex].margin ?? 1;
+            //             let pnl = dataPnl.values[dataIndex].pnl;
+            //             let ratePnl = pnl / margin;
+            //             return [
+            //                 ` - ${t('portfolio:pnl')}: ${raw > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`
+            //             ];
+            //         }
+            //     },
+            //     backgroundColor: isDark ? colors.dark['2'] : colors.gray['15'],
+            //     padding: 12,
+            //     titleColor: isDark ? colors.gray['7'] : colors.gray['1'],
+            //     titleFont: { weight: 'normal', size: 14, paddingBottom: 12, lineHeight: 1.43 },
+            //     titleAlign: 'left',
+            //     displayColors: false,
+            //     bodyColor: isDark ? colors.gray['4'] : colors.gray['2'],
+            //     bodyFont: { size: 16, lineHeight: 1.5 },
+            //     caretSize: 5
+            // },
             tooltip: {
-                enabled: !isNeverTrade,
-                usePointStyle: true,
-                callbacks: {
-                    title: function (context) {
-                        if (dataPnl?.interval === INTERVAL.DAY) return context[0].label;
-                        const { dataIndex } = context[0];
+                enabled: false,
+                position: 'nearest',
+                external: (context) => {
+                    if (!isMobile) {
+                        const { dataIndex, label } = context?.chart?.tooltip?.dataPoints?.['0'];
+
+                        let title = '';
                         const curDate = new Date(dataPnl.labels[dataIndex]?.date);
-                        console.log('_____here: ', addMonths(curDate, 1), addWeeks(curDate, 1));
-                        if (dataPnl?.interval === INTERVAL.WEEK) return formatTime(curDate, 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM');
-                        if (dataPnl?.interval === INTERVAL.MONTH)
-                            return formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
-                    },
-                    label: function (context) {
-                        const { dataIndex, label, raw } = context;
+                        switch (dataPnl?.interval) {
+                            case INTERVAL.DAY:
+                                title = label;
+                                break;
+                            case INTERVAL.WEEK:
+                                title = formatTime(curDate, 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM');
+                                break;
+                            case INTERVAL.MONTH:
+                                title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
+                                break;
+                            default:
+                                break;
+                        }
+
                         let margin = dataPnl.values[dataIndex].margin ?? 1;
                         let pnl = dataPnl.values[dataIndex].pnl;
                         let ratePnl = pnl / margin;
-                        return [
-                            ` - ${t('portfolio:pnl')}: ${raw > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`
-                        ];
+
+                        externalTooltipHandler(context, isDark, t, isVndc, title, pnl, ratePnl);
                     }
-                },
-                backgroundColor: isDark ? colors.dark['2'] : colors.gray['15'],
-                padding: 12,
-                titleColor: isDark ? colors.gray['7'] : colors.gray['1'],
-                titleFont: { weight: 'normal', size: 14, paddingBottom: 12, lineHeight: 1.43 },
-                titleAlign: 'left',
-                displayColors: false,
-                bodyColor: isDark ? colors.gray['4'] : colors.gray['2'],
-                bodyFont: { size: 16, lineHeight: 1.5 },
-                caretSize: 5
+                }
             }
         },
         scales: {
@@ -273,3 +302,144 @@ const PnlChanging = ({
 };
 
 export default PnlChanging;
+
+const getOrCreateTooltip = (chart, isDark) => {
+    let tooltipEl = chart.canvas.parentNode.querySelector('div');
+
+    if (!tooltipEl) {
+        tooltipEl = document.createElement('div');
+        tooltipEl.style.background = isDark ? colors.dark['2'] : colors.gray['15'];
+        tooltipEl.style.borderRadius = '6px';
+        tooltipEl.style.color = 'white';
+        tooltipEl.style.opacity = 1;
+        tooltipEl.style.pointerEvents = 'none';
+        tooltipEl.style.position = 'absolute';
+        tooltipEl.style.transform = 'translate(-50%, 0)';
+        tooltipEl.style.transition = 'all .1s ease';
+
+        const table = document.createElement('table');
+        table.style.color = isDark ? colors.gray['4'] : colors.gray['15'];
+        table.style.fontWeight = 'normal';
+        table.style.fontSize = '16px';
+        table.style.margin = '6px';
+        // table.style.padding = '12px';
+        // table.style.backgroundColor = isDark ? colors.dark['2'] : colors.gray['15']
+
+        tooltipEl.appendChild(table);
+        chart.canvas.parentNode.appendChild(tooltipEl);
+    }
+
+    return tooltipEl;
+};
+
+const generateThead = (isDark, label) => {
+    const tableHead = document.createElement('thead');
+    const tr = document.createElement('tr');
+    tr.style.borderWidth = 0;
+    const th = document.createElement('th');
+    th.style.borderWidth = 0;
+    th.style.textAlign = 'left';
+    th.style.color = isDark ? colors.gray['7'] : colors.gray['1'];
+    th.style.fontSize = '14px';
+    th.style.fontWeight = 'normal';
+    th.style.paddingBottom = '12px';
+    const text = document.createTextNode(label);
+
+    th.appendChild(text);
+    tr.appendChild(th);
+    tableHead.appendChild(tr);
+    return tableHead;
+};
+
+const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl) => {
+    // Tooltip Element
+    const { chart, tooltip } = context;
+    const tooltipEl = getOrCreateTooltip(chart, isDark);
+
+    // Hide if no tooltip
+    if (tooltip.opacity === 0) {
+        tooltipEl.style.opacity = 0;
+        return;
+    }
+
+    // Set Text
+    if (tooltip.body) {
+        // Generate header
+        const tableHead = generateThead(isDark, title);
+
+        const tableBody = document.createElement('tbody');
+        const ulElement = document.createElement('ul');
+        ulElement.className = 'list-disc marker:text-xs ml-5 text-base !leading-[24px]';
+
+        // Create first <li> element
+        // const liElement1 = document.createElement('li');
+        // liElement1.textContent = `${t('portfolio:amount_position')}: ${curData?.doc_count} (${rate}%)`;
+        // ulElement.appendChild(liElement1);
+
+        // Create second <li> element
+        // const liElement2 = document.createElement('li');
+        // liElement2.textContent = `Tỷ lệ: ${rate}%`;
+        // ulElement.appendChild(liElement2);
+
+        const liElement3 = document.createElement('li');
+        liElement3.textContent = `${t('portfolio:pnl')}: `;
+        const spanElement = document.createElement('span');
+        spanElement.className = 'red-2 font-semibold';
+        spanElement.style.color = pnl > 0 ? colors.green['2'] : colors.red['2'];
+        spanElement.textContent = `${pnl > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`;
+        liElement3.appendChild(spanElement);
+        ulElement.appendChild(liElement3);
+
+        const tr = document.createElement('tr');
+        tr.style.backgroundColor = 'inherit';
+        tr.style.borderWidth = 0;
+
+        const td = document.createElement('td');
+        td.style.borderWidth = 0;
+
+        // const text = document.createTextNode(body);
+
+        td.appendChild(ulElement);
+        // td.appendChild(text);
+        tr.appendChild(td);
+        tableBody.appendChild(tr);
+
+        const tableRoot = tooltipEl.querySelector('table');
+
+        // Remove old children
+        while (tableRoot.firstChild) {
+            tableRoot.firstChild.remove();
+        }
+
+        // Add new children
+        tableRoot.appendChild(tableHead);
+        tableRoot.appendChild(tableBody);
+    }
+
+    const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+    const tooltipWidth = tooltipEl.offsetWidth;
+
+    tooltipEl.style.left = 28 + tooltipWidth / 2 + positionX + tooltip.caretX + 'px';
+    tooltipEl.style.top = positionY + 'px'; // Position tooltip based on the bar's center
+    tooltipEl.style.font = tooltip.options.bodyFont.string;
+    tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+    tooltipEl.style.opacity = 1;
+
+    // Create caret:
+    const tooltipCaretClassName = 'tooltip-caret';
+    let tooltipCaretEl = tooltipEl.querySelector(`.${tooltipCaretClassName}`);
+
+    if (!tooltipCaretEl) {
+        tooltipCaretEl = document.createElement('div');
+        tooltipCaretEl.classList.add(tooltipCaretClassName);
+        tooltipEl.appendChild(tooltipCaretEl);
+    }
+
+    tooltipCaretEl.classList.add('tooltip-caret');
+    tooltipCaretEl.style.top = tooltipEl.offsetHeight / 2 + 'px'; // Đặt vị trí dọc của caret
+
+    // tooltipCaretEl.style.left = caretX + 'px'; // Đặt vị trí ngang của caret
+    // tooltipCaretEl.style.top = caretY + 'px'; // Đặt vị trí dọc của caret
+
+    tooltipEl.appendChild(tooltipCaretEl);
+};
