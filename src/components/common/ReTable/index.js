@@ -243,7 +243,7 @@ const ReTable = memo(
                                     className={className.join(' ')}
                                     onClick={() => {
                                         !c?.preventSort && setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] });
-                                        if (cbSort) cbSort(!sorter?.[`${c.key}`]);
+                                        if (cbSort) cbSort(!sorter?.[`${c.key}`], c.key);
                                         if (customSort) customSort({ ...sorter, [`${c.key}`]: !sorter?.[`${c.key}`] });
                                     }}
                                 >
@@ -279,7 +279,7 @@ const ReTable = memo(
                                     className={className.join(' ')}
                                     onClick={() => {
                                         !c?.preventSort && setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] });
-                                        if (cbSort) cbSort(!sorter?.[`${c.key}`]);
+                                        if (cbSort) cbSort(!sorter?.[`${c.key}`], c.key);
                                     }}
                                 >
                                     {c.title} {!c?.preventSort && <Sorter isUp={sorted ? undefined : sorter?.[`${c.key}`]} />}
@@ -439,6 +439,13 @@ const ReTableWrapperV2 = styled.div`
     }
 
     .rc-table-cell-fix-left,
+    .rc-table-cell-fix-left-first,
+    .rc-table-cell-fix-left-last {
+        z-index: 20;
+        background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important;
+    }
+
+    /* .rc-table-cell-fix-left, */
     .rc-table-cell-fix-right,
     .rc-table-cell-fix-right-first,
     .rc-table-cell-fix-right-last {
