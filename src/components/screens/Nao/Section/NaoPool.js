@@ -427,10 +427,10 @@ const NaoPool = ({ dataSource, assetNao }) => {
     );
 };
 
-const ArrowRight = memo(({ className, size = 24, onClick, disabled }) => {
+export const ArrowRight = memo(({ className, size = 24, onClick, disabled }) => {
     return (
-        <div>
-            <svg xmlns="http://www.w3.org/2000/svg" className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" onClick={onClick}>
+        <button disabled={disabled} onClick={onClick}>
+            <svg xmlns="http://www.w3.org/2000/svg" className={className} width={size} height={size} viewBox="0 0 24 24" fill="none">
                 <rect width={size} height={size} rx={12} className="text-gray-11 dark:text-dark-2" fill="currentColor" />
                 <g clipPath="url(#w8kj3i91ta)">
                     <path
@@ -445,7 +445,7 @@ const ArrowRight = memo(({ className, size = 24, onClick, disabled }) => {
                     </clipPath>
                 </defs>
             </svg>
-        </div>
+        </button>
     );
 });
 
