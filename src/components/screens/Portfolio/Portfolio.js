@@ -231,18 +231,16 @@ const Portfolio = () => {
                         {isMobile && (isOpenPositionInfo1 || isOpenPositionInfo2) && (
                             <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-12 dark:bg-dark-4">
                                 <BxsInfoCircle />
-                                <span>Nhấn vào từng phần để xem thống kê chi tiết</span>
+                                <span>{t('portfolio:click_array_for_details')}</span>
                             </div>
-                        )}
-                        {isMobile && (
-                            <div
-                                className={`w-full border-b border-divider dark:border-divider-dark mt-[${
-                                    isOpenPositionInfo1 || isOpenPositionInfo2 ? 47 : 23
-                                }px]`}
-                            ></div>
                         )}
                     </div>
                 </div>
+                <div
+                    className={`relative w-full border-b border-divider dark:border-divider-dark ${!isMobile && 'hidden'} ${
+                        isOpenPositionInfo1 || isOpenPositionInfo2 ? ' mt-12' : ' mt-6'
+                    }`}
+                ></div>
             </div>
             {/* Table top 5 positions */}
             <div className="w-full md:px-4">

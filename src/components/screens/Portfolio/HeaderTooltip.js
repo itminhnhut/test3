@@ -14,26 +14,16 @@ const HeaderTooltip = ({ className, tooltipId, title, tooltipContent, isMobile =
         <div className={className}>
             <Tooltip
                 overridePosition={(e) => {
-                    // var element = document.getElementById(`${type}_bar`);
-                    // var positionInfo = element.getBoundingClientRect();
-                    // var width = positionInfo.width;
-                    // var widthLoss = (width * percentClipPath) / 100;
-                    // var widthProfit = width - widthLoss;
-                    // let delta;
-                    // if (percentClipPath < 50) {
-                    //     delta = widthLoss / 2 + (widthProfit - width / 2);
-                    // } else {
-                    //     delta = width / 2 - widthLoss / 2;
-                    // }
-                    if(e.left < 0) return {
+                    if(e?.left < 0) return {
                         left: e.left < 16 ? 16 : e.left,
                         top: e.top
                     }
+                    return e
                 }}
                 id={tooltipId}
                 place={'top'}
                 arrowColor={isDark ? colors.dark['1'] : colors.gray['11']}
-                className={`max-w-[${isMobile ? 300 : 520}px] !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1 !text-gray-15 dark:!text-gray-4`}
+                className={`max-w-[${isMobile ? 300 : 520}px] !px-6 !py-3 mr-4 !bg-gray-11 dark:!bg-dark-1 !text-gray-15 dark:!text-gray-4`}
             >
                 {isArray(tooltipContent) && (
                     <ul className="list-disc marker:text-xs ml-1">
