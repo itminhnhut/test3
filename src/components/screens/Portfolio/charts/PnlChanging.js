@@ -288,32 +288,39 @@ const PnlChanging = ({
 export default PnlChanging;
 
 const getOrCreateTooltip = (chart, isDark) => {
-    let tooltipEl = chart.canvas.parentNode.querySelector('div');
+    const parent = chart.canvas.parentNode;
+    let tooltipEl = parent.querySelector('div');
 
-    if (!tooltipEl) {
-        tooltipEl = document.createElement('div');
-        tooltipEl.style.background = isDark ? colors.dark['2'] : colors.gray['15'];
-        tooltipEl.style.borderRadius = '6px';
-        tooltipEl.style.color = 'white';
-        tooltipEl.style.opacity = 1;
-        tooltipEl.style.pointerEvents = 'none';
-        tooltipEl.style.position = 'absolute';
-        tooltipEl.style.transform = 'translate(-50%, 0)';
-        tooltipEl.style.transition = 'all .1s ease';
-        tooltipEl.style.width = '300px';
-        tooltipEl.style.height = '88px';
-
-        const table = document.createElement('table');
-        table.style.color = isDark ? colors.gray['4'] : colors.gray['15'];
-        table.style.fontWeight = 'normal';
-        table.style.fontSize = '16px';
-        table.style.margin = '6px';
-        // table.style.padding = '12px';
-        // table.style.backgroundColor = isDark ? colors.dark['2'] : colors.gray['15']
-
-        tooltipEl.appendChild(table);
-        chart.canvas.parentNode.appendChild(tooltipEl);
+    // Remove existing tooltip element if found
+    if (tooltipEl) {
+        parent.removeChild(tooltipEl);
     }
+    // let tooltipEl = chart.canvas.parentNode.querySelector('div');
+
+    // if (!tooltipEl) {
+    tooltipEl = document.createElement('div');
+    tooltipEl.style.background = isDark ? colors.dark['2'] : colors.darkBlue;
+    tooltipEl.style.borderRadius = '6px';
+    tooltipEl.style.color = 'white';
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.pointerEvents = 'none';
+    tooltipEl.style.position = 'absolute';
+    tooltipEl.style.transform = 'translate(-50%, 0)';
+    tooltipEl.style.transition = 'all .1s ease';
+    tooltipEl.style.width = '300px';
+    tooltipEl.style.height = '88px';
+
+    const table = document.createElement('table');
+    table.style.color = isDark ? colors.gray['4'] : '#fff';
+    table.style.fontWeight = 'normal';
+    table.style.fontSize = '16px';
+    table.style.margin = '6px';
+    // table.style.padding = '12px';
+    // table.style.backgroundColor = isDark ? colors.dark['2'] : colors.gray['15']
+
+    tooltipEl.appendChild(table);
+    chart.canvas.parentNode.appendChild(tooltipEl);
+    // }
 
     return tooltipEl;
 };
