@@ -86,7 +86,7 @@ const PnlChanging = ({
                     if (!isMobile) {
                         const { dataIndex } = context?.chart?.tooltip?.dataPoints?.['0'];
 
-                        const title = parseTitle(dataPnl.labels[dataIndex]?.date, dataPnl?.interval);
+                        const title = parseTitle(dataPnl.labels[dataIndex]?.date, dataPnl?.interval, true);
 
                         let margin = dataPnl.values[dataIndex].margin ?? 1;
                         let pnl = dataPnl.values[dataIndex].pnl;
@@ -227,7 +227,7 @@ const PnlChanging = ({
                         {showDetails && (
                             <MCard addClass={'!p-4 !font-semibold !mt-6'}>
                                 <div className="flex items-center justify-between">
-                                    <span className="txtSecond-3">{t('common:day')}</span>
+                                    <span className="txtSecond-3">{t('common:global_label.date')}</span>
                                     <div className="whitespace-nowrap font-semibold flex items-center">
                                         {parseTitle(dataPnl.labels[showDetails]?.date, dataPnl?.interval)}
                                     </div>
@@ -445,18 +445,18 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
     tooltipEl.appendChild(tooltipCaretEl);
 };
 
-const parseTitle = (stringDate, interval) => {
+const parseTitle = (stringDate, interval, isDetails = false) => {
     let title = '';
     const curDate = new Date(stringDate);
     switch (interval) {
         case INTERVAL.DAY:
-            title = formatTime(curDate, 'dd/MM');
+            title = formatTime(curDate, isDetails ? 'dd/MM/yyyy' : 'dd/MM');
             break;
         case INTERVAL.WEEK:
-            title = formatTime(curDate, 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM');
+            title = formatTime(curDate, isDetails ? 'dd/MM/yyyy' : 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), isDetails ? 'dd/MM/yyyy' : 'dd/MM');
             break;
         case INTERVAL.MONTH:
-            title = formatTime(curDate, 'MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'MM/yyyy');
+            title = formatTime(curDate, isDetails ? 'dd/MM/yyyy' : 'MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), isDetails ? 'dd/MM/yyyy' : 'MM/yyyy');
             break;
         default:
             break;

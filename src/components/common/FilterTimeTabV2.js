@@ -241,7 +241,7 @@ const FilterTimeTabV2 = ({
                 </div>
             </div>
             <ModalV2 isVisible={showPicker} onBackdropCb={handleOutside} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
-                <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('common:select_time')}</h1>
+                <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('common:time')}</h1>
                 <div className={classNames('date-range-picker flex flex-col justify-center mt-2 w-full !bg-transparent !border-none !shadow-none')}>
                     <DateRangePicker
                         className={classNames(`h-full px-[10px] w-full`)}
