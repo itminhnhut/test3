@@ -343,14 +343,14 @@ const NaoPerformance = memo(() => {
     );
 });
 
-export const RangePopover = ({ language, active = {}, onChange, popoverClassName = '' }) => {
+export const RangePopover = ({ language, active = {}, onChange, popoverClassName = '', btnClassName = '' }) => {
     const popOverClasses = classNames('relative flex', popoverClassName);
     return (
         <Popover className={popOverClasses}>
             {({ open, close }) => (
                 <>
                     <Popover.Button>
-                        <div className="h-10 flex justify-center items-center">
+                        <div className={classNames('h-10 flex justify-center items-center', btnClassName)}>
                             <div className="sm:hidden">
                                 <SvgFilter size={24} color="currentColor" className="text-txtPrimary dark:text-txtPrimary-dark" />
                             </div>
