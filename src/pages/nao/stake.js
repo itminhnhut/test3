@@ -22,6 +22,7 @@ import { createSelector } from 'reselect';
 import { useRouter } from 'next/router';
 ('next/router');
 import { useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
+import NaoHeader from 'components/screens/Nao/NaoHeader';
 
 const getAssetNao = createSelector([(state) => state.utils.assetConfig, (utils, params) => params], (assets, params) => {
     return assets.find((rs) => rs.assetCode === params);
@@ -29,6 +30,7 @@ const getAssetNao = createSelector([(state) => state.utils.assetConfig, (utils, 
 
 const Stake = () => {
     const { width, height } = useWindowSize();
+    const isMobile = width < 820;
     const {
         t,
         i18n: { language }
@@ -63,7 +65,10 @@ const Stake = () => {
 
     return (
         <LayoutNaoToken isHeader={false}>
-            <div className="sticky top-0 z-10">
+            <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0 mb:block hidden">
+                <NaoHeader />
+            </div>
+            <div className="mb_only:sticky top-0 z-10 px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
                 <div className="stake_header bg-bgPrimary dark:bg-bgPrimary-dark relative z-[9]">
                     {/* <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                     language={language} t={t} />
@@ -82,28 +87,30 @@ const Stake = () => {
                         </div>
                     }
                 </div> */}
-                    <div className="flex items-center px-4 pb-4 pt-6 space-x-2">
-                        <ChevronLeft size={20} onClick={() => router.back()} />
-                        <label onClick={() => router.back()} className="font-semibold">
+                    <div className="flex items-center pb-4 pt-6 mb:pt-20 mb:pb-12">
+                        <ChevronLeft size={20} onClick={() => router.back()} className="mb:hidden mr-2" />
+                        <label onClick={() => router.back()} className="font-semibold mb:text-5xl">
                             {t('nao:governance_pool')}
                         </label>
                     </div>
-                    <Tabs tab={tab}>
-                        <TabItem className="py-[14px]" onClick={() => setTab(0)} active={tab === 0}>
+                    <Tabs isMobile={isMobile} tab={tab}>
+                        <TabItem className="py-4 mb:w-[fit-content]" onClick={() => setTab(0)} active={tab === 0}>
                             {t('nao:pool:stake_nao')}
                         </TabItem>
-                        <TabItem className="py-[14px]" onClick={() => setTab(1)} active={tab === 1}>
+                        <TabItem className="py-4 mb:w-[fit-content]" onClick={() => setTab(1)} active={tab === 1}>
                             {t('nao:pool:performance')}
                         </TabItem>
                     </Tabs>
                 </div>
             </div>
-            <div className={`h-full w-full px-4 ${!tab ? 'py-12' : 'py-6'}`}>
-                <div className={tab !== 0 ? 'hidden' : ''}>
-                    <StakeTab ref={refStake} assetNao={assetNao} dataSource={dataSource} getStake={getStake} />
-                </div>
-                <div className={tab !== 1 ? 'hidden' : height < 600 ? 'min-h-[600px] relative' : ''}>
-                    <PerformanceTab onShowLock={onShowLock} assetNao={assetNao} isSmall={height < 600} dataSource={dataSource} />
+            <div className="px-4 nao:px-0 max-w-[72.5rem] w-full m-auto !mt-0">
+                <div className={`h-full w-full ${!tab ? 'py-8' : 'py-6'}`}>
+                    <div className={tab !== 0 ? 'hidden' : ''}>
+                        <StakeTab ref={refStake} assetNao={assetNao} dataSource={dataSource} getStake={getStake} />
+                    </div>
+                    <div className={tab !== 1 ? 'hidden' : height < 600 ? 'min-h-[600px] relative' : ''}>
+                        <PerformanceTab onShowLock={onShowLock} assetNao={assetNao} isSmall={height < 600} dataSource={dataSource} />
+                    </div>
                 </div>
             </div>
         </LayoutNaoToken>
@@ -168,7 +175,7 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
 };
 
 const Tabs = styled.div.attrs({
-    className: 'relative flex items-center border-b-2 border-divider dark:border-divider-dark'
+    className: 'relative flex items-center border-b-2 border-divider dark:border-divider-dark mb:space-x-6'
 })`
     &:after {
         content: '';
@@ -176,14 +183,14 @@ const Tabs = styled.div.attrs({
         bottom: -2px;
         height: 2px;
         background-color: ${() => colors.teal};
-        transform: ${({ tab }) => `translate(${tab * 100}%,0)`};
-        width: 50%;
+        transform: ${({ tab, isMobile }) => (isMobile ? `translate(${tab * 100}%,0)` : tab === 1 ? `translate(106px,0)` : `translate(0)`)};
+        width: ${({ tab, isMobile }) => (isMobile ? '50%' : tab === 1 ? '74px' : '85px')};
         transition: all 0.2s;
     }
 `;
 
 const TabItem = styled.div.attrs(({ active }) => ({
-    className: `pb-3 w-full flex items-center justify-center text-sm leading-6 ${
+    className: `pb-3 w-full flex items-center justify-center text-sm mb:text-base leading-6 hover:cursor-pointer ${
         active ? 'text-txtPrimary dark:text-txtPrimary-dark font-semibold' : 'text-txtSecondary dark:text-txtSecondary-dark'
     }`
 }))``;

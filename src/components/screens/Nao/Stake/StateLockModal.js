@@ -49,7 +49,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                 isZero={pos.left === 0}
                 isDark
                 onusMode
-                className={`left-1/2 translate-x-[-50%] w-max !text-sm !font-medium text-txtPrimary dark:text-txtPrimary-dark`}
+                className={`left-1/2 translate-x-[-50%] w-max !text-sm mb:!text-base !font-medium text-txtPrimary dark:text-txtPrimary-dark`}
             >
                 {ceil(pos.left, 0)}%
             </ThumbLabel>
@@ -139,63 +139,70 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                 loading={loading}
             />
             <div
+                onClick={onClose}
+                className={classNames('absolute z-[90] top-0 left-0 w-full h-full transition-opacity duration-200 bg-black-800/60 dark:bg-black-800/80')}
+            />
+            <div
                 className={classNames(
-                    'flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-bgPrimary dark:bg-bgPrimary-dark disabled-zoom',
+                    'fixed inset-0 m-auto h-full w-full mb:h-[fit-content] z-[91] bg-bgPrimary dark:bg-bgPrimary-dark disabled-zoom max-w-[800px] mb:max-h-[90%] mb:rounded-xl',
                     { invisible: !visible },
                     { visible: visible }
                 )}
             >
-                <div className="flex-1 min-h-0 overflow-y-auto">
-                    <div className="flex items-center px-4 pb-4 pt-6 space-x-2">
-                        <ChevronLeft size={20} onClick={onClose} />
-                        <label onClick={onClose} className="font-semibold">
+                <div className="h-full">
+                    <SvgCross size={24} onClick={onClose} color="currentColor" className="hidden mb:block ml-auto mr-8 mt-8 cursor-pointer" />
+                    <div className="flex items-center px-4 mb:px-8 mb:pt-6 mb:pb-8">
+                        <ChevronLeft size={20} onClick={onClose} className="mb:hidden mr-2" />
+                        <label onClick={onClose} className="font-semibold mb:text-4xl">
                             {t(`nao:pool:${isLock ? 'lock' : 'unlock'}`)} NAO
                         </label>
                     </div>
-                    <div className="px-4 py-6">
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs mb-2">{t('nao:pool:input_lock')}</div>
-                        <TradingInput
-                            validator={validator()}
-                            thousandSeparator
-                            allowNegative={false}
-                            labelClassName="hidden"
-                            className={`flex-grow text-txtPrimary dark:text-txtSecondary-dark w-full !text-sm`}
-                            containerClassName={`w-full dark:bg-dark-2 text-sm`}
-                            value={amount}
-                            decimalScale={assetNao?.assetDigit}
-                            onValueChange={onChangeAmount}
-                            renderTail={() => <div className="text-txtSecondary-dark dark:text-txtSecondary-dark text-sm">NAO</div>}
-                            inputMode="decimal"
-                            allowedDecimalSeparators={[',', '.']}
-                            errorTooltip={false}
-                            // renderText={(e) => console.log(e)}
-                        />
-                        <div className="my-6 -mx-2">
-                            <Slider
-                                useLabel
-                                positionLabel="top"
-                                labelSuffix="%"
-                                x={percent}
-                                axis="x"
-                                xStart={0}
-                                xmax={100}
-                                onChange={({ x }) => onChangePercent(x)}
+                    <div className="overflow-y-auto px-4 mb:px-8 mb:max-h-[calc(90vh-15.25rem)] grid mb:grid-cols-2 grid-cols-1 gap-4 mb:gap-6">
+                        <div className={classNames(!isLock && 'col-span-2')}>
+                            <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs mb:text-sm mb-2">{t('nao:pool:input_lock')}</div>
+                            <TradingInput
+                                validator={validator()}
+                                thousandSeparator
+                                allowNegative={false}
+                                labelClassName="hidden"
+                                className={`flex-grow text-txtPrimary dark:text-txtSecondary-dark w-full !text-sm mb:!text-base`}
+                                containerClassName={`w-full dark:bg-dark-2 text-sm lg:text-base`}
+                                value={amount}
+                                decimalScale={assetNao?.assetDigit}
+                                onValueChange={onChangeAmount}
+                                renderTail={() => <div className="text-txtSecondary-dark dark:text-txtSecondary-dark text-sm mb:text-base">NAO</div>}
+                                inputMode="decimal"
+                                allowedDecimalSeparators={[',', '.']}
+                                errorTooltip={false}
+                                // renderText={(e) => console.log(e)}
                             />
-                        </div>
-                        <div className="text-sm space-y-2 mb-12">
-                            {isLock && (
+                            <div className="my-6 -mx-2">
+                                <Slider
+                                    useLabel
+                                    positionLabel="top"
+                                    labelSuffix="%"
+                                    x={percent}
+                                    axis="x"
+                                    xStart={0}
+                                    xmax={100}
+                                    onChange={({ x }) => onChangePercent(x)}
+                                />
+                            </div>
+                            <div className="text-sm mb:text-base space-y-2">
+                                {isLock && (
+                                    <div className="flex justify-between">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:minimun', { value: '' })}</div>&nbsp;
+                                        <div className="font-semibold">1,000 NAO</div>
+                                    </div>
+                                )}
                                 <div className="flex justify-between">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:minimun', { value: '' })}</div>&nbsp;
-                                    <div className="font-semibold">1,000 NAO</div>
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:available')}</div>&nbsp;
+                                    <div className="font-semibold">{formatNumber(balance, assetNao?.assetDigit ?? 0)} NAO</div>
                                 </div>
-                            )}
-                            <div className="flex justify-between">
-                                <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:available')}</div>&nbsp;
-                                <div className="font-semibold">{formatNumber(balance, assetNao?.assetDigit ?? 0)} NAO</div>
                             </div>
                         </div>
                         {isLock && (
-                            <div>
+                            <div className="">
                                 <Tooltip
                                     id="tooltip-profit-est"
                                     className="w-full sm_only:!max-w-[calc(100%-2rem)] sm_only:!mx-4 sm_only:after:!left-10 sm_only:after:translate-x-[-50%]"
@@ -211,19 +218,19 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                         return { top, left };
                                     }}
                                 />
-                                <label className="text-sm text-txtPrimary dark:text-txtPrimary-dark leading-6 font-semibold">
+                                <label className="text-sm mb:text-base text-txtPrimary dark:text-txtPrimary-dark leading-6 font-semibold">
                                     {t('nao:pool:lock_overview')}
                                 </label>
-                                <CardNao className="mt-2 !p-4 space-y-2 !bg-gray-13 dark:!bg-dark-4">
-                                    <div className="text-sm flex justify-between items-center">
+                                <CardNao className="mt-2 !p-4 space-y-2 !bg-gray-13 dark:!bg-dark-4 !min-w-0">
+                                    <div className="text-sm mb:text-base flex justify-between items-center">
                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:pool:qty_lock')}</div>
                                         <span className="font-semibold">{formatNumber(data?.availableStaked, assetNao?.assetDigit ?? 8)} NAO</span>
                                     </div>
-                                    <div className="text-sm flex justify-between items-center">
+                                    <div className="text-sm mb:text-base flex justify-between items-center">
                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:pool:est_apy_2')}</div>
                                         <span className="font-semibold">{formatNumber(data?.apy, 2)}%</span>
                                     </div>
-                                    <div className="text-sm flex justify-between items-center">
+                                    <div className="text-sm mb:text-base flex justify-between items-center">
                                         <div
                                             className="text-txtSecondary dark:text-txtSecondary-dark border-gray-1 dark:border-gray-7 border-b border-dashed"
                                             data-tip={t('nao:pool:tooltip_profit_est')}
@@ -233,7 +240,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                         </div>
                                         <span className="font-semibold">~{formatNumber(data?.profitEstimated, 0) + ' VNDC'} </span>
                                     </div>
-                                    <div className="text-sm flex justify-between items-center">
+                                    <div className="text-sm mb:text-base flex justify-between items-center">
                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:pool:lock_duration')}</div>
                                         <span className="font-semibold">
                                             {data?.duration ?? 7} {t('nao:pool:days')}
@@ -242,23 +249,23 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                 </CardNao>
                             </div>
                         )}
-                        {/* <CardNao className="mt-3 text-xs p-4 !bg-gray-13 dark:!bg-dark-4 mb-[7rem]">
+                        {/* <CardNao className="mt-3 text-xs mb:text-sm p-4 !bg-gray-13 dark:!bg-dark-4 mb-[7rem]">
                             <div className="flex items-center space-x-2">
                                 <BxsInfoCircle size={16} color={colors.gray[7]} />
-                                <span className="font-semibold text-sm">{t('nao:note')}</span>
+                                <span className="font-semibold text-sm mb:text-base">{t('nao:note')}</span>
                             </div>
                             <div className="text-txtSecondary dark:text-txtSecondary-dark mt-2">{t(`nao:pool:description_${isLock ? 'lock' : 'unlock'}`)}</div>
                         </CardNao> */}
-                        <div className="fixed left-0 bottom-0 w-full pb-12 pt-8 px-4 border-t border-divider dark:border-divider-dark bg-white dark:bg-dark">
-                            <ButtonNao
-                                onClick={onSave}
-                                className={`py-3 font-semibold ${
-                                    !Number(amount) || !validator()?.isValid ? '!bg-gray-12 dark:!bg-dark-2 !text-txtDisabled dark:!text-txtDisabled-dark' : ''
-                                }`}
-                            >
-                                {t('common:confirm')}
-                            </ButtonNao>
-                        </div>
+                    </div>
+                    <div className="w-full px-4 mb:px-8 mb:pt-10 mb:pb-8 border-t mb:border-0 border-divider dark:border-divider-dark bg-white dark:bg-dark">
+                        <ButtonNao
+                            onClick={onSave}
+                            className={`py-3 font-semibold ${
+                                !Number(amount) || !validator()?.isValid ? '!bg-gray-12 dark:!bg-dark-2 !text-txtDisabled dark:!text-txtDisabled-dark' : ''
+                            }`}
+                        >
+                            {t('common:confirm')}
+                        </ButtonNao>
                     </div>
                 </div>
             </div>
@@ -289,9 +296,9 @@ const AlertModal = ({ visible, onConfirm, onClose, t, isLock, amount, decimal, d
     }, [data]);
 
     return (
-        <ModalV2 isMobile isVisible={visible} onBackdropCb={onClose} wrapClassName="pb-12">
+        <ModalV2 isMobile isVisible={visible} onBackdropCb={onClose} wrapClassName="pb-12" className="mb:!max-w-[488px]">
             <label className="text-[20px] font-semibold leading-6">{t(`nao:pool:confirm_${isLock ? 'lock' : 'unlock'}`)}</label>
-            <div className="text-sm mt-8 bg-gray-13 dark:bg-dark-4 p-4 rounded-xl flex flex-col space-y-3">
+            <div className="text-sm mb:text-base mt-8 mb:mt-6 bg-gray-13 dark:bg-dark-4 p-4 mb:!bg-transparent mb:border border-divider dark:border-divider-dark rounded-xl flex flex-col space-y-3">
                 <div className="flex items-center justify-between">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t(`nao:pool:amount_${isLock ? 'lock' : 'unlock'}`)}</label>
                     <span className="font-semibold">{formatNumber(amount, decimal)} NAO</span>
@@ -300,6 +307,7 @@ const AlertModal = ({ visible, onConfirm, onClose, t, isLock, amount, decimal, d
                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:pool:est_revenue')}</label>
                     <span>{formatNumber(revenue, decimal)} NAO</span>
                 </div> */}
+                <div className="h-[1px] w-full hidden mb:block bg-divider dark:bg-divider-dark"></div>
                 <div className="flex items-center justify-between">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark">
                         {isLock ? t('nao:pool:lock_duration') : t('nao:pool:time_to_get_back')}
@@ -312,7 +320,7 @@ const AlertModal = ({ visible, onConfirm, onClose, t, isLock, amount, decimal, d
             {/* <div className="flex items-center mt-6" onClick={onHandleChecked}>
                 <CheckBox onusMode={true} active={checked}
                     boxContainerClassName={`rounded-[2px] ${checked ? '' : '!bg-gray-12 dark:!bg-dark-2'}`} />
-                <span className="ml-3 whitespace-nowrap text-txtSecondary dark:text-txtSecondary-dark text-xs">
+                <span className="ml-3 whitespace-nowrap text-txtSecondary dark:text-txtSecondary-dark text-xs mb:text-sm">
                     {t('nao:pool:not_show_message')}
                 </span>
             </div> */}

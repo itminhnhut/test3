@@ -108,7 +108,7 @@ const NaoHeader = memo(() => {
                 src={getS3Url("/images/nao/ic_nao.png")}
                 width="40"
                 height="40"
-                className="min-w-[2.5rem]"
+                className="min-w-[2.5rem] cursor-pointer"
             />
             <div
                 className={`flex items-center text-txtPrimary dark:text-txtPrimary-dark font-medium ${width > 820 ? "space-x-10" : "space-x-4"
@@ -117,15 +117,18 @@ const NaoHeader = memo(() => {
                 {width > 820 && (
                     <>
                         {category.map((item) => (
-                            <div
-                                key={item.label}
-                                onClick={() => scrollToView(item)}
-                                className="cursor-pointer"
-                            >
-                                {t(`nao:${item.label}`)}
-                            </div>
+                            <>
+                                {item.label === 'Stake NAO' ? null : (
+                                    <div key={item.label} onClick={() => scrollToView(item)} className="cursor-pointer">
+                                        {t(`nao:${item.label}`)}
+                                    </div>
+                                )}
+                            </>
                         ))}
                         <LanguageSetting />
+                        <ButtonNao onClick={() => router.push("/nao/stake")} className="!rounded-md h-10 !px-6 !py-2">
+                            {t(`nao:Stake NAO`)}
+                        </ButtonNao>
                     </>
                 )}
                 {width <= 820 && (

@@ -251,6 +251,7 @@ module.exports = {
                 xsm: '320px',
                 xs: '319px',
                 sm_only: { max: defaultTheme.screens.sm },
+                mb_only: { max: '820px' },
             },
             spacing: {
                 128: '32rem',
