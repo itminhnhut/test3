@@ -229,7 +229,7 @@ const ContestPerRanks = ({
             {top3.length > 0 && (
                 <div className="flex flex-wrap gap-3 sm:gap-6 mt-6 text-sm sm:text-base">
                     {top3.map((item, index) => (
-                        <CardNao key={index} className="!p-4 sm:!p-5">
+                        <CardNao key={index} className="!p-4 sm:!p-5 !min-w-min">
                             <div className="flex items-center justify-between flex-1 gap-5">
                                 <div className="flex items-center space-x-4">
                                     <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
