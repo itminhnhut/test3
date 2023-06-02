@@ -151,13 +151,13 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
             >
                 <div className="h-full">
                     <SvgCross size={24} onClick={onClose} color="currentColor" className="hidden mb:block ml-auto mr-8 mt-8 cursor-pointer" />
-                    <div className="flex items-center px-4 mb:px-8 mb:pt-6 mb:pb-8">
+                    <div className="flex items-center px-4 py-6 mb-6 mb:px-8 mb:mb-2">
                         <ChevronLeft size={20} onClick={onClose} className="mb:hidden mr-2" />
                         <label onClick={onClose} className="font-semibold mb:text-4xl">
                             {t(`nao:pool:${isLock ? 'lock' : 'unlock'}`)} NAO
                         </label>
                     </div>
-                    <div className="overflow-y-auto px-4 mb:px-8 mb:max-h-[calc(90vh-15.25rem)] grid mb:grid-cols-2 grid-cols-1 gap-4 mb:gap-6">
+                    <div className="overflow-y-auto px-4 mb:px-8 h-[calc(100vh-13.5rem)] mb:h-auto mb:max-h-[calc(90vh-15.25rem)] mb:grid mb:grid-cols-2 mb:gap-4">
                         <div className={classNames(!isLock && 'col-span-2')}>
                             <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs mb:text-sm mb-2">{t('nao:pool:input_lock')}</div>
                             <TradingInput
@@ -202,7 +202,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                             </div>
                         </div>
                         {isLock && (
-                            <div className="">
+                            <div className="mt-12 mb:mt-0">
                                 <Tooltip
                                     id="tooltip-profit-est"
                                     className="w-full sm_only:!max-w-[calc(100%-2rem)] sm_only:!mx-4 sm_only:after:!left-10 sm_only:after:translate-x-[-50%]"
@@ -249,15 +249,15 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                 </CardNao>
                             </div>
                         )}
-                        {/* <CardNao className="mt-3 text-xs mb:text-sm p-4 !bg-gray-13 dark:!bg-dark-4 mb-[7rem]">
+                        <CardNao className={classNames('text-xs mb:text-sm p-4 !bg-gray-13 dark:!bg-dark-4 mb:hidden', isLock ? 'mt-3' : 'mt-6')}>
                             <div className="flex items-center space-x-2">
                                 <BxsInfoCircle size={16} color={colors.gray[7]} />
                                 <span className="font-semibold text-sm mb:text-base">{t('nao:note')}</span>
                             </div>
                             <div className="text-txtSecondary dark:text-txtSecondary-dark mt-2">{t(`nao:pool:description_${isLock ? 'lock' : 'unlock'}`)}</div>
-                        </CardNao> */}
+                        </CardNao>
                     </div>
-                    <div className="w-full px-4 mb:px-8 mb:pt-10 mb:pb-8 border-t mb:border-0 border-divider dark:border-divider-dark bg-white dark:bg-dark">
+                    <div className="w-full px-4 pt-8 pb-12 mb:px-8 mb:pt-10 mb:pb-8 border-t mb:border-0 border-divider dark:border-divider-dark bg-white dark:bg-dark">
                         <ButtonNao
                             onClick={onSave}
                             className={`py-3 font-semibold ${
