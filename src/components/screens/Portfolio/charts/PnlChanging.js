@@ -2,16 +2,12 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { formatPrice, formatTime } from 'src/redux/actions/utils';
 import colors from 'styles/colors';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import { useTranslation } from 'next-i18next';
 import Note from 'components/common/Note';
-import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
-import { ArrowDropDownIcon, BxsInfoCircle, HelpIcon } from 'components/svg/SvgIcon';
+import {  BxsInfoCircle } from 'components/svg/SvgIcon';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 
 import ChartJS from './ChartJS';
 import { indexOf } from 'lodash';
-import Tooltip from 'components/common/Tooltip';
 import HeaderTooltip from '../HeaderTooltip';
 import TableNoData from 'components/common/table.old/TableNoData';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -21,7 +17,7 @@ import { formatNanNumber } from 'redux/actions/utils';
 import { isNumber } from 'lodash';
 import ModalV2 from 'components/common/V2/ModalV2';
 import MCard from 'components/common/MCard';
-const { subDays, format, addMonths, addWeeks } = require('date-fns');
+const {  addMonths, addWeeks } = require('date-fns');
 
 const INTERVAL = {
     DAY: 'day',
@@ -307,7 +303,7 @@ const getOrCreateTooltip = (chart, isDark) => {
     tooltipEl.style.position = 'absolute';
     tooltipEl.style.transform = 'translate(-50%, 0)';
     tooltipEl.style.transition = 'all .1s ease';
-    tooltipEl.style.width = '300px';
+    tooltipEl.style.width = '350px';
     tooltipEl.style.height = '88px';
 
     const table = document.createElement('table');

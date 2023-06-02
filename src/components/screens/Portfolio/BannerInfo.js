@@ -1,14 +1,10 @@
 import React from 'react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_VIP } from 'redux/actions/apis';
-import { formatTime, getLoginUrl, walletLinkBuilder } from 'src/redux/actions/utils';
-import { FEE_TABLE, FUTURES_PRODUCT, PRODUCT } from 'constants/constants';
-import SvgAddCircle from 'components/svg/SvgAddCircle';
+import { formatTime, getS3Url } from 'src/redux/actions/utils';
+import { FUTURES_PRODUCT } from 'constants/constants';
 import colors from 'styles/colors';
-import router from 'next/router';
-import { WalletType } from 'redux/actions/const';
-import { EXCHANGE_ACTION } from 'pages/wallet';
 
 import 'react-loading-skeleton/dist/skeleton.css';
 import Skeletor from 'components/common/Skeletor';
@@ -19,7 +15,7 @@ import Image from 'next/image';
 import { isNumber } from 'lodash';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
-const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, firstTimeTrade, loadingOverview }) => {
+const BannerInfo = ({ user, t, isMobile, typeProduct, setTypeProduct, firstTimeTrade, loadingOverview }) => {
     // Handle for Header tab:
     const [vipLevel, setVipLevel] = useState(0);
 
@@ -40,20 +36,16 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
         getVip();
     }, []);
 
-    // const handleDepositIconBtn = useCallback(() => {
-    //     if (!user) {
-    //         router.push(getLoginUrl('sso', 'login'));
-    //     } else {
-    //         router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: currency || 'USDT' }));
-    //     }
-    // }, [currency, user]);
-
-    const duringHours = Math.floor((new Date() - new Date(firstTimeTrade)) / (1000 * 60 * 60))
+    const duringHours = Math.floor((new Date() - new Date(firstTimeTrade)) / (1000 * 86400));
     const renderUserGeneralInfo = () => (
         <div className={`${isMobile ? 'pt-[76px]' : 'ml-8'} flex flex-col items-start justify-center gap-y-2 text-sm md:text-base`}>
             <span className="text-xl md:text-2xl">{user?.name ?? user?.username ?? user?.email ?? t('common:unknown')}</span>
             <div className="flex items-center">
-                {isNumber(vipLevel) ? <span className="text-green-2">VIP {vipLevel}</span> : <Skeletor width={50} baseColor={colors.darkBlue3} highlightColor={colors.darkBlue4}/>}
+                {isNumber(vipLevel) ? (
+                    <span className="text-green-2">VIP {vipLevel}</span>
+                ) : (
+                    <Skeletor width={50} baseColor={colors.darkBlue3} highlightColor={colors.darkBlue4} />
+                )}
 
                 <div className="w-1 h-1 rounded-full bg-gray-7 mx-2"></div>
                 <TextCopyable text={user?.code} copyIconColor="#fff" />
@@ -64,8 +56,8 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
                     <Skeletor width={170} height={17} baseColor={colors.darkBlue3} highlightColor={colors.darkBlue4} />
                 ) : (
                     <div className="flex">
-                        {firstTimeTrade ? formatTime(firstTimeTrade, 'dd/MM/yyyy').toString() + ' ': '-'}
-                        {firstTimeTrade && `(${duringHours} ${duringHours > 1 ? t('common:hours') : t('common:hour')})`}
+                        {firstTimeTrade ? formatTime(firstTimeTrade, 'dd/MM/yyyy').toString() + ' ' : '-'}
+                        {firstTimeTrade && `(${duringHours} ${duringHours > 1 ? t('common:global_label.days') : t('common:day')})`}
                     </div>
                 )}
             </div>
@@ -80,7 +72,7 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
                     <div
                         style={{
                             height: 236,
-                            backgroundImage: `url(/images/screen/portfolio/banner_mobile.png)`
+                            backgroundImage: `url(${getS3Url(`/images/screen/portfolio/banner_mobile.png`)})`
                         }}
                         className="w-full  px-4 bg-cover bg-center relative"
                     >
@@ -127,7 +119,9 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
                 </div>
             ) : (
                 <div
-                    style={{ backgroundImage: `url(/images/screen/portfolio/banner_desktop.png)` }}
+                    style={{
+                        backgroundImage: `url(${getS3Url(`/images/screen/portfolio/banner_desktop.png`)})`
+                    }}
                     className="w-full bg-black-800 px-4 md:px-28 bg-cover bg-center"
                 >
                     <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">

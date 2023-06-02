@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
 import classNames from 'classnames';
-import { ChevronDown } from 'react-feather';
 import { ArrowDownIcon, CheckCircleIcon } from 'components/svg/SvgIcon';
 import useOutsideClick from 'hooks/useOutsideClick';
 import styled from 'styled-components';

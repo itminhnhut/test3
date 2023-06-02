@@ -1,38 +1,16 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
+import { useState, useEffect, useMemo } from 'react';
 import React from 'react';
 import {
-    formatPrice,
     formatNumber,
     formatTime,
-    formatPercentage,
-    formatSwapRate,
-    formatWallet,
-    getDecimalScale,
-    getLoginUrl,
-    countDecimals,
-    walletLinkBuilder,
-    safeToFixed,
-    formatCurrency,
     formatNanNumber
 } from 'redux/actions/utils';
 
 import colors from 'styles/colors';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
-import Note from 'components/common/Note';
-import { indexOf } from 'lodash';
-const { subDays } = require('date-fns');
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
-import { PATHS } from 'constants/paths';
-import SvgWalletFutures from 'components/svg/SvgWalletFutures';
-import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
-import HideSmallBalance from 'components/common/HideSmallBalance';
-import SearchBoxV2 from 'components/common/SearchBoxV2';
-import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
-import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import HeaderTooltip from './HeaderTooltip';
 import { API_FUTURES_STATISTIC_TOP_POSITIONS } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';

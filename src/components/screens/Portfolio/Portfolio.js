@@ -1,7 +1,5 @@
 import React from 'react';
-import { useState, useEffect, useCallback } from 'react';
-import Button from '../../common/Button';
-import FuturePortfolio from './FuturePortfolio';
+import { useState, useEffect } from 'react';
 import { ComponentTabWrapper, ComponentTabItem, ComponentTabUnderline } from './styledPortfolio';
 import dynamic from 'next/dynamic';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -9,8 +7,6 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useWindowSize from 'hooks/useWindowSize';
-import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
-import PriceChangePercent from 'components/common/PriceChangePercent';
 import PnlChanging from './charts/PnlChanging';
 import TradingPair from './charts/TradingPair';
 import PositionInfo from './PositionInfo';
@@ -20,14 +16,11 @@ import { WIDTH_MD } from '../Wallet';
 import FeaturedStats from './FeaturedStats';
 import { FUTURES_PRODUCT } from 'constants/constants';
 import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
-import { API_FUTURES_STATISTIC_OVERVIEW, API_FUTURES_STATISTIC_PAIRS, API_FUTURES_STATISTIC_PNL } from 'redux/actions/apis';
+import { API_FUTURES_STATISTIC_OVERVIEW, API_FUTURES_STATISTIC_PNL } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
-import { ApiStatus } from 'redux/actions/const';
-import FilterTimeTab from 'components/common/FilterTimeTab';
 import FilterTimeTabV2 from 'components/common/FilterTimeTabV2';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
 import GroupButtonCurrency from './GroupButtonCurrency';
-import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const TIME_FILTER = [

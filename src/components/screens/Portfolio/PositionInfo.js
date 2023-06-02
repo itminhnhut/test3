@@ -1,7 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
-import GroupTextFilter, { listTimeFilter } from 'components/common/GroupTextFilter';
+import { useState, useMemo } from 'react';
 import HeaderTooltip from './HeaderTooltip';
-import { formatNanNumber, formatPrice } from 'redux/actions/utils';
+import { formatNanNumber } from 'redux/actions/utils';
 import Tooltip from 'components/common/Tooltip';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import colors from 'styles/colors';
