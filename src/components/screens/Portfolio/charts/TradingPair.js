@@ -72,7 +72,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
     };
 
     useEffect(() => {
-        if (filter?.range?.endDate) return;
+        if (!filter?.range?.endDate) return;
         fetchDataTradingPairs();
     }, [typeProduct, typeCurrency, filterPnl, filter]);
 
@@ -93,7 +93,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                         ? listDoughnutColorsDark.slice(0, labels.length)
                         : listDoughnutColorsLight.slice(0, labels.length),
                 borderWidth: 0,
-                hoverBackgroundColor: listDoughnutColorsHover
+                hoverBackgroundColor: labels.length === 0 ? (isDark ? [colors.dark['6']] : ['#b5c0c9']) : listDoughnutColorsHover
             }
         ]
     };
@@ -107,7 +107,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
         maintainAspectRatio: true,
         cutout: '87%',
         onClick: (evt, item) => {
-            if (!isMobile) return;
+            if (!isMobile || !labels?.length) return;
             const curPair = dataTradingPairs?.symbolsCount?.buckets[item[0]?.index || 0];
             setShowDetails(curPair);
         },
@@ -116,13 +116,16 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                 enabled: false,
                 position: 'nearest',
                 external: (context) => {
-                    const { dataIndex } = context?.chart?.tooltip?.dataPoints?.['0'];
-                    const curData = dataTradingPairs?.symbolsCount?.buckets[dataIndex];
+                    if (!isMobile && labels?.length) {
+                        const { dataIndex } = context?.chart?.tooltip?.dataPoints?.['0'];
+                        const curData = dataTradingPairs?.symbolsCount?.buckets[dataIndex];
 
-                    const {key, doc_count, margin, profit} = curData
-                    const ratePnl = profit?.value / margin?.value
-                    const rate = doc_count / totalPosition;
-                    if (!isMobile) externalTooltipHandler(context, isDark, t, isVndc, doc_count, rate, profit?.value, ratePnl);
+                        const { doc_count, margin, profit } = curData;
+                        const ratePnl = profit?.value / margin?.value;
+                        const rate = doc_count / totalPosition;
+
+                        externalTooltipHandler(context, isDark, t, isVndc, doc_count, rate, profit?.value, ratePnl);
+                    }
                 }
             }
         }
@@ -354,7 +357,7 @@ const externalTooltipHandler = (context, isDark, t, isVndc, doc_count, rate, pro
 
         const sign = profit > 0 ? '+' : '';
 
-        const pnl = `${sign}${formatNanNumber(profit, isVndc ? 0 : 4)} (${sign}${formatNanNumber((ratePnl * 100), 2)}%)`;
+        const pnl = `${sign}${formatNanNumber(profit, isVndc ? 0 : 4)} (${sign}${formatNanNumber(ratePnl * 100, 2)}%)`;
 
         // Generate header
         const tableHead = generateThead(isDark, label);
@@ -365,7 +368,7 @@ const externalTooltipHandler = (context, isDark, t, isVndc, doc_count, rate, pro
 
         // Create first <li> element
         const liElement1 = document.createElement('li');
-        liElement1.textContent = `${t('portfolio:amount_position')}: ${doc_count} (${formatNanNumber((rate * 100), 2)}%)`;
+        liElement1.textContent = `${t('portfolio:amount_position')}: ${doc_count} (${formatNanNumber(rate * 100, 2)}%)`;
         ulElement.appendChild(liElement1);
 
         const liElement3 = document.createElement('li');
