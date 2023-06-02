@@ -55,7 +55,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                         '!text-red-2 !dark:text-red': totalPnl < 0
                     })}
                 >
-                    {loadingOverview ? <Skeletor width={150} /> : `${sign} ${formatNanNumber(totalPnl, isVnd ? 0 : 4)}`}
+                    {loadingOverview ? <Skeletor width={150} /> : `${sign}${formatNanNumber(totalPnl, isVnd ? 0 : 4)}`}
                 </div>
                 {loadingOverview ? (
                     <Skeletor width={50} />
