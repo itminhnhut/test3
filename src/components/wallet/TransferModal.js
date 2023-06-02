@@ -49,9 +49,11 @@ const ALLOWED_WALLET_FROM = {
 
 const ALLOWED_WALLET_TO = {
     SPOT: WalletType.SPOT,
-    FUTURES: WalletType.FUTURES,
-    NAO_FUTURES: WalletType.NAO_FUTURES
+    FUTURES: WalletType.FUTURES
+    // NAO_FUTURES: WalletType.NAO_FUTURES
 };
+
+const NOT_ALLOWED_WALLET_TO = Object.values(ALLOWED_WALLET_FROM).filter((wallet) => !Object.values(ALLOWED_WALLET_TO).includes(wallet));
 
 const TransferWalletResult = {
     INVALID_AMOUNT: 'INVALID_AMOUNT',
@@ -333,13 +335,15 @@ const TransferModal = ({ isMobile, alert }) => {
 
     const onBlur = () => setState({ focus: {} });
 
+    const isNotAllowToRevert = NOT_ALLOWED_WALLET_TO.includes(state.fromWallet);
+
     const onSetWallet = (targetWallet, walletType) => {
         let otherWallet = targetWallet === 'fromWallet' ? 'toWallet' : 'fromWallet';
 
         // thực hiện hoán đổi fromWallet và toWallet nếu như targetWallet === otherWallet
         if (state?.[otherWallet] === walletType) {
-            // Ví hoa hồng ở fromWallet sẽ được hoán đổi thành ví đầu tiên trong list ALLOWED_WALLET_TO sau khi filter
-            if (state.fromWallet === WalletType.BROKER) {
+            // If not allow to revert
+            if (isNotAllowToRevert) {
                 setState({
                     fromWallet: state.toWallet,
                     toWallet: Object.values(ALLOWED_WALLET_TO).filter((allowWallet) => allowWallet !== state.toWallet)[0]
@@ -354,8 +358,9 @@ const TransferModal = ({ isMobile, alert }) => {
             openList: {}
         });
     };
+
     const revertWallet = () => {
-        if (state.fromWallet === WalletType.BROKER) return;
+        if (isNotAllowToRevert) return;
         if (state.fromWallet && state.toWallet) {
             const _newState = {
                 fromWallet: state.toWallet,
@@ -367,58 +372,59 @@ const TransferModal = ({ isMobile, alert }) => {
         }
     };
 
-    const onSetMax = useMemo(
-        () => () => {
-            const format = formatNumber(currentWallet?.available, assetDigit, 0, true).replace(/,/g, '');
-            setState({ amount: format });
-            return null;
-        },
-        [currentWallet, assetDigit]
-    );
-
-    const renderWalletWithType = ({ side, isOpenList, walletType, isDisable, isDropdown = true, dropList }) => {
-        let iconMode = 'normal';
-        if (isDisable) {
-            iconMode = isDarkMode ? 'disabled_dm' : 'disabled_lm';
-        }
-
-        const WALLET = {
-            [WalletType.SPOT]: { icon: <SvgWalletExchange size={20} mode={iconMode} />, type: t('wallet:spot_short') },
-            [WalletType.FUTURES]: { icon: <SvgWalletFutures size={20} mode={iconMode} />, type: t('wallet:nami_futures_short') },
-            [WalletType.BROKER]: { icon: <PartnersIcon size={20} mode={iconMode} />, type: t('wallet:commission') },
-            [WalletType.NAO_FUTURES]: {
-                icon: <Image width={20} height={20} src={getS3Url('/images/nao/ic_nao.png')} />,
-                type: 'NAO Futures'
-            }
-        };
-
-        const renderWallet = () => {
-            if (!WALLET?.[walletType]) return WALLET[WalletType.SPOT];
-            return WALLET[walletType];
-        };
-
-        return (
-            <div className="flex w-full space-x-3 items-center ">
-                <div className="flex items-center ">{renderWallet().icon}</div>
-                {side && <div className="txtSecond-3 w-10 ">{side}</div>}
-
-                <div className="relative flex-grow text-sm font-semibold flex items-center">
-                    <span className={`${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{renderWallet().type}</span>
-
-                    {isDropdown && (
-                        <span
-                            className={classNames('ml-1 text-txtSecondary dark:text-txtSecondary-dark transition-transform duration-50', {
-                                'rotate-180': isOpenList
-                            })}
-                        >
-                            <ArrowDropDownIcon color="currentColor" size={16} />
-                        </span>
-                    )}
-                    {dropList?.()}
-                </div>
-            </div>
-        );
+    const onSetMax = () => {
+        const format = formatNumber(currentWallet?.available, assetDigit, 0, true).replace(/,/g, '');
+        setState({ amount: format });
+        return null;
     };
+
+    // render wallet type
+    const renderWalletWithType = useCallback(
+        ({ side, isOpenList, walletType, isDisable, isDropdown = true, dropList }) => {
+            let iconMode = 'normal';
+            if (isDisable) {
+                iconMode = isDarkMode ? 'disabled_dm' : 'disabled_lm';
+            }
+
+            const WALLET = {
+                [WalletType.SPOT]: { icon: <SvgWalletExchange size={20} mode={iconMode} />, type: t('wallet:spot_short') },
+                [WalletType.FUTURES]: { icon: <SvgWalletFutures size={20} mode={iconMode} />, type: t('wallet:nami_futures_short') },
+                [WalletType.BROKER]: { icon: <PartnersIcon size={20} mode={iconMode} />, type: t('wallet:commission') },
+                [WalletType.NAO_FUTURES]: {
+                    icon: <Image width={20} height={20} src={getS3Url('/images/nao/ic_nao.png')} />,
+                    type: 'NAO Futures'
+                }
+            };
+
+            const renderWallet = () => {
+                if (!WALLET?.[walletType]) return WALLET[WalletType.SPOT];
+                return WALLET[walletType];
+            };
+
+            return (
+                <div className="flex w-full space-x-3 items-center ">
+                    <div className="flex items-center ">{renderWallet().icon}</div>
+                    {side && <div className="txtSecond-3 w-10 ">{side}</div>}
+
+                    <div className="relative flex-grow text-sm font-semibold flex items-center">
+                        <span className={`${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{renderWallet().type}</span>
+
+                        {isDropdown && (
+                            <span
+                                className={classNames('ml-1 text-txtSecondary dark:text-txtSecondary-dark transition-transform duration-50', {
+                                    'rotate-180': isOpenList
+                                })}
+                            >
+                                <ArrowDropDownIcon color="currentColor" size={16} />
+                            </span>
+                        )}
+                        {dropList?.()}
+                    </div>
+                </div>
+            );
+        },
+        [t]
+    );
 
     // Render Handler
     const renderWalletSelect = useCallback(() => {
@@ -463,10 +469,10 @@ const TransferModal = ({ isMobile, alert }) => {
                         <ArrowForwardIcon color="currentColor" size={16} />
                     </div>
                     <button
-                        disabled={state.fromWallet === WalletType.BROKER}
-                        className={`rounded-full hover:opacity-75 transition  cursor-pointer select-none
-                    ${state.fromWallet === WalletType.BROKER && 'cursor-not-allowed'}
-                    `}
+                        disabled={isNotAllowToRevert}
+                        className={classNames('rounded-full hover:opacity-75 transition  cursor-pointer select-none', {
+                            'cursor-not-allowed': isNotAllowToRevert
+                        })}
                         onClick={revertWallet}
                     >
                         <SyncAltIcon size={24} />

@@ -21,6 +21,7 @@ import SearchBoxV2 from 'components/common/SearchBoxV2';
 import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
 import Image from 'next/image';
+import { BxChevronDown } from 'components/svg/SvgIcon';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -210,7 +211,7 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
 
     const renderEstWallet = useCallback(() => {
         return (
-            <div className="mt-[24px] md:mt-12 flex items-center justify-between">
+            <div className="flex items-center justify-between">
                 <div className="hidden md:flex rounded-full dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
                     <Image src={getS3Url('/images/nao/ic_nao.png')} width={32} height={32} />
                     {/* <SvgWalletFutures size={32} /> */}
@@ -275,46 +276,59 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                 addClass={`mt-5 !p-8 rounded-xl 
              ${currentTheme === THEME_MODE.DARK ? ' bg-bgTabInactive-dark border border-divider-dark' : ' bg-white shadow-card_light border-none'}`}
             >
-                <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 flex justify-between items-end">
-                    <div>
+                <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 ">
+                    <div className="flex w-full items-center justify-between mb-6 md:mb-12 ">
                         <EstBalance onClick={() => setIsHideAsset(!isHideAsset)} isHide={isHideAsset} isSmallScreen={isSmallScreen} />
-                        {renderEstWallet()}
+                        <Link href={'/nao/stake'} passHref>
+                            <a className="block">
+                                <ButtonV2 className="!h-auto !py-0 items-center font-semibold space-x-2" variants="text">
+                                    <span>NAO Goverance</span>
+                                    <BxChevronDown color="currentColor" size={16} />
+                                </ButtonV2>
+                            </a>
+                        </Link>
                     </div>
+                    <div className="flex justify-between items-end">
+                        {renderEstWallet()}
+                        <div className="hidden md:block">
+                            <div className="flex space-x-3 justify-end h-full w-full ">
+                                <ButtonV2
+                                    onClick={() =>
+                                        dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.NAO_FUTURES, toWallet: WalletType.SPOT }))
+                                    }
+                                    className="px-6 py-3 !w-auto !font-semibold !text-base"
+                                >
+                                    {t('common:transfer')}
+                                </ButtonV2>
 
-                    <div className="hidden md:block">
-                        <div className="flex space-x-3 justify-end h-full w-full ">
-                            <ButtonV2
-                                onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.NAO_FUTURES, toWallet: WalletType.SPOT }))}
-                                // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
-                                className="px-6 py-3 !w-auto !font-semibold !text-base"
-                            >
-                                {t('common:transfer')}
-                            </ButtonV2>
-
-                            <ButtonV2 variants="secondary" className="px-6 py-3 !font-semibold !text-base !w-auto">
-                                Thống kê
-                            </ButtonV2>
+                                <Link href={'/nao'} passHref>
+                                    <a className="block">
+                                        <ButtonV2 variants="secondary" className="px-6 py-3 !font-semibold !text-base !w-auto">
+                                            Thống kê
+                                        </ButtonV2>
+                                    </a>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
                 {renderAvailableBalance()}
             </MCard>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 md:hidden  mt-6">
                 <ButtonV2
                     onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.NAO_FUTURES, toWallet: WalletType.SPOT }))}
-                    // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
-                    className="py-3 !font-semibold !text-base w-full md:hidden mt-6"
+                    className="py-3 !font-semibold !text-base w-full"
                 >
                     {t('common:transfer')}
                 </ButtonV2>
-                <ButtonV2
-                    variants="secondary"
-                    // onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.NAO_FUTURES, toWallet: WalletType.SPOT }))}
-                    // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
-                    className="py-3 !font-semibold !text-base w-full md:hidden mt-6"
-                >
-                    Thống kê
-                </ButtonV2>
+
+                <Link href={'/nao'} passHref>
+                    <a className="block w-full">
+                        <ButtonV2 variants="secondary" className="py-3 !font-semibold !text-base w-full">
+                            Thống kê
+                        </ButtonV2>
+                    </a>
+                </Link>
             </div>
 
             <div className="mt-12 md:mt-16 flex items-center justify-between">
