@@ -252,7 +252,7 @@ const MarketTable = ({
         const translater = (key) => {
             switch (key) {
                 case 'pair':
-                    return language === 'vi' ? 'Cặp' : 'Pair';
+                    return <span className='pl-10 sm:pl-14'>{language === 'vi' ? 'Cặp' : 'Pair'}</span>;
                 case 'last_price':
                     return language === 'vi' ? 'Giá gần nhất' : 'Last Price';
                 case 'change_24h':
@@ -381,7 +381,7 @@ const MarketTable = ({
                             favoriteRefresher={restProps.favoriteRefresher}
                         />
                     );
-                },
+                }
             },
             {
                 key: 'p',
@@ -390,10 +390,14 @@ const MarketTable = ({
                 align: 'right',
                 width: 168,
                 sortable: true,
-                render: (row, item) => <div>
-                    <div className="whitespace-nowrap">{formatPrice(row)}</div>
-                    <div className='text-txtSecondary dark:text-txtSecondary-dark font-normal text-xs'>${formatPrice(item?.q === 'VNDC' ? item?.p / 23415 : restProps.referencePrice[`${item?.q}/USD`] * item?.p, 4)}</div>
-                </div>
+                render: (row, item) => (
+                    <div>
+                        <div className="whitespace-nowrap">{formatPrice(row)}</div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark font-normal text-xs">
+                            ${formatPrice(item?.q === 'VNDC' ? item?.p / 23415 : restProps.referencePrice[`${item?.q}/USD`] * item?.p, 4)}
+                        </div>
+                    </div>
+                )
             },
             {
                 key: 'change_24h',
@@ -439,9 +443,9 @@ const MarketTable = ({
                 key: 'operation',
                 dataIndex: 'operation',
                 align: 'center',
-                width: (restProps.tabIndex === 1 || (restProps.tabIndex === 0 && restProps.favType === 0)) ? 224 : 164,
+                width: restProps.tabIndex === 1 || (restProps.tabIndex === 0 && restProps.favType === 0) ? 224 : 164,
                 render: (_row, item) => renderTradeLink(item.b, item.q, language, tradingMode)
-            },
+            }
         ];
 
         return (
@@ -459,7 +463,7 @@ const MarketTable = ({
                 showPaging={false}
                 height={'300px'}
                 tableStyle={{
-                    padding: '20px 16px',
+                    padding: '12px 16px',
                     headerStyle: {
                         padding: '0px'
                     },
@@ -793,7 +797,7 @@ const Pair = ({ item, width, tradingMode, lang = 'vi', futuresConfigs, favoriteL
     const { baseAsset, baseAssetId, quoteAsset, quoteAssetId } = initMarketWatchItem(item);
 
     return (
-        <div className='flex items-center space-x-4'>
+        <div className='flex items-center space-x-8'>
             {favoriteList && (
                 <FavActionButton
                     b={{
