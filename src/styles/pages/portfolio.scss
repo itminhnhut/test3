@@ -1,25 +1,19 @@
-
-// .tooltip-caret-left {
-//     position: absolute;
-//     width: 0;
-//     height: 0;
-//     border-top: 5px solid transparent;
-//     border-bottom: 5px solid transparent;
-//     border-right: 5px solid #1c232e; /* Màu của caret */
-//     left: -5px; /* Đặt vị trí bên trái của caret */
-//     top: 50%; /* Đặt vị trí dọc của caret */
-//     transform: translateY(-50%); /* Điều chỉnh vị trí dọc của caret */
-// }
+.tooltip-caret {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-right: 5px solid #1c232e; /* Màu của caret */
+    left: -5px; /* Đặt vị trí bên trái của caret */
+    top: 50%; /* Đặt vị trí dọc của caret */
+    transform: translateY(-50%); /* Điều chỉnh vị trí dọc của caret */
+}
 
 .tooltip-caret-left {
     position: absolute;
-    // width: 0;
-    // height: 0;
-
-    border-radius: 50%; /* Create a circular shape */
-    border: 2px solid red; /* Set the border width and color */
-
-
+    width: 0;
+    height: 0;
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
     border-right: 5px solid #1c232e; /* Màu của caret */

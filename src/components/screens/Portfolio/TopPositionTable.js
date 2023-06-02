@@ -1,10 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import React from 'react';
-import {
-    formatNumber,
-    formatTime,
-    formatNanNumber
-} from 'redux/actions/utils';
+import { formatNumber, formatTime, formatNanNumber } from 'redux/actions/utils';
 
 import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
@@ -21,6 +17,7 @@ import Skeletor from 'components/common/Skeletor';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import MCard from 'components/common/MCard';
+import TextCopyable from '../Account/TextCopyable';
 
 const LIST_TABS = [
     { id: 1, localized: 'portfolio:highest' },
@@ -72,6 +69,14 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
     const columns = useMemo(
         () => [
             {
+                key: 'displaying_id',
+                dataIndex: 'displaying_id',
+                title: 'ID',
+                align: 'left',
+                width: 136,
+                render: (v) => <TextCopyable text={v} />
+            },
+            {
                 key: 'closed_at',
                 dataIndex: 'closed_at',
                 title: t('common:time'),
@@ -120,17 +125,6 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                             <PriceChangePercent priceChangePercent={v / item?.margin} className="!justify-start !text-base" />
                         </div>
                     );
-                    // return (
-                    //     <OrderProfit
-                    //         className="w-full"
-                    //         key={item.displaying_id}
-                    //         order={item}
-                    //         initPairPrice={item.close_price}
-                    //         setShareOrderModal={() => setShareOrder(item)}
-                    //         decimal={isVndc ? item?.decimalSymbol : item?.decimalSymbol + 2}
-                    //         isTabHistory
-                    //     />
-                    // );
                 }
             },
             {
@@ -148,14 +142,6 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                 align: 'right',
                 width: 163,
                 render: (v, item) => formatNumber(v, item?.decimalScalePrice, 0, true)
-            },
-            {
-                key: 'displaying_id',
-                dataIndex: 'displaying_id',
-                title: t('portfolio:position_id'),
-                align: 'right',
-                width: 136,
-                render: (v) => `ID #${v}`
             }
         ],
         [dataTable]
@@ -298,7 +284,8 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                 scroll={{ x: true }}
                 limit={LIMIT_ROW}
                 skip={0}
-                pagingClassName="border-none"
+                noBorder={true}
+                // pagingClassName="border-none"
                 height={350}
                 tableStyle={{ fontSize: '16px', padding: '16px', rcTableContent: { 'padding-bottom': '46px' } }}
                 textEmptyCustom={t('portfolio:no_position_recorded')}
@@ -344,8 +331,8 @@ const ModalDetailsPosition = ({ value, isVndc, t }) => {
                     <div>{formatNumber(order_value, decimalScalePrice, 0, true)}</div>
                 </div>
                 <div className="flex justify-between items-center mt-2.5">
-                    <div className="txtSecond-3">{t('portfolio:position_id')}</div>
-                    <div>{`ID #${displaying_id}`}</div>
+                    <div className="txtSecond-3">ID</div>
+                    <TextCopyable text={displaying_id}/>
                 </div>
             </MCard>
         </div>

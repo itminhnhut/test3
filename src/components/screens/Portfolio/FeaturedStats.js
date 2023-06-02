@@ -96,7 +96,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                     ) : (
                         <div className="text-right">
                             <span className="txtPri-1">{dataOverview?.totalPositions?.value}</span>
-                            <span className="txtSecond-2">{` (${dataOverview?.countLongPositions?.doc_count} ${t('common:buy')} - ${dataOverview?.countShortPositions?.doc_count} ${t('common:sell')})`}</span>
+                            <span className="txtSecond-2">{` (${dataOverview?.countLongPositions?.doc_count || 0} ${t('common:buy')} - ${dataOverview?.countShortPositions?.doc_count || 0} ${t('common:sell')})`}</span>
                         </div>
                     )}
                 </div>

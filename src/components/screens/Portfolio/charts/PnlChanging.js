@@ -443,14 +443,14 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
 
     if (!tooltipCaretEl) {
         tooltipCaretEl = document.createElement('div');
-        // tooltipCaretEl.style.width = barEl.width;
-        // tooltipCaretEl.style.height = barEl.width;
-        // console.log("___________", barEl);
+        // tooltipCaretEl.style.width = '20px'; // barEl.width;
+        // tooltipCaretEl.style.height = '20px'; //barEl.width;
+        // tooltipCaretEl.style.left = '-20px'; //barEl.width;
         tooltipCaretEl.classList.add(tooltipCaretClassName);
         tooltipEl.appendChild(tooltipCaretEl);
     }
 
-    tooltipCaretEl.classList.add('tooltip-caret');
+    tooltipCaretEl.classList.add(tooltipCaretClassName);
     tooltipCaretEl.style.top = tooltipEl.offsetHeight / 2 + 'px'; // Đặt vị trí dọc của caret
 
     // tooltipCaretEl.style.left = caretX + 'px'; // Đặt vị trí ngang của caret
@@ -467,11 +467,11 @@ const parseTitle = (stringDate, interval, isDetails = false) => {
             title = formatTime(curDate, isDetails ? 'dd/MM/yyyy' : 'dd/MM');
             break;
         case INTERVAL.WEEK:
-            if(!isDetails) title = formatTime('dd/MM')
-            else title = formatTime('dd/MM/yyyy') + ' - ' + formatTime(addWeeks(curDate, 1),  'dd/MM/yyyy');
+            if(!isDetails) title = formatTime(curDate, 'dd/MM')
+            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addWeeks(curDate, 1),  'dd/MM/yyyy');
             break;
         case INTERVAL.MONTH:
-            if(!isDetails) title = formatTime('MM/yyyy')
+            if(!isDetails) title = formatTime(curDate, 'MM/yyyy')
             else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
             break;
         default:
