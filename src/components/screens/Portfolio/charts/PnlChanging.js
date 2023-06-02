@@ -303,7 +303,7 @@ const getOrCreateTooltip = (chart, isDark) => {
     tooltipEl.style.position = 'absolute';
     tooltipEl.style.transform = 'translate(-50%, 0)';
     tooltipEl.style.transition = 'all .1s ease';
-    tooltipEl.style.width = '350px';
+    tooltipEl.style.width = 'auto';
     tooltipEl.style.height = '88px';
 
     const table = document.createElement('table');
@@ -405,29 +405,47 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
         tableRoot.appendChild(tableBody);
     }
 
-    const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+    const { offsetLeft: positionX, offsetTop: positionY, offsetWidth: chartWidth } = chart.canvas;
     const tooltipWidth = tooltipEl.offsetWidth;
     const tooltipHeight = tooltipEl.offsetHeight;
 
-    /**
-     * tooltip.caretX: tọa độ x của current bar
-     */
 
     const datasetIndex = tooltip.dataPoints[0].datasetIndex; // Get the index of the hovered dataset
-    // const barWidth = chart.getDatasetMeta(datasetIndex).data[tooltip.dataPoints[0].index].width; // Get the width of the hovered Bar column
     const barEl = chart.getDatasetMeta(datasetIndex)?.data[dataIndex];
-    tooltipEl.style.left = positionX + barEl.x + barEl.width / 2 + tooltipWidth / 2 + 12 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
-    tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
-    tooltipEl.style.font = tooltip.options.bodyFont.string;
-    tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
-    tooltipEl.style.opacity = 1;
+    /**
+     * tooltip.caretX: tọa độ x của current bar
+     * barEl.width: độ rộng của current bar
+     * barEl.height: độ cao của current bar
+     */
+
+    // Trường hợp những Bar cuối sẽ bị overflow
+    let tooltipCaretClassName;
+
+    if(tooltip.caretX + tooltipWidth > chartWidth) {
+        tooltipEl.style.left = positionX + barEl.x - tooltipWidth / 2 - 12 - barEl.width / 2 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
+        tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
+        tooltipEl.style.font = tooltip.options.bodyFont.string;
+        tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+        tooltipEl.style.opacity = 1;
+        tooltipCaretClassName = 'tooltip-caret-right'
+    } else {
+        tooltipEl.style.left = positionX + barEl.x + barEl.width / 2 + tooltipWidth / 2 + 12 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
+        tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
+        tooltipEl.style.font = tooltip.options.bodyFont.string;
+        tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+        tooltipEl.style.opacity = 1;
+        tooltipCaretClassName = 'tooltip-caret-left'
+    }
 
     // Create caret:
-    const tooltipCaretClassName = 'tooltip-caret';
     let tooltipCaretEl = tooltipEl.querySelector(`.${tooltipCaretClassName}`);
+    // const x = document.createElement('div');
 
     if (!tooltipCaretEl) {
         tooltipCaretEl = document.createElement('div');
+        // tooltipCaretEl.style.width = barEl.width;
+        // tooltipCaretEl.style.height = barEl.width;
+        // console.log("___________", barEl);
         tooltipCaretEl.classList.add(tooltipCaretClassName);
         tooltipEl.appendChild(tooltipCaretEl);
     }
@@ -449,10 +467,12 @@ const parseTitle = (stringDate, interval, isDetails = false) => {
             title = formatTime(curDate, isDetails ? 'dd/MM/yyyy' : 'dd/MM');
             break;
         case INTERVAL.WEEK:
-            title = formatTime(curDate, isDetails ? 'dd/MM/yyyy' : 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), isDetails ? 'dd/MM/yyyy' : 'dd/MM');
+            if(!isDetails) title = formatTime('dd/MM')
+            else title = formatTime('dd/MM/yyyy') + ' - ' + formatTime(addWeeks(curDate, 1),  'dd/MM/yyyy');
             break;
         case INTERVAL.MONTH:
-            title = formatTime(curDate, isDetails ? 'dd/MM/yyyy' : 'MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), isDetails ? 'dd/MM/yyyy' : 'MM/yyyy');
+            if(!isDetails) title = formatTime('MM/yyyy')
+            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
             break;
         default:
             break;
