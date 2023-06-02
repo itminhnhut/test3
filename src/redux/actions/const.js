@@ -1,7 +1,9 @@
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+
 export const EPS = 0.00000001;
 
 export const LOCAL_STORAGE_KEY = {
-    THEME: 'theme',
+    THEME: 'theme'
 };
 
 const TokenConfigNetwork = {
@@ -15,7 +17,7 @@ const TokenConfigNetwork = {
     ETHEREUM_CLASSIC: 'ETHEREUM_CLASSIC',
     VITE_CHAIN: 'VITE_CHAIN',
     BINANCE_SMART_CHAIN: 'BINANCE_SMART_CHAIN',
-    THETA: 'THETA',
+    THETA: 'THETA'
 };
 
 export const TokenConfigV1 = {
@@ -30,7 +32,7 @@ export const TokenConfigV1 = {
         [TokenConfigNetwork.BITCOIN]: 7,
         [TokenConfigNetwork.VITE_CHAIN]: 8,
         [TokenConfigNetwork.BINANCE_SMART_CHAIN]: 9,
-        [TokenConfigNetwork.THETA]: 10,
+        [TokenConfigNetwork.THETA]: 10
     },
     Type: {
         BITCOIN: 'BITCOIN',
@@ -45,7 +47,7 @@ export const TokenConfigV1 = {
         KARDIA_CHAIN_NATIVE: 'KARDIA_CHAIN_NATIVE',
         VITE_CHAIN_TOKEN: 'VITE_CHAIN_TOKEN',
         BEP20: 'BEP20',
-        THETA_TOKEN: 'THETA_TOKEN',
+        THETA_TOKEN: 'THETA_TOKEN'
     },
     HashRegex: {
         FIAT: '',
@@ -58,13 +60,14 @@ export const TokenConfigV1 = {
         TomoChain: '^(0x)[0-9A-Fa-f]{40}$',
         THETA_TOKEN: '^(0x)[0-9A-Fa-f]{40}$',
         VITE_CHAIN_TOKEN: '^(vite_)[a-z0-9]{50}$',
-        VITEMEMO: '\\w{0,120}',
-    },
+        VITEMEMO: '\\w{0,120}'
+    }
 };
 
 export const TRADING_MODE = {
     EXCHANGE: 1,
     FUTURES: 2,
+    NAO: 3
 };
 
 export const customModalStyles = {
@@ -78,16 +81,16 @@ export const customModalStyles = {
         border: 'none',
         overflow: 'inherit',
         width: 'auto',
-        overlay: { zIndex: 1000000 },
+        overlay: { zIndex: 1000000 }
     },
     overlay: {
         zIndex: 9999,
-        background: 'rgba(0,0,0,0.8)',
-    },
+        background: 'rgba(0,0,0,0.8)'
+    }
 };
 export const UserPrefs = {
     OPENING_CHARTS: 'opening_charts',
-    CONFIRM_CLOSING_ORDER: 'confirm_closing_order',
+    CONFIRM_CLOSING_ORDER: 'confirm_closing_order'
 };
 
 export const MetamaskError = {
@@ -95,12 +98,12 @@ export const MetamaskError = {
     WRONG_NETWORK: 'wrong_network',
     NOT_INSTALLED: 'not_installed',
     NO_ACCOUNT: 'no_account',
-    UNKNOWN_ERROR: 'unknown_error',
+    UNKNOWN_ERROR: 'unknown_error'
 };
 
 export const NavigationMode = {
     MOBILE: 'mobile',
-    DESKTOP: 'desktop',
+    DESKTOP: 'desktop'
 };
 
 export const STARRED_CURRENCY = 'STARRED_CURRENCY';
@@ -112,21 +115,19 @@ export const WalletAction = {
     DEPOSIT: 'DEPOSIT',
     WITHDRAW: 'WITHDRAW',
     HISTORY: 'HISTORY',
-    BALANCE: 'BALANCE',
+    BALANCE: 'BALANCE'
 };
 
 export const SocialSocketEvent = {
-    NOTIFICATION: 'notification',
+    NOTIFICATION: 'notification'
 };
 
 export const SOCIAL_USERNAME_REXEXP = /^[a-zA-Z][a-zA-Z0-9]{5,14}$/;
-export const SOCIAL_USERNAME_IN_TEXT =
-    /([^a-zA-Z0-9$]?)(@[a-zA-Z][a-zA-Z0-9]{5,14})([^a-zA-Z0-9$]?)/gm;
-export const REGEX_URL =
-    /(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-z]{2,6})\b([-a-zA-Z0-9@:%_+.~#?&/=]*)/gm;
+export const SOCIAL_USERNAME_IN_TEXT = /([^a-zA-Z0-9$]?)(@[a-zA-Z][a-zA-Z0-9]{5,14})([^a-zA-Z0-9$]?)/gm;
+export const REGEX_URL = /(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-z]{2,6})\b([-a-zA-Z0-9@:%_+.~#?&/=]*)/gm;
 
 export const ChartBroker = {
-    NAMI_FUTURE: 'NamiFuture',
+    NAMI_FUTURE: 'NamiFuture'
 };
 export const TradingViewSupportTimezone = [
     { timezone: 'Pacific/Honolulu', offset: -600 },
@@ -155,43 +156,43 @@ export const TradingViewSupportTimezone = [
     { timezone: 'Pacific/Norfolk', offset: 690 },
     { timezone: 'Pacific/Auckland', offset: 720 },
     { timezone: 'Pacific/Chatham', offset: 765 },
-    { timezone: 'Pacific/Fakaofo', offset: 780 },
+    { timezone: 'Pacific/Fakaofo', offset: 780 }
 ];
 
 export const ApiResultRegister = {
     EMAIL_NOT_VALID: 'email_not_valid',
     PASSWORD_NOT_VALID: 'password_not_valid',
     TEMPORARY_EMAIL: 'temporary_email',
-    EMAIL_EXISTED: 'email_existed',
+    EMAIL_EXISTED: 'email_existed'
 };
 
 export const ApiResultLogin = {
     USERNAME_NOT_FOUND: 'username_not_found',
     EMAIL_NOT_FOUND: 'email_not_found',
-    WRONG_PASSWORD: 'wrong_password',
+    WRONG_PASSWORD: 'wrong_password'
 };
 
 export const VerifyEmail = {
     SUCCESS: 'success',
-    FAILED: 'failed',
+    FAILED: 'failed'
 };
 
 export const ApiResultForgetPassword = {
     EMAIL_NOT_REGISTERED: 'email_not_registered',
     OTP_UNAVAILABLE: 'otp_unavailable',
-    PASSWORD_INVALID: 'password_invalid',
+    PASSWORD_INVALID: 'password_invalid'
 };
 
 export const ApiResultSetUsername = {
     EXISTED: 'username_existed',
     HAS_BEEN_SET: 'username_already_set',
     INVALID: 'invalid',
-    MISSING_DATA: 'missing_data',
+    MISSING_DATA: 'missing_data'
 };
 
 export const TotalPrize = {
     DOGE: 41000,
-    XLM: 1000,
+    XLM: 1000
 };
 
 export const ApiResultConvertTokenToETH = {
@@ -200,7 +201,7 @@ export const ApiResultConvertTokenToETH = {
     INSUFFICIENT: 'insufficient',
 
     ETH_NOT_ENOUGH_TO_CONVERT: 'eth_not_enough_to_convert',
-    UNKNOWN_ERROR: 'unknown_error',
+    UNKNOWN_ERROR: 'unknown_error'
 };
 
 export const ApiResultWithdrawETH = {
@@ -214,7 +215,7 @@ export const ApiResultWithdrawETH = {
     INVALID_OTP: 'invalid_otp',
     MISSING_OTP: 'missing_otp',
 
-    UNKNOWN_ERROR: 'unknown_error',
+    UNKNOWN_ERROR: 'unknown_error'
 };
 
 export const WithdrawalStatus = {
@@ -222,13 +223,13 @@ export const WithdrawalStatus = {
     COMPLETED: 2,
     REJECTED: 3,
     WAITING_FOR_CONFIRMATIONS: 4,
-    WAITING_FOR_BALANCE: 5,
+    WAITING_FOR_BALANCE: 5
 };
 
 export const NotificationStatus = {
     EMITTED: 0,
     READ: 1,
-    DELETED: 2,
+    DELETED: 2
 };
 
 export const NotificationCategory = {
@@ -244,20 +245,20 @@ export const NotificationCategory = {
     MARKET_EXCHANGE: 9,
     CHALLENGE_MODE_SURVIVAL: 10,
     WAVES_BUY_NAMI: 12,
-    DEPOSIT_ERC20: 14,
+    DEPOSIT_ERC20: 14
 };
 
 export const ChallengeRoomStatus = {
     ALL: -1,
     PENDING: 0,
     STARTED: 1,
-    ENDED: 2,
+    ENDED: 2
 };
 
 export const UserChallengeRoomStatus = {
     JOINED: 1,
     EXITED: 0,
-    STOP_PLAY: 2,
+    STOP_PLAY: 2
 };
 
 export const ChallengeRoomType = {
@@ -273,7 +274,7 @@ export const ChallengeRoomType = {
     MODE_ALTCOIN: 7,
     MODE_RACING: 8,
     MODE_SURVIVAL: 9,
-    CHALLENGE_SURVIVAL: 10,
+    CHALLENGE_SURVIVAL: 10
 };
 
 export const UserRole = {
@@ -285,26 +286,26 @@ export const UserRole = {
     // Has role to create challenge survival room
     LEVEL_1: 6,
 
-    CHAT_SUPPORTER: 10,
+    CHAT_SUPPORTER: 10
 };
 
 export const ApiResultDeleteChat = {
     MISSING_DATA: 'missing_data',
     PERMISSION_DENIED: 'permission_denied',
-    UNKNOWN_ERROR: 'unknown_error',
+    UNKNOWN_ERROR: 'unknown_error'
 };
 
 export const MarketType = {
     BUY: 1,
     SELL: 2,
-    CLOSE: 3,
+    CLOSE: 3
 };
 
 export const ExchangeHistoryAction = {
     MATCH_ORDER: 1,
     CLOSE_ORDER: 2,
     MATCH_MARKET_ORDER: 3,
-    UPDATE_ORDER: 4,
+    UPDATE_ORDER: 4
 };
 
 export const ExchangeStatus = {};
@@ -313,23 +314,23 @@ export const ExchangeOrderStatus = {
     PENDING: 1,
     SUCCESS: 2,
     CLOSED: 3,
-    FAILED: 4,
+    FAILED: 4
 };
 export const ExchangeHistoryStatus = {
     MATCH_ORDER_SUCCESSFULLY: 1,
     USER_BACK_ETH: 2,
-    FORCE_BACK_ETH: 3,
+    FORCE_BACK_ETH: 3
 };
 
 export const ExchangeType = {
     BUY: 1,
     SELL: 2,
-    CLOSE: 3,
+    CLOSE: 3
 };
 
 export const ExchangeSellerFee = {
     LEVEL_1: 5, // Volume < 100$
-    LEVEL_2: 5, // Volume > 100$
+    LEVEL_2: 5 // Volume > 100$
 };
 
 export const ExchangeOrderResult = {
@@ -343,25 +344,25 @@ export const ExchangeOrderResult = {
     NOT_ENOUGH_ETH: 'NOT_ENOUGH_ETH',
     NOT_ENOUGH_CURRENCY: 'NOT_ENOUGH_CURRENCY',
     INVALID_TIME_BACK_ETH: 'INVALID_TIME_BACK_ETH',
-    UNKNOWN_ERROR: 'UNKNOWN_ERROR',
+    UNKNOWN_ERROR: 'UNKNOWN_ERROR'
 };
 
 export const ExchangeMode = {
     MARKET: 1,
     LIMIT: 2,
-    STOP_LIMIT: 3,
+    STOP_LIMIT: 3
 };
 
 export const ExchangeStopLimitType = {
     GREATER_OR_EQUAL: 1,
-    LESS_OR_EQUAL: 2,
+    LESS_OR_EQUAL: 2
 };
 export const DepositStatus = {
     PENDING: 0,
     COMPLETED: 1,
     WAITING_FOR_BLOCK_CONFIRMATION: 2,
     BLOCK_DENIED: 3,
-    CONFIRMED_WAIT_TO_DEPOSIT: 4,
+    CONFIRMED_WAIT_TO_DEPOSIT: 4
 };
 
 export const DepWdlStatus = {
@@ -371,13 +372,13 @@ export const DepWdlStatus = {
     DepositedWaitingForConfirmation: 4,
     TransferredWaitingForConfirmation: 5,
     WithdrawWaitingForBalance: 6, // When user withdraws, switches to this status when Nami's withdrawal wallet is not enough money
-    WithdrawWaitingForApproval: 7, // Admin verify
+    WithdrawWaitingForApproval: 7 // Admin verify
 };
 
 export const ChatResult = {
     CHAT_ANGRY: 'chat_angry',
     SPAM: 'spam',
-    UNKNOWN_ERROR: 'unknown_error',
+    UNKNOWN_ERROR: 'unknown_error'
 };
 
 export const LoginButtonPosition = {
@@ -387,14 +388,14 @@ export const LoginButtonPosition = {
     WEB_BANNER_HOME: 'web_banner_home',
     MOBILE_HEADER: 'mobile_header',
     MOBILE_MODAL: 'mobile_modal',
-    MOBILE_MIDDLE: 'mobile_middle',
+    MOBILE_MIDDLE: 'mobile_middle'
 };
 
 export const TfaResult = {
     ERR_MISMATCH_STATE: 'err_mismatch_state',
     AUTHENTICATOR_SECRET_INVALID: 'authenticator_secret_invalid',
     AUTHENTICATOR_SECRET_EXPIRED: 'authenticator_secret_expired',
-    INVALID_OTP: 'invalid_otp',
+    INVALID_OTP: 'invalid_otp'
 };
 
 export const TokenConfig = {
@@ -405,7 +406,7 @@ export const TokenConfig = {
         TOMO_CHAIN: 'TomoChain',
         ETHEREUM: 'Ethereum',
         TRON_NETWORK: 'TRON_NETWORK',
-        KARDIA_CHAIN: 'KARDIA_CHAIN',
+        KARDIA_CHAIN: 'KARDIA_CHAIN'
     },
     Type: {
         BITCOIN: 'BITCOIN',
@@ -420,8 +421,8 @@ export const TokenConfig = {
         KARDIA_CHAIN_NATIVE: 'KARDIA_CHAIN_NATIVE',
         VITE_CHAIN_TOKEN: 'VITE_CHAIN_TOKEN',
         BEP20: 'BEP20',
-        THETA_TOKEN: 'THETA_TOKEN',
-    },
+        THETA_TOKEN: 'THETA_TOKEN'
+    }
 };
 
 export const BuyBackTicket = {
@@ -429,8 +430,8 @@ export const BuyBackTicket = {
         PENDING: 0,
         REGISTED_SELL: 1,
         SOLD_SUCCESSFULLY: 2,
-        FAIL: 3,
-    },
+        FAIL: 3
+    }
 };
 
 export const SymbolTradingStatus = {
@@ -438,7 +439,7 @@ export const SymbolTradingStatus = {
     TRADING: 'TRADING',
     END_OF_DAY: 'END_OF_DAY',
     HALT: 'HALT',
-    BREAK: 'BREAK',
+    BREAK: 'BREAK'
 };
 
 export const DefaultExchangeSymbolConfig = {
@@ -449,35 +450,37 @@ export const DefaultExchangeSymbolConfig = {
     step_size: 0.00000001,
     min_qty: 0.00000001,
     max_qty: 900000,
-    min_notional: 15,
+    min_notional: 15
 };
 
 export const ThemeMode = {
     DARK: 'DARK',
-    LIGHT: 'LIGHT',
+    LIGHT: 'LIGHT'
 };
 
 export const DefaultThemeMode = ThemeMode.LIGHT;
 
 export const SpecialMode = {
     NORMAL: 0,
-    ECO: 1,
+    ECO: 1
 };
 
 export const WalletType = {
     SPOT: 'SPOT',
     MARGIN: 'MARGIN',
     FUTURES: 'FUTURES',
+    PARTNERS: 'PARTNERS',
     P2P: 'P2P',
     POOL: 'POOL',
     BROKER: 'BROKER',
     EARN: 'EARN',
     ONUS: 'ONUS',
+    NAO_FUTURES: 'NAO_FUTURES'
 };
 
 export const EarnWalletType = {
     STAKING: 'stake',
-    FARMING: 'farm',
+    FARMING: 'farm'
 };
 
 export const WalletTypeReducerKey = {
@@ -487,7 +490,7 @@ export const WalletTypeReducerKey = {
     [WalletType.P2P]: 'P2P',
     [WalletType.POOL]: 'POOL',
     [WalletType.BROKER]: 'BROKER',
-    [WalletType.EARN]: 'EARN',
+    [WalletType.EARN]: 'EARN'
 };
 
 export const WalletTypeName = {
@@ -495,12 +498,12 @@ export const WalletTypeName = {
     [WalletType.MARGIN]: '',
     [WalletType.FUTURES]: 'Futures Account',
     [WalletType.P2P]: '',
-    [WalletType.POOL]: '',
+    [WalletType.POOL]: ''
 };
 
 export const ApiStatus = {
     SUCCESS: 'ok',
-    ERROR: 'error',
+    ERROR: 'error'
 };
 
 export const PublicSocketEvent = {
@@ -513,47 +516,48 @@ export const PublicSocketEvent = {
     FUTURES_MINI_TICKER_UPDATE: 'futures:mini_ticker:update',
     FUTURES_MARK_PRICE_UPDATE: 'futures:mark_price:update',
     FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error',
+    FUTURE_PROCESSING_ORDER_ERROR_NAO: 'future:processing_order_error_nao',
     // FUTURES_RECENT_TRADE_ADD: 'futures:recent_trade:add',
 
     IEO_PERCENTAGE_UPDATE: 'ieo:project_update',
     IEO_TICKET_STATUS_UPDATE: 'ieo:buy_response',
-    CALCULATE_WITHDRAW_FEE: 'calculate_withdrawal_fee',
+    CALCULATE_WITHDRAW_FEE: 'calculate_withdrawal_fee'
 };
 
 export const ExchangeOrderEnum = {
     StopLimitType: {
         GREATER_OR_EQUAL: 1,
-        LESS_OR_EQUAL: 2,
+        LESS_OR_EQUAL: 2
     },
     Side: {
         BUY: 'BUY',
-        SELL: 'SELL',
+        SELL: 'SELL'
     },
     Status: {
         NEW: 'NEW',
         PARTIALLY_FILLED: 'PARTIALLY_FILLED',
         FILLED: 'FILLED',
         CANCELED: 'CANCELED',
-        FAILED: 'FAILED',
+        FAILED: 'FAILED'
     },
     Type: {
         MARKET: 'MARKET',
         LIMIT: 'LIMIT',
-        STOP_LIMIT: 'STOP_LIMIT',
+        STOP_LIMIT: 'STOP_LIMIT'
     },
 
     QuantityMode: {
         QUANTITY: 'QUANTITY',
-        QUOTE_QUANTITY: 'QUOTE_QUANTITY',
+        QUOTE_QUANTITY: 'QUOTE_QUANTITY'
     },
     NotificationType: {
         PLACE_ORDER: 'PLACE_ORDER',
-        CLOSE_ORDER: 'CLOSE_ORDER',
+        CLOSE_ORDER: 'CLOSE_ORDER'
     },
     LiquidityStatus: {
         HOLD: 'HOLD',
         TRANSFERRED: 'TRANSFERRED',
-        TRANSFERRED_ERROR: 'TRANSFERRED_ERROR',
+        TRANSFERRED_ERROR: 'TRANSFERRED_ERROR'
     },
     Result: {
         INVALID_USER: 'INVALID_USER',
@@ -575,12 +579,12 @@ export const ExchangeOrderEnum = {
         INVALID_QUANTITY: 'INVALID_QUANTITY',
         TOO_MUCH_ORDERS: 'TOO_MUCH_ORDERS',
         INSTRUMENTS_DO_NOT_MATCH: 'INSTRUMENTS_DO_NOT_MATCH',
-        INSTRUMENT_NOT_LISTED_FOR_TRADING_YET:
-            'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET',
+        INSTRUMENT_NOT_LISTED_FOR_TRADING_YET: 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET',
+        NAO_IS_MAINTAINED: "NAO_IS_MAINTAINED",
         INVALID_PRICE: 'INVALID_PRICE',
         INVALID_TICK_SIZE: 'INVALID_TICK_SIZE',
         INVALID_STEP_SIZE: 'INVALID_STEP_SIZE',
-        INVALID_MIN_NOTIONAL: 'INVALID_MIN_NOTIONAL',
+        INVALID_MIN_NOTIONAL: 'INVALID_MIN_NOTIONAL'
     },
     Filter: {
         PRICE_FILTER: 'PRICE_FILTER',
@@ -591,66 +595,64 @@ export const ExchangeOrderEnum = {
         MARKET_LOT_SIZE: 'MARKET_LOT_SIZE',
         MAX_NUM_ORDERS: 'MAX_NUM_ORDERS',
         MAX_NUM_ALGO_ORDERS: 'MAX_NUM_ALGO_ORDERS',
-        MAX_TOTAL_VOLUME: 'MAX_TOTAL_VOLUME',
-    },
+        MAX_TOTAL_VOLUME: 'MAX_TOTAL_VOLUME'
+    }
 };
 
 export const FuturesOrderEnum = {
-
     GroupStatus: {
         OPENING: 0,
-        HISTORY: 1,
+        HISTORY: 1
     },
     Status: {
         PENDING: 0,
         ACTIVE: 1,
-        CLOSED: 2,
+        CLOSED: 2
     },
     Side: {
         BUY: 'Buy',
-        SELL: 'Sell',
+        SELL: 'Sell'
     },
     Type: {
         MARKET: 'Market',
         LIMIT: 'Limit',
-        STOP: 'Stop',
+        STOP: 'Stop'
     },
     ReasonCloseCode: {
         NORMAL: 0,
         HIT_SL: 1,
         HIT_TP: 2,
         LIQUIDATE: 3,
-        HIT_LIMIT_CLOSE: 4,
+        HIT_LIMIT_CLOSE: 4
     },
     BitmexTransferError: {
         PROCESS_SUCCESSFULLY: 0,
         PLACE_ORDER_WITHOUT_SL_TP: 1, // Dat duoc lenh chinh nhung khong dat duoc lenh SL, TP
         ACTIVE_ORDER_ERROR: 2, // Lenh Stop hoac Limit duoc active nhung khong dat duoc SL, TP
-        HIT_SL_TP_ERROR: 3, // Hit SL hoac TP nhung khong dong duoc lenh con lai
+        HIT_SL_TP_ERROR: 3 // Hit SL hoac TP nhung khong dong duoc lenh con lai
     },
     PromoteProgram: {
         NORMAL: 0,
         LUCKY_MONEY_2020: 1,
-        AIRDROP_VNDC: 2,
+        AIRDROP_VNDC: 2
     },
     SpecialMode: {
         NORMAL: 0,
-        ONLY_LIMIT: 1,
+        ONLY_LIMIT: 1
     },
     // 30 60 90 120 -> Step 100
     LiquidityBroker: {
         BINANCE: 'BINANCE',
         BITMEX: 'BITMEX',
-        NAMI: 'NAMI',
+        NAMI: 'NAMI'
     },
     CloseAllOrderType: {
         ALL: 'ALL',
         PROFIT: 'PROFIT',
         LOSS: 'LOSS',
         PENDING: 'PENDING',
-        ACTIVE: 'ACTIVE',
-    },
-
+        ACTIVE: 'ACTIVE'
+    }
 };
 
 export const ExchangeFilterDefault = {
@@ -658,28 +660,28 @@ export const ExchangeFilterDefault = {
         filterType: 'PRICE_FILTER',
         minPrice: '0.00000001',
         maxPrice: '100000.00000000',
-        tickSize: '0.00010000',
+        tickSize: '0.00010000'
     },
     LOT_SIZE: {
         filterType: 'LOT_SIZE',
         minQty: '0.00000001',
         maxQty: '900000.00000000',
-        stepSize: '0.01000000',
+        stepSize: '0.01000000'
     },
     MIN_NOTIONAL: {
         filterType: 'MIN_NOTIONAL',
         minNotional: '10.00000000',
         applyToMarket: true,
-        avgPriceMins: 5,
-    },
+        avgPriceMins: 5
+    }
 };
 
 export const SpotFeePercentage = {
-    NORMAL: 0.0012,
+    NORMAL: 0.0012
 };
 
 export const SpotMarketPriceBias = {
-    NORMAL: 0.2 / 100,
+    NORMAL: 0.2 / 100
 };
 
 export const StatusBankTransfer = {
@@ -687,13 +689,13 @@ export const StatusBankTransfer = {
     Success: 2,
     Declined: 3,
     DepositedWaitingForConfirmation: 4,
-    TransferredWaitingForConfirmation: 5,
+    TransferredWaitingForConfirmation: 5
 };
 
 export const QueryWalletType = {
     spot: 'SPOT',
     broker: 'BROKER',
-    earn: 'EARN',
+    earn: 'EARN'
 };
 
 export const WithdrawResult = {
@@ -704,7 +706,7 @@ export const WithdrawResult = {
     AmountTooSmall: 'amount_too_small',
     AmountExceeded: 'amount_exceeded',
     NotEnoughBalance: 'not_enough_balance',
-    Unknown: 'unknown_error',
+    Unknown: 'unknown_error'
 };
 
 export const CategoryList = {
@@ -727,7 +729,7 @@ export const CategoryList = {
     SWAP_PLACE_ORDER: 'SWAP_PLACE_ORDER',
     SWAP_FEE: 'SWAP_FEE',
     STAKE_REWARD: 'STAKE_REWARD',
-    ATTLAS_MEMBERSHIP: 'ATTLAS_MEMBERSHIP',
+    ATTLAS_MEMBERSHIP: 'ATTLAS_MEMBERSHIP'
 };
 
 export const LAYOUT_VERSION = '1.0.8';
@@ -735,7 +737,7 @@ export const LS_KEYS = {
     SPOT_LAYOUT: `spot:layouts__${LAYOUT_VERSION}`,
     SPOT_LAYOUT_ON_SIDEBAR: `spot:isOnSidebar:layouts__${LAYOUT_VERSION}`,
     SPOT_ON_SIDEBAR: `spot:isOnSidebar__${LAYOUT_VERSION}`,
-    SPOT_MAX_CHART: `spot:maxChart__${LAYOUT_VERSION}`,
+    SPOT_MAX_CHART: `spot:maxChart__${LAYOUT_VERSION}`
 };
 
 export const OLD_LS_KEYS = [
@@ -770,7 +772,7 @@ export const OLD_LS_KEYS = [
     'spot:isOnSidebar:layouts__1.0.7',
     'spot:isOnSidebar__1.0.7',
     'spot:maxChart__1.0.7',
-    'spot:layout__1.0.7',
+    'spot:layout__1.0.7'
 ];
 
 export const KYC_STATUS = {
@@ -779,7 +781,7 @@ export const KYC_STATUS = {
     APPROVED: 2,
     ADVANCE_KYC: 3,
     APPROVED_PENDING_APPROVAL_ADVANCE: 4, // cập nhật thêm số cmnd + ảnh mặt
-    PENDING_APPROVAL_ADVANCE: 5, // user kyc từ đầu cập nhật hết
+    PENDING_APPROVAL_ADVANCE: 5 // user kyc từ đầu cập nhật hết
 };
 
 export const SECURITY_VERIFICATION = {
@@ -791,30 +793,29 @@ export const SECURITY_VERIFICATION = {
     ENABLE_PHONE_VERIFICATION: 5,
     CHANGE_NAME: 6,
     CHANGE_USERNAME: 7,
-    WITHDRAW_ONCHAIN: 8,
+    WITHDRAW_ONCHAIN: 8
 };
 
 export const DOWNLOAD_APP_LINK = {
     IOS: 'https://apps.apple.com/us/app/id1480302334',
-    ANDROID:
-        'https://play.google.com/store/apps/details?id=com.namicorp.exchange',
+    ANDROID: 'https://play.google.com/store/apps/details?id=com.namicorp.exchange'
 };
 
 export const CATEGORY_SPOT_SIGNAL = {
     ALL: 'nami_cat_all',
-    SIGNAL: 'nami_cat_signal',
+    SIGNAL: 'nami_cat_signal'
 };
 
 export const SPOT_LAYOUT_MODE = {
     SIMPLE: 'simple',
     PRO: 'pro',
-    FULLSCREEN: 'fullscreen',
+    FULLSCREEN: 'fullscreen'
 };
 
 export const ORDER_BOOK_MODE = {
     BIDS: 'bids',
     ASKS: 'asks',
-    ALL: 'all',
+    ALL: 'all'
 };
 
 export const UserSocketEvent = {
@@ -831,24 +832,28 @@ export const UserSocketEvent = {
     EXCHANGE_PLACE_MARKET_ORDER_RESULT: 'exchange:place_market_order_result',
     UPDATE_BALANCE: 'user:update_balance',
     FUTURES_OPEN_ORDER: 'future:update_opening_order',
+    FUTURES_OPEN_ORDER_NAO: 'future:update_opening_order_nao',
     FUTURE_DONE_CLOSING_ALL_ORDERS: 'future:done_closing_all_orders',
-    FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error'
+    FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error',
+    FUTURE_PROCESSING_ORDER_ERROR_NAO: 'future:processing_order_error_nao',
+    PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER',
+    SMART_OTP: 'SMART_OTP'
 };
 
 export const EarnOrder_Status = {
     SAVING: 1,
     FINISHED: 2,
-    CANCELLED: 0,
+    CANCELLED: 0
 };
 
 export const ChartMode = {
     SPOT: 'SPOT',
-    FUTURES: 'FUTURES',
+    FUTURES: 'FUTURES'
 };
 
 export const DefaultFuturesFee = {
     Nami: 0.06 / 100,
-    NamiFrameOnus: 0.06 / 100,
+    NamiFrameOnus: 0.06 / 100
 };
 
 export const TransactionCategory = {
@@ -871,5 +876,89 @@ export const TransactionCategory = {
     PAY_INTEREST_STAKE_TRANSACTION: 1019,
     FUTURE_FUNDING_FEE: 611,
     CONTEST_REWARD: 612,
-    REWARD_CENTER: 801,
+    REWARD_CENTER: 801
+};
+
+export const rateCurrency = {
+    VNDC: 23415,
+    USDT: 1
+};
+
+export const DefaultAvatar = 'https://nami-dev.sgp1.digitaloceanspaces.com/nami.exchange/images/preset_avatar/2/Len_cung_trang_11.png';
+
+export const GET_PARTNER_STATUS = {
+    INVALID_AMOUNT: 'INVALID_AMOUNT'
+};
+
+export const ApiResultCreateOrder = {
+    INVALID_OTP: 'INVALID_OTP',
+    TOO_MUCH_REQUEST: 'TOO_MUCH_REQUEST',
+    NOT_FOUND_PARTNER: 'NOT_FOUND_PARTNER',
+    NOT_ENOUGH_MONEY: 'NOT_ENOUGH_MONEY',
+    INVALID_AMOUNT: 'INVALID_AMOUNT',
+    EXCEEDING_PERMITTED_LIMIT: 'EXCEEDING_PERMITTED_LIMIT',
+    NOT_FOUND_ORDER: 'NOT_FOUND_ORDER',
+    SECRET_INVALID: 'SECRET_INVALID',
+    SOTP_INVALID: 'SOTP_INVALID',
+    SOTP_INVALID_EXCEED_TIME: 'SOTP_INVALID_EXCEED_TIME'
+};
+
+export const DEFAULT_PARTNER_MIN = {
+    [SIDE.SELL]: 100e3,
+    [SIDE.BUY]: 100e3
+};
+
+export const DEFAULT_PARTNER_MAX = {
+    [SIDE.SELL]: 500e6,
+    [SIDE.BUY]: 500e6
+};
+
+export const PartnerOrderStatus = {
+    PENDING: 0,
+    SUCCESS: 1,
+    REJECTED: 2,
+    DISPUTED: 3
+};
+
+export const PartnerPersonStatus = {
+    PENDING: 0,
+    TRANSFERRED: 1,
+    DISPUTED: 2
+};
+
+export const PartnerOrderLog = {
+    CREATED: 0,
+    CANCELED: 1,
+    REJECTED: 2,
+    ACCEPTED: 3,
+    TRANSFERRED_FIAT: 4,
+    RECEIVED_FIAT: 5,
+    UPLOADED: 6,
+    DISPUTED: 7,
+    COMPLETED_DISPUTE: 8,
+    TIMEOUT_NOT_ACCEPT: 9,
+    TIMEOUT_NOT_TRANSFER: 10,
+    TIMEOUT_NOT_RECEIVE: 11,
+    SYSTEM_UPDATE_SUCCESS: 12,
+    SYSTEM_UPDATE_REJECT: 13,
+    SYSTEM_UPDATE_DISPUTE: 14
+};
+
+export const PartnerOrderStatusLog = {
+    PENDING: 0,
+    PROCESSING: 1,
+    SUCCESS: 2,
+    REJECTED: 3,
+    DISPUTED: 4
+};
+
+export const PartnerAcceptStatus = {
+    PENDING: PartnerPersonStatus.PENDING,
+    ACCEPTED: PartnerPersonStatus.TRANSFERRED,
+    DENIED: PartnerPersonStatus.DISPUTED
+};
+
+export const PartnerReasonDisputed = {
+    TIME_OUT: 1,
+    USER_DISPUTED: 2
 };

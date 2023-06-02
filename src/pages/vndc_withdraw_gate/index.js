@@ -181,7 +181,6 @@ const ExternalWithdrawal = (props) => {
             available: getAvailableToken(WalletCurrency.NAC, balance),
         })
 
-        // console.log('>>> setWalletArr ', cloner)
 
         setWalletArr(cloner.reverse())
     }
@@ -316,12 +315,10 @@ const ExternalWithdrawal = (props) => {
         // console.log('>> walletArr ', walletArr)
         return walletArr.slice(0, range).map((item) => {
             const { currency, alias, des, available } = item
-            // console.log('>>> ', item)
             const availableRounded = roundToDown(
                 available,
                 DECIMAL_SCALES[currency]
             )
-            // console.log('>>> ', availableRounded, DECIMAL_SCALES[currency])
             const converted = formatNumber(availableRounded)
 
             // handle loading
@@ -713,9 +710,10 @@ const ExternalWithdrawal = (props) => {
             />
             <NoticePopup active={modal.isNotice} isDark={isDark}>
                 <div className='NoticePopup__Header'>{t('modal:notice')}</div>
-                <div className='NoticePopup__Content'>
+                <div className='NoticePopup__Content' >
                     <Key size={24} color='#03BBCC' />
-                    {t('common:sign_in_to_continue')}
+                    <div dangerouslySetInnerHTML={{ __html: t('common:sign_in_to_continue') }} />
+                    {/* {t('common:sign_in_to_continue')} */}
                     <a href='#' onClick={() => handleLogin(false)}>
                         {t('common:sign_in')}
                     </a>

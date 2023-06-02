@@ -1,26 +1,45 @@
 {
+    "kyc_step": {
+        "title": "Xác minh tài khoản",
+        "content": "Để bắt đầu quá trình xác minh tài khoản, vui lòng chuẩn bị đầy đủ các tài liệu sau:",
+        "step_1": "Thông tin cá nhân",
+        "step_2": "Phương thức thanh toán",
+        "step_3": "CMTND / CCCD / Hộ chiếu",
+        "step_4": "Quét diện mạo",
+        "scan": "Quét mã này bằng ứng dụng di động Nami Exchange để bắt đầu quá trình KYC"
+    },
+    "current_futures": {
+        "title": "Các tính năng hiện tại",
+        "buy_sell": "Mua và bán tiền điện tử qua ĐTKD",
+        "price_daily": "200,000,000 VNDC hàng ngày",
+
+        "deposit": "Giới hạn gửi tiền",
+        "withdrawal": "Giới hạn rút tiền",
+        "unlimited": "Không giới hạn",
+
+        "other": "Tính năng khác",
+        "reward": "Phần thưởng"
+    },
     "title": "Xác minh tài khoản",
     "title_2": "Yêu cầu xác minh",
-    "title_3": "Các tính năng hiện tại",
     "personal": "Thông tin cá nhân",
     "government": "ID do chính phủ cấp",
     "facial": "Nhận dạng khuân mặt",
     "timer": "Thời gian xét duyệt: 10 ngày",
     "qr_1": "Quét mã bằng ứng dụng Nami Exchange",
     "qr_2": "để bắt đầu quy trình KYC",
-    "buy_sell": "Mua và bán tiền điện tử thông qua Partner Limit",
-    "price_daily": "200,000,000 VNDC hàng ngày",
-    "withdrawal": "Giới hạn rút tiền",
-    "unlimited": "Không giới hạn",
-    "deposit": "Giới hạn gửi tiền",
-    "other": "Tính năng khác",
-    "reward": "Phần thưởng",
     "account": {
         "not_verified": "Tài khoản của bạn chưa được xác minh.",
-        "process": "KYC của bạn đang trong quá trình xét duyệt",
-        "congratulations": "Xin chúc mừng!",
+        "not_verified_content": "Hoàn tất xác minh để truy cập các dịch vụ của Nami",
+
+        "process": "Yêu cầu xác minh đang chờ duyệt",
+        "process_content": "Yêu cầu xác minh của bạn sẽ được xử lý trong thời gian sớm nhất. Hệ thống sẽ gửi thông báo qua email và ứng dụng khi tài khoản xác thực thành công.",
+
+        "congratulations": "Chúc mừng!",
+
         "not_verified_2": "Hoàn tất xác minh để truy cập các dịch vụ của Nami",
-        "verified": "Tài khoản của bạn đã được xác minh thành công!"
+        "verified": "Tài khoản của bạn đã được xác minh."
     },
-    "title_tab": "Nhận dạng"
+    "title_tab": "Nhận dạng",
+    "kyc_title": "Xác thực tài khoản"
 }

@@ -1,337 +1,444 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis';
-import { FuturesOrderTypes, FuturesStopOrderMode } from 'redux/reducers/futures';
+import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { useTranslation } from 'next-i18next';
-import { formatNumber } from 'redux/actions/utils';
-import { ApiStatus } from 'redux/actions/const';
-import FuturesOrderButtonsGroup from 'components/screens/Futures/PlaceOrder/OrderModule/OrderButtonsGroup';
-import FuturesOrderUtilities from 'components/screens/Futures/PlaceOrder/OrderModule/OrderUtilities';
+import { formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp, setTransferModal } from 'redux/actions/utils';
 import FuturesOrderSlider from 'components/screens/Futures/PlaceOrder/OrderModule/OrderSlider';
-import FuturesOrderMarket from 'components/screens/Futures/PlaceOrder/OrderModule/OrderMarket';
-import FuturesMarketWatch from 'models/FuturesMarketWatch';
-import FuturesOrderLimit from 'components/screens/Futures/PlaceOrder/OrderModule/OrderLimit';
 import FuturesOrderSLTP from 'components/screens/Futures/PlaceOrder/OrderModule/OrderSLTP';
-import TradingLabel from 'components/trade/TradingLabel';
-import Divider from 'components/common/Divider';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
 import FuturesOrderButtonsGroupVndc from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { VndcFutureOrderType, getMaxQuoteQty } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import TradingInput from 'components/trade/TradingInput';
+import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum, WalletType } from 'redux/actions/const';
+import { AddCircleColorIcon } from 'components/svg/SvgIcon';
+import usePrevious from 'hooks/usePrevious';
+import floor from 'lodash/floor';
+import { useDispatch } from 'react-redux';
+import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
-const FuturesOrderModule = ({
-    markPrice,
-    currentType,
-    currentLeverage,
-    pairConfig,
-    price,
-    stopPrice,
-    size,
-    quantity,
-    selectedAsset,
-    setStopPrice,
-    setAsset,
-    handleQuantity,
-    handlePrice,
-    positionMode,
-    availableAsset,
-    isReversedAsset,
-    lastPrice,
-    maxBuy,
-    maxSell,
-    stopOrderMode,
-    setStopOrderMode,
-    isVndcFutures,
-    ask,
-    bid,
-    isAuth,
-    side,
-    pair,
-    maxSize
-}) => {
-    // ? Use hooks
-    const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0)
-    const firstTime = useRef(true);
-
-    const { t } = useTranslation()
-    const usdRate = useSelector((state) => state.utils.usdRate)
+const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndcFutures, isAuth, side, decimals, pairPrice, pair }) => {
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+    const ask = pairPrice?.ask ?? 0;
+    const bid = pairPrice?.bid ?? 0;
+    const lastPrice = pairPrice?.lastPrice ?? 0;
+    const oldPair = usePrevious(pair);
+    const mount = useRef(false);
+    const [price, setPrice] = useState(lastPrice);
+    const [quoteQty, setQuoteQty] = useState(0);
     const [orderSlTp, setOrderSlTp] = useState({
         sl: '',
         tp: ''
-    })
-
-    const countDecimals = (value) => {
-        if (Math.floor(value) === value || !value) return 0;
-        return value.toString().split(".")[1]?.length || 0;
-    }
-
-    const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
-    const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
-    const decimalScaleQtyMarket = pairConfig?.filters.find(rs => rs.filterType === 'MARKET_LOT_SIZE');
+    });
+    const refSlider = useRef(null);
 
     useEffect(() => {
-        setTimeout(() => {
-            firstTime.current = true;
-        }, 100);
-    }, [pair, side, currentType])
+        mount.current = false;
+    }, [pair]);
 
     useEffect(() => {
-        if (firstTime.current && lastPrice) {
-            firstTime.current = false;
-            setOrderSlTp({
-                sl: +(lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05)),
-                tp: +(lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05)),
-            })
+        if (!mount.current && lastPrice) {
+            mount.current = true;
         }
-    }, [currentType, side, pair, lastPrice, firstTime.current])
+    }, [mount.current, lastPrice]);
 
+    useEffect(() => {
+        if (!mount.current) return;
+        setPrice(lastPrice);
+    }, [mount.current, type, decimals]);
 
-    const inputValidator = (type, isStop) => {
+    useEffect(() => {
+        if (!mount.current) return;
+        onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? lastPrice : price);
+    }, [side, type, decimals, leverage, price]);
+
+    useEffect(() => {
+        if (!localStorage.getItem('web_auto_type_tp_sl')) {
+            localStorage.setItem('web_auto_type_tp_sl', JSON.stringify({ auto: true }));
+        }
+    }, [pair]);
+
+    const onChangeSlTp = (leverage, _lastPrice) => {
+        let autoTypeInput = localStorage.getItem('web_auto_type_tp_sl');
+        if (autoTypeInput) {
+            autoTypeInput = JSON.parse(autoTypeInput);
+            if (autoTypeInput.auto) {
+                const _sl = +getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price) || '';
+                const _tp = +getSuggestTp(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price) || '';
+                if (leverage <= 10) {
+                    setOrderSlTp({ tp: '', sl: '' });
+                } else if (leverage <= 20) {
+                    setOrderSlTp({ tp: '', sl: _sl });
+                }
+                if (leverage > 20) {
+                    setOrderSlTp({ tp: _tp, sl: _sl });
+                }
+            }
+        }
+    };
+
+    useEffect(() => {
+        const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true, isAuth);
+        refSlider.current.changePercent(floor(_maxQuoteQty, decimals?.symbol));
+    }, [leverage]);
+
+    const maxQuoteQty = useMemo(() => {
+        const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true, isAuth);
+        return floor(_maxQuoteQty, decimals?.symbol);
+    }, [price, type, side, leverage, availableAsset, pairPrice, pairConfig]);
+
+    const minQuoteQty = useMemo(() => {
+        return pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional ?? (isVndcFutures ? 100000 : 5);
+    }, [pairConfig]);
+
+    const inputValidator = (key, isText = false) => {
         let isValid = true,
-            msg = null
-
-        const lotSize =
-            pairConfig?.filters?.find((o) =>
-                [
-                    FuturesOrderTypes.Market,
-                    FuturesOrderTypes.StopMarket,
-                ].includes(currentType)
-                    ? o?.filterType === 'MARKET_LOT_SIZE'
-                    : o?.filterType === 'LOT_SIZE'
-            ) || {}
-
-        const priceFilter =
-            pairConfig?.filters?.find((o) => o.filterType === 'PRICE_FILTER') ||
-            {}
-
-        switch (type) {
+            msg = null;
+        const { sl, tp } = orderSlTp;
+        if (oldPair !== pair) return { isValid, msg };
+        const stopPrice = price;
+        let min = 0,
+            max = 0;
+        switch (key) {
             // input check
-            case 'quantity':
-                const _max = isReversedAsset
-                    ? lotSize?.maxQty * baseAssetUsdValue
-                    : lotSize?.maxQty
-                const _min = isReversedAsset
-                    ? lotSize?.minQty * baseAssetUsdValue
-                    : lotSize?.minQty
-                const decimals = countDecimals(decimalScaleQtyLimit?.stepSize)
-                const _displayingMax = isReversedAsset
-                    ? `${formatNumber(_max, decimals, 0, true)} ${pairConfig?.quoteAsset} ≈ ${formatNumber(lotSize?.maxQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
-                    : `${formatNumber(maxSize, decimals, 0, true)} ${pairConfig?.baseAsset}`
-                const _displayingMin = isReversedAsset
-                    ? `${formatNumber(_min, decimals, 0, true)} ${pairConfig?.quoteAsset} ≈ ${formatNumber(lotSize?.minQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
-                    : `${formatNumber(lotSize?.minQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
-
-                if (quantity?.both < +_min) {
-                    msg = `${t('futures:minimum_qty')} ${_displayingMin} `
-                    isValid = false
+            case 'quoteQty':
+                const _min = minQuoteQty;
+                const _max = maxQuoteQty;
+                const _displayingMax = `${formatNumber(_max, decimals.symbol, 0, true)} ${pairConfig?.quoteAsset}`;
+                const _displayingMin = `${formatNumber(_min, decimals.symbol, 0, true)} ${pairConfig?.quoteAsset}`;
+                if (quoteQty < +_min) {
+                    msg = `${t('futures:minimum_qty')} ${_displayingMin} `;
+                    isValid = false;
+                } else if (quoteQty > +Number(_max).toFixed(decimals.symbol)) {
+                    msg = `${t('futures:maximum_qty')} ${_displayingMax}`;
+                    isValid = false;
                 }
-
-                if (quantity?.both > +maxSize) {
-                    msg = `${t('futures:maximum_qty')} ${_displayingMax}`
-                    isValid = false
-                }
-
-                return { isValid, msg }
-
+                return {
+                    isValid,
+                    msg
+                };
             case 'price':
             case 'stop_loss':
             case 'take_profit':
-                const _maxPrice = priceFilter?.maxPrice
-                const _minPrice = priceFilter?.minPrice
-                const _price = isStop ? stopPrice : type === 'price' ? price : type === 'stop_loss' ? orderSlTp.sl : orderSlTp.tp
-                if (+_price < +_minPrice) {
-                    isValid = false
-                    msg = `${t('futures:minimum_price')} ${formatNumber(_minPrice, 0, 0, true)}`
+                // Nếu không nhập thì ko cần validate luôn, cho phép đặt lệnh không cần SL, TP
+                if ((key === 'stop_loss' && !sl && !isText) || (key === 'take_profit' && !tp && !isText)) {
+                    return {
+                        isValid,
+                        msg
+                    };
+                }
+                const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, pairConfig);
+                const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, pairConfig);
+                const _maxPrice = priceFilter?.maxPrice;
+                const _minPrice = priceFilter?.minPrice;
+                let _activePrice = lastPrice;
+                if (key !== 'price') {
+                    if (type === 'LIMIT') {
+                        _activePrice = price;
+                    } else if (type === 'STOP_MARKET') {
+                        _activePrice = stopPrice;
+                    }
                 }
 
-                if (+_price > +_maxPrice) {
-                    isValid = false
-                    msg = `${t('futures:maximum_price')} ${formatNumber(_maxPrice, 0, 0, true)}`
+                // Truong hop dat lenh market
+                const lowerBound = {
+                    min: Math.max(_minPrice, _activePrice * percentPriceFilter?.multiplierDown),
+                    max: Math.min(_activePrice, _activePrice * (1 - percentPriceFilter?.minDifferenceRatio))
+                };
+
+                const upperBound = {
+                    min: Math.max(_activePrice, _activePrice * (1 + percentPriceFilter?.minDifferenceRatio)),
+                    max: Math.min(_maxPrice, _activePrice * percentPriceFilter?.multiplierUp)
+                };
+
+                let bound = lowerBound;
+                if (side === FuturesOrderEnum.Side.BUY) {
+                    bound = key === 'stop_loss' ? lowerBound : upperBound;
+                } else {
+                    bound = key === 'stop_loss' ? upperBound : lowerBound;
                 }
 
-                return { isValid, msg }
-            default:
-                return {}
-        }
-    }
+                if (key === 'stop_loss') {
+                    bound = side === FuturesOrderEnum.Side.BUY ? lowerBound : upperBound;
+                    min = bound.min;
+                    max = bound.max;
+                    // Modify bound base on type
+                    if (sl < bound.min) {
+                        isValid = false;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.price, 0, true)}`;
+                    } else if (sl > bound.max) {
+                        isValid = false;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.price, 0, true)}`;
+                    }
+                } else if (key === 'take_profit') {
+                    bound = side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound;
+                    min = bound.min;
+                    max = bound.max;
+                    if (tp < bound.min) {
+                        isValid = false;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.price, 0, true)}`;
+                    } else if (tp > bound.max) {
+                        isValid = false;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.price, 0, true)}`;
+                    }
+                } else if (key === 'price' && (type === 'STOP_MARKET' || type === 'LIMIT')) {
+                    if (side === FuturesOrderEnum.Side.BUY) {
+                        // Truong hop la buy thi gia limit phai nho hon gia hien tai
+                        if (type === 'LIMIT') {
+                            min = lowerBound.min;
+                            max = lowerBound.max;
+                            if (price < lowerBound.min) {
+                                isValid = false;
+                                msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.price, 0, true)}`;
+                            } else if (price > lowerBound.max) {
+                                isValid = false;
+                                msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.price, 0, true)}`;
+                            }
+                        } else if (type === 'STOP_MARKET') {
+                            min = upperBound.min;
+                            max = upperBound.max;
+                            if (stopPrice < upperBound.min) {
+                                isValid = false;
+                                msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.price, 0, true)}`;
+                            } else if (stopPrice > upperBound.max) {
+                                isValid = false;
+                                msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.price, 0, true)}`;
+                            }
+                        }
+                    } else if (side === FuturesOrderEnum.Side.SELL) {
+                        if (type === 'LIMIT') {
+                            min = upperBound.min;
+                            max = upperBound.max;
+                            if (price < upperBound.min) {
+                                isValid = false;
+                                msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.price, 0, true)}`;
+                            } else if (price > upperBound.max) {
+                                isValid = false;
+                                msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.price, 0, true)}`;
+                            }
+                        } else if (type === 'STOP_MARKET') {
+                            min = lowerBound.min;
+                            max = lowerBound.max;
+                            if (stopPrice < lowerBound.min) {
+                                isValid = false;
+                                msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.price, 0, true)}`;
+                            } else if (stopPrice > lowerBound.max) {
+                                isValid = false;
+                                msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.price, 0, true)}`;
+                            }
+                        }
+                    }
+                }
 
-    const getOrderStopModeLabel = (mode) => {
-        switch (mode) {
-            case FuturesStopOrderMode.lastPrice:
-                return 'Last'
-            case FuturesStopOrderMode.markPrice:
-                return 'Mark'
+                if (key === 'stop_loss' && isValid) {
+                    //  Kiểm tra hợp lệ giá liquidate không
+                    // const size = size
+                    const liquidatePrice = getLiquidatePrice(
+                        {
+                            quantity: quoteQty / _activePrice,
+                            side,
+                            quoteQty,
+                            leverage
+                        },
+                        _activePrice
+                    );
+                    const bias = DefaultFuturesFee.Nami;
+                    const liquidatePriceBound = {
+                        upper: liquidatePrice * (1 - bias),
+                        lower: liquidatePrice * (1 + bias)
+                    };
+                    if (side === VndcFutureOrderType.Side.SELL && sl > liquidatePriceBound.upper) {
+                        isValid = false;
+                        msg = `${t('futures:liquidate_alert_less')} ${formatNumber(liquidatePriceBound.upper, decimals.price, 0, true)}`;
+                    } else if (side === VndcFutureOrderType.Side.BUY && sl < liquidatePriceBound.lower) {
+                        isValid = false;
+                        msg = `${t('futures:liquidate_alert_greater')} ${formatNumber(liquidatePriceBound.lower, decimals.price, 0, true)}`;
+                    }
+                }
+                if (isText) {
+                    return { min, max };
+                }
+                return {
+                    isValid,
+                    msg
+                };
+            case 'leverage':
+                min = pairConfig?.leverageConfig?.min ?? 0;
+                max = pairConfig?.leverageConfig?.max ?? 0;
+                if (min > leverage) {
+                    msg = `${t('futures:minimum_leverage')} ${min} `;
+                    isValid = false;
+                }
+                if (max < leverage) {
+                    msg = `${t('futures:maximum_leverage')} ${max}`;
+                    isValid = false;
+                }
+                return {
+                    isValid,
+                    msg,
+                    isError: !isValid
+                };
             default:
-                return ''
+                return {};
         }
-    }
+    };
 
-    const renderBuySellByPercent = useCallback(() => {
-        const _buy =
-            String(size)?.includes('%')
-                ? formatNumber(quantity?.buy, countDecimals(decimalScaleQtyMarket?.stepSize))
-                : '0.0000'
-        const _sell =
-            String(size)?.includes('%')
-                ? formatNumber(quantity?.sell, countDecimals(decimalScaleQtyMarket?.stepSize))
-                : '0.0000'
-        const volume = formatNumber(size, countDecimals(decimalScaleQtyMarket?.stepSize));
-        const _maxSize = formatNumber(maxSize, countDecimals(decimalScaleQtyMarket?.stepSize))
+    const textDescription = (key, data) => {
+        let rs = {};
+        switch (key) {
+            case 'quoteQty':
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, decimals.symbol)}`,
+                    max: `${t('common:max')}: ${data?.max ? formatNumber(data?.max, decimals.symbol) : '-'}`
+                };
+                return `${rs.min}. ${rs.max}.`;
+            case 'price':
+            case 'stop_loss':
+            case 'take_profit':
+                if ((key === 'stop_loss' || key === 'take_profit') && !price) return;
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, decimals.price)}`,
+                    max: `${t('common:max')}: ${data?.max ? formatNumber(data?.max, decimals.price) : '-'}`
+                };
+                return `${rs.min}. ${rs.max}.`;
+            default:
+                break;
+        }
+        return '';
+    };
+
+    const isError =
+        !inputValidator('price').isValid ||
+        !inputValidator('stop_loss').isValid ||
+        !inputValidator('take_profit').isValid ||
+        !inputValidator('quoteQty').isValid ||
+        !inputValidator('leverage').isValid;
+
+    const renderAvail = () => {
+        const margin = quoteQty / leverage;
         return (
-            <>
-                <TradingLabel
-                    label={t('futures:volume')}
-                    value={`${volume} ${selectedAsset}`}
-                    containerClassName='text-xs'
-                />
-                <TradingLabel
-                    label={t('common:max')}
-                    value={`${_maxSize} ${selectedAsset}`}
-                    containerClassName='text-xs'
-                />
-            </>
-        )
-    }, [size, pairConfig, selectedAsset, quantity, side])
+            <div className="mt-4 text-sm space-y-2">
+                <div className="flex items-center justify-between">
+                    <div className="text-darkBlue-5 flex items-center space-x-1">
+                        <span>{t('futures:mobile:available')}</span>
+                        {isAuth && (
+                            <AddCircleColorIcon
+                                onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }))}
+                                className="cursor-pointer"
+                            />
+                        )}
+                    </div>
+                    <span className="font-medium">
+                        {formatNumber(availableAsset, decimals.symbol)} {pairConfig?.quoteAsset}
+                    </span>
+                </div>
+                <div className="flex items-center justify-between">
+                    <span className="text-darkBlue-5">{t('futures:margin')}</span>
+                    <span className="font-medium">
+                        {formatNumber(margin, decimals.symbol)} {pairConfig?.quoteAsset}
+                    </span>
+                </div>
+            </div>
+        );
+    };
 
-    useEffect(() => {
-        if (usdRate) {
-            setBaseAssetUsdValue(usdRate?.[pairConfig?.baseAssetId])
-        }
-    }, [pairConfig?.baseAssetId, usdRate])
-
-    const isError = useMemo(() => {
-        const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
-        const not_valid = !size || !inputValidator('price', ArrStop.includes(currentType)).isValid || !inputValidator('quantity').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
-        return not_valid
-    }, [price, size, currentType, stopPrice, orderSlTp])
+    const isMarket = FuturesOrderTypes.Market === type;
 
     return (
-        <div className='pt-5 pb-[18px]'>
-            {/* Order Utilities */}
-            <FuturesOrderUtilities
-                quoteAsset={pairConfig?.quoteAsset}
-                quoteAssetId={pairConfig?.quoteAssetId}
-                isAuth={isAuth}
-                isVndcFutures={true}
+        <div className="mt-4 space-y-4">
+            <TradingInput
+                containerClassName="w-full dark:bg-dark-2"
+                label={t('common:price')}
+                value={isMarket ? t('futures:market') : price}
+                disabled={isMarket}
+                allowNegative={false}
+                onValueChange={({ value }) => setPrice(value)}
+                decimalScale={decimals.price}
+                validator={inputValidator('price')}
+                textDescription={textDescription('price', inputValidator('price', true))}
+                errorTooltip={false}
+                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark select-none"
+                renderTail={() => pairConfig?.quoteAsset}
+                clearAble
+                errorEmpty
+            />
+            <TradingInput
+                label={t('futures:order_table:volume')}
+                value={quoteQty}
+                allowNegative={false}
+                onValueChange={({ value }) => setQuoteQty(value)}
+                validator={inputValidator('quoteQty')}
+                textDescription={textDescription('quoteQty', { min: minQuoteQty, max: maxQuoteQty })}
+                errorTooltip={false}
+                decimalScale={decimals.qty}
+                containerClassName="w-full dark:bg-dark-2"
+                labelClassName="whitespace-nowrap"
+                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark select-none"
+                renderTail={() => pairConfig?.quoteAsset}
+                clearAble
             />
 
-            {/* Order Input Scenario */}
-            <div className='mt-4'>
-                {(currentType === FuturesOrderTypes.Market ||
-                    currentType === FuturesOrderTypes.StopMarket) && (
-                        <FuturesOrderMarket
-                            stopPrice={stopPrice}
-                            setStopPrice={setStopPrice}
-                            size={size}
-                            handleQuantity={handleQuantity}
-                            pairConfig={pairConfig}
-                            setAsset={setAsset}
-                            selectedAsset={selectedAsset}
-                            getValidator={inputValidator}
-                            stopOrderMode={stopOrderMode}
-                            setStopOrderMode={setStopOrderMode}
-                            getOrderStopModeLabel={getOrderStopModeLabel}
-                            isStopMarket={
-                                currentType === FuturesOrderTypes.StopMarket
-                            }
-                            isVndcFutures={isVndcFutures}
-                            decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
-                            decimalScaleQty={countDecimals(decimalScaleQtyMarket?.stepSize)}
-                        />
-                    )}
-                {(currentType === FuturesOrderTypes.Limit ||
-                    currentType === FuturesOrderTypes.StopLimit) && (
-                        <FuturesOrderLimit
-                            price={price}
-                            handlePrice={handlePrice}
-                            size={size}
-                            handleQuantity={handleQuantity}
-                            stopPrice={stopPrice}
-                            setStopPrice={setStopPrice}
-                            setAsset={setAsset}
-                            selectedAsset={selectedAsset}
-                            stopOrderMode={stopOrderMode}
-                            setStopOrderMode={setStopOrderMode}
-                            getOrderStopModeLabel={getOrderStopModeLabel}
-                            pairConfig={pairConfig}
-                            getValidator={inputValidator}
-                            getLastedLastPrice={() => handlePrice(lastPrice)}
-                            isStopLimit={
-                                currentType === FuturesOrderTypes.StopLimit
-                            }
-                            isVndcFutures={isVndcFutures}
-                            decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
-                            decimalScaleQty={countDecimals(decimalScaleQtyLimit?.stepSize)}
-                        />
-                    )}
-            </div>
-
             {/* Slider */}
-            <div className='mt-4'>
+            <div className="mt-4">
                 <FuturesOrderSlider
-                    size={size}
-                    available={availableAsset}
-                    onChange={(size) => handleQuantity(size, !isVndcFutures)}
-                    isVndcFutures={isVndcFutures}
-                    maxBuy={maxBuy}
-                    maxSell={maxSell}
-                    side={side}
-                    currentType={currentType}
-                    pair={pair}
+                    quoteQty={quoteQty}
+                    onChange={(vol) => setQuoteQty(vol)}
                     isAuth={isAuth}
-                    maxSize={maxSize}
-                    decimalScaleQty={countDecimals(currentType === FuturesOrderTypes.StopMarket ? decimalScaleQtyMarket?.stepSize : decimalScaleQtyLimit?.stepSize)}
+                    decimals={decimals}
+                    minQuoteQty={minQuoteQty}
+                    maxQuoteQty={maxQuoteQty}
+                    pair={pair}
+                    ref={refSlider}
                 />
             </div>
-
-            <div className='mt-3.5 flex items-center justify-between select-none'>
-                {renderBuySellByPercent()}
-            </div>
-
-            <Divider className='my-5' />
 
             {/* Order SL-TP */}
             <FuturesOrderSLTP
                 isVndcFutures={isVndcFutures}
                 orderSlTp={orderSlTp}
                 setOrderSlTp={setOrderSlTp}
-                decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
-                getValidator={inputValidator}
+                decimals={decimals}
+                inputValidator={inputValidator}
                 side={side}
-                size={size}
                 pairConfig={pairConfig}
                 price={price}
-                stopPrice={stopPrice}
                 lastPrice={lastPrice}
                 ask={ask}
                 bid={bid}
-                currentType={currentType}
-                leverage={currentLeverage}
+                type={type}
+                leverage={leverage}
                 isAuth={isAuth}
+                quoteQty={quoteQty}
+                isDark={isDark}
+                textDescription={textDescription}
             />
 
-            <Divider className='my-5' />
-
+            {renderAvail()}
+            {maxQuoteQty < minQuoteQty && minQuoteQty > availableAsset && mount.current && (
+                <div className="text-red text-xs flex items-center space-x-1">
+                    <ErrorTriggersIcon />
+                    <span>{t('futures:mobile:balance_insufficient')}</span>
+                </div>
+            )}
             <FuturesOrderButtonsGroupVndc
                 pairConfig={pairConfig}
-                positionMode={positionMode}
-                type={currentType}
-                quantity={quantity}
+                type={type}
+                quoteQty={quoteQty}
                 price={price}
-                stopPrice={stopPrice}
-                stopOrderMode={stopOrderMode}
-                leverage={currentLeverage}
+                leverage={leverage}
                 orderSlTp={orderSlTp}
-                size={size}
                 isError={isError}
+                lastPrice={lastPrice}
                 ask={ask}
                 bid={bid}
                 isAuth={isAuth}
-                decimalScaleQty={countDecimals(decimalScaleQtyMarket?.stepSize)}
-                decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
+                decimals={decimals}
                 side={side}
+                isMarket={isMarket}
             />
         </div>
-    )
-}
+    );
+};
 
-export default FuturesOrderModule
+export default FuturesOrderModule;

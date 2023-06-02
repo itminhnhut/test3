@@ -56,9 +56,9 @@ export const SupportCategories = {
                     },
                     {
                         id: 'referral_freshman',
-                        title: 'Chương trình Giới thiệu người dùng mới',
-                        slug: 'faq-vi-chuong-trinh-gioi-thieu-nguoi-dung-moi',
-                        displaySlug: 'chuong-trinh-gioi-thieu-nguoi-dung-moi',
+                        title: 'Giới thiệu người dùng mới',
+                        slug: 'faq-vi-gioi-thieu-nguoi-dung-moi',
+                        displaySlug: 'gioi-thieu-nguoi-dung-moi',
                     },
                     {
                         id: 'rw_center',
@@ -122,10 +122,10 @@ export const SupportCategories = {
             },
             {
                 id: CatsKey.SpotTrading,
-                title: 'Giao dịch Spot',
+                title: 'Giao dịch Exchange',
                 slug: 'faq-vi-giao-dich-spot',
                 displaySlug: 'giao-dich-spot',
-                description: 'Hướng dẫn về giao dịch Spot trên Nami Exchange',
+                description: 'Hướng dẫn về giao dịch Exchange trên Nami Exchange',
                 iconUrl: '',
                 subCats: []
             },
@@ -138,14 +138,14 @@ export const SupportCategories = {
                 iconUrl: '',
                 subCats: []
             },
-            {
-                id: CatsKey.TokenPrediction,
-                title: 'Token dự đoán',
-                slug: 'faq-vi-token-prediction',
-                displaySlug: 'token-prediction',
-                description: 'Các thông tin liên quan đến Token Dự đoán - sản phẩm đột phá mới của Nami Exchange',
-                iconUrl: ''
-            },
+            // {
+            //     id: CatsKey.TokenPrediction,
+            //     title: 'Token dự đoán',
+            //     slug: 'faq-vi-token-prediction',
+            //     displaySlug: 'token-prediction',
+            //     description: 'Các thông tin liên quan đến Token Dự đoán - sản phẩm đột phá mới của Nami Exchange',
+            //     iconUrl: ''
+            // },
             {
                 id: CatsKey.FuturesTrading,
                 title: 'Giao dịch Futures',
@@ -190,22 +190,22 @@ export const SupportCategories = {
                 description: 'Chương trình trả lãi ngày với lãi suất năm 12.79% với VNDC và 6% với USDT',
                 iconUrl: ''
             },
-            {
-                id: CatsKey.Others,
-                title: 'Chuyên mục khác',
-                slug: 'faq-vi-chuyen-muc-khac',
-                displaySlug: 'chuyen-muc-khac',
-                description: 'Thông tin về điều khoản sử dụng sản phẩm dịch vụ',
-                iconUrl: '',
-                subCats: [
-                    {
-                        id: 'rules_condition',
-                        title: 'Điều khoản và điều kiện',
-                        slug: 'faq-vi-dieu-khoan-va-dieu-kien',
-                        displaySlug: 'dieu-khoan-va-dieu-kien'
-                    }
-                ]
-            },
+            // {
+            //     id: CatsKey.Others,
+            //     title: 'Chuyên mục khác',
+            //     slug: 'faq-vi-chuyen-muc-khac',
+            //     displaySlug: 'chuyen-muc-khac',
+            //     description: 'Thông tin về điều khoản sử dụng sản phẩm dịch vụ',
+            //     iconUrl: '',
+            //     subCats: [
+            //         {
+            //             id: 'rules_condition',
+            //             title: 'Điều khoản và điều kiện',
+            //             slug: 'faq-vi-dieu-khoan-va-dieu-kien',
+            //             displaySlug: 'dieu-khoan-va-dieu-kien'
+            //         }
+            //     ]
+            // },
             {
                 id: CatsKey.BusinessPartner,
                 title: 'Hợp tác kinh doanh',
@@ -251,8 +251,8 @@ export const SupportCategories = {
                     {
                         id: 'referral_freshman',
                         title: 'Referral Program',
-                        slug: 'faq-en-introducing-new-users',
-                        displaySlug: 'introducing-new-users',
+                        slug: 'faq-en-referral-program',
+                        displaySlug: 'referral-program',
                     },
                     {
                         id: 'rw_center',
@@ -314,10 +314,10 @@ export const SupportCategories = {
             },
             {
                 id: CatsKey.SpotTrading,
-                title: 'Spot Trading',
+                title: 'Exchange Trading',
                 slug: 'faq-en-spot-trading',
                 displaySlug: 'spot-trading',
-                description: 'Guide to spot trading on Nami Exchange',
+                description: 'Guide to exchange trading on Nami Exchange',
                 iconUrl: ''
             },
             {
@@ -328,14 +328,14 @@ export const SupportCategories = {
                 description: 'Information about Swap product on Nami Exchange',
                 iconUrl: ''
             },
-            {
-                id: CatsKey.TokenPrediction,
-                title: 'Token Prediction',
-                slug: 'faq-en-token-prediction',
-                displaySlug: 'token-prediction',
-                description: "Information about Token Prediction - Nami Exchange's new breakthrough product",
-                iconUrl: ''
-            },
+            // {
+            //     id: CatsKey.TokenPrediction,
+            //     title: 'Token Prediction',
+            //     slug: 'faq-en-token-prediction',
+            //     displaySlug: 'token-prediction',
+            //     description: "Information about Token Prediction - Nami Exchange's new breakthrough product",
+            //     iconUrl: ''
+            // },
             {
                 id: CatsKey.FuturesTrading,
                 title: 'Futures Trading',
@@ -380,22 +380,22 @@ export const SupportCategories = {
                 description: 'Information about Daily Staking program with APY 12.79% for VNDC and 6% for USDT',
                 iconUrl: ''
             },
-            {
-                id: CatsKey.Others,
-                title: 'Other topics',
-                slug: 'faq-en-other-topics',
-                displaySlug: 'other-topics',
-                description: 'Information about Terms of use of products and services',
-                iconUrl: '',
-                subCats: [
-                    {
-                        id: 'rules_condition',
-                        title: 'Nami Terms of Use',
-                        slug: 'faq-en-nami-terms-of-use',
-                        displaySlug: 'nami-terms-of-use'
-                    }
-                ]
-            },
+            // {
+            //     id: CatsKey.Others,
+            //     title: 'Other topics',
+            //     slug: 'faq-en-other-topics',
+            //     displaySlug: 'other-topics',
+            //     description: 'Information about Terms of use of products and services',
+            //     iconUrl: '',
+            //     subCats: [
+            //         {
+            //             id: 'rules_condition',
+            //             title: 'Nami Terms of Use',
+            //             slug: 'faq-en-nami-terms-of-use',
+            //             displaySlug: 'nami-terms-of-use'
+            //         }
+            //     ]
+            // },
             {
                 id: CatsKey.BusinessPartner,
                 title: 'Business Cooperation',
@@ -421,7 +421,7 @@ export const SupportCategories = {
                 title: 'Tin tức về Nami',
                 slug: 'noti-vi-tin-tuc-ve-nami',
                 displaySlug: 'tin-tuc-ve-nami',
-                description: 'Các thông tin cập nhật về Nami Corp. và Nami Exchange',
+                description: 'Các thông tin cập nhật về Nami Foundation. và Nami Exchange',
                 iconUrl: ''
             },
             {
@@ -455,7 +455,7 @@ export const SupportCategories = {
                 title: 'Nami News',
                 slug: 'noti-en-nami-news',
                 displaySlug: 'nami-news',
-                description: 'Latest news about Nami Corp. and Nami Exchange',
+                description: 'Latest news about Nami Foundation. and Nami Exchange',
                 iconUrl: ''
             },
             {
@@ -481,31 +481,36 @@ export const SupportCategories = {
 export const getSupportCategoryIcons = (id) => {
     switch (id) {
         case CatsKey.AccountFunctions:
-            return '/images/screen/support/ic_user.png'
+            return '/images/screen/support/v2/ic_user.png'
         case CatsKey.Tutorial:
+            return '/images/screen/support/v2/ic_book.png'
         case CatsKey.NamiNews:
+            return '/images/screen/support/v2/ic_news.png'
         case CatsKey.Announcement:
+            return '/images/screen/support/v2/ic_noti.png'
         case CatsKey.Event:
-            return '/images/screen/support/ic_book.png'
+            return '/images/screen/support/v2/ic_event.png'
         case CatsKey.DepWdlCrypto:
-            return '/images/screen/support/ic_dollar.png'
+            return '/images/screen/support/v2/ic_dollar.png'
         case CatsKey.NamiToken:
-            return '/images/screen/support/ic_nami_token.png'
+            return '/images/screen/support/v2/ic_nami_token.png'
         case CatsKey.SpotTrading:
+            return '/images/screen/support/v2/ic_analytic.png'
         case CatsKey.TokenPrediction:
-            return '/images/screen/support/ic_analytic.png'
+            return '/images/screen/support/v2/ic_uptrend.png'
         case CatsKey.FuturesTrading:
-            return '/images/screen/support/ic_trend.png'
+            return '/images/screen/support/v2/ic_trend.png'
         case CatsKey.Swap:
+            return '/images/screen/support/v2/ic_dou_dollar.png'
         case CatsKey.NewTokenListing:
-            return '/images/screen/support/ic_duo_dollar.png'
+            return '/images/screen/support/v2/ic_coin.png'
         case CatsKey.Finance:
         case CatsKey.DailyStaking:
-            return '/images/screen/support/ic_wallet.png'
+            return '/images/screen/support/v2/ic_wallet.png'
         case CatsKey.Others:
-            return '/images/screen/support/ic_other.png'
+            return '/images/screen/support/v2/ic_other.png'
         case CatsKey.BusinessPartner:
-            return '/images/icon/ic_globe.png'
+            return '/images/screen/support/v2/ic_partner.png'
     }
 }
 

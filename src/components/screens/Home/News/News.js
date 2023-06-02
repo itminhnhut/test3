@@ -1,102 +1,116 @@
 import { useKeenSlider } from 'keen-slider/react';
-import { useWindowSize } from 'utils/customHooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import 'keen-slider/keen-slider.min.css';
-import { ChevronLeft, ChevronRight } from 'react-feather';
+import { useRefWindowSize } from 'hooks/useWindowSize';
+import Image from 'next/image';
 
 const News = ({ data, lang }) => {
     const [state, set] = useState({
         autoplay: true,
         slideStep: 1,
         currentSlide: 0
-    })
-    const setState = (state) => set(prevState => ({ ...prevState, ...state }))
-    const { width } = useWindowSize()
+    });
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
+    const { width } = useRefWindowSize();
 
     // slider
     const [refNews, slider] = useKeenSlider({
         initial: 0,
-        slidesPerView: 1,
-        spacing: 12,
+        slidesPerView: 1.2,
+        centered: true,
+        spacing: 32,
         loop: true,
         dot: true,
-        slideChanged: slide => setState({ currentSlide: slide.details().relativeSlide }),
+        slideChanged: (slide) => setState({ currentSlide: slide.details().relativeSlide }),
         breakpoints: {
             '(min-width: 768px)': {
-                slidesPerView: 3
+                slidesPerView: 3,
+                centered: false
             },
             '(min-width: 1024px)': {
-                slidesPerView: 4
+                slidesPerView: 4,
+                centered: false
+            },
+            '(min-width: 2160px)':{
+                slidesPerView: 5,
+                centered: false
             }
-        },
-    })
-    const timer = useRef()
-
+        }
+    });
+    const timer = useRef();
 
     const renderNews = useCallback(() => {
-        if (!data) return null
+        if (!data) return null;
 
-        return data.map(news => {
-            const { title } = news
+        return data.map((news) => {
+            const { title } = news;
             const primary_tags = news.primary_tag?.slug.split('-');
             const tag = primary_tags[1] === 'faq' ? 'faq' : 'announcement';
             const refId = `https://nami.exchange/${lang}/support/${tag}/${primary_tags.slice(2, primary_tags.length).join('-')}/${news.slug}?source=app`;
             const img = news?.feature_image || 'https://static.namifutures.com/nami.exchange/images/nami_announcement.jpeg';
             return (
-                <div key={`news___${news.id}`} className="keen-slider__slide number-slide1" title={title}>
+                <div key={`news___${news.id}`} className="keen-slider__slide number-slide1 !bg-transparent" title={title}>
                     <a href={refId} target="_blank">
-                        <img src={img} alt="" />
+                        <div className={` relative`}>
+                            <Image
+                                src={img}
+                                alt={title}
+                                width={280}
+                                height={146}
+                            />
+                        </div>
                     </a>
                 </div>
-            )
-        })
-    }, [data])
+            );
+        });
+    }, [data]);
 
     const renderControl = useCallback(() => {
-        if (!slider || width < 768) return null
+        if (!slider || width < 768) return null;
         return (
             <div className="keen-slider__slide__control__wrapper mal-container">
-                <div className="keen-slider__slide__control__item keen-slider__slide__control__prev"
+                {/* <div className="keen-slider__slide__control__item keen-slider__slide__control__prev"
                     onClick={() => slider.prev()}>
                     <ChevronLeft size={width >= 1024 ? 26 : 18} />
                 </div>
                 <div className="keen-slider__slide__control__item keen-slider__slide__control__next"
                     onClick={() => slider.next()}>
                     <ChevronRight size={width >= 1024 ? 26 : 18} />
-                </div>
+                </div> */}
             </div>
-        )
-    }, [slider, width])
+        );
+    }, [slider, width]);
 
     const renderDots = useCallback(() => {
-        if (!slider) return null
+        if (!slider) return null;
         return (
             <div className="dots">
                 {[...Array(slider.details().size).keys()].map((idx) => {
-                    return <button key={idx} onClick={() => slider.moveToSlideRelative(idx)}
-                        className={"dot" + (state.currentSlide === idx ? " active" : "")} />
+                    return (
+                        <button key={idx} onClick={() => slider.moveToSlideRelative(idx)} className={'dot' + (state.currentSlide === idx ? ' active' : '')} />
+                    );
                 })}
             </div>
-        )
-    }, [slider, state.currentSlide])
+        );
+    }, [slider, state.currentSlide]);
 
     useEffect(() => {
-        refNews.current.addEventListener("mouseover", () => {
-            setState({ autoplay: false })
-        })
-        refNews.current.addEventListener("mouseout", () => {
-            setState({ autoplay: true })
-        })
-    }, [refNews])
+        refNews.current.addEventListener('mouseover', () => {
+            setState({ autoplay: false });
+        });
+        refNews.current.addEventListener('mouseout', () => {
+            setState({ autoplay: true });
+        });
+    }, [refNews]);
 
     useEffect(() => {
-        timer.current = setInterval(() => state.autoplay && slider && slider.next(), 2300)
-        return () => clearInterval(timer.current)
-    }, [state.autoplay, slider])
+        timer.current = setInterval(() => state.autoplay && slider && slider.next(), 8000);
+        return () => clearInterval(timer.current);
+    }, [state.autoplay, slider]);
 
     useEffect(() => {
-        width && slider && slider.resize()
-    }, [width, slider])
+        width && slider && slider.resize();
+    }, [width, slider]);
 
     return (
         <div className="homepage-news___news">
@@ -106,11 +120,9 @@ const News = ({ data, lang }) => {
                 </div>
                 {renderControl()}
             </div>
-            <div className="keen-slider__dots__wrapper">
-                {renderDots()}
-            </div>
+            <div className="keen-slider__dots__wrapper">{renderDots()}</div>
         </div>
-    )
-}
+    );
+};
 
-export default News
+export default News;

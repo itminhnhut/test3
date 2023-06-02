@@ -13,7 +13,8 @@ import {
     API_GET_FUTURES_USER_SETTINGS,
     API_SET_FUTURES_MARGIN_MODE,
     API_SET_FUTURES_POSITION_MODE,
-    API_UPDATE_FUTURES_SYMBOL_VIEW
+    API_UPDATE_FUTURES_SYMBOL_VIEW,
+    API_GET_NAO_FUTURES_SETTING
 } from './apis';
 import { ApiStatus, TRADING_MODE } from './const';
 import {
@@ -27,10 +28,11 @@ import {
     SET_FUTURES_PAIR_CONFIGS,
     SET_FUTURES_SETTING,
     SET_FUTURES_USE_SLTP,
-    SET_FUTURES_USER_SETTINGS
+    SET_FUTURES_USER_SETTINGS,
 } from './types';
 import { favoriteAction } from './user';
 import { checkInFundingTime, checkLargeVolume, formatNumber } from 'redux/actions/utils';
+import isEmpty from 'lodash/isEmpty';
 
 export const setUsingSltp = (payload) => (dispatch) => dispatch({
     type: SET_FUTURES_USE_SLTP,
@@ -50,8 +52,8 @@ export const setFuturesOrderTypes =
         });
     };
 
-export const getFuturesFavoritePairs = () => async (dispatch) => {
-    const favoritePairs = await favoriteAction('get', TRADING_MODE.FUTURES);
+export const getFuturesFavoritePairs = (mode) => async (dispatch) => {
+    const favoritePairs = await favoriteAction('get', mode ?? TRADING_MODE.FUTURES);
     if (Array.isArray(favoritePairs)) {
         dispatch({
             type: SET_FUTURES_FAVORITE_PAIRS,
@@ -161,6 +163,12 @@ export const getMarginModeLabel = (mode) => {
 };
 
 export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
+    let obj = {
+        status: '',
+        title: '',
+        message: '',
+        notes: ''
+    };
     try {
         const { data } = await Axios.post(API_GET_FUTURES_ORDER, {
             ...params,
@@ -178,16 +186,23 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             if (utils?.alert) {
                 utils.alert.show('success', t('futures:place_order_success'), t('futures:place_order_success_message'), notice);
             } else {
-                showNotification(
-                    {
-                        message: t('futures:place_order_success'),
-                        title: t('common:success'),
-                        type: 'success',
-                    },
-                    1800,
-                    'bottom',
-                    'bottom-right',
-                );
+                obj = {
+                    status: 'success',
+                    title: t('futures:place_order_success'),
+                    message: t('futures:place_order_success_message'),
+                    notes: notice
+                };
+               
+                // showNotification(
+                //     {
+                //         message: t('futures:place_order_success'),
+                //         title: t('common:success'),
+                //         type: 'success',
+                //     },
+                //     1800,
+                //     'bottom',
+                //     'bottom-right',
+                // );
             }
         } else {
             // handle multi language
@@ -205,16 +220,22 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             if (utils?.alert) {
                 utils.alert.show('error', t('futures:place_order'), message, data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`);
             } else {
-                showNotification(
-                    {
-                        message,
-                        title: t('common:failed'),
-                        type: 'failure',
-                    },
-                    1800,
-                    'bottom',
-                    'bottom-right',
-                );
+                obj = {
+                    status: 'error',
+                    title: t('futures:place_order'),
+                    message: message,
+                    notes: data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`
+                };
+                // showNotification(
+                //     {
+                //         message,
+                //         title: t('common:failed'),
+                //         type: 'failure',
+                //     },
+                //     1800,
+                //     'bottom',
+                //     'bottom-right',
+                // );
             }
         }
     } catch (e) {
@@ -226,19 +247,24 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
                 utils.alert.show('error', t('common:failed'), e?.message);
             }
         } else {
-            showNotification(
-                {
-                    message: `${e?.message}`,
-                    title: t('common:failed'),
-                    type: 'failure',
-                },
-                1800,
-                'bottom',
-                'bottom-right',
-            );
+            obj = {
+                status: 'error',
+                title: t('common:failed'),
+                message: e.message === 'Network Error' || !navigator?.onLine ? t('error:futures:NETWORK_ERROR') : e?.message
+            };
+            // showNotification(
+            //     {
+            //         message: `${e?.message}`,
+            //         title: t('common:failed'),
+            //         type: 'failure',
+            //     },
+            //     1800,
+            //     'bottom',
+            //     'bottom-right',
+            // );
         }
     } finally {
-        if (cb) cb();
+        if (cb) cb(obj);
     }
 };
 
@@ -290,14 +316,14 @@ const placeFuturesOrderValidator = (params, utils) => {
     return _validator;
 };
 
-export const getOrdersList = (cb) => async (dispatch) => {
+export const getOrdersList = (params, cb) => async (dispatch) => {
     const { data } = await Axios.get(API_GET_FUTURES_ORDER, {
-        params: { status: 0 },
+        params: { status: 0, ...params }
     });
     if (data?.status === ApiStatus.SUCCESS) {
         dispatch({
             type: SET_FUTURES_ORDERS_LIST,
-            payload: data?.data?.orders || [],
+            payload: data?.data?.orders || []
         });
         if (cb) cb(data?.data?.orders || []);
     }
@@ -310,14 +336,16 @@ export const removeItemMarketWatch = (pair) => async (dispatch) => {
     });
 };
 
-export const reFetchOrderListInterval = (times = 1, duration = 5000) => (dispatch) => {
-    for (let i = 0; i < times; i++) {
-        console.log(`call ${i}`.repeat(10));
-        setTimeout(() => {
-            dispatch(getOrdersList());
-        }, duration * (i + 1));
-    }
-};
+export const reFetchOrderListInterval =
+    (times = 1, duration = 5000, isNAO = false) =>
+    (dispatch) => {
+        for (let i = 0; i < times; i++) {
+            console.log(`call ${i}`.repeat(10));
+            setTimeout(() => {
+                dispatch(getOrdersList(isNAO ? { product: 2 } : null));
+            }, duration * (i + 1));
+        }
+    };
 
 export const updateSymbolView = ({ symbol }) => async (dispatch) => {
     const { data } = await Axios.post(API_UPDATE_FUTURES_SYMBOL_VIEW, {
@@ -326,11 +354,21 @@ export const updateSymbolView = ({ symbol }) => async (dispatch) => {
 };
 
 export const fetchFuturesSetting = (params) => async (dispatch) => {
-    const { data } = await Axios[params ? 'post' : 'get'](API_GET_FUTURES_SETTING, { ...params });
+    const api = params?.isNao ? API_GET_NAO_FUTURES_SETTING : API_GET_FUTURES_SETTING;
+    if (params?.isNao) delete params?.isNao;
+    const isUpdate = !isEmpty(params);
+    const { data } = await Axios[isUpdate ? 'post' : 'get'](api, { ...params });
     if (data?.status === ApiStatus.SUCCESS) {
         dispatch({
-            type: params ? SET_FUTURES_SETTING : GET_FUTURES_SETTING,
-            payload: params ? params : data?.data,
+            type: isUpdate ? SET_FUTURES_SETTING : GET_FUTURES_SETTING,
+            payload: isUpdate ? params : data?.data
         });
     }
+};
+
+export const setFuturesSetting = (params) => async (dispatch) => {
+    dispatch({
+        type: SET_FUTURES_SETTING,
+        payload: params
+    });
 };

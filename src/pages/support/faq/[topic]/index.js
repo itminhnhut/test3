@@ -8,12 +8,13 @@ import Link from 'next/link';
 import useApp from 'hooks/useApp';
 import { appUrlHandler, SupportCategories } from 'constants/faqHelper';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { getLastedArticles, ghost } from 'utils';
 import { formatTime } from 'redux/actions/utils';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
 import dynamic from 'next/dynamic';
+import useWindowSize from 'hooks/useWindowSize';
 
 const RePagination = dynamic(() => import('components/common/ReTable/RePagination'), { ssr: false });
 
@@ -22,17 +23,25 @@ const FaqTopics = (props) => {
     const [currentGroup, setCurrentGroup] = useState(null)
     const [theme, , setTheme] = useDarkMode();
     const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(25);
     const [articles, setArticles] = useState([]);
     const [total, setTotal] = useState(0);
-    const [search, setSearch] = useState('');
-
-
+    const [pagination, setPagination] = useState({
+        limit: 25,
+        next: null,
+        page: 1,
+        pages: 0,
+        prev: null,
+        total: 0,
+    })
     const router = useRouter()
     const isApp = useApp()
     const {
         t,
         i18n: { language },
     } = useTranslation()
+    const { width } = useWindowSize
+    const isMobile = width < 640
     const cats =
         SupportCategories.faq[language]?.find(
             (o) => o.displaySlug === router?.query?.topic
@@ -41,58 +50,66 @@ const FaqTopics = (props) => {
     useEffect(() => {
         getLastedArticles(
             `faq-${language || 'en'}-${router?.query?.topic}`,
-            25,
+            limit,
             page,
             language
         )
             .then((articles) => {
+                console.log(articles)
                 setArticles(articles);
                 setTotal(articles.meta?.pagination?.total);
+                setPagination(articles.meta?.pagination)
             });
-    }, [page, router]);
+    }, [page, router?.query?.topic, language, limit]);
+
 
     const renderGroup = () => {
         return (
             cats &&
             cats.map((item) => (
-                <div
-                    key={item.id}
-                    title={item.title}
-                    className='mb-[18px] h-full w-full sm:w-1/2 lg:w-1/3 sm:pr-3'
+                <Link
+                    href={{
+                        pathname:
+                            PATHS.SUPPORT.FAQ + `/${router?.query?.topic}`,
+                        query: appUrlHandler(
+                            { group: item.displaySlug },
+                            isApp
+                        ),
+                    }}
+                    key={item.uuid}
                 >
-                    <Link
-                        href={{
-                            pathname:
-                                PATHS.SUPPORT.FAQ + `/${router?.query?.topic}`,
-                            query: appUrlHandler(
-                                { group: item.displaySlug },
-                                isApp
-                            ),
-                        }}
-                        key={item.uuid}
+                    <div
+                        key={item.id}
+                        title={item.title}
+                        className={classNames('text-txtPrimary dark:text-gray-4 w-full h-[52px] sm:h-[76px] bg-gray-13 dark:bg-darkBlue-3 rounded-md flex items-center cursor-pointer', {
+                            '!text-txtTextBtn dark:!text-txtPrimary-dark dark:!bg-hover-dark': item.displaySlug === router?.query?.group
+                        })}
                     >
-                        <a className='truncate block bg-gray-4 dark:bg-darkBlue-4 rounded-sm hover:opacity-80 px-4 py-3 text-sm font-medium lg:text-[16px]'>
+                        <a className='line-clamp-2 block font-normal text-sm sm:font-semibold sm:text-lg px-6'>
                             {item?.title}
                         </a>
-                    </Link>
-                </div>
+                    </div>
+                </Link>
             ))
         )
     }
-    const renderPagination = useCallback(() => {
+    const renderPagination = useMemo(() => {
         if (!total) return null;
-        return (
+        return pagination?.page === 1 && !pagination?.next ? null : (
             <div className="flex items-center justify-center mt-8">
-                <RePagination
-                    total={total}
-                    current={page}
-                    pageSize={25}
-                    showTitle={false}
-                    onChange={(currentPage) => setPage(currentPage)}
-                />
+                <div className='sm:hidden font-semibold text-base dark:text-teal text-txtTextBtn cursor-pointer' onClick={() => setLimit(limit + 15)}>{t('common:read_more')}</div>
+                <div className='sm:block hidden'>
+                    <RePagination
+                        isNamiV2
+                        current={page}
+                        pageSize={25}
+                        name="market_table___list"
+                        pagingPrevNext={{ language, page: page - 1, hasNext: !!pagination?.next, onChangeNextPrev: (change) => setPage(page + change) }}
+                    />
+                </div>
             </div>
         );
-    }, [page, articles, total]);
+    }, [page, articles, total, pagination, limit]);
     const renderAppHeader = () => {
         if (!isApp) return null
         const topic = props?.data?.tags?.find(
@@ -111,9 +128,8 @@ const FaqTopics = (props) => {
         )
     }
 
-    const renderGroupArticles = useCallback(() => {
+    const renderGroupArticles = useMemo(() => {
         if (!currentGroup || !articles || !articles.length) return null
-
         const data = articles?.filter((e) => {
             const isBelongThisGroup = e?.tags?.find(
                 (o) => o.slug === `faq-${language}-${currentGroup}`
@@ -121,74 +137,78 @@ const FaqTopics = (props) => {
             return !!isBelongThisGroup
         })
 
-        // console.log('namidev filtered => ', data)
-
         if (!data.length) {
             return <div>{t('support-center:no_articles')}</div>
         }
 
         return data?.map((article) => (
-            <a
-                href={
-                    PATHS.SUPPORT.FAQ +
-                    `/${router?.query?.topic}/${article.slug}${
-                        isApp ? '?source=app' : ''
-                    }`
-                }
-                key={article.uuid}
-                className='block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant'
-            >
-                {article?.title}{' '}
-                <span className='text-[10px] lg:text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                    {formatTime(article.created_at, 'dd-MM-yyyy')}
-                </span>
-            </a>
+            <Link key={article.uuid} href={
+                PATHS.SUPPORT.FAQ +
+                `/${router?.query?.topic}/${article.slug}${isApp ? '?source=app' : ''
+                }`
+            }>
+                <a className='block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:text-txtTextBtn dark:hover:text-teal'>
+                    <div className='w-full'>
+                        <div>
+                            <div className='text-txtPrimary dark:text-gray-4 font-normal text-base hover:text-txtTextBtn dark:hover:text-teal'>
+                                {article?.title}{' '}
+                            </div>
+                            <div className='mt-2 text-txtSecondary dark:text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
+                                {formatTime(article.created_at, 'dd/MM/yyyy')}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </Link>
         ))
     }, [currentGroup, articles, language])
 
-    const renderLastedArticles = useCallback(() => {
+    const renderLastedArticles = useMemo(() => {
         if (!!currentGroup) return null
 
         if (!cats.length && (!articles || !articles.length)) {
             return <div>{t('support-center:no_articles')}</div>
         }
 
-        const data = articles.slice(0, !!cats?.length ? 5 : 25)
+        // const data = articles.slice(0, !!cats?.length ? 5 : 25)
 
-        return data.map((article) => (
+        return articles.map((article) => (
             <Link
                 href={
                     PATHS.SUPPORT.FAQ +
-                    `/${router?.query?.topic}/${article.slug.toString()}${
-                        isApp ? '?source=app' : ''
+                    `/${router?.query?.topic}/${article.slug.toString()}${isApp ? '?source=app' : ''
                     }`
                 }
                 key={article.uuid}
             >
-                <a className='!block !w-full text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant'>
-                    {article?.title}{' '}
-                    <span className='text-[10px] lg:text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                        {formatTime(article.created_at, 'dd-MM-yyyy')}
-                    </span>
+                <a className='w-full'>
+                    <div>
+                        <div className='text-txtPrimary dark:text-gray-4 font-normal text-base hover:text-txtTextBtn dark:hover:text-teal'>
+                            {article?.title}{' '}
+                        </div>
+                        <div className='mt-2 text-txtSecondary dark:text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
+                            {formatTime(article.created_at, 'dd/MM/yyyy')}
+                        </div>
+                    </div>
                 </a>
             </Link>
         ))
     }, [articles, currentGroup])
 
-    useEffect(() => {
-        if (router?.query?.group) {
-            setCurrentGroup(router?.query?.group)
-        } else {
-            setCurrentGroup(null)
-        }
+    // useEffect(() => {
+    //     if (router?.query?.group) {
+    //         setCurrentGroup(router?.query?.group)
+    //     } else {
+    //         setCurrentGroup(null)
+    //     }
 
-        const themeLocal = localStorage.getItem("theme");
-        if (themeLocal === "dark") {
-            setTheme(THEME_MODE.DARK);
-        } else {
-            setTheme(THEME_MODE.LIGHT);
-        }
-    }, [router?.query])
+    //     const themeLocal = localStorage.getItem("theme");
+    //     if (themeLocal === "dark") {
+    //         setTheme(THEME_MODE.DARK);
+    //     } else {
+    //         setTheme(THEME_MODE.LIGHT);
+    //     }
+    // }, [router?.query])
 
     return (
         <>
@@ -198,21 +218,36 @@ const FaqTopics = (props) => {
                 mode='faq'
                 faqCurrentGroup={currentGroup}
             >
-                <div
-                    className={classNames('flex flex-wrap', {
-                        'mb-4 md:mb-6': !!cats.length && !!!currentGroup,
-                    })}
-                >
-                    {!currentGroup && renderGroup()}
+                <div className='text-txtPrimary dark:text-gray-4 font-semibold text-base sm:text-[32px] sm:leading-[38px] mb-6 sm:mb-8 cursor-pointer'>
+                    <Link href='/support/faq/account-functions'>
+                        <a>
+                            {SupportCategories.faq[language]?.find(
+                                (o) => o.displaySlug === router?.query?.topic
+                            )?.title}
+                        </a>
+                    </Link>
                 </div>
-                <div className=''>{renderGroupArticles()}</div>
+                {cats.length ? <div
+                    className={classNames('flex flex-col sm:grid w-full gap-4 mb-12 sm:mb-20', {
+                        // '': !!cats.length && !!!currentGroup,
+                    })}
+                    style={{
+                        gridTemplateColumns: isMobile ? null : "repeat(auto-fill, 280px)",
+                    }}
+                >
+                    {renderGroup()}
+                </div> : null}
+                {(currentGroup && articles && articles.length) ? <div className='text-txtPrimary dark:text-gray-4 font-semibold text-[32px] leading-[38px] mb-6 sm:mb-8'>
+                    {t('common:related_posts')}
+                </div> : null}
+                <div className=''>{renderGroupArticles}</div>
                 {!!cats.length && !!articles?.length && !!!currentGroup && (
-                    <div className='text-[16px] font-bold md:text-[20px] lg:text-[28px] mb-6'>
+                    <div className='text-txtPrimary dark:text-gray-4 font-semibold text-[32px] leading-[38px] mb-6 sm:mb-8'>
                         {t('support-center:lasted_articles')}
                     </div>
                 )}
-                <div className=''>{renderLastedArticles()}</div>
-                {renderPagination()}
+                <div className=''>{renderLastedArticles}</div>
+                {renderPagination}
             </TopicsLayout>
         </>
     )

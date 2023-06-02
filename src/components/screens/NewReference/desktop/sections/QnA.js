@@ -2,7 +2,13 @@ import { useTranslation } from 'next-i18next';
 import React, { useMemo, useState } from 'react';
 import { Line } from 'components/screens/NewReference/mobile';
 import RefCard from 'components/screens/NewReference/RefCard';
-import Link from 'next/link'
+import Link from 'next/link';
+import { theme } from '../../../../../../tailwind.config';
+
+const title = {
+    en: 'FAQ',
+    vi: 'Câu hỏi thường gặp'
+};
 
 const QnAData = [
     {
@@ -88,17 +94,14 @@ const QnA = ({ id, t, language }) => {
 
     const renderData = (dataSource) => {
         return (
-            <div className="">
+            <div className="space-y-2">
                 {dataSource.map((data, index) => {
                     return (
-                        <div key={index} className="">
-                            <div className="text-sm leading-6">
-                                <div className="text-darkBlue font-semibold cursor-pointer">{data.q[language]}</div>
-                                <div className="text-gray-1 font-medium mt-1 text-justify" style={{ whiteSpace: 'pre-line' }}>
-                                    {data.a[language]}
-                                </div>
-                            </div>
-                            {dataSource.length === index + 1 ? null : <Line className="my-4" />}
+                        <div key={index} className="text-sm leading-6 py-4">
+                            <p className="font-semibold cursor-pointer mb-3 leading-5">{data.q[language]}</p>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark text-justify" style={{ whiteSpace: 'pre-line' }}>
+                                {data.a[language]}
+                            </span>
                         </div>
                     );
                 })}
@@ -107,23 +110,19 @@ const QnA = ({ id, t, language }) => {
     };
     return (
         <div className="flex w-full gap-8" id={id}>
-            <RefCard wrapperClassName="!p-6 w-full">
-                <div className="font-semibold text-[20px] leading-6 mb-6">FAQ</div>
+            <RefCard wrapperClassName="!p-8 w-full bg-light dark:bg-darkBlue-3">
+                <div className="font-semibold text-[20px] leading-6 mb-4">{title[language]}</div>
                 {renderData(QnAData)}
                 <div className="text-teal underline font-medium text-sm text-center mt-8">
                     <Link href={policyLink}>
                         <a target="_blank">
-                            {language === 'vi' ? 'Xem thêm: Chính sách đối tác kinh doanh Nami Exchange' : "Read more: Nami Exchange's policy on business partners"}
+                            {language === 'vi'
+                                ? 'Xem thêm: Chính sách đối tác kinh doanh Nami Exchange'
+                                : "Read more: Nami Exchange's policy on business partners"}
                         </a>
                     </Link>
                 </div>
             </RefCard>
-            {/* <RefCard wrapperClassName='!p-6 w-full'>
-                <div className='font-semibold text-[20px] leading-6 mb-6'>
-                    {t('reference:referral.friend_list')}
-                </div>
-                {renderData(TermData)}
-            </RefCard> */}
         </div>
     );
 };

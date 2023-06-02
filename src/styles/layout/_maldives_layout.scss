@@ -1,17 +1,11 @@
 @import "../helpers/contants";
 
-.mal-layouts___light {
-  @apply bg-bgPrimary #{!important};
-}
 
-.mal-layouts___dark {
-  @apply dark:bg-bgPrimary-dark #{!important};
-}
 
 .mal-layouts {
   @apply relative h-full bg-bgPrimary dark:bg-bgPrimary-dark;
 
-  min-width: 320px;
+  // min-width: 320px;
   overflow-x: hidden;
 }
 
@@ -24,7 +18,7 @@
 }
 
 .layout-onus {
-    @apply relative h-full bg-onus dark:bg-onus text-onus;
+    @apply relative h-full bg-white dark:bg-dark text-txtPrimary dark:text-txtPrimary-dark;
 
     min-width: 320px;
     overflow-x: hidden;
@@ -33,4 +27,13 @@
   max-height: calc(100vh - 300px);
   overflow-y: auto;
   padding: 0 15px;
+}
+
+.term-mobile-view-v2::-webkit-scrollbar {
+  display: none;
+}
+
+.term-mobile-view-v2 {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }

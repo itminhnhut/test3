@@ -12,7 +12,8 @@ import { getCheckPassCode, verifyCheckPassCode } from 'src/redux/actions/user';
 import { useComponentVisible } from 'src/utils/customHooks';
 import showNotification from 'src/utils/notificationService';
 
-const GoogleAuthModalWrapper = ({ user,
+const GoogleAuthModalWrapper = ({
+    user,
     closeModal,
     authType,
     securityMethods,
@@ -62,8 +63,6 @@ const GoogleAuthModal = ({
     securityMethods,
     email,
     phone,
-    currentPassword,
-    newPassword,
     googleSecretKey,
     googleSecretKeyQr,
     checkPassId,
@@ -109,7 +108,7 @@ const GoogleAuthModal = ({
             return info.replace(/(.{2})(.*)(?=@)/,
                 (gp1, gp2, gp3) => {
                     for (let i = 0; i < gp3.length; i++) {
-                    // eslint-disable-next-line no-param-reassign
+                        // eslint-disable-next-line no-param-reassign
                         gp2 += '*';
                     } return gp2;
                 });
@@ -318,7 +317,7 @@ const GoogleAuthModal = ({
                         onClick={handleSubmit}
                         className={`${isVerifying ? 'cursor-not-allowed' : 'cursor-pointer'} mt-[102px] bg-[rgba(64,33,208,1)] w-full px-[36px] py-[11px] rounded text-white font-bold text-sm flex flex-row items-center justify-center`}
                     >
-                        { isVerifying && <IconLoading color="#FFFFFF" />} <span className="ml-2">{t('common:verify')}</span>
+                        {isVerifying && <IconLoading color="#FFFFFF" />} <span className="ml-2">{t('common:verify')}</span>
                     </button>
                 </div>
             );
@@ -429,7 +428,7 @@ const GoogleAuthModal = ({
                     >
                         <button
                             type="button"
-                            onClick={() => {}}
+                            onClick={() => { }}
                             className="w-full bg-transparent px-[36px] py-[11px] font-bold text-sm text-[#00C8BC]"
                         >{t('profile:reset_google_auth')}
                         </button>
@@ -440,7 +439,7 @@ const GoogleAuthModal = ({
                         onClick={handleSubmit}
                         className={`${isVerifying ? 'cursor-not-allowed' : 'cursor-pointer'} bg-[rgba(64,33,208,1)] w-full px-[36px] py-[11px] rounded text-white font-bold text-sm flex flex-row items-center justify-center`}
                     >
-                        { isVerifying && <IconLoading color="#FFFFFF" />} <span className="ml-2">{t('common:verify')}</span>
+                        {isVerifying && <IconLoading color="#FFFFFF" />} <span className="ml-2">{t('common:verify')}</span>
                     </button>
                 </div>
             );

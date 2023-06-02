@@ -3,7 +3,7 @@ import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { roundTo } from 'round-to';
 import classNames from 'classnames';
 import { Popover, Transition } from '@headlessui/react';
-import ModelMarketMobile from 'components/screens/Mobile/Market/ModelMarket';
+import ModelMarketMobile from 'components/screens/Nao_futures/Market/ModelMarket';
 import { AreaChart, BarsChart, BaseLineChart, CandleChartOnus, LineChart } from '../timeFrame';
 import { IconStarOnus, IconRefresh } from 'components/common/Icons';
 import colors from 'styles/colors';
@@ -11,7 +11,7 @@ import { PublicSocketEvent, TRADING_MODE } from 'redux/actions/const';
 import { favoriteAction } from 'redux/actions/user';
 import { getFuturesFavoritePairs } from 'redux/actions/futures';
 import { useDispatch, useSelector } from 'react-redux';
-import Guideline from 'components/screens/Mobile/Futures/Guideline';
+import Guideline from 'components/screens/Nao_futures/Futures/Guideline';
 import styled from 'styled-components';
 import useWindowSize from 'hooks/useWindowSize';
 import Emitter from 'redux/actions/emitter';
@@ -127,7 +127,7 @@ const ChartOptions = ({
                                 src={getS3Url(`/images/coins/64/${pairConfig?.baseAssetId}.png`)} height={24}
                                 width={24} />}
                             <div
-                                className="font-semibold text-onus-white ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
+                                className="font-semibold text-txtPrimary dark:text-txtPrimary-dark ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                         </div>
                         <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
                     </div>
@@ -143,7 +143,7 @@ const ChartOptions = ({
                     options={listTimeFrame}
                     classNamePanel="rounded-md"
                     label={<div
-                        className="text-[0.9375rem] text-onus-grey leading-[1.25rem]">{resolutionLabel}</div>}
+                        className="text-[0.9375rem] text-txtSecondary dark:text-txtSecondary-dark leading-[1.25rem]">{resolutionLabel}</div>}
                 />
                 <MenuTime
                     value={chartType}
@@ -159,11 +159,11 @@ const ChartOptions = ({
                         <IconHelper/>
                     </div>
                 } */}
-                <div className="" onClick={fullChart ? handleOpenIndicatorModal : resetComponent}>
+                <div className="text-txtSecondary dark:text-txtSecondary-dark" onClick={fullChart ? handleOpenIndicatorModal : resetComponent}>
                     {!fullChart ?
-                        <IconRefresh />
+                        <IconRefresh color='currentColor' />
                         :
-                        <SvgActivity color={colors.onus.grey} />
+                        <SvgActivity color="currentColor" />
                     }
                 </div>
                 <FavouriteButton pair={pair} pairConfig={pairConfig} />
@@ -215,9 +215,9 @@ const Change24h = ({
     return (
         <div className="flex items-center">
             <div
-                className={classNames('pr-2 min-w-[5rem] text-onus-green font-medium',
+                className={classNames('pr-2 min-w-[5rem] text-green-2 font-medium',
                     {
-                        '!text-onus-red':
+                        '!text-red-2':
                             pairPrice?.priceChangePercent < 0,
                     })}
             >
@@ -267,7 +267,7 @@ export const MenuTime = ({
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className={`absolute z-50 bg-onus-bg3 ${classNamePanel}`}>
+                        <Popover.Panel className={`absolute z-50 bg-gray-12 dark:bg-dark-2 ${classNamePanel}`}>
                             <div
                                 className="overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
                                 {options?.map((item, index) => {
@@ -277,14 +277,14 @@ export const MenuTime = ({
                                             close();
                                         }}
                                             className={classNames(
-                                                'pb-2 w-max text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
+                                                'pb-2 w-max text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
                                                 {
-                                                    'text-txtPrimary-dark':
+                                                    '!text-txtPrimary dark:!text-txtPrimary-dark':
                                                         item[keyValue] === value,
                                                 }
                                             )}
                                         >
-                                            <Svg>{item?.icon}</Svg>
+                                            <Svg className={`!fill-fillSecondary dark:!fill-fillSecondary-dark`} >{item?.icon}</Svg>
                                             {item[displayValue]}
                                         </div>
                                     );
@@ -299,12 +299,12 @@ export const MenuTime = ({
 };
 
 const Svg = styled.div.attrs({
-    className: ''
+    className: `fill-fillPrimary dark:fill-fillPrimary-dark`
 })`
   svg {
     height: 20px;
     width: 20px;
-    fill: ${colors.onus.grey}
+    fill: inherit;
   }
 `;
 
@@ -316,13 +316,13 @@ const FavouriteButton = ({ pairConfig }) => {
     const isFavorite = useMemo(() => favoritePairs.includes(pair), [favoritePairs, pairConfig]);
 
     const handleSetFavorite = async () => {
-        await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.FUTURES, pair);
-        dispatch(getFuturesFavoritePairs());
+        await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.NAO, pair);
+        dispatch(getFuturesFavoritePairs(TRADING_MODE.NAO));
     };
 
-    return <div className="cursor-pointer flex items-center " onClick={handleSetFavorite}>
-        <IconStarOnus stroke={isFavorite ? colors.onus.orange : colors.onus.grey}
-            color={isFavorite ? colors.onus.orange : ''} />
+    return <div className="cursor-pointer flex items-center text-txtSecondary dark:text-txtSecondary-dark" onClick={handleSetFavorite}>
+        <IconStarOnus stroke={isFavorite ? colors.yellow[2] : 'currentColor'}
+            color={isFavorite ? colors.yellow[2] : ''} />
     </div>;
 };
 

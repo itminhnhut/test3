@@ -26,7 +26,7 @@ import floor from 'lodash/floor';
 import LayoutMobile, { AlertContext } from 'components/common/layouts/LayoutMobile';
 import Divider from 'components/common/Divider';
 import { ApiStatus } from 'redux/actions/const';
-import SortIcon from 'components/screens/Mobile/SortIcon';
+import SortIcon from 'components/screens/Nao_futures/SortIcon';
 
 const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAO, WalletCurrency.NAMI, WalletCurrency.ONUS, WalletCurrency.USDT];
 
@@ -41,7 +41,7 @@ const MIN_WITHDRAWAL = {
 const MAX_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 500e6,
     [WalletCurrency.NAMI]: 100000,
-    [WalletCurrency.NAO]: 50000,
+    [WalletCurrency.NAO]: 100000,
     [WalletCurrency.ONUS]: 50000,
     [WalletCurrency.USDT]: 5000,
 };
@@ -98,7 +98,7 @@ const ExternalWithdrawal = (props) => {
 
     // map state from redux
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
-    const futuresBalances = useSelector((state) => state.wallet.FUTURES) || {};
+    const futuresBalances = useSelector((state) => state.wallet?.NAO_FUTURES) || {};
 
     const alertContext = useContext(AlertContext);
 
@@ -310,7 +310,7 @@ const ExternalWithdrawal = (props) => {
                                 {currentCurr?.assetName}
                             </span>
                         </div>
-                        <SortIcon size={14}/>
+                        <SortIcon className="text-gray-1 dark:text-gray-7" size={14} color="currentColor" activeColor='currentColor' />
                     </div>
                     <div className="flex justify-between">
                         <span className="text-onus-secondary text-xs uppercase">
@@ -335,17 +335,17 @@ const ExternalWithdrawal = (props) => {
                                 setAmount(floor(Math.min(currentCurr?.available || 0, max), decimalScale));
                             }}
                         >
-                            <span className="px-4 py-2 text-onus-base font-semibold">
+                            <span className="px-4 py-2 text-teal font-semibold">
                                 {t('ext_gate:max_opt')}
                             </span>
                             <div
-                                className="h-full leading-[2.75rem] bg-onus-1 w-16 text-onus-grey rounded-r-md text-center">
+                                className="h-full leading-[2.75rem] bg-onus-1 w-16 text-txtSecondary dark:text-txtSecondary-dark rounded-r-md text-center">
                                 {currentCurr?.assetCode}
                             </div>
                         </div>
                     </div>
                     <div className="text-xs mb-6">
-                        <span className="text-onus-grey mr-1">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark mr-1">
                             {t('ext_gate:available')}:
                         </span>
                         <span>
@@ -360,19 +360,19 @@ const ExternalWithdrawal = (props) => {
                     <div className="flex justify-between items-center pl-4 bg-onus-2 rounded-md h-11 mb-6 mt-2">
                         <span>{fee > 0 ? formatNumber(fee, decimalScale) : t('common:free')}</span>
                         <div
-                            className="h-full leading-[2.75rem] bg-onus-1 w-16 text-onus-grey rounded-r-md text-center">
+                            className="h-full leading-[2.75rem] bg-onus-1 w-16 text-txtSecondary dark:text-txtSecondary-dark rounded-r-md text-center">
                             {currentCurr?.assetCode}
                         </div>
                     </div>
                 </div>
                 <div className="text-center mb-2">
-                    {error && <span className="text-sm text-onus-red">{error}</span>}
+                    {error && <span className="text-sm text-red-2">{error}</span>}
                 </div>
                 <div
                     className={classNames(
                         'bg-[#0068FF] h-12 w-full rounded-md text-center leading-[3rem] text-onus font-semibold',
                         {
-                            '!bg-darkBlue-4 text-onus-grey': isDisableBtn
+                            '!bg-darkBlue-4 text-txtSecondary dark:text-txtSecondary-dark': isDisableBtn
                         }
                     )}
                     onClick={() => !isDisableBtn && onWdl(+amount, currentCurr?.id)}
@@ -387,7 +387,7 @@ const ExternalWithdrawal = (props) => {
 
             <Div100vh
                 className={classNames(
-                    'fixed top-0 left-0 right-0 z-30 p-6 bg-onus text-onus',
+                    'fixed top-0 left-0 right-0 z-30 p-6 bg-bgPrimary dark:bg-bgPrimary-dark text-onus',
                     'translate-y-full transition-transform duration-500',
                     {
                         'translate-y-0': modal.isListAssetModal,
@@ -420,7 +420,7 @@ const ExternalWithdrawal = (props) => {
                                         <div className="font-bold">
                                             {a.assetCode}
                                         </div>
-                                        <div className="text-onus-grey text-sm">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
                                             {a.assetName}
                                         </div>
                                     </div>
@@ -457,12 +457,12 @@ const ExternalWithdrawal = (props) => {
             {/*    <p className="text-center font-semibold text-lg mt-5">*/}
             {/*        {t('wallet:mobile:transfer_asset_success', {})}*/}
             {/*    </p>*/}
-            {/*    <p className="text-center text-sm text-onus-grey">*/}
+            {/*    <p className="text-center text-sm text-txtSecondary dark:text-txtSecondary-dark">*/}
             {/*        {t('wallet:mobile:tips')}*/}
             {/*    </p>*/}
             {/*    <div className="mt-7 mb-8 space-y-4">*/}
             {/*        <div className="flex justify-between text-xs">*/}
-            {/*            <span className="font-medium text-onus-grey">*/}
+            {/*            <span className="font-medium text-txtSecondary dark:text-txtSecondary-dark">*/}
             {/*                {t('wallet:mobile:time')}*/}
             {/*            </span>*/}
             {/*            <span className="font-semibold">*/}
@@ -470,7 +470,7 @@ const ExternalWithdrawal = (props) => {
             {/*            </span>*/}
             {/*        </div>*/}
             {/*        <div className="flex justify-between text-xs">*/}
-            {/*            <span className="font-medium text-onus-grey">*/}
+            {/*            <span className="font-medium text-txtSecondary dark:text-txtSecondary-dark">*/}
             {/*                {t('wallet:mobile:amount')}*/}
             {/*            </span>*/}
             {/*            <span className="font-semibold">*/}
@@ -480,7 +480,7 @@ const ExternalWithdrawal = (props) => {
             {/*        </div>*/}
             {/*        <div className="flex justify-between text-xs">*/}
             {/*            <span*/}
-            {/*                className="font-medium text-onus-grey whitespace-nowrap mr-3">*/}
+            {/*                className="font-medium text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap mr-3">*/}
             {/*                {t('wallet:mobile:transfer_from_to')}*/}
             {/*            </span>*/}
             {/*            <span className="font-semibold whitespace-nowrap">*/}
@@ -501,7 +501,8 @@ const ExternalWithdrawal = (props) => {
                 <div className="NoticePopup__Header">{t('modal:notice')}</div>
                 <div className="NoticePopup__Content">
                     <Key size={24} color="#03BBCC"/>
-                    {t('common:sign_in_to_continue')}
+                    <div dangerouslySetInnerHTML={{ __html: t('common:sign_in_to_continue') }} />
+                    {/* {t('common:sign_in_to_continue')} */}
                     <a href="#" onClick={() => emitWebViewEvent('login')}>
                         {t('common:sign_in')}
                     </a>

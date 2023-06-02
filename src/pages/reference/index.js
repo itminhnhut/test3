@@ -15,15 +15,17 @@ const Reference = () => {
     // const currentTheme = useSelector((state) => state.user.theme);
     const [currentTheme, onThemeSwitch, setTheme] = useDarkMode();
 
-    useEffect(() => {
-        const root = document.querySelector(":root");
-        root.classList.add("light");
-        setTheme(THEME_MODE.LIGHT);
-    }, [currentTheme])
-
     const { width } = useWindowSize()
-
     const isMobile = width < 830
+
+    useEffect(() => {
+        if (isMobile) {
+            const root = document.querySelector(":root");
+            root.classList.add("dark");
+            setTheme(THEME_MODE.DARK);
+        }
+    }, [currentTheme, isMobile])
+
     return (
         <>
             <Head>
@@ -34,15 +36,16 @@ const Reference = () => {
                     hideNavBar={isMobile}
                     hideFooter={isMobile}
                     navOverComponent
-                    light
+                    light={currentTheme === THEME_MODE.LIGHT}
+                    dark={currentTheme === THEME_MODE.DARK}
                     navStyle={isMobile ? {
                         position: 'fixed',
                     } : {
                         boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)',
                     }}
                 >
-                    <div className={classNames("h-full ", { 'flex justify-center': !isMobile })}>
-                        {!isMobile ? <RefDesktopScreen />  :<NewReference />}
+                    <div className={classNames("h-full bg-gray-13 dark:bg-transparent", { 'flex justify-center': !isMobile })}>
+                        {!isMobile ? <RefDesktopScreen /> : <NewReference />}
                     </div>
                 </MaldivesLayout>
             </DynamicNoSsr>

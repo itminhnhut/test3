@@ -13,8 +13,11 @@ import { Check } from 'react-feather';
 import { assetCodeFromId, WalletCurrency } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
 import useWindowSize from 'hooks/useWindowSize';
+import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import SvgFilter from 'components/svg/SvgFilter';
+import CheckCircle from 'components/svg/CheckCircle';
 
-const days = [
+export const days = [
     {
         en: 'Today',
         vi: 'Hôm nay',
@@ -44,7 +47,7 @@ const days = [
 
 const filterFeeAsset = [
     {
-        id: WalletCurrency.NA0,
+        id: WalletCurrency.NA0 ?? 447,
         label: 'NAO',
         ratio: '0.036'
     },
@@ -67,7 +70,7 @@ const filterFeeAsset = [
         id: WalletCurrency.USDT,
         label: 'USDT',
         ratio: '0.06'
-    },
+    }
 ];
 
 const NaoPerformance = memo(() => {
@@ -86,7 +89,7 @@ const NaoPerformance = memo(() => {
     const [fee, setFee] = useState(WalletCurrency.VNDC);
     const [referencePrice, setReferencePrice] = useState({});
 
-    const assetConfig = useSelector(state => state.utils.assetConfig);
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
 
     // const [getQueryByName , updateQuery] = useAddQuery('date')
 
@@ -116,8 +119,9 @@ const NaoPerformance = memo(() => {
                 options: { method: 'GET' },
                 params: {
                     range: filter.day,
-                    marginCurrency: filter.marginCurrency
-                },
+                    marginCurrency: filter.marginCurrency,
+                    userCategory: 2
+                }
             });
             setDataSource(!(data?.error || data?.status) ? data : null);
         } catch (e) {
@@ -133,15 +137,17 @@ const NaoPerformance = memo(() => {
                 params: {
                     base: 'VNDC,USDT',
                     quote: 'USD'
-                },
+                }
             });
             if (data) {
-                setReferencePrice(data.reduce((acm, current) => {
-                    return {
-                        ...acm,
-                        [`${current.base}/${current.quote}`]: current.price,
-                    };
-                }, {}));
+                setReferencePrice(
+                    data.reduce((acm, current) => {
+                        return {
+                            ...acm,
+                            [`${current.base}/${current.quote}`]: current.price
+                        };
+                    }, {})
+                );
             }
         } catch (e) {
             console.log(e);
@@ -153,26 +159,26 @@ const NaoPerformance = memo(() => {
         if (!dataSource?.feeRevenue) return [];
         const assets = [];
         let first = true;
-        return Object.keys(dataSource?.feeRevenue)
-            .reduce((newItem, item) => {
-                const asset = assetConfig.find(rs => rs.id === Number(item));
-                if (asset) {
-                    assets.push({
-                        id: asset.id,
-                        assetCode: asset?.assetCode,
-                        assetDigit: asset?.assetDigit,
-                        value: dataSource.feeRevenue[item],
-                    });
-                }
-                return assets;
-            }, []);
+        return Object.keys(dataSource?.feeRevenue).reduce((newItem, item) => {
+            if (Number(item) === 86 && dataSource.feeRevenue[item] <= 0) return;
+            const asset = assetConfig.find((rs) => rs.id === Number(item));
+            if (asset) {
+                assets.push({
+                    id: asset.id,
+                    assetCode: asset?.assetCode,
+                    assetDigit: asset?.assetDigit,
+                    value: dataSource.feeRevenue[item]
+                });
+            }
+            return assets;
+        }, []);
     }, [dataSource, assetConfig]);
 
     const feeFilter = useMemo(() => {
-        const _fee = assets.find(rs => rs.id === fee);
+        const _fee = assets.find((rs) => rs.id === fee);
         return {
             total: _fee ? formatNumber(_fee?.value, _fee?.assetDigit) + ' ' + _fee?.assetCode : '-',
-            ratio: filterFeeAsset.find(rs => rs.id === fee)?.ratio ?? '0.06'
+            ratio: filterFeeAsset.find((rs) => rs.id === fee)?.ratio ?? '0.06'
         };
     }, [fee, assets]);
 
@@ -185,12 +191,18 @@ const NaoPerformance = memo(() => {
     };
 
     const updateDateRangeUrl = (dateValue) => {
-        router.push({
-            pathname: router.pathname,
-            query: {
-                date: dateValue,
+        router.push(
+            {
+                pathname: router.pathname,
+                query: {
+                    date: dateValue
+                }
+            },
+            undefined,
+            {
+                shallow: true
             }
-        });
+        );
     };
 
     const handleChangeDateRange = (day) => {
@@ -204,67 +216,85 @@ const NaoPerformance = memo(() => {
     };
 
     return (
-        <section id="nao_performance" className="pt-10 sm:pt-20">
+        <section id="nao_performance" className="pt-6 sm:pt-20 text-sm sm:text-base">
             <div className="flex items-center flex-wrap justify-between gap-5">
-                <div>
-                    <TextLiner liner={width < 992}
-                               className="text-nao lg:text-white">{t('nao:onus_performance:title')}</TextLiner>
-                    <span
-                        className="text-sm sm:text-[1rem] text-nao-grey">{t('nao:onus_performance:description')}</span>
+                <div className="space-y-2 flex flex-col">
+                    <TextLiner className="">{t('nao:onus_performance:title')}</TextLiner>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:onus_performance:description')}</span>
                 </div>
                 <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
-                    <RangePopover language={language} active={days.find(d => d.value === filter.day)}
-                                  onChange={handleChangeDateRange} className="flex order-last lg:order-first"
-                                  popoverClassName={'lg:mr-2 '}/>
-                    <div className="order-first gap-2 lg:order-last flex gap-last">
-                        <ButtonNao
-                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.VNDC })}
+                    <RangePopover
+                        language={language}
+                        active={days.find((d) => d.value === filter.day)}
+                        onChange={handleChangeDateRange}
+                        className="flex order-last"
+                        popoverClassName={'lg:mr-2 '}
+                    />
+                    <div className="order-first gap-2 flex gap-last">
+                        <button
+                            type="BUTTON"
+                            className={classNames(
+                                'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                { '!border-teal bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
+                            )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
-                        >Futures VNDC</ButtonNao>
-                        <ButtonNao
-                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.USDT })}
+                        >
+                            Futures VNDC
+                        </button>
+                        <button
+                            type="BUTTON"
+                            className={classNames(
+                                'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                { '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.USDT }
+                            )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
-                        >Futures USDT</ButtonNao>
+                        >
+                            Futures USDT
+                        </button>
                     </div>
                 </div>
             </div>
-            <div className="pt-5 sm:pt-6 flex items-center flex-wrap gap-5">
-                <CardNao>
-                    <label
-                        className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_volume')}</label>
+            <div className="pt-5 sm:pt-6 flex items-center flex-wrap gap-4 sm:gap-5">
+                <CardNao className="rounded-lg">
+                    <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
+                        {t('nao:onus_performance:total_volume')}
+                    </label>
                     <div className="pt-4">
-                        <div
-                            className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}</div>
-                        <span
-                            className="text-sm text-nao-grey">{dataSource ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3) : '-'} </span>
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark text-xl sm:text-2xl font-semibold pb-2">
+                            {dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}
+                        </div>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                            {dataSource
+                                ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3)
+                                : '-'}{' '}
+                        </span>
                     </div>
                 </CardNao>
-                <CardNao>
-                    <label
-                        className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_orders')}</label>
+                <CardNao className="rounded-lg">
+                    <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
+                        {t('nao:onus_performance:total_orders')}
+                    </label>
                     <div className="pt-4">
-                        <div
-                            className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}</div>
-                        <span
-                            className="text-sm text-nao-grey">{dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}</span>
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark text-xl sm:text-2xl font-semibold pb-2">
+                            {dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}
+                        </div>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                            {dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}
+                        </span>
                     </div>
                 </CardNao>
-                <CardNao noBg>
+                <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark">
                     <div className="flex items-center justify-between">
-                        <label
-                            className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_fee')}</label>
+                        <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
+                            {t('nao:onus_performance:total_fee')}
+                        </label>
                         <Popover className="relative flex">
-                            {({
-                                open,
-                                close
-                            }) => (
+                            {({ open, close }) => (
                                 <>
                                     <Popover.Button>
-                                        <div
-                                            className="text-sm px-2 py-1 bg-nao-bg3 rounded-md flex items-center justify-between text-nao-white min-w-[72px]">
-                                            {filterFeeAsset.find(a => a.id === fee)?.label || '--'}
-                                            <img alt="" src={getS3Url('/images/nao/ic_arrow_bottom.png')} height="16"
-                                                 width="16"/>
+                                        <div className="px-2 py-[6px] bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between text-gray-15 dark:text-white min-w-[72px] space-x-1">
+                                            {filterFeeAsset.find((a) => a.id === fee)?.label || '--'}
+                                            <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
                                         </div>
                                     </Popover.Button>
                                     <Transition
@@ -276,16 +306,20 @@ const NaoPerformance = memo(() => {
                                         leaveFrom="opacity-100 translate-y-0"
                                         leaveTo="opacity-0 translate-y-1"
                                     >
-                                        <Popover.Panel
-                                            className="absolute top-8 left-0 z-50 bg-nao-bg3 rounded-md mt-1">
-                                            <div
-                                                className="px-2 py-[2] min-w-[72px] shadow-onlyLight font-medium text-xs flex flex-col">
+                                        <Popover.Panel className="absolute top-8 mt-3 right-0 z-5 bg-white dark:bg-dark-4 rounded-md border border-divider dark:border-divider-dark">
+                                            <div className="py-[2] min-w-[72px] shadow-onlyLight text-sm flex flex-col">
                                                 {assets.map((item, index) => (
-                                                    <span onClick={() => {
-                                                        setFee(item?.id);
-                                                        close();
-                                                    }} key={index}
-                                                          className={`py-[1px] my-[2px] cursor-pointer ${item?.assetCode === fee ? 'text-nao-white' : 'text-nao-text'}`}>{item?.assetCode}</span>
+                                                    <span
+                                                        onClick={() => {
+                                                            setFee(item?.id);
+                                                            close();
+                                                        }}
+                                                        key={index}
+                                                        className={`px-4 py-3 cursor-pointer hover:bg-hover-1 dark:hover:bg-hover-dark flex items-center space-x-4`}
+                                                    >
+                                                        <span>{item?.assetCode}</span>
+                                                        {item?.id === fee && <CheckCircle color="currentColor" size={16} />}
+                                                    </span>
                                                 ))}
                                             </div>
                                         </Popover.Panel>
@@ -295,83 +329,81 @@ const NaoPerformance = memo(() => {
                         </Popover>
                     </div>
                     <div className="pt-4">
-                        <div
-                            className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{feeFilter.total}</div>
-                        <span className="text-sm text-nao-grey">{feeFilter.ratio}%</span>
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark text-xl sm:text-2xl font-semibold pb-2">{feeFilter.total}</div>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{feeFilter.ratio}%</span>
                     </div>
                 </CardNao>
             </div>
-            {
-                dataSource?.lastTimeUpdate && <div
-                    className="mt-6 text-sm text-nao-grey font-medium leading-6">{t('nao:contest:last_updated_time_dashboard', { minute: 5 })}: {formatTime(new Date(dataSource?.lastTimeUpdate))}</div>
-            }
+            {dataSource?.lastTimeUpdate && (
+                <div className="text-xs sm:text-sm mt-3 sm:mt-4 text-txtSecondary dark:text-txtSecondary-dark">
+                    {t('nao:contest:last_updated_time_dashboard', { minute: 5 })}: {formatTime(new Date(dataSource?.lastTimeUpdate), 'HH:mm dd/MM/yyyy')}
+                </div>
+            )}
         </section>
     );
 });
 
-const RangePopover = ({
-    language,
-    active = {},
-    onChange,
-    popoverClassName = '',
-}) => {
+export const RangePopover = ({ language, active = {}, onChange, popoverClassName = '' }) => {
     const popOverClasses = classNames('relative flex', popoverClassName);
-    return <Popover className={popOverClasses}>
-        {({
-            open,
-            close
-        }) => (
-            <>
-                <Popover.Button>
-                    <div
-                        className="text-sm pl-4 pr-2 h-10 bg-nao-bg3 rounded-md flex items-center justify-between text-nao-white min-w-[72px]">
-                        <span className="mr-1">{active[language]}</span>
-                        <img alt="" src={getS3Url('/images/nao/ic_arrow_bottom.png')} height="16" width="16"/>
-                    </div>
-                </Popover.Button>
-                <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-200"
-                    enterFrom="opacity-0 translate-y-1"
-                    enterTo="opacity-100 translate-y-0"
-                    leave="transition ease-in duration-150"
-                    leaveFrom="opacity-100 translate-y-0"
-                    leaveTo="opacity-0 translate-y-1"
-                >
-                    <Popover.Panel
-                        className="absolute min-w-[14.5rem] shadow-onlyLight top-8 left-0 md:left-auto md:right-0 z-50 bg-nao-bg3 rounded-xl mt-3">
-                        <div className="font-medium text-xs flex flex-col">
-                            {days.map((day, index) => {
-                                const isActive = active.value === day.value;
-                                return (
-                                    <div
-                                        key={day.value}
-                                        onClick={() => {
-                                            onChange(day.value);
-                                            close();
-                                        }}
-                                        className={classNames(
-                                            'flex justify-between items-center py-2 px-4 cursor-pointer leading-6',
-                                            'first:rounded-t-xl last:rounded-b-xl hover:bg-onus-2',
-                                        )}>
-                                        <span>{day[language]}</span>
-                                        {isActive && <Check size={16} color={colors.onus.base}/>}
-                                    </div>
-                                );
-                            })}
+    return (
+        <Popover className={popOverClasses}>
+            {({ open, close }) => (
+                <>
+                    <Popover.Button>
+                        <div className="h-10 flex justify-center items-center">
+                            <div className="sm:hidden">
+                                <SvgFilter size={24} color="currentColor" className="text-txtPrimary dark:text-txtPrimary-dark" />
+                            </div>
+                            <div className="hidden sm:flex px-4 py-3 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtSecondary dark:text-txtSecondary-dark rounded-md !font-SF-Pro !text-base">
+                                {active[language]}
+                                <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
+                            </div>
                         </div>
-                    </Popover.Panel>
-                </Transition>
-            </>
-        )}
-    </Popover>;
+                    </Popover.Button>
+                    <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-200"
+                        enterFrom="opacity-0 translate-y-1"
+                        enterTo="opacity-100 translate-y-0"
+                        leave="transition ease-in duration-150"
+                        leaveFrom="opacity-100 translate-y-0"
+                        leaveTo="opacity-0 translate-y-1"
+                    >
+                        <Popover.Panel className="absolute min-w-[8rem] sm:min-w-[10rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-bgPrimary dark:bg-dark-4 border border-divider dark:border-divider-dark rounded-md mt-3">
+                            <div className="text-sm sm:text-base flex flex-col text-txtPrimary dark:text-txtPrimary-dark sm:py-3">
+                                {days.map((day, index) => {
+                                    const isActive = active.value === day.value;
+                                    return (
+                                        <div
+                                            key={day.value}
+                                            onClick={() => {
+                                                onChange(day.value);
+                                                close();
+                                            }}
+                                            className={classNames(
+                                                'flex justify-between items-center py-3 my-1 px-4 cursor-pointer',
+                                                'first:rounded-t-md last:rounded-b-md hover:bg-hover-1 dark:hover:bg-hover-dark'
+                                            )}
+                                        >
+                                            <span>{day[language]}</span>
+                                            {isActive && <CheckCircle color="currentColor" size={16} />}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </Popover.Panel>
+                    </Transition>
+                </>
+            )}
+        </Popover>
+    );
 };
 
 const Days = styled.div.attrs({
-    className: 'px-4 py-2 rounded-[6px] cursor-pointer text-nao-white text-sm bg-nao-bg3 select-none text-center'
+    className: 'px-4 py-2 rounded-[6px] cursor-pointer text-txtPrimary dark:text-txtPrimary-dark text-sm bg-gray-12 dark:bg-dark-2 select-none text-center'
 })`
-  background: ${({ active }) => active ? colors.nao.blue2 : ''};
-  font-weight: ${({ active }) => active ? '600' : '400'}
+    background: ${({ active }) => (active ? colors.teal : '')};
+    font-weight: ${({ active }) => (active ? '600' : '400')};
 `;
 
 export default NaoPerformance;

@@ -1,35 +1,35 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import {
-    formatNumber as formatWallet,
-    getS3Url,
-    getV1Url,
-    setTransferModal,
-    walletLinkBuilder,
-} from 'redux/actions/utils';
-import { Check, Eye, EyeOff, Search, X } from 'react-feather';
+import { dwLinkBuilder, formatNumber as formatWallet, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
+import { MoreHorizIcon } from 'components/svg/SvgIcon';
+
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils';
 import { WalletType } from 'redux/actions/const';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from 'constants/paths';
 import { Menu, useContextMenu } from 'react-contexify';
 
 import useWindowSize from 'hooks/useWindowSize';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import MCard from 'components/common/MCard';
-import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
-import Empty from 'components/common/Empty';
-import Skeletor from 'components/common/Skeletor';
-import RePagination from 'components/common/ReTable/RePagination';
 import Link from 'next/link';
 import AssetLogo from 'components/wallet/AssetLogo';
-
-import 'react-contexify/dist/ReactContexify.css';
+import SvgWalletExchange from 'components/svg/SvgWalletExchange';
+import useOutsideClick from 'hooks/useOutsideClick';
+import TableV2 from 'components/common/V2/TableV2';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import HideSmallBalance from 'components/common/HideSmallBalance';
+import SearchBoxV2 from 'components/common/SearchBoxV2';
+import ModalV2 from 'components/common/V2/ModalV2';
+import EstBalance from 'components/common/EstBalance';
+import NoData from 'components/common/V2/TableV2/NoData';
+import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceToNami';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const INITIAL_STATE = {
-    hideAsset: false,
     hideSmallAsset: false,
     reInitializing: false,
     tableData: null,
@@ -37,218 +37,85 @@ const INITIAL_STATE = {
     currentPage: 1,
     action: null, // action = null is wallet overview
     currentMarketList: null,
-}
+    currentRowAction: null
+};
 
-const MENU_CONTEXT = 'market-available'
+const MENU_CONTEXT = 'market-available';
 
-const ExchangeWallet = ({
-    allAssets,
-    estBtc,
-    estUsd,
-    usdRate,
-    marketWatch,
-}) => {
+const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSmallScreen, isHideAsset, setIsHideAsset }) => {
     // Init State
-    const [state, set] = useState(INITIAL_STATE)
-    const setState = (state) => set((prevState) => ({ ...prevState, ...state }))
-
-    const tableRef = useRef(null)
+    const [state, set] = useState(INITIAL_STATE);
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Use Hooks
-    const r = useRouter()
-    const { t } = useTranslation()
-    const { width } = useWindowSize()
-    const [currentTheme] = useDarkMode()
-    const dispatch = useDispatch()
-    const { show } = useContextMenu({ id: MENU_CONTEXT })
+    const r = useRouter();
+    const { t } = useTranslation();
+    const { width } = useWindowSize();
+    const [currentTheme] = useDarkMode();
+    const dispatch = useDispatch();
+    const { show } = useContextMenu({ id: MENU_CONTEXT });
+    const [curRowSelected, setCurRowSelected] = useState(null);
 
-    // Render Handler
-    const renderAssetTable = useCallback(() => {
-        let tableStatus
+    // handle table:
+    const flag = useRef(false);
+    const popover = useRef(null);
 
-        if (!state.tableData || !state.tableData?.length) {
-            tableStatus = <Empty />
-        }
+    useOutsideClick(popover, () => {
+        return !flag.current && curRowSelected && setCurRowSelected(null);
+    });
 
-        const columns = [
-            {
-                key: 'asset',
-                dataIndex: 'asset',
-                title: t('common:asset'),
-                align: 'left',
-                width: 120,
-                fixed: width >= 992 ? 'none' : 'left',
-            },
-            {
-                key: 'total',
-                dataIndex: 'total',
-                title: t('common:total'),
-                align: 'right',
-                width: 95,
-            },
-            {
-                key: 'available',
-                dataIndex: 'available',
-                title: t('common:available_balance'),
-                align: 'right',
-                width: 95,
-            },
-            {
-                key: 'in_order',
-                dataIndex: 'in_order',
-                title: t('common:in_order'),
-                align: 'right',
-                width: 95,
-            },
-            {
-                key: 'btc_value',
-                dataIndex: 'btc_value',
-                title: t('common:btc_value'),
-                align: 'right',
-                width: 80,
-            },
-            {
-                key: 'operation',
-                dataIndex: 'operation',
-                title: '',
-                align: 'left',
-                width: 380,
-                fixed: width >= 992 ? 'right' : 'none',
-            },
-        ]
-
-        return (
-            <ReTable
-                sort
-                defaultSort={{ key: 'btc_value', direction: 'desc' }}
-                useRowHover
-                data={state.tableData || []}
-                columns={columns}
-                rowKey={(item) => item?.key}
-                loading={!state.tableData?.length}
-                scroll={{ x: true }}
-                tableStatus={tableStatus}
-                tableStyle={{
-                    paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                    tableStyle: { minWidth: '1300px !important' },
-                    headerStyle: {},
-                    rowStyle: {},
-                    shadowWithFixedCol: width < 1366,
-                    noDataStyle: {
-                        minHeight: '480px',
-                    },
-                }}
-                paginationProps={{
-                    hide: true,
-                    current: state.currentPage,
-                    pageSize: ASSET_ROW_LIMIT,
-                    onChange: (currentPage) => setState({ currentPage }),
-                }}
-            />
-        )
-    }, [state.tableData, state.currentPage, width])
-
-    const renderPagination = useCallback(() => {
-        return (
-            <div className='mt-10 mb-20 flex items-center justify-center'>
-                <RePagination
-                    total={state.tableData?.length}
-                    current={state.currentPage}
-                    pageSize={ASSET_ROW_LIMIT}
-                    onChange={(currentPage) => setState({ currentPage })}
-                    name='market_table___list'
-                />
-            </div>
-        )
-    }, [state.tableData, state.currentPage])
+    // handle columns operations in table sticky or not?
+    const [isStickyColOperation, setIsStickyColOperation] = useState(false);
+    useEffect(() => {
+        // setIsStickyColOperation(width >= 992 && width < 1280);
+        setIsStickyColOperation(width < 1280);
+    }, [width]);
 
     const renderEstWallet = useCallback(() => {
         return (
-            <>
-                <div className='mt-5 flex items-center'>
-                    <div className='rounded-md bg-teal-lightTeal dark:bg-teal-5 min-w-[35px] min-h-[35px] md:min-w-[40px] md:min-h-[40px] flex items-center justify-center'>
-                        <img
-                            className='-ml-0.5'
-                            src={getS3Url('/images/icon/ic_wallet_2.png')}
-                            height={width >= 768 ? '25' : '14'}
-                            width={width >= 768 ? '25' : '14'}
-                            alt=''
-                        />
+            <div className="mt-[24px] md:mt-12 flex items-center justify-between">
+                <div className="hidden md:flex rounded-full dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
+                    <SvgWalletExchange size={32} />
+                </div>
+                <div>
+                    <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
+                        {isHideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)} BTC
                     </div>
-                    <div className='ml-3 md:ml-6 sm:flex items-center'>
-                        <div className='font-bold text-[24px] lg:text-[28px] xl:text-[36px] text-dominant flex flex-wrap'>
-                            <span className='mr-1.5'>
-                                {state.hideAsset
-                                    ? SECRET_STRING
-                                    : formatWallet(
-                                          estBtc?.totalValue,
-                                          estBtc?.assetDigit
-                                      )}
-                            </span>
-                            <span>BTC</span>
-                        </div>
-                        <div className='font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 sm:mt-0 sm:ml-4'>
-                            {state.hideAsset
-                                ? `(${SECRET_STRING})`
-                                : `($ ${formatWallet(
-                                      estUsd?.totalValue,
-                                      estUsd?.assetDigit
-                                  )})`}
-                        </div>
+                    <div className="font-normal text-sm md:text-base mt-1">
+                        {isHideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
                     </div>
                 </div>
-                <div
-                    style={
-                        currentTheme === THEME_MODE.LIGHT
-                            ? { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }
-                            : undefined
-                    }
-                    className='px-3 py-2 flex items-center rounded-lg dark:bg-darkBlue-4 lg:px-5 lg:py-4 lg:rounded-xl mt-4 max-w-[368px] lg:max-w-max'
-                >
-                    <div className='font-medium text-xs lg:text-sm pr-3 lg:pr-5 border-r border-divider dark:border-divider-dark'>
-                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            {t('common:available_balance')}:{' '}
-                        </span>{' '}
-                        <span>
-                            {state.hideAsset
-                                ? `${SECRET_STRING}`
-                                : formatWallet(
-                                      estBtc?.value,
-                                      estBtc?.assetDigit
-                                  )}{' '}
-                            BTC
-                        </span>
-                    </div>
-                    <div className='font-medium text-xs lg:text-sm pl-3 lg:pl-5'>
-                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            {t('common:in_order')}:{' '}
-                        </span>{' '}
-                        <span>
-                            {state.hideAsset
-                                ? `${SECRET_STRING}`
-                                : formatWallet(
-                                      estBtc?.locked,
-                                      estBtc?.assetDigit
-                                  )}{' '}
-                            BTC
-                        </span>
-                    </div>
+            </div>
+        );
+    }, [estBtc, estUsd, isHideAsset, currentTheme]);
+
+    // Kha dung - dang dat lenh2
+    const renderAvailableBalance = useCallback(() => {
+        return (
+            <div className="txtPri-1 grid grid-cols-2 mt-5 md:flex md:justify-start md:mt-8">
+                <div className="flex flex-col md:flex-row pr-4 md:pr-8 md:items-center">
+                    <span className="txtSecond-1">{t('common:available_balance')}: &nbsp;</span>
+                    <span className="mt-2 md:mt-0">{isHideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit)} BTC</span>
                 </div>
-            </>
-        )
-    }, [estBtc, estUsd, state.hideAsset, currentTheme])
+                <div className="pl-4 border-l border-divider dark:border-divider-dark md:flex md:border-none md:items-center">
+                    <div className="txtSecond-1">{t('common:in_order')}: &nbsp;</div>
+                    <div className="mt-2 md:mt-0">{isHideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit)} BTC</div>
+                </div>
+            </div>
+        );
+    }, [estBtc, isHideAsset, currentTheme]);
 
     const renderMarketListContext = useCallback(() => {
-        if (!state.currentMarketList) return null
+        if (!state.currentMarketList) return null;
 
-        const markets = []
+        const markets = [];
         state.currentMarketList.forEach((item, index) => {
-            const pair = initMarketWatchItem(item)
+            const pair = initMarketWatchItem(item);
             markets.push(
-                <div className='px-2'>
+                <div className="px-2">
                     <Link
                         href={PATHS.EXCHANGE.TRADE.getPair(undefined, {
-                            pair: `${pair?.baseAsset}-${pair?.quoteAsset}`,
+                            pair: `${pair?.baseAsset}-${pair?.quoteAsset}`
                         })}
                     >
                         <a
@@ -262,457 +129,663 @@ const ExchangeWallet = ({
                         </a>
                     </Link>
                 </div>
-            )
-        })
+            );
+        });
 
         return (
             <Menu
                 id={MENU_CONTEXT}
                 animation={false}
                 style={{ boxShadow: 'none' }}
-                className='!min-w-[100px] !w-auto !p-0 !rounded-lg !overflow-hidden
-                             !drop-shadow-onlyLight dark:!drop-shadow-none !bg-bgContainer dark:!bg-darkBlue-3'
+                className="!min-w-[100px] !w-auto !p-0 !rounded-lg !overflow-hidden
+                             !drop-shadow-onlyLight dark:!drop-shadow-none !bg-bgContainer dark:!bg-darkBlue-3"
             >
                 {markets}
             </Menu>
-        )
-    }, [state.currentMarketList])
+        );
+    }, [state.currentMarketList]);
 
     useEffect(() => {
         if (r?.query?.action) {
-            setState({ action: r.query.action })
+            setState({ action: r.query.action });
         } else {
-            setState({ action: null })
+            setState({ action: null });
         }
-    }, [r])
+    }, [r]);
 
     useEffect(() => {
-        if (
-            state.action &&
-            Object.keys(EXCHANGE_ACTION).includes(state.action.toUpperCase())
-        ) {
-            r.replace(`?action=${state.action}`)
+        if (state.action && Object.keys(EXCHANGE_ACTION).includes(state.action.toUpperCase())) {
+            r.replace(`?action=${state.action}`);
         }
-    }, [state.action])
+    }, [state.action]);
 
     useEffect(() => {
         if (allAssets && Array.isArray(allAssets) && allAssets?.length) {
-            const origin = dataHandler(allAssets, {
-                usdRate,
-                marketWatch,
-                translator: t,
-                dispatch,
-                setState,
-                show,
-            })
-            let tableData = origin
-            if (state.hideSmallAsset) {
-                tableData = origin.filter(
-                    (item) => item?.sortByValue?.total > 1
-                )
-            }
-            if (state.search) {
-                tableData = tableData.filter((item) =>
-                    item?.sortByValue?.asset.includes(
-                        state.search?.toUpperCase()
-                    )
-                )
-            }
-            tableData && setState({ tableData })
-        }
-    }, [allAssets, usdRate, marketWatch, state.hideSmallAsset, state.search])
+            let tableData = allAssets;
 
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: => ', state)
-    // }, [state])
+            const minSmallBalance = 0;
+            if (state.hideSmallAsset) {
+                tableData = tableData.filter((item) => item?.wallet?.value > minSmallBalance);
+            }
+
+            if (state.search) {
+                tableData = tableData.filter((item) => {
+                    return (
+                        item?.assetCode?.toUpperCase().includes(state.search?.toUpperCase()) ||
+                        item?.assetName?.toUpperCase().includes(state.search?.toUpperCase())
+                    );
+                });
+            }
+
+            tableData && setState({ tableData });
+        }
+    }, [allAssets, usdRate, marketWatch, state.hideSmallAsset, state.search, curRowSelected]);
+
+    // Render Handler
+    const renderAssetTable = useCallback(() => {
+        if (isSmallScreen) return null;
+        const columns = [
+            {
+                key: 'assetCode',
+                dataIndex: 'assetCode',
+                title: t('common:asset'),
+                align: 'left',
+                width: 210,
+                fixed: 'left',
+                render: (v, item) => (
+                    <div className="flex items-center gap-4">
+                        <AssetLogo assetCode={v} size={32} />
+                        <div className="flex flex-col space-y-1">
+                            <span className="font-semibold">{v}</span>
+                            <span className="text-xs text-txtSecondary-dark">{item?.assetName}</span>
+                        </div>
+                    </div>
+                )
+            },
+            {
+                key: 'wallet.value',
+                dataIndex: ['wallet', 'value'],
+                title: t('common:total'),
+                align: 'right',
+                width: 200,
+                render: (v, item) => (
+                    <span className="whitespace-nowrap">
+                        {isHideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                    </span>
+                )
+            },
+            {
+                key: 'available',
+                dataIndex: 'available',
+                title: t('common:available_balance'),
+                align: 'right',
+                width: 200,
+                render: (v, item) => (isHideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000')
+            },
+            {
+                key: 'wallet.locked_value',
+                dataIndex: ['wallet', 'locked_value'],
+                title: t('common:in_order'),
+                align: 'right',
+                width: 200,
+                render: (v, item) => {
+                    let lockedValue = formatWallet(v, item?.assetDigit);
+                    if (lockedValue === 'NaN') {
+                        lockedValue = '0.0000';
+                    }
+                    return (
+                        <span className="whitespace-nowrap">
+                            {isHideAsset ? (
+                                SECRET_STRING
+                            ) : v ? (
+                                <Link href={PATHS.EXCHANGE.TRADE.DEFAULT}>
+                                    <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
+                                </Link>
+                            ) : (
+                                '0.0000'
+                            )}
+                        </span>
+                    );
+                }
+            },
+            {
+                key: 'wallet.value',
+                dataIndex: ['wallet', 'value'],
+                title: t('common:btc_value'),
+                align: 'right',
+                width: 200,
+                render: (v, item) => {
+                    const assetUsdRate = usdRate?.[item?.id] || 0;
+                    const btcUsdRate = usdRate?.['9'] || 0;
+
+                    const totalUsd = v * assetUsdRate;
+                    const totalBtc = totalUsd / btcUsdRate;
+
+                    return (
+                        <div>
+                            {assetUsdRate ? (
+                                <>
+                                    <div className="whitespace-nowrap">{isHideAsset ? SECRET_STRING : totalBtc ? formatWallet(totalBtc, 4) : '0.0000'}</div>
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
+                                        ({isHideAsset ? '$' + SECRET_STRING : totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
+                                    </div>
+                                </>
+                            ) : (
+                                '--'
+                            )}
+                        </div>
+                    );
+                }
+            },
+            {
+                key: 'operation',
+                dataIndex: 'operation',
+                title: '',
+                align: 'left',
+                width: 72,
+                // fixed: 'right'
+                fixed: isStickyColOperation ? 'right' : 'none',
+                render: (v, item, idx) => {
+                    const marketAvailable = getMarketAvailable(item?.assetCode, marketWatch);
+
+                    return (
+                        <RenderOperationLink2
+                            // rowData={curRowSelected}
+                            isShow={curRowSelected?.id === item?.id}
+                            idx={idx}
+                            onClick={(e) => {
+                                flag.current = true;
+                                setCurRowSelected((prev) => {
+                                    return prev && prev?.id === e?.id ? null : e;
+                                });
+                            }}
+                            isStickyColOperation={isStickyColOperation}
+                            item={item}
+                            popover={popover}
+                            assetName={item?.assetName}
+                            utils={{
+                                usdRate,
+                                marketWatch,
+                                translator: t,
+                                dispatch,
+                                setState,
+                                show,
+                                marketAvailable
+                            }}
+                            onMouseOut={() => (flag.current = false)}
+                            router={router}
+                        />
+                    );
+                }
+            }
+        ];
+
+        return (
+            <TableV2
+                sort
+                defaultSort={{ key: 'wallet.value', direction: 'desc' }}
+                useRowHover
+                data={state.tableData || []}
+                columns={columns}
+                rowKey={(item) => item?.key}
+                scroll={{ x: true }}
+                limit={ASSET_ROW_LIMIT}
+                skip={0}
+                isSearch={!!state.search}
+                height={404}
+                noBorder
+                pagingClassName="border-none"
+                tableStyle={{ fontSize: '16px', padding: '16px' }}
+                className="border border-divider dark:border-divider-dark rounded-xl pt-4  md:mt-8"
+            />
+        );
+    }, [state.tableData, state.currentPage, width, usdRate, curRowSelected, isHideAsset]);
+
+    // Check Kyc before redirect to page Deposit / Withdraw
+    const router = useRouter();
+
+    const ListButton = ({ className }) => {
+        return (
+            <div className={className}>
+                <ButtonV2 className="px-6" onClick={() => router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))}>
+                    {t('common:deposit')}
+                </ButtonV2>
+                <ButtonV2
+                    // onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
+                    onClick={() => router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL))}
+                    className="px-6"
+                    variants="secondary"
+                >
+                    {t('common:withdraw')}
+                </ButtonV2>
+                <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" variants="secondary">
+                    {t('common:transfer')}
+                </ButtonV2>
+            </div>
+        );
+    };
+
+    const [curAssetCodeAction, setCurAssetCodeAction] = useState('');
+
+    const renderModalActionMobile = useCallback(() => {
+        if (!curAssetCodeAction) return null;
+
+        const marketAvailable = getMarketAvailable(curAssetCodeAction, marketWatch);
+        const noMarket = !marketAvailable?.length;
+
+        let tradeButton = null;
+        if (Array.isArray(marketAvailable) && marketAvailable?.length) {
+            if (marketAvailable?.length === 1) {
+                const pair = initMarketWatchItem(marketAvailable?.[0]);
+                // console.log('namidev-DEBUG: => ', pair)
+                tradeButton = (
+                    <Link
+                        href={PATHS.EXCHANGE?.TRADE?.getPair(undefined, {
+                            pair: `${curAssetCodeAction}-${pair?.quoteAsset}`
+                        })}
+                        prefetch={false}
+                    >
+                        <a>{t('common:trade')}</a>
+                    </Link>
+                );
+            } else {
+                tradeButton = (
+                    <span
+                        onClick={(e) => {
+                            utils?.setState({
+                                currentMarketList: marketAvailable
+                            });
+                            setTimeout(() => utils?.show(e), 200);
+                        }}
+                    >
+                        {t('common:trade')}
+                    </span>
+                );
+            }
+        }
+
+        return (
+            <ModalV2 isVisible={curAssetCodeAction} onBackdropCb={() => setCurAssetCodeAction(null)} wrapClassName="px-6" isMobile={true}>
+                <div className="flex flex-col gap-3 items-start">
+                    <Link
+                        href={PATHS.EXCHANGE?.SWAP?.getSwapPair({
+                            fromAsset: 'USDT',
+                            toAsset: curAssetCodeAction
+                        })}
+                    >
+                        {t('common:buy')}
+                    </Link>
+                    <button
+                        onClick={() =>
+                            router.push(
+                                dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, curAssetCodeAction)
+                                // walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                                //     type: 'crypto',
+                                //     asset: curAssetCodeAction
+                                // })
+                            )
+                        }
+                    >
+                        {t('common:deposit')}
+                    </button>
+                    <button
+                        onClick={() =>
+                            router.push(
+                                dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL, curAssetCodeAction)
+                                // walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, {
+                                //     type: 'crypto',
+                                //     asset: curAssetCodeAction
+                                // })
+                            )
+                        }
+                    >
+                        {t('common:withdraw')}
+                    </button>
+
+                    {!noMarket && tradeButton}
+                    {ALLOWED_FUTURES_TRANSFER.includes(curAssetCodeAction) && (
+                        <button
+                            onClick={() =>
+                                dispatch(
+                                    setTransferModal({
+                                        isVisible: true,
+                                        fromWallet: WalletType.SPOT,
+                                        toWallet: WalletType.FUTURES,
+                                        asset: curAssetCodeAction
+                                    })
+                                )
+                            }
+                        >
+                            {t('common:transfer')}
+                        </button>
+                    )}
+                </div>
+            </ModalV2>
+        );
+    }, [curAssetCodeAction]);
 
     return (
         <>
-            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between'>
-                <div className='t-common whitespace-nowrap'>
-                    {t('common:overview')}
+            <MCard
+                addClass={`mt-5 !p-8 rounded-xl
+             ${currentTheme === THEME_MODE.DARK ? ' bg-bgTabInactive-dark border border-divider-dark' : ' bg-white shadow-card_light border-none'}`}
+            >
+                <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 flex justify-between items-end">
+                    <div>
+                        <EstBalance onClick={() => setIsHideAsset(!isHideAsset)} isHide={isHideAsset} isSmallScreen={isSmallScreen} />
+                        {renderEstWallet()}
+                    </div>
+                    <div className="hidden md:block">
+                        <ListButton className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto gap-3" />
+                    </div>
                 </div>
-                <div className='flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto'>
-                    <Link
-                        href={walletLinkBuilder(
-                            WalletType.SPOT,
-                            EXCHANGE_ACTION.DEPOSIT
+                {renderAvailableBalance()}
+            </MCard>
+            <ListButton className="mt-6 flex items-end justify-end h-full w-full gap-2 md:hidden" />
+
+            {/* Khi nao co Function Chuyen so du nho thanh Nami thi remove code nay */}
+            {/* <div className="mt-12 md:mt-16 flex items-center justify-between">
+                <div className="t-common-v2 hidden md:block">Exchange</div>
+                {isSmallScreen ? (
+                    <div className="w-full flex items-center justify-between">
+                        <SearchBoxV2
+                            value={state.search}
+                            onChange={(value) => {
+                                setState({ search: value });
+                            }}
+                            onFocus={() => setState({ currentPage: 1 })}
+                            wrapperClassname="w-[180px]"
+                            width={width}
+                        />
+                        <HideSmallBalance
+                            onClick={() =>
+                                setState({
+                                    hideSmallAsset: !state.hideSmallAsset
+                                })
+                            }
+                            isHide={state.hideSmallAsset}
+                            className="whitespace-nowrap"
+                            width={width}
+                        />
+                    </div>
+                ) : (
+                    <div className="flex items-center">
+                        <HideSmallBalance
+                            onClick={() =>
+                                setState({
+                                    hideSmallAsset: !state.hideSmallAsset
+                                })
+                            }
+                            isHide={state.hideSmallAsset}
+                            className="mr-8 whitespace-nowrap"
+                            width={width}
+                        />
+                        <SearchBoxV2
+                            value={state.search}
+                            onChange={(value) => {
+                                setState({ search: value });
+                            }}
+                            onFocus={() => setState({ currentPage: 1 })}
+                            width={width}
+                        />
+                    </div>
+                )}
+            </div> */}
+
+            {/* Khi nao co Function Chuyen so du nho thanh Nami thi enable code nay */}
+            <div className="mt-12 md:mt-16 lg:items-center lg:justify-between">
+                <div className="t-common-v2 hidden md:block">Exchange</div>
+                <div className="flex items-end justify-between md:pt-8">
+                    <TransferSmallBalanceToNami className="hidden md:flex" width={width} allAssets={allAssets} />
+
+                    {isSmallScreen ? (
+                        <div className="w-full flex items-center justify-between">
+                            <SearchBoxV2
+                                value={state.search}
+                                onChange={(value) => {
+                                    setState({ search: value });
+                                }}
+                                onFocus={() => setState({ currentPage: 1 })}
+                                wrapperClassname="w-[180px]"
+                                width={width}
+                            />
+                            <HideSmallBalance
+                                onClick={() =>
+                                    setState({
+                                        hideSmallAsset: !state.hideSmallAsset
+                                    })
+                                }
+                                isHide={state.hideSmallAsset}
+                                className="whitespace-nowrap"
+                                width={width}
+                            />
+                        </div>
+                    ) : (
+                        <div className="flex items-center">
+                            <HideSmallBalance
+                                onClick={() =>
+                                    setState({
+                                        hideSmallAsset: !state.hideSmallAsset
+                                    })
+                                }
+                                isHide={state.hideSmallAsset}
+                                className="mr-8 whitespace-nowrap"
+                                width={width}
+                            />
+                            <SearchBoxV2
+                                value={state.search}
+                                onChange={(value) => {
+                                    setState({ search: value });
+                                }}
+                                onFocus={() => setState({ currentPage: 1 })}
+                                width={width}
+                            />
+                        </div>
+                    )}
+                </div>
+            </div>
+            <div className="hidden md:block">{renderAssetTable()}</div>
+            <div className="md:hidden flex flex-col gap-4 mt-4 mb-20 text-sm dark:text-gray-4 text-gray-15">
+                {state?.tableData && state?.tableData?.length > 0 && isSmallScreen ? (
+                    <>
+                        {state.tableData.map((item, index) => {
+                            const { assetCode, assetDigit, assetName, available, id, wallet } = item;
+                            const assetUsdRate = usdRate?.[id] || 0;
+                            const totalUsd = wallet.value * assetUsdRate;
+                            const hidden = index + 1 > state.currentPage * ASSET_ROW_LIMIT;
+
+                            return (
+                                <div
+                                    key={'mobile_row_' + item.id}
+                                    className={`w-full flex flex-col p-4 gap-4 bg-gray-13 dark:bg-dark-4 rounded-xl ${hidden && 'hidden'}`}
+                                >
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex items-center">
+                                            <AssetLogo assetCode={assetCode} size={32} />
+                                            <span className="font-semibold mr-2 ml-3">{assetCode}</span>
+                                            <span className="txtSecond-1">{assetName}</span>
+                                        </div>
+                                        <div className="cursor-pointer">
+                                            <MoreHorizIcon onClick={() => setCurAssetCodeAction(assetCode)} />
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <span className="txtPri-1 whitespace-nowrap">
+                                            {isHideAsset
+                                                ? SECRET_STRING
+                                                : wallet.value
+                                                ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                : '0.0000'}
+                                        </span>
+                                        &nbsp;
+                                        <span className="txtSecond-1  whitespace-nowrap">
+                                            ~ ${isHideAsset ? SECRET_STRING : totalUsd > 0 ? formatWallet(totalUsd, 2) : '0.0000'}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="txtSecond-2">{t('common:available_balance')}</span>
+                                            <span className="txtPri-1">
+                                                {isHideAsset
+                                                    ? SECRET_STRING
+                                                    : available
+                                                    ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center justify-between mt-3">
+                                            <span className="txtSecond-2">{t('common:in_order')}</span>
+                                            <span className="txtPri-1">
+                                                {isHideAsset
+                                                    ? SECRET_STRING
+                                                    : wallet.locked_value
+                                                    ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        {state.tableData.length > state.currentPage * ASSET_ROW_LIMIT + ASSET_ROW_LIMIT && (
+                            <div
+                                onClick={() => setState({ currentPage: state.currentPage + 1 })}
+                                className="text-teal text-sm font-semibold text-center cursor-pointer mt-2"
+                            >
+                                {t('common:load_more')}
+                            </div>
                         )}
-                    >
-                        <a className='py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer'>
-                            {t('common:deposit')}
-                        </a>
-                    </Link>
-                    <div className='w-full h-[8px] sm:hidden' />
+                    </>
+                ) : (
+                    <NoData className="mt-12" isSearch={!!state.search} />
+                )}
+            </div>
+
+            {/* {renderPagination()} */}
+
+            {renderMarketListContext()}
+            {renderModalActionMobile()}
+        </>
+    );
+};
+
+const ASSET_ROW_LIMIT = 10;
+
+const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils, idx, isStickyColOperation, onMouseOut, router }) => {
+    const markets = utils?.marketAvailable;
+    const noMarket = !markets?.length;
+
+    let tradeButton = null;
+    const cssLi = `w-full px-4 py-2 flex items-center justify-center cursor-pointer
+    hover:text-txtTabHover dark:hover:text-txtTextBtn-dark
+    hover:bg-gray-13 dark:hover:bg-hover-dark
+    `;
+    const cssPopover = () => {
+        if (isStickyColOperation) {
+            return `absolute ${idx >= 0 && idx < ASSET_ROW_LIMIT - 3 ? 'top-2/3 mt-2' : 'bottom-2/3 mb-2'} right-full`;
+        } else {
+            return `absolute ${ASSET_ROW_LIMIT - idx < 4 ? 'bottom-2/3 mb-2' : 'top-2/3 mt-2'} right-1/2`;
+        }
+    };
+
+    if (Array.isArray(markets) && markets?.length) {
+        if (markets?.length === 1) {
+            const pair = initMarketWatchItem(markets?.[0]);
+            // console.log('namidev-DEBUG: => ', pair)
+            tradeButton = (
+                <li>
                     <Link
-                        href={walletLinkBuilder(
-                            WalletType.SPOT,
-                            EXCHANGE_ACTION.WITHDRAW
-                        )}
+                        href={PATHS.EXCHANGE?.TRADE?.getPair(undefined, {
+                            pair: `${assetName}-${pair?.quoteAsset}`
+                        })}
+                        prefetch={false}
                     >
-                        <a className='py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px]  mr-3.5 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer'>
-                            {t('common:withdraw')}
-                        </a>
+                        <a className={cssLi}>{utils?.translator('common:trade')}</a>
                     </Link>
-                    {/*<Link href="/wallet/exchange/transfer?from=exchange" prefetch>*/}
-                    <div
+                </li>
+            );
+        } else {
+            tradeButton = (
+                <li
+                    className={cssLi}
+                    onClick={(e) => {
+                        utils?.setState({
+                            currentMarketList: utils?.marketAvailable
+                        });
+                        setTimeout(() => utils?.show(e), 200);
+                    }}
+                >
+                    {utils?.translator('common:trade')}
+                </li>
+            );
+        }
+    }
+
+    return (
+        <div className=" h-full flex items-center justify-between" id={item.id} onMouseOut={onMouseOut}>
+            <button onClick={() => onClick(item)} className="relative w-full flex items-center justify-center px-0 z-30">
+                <MoreHorizIcon />
+            </button>
+            {/* Popover */}
+            <ul
+                ref={isShow ? popover : null}
+                className={`py-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl
+                border-[0.5px] border-divider dark:border-divider-dark
+                bg-white dark:bg-listItemSelected-dark
+                text-gray-1 dark:text-txtPrimary-dark text-left text-base font-normal
+                ${isShow ? 'block' : 'hidden'} ${cssPopover()}`}
+            >
+                <li className={cssLi}>
+                    <a
+                        href={PATHS.EXCHANGE?.SWAP?.getSwapPair({
+                            fromAsset: 'USDT',
+                            toAsset: assetName
+                        })}
+                    >
+                        {utils?.translator('common:buy')}
+                    </a>
+                </li>
+                {!noMarket && tradeButton}
+                <li
+                    className={cssLi}
+                    onClick={() =>
+                        // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: item?.assetCode || assetName }))
+                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, item?.assetCode || assetName))
+                    }
+                >
+                    {utils?.translator('common:deposit')}
+                </li>
+                <li
+                    className={cssLi}
+                    onClick={() =>
+                        // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: item?.assetCode || assetName }))
+                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL, item?.assetCode || assetName))
+                    }
+                >
+                    {utils?.translator('common:withdraw')}
+                </li>
+                {ALLOWED_FUTURES_TRANSFER.includes(assetName) && (
+                    <li
+                        className={cssLi}
                         onClick={() =>
-                            dispatch(
+                            utils?.dispatch(
                                 setTransferModal({
                                     isVisible: true,
                                     fromWallet: WalletType.SPOT,
                                     toWallet: WalletType.FUTURES,
+                                    asset: assetName
                                 })
                             )
                         }
-                        className='py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer'
                     >
-                        {t('common:transfer')}
-                    </div>
-                    {/*</Link>*/}
-                </div>
-            </div>
-            <MCard addClass='mt-5 !p-6 xl:!p-10'>
-                <div className='flex flex-col md:flex-row md:items-center md:justify-between'>
-                    <div>
-                        <div className='flex items-center font-medium text-sm'>
-                            <div className='mr-2'>
-                                {t('wallet:est_balance')}
-                            </div>
-                            <div
-                                className='flex items-center text-txtSecondary dark:text-txtSecondary-dark cursor-pointer hover:opacity-80 select-none'
-                                onClick={() =>
-                                    setState({ hideAsset: !state.hideAsset })
-                                }
-                            >
-                                {state.hideAsset ? (
-                                    <EyeOff size={16} className='mr-[4px]' />
-                                ) : (
-                                    <Eye size={16} className='mr-[4px]' />
-                                )}{' '}
-                                {t('wallet:hide_asset')}
-                            </div>
-                        </div>
-                        {renderEstWallet()}
-                    </div>
-                    <div className='hidden md:block'>
-                        <img
-                            src={getS3Url(
-                                '/images/screen/wallet/wallet_overview_grp.png'
-                            )}
-                            width='140'
-                            height='140'
-                            alt=''
-                        />
-                    </div>
-                </div>
-            </MCard>
-
-            <div className='mt-16 lg:flex lg:items-center lg:justify-between'>
-                <div className='t-common'>Exchange</div>
-                <div className='mt-2 lg:flex'>
-                    <div className='flex items-center justify-between lg:mr-5'>
-                        <div
-                            className='flex items-center select-none cursor-pointer lg:mr-5'
-                            onClick={() =>
-                                setState({
-                                    hideSmallAsset: !state.hideSmallAsset,
-                                })
-                            }
-                        >
-                            <span
-                                className={
-                                    state.hideSmallAsset
-                                        ? 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[4px] border border-dominant bg-dominant'
-                                        : 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[4px] border border-gray-3 dark:border-darkBlue-4'
-                                }
-                            >
-                                {state.hideSmallAsset ? (
-                                    <Check size={10} color='#FFFFFF' />
-                                ) : null}
-                            </span>
-                            <span className='ml-3 text-xs'>
-                                {t('wallet:hide_small_balance')}
-                            </span>
-                        </div>
-                        {/*<div className="flex items-center rounded-[4px] lg:px-4 py-3 lg:bg-teal-lightTeal lg:dark:bg-teal-opacity select-none cursor-pointer hover:opacity-80">*/}
-                        {/*    <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="16" height="16"/>*/}
-                        {/*    <a href="/" className="text-xs ml-3 text-dominant cursor-pointer">*/}
-                        {/*        {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}*/}
-                        {/*    </a>*/}
-                        {/*</div>*/}
-                    </div>
-                    <div className='py-2 px-3 mt-4 lg:mt-0 lg:py-3 lg:px-5 flex items-center rounded-md bg-gray-5 dark:bg-darkBlue-4'>
-                        <Search
-                            size={width >= 768 ? 20 : 16}
-                            className='text-txtSecondary dark:text-txtSecondary-dark'
-                        />
-                        <input
-                            className='text-sm w-full px-2.5'
-                            value={state.search}
-                            onChange={(e) =>
-                                setState({ search: e?.target?.value })
-                            }
-                            onFocus={() => setState({ currentPage: 1 })}
-                            placeholder={t('common:search')}
-                        />
-                        {state.search && (
-                            <X
-                                size={width >= 768 ? 20 : 16}
-                                className='cursor-pointer'
-                                onClick={() => setState({ search: '' })}
-                            />
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            <MCard
-                getRef={(ref) => (tableRef.current = ref)}
-                style={
-                    currentTheme === THEME_MODE.LIGHT
-                        ? { boxShadow: '0px 7px 23px rgba(0, 0, 0, 0.05)' }
-                        : {}
-                }
-                addClass='relative mt-5 pt-0 pb-0 px-0 overflow-hidden'
-            >
-                {renderAssetTable()}
-            </MCard>
-
-            {renderPagination()}
-
-            {renderMarketListContext()}
-        </>
-    )
-}
-
-const ASSET_ROW_LIMIT = 10
-
-const dataHandler = (data, utils) => {
-    if (!data || !data?.length) {
-        const skeleton = []
-        for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
-            skeleton.push({
-                ...ROW_LOADING_SKELETON,
-                key: `asset_loading__skeleton_${i}`,
-            })
-        }
-        return skeleton
-    }
-
-    const result = []
-
-    data.forEach((item) => {
-        let lockedValue = formatWallet(
-            item?.wallet?.locked_value,
-            item?.assetDigit
-        )
-        if (lockedValue === 'NaN') {
-            lockedValue = '0.0000'
-        }
-
-        const marketAvailable = getMarketAvailable(
-            item?.assetCode,
-            utils?.marketWatch
-        )
-
-        const assetUsdRate = utils?.usdRate?.[item?.id] || 0
-        const btcUsdRate = utils?.usdRate?.['9'] || 0
-
-        const totalUsd = item?.wallet?.value * assetUsdRate
-        const totalBtc = totalUsd / btcUsdRate
-
-        result.push({
-            key: `exchange_asset___${item?.assetCode}`,
-            asset: (
-                <div className='flex items-center'>
-                    <AssetLogo assetCode={item?.assetCode} size={32} />
-                    <div className='ml-2 text-sm'>
-                        <div>{item?.assetCode}</div>
-                        <div className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
-                            {item?.assetFullName ||
-                                item?.assetName ||
-                                item?.assetCode}
-                        </div>
-                    </div>
-                </div>
-            ),
-            total: (
-                <span className='text-sm whitespace-nowrap'>
-                    {item?.wallet?.value
-                        ? formatWallet(
-                              item?.wallet?.value,
-                              item?.assetCode === 'USDT' ? 2 : item?.assetDigit
-                          )
-                        : '0.0000'}
-                </span>
-            ),
-            available: (
-                <span className='text-sm whitespace-nowrap'>
-                    {item?.wallet?.value - item?.wallet?.locked_value
-                        ? formatWallet(
-                              item?.wallet?.value - item?.wallet?.locked_value,
-                              item?.assetCode === 'USDT' ? 2 : item?.assetDigit
-                          )
-                        : '0.0000'}
-                </span>
-            ),
-            in_order: (
-                <span className='text-sm whitespace-nowrap'>
-                    {item?.wallet?.locked_value ? (
-                        <Link href={PATHS.EXCHANGE.TRADE.DEFAULT}>
-                            <a className='hover:text-dominant hover:!underline'>
-                                {lockedValue}
-                            </a>
-                        </Link>
-                    ) : (
-                        '0.0000'
-                    )}
-                </span>
-            ),
-            btc_value: (
-                <div className='text-sm'>
-                    {assetUsdRate ? (
-                        <>
-                            <div className='whitespace-nowrap'>
-                                {totalBtc
-                                    ? formatWallet(totalBtc, item?.assetDigit)
-                                    : '0.0000'}
-                            </div>
-                            <div className='text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap'>
-                                (
-                                {totalUsd > 0
-                                    ? ' ≈ $' + formatWallet(totalUsd, 2)
-                                    : '$0.0000'}
-                                )
-                            </div>
-                        </>
-                    ) : (
-                        '--'
-                    )}
-                </div>
-            ),
-            operation: renderOperationLink(item?.assetName, {
-                ...utils,
-                marketAvailable,
-            }),
-            [RETABLE_SORTBY]: {
-                asset: item?.assetName,
-                total: +item?.wallet?.value,
-                available: +item?.wallet?.value - +item?.wallet?.locked_value,
-                in_order: item?.wallet?.locked_value,
-                btc_value: +totalUsd,
-            },
-        })
-    })
-
-    return result
-}
-
-const renderOperationLink = (assetName, utils) => {
-    const markets = utils?.marketAvailable
-    const noMarket = !markets?.length
-
-    let tradeButton = null
-    if (Array.isArray(markets) && markets?.length) {
-        if (markets?.length === 1) {
-            const pair = initMarketWatchItem(markets?.[0])
-            // console.log('namidev-DEBUG: => ', pair)
-            tradeButton = (
-                <Link
-                    href={PATHS.EXCHANGE?.TRADE?.getPair(undefined, {
-                        pair: `${assetName}-${pair?.quoteAsset}`,
-                    })}
-                    prefetch={false}
-                >
-                    <a
-                        className='relative select-none py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center
-                                text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white'
-                    >
-                        {utils?.translator('common:trade')}
-                    </a>
-                </Link>
-            )
-        } else {
-            tradeButton = (
-                <div
-                    className='relative select-none py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center
-                                text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white'
-                    onClick={(e) => {
-                        utils?.setState({
-                            currentMarketList: utils?.marketAvailable,
-                        })
-                        setTimeout(() => utils?.show(e), 200)
-                    }}
-                >
-                    {utils?.translator('common:trade')}
-                </div>
-            )
-        }
-    }
-
-    return (
-        <div className='relative flex pl-12'>
-            <a
-                className='py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white'
-                href={PATHS.EXCHANGE?.SWAP?.getSwapPair({
-                    fromAsset: 'USDT',
-                    toAsset: assetName,
-                })}
-            >
-                {/*`/wallet/exchange/deposit?type=crypto&asset=${assetName}`*/}
-                {utils?.translator('common:buy')}
-            </a>
-            {!noMarket && tradeButton}
-            <a
-                className='py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white'
-                href={walletLinkBuilder(
-                    WalletType.SPOT,
-                    EXCHANGE_ACTION.DEPOSIT,
-                    { type: 'crypto', asset: assetName }
+                        {utils?.translator('common:transfer')}
+                    </li>
                 )}
-            >
-                {utils?.translator('common:deposit')}
-            </a>
-            <a
-                className='py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white'
-                href={walletLinkBuilder(
-                    WalletType.SPOT,
-                    EXCHANGE_ACTION.WITHDRAW,
-                    { type: 'crypto', asset: assetName }
-                )}
-            >
-                {utils?.translator('common:withdraw')}
-            </a>
-            {ALLOWED_FUTURES_TRANSFER.includes(assetName) && (
-                <div
-                    className='py-1.5 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white'
-                    onClick={() =>
-                        utils?.dispatch(
-                            setTransferModal({
-                                isVisible: true,
-                                fromWallet: WalletType.SPOT,
-                                toWallet: WalletType.FUTURES,
-                                asset: assetName,
-                            })
-                        )
-                    }
-                >
-                    {utils?.translator('common:transfer')}
-                </div>
-            )}
+            </ul>
         </div>
-    )
-}
+    );
+};
 
-const ALLOWED_FUTURES_TRANSFER = ['VNDC', 'USDT', 'NAMI', 'NAC']
+const ALLOWED_FUTURES_TRANSFER = ['VNDC', 'USDT', 'NAMI', 'NAC'];
 
-const ROW_LOADING_SKELETON = {
-    asset: <Skeletor width={65} />,
-    total: <Skeletor width={65} />,
-    available: <Skeletor width={65} />,
-    in_order: <Skeletor width={65} />,
-    operation: <Skeletor width={125} />,
-}
-
-export default ExchangeWallet
+export default ExchangeWallet;

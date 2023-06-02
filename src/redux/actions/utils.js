@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState, useMemo } from 'react';
 import qs from 'qs';
 import format from 'date-fns/format';
 import numeral from 'numeral';
@@ -15,10 +15,12 @@ import {
     LoginButtonPosition,
     TokenConfigV1 as TokenConfig,
     TradingViewSupportTimezone,
-    WalletType
+    WalletType,
+    rateCurrency
 } from './const';
 import { SET_BOTTOM_NAVIGATION, SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types';
-
+import { API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
+import fetchAPI from 'utils/fetch-api';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { PATHS } from 'constants/paths';
@@ -26,6 +28,22 @@ import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/
 
 const WAValidator = require('multicoin-address-validator');
 const EthereumAddress = require('ethereum-address');
+import ChevronDown from 'src/components/svg/ChevronDown';
+import colors from 'styles/colors';
+import { useTranslation } from 'next-i18next';
+import { createSelector } from 'reselect';
+import { FuturesOrderTypes } from 'redux/reducers/futures';
+import { CopyIcon, CheckedIcon } from 'components/svg/SvgIcon';
+import { useSelector } from 'react-redux';
+import utilsSelectors from 'redux/selectors/utilsSelectors';
+import { useRouter } from 'next/router';
+import { log } from 'utils';
+import { cloneDeep } from 'lodash';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE as SIDE_DW } from 'redux/reducers/withdrawDeposit';
+import moment from 'moment-timezone';
+import usePrevious from 'hooks/usePrevious';
+import classNames from 'classnames';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -35,19 +53,13 @@ export function scrollHorizontal(el, parentEl) {
         padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight),
         border = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
 
-    const rect = el.getBoundingClientRect();
-    const {
-        left,
-        right,
-        bottom,
-        top,
-        width
-    } = parentEl.getBoundingClientRect();
-    // const inView = rect.left >= left && rect.right <= right
-    // const position = rect.left < left ? 0 : rect.right;
-    const center = (rect.left + parentEl.scrollLeft + margin + padding + border) - (width / 2);
+    const child = el.getBoundingClientRect();
+    const parent = parentEl.getBoundingClientRect();
+    const activeWidth = el.clientWidth / 2;
+    var pos = child.left - parent.left + activeWidth;
+    pos = pos + parentEl.scrollLeft + margin + padding + border - parentEl.clientWidth / 2;
     parentEl.scrollTo({
-        left: center,
+        left: pos,
         behavior: 'smooth'
     });
 }
@@ -68,8 +80,7 @@ export const getDecimalScale = memoize((value = 0.00000001) => {
 export const countDecimals = function (value) {
     if (Math.floor(value) === value) return 0;
 
-    var str = Number(value)
-        ?.toString();
+    var str = Number(value)?.toString();
     if (str?.indexOf('.') !== -1 && str?.indexOf('-') !== -1) {
         return str?.split('-')[1] || 0;
     } else if (str?.indexOf('.') !== -1) {
@@ -81,11 +92,9 @@ export const countDecimals = function (value) {
 export const formatSwapRate = (value, scaleMore = 2) => {
     if (!value) return;
     let x;
-    if (value.toString()
-        .includes('e')) {
+    if (value.toString().includes('e')) {
         const last = getDecimalScale(eToNumber(value)) + scaleMore;
-        x = eToNumber(value)
-            .substring(0, last);
+        x = eToNumber(value).substring(0, last);
     } else {
         x = formatSwapValue(value);
     }
@@ -93,8 +102,8 @@ export const formatSwapRate = (value, scaleMore = 2) => {
     return x;
 };
 
-export const formatCurrency = (n, digits = 4, vi = false) => {
-    if (n < 1e3) return formatNumber(n, 0, 0, true);
+export const formatCurrency = (n, digits = 4, vi = false, e = 1e3) => {
+    if (n < e) return formatNumber(n, 0, 0, true);
     if (n >= 1e3 && n < 1e6) return formatNumber(+(n / 1e3).toFixed(4), digits, 0, true) + 'K';
     if (n >= 1e6 && n < 1e9) return formatNumber(+(n / 1e6).toFixed(4), digits, 0, true) + (vi ? ' triệu' : 'M');
     if (n >= 1e9 && n < 1e12) return formatNumber(+(n / 1e9).toFixed(4), digits, 0, true) + (vi ? ' tỷ' : 'B');
@@ -102,30 +111,19 @@ export const formatCurrency = (n, digits = 4, vi = false) => {
 };
 
 export function eToNumber(value) {
-    let sign = ''
+    let sign = '';
 
-    ;(value += '').charAt(0) === '-' &&
-    ((value = value?.toString()
-        .substring(1)), (sign = '-'));
-    let arr = value?.toString()
-        .split(/[e]/gi);
+    (value += '').charAt(0) === '-' && ((value = value?.toString().substring(1)), (sign = '-'));
+    let arr = value?.toString().split(/[e]/gi);
     if (arr.length < 2) return sign + value;
-    let dot = (0.1).toLocaleString()
-            .substr(1, 1),
+    let dot = (0.1).toLocaleString().substr(1, 1),
         n = arr[0],
         exp = +arr[1],
         w = (n = n.replace(/^0+/, '')).replace(dot, ''),
         pos = n.split(dot)[1] ? n.indexOf(dot) + exp : w.length + exp,
         L = pos - w.length,
         s = '' + BigInt(w);
-    w =
-        exp >= 0
-            ? L >= 0
-                ? s + '0'.repeat(L)
-                : r()
-            : pos <= 0
-                ? '0' + dot + '0'.repeat(Math.abs(pos)) + s
-                : r();
+    w = exp >= 0 ? (L >= 0 ? s + '0'.repeat(L) : r()) : pos <= 0 ? '0' + dot + '0'.repeat(Math.abs(pos)) + s : r();
     L = w.split(dot);
     if ((L[0] === 0 && L[1] === 0) || (+w === 0 && +s === 0)) w = 0; //** added 9/10/2021
     return sign + w;
@@ -137,15 +135,12 @@ export function eToNumber(value) {
 
 export const getDecimalSpotPrice = memoize(
     (symbol = '') => {
-        const configs = store()
-            .getState()?.utils?.exchangeConfig || null;
+        const configs = store().getState()?.utils?.exchangeConfig || null;
         if (isArray(configs)) {
             const config = configs.find((e) => e?.symbol === symbol);
             if (config) {
                 const filter = getFilter('PRICE_FILTER', config);
-                return +filter?.tickSize
-                    ? getDecimalScale(+filter?.tickSize)
-                    : 6;
+                return +filter?.tickSize ? getDecimalScale(+filter?.tickSize) : 6;
             }
         }
         return 6;
@@ -156,42 +151,40 @@ export const getDecimalSpotPrice = memoize(
 export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
     let params = {};
     if (typeof window !== 'undefined') {
+        const currentUrl = window.location.href;
+
         const _options = defaults(options, {
-            redirect: window.location.href,
+            redirect: currentUrl,
             referral: null,
             utm_source: 'web',
             utm_medium: 'direct',
             utm_campaign: 'nami.exchange',
             utm_content: LoginButtonPosition.WEB_HEADER,
-            mobile_web: false,
+            mobile_web: false
         });
 
-        const referral =
-            sessionStorage && sessionStorage.getItem('refCode')
-                ? sessionStorage.getItem('refCode')
-                : _options.referral;
+        const referral = sessionStorage && sessionStorage.getItem('refCode') ? sessionStorage.getItem('refCode') : _options.referral;
+
+        const theme = localStorage?.getItem('theme') ?? 'dark';
+
+        let language = 'vi';
+        if (!currentUrl.includes('/vi')) language = 'en';
 
         params = {
             ..._options,
             referral,
+            theme,
+            language
         };
         params = defaults(params, { redirect: process.env.APP_URL });
 
         switch (mode) {
             case 'sso':
                 if (action === 'register') {
-                    return `${process.env.NEXT_PUBLIC_API_URL?.replace(
-                        '/en',
-                        ''
-                    )
-                        .replace('/vi', '')}/register/nami?${qs.stringify(params)}`;
+                    return `${process.env.NEXT_PUBLIC_API_URL?.replace('/en', '').replace('/vi', '')}/register/nami?${qs.stringify(params)}`;
                     // return `${___DEV___ ? 'https://auth-test.nami.trade' : 'https://auth.nami.io'}/register?${qs.stringify(params)}`;
                 }
-                return `${process.env.NEXT_PUBLIC_API_URL?.replace(
-                    '/en',
-                    ''
-                )
-                    .replace('/vi', '')}/login/nami?${qs.stringify(params)}`;
+                return `${process.env.NEXT_PUBLIC_API_URL?.replace('/en', '').replace('/vi', '')}/login/nami?${qs.stringify(params)}`;
 
             default:
                 break;
@@ -219,6 +212,15 @@ export function formatTime(value, f = 'yyyy-MM-dd HH:mm') {
     }
 }
 
+export function formatTimePartner(t, value) {
+    if (!value) return '';
+    return value >= 60 * 60 * 1000 // 1 hour
+        ? `${formatTime(value, 'h:mm')} ${t('common:hour')}`
+        : value >= 60 * 1000 // 1 minute
+        ? `${formatTime(value, 'm')} ${t('common:minute')}`
+        : `${formatTime(value, 's')} ${t('common:second')}`;
+}
+
 export function getTimeAgo(value, options) {
     if (!value) return;
     const date = value instanceof Date ? value : new Date(value);
@@ -232,86 +234,81 @@ export function formatBalance(value, digits = 2, acceptNegative = false) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 1e-8) return '0';
     if (!acceptNegative && +value < 0) return '0';
-    return numeral(+value)
-        .format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
+    return numeral(+value).format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
 }
 
+export const formatBalanceFiat = (value, assetCode, acceptNegative = false) => {
+    const isVNDC = assetCode === 'VNDC';
+    const isUSDT = assetCode === 'USDT';
+    return formatBalance(isVNDC ? Math.round(value) : value, isVNDC ? 0 : isUSDT ? 4 : 0, acceptNegative);
+};
+
+export const getExactBalanceFiat = (balance, assetCode) => {
+    const digit = assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : 0;
+    return roundByExactDigit(balance, digit);
+};
 // Hiển thị cho phí spot tính bằng VNDC, USDT, ATS
 export function formatSpotFee(value) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 0.01) return '< 0.01';
-    return numeral(+value)
-        .format('0,0.[00]', Math.floor);
+    return numeral(+value).format('0,0.[00]', Math.floor);
 }
 
 export function formatPercentage(value, digits = 2, acceptNegative = false) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 1e-2) return '0';
     if (!acceptNegative && +value < 0) return '0';
-    return numeral(+value)
-        .format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
+    return numeral(+value).format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
 }
 
-export function formatWallet(
-    value,
-    additionDigits = 2,
-    acceptNegative = false
-) {
+export function formatWallet(value, additionDigits = 2, acceptNegative = false) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 1e-8) return '0';
     if (!acceptNegative && +value < 0) return '0';
-    return numeral(+value)
-        .format(
-            `0,0.00[${'0'.repeat(additionDigits)}]`,
-            Math.floor
-        );
+    return numeral(+value).format(`0,0.00[${'0'.repeat(additionDigits)}]`, Math.floor);
 }
 
 export function formatPrice(price = 0, configs = [], assetCode = '') {
+    price = exponentialToDecimal(price);
     if (isArray(configs)) {
-        const asset = configs.find(
-            (e) => e.assetCode?.toUpperCase() === assetCode?.toUpperCase()
-        );
+        const asset = configs.find((e) => e.assetCode?.toUpperCase() === assetCode?.toUpperCase());
         if (asset) {
-            return numeral(+price)
-                .format(
-                    `0,0.[${'0'.repeat(asset.assetDigit)}]`
-                );
+            if (price <= 1e-6) return formatNumber2(price, asset.assetDigit);
+            return numeral(+price).format(`0,0.[${'0'.repeat(asset.assetDigit)}]`);
         }
     }
     if (isNumber(configs)) {
-        return numeral(+price)
-            .format(`0,0.[${'0'.repeat(configs)}]`);
+        if (price <= 1e-6) return formatNumber2(price, configs);
+        return numeral(+price).format(`0,0.[${'0'.repeat(configs)}]`);
     }
 
-    return numeral(+price)
-        .format('0,0.[000000]');
+    return numeral(+price).format('0,0.[000000]');
 }
 
 export function formatSpotPrice(price = 0, symbol = '') {
-    return numeral(+price)
-        .format(
-            `0,0.[${'0'.repeat(getDecimalSpotPrice(symbol))}]`
-        );
+    return numeral(+price).format(`0,0.[${'0'.repeat(getDecimalSpotPrice(symbol))}]`);
 }
+
+export const formatPhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) return;
+    let phone = phoneNumber?.toString();
+    if (phone?.length !== 10) return phoneNumber;
+    return phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+};
 
 export function randomString(length = 15) {
     let result = '';
-    const characters =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
     for (let i = 0; i < length; ++i) {
-        result += characters.charAt(
-            Math.floor(Math.random() * charactersLength)
-        );
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
 }
 
 // Format cho ca gia va so luong
 export function formatSwapValue(price = 0) {
-    return numeral(+price)
-        .format('0,0.[00000000]');
+    return numeral(+price).format('0,0.[00000000]');
 }
 
 export function isInvalidPrecision(value, precision) {
@@ -320,28 +317,77 @@ export function isInvalidPrecision(value, precision) {
 }
 
 export function formatNumberToText(value = 0) {
-    return numeral(+value)
-        .format('0,00a');
+    return numeral(+value).format('0,00a');
 }
 
-export function formatNumber(
-    value,
-    digits = 2,
-    forceDigits = 0,
-    acceptNegative = false
-) {
-    const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''
-    }`;
-    if (isNil(value)) return defaultValue;
-    if (Math.abs(+value) < 1e-9) return defaultValue;
-    if (!acceptNegative && +value < 0) return defaultValue;
-    return numeral(+value)
-        .format(
-            `0,0.${'0'.repeat(forceDigits)}${digits > 0 ? `[${'0'.repeat(digits)}]` : ''
-            }`,
-            Math.floor
-        );
+export function formatNumber(value, digits = 2, forceDigits = 0, acceptNegative = false) {
+    value = exponentialToDecimal(value);
+    const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''}`;
+    if (isNil(value) || (!acceptNegative && +value < 0)) return defaultValue;
+    if (Math.abs(+value) <= 1e-6) return formatNumber2(value, forceDigits || digits);
+    return numeral(+value).format(`0,0.${'0'.repeat(forceDigits)}${digits > 0 ? `[${'0'.repeat(digits)}]` : ''}`, Math.floor);
 }
+
+export function formatNumber2(number, decimalScale = 8, thousandSeparator = true) {
+    if (!number) {
+        return '';
+    }
+    if (thousandSeparator) {
+        // Can't use toLocaleString because it's not available on Android
+        const parts = number.toString().split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        if (parts[1]) {
+            parts[1] = parts[1].substring(0, decimalScale);
+        }
+        if (decimalScale === 0) return parts[0];
+        return parts.join('.');
+    } else {
+        return numberToString(number, decimalScale);
+    }
+}
+
+export function numberToString(number, decimalScale = 8, cutPaddingDecimalsZero = true) {
+    if (!number) {
+        return '';
+    }
+    let result = Number(number).toFixed(decimalScale);
+    if (decimalScale > 0 && cutPaddingDecimalsZero) {
+        return result.replace(/\.?0+$/, '');
+    } else {
+        return result;
+    }
+}
+
+export const exponentialToDecimal = (exponential) => {
+    let decimal = exponential?.toString().toLowerCase() || '';
+    if (decimal.includes('e+')) {
+        const exponentialSplitted = decimal.split('e+');
+        let postfix = '';
+        for (let i = 0; i < +exponentialSplitted[1] - (exponentialSplitted[0].includes('.') ? exponentialSplitted[0].split('.')[1].length : 0); i++) {
+            postfix += '0';
+        }
+        const addCommas = (text) => {
+            let j = 3;
+            let textLength = text.length;
+            while (j < textLength) {
+                text = `${text.slice(0, textLength - j)},${text.slice(textLength - j, textLength)}`;
+                textLength++;
+                j += 3 + 1;
+            }
+            return text;
+        };
+        decimal = addCommas(exponentialSplitted[0].replace('.', '') + postfix);
+    }
+    if (decimal.toLowerCase().includes('e-')) {
+        const exponentialSplitted = decimal.split('e-');
+        let prefix = '0.';
+        for (let i = 0; i < +exponentialSplitted[1] - 1; i++) {
+            prefix += '0';
+        }
+        decimal = prefix + exponentialSplitted[0].replace('.', '');
+    }
+    return decimal;
+};
 
 export function scrollFocusInput() {
     if (typeof window !== 'undefined') {
@@ -352,11 +398,7 @@ export function scrollFocusInput() {
 export function getExchange24hPercentageChange(price) {
     let change24h;
     if (price) {
-        const {
-            p: lastPrice,
-            ld: lastPrice24h,
-            q: quoteAsset
-        } = price;
+        const { p: lastPrice, ld: lastPrice24h, q: quoteAsset } = price;
         if (lastPrice && lastPrice24h) {
             change24h = ((lastPrice - lastPrice24h) / lastPrice24h) * 100;
         } else if (lastPrice && !lastPrice24h) {
@@ -369,27 +411,32 @@ export function getExchange24hPercentageChange(price) {
     return change24h;
 }
 
-export function render24hChange(ticker) {
+export function render24hChange(ticker, showPrice = false, className = '') {
     const change24h = getExchange24hPercentageChange(ticker);
-    let text;
-    let className = '';
-    if (change24h != null) {
-        let sign;
+    let percent, priceChange;
+    // let className = '';
+    let negative = false;
+    if (change24h) {
+        priceChange = (change24h * ticker.ld) / 100;
         if (change24h > 0) {
-            sign = '+';
             className += ' text-teal';
         } else if (change24h < 0) {
-            sign = '';
+            negative = true;
             className += ' text-red';
-        } else {
-            sign = '';
         }
 
-        text = `${sign}${formatPercentage(change24h, 2, true)}%`;
+        percent = `${formatPercentage(Math.abs(change24h), 2, true)}%`;
     } else {
-        text = '-';
+        percent = null;
     }
-    return <span className={`${className}`}>{text}</span>;
+    return (
+        <div className={`${className} text-xs space-x-2 flex font-semibold`}>
+            {showPrice && <span>{formatNumber(Math.abs(priceChange), ticker?.q === 'VNDC' ? 0 : 2, 0, true)}</span>}
+            <span className={'flex items-center ' + (percent ? '' : 'text-teal')}>
+                {percent ? <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : '!rotate-0'} /> : null} {percent ?? '-'}
+            </span>
+        </div>
+    );
 }
 
 export function getS3Url(url) {
@@ -403,8 +450,7 @@ export function getV1Url(url) {
 function encodeData(data) {
     return Object.keys(data)
         .map((key) => {
-            return [key, data[key]].map(encodeURIComponent)
-                .join('=');
+            return [key, data[key]].map(encodeURIComponent).join('=');
         })
         .join('&');
 }
@@ -413,18 +459,14 @@ export function getSparkLine(symbol, color = '#00C8BC', resolution) {
     const query = {
         symbol,
         broker: 'NAMI_SPOT',
-        color,
+        color
     };
     if (resolution) query.resolution = resolution;
-    return (
-        process.env.NEXT_PUBLIC_PRICE_API_URL +
-        `/api/v1/chart/sparkline?${encodeData(query)}`
-    );
+    return process.env.NEXT_PUBLIC_PRICE_API_URL + `/api/v1/chart/sparkline?${encodeData(query)}`;
 }
 
 export const getAssetCode = (assetId) => {
-    const configs = store()
-        .getState()?.utils?.assetConfig || null;
+    const configs = store().getState()?.utils?.assetConfig || null;
     const assetConfig = find(configs, { id: assetId });
     if (assetConfig) {
         return assetConfig.assetCode;
@@ -433,8 +475,7 @@ export const getAssetCode = (assetId) => {
 };
 
 export const getAssetName = (assetId) => {
-    const configs = store()
-        .getState()?.utils?.assetConfig || null;
+    const configs = store().getState()?.utils?.assetConfig || null;
     const assetConfig = find(configs, { id: assetId });
     if (assetConfig) {
         return assetConfig.assetName;
@@ -443,8 +484,7 @@ export const getAssetName = (assetId) => {
 };
 
 export const getAssetId = (assetCode) => {
-    const configs = store()
-        .getState()?.utils?.assetConfig || null;
+    const configs = store().getState()?.utils?.assetConfig || null;
     const assetConfig = find(configs, { assetCode });
     if (assetConfig) {
         return assetConfig.id;
@@ -453,9 +493,17 @@ export const getAssetId = (assetCode) => {
 };
 
 export const getAssetFromCode = (assetCode) => {
-    const configs = store()
-        .getState()?.utils?.assetConfig || null;
+    const configs = store().getState()?.utils?.assetConfig || null;
     const assetConfig = find(configs, { assetCode });
+    if (assetConfig) {
+        return assetConfig;
+    }
+    return null;
+};
+
+export const getAssetFromId = (assetId) => {
+    const configs = store().getState()?.utils?.assetConfig || null;
+    const assetConfig = find(configs, { id: assetId });
     if (assetConfig) {
         return assetConfig;
     }
@@ -471,13 +519,12 @@ export function renderName(assetCode, configs) {
 }
 
 export function safeToFixed(value, digits = 2) {
-    return numeral(+value)
-        .format(`0.[${'0'.repeat(digits)}]`, Math.trunc);
+    return numeral(+value).format(`0.[${'0'.repeat(digits)}]`, Math.trunc);
 }
 
 export function getTradingViewTimezone() {
     const timezone = find(TradingViewSupportTimezone, {
-        offset: -new Date().getTimezoneOffset(),
+        offset: -new Date().getTimezoneOffset()
     });
     return timezone ? timezone.timezone : 'America/New_York';
 }
@@ -500,13 +547,7 @@ export function getPercentageOf(a, b) {
         sign = '';
         className = 'text-red';
     }
-    return (
-        <span className={className}>{`${sign}${formatPercentage(
-            percentage,
-            2,
-            true
-        )}%`}</span>
-    );
+    return <span className={className}>{`${sign}${formatPercentage(percentage, 2, true)}%`}</span>;
 }
 
 export function getChangePercentage(from, to) {
@@ -527,32 +568,21 @@ export function getChangePercentage(from, to) {
         sign = '';
         className = 'text-red';
     }
-    return (
-        <span className={className}>{`${sign}${formatPercentage(
-            percentage,
-            2,
-            true
-        )}%`}</span>
-    );
+    return <span className={className}>{`${sign}${formatPercentage(percentage, 2, true)}%`}</span>;
 }
 
 export function formatWalletWithoutDecimal(value, acceptNegative = false) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 1e-8) return '0';
     if (!acceptNegative && +value < 0) return '0';
-    return numeral(+value)
-        .format('0,0', Math.floor);
+    return numeral(+value).format('0,0', Math.floor);
 }
 
-export function formatWalletReverseWithoutDecimal(
-    value,
-    acceptNegative = false
-) {
+export function formatWalletReverseWithoutDecimal(value, acceptNegative = false) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 1e-8) return '0';
     if (!acceptNegative && +value < 0) return '0';
-    return numeral(+value * -1)
-        .format('0,0', Math.floor);
+    return numeral(+value * -1).format('0,0', Math.floor);
 }
 
 export function roundByWithdraw(val, roundByValue) {
@@ -566,16 +596,10 @@ export function formatAbbreviateNumber(num, fixed) {
 
     // eslint-disable-next-line no-param-reassign
     fixed = !fixed || fixed < 0 ? 0 : fixed; // number of decimal places to show
-    const b = Number(num)
-        .toPrecision(2)
-        .split('e'); // get power
+    const b = Number(num).toPrecision(2).split('e'); // get power
     const k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3); // floor at decimals, ceiling at trillions
     // eslint-disable-next-line no-restricted-properties
-    const c =
-        k < 1
-            ? Number(num)
-                .toFixed(0 + fixed)
-            : (Number(num) / Math.pow(10, k * 3)).toFixed(1 + fixed); // divide by power
+    const c = k < 1 ? Number(num).toFixed(0 + fixed) : (Number(num) / Math.pow(10, k * 3)).toFixed(1 + fixed); // divide by power
     const d = c < 0 ? c : Math.abs(c); // enforce -0 is 0
     const e = (+d).toLocaleString() + ['', 'K', 'M', 'B', 'T'][k]; // append power
     // if (e === 'NaN' || Number.isNaN(e)) {
@@ -632,9 +656,7 @@ export function hashValidator(hash, type) {
 
 export const shortHashAddress = (address, first, last) => {
     if (!address) return;
-    return `${address?.substring(0, first)}...${address.substring(
-        address.length - last
-    )}`;
+    return `${address?.substring(0, first)}...${address.substring(address.length - last)}`;
 };
 
 export function buildExplorerUrl(value, tokenNetwork) {
@@ -692,10 +714,7 @@ export function buildBinanceExplorerUrl(addressOrTxhash) {
         } else {
             return `https://explorer.binance.org/tx/${addressOrTxhash}`;
         }
-    } else if (
-        addressOrTxhash.startsWith('tbnb') ||
-        addressOrTxhash.startsWith('bnb')
-    ) {
+    } else if (addressOrTxhash.startsWith('tbnb') || addressOrTxhash.startsWith('bnb')) {
         // Address
         if (network) {
             return `https://${network}-explorer.binance.org/address/${addressOrTxhash}`;
@@ -856,7 +875,7 @@ export function updateOrInsertDepositHistory(searchCriteria, history) {
     return {
         type: UPDATE_DEPOSIT_HISTORY,
         criteria: searchCriteria,
-        payload: history,
+        payload: history
     };
 }
 
@@ -864,17 +883,28 @@ export function walletLinkBuilder(walletType, action, payload) {
     if (walletType === WalletType.SPOT) {
         switch (action) {
             case EXCHANGE_ACTION.DEPOSIT:
-                return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'
-                }&asset=${payload?.asset || 'USDT'}`;
+                return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
             case EXCHANGE_ACTION.WITHDRAW:
-                return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'
-                }&asset=${payload?.asset || 'USDT'}`;
+                return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
             default:
                 return '';
         }
     }
 
     if (walletType === WalletType.FUTURES) {
+    }
+}
+
+export function dwLinkBuilder(type, side, assetId) {
+    // Deposit: BUY
+    // Withdraw: SELL
+    switch (type) {
+        case TYPE_DW.CRYPTO:
+            return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
+        case TYPE_DW.PARTNER:
+            return `${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId || 'USDT'}`;
+        default:
+            return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
     }
 }
 
@@ -889,7 +919,7 @@ export function setTransferModal(payload) {
 
     return {
         type: SET_TRANSFER_MODAL,
-        payload,
+        payload
     };
 }
 
@@ -928,42 +958,27 @@ export const secondToMinutesAndSeconds = (time) => {
             hours,
             minutes,
             seconds
-        }),
+        })
     };
 };
 
 export const getPriceColor = (value, onusMode = false) => {
     if (onusMode) {
-        return value === 0 ? '' : value < 0 ? 'text-onus-red' : 'text-onus-green';
+        return value === 0 ? '' : value < 0 ? 'text-red-2' : 'text-green-2';
     } else {
-        return value === 0 ? '' : value < 0 ? 'text-red' : 'text-dominant';
+        return value === 0 ? '' : value < 0 ? 'text-red-2 dark:text-red' : 'text-green-3 dark:text-teal';
     }
 };
 
 const BASE_ASSET = ['VNDC', 'USDT'];
 
 export const getSymbolObject = (symbol) => {
-    if (
-        !symbol ||
-        [
-            'USDTVNDC',
-            'VNDCUSDT',
-            'VNDC/USDT',
-            'USDT/VNDC',
-            'VNDC/',
-            'USDT/',
-        ].includes(symbol)
-    ) {
+    if (!symbol || ['USDTVNDC', 'VNDCUSDT', 'VNDC/USDT', 'USDT/VNDC', 'VNDC/', 'USDT/'].includes(symbol)) {
         log?.d(`Symbol not support`);
         return;
     }
 
-    if (
-        symbol?.includes('/VNDC') ||
-        symbol?.includes('/USDT') ||
-        symbol?.includes('VNDC') ||
-        symbol?.includes('USDT')
-    ) {
+    if (symbol?.includes('/VNDC') || symbol?.includes('/USDT') || symbol?.includes('VNDC') || symbol?.includes('USDT')) {
         let baseAsset = '',
             quoteAsset = '';
 
@@ -985,7 +1000,7 @@ export const getSymbolObject = (symbol) => {
         return {
             symbol,
             baseAsset,
-            quoteAsset,
+            quoteAsset
         };
     }
 
@@ -995,7 +1010,7 @@ export const getSymbolObject = (symbol) => {
 export const setBottomTab = (tab) => async (dispatch) => {
     dispatch({
         type: SET_BOTTOM_NAVIGATION,
-        payload: tab,
+        payload: tab
     });
 };
 
@@ -1007,16 +1022,10 @@ export const emitWebViewEvent = (event) => {
 };
 
 export const getLiquidatePrice = (order = {}, activePrice = 0) => {
-
     let liquidatePrice = 0;
-    const {
-        side,
-        quantity: size,
-        leverage,
-        quoteQty,
-    } = order;
-    const _size = (side === VndcFutureOrderType.Side.SELL ? -size : size);
-    const _sign = (side === VndcFutureOrderType.Side.SELL ? -1 : 1);
+    const { side, quantity: size, leverage, quoteQty } = order;
+    const _size = side === VndcFutureOrderType.Side.SELL ? -size : size;
+    const _sign = side === VndcFutureOrderType.Side.SELL ? -1 : 1;
     const margin = quoteQty / leverage;
     const feeRatio = DefaultFuturesFee.NamiFrameOnus;
     liquidatePrice = (_size * activePrice + quoteQty * feeRatio - margin) / (size * (_sign - feeRatio));
@@ -1025,17 +1034,17 @@ export const getLiquidatePrice = (order = {}, activePrice = 0) => {
 
 export const getSuggestSl = (side, activePrice = 0, leverage = 10, profitRatio = 0.6) => {
     if (side == VndcFutureOrderType.Side.BUY) {
-        return (-profitRatio * activePrice / leverage + activePrice * (1 + DefaultFuturesFee.NamiFrameOnus)) / (1 - DefaultFuturesFee.NamiFrameOnus);
+        return ((-profitRatio * activePrice) / leverage + activePrice * (1 + DefaultFuturesFee.NamiFrameOnus)) / (1 - DefaultFuturesFee.NamiFrameOnus);
     } else {
-        return (-profitRatio * activePrice / leverage - activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) / (-1 - DefaultFuturesFee.NamiFrameOnus);
+        return ((-profitRatio * activePrice) / leverage - activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) / (-1 - DefaultFuturesFee.NamiFrameOnus);
     }
 };
 
 export const getSuggestTp = (side, activePrice = 0, leverage = 10, profitRatio = 0.6) => {
     if (side == VndcFutureOrderType.Side.BUY) {
-        return (profitRatio * activePrice / leverage + activePrice * (1 + DefaultFuturesFee.NamiFrameOnus)) / (1 - DefaultFuturesFee.NamiFrameOnus);
+        return ((profitRatio * activePrice) / leverage + activePrice * (1 + DefaultFuturesFee.NamiFrameOnus)) / (1 - DefaultFuturesFee.NamiFrameOnus);
     } else {
-        return (profitRatio * activePrice / leverage - activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) / (-1 - DefaultFuturesFee.NamiFrameOnus);
+        return ((profitRatio * activePrice) / leverage - activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) / (-1 - DefaultFuturesFee.NamiFrameOnus);
     }
 };
 
@@ -1044,20 +1053,15 @@ export const checkInFundingTime = () => {
     const hour = now.getUTCHours();
     const min = now.getMinutes();
     return (min === 0 && hour % 8 === 0) || (min >= 50 && hour % 8 === 7);
-
 };
 
-export const Countdown = ({
-    date,
-    onEnded,
-    isDays = false
-}) => {
+export const Countdown = memo(({ date, onEnded, isDays = false }) => {
     const timer = useRef(null);
     const [count, setCount] = useState({
         days: 0,
         hours: '00',
         minutes: '00',
-        seconds: '00',
+        seconds: '00'
     });
 
     const formatN = (number) => {
@@ -1106,7 +1110,7 @@ export const Countdown = ({
             {isDays ? count?.days + 'D' : ''} {count?.hours}:{count?.minutes}:{count?.seconds}
         </>
     );
-};
+});
 
 export const formatFundingRate = (value) => {
     return (value ? (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true) : 0) + '%';
@@ -1116,6 +1120,305 @@ export function checkLargeVolume(notional, isVndc = true) {
     if (isVndc) {
         return notional >= 600e6;
     } else {
-        return notional >= 30e3
+        return notional >= 30e3;
     }
+}
+
+export const RefCurrency = ({ price, quoteAsset }) => {
+    const [referencePrice, setReferencePrice] = useState([]);
+
+    useEffect(() => {
+        fetchAPI({
+            url: API_GET_REFERENCE_CURRENCY,
+            params: { base: 'VNDC,USDT', quote: 'USD' }
+        })
+            .then(({ data = [] }) => {
+                setReferencePrice(
+                    data.reduce((acm, current) => {
+                        return {
+                            ...acm,
+                            [`${current.base}/${current.quote}`]: current.price
+                        };
+                    }, {})
+                );
+            })
+            .catch((err) => console.error(err));
+    }, []);
+
+    return `$${formatPrice(quoteAsset === 'VNDC' ? price / rateCurrency[quoteAsset] : referencePrice[`${quoteAsset}/USD`] * price, 4)}`;
+};
+
+export const TypeTable = ({ type, data }) => {
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+    const str = String(data[type]).toUpperCase();
+    const color = str === 'SELL' ? 'text-red-2 dark:text-red' : 'text-green-3 dark:text-teal';
+    switch (type) {
+        case 'side':
+            return <span className={color}>{str === 'SELL' ? t('common:sell') : t('common:buy')}</span>;
+        case 'type':
+            return str === 'MARKET' ? t('common:market') : str === 'LIMIT' ? t('common:limit') : getType(str);
+        default:
+            return null;
+    }
+};
+
+export const getDecimalPrice = (config) => {
+    const decimalScalePrice = config?.filters?.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
+    return +countDecimals(decimalScalePrice?.tickSize);
+};
+
+export const getDecimalQty = (config) => {
+    const decimal = config?.filters?.find((rs) => rs.filterType === 'LOT_SIZE') ?? 1;
+    return +countDecimals(decimal?.stepSize);
+};
+
+export const getUnit = createSelector([(state) => state.utils.assetConfig, (unitConfig, assetCode) => assetCode], (unitConfig, assetCode) =>
+    unitConfig.find((rs) => rs?.assetCode === assetCode)
+);
+
+export const getType = (type) => {
+    switch (type) {
+        case FuturesOrderTypes.Limit:
+            return VndcFutureOrderType.Type.LIMIT;
+        case FuturesOrderTypes.Market:
+            return VndcFutureOrderType.Type.MARKET;
+        case FuturesOrderTypes.StopLimit:
+        case FuturesOrderTypes.StopMarket:
+            return VndcFutureOrderType.Type.STOP;
+        default:
+            return null;
+    }
+};
+
+export function isFunction(functionToCheck) {
+    return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
+}
+
+export const copy = (text, cb) => {
+    if (navigator.clipboard && navigator.permissions) {
+        navigator.clipboard.writeText(text).then(cb);
+    } else if (document.queryCommandSupported('copy')) {
+        const ele = document.createElement('textarea');
+        ele.value = text;
+        document.body.appendChild(ele);
+        ele.select();
+        document.execCommand('copy');
+        document.body.removeChild(ele);
+        if (cb) cb();
+    }
+};
+
+export const CopyText = memo(({ text = '', setText, value, className = '', size = 16, label, CustomCopyIcon, textClass, copyClass, checkedClass }) => {
+    const [copied, setCopied] = useState(false);
+    const title = label ?? text;
+    useEffect(() => {
+        if (value) setCopied(value === text);
+    }, [value]);
+
+    useEffect(() => {
+        if (copied)
+            setTimeout(() => {
+                setCopied(false);
+            }, 3000);
+    }, [copied]);
+
+    const renderCopyIcon = () => {
+        if (CustomCopyIcon) {
+            return <CustomCopyIcon size={size} className={copyClass}  />;
+        }
+        return <CopyIcon size={size} />;
+    };
+
+    return (
+        <div
+            className={`flex items-center space-x-2 cursor-pointer ${className}`}
+            onClick={() =>
+                copy(text, () => {
+                    setCopied(true);
+                    if (setText) setText(text);
+                })
+            }
+        >
+            <span className={textClass}>{title}</span>
+            {!copied ? renderCopyIcon() : <CheckedIcon size={size} color={colors.teal} className={checkedClass} />}
+        </div>
+    );
+});
+
+export const ReasonClose = ({ order }) => {
+    const { t } = useTranslation();
+    switch (order?.reason_close_code) {
+        case 0:
+            return t('futures:order_history:normal');
+        case 1:
+            return t('futures:order_history:hit_sl');
+        case 2:
+            return t('futures:order_history:hit_tp');
+        case 3:
+            return t('futures:order_history:liquidate');
+        case 5:
+            return t('futures:mobile:adjust_margin:added_volume');
+        case 6:
+            return t('futures:mobile:adjust_margin:close_partially');
+        default:
+            return '-';
+    }
+};
+
+export const FeeMetaFutures = ({ order, mode = 'open_fee' }) => {
+    const allAssets = useSelector((state) => utilsSelectors.getAllAssets(state));
+    const convertObject = (obj) => {
+        if (obj?.currency) {
+            return [
+                {
+                    asset: +obj?.currency,
+                    value: obj?.value ?? 0
+                }
+            ];
+        } else {
+            const arr = [];
+            Object.keys(obj).map((key) => {
+                arr.push({
+                    asset: +key,
+                    value: obj[key]
+                });
+            });
+            return arr;
+        }
+    };
+
+    const fee_metadata = useMemo(() => {
+        const metadata = order?.fee_data ?? order?.fee_metadata;
+        const feeFilter = metadata?.[mode === 'open_fee' ? 'place_order' : 'close_order'];
+        const fee = feeFilter ? convertObject(feeFilter) : [];
+        return fee;
+    }, [order]);
+
+    const decimal = fee_metadata[0]?.asset === 72 ? allAssets[fee_metadata[0]?.asset]?.assetDigit : allAssets[fee_metadata[0]?.asset]?.assetDigit + 2;
+    return fee_metadata.length > 0 ? formatNumber(fee_metadata[0]?.value, decimal) + ' ' + allAssets[fee_metadata[0]?.asset]?.assetCode : '-';
+};
+
+export const getOffsetEl = (el) => {
+    var clone = el.cloneNode(true);
+    clone.style.cssText = 'position: fixed; top: 0; left: 0; overflow: auto; visibility: hidden; pointer-events: none; height: unset; max-height: unset';
+    document.body.append(clone);
+    const width = clone.offsetWidth;
+    const height = clone.offsetHeight;
+    clone.remove();
+    return { w: width, h: height };
+};
+
+export function parseUnormStr(input) {
+    //Đổi chữ hoa thành chữ thường
+    let slug = input.toLowerCase();
+
+    //Đổi ký tự có dấu thành không dấu
+    slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+    slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+    slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+    slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+    slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+    slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+    slug = slug.replace(/đ/gi, 'd');
+
+    // Một vài bộ encode coi các dấu mũ, dấu chữ như một kí tự riêng biệt nên thêm hai dòng này
+    slug = slug.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/gi, ''); // ̀ ́ ̃ ̉ ̣  huyền, sắc, ngã, hỏi, nặng
+    slug = slug.replace(/\u02C6|\u0306|\u031B/gi, ''); // ˆ ̆ ̛  Â, Ê, Ă, Ơ, Ư
+
+    // Bỏ dấu câu, kí tự đặc biệt
+    slug = slug.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, ' ');
+    slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, ' ');
+
+    // Bỏ các khoảng trắng liền nhau
+    slug = slug.replace(/ + /g, ' ');
+    slug = slug.trim();
+
+    return slug;
+}
+
+export const filterSearch = (originDataset, keys, searchValue) => {
+    if (!searchValue) return originDataset;
+
+    return originDataset.filter((item) => {
+        for (const key of keys) {
+            if (parseUnormStr(item[key]).includes(parseUnormStr(searchValue))) return true;
+        }
+        return false;
+    });
+    // const lowercaseSearch = searchValue.toLowerCase();
+    // const copyDataSet = cloneDeep(originDataset);
+    // return copyDataSet.filter((item) => keys.reduce((result, key) => result || (item?.[key] && item[key].toLowerCase().includes(lowercaseSearch)), false));
+};
+
+export const saveFile = (file, name) => {
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+};
+
+export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+export const roundByExactDigit = (value, digit) => Math.floor(value * Math.pow(10, digit)) / Math.pow(10, digit);
+
+export const searchSort = (Arr = [], fieldNames = [], strSearch) => {
+    const formatStr = (e) => {
+        return fieldNames.reduce((acc, key) => {
+            return e[acc] + ' ' + e[key];
+        });
+    };
+
+    if (!strSearch) return Arr;
+    return Arr.filter((item) => String(formatStr(item)).toLowerCase().includes(strSearch.toLowerCase())).sort((a, b) => {
+        if (formatStr(a).toLowerCase().indexOf(strSearch.toLowerCase()) > formatStr(b).toLowerCase().indexOf(strSearch.toLowerCase())) {
+            return 1;
+        } else if (formatStr(a).toLowerCase().indexOf(strSearch.toLowerCase()) < formatStr(b).toLowerCase().indexOf(strSearch.toLowerCase())) {
+            return -1;
+        } else {
+            if (formatStr(a) > formatStr(b)) return 1;
+            else return -1;
+        }
+    });
+};
+
+export const LastPrice = memo(({ price, className, style }) => {
+    const prevPrice = usePrevious(price);
+    return (
+        <div
+            style={style}
+            className={classNames(
+                '',
+                {
+                    'text-red': price < prevPrice,
+                    'text-teal': price >= prevPrice
+                },
+                className
+            )}
+        >
+            {formatPrice(price)}
+        </div>
+    );
+});
+
+export function formatNanNumber(value, digits = 0) {
+    const formatedNumber = formatNumber(value, digits);
+    return `${formatedNumber === 'NaN' ? 0 : formatedNumber}`;
+}
+
+export const convertDateToMs = (date = 0, type = 'startOf') => {
+    if (type === 'startOf') {
+        return moment.utc(moment(+date).startOf('day')).unix() * 1000;
+    }
+    return moment.utc(moment(+date).endOf('day')).unix() * 1000;
+};
+
+const md5 = require('md5')
+export const getSignature = (userId, timestamp)=> {
+    return md5(userId.slice(0, 10)+timestamp)
 }

@@ -1,13 +1,12 @@
-import classNames from 'classnames';
 import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_NEW_COMMISSIONS, API_NEW_REFERRAL_NEW_FRIENDS } from 'redux/actions/apis';
-import { Line, NoData } from 'components/screens/NewReference/mobile';
+import { NoData } from 'components/screens/NewReference/mobile';
 import { formatNumber, formatTime } from 'redux/actions/utils';
-import Tabs, { TabItem } from 'components/common/Tabs/Tabs'
-import { useTranslation } from 'next-i18next'
-import React, { useEffect, useState, useMemo } from 'react'
-import { RefInfo, UserIcon } from 'components/screens/NewReference/mobile/sections/LastedActivities';
+import React, { useEffect, useState, useMemo } from 'react';
 import RefCard from '../../RefCard';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import UserCircle from 'components/svg/UserCircle';
+import { useSelector } from 'react-redux';
 
 const tier = {
     1: {
@@ -29,8 +28,8 @@ const tier = {
     5: {
         en: 'Diamond',
         vi: 'Kim Cương'
-    },
-}
+    }
+};
 const languages = {
     newUser: {
         en: 'New Friend',
@@ -48,108 +47,133 @@ const languages = {
         en: 'Ranking',
         vi: 'Hạng'
     }
-}
+};
+
+const KING = {
+    SPOT: { vi: 'Nami Spot', en: 'Nami Spot' },
+    FUTURES: { vi: 'Nami Futures', en: 'Nami Futures' },
+    STAKING: { vi: 'Nami Daily Staking', en: 'Nami Daily Staking' },
+    SWAP: { vi: 'Quy đổi', en: 'Swap' },
+    NAO_FUTURES: { vi: 'NAO Futures', en: 'NAO Futures' }
+};
 
 const Commission = ({ t, language, id }) => {
-    const [lastedCommissions, setLastedCommissions] = useState([])
-    const [lastedFriends, setLastedFriends] = useState([])
-    const tags = [{
-        value: 'receivedCommision',
-        content: t('futures:mobile.commission')
-    }, {
-        value: 'lastedUser',
-        content: t('reference:referral.new_friends')
-    },]
-    const [tab, setTab] = useState(tags[0].value)
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
+
+    const [lastedCommissions, setLastedCommissions] = useState([]);
+    const [lastedFriends, setLastedFriends] = useState([]);
+    const [theme] = useDarkMode();
+
     useEffect(() => {
-        FetchApi({
+        handleAPI();
+    }, []);
+
+    const handleAPI = () => {
+        const commission = FetchApi({
             url: API_NEW_REFERRAL_NEW_COMMISSIONS,
             options: {
-                method: 'GET',
-            },
-        }).then(({ data, status }) => {
-            if (status === 'ok') {
-                setLastedCommissions(data)
-            } else {
-                setLastedCommissions([])
+                method: 'GET'
             }
         });
-        FetchApi({
+        const newFriend = FetchApi({
             url: API_NEW_REFERRAL_NEW_FRIENDS,
             options: {
-                method: 'GET',
-            },
-        }).then(({ data, status }) => {
-            if (status === 'ok') {
-                setLastedFriends(data)
-            } else {
-                setLastedFriends([])
+                method: 'GET'
             }
         });
-    }, [])
+        Promise.all([commission, newFriend])
+            .then((values) => {
+                const [commissions = {}, friends = {}] = values || [];
+                setLastedCommissions(commissions?.data || []);
+                setLastedFriends(friends?.data || []);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    };
 
     const renderNewFriends = useMemo(() => {
-        return !lastedFriends.length ? <><NoData className='my-20' text={t('reference:referral.no_friends')} /></> : lastedFriends.map(data =>
-            <div key={data.userId}>
-                <div className='flex gap-2'>
-                    <UserIcon />
-                    <div className='font-semibold text-sm leading-6 text-darkBlue'>
-                        {t('reference:referral.new_friend')}: {data.code}
+        return !lastedFriends.length ? (
+            <NoData className="my-20 !text-base" text={t('reference:referral.no_friends')} />
+        ) : (
+            lastedFriends.map((data) => (
+                <div key={`NewFriend-${data.name}`} className="p-4 bg-gray-13 dark:bg-dark-2 rounded-xl">
+                    <div className="flex gap-2 mb-6 items-center">
+                        <UserCircle size={32} />
+                        <div>
+                            <p className="font-semibold text-darkBlue dark:text-gray-4">{data.name || '_'}</p>
+                            <div className="text-tiny flex flex-row  text-gray-1 dark:text-gray-7 items-center">
+                                <p>{data?.code || '_'}</p>
+                                <span className="mx-2 w-1 h-1 rounded-full bg-gray-1 dark:bg-gray-7" />
+                                <p>{formatTime(data?.invitedAt, 'HH:mm dd/MM/yyyy') || '_'}</p>
+                            </div>
+                        </div>
+                        {/* <p className="font-semibold">
+                            {t('reference:referral.new_friend')}: {data.code}
+                        </p> */}
+                    </div>
+                    <div className="space-y-3">
+                        <div>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('reference:referral:referrer')}</span>
+                            <span className="float-right text-txtPrimary dark:text-gray-4 font-semibold">{data?.invitedBy?.name || '_'}</span>
+                        </div>
+                        <div>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">Nami ID</span>
+                            <span className="float-right text-txtPrimary dark:text-gray-4 font-semibold">{data?.invitedBy?.code || '_'}</span>
+                        </div>
+                        <div>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('reference:referral:level')}</span>
+                            <span className="float-right text-txtPrimary dark:text-gray-4 font-semibold">{`F${data?.level - 1}`}</span>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <RefInfo data={data} language={language} className='mb-6 mt-4' />
-                </div>
-            </div>
-        )
-    }, [lastedFriends])
+            ))
+        );
+    }, [lastedFriends]);
+
+    const total = (data) => {
+        const asset = data?.value > 0 ? '+' : '';
+        const symbol = assetConfig.find((f) => f.id === data.currency) || {};
+        return `${asset}${formatNumber(data.value || 0, symbol?.assetDigit, 0, true)} ${symbol?.assetCode}`;
+    };
 
     const renderLastedCommissions = useMemo(() => {
-        return !lastedCommissions.length ? <><NoData className='my-20' text={t('reference:referral.no_commission')} /></> : lastedCommissions.map((data, index) =>
-            <div key={index}>
-                <div className='flex flex-col gap-1'>
-                    <div className='flex w-full justify-between items-center font-semibold text-sm leading-6'>
-                        <div className='text-darkBlue'>
-                            {data.formUserCode} ({t('reference:referral.level')} {data.level < 10 ? 0 : null}{data.level})
+        return !lastedCommissions.length ? (
+            <NoData className="my-20 !text-base" text={t('reference:referral.no_recent_activities')} />
+        ) : (
+            lastedCommissions.map((data, index) => (
+                <div key={`commission-${index}-${data.fromUserCode}`}>
+                    <div className="flex flex-col gap-1">
+                        <div className="flex w-full justify-between items-center font-semibold leading-6">
+                            <div>{`${data.fromUserCode} (${t('reference:referral.level')} F${data?.level || 0})`}</div>
+                            <div className="text-teal">{total(data)}</div>
                         </div>
-                        <div className='text-teal'>
-                            +{formatNumber(data.value, 2)} VNDC
-                        </div>
-                    </div>
-                    <div className='flex w-full justify-between items-center !text-gray-1 font-medium text-xs leading-[14px]'>
-                        <div>
-                            {formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}
-                        </div>
-                        <div>
-                            {t('reference:referral.type')}: {data.kind}
+                        <div className="flex w-full justify-between items-center text-txtSecondary dark:text-txtSecondary-dark text-sm">
+                            <div>{formatTime(data.createdAt, 'dd/MM/yyyy HH:mm:ss')}</div>
+                            <div>
+                                {t('reference:referral.type_commission')}: <span className="capitalize">{KING[data?.kind]?.[language] || '--'}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                {lastedCommissions.length === index + 1 ? null : <Line className='my-4' />}
-            </div>
-        )
-    }, [lastedCommissions])
+            ))
+        );
+    }, [lastedCommissions]);
 
     return (
-        <div className='flex gap-8 w-full' id={id}>
-            <RefCard wrapperClassName='!p-6 w-full max-h-[624px]'>
-                <div className='font-semibold text-[20px] leading-6 mb-6'>
-                    {t('reference:referral.new_friends')}
-                </div>
-                <div className='max-h-[calc(624px-96px)] overflow-y-auto pr-4'>
-                    {renderNewFriends}
-                </div>
+        <div className="flex gap-6 w-full" id={id}>
+            {/* Hoa hồng */}
+            <RefCard wrapperClassName="!py-6 px-8 w-full max-h-[624px]" isBlack={theme === THEME_MODE.DARK}>
+                <div className="font-semibold text-[22px] leading-7 py-3 mb-6">{t('reference:referral.recent_activities')}</div>
+                <div className="max-h-[calc(624px-124px)] overflow-y-auto pr-5 -mr-5 space-y-8">{renderLastedCommissions}</div>
             </RefCard>
-            <RefCard wrapperClassName='!p-6 w-full  max-h-[624px]'>
-                <div className='font-semibold text-[20px] leading-6 mb-6'>
-                    {t('futures:mobile.commission')}
-                </div>
-                <div className='max-h-[calc(624px-96px)] overflow-y-auto pr-4'>
-                    {renderLastedCommissions}
-                </div>
+            {/* Bạn bè mới */}
+            <RefCard wrapperClassName="!py-6 px-8 w-full max-h-[624px]" isBlack={theme === THEME_MODE.DARK}>
+                <div className="font-semibold text-[22px] leading-7 py-3 mb-6">{t('reference:referral.new_friends')}</div>
+                <div className="max-h-[calc(624px-124px)] overflow-y-auto pr-5 -mr-5 space-y-4">{renderNewFriends}</div>
             </RefCard>
         </div>
-    )
-}
+    );
+};
 
-export default Commission
+export default Commission;

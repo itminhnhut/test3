@@ -191,7 +191,7 @@ const Summary = (props) => {
                             </div>
                         </div>
                         <div className='w-full'>
-                            <div className='font-semibold text-4xl leading-10'>
+                            <div className='font-semibold text-5xl leading-10'>
                                 100%  <span className='font-medium text-lg leading-10 text-gray-2'>({section1Data.buy} lệnh mua và {section1Data.sell} lệnh bán)</span>
                             </div>
                             <div className='flex w-full bg-[#F2F4F7] h-4 rounded transition-all my-6'>
@@ -257,8 +257,8 @@ const Summary = (props) => {
             datasets: [{
                 type: 'bar',
                 data: chartData,
-                backgroundColor: colors.portfolio.teal[0],
-                borderColor: colors.portfolio.teal[0],
+                backgroundColor: colors.teal,
+                borderColor: colors.teal,
                 maxBarThickness: width >= 640 ? 32 : 8,
                 borderRadius: 2,
             }]
@@ -288,7 +288,7 @@ const Summary = (props) => {
                         },
                     },
                     backgroundColor: colors.white,
-                    titleColor: colors.grey2,
+                    titleColor: colors.gray[2],
                     displayColors: false
                 },
             },
@@ -331,8 +331,8 @@ const Summary = (props) => {
             labels,
             datasets: [{
                 data: chartData,
-                backgroundColor: [colors.portfolio.teal[0], '#C0F9EE'],
-                borderColor: [colors.portfolio.teal[0], '#C0F9EE'],
+                backgroundColor: [colors.teal, '#C0F9EE'],
+                borderColor: [colors.teal, '#C0F9EE'],
                 hoverOffset: 4,
                 spacing: 4,
                 rotation: 180,

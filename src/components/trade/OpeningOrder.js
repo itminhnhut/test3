@@ -1,35 +1,44 @@
-import SvgCross from 'src/components/svg/Cross';
 import filter from 'lodash/filter';
 import findIndex from 'lodash/findIndex';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import Emitter from 'redux/actions/emitter';
-import { tableStyle } from 'src/config/tables';
 import { API_GET_OPEN_ORDER } from 'src/redux/actions/apis';
 import { ApiStatus, ExchangeOrderEnum, UserSocketEvent } from 'src/redux/actions/const';
-import { formatBalance, formatTime } from 'src/redux/actions/utils';
-import fetchAPI from 'utils/fetch-api';
-import showNotification from 'utils/notificationService';
-import TableNoData from '../common/table.old/TableNoData';
-import TableLoader from '../loader/TableLoader';
+import { formatBalance, formatTime, TypeTable } from 'src/redux/actions/utils';
+import fetchAPI, { useCancelToken } from 'utils/fetch-api';
 import Link from 'next/link';
+import { formatNumber } from 'redux/actions/utils';
+import TableV2 from '../common/V2/TableV2';
+import AlertModalV2 from '../common/V2/ModalV2/AlertModalV2';
+import { Store } from 'react-notifications-component';
 
 const SpotOrderList = (props) => {
-    const { t } = useTranslation(['common', 'spot']);
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation(['common', 'spot']);
     const { toggle } = props;
     const [orders, setOrders] = useState([]);
     const [filteredOrders, setFilteredOrders] = useState([]);
     const [loading, setLoading] = useState(false);
-    const userSocket = useSelector(state => state.socket.userSocket);
-    const user = useSelector(state => state.auth.user);
-
-    const { currentPair, filterByCurrentPair, darkMode } = props;
+    const userSocket = useSelector((state) => state.socket.userSocket);
+    const user = useSelector((state) => state.auth.user);
+    const { currentPair, filterByCurrentPair } = props;
+    const [showCloseAll, setShowCloseAll] = useState(false);
+    const [showSuccess, setshowSuccess] = useState(false);
+    const alert = useRef({
+        type: '',
+        title: '',
+        message: ''
+    });
+    const [loaded, setLoaded] = useState(false);
+    const cancelToken = useCancelToken();
 
     useEffect(() => {
         if (filterByCurrentPair) {
-            const filter = orders.filter(hist => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair);
+            const filter = orders.filter((hist) => `${hist?.baseAsset}-${hist?.quoteAsset}` === currentPair);
             setFilteredOrders(filter);
         } else {
             setFilteredOrders(orders);
@@ -37,38 +46,113 @@ const SpotOrderList = (props) => {
     }, [orders, currentPair, filterByCurrentPair]);
 
     const closeOrder = async (order) => {
-        const {displayingId, symbol} = order
-        const res = await fetchAPI({
-            url: '/api/v3/spot/order',
-            options: {
-                method: 'DELETE',
-            },
-            params: {
-                displayingId,
-                symbol,
-            },
-        });
-        const { status, data } = res;
-        let message = '';
-        if (status === ApiStatus.SUCCESS) {
-            message = t('spot:close_order_success', {
-                displayingId, side: data?.side, type: data?.type, token: `${data?.baseAsset}/${data?.quoteAsset}`,
+        if (loaded) return;
+        try {
+            setLoaded(true);
+            const { displayingId, symbol } = order;
+            const res = await fetchAPI({
+                url: '/api/v3/spot/order',
+                options: {
+                    method: 'DELETE'
+                },
+                params: {
+                    displayingId,
+                    symbol
+                }
             });
-            showNotification({ message, title: 'Success', type: 'success' }, null, 'bottom', 'bottom-right');
-        } else {
-            showNotification({ message: t('spot:close_order_failed', {
-                    displayingId, side: order?.side, type: order?.type, token: `${order?.baseAsset}/${order?.quoteAsset}`,
+            const { status, data } = res;
+            if (status === ApiStatus.SUCCESS) {
+                alert.current = {
+                    type: 'success',
+                    title: t('common:success'),
+                    message: t('spot:cancel_order_success', {
+                        displayingId,
+                        side: data?.side,
+                        type: data?.type,
+                        token: `${data?.baseAsset}/${data?.quoteAsset}`
+                    })
+                };
+                // message = t('spot:close_order_success', {
+                //     displayingId,
+                //     side: data?.side,
+                //     type: data?.type,
+                //     token: `${data?.baseAsset}/${data?.quoteAsset}`
+                // });
+                // showNotification({ message, title: 'Success', type: 'success' }, null, 'bottom', 'bottom-right');
+            } else {
+                alert.current = {
+                    type: 'error',
+                    title: t('common:cancel_order'),
+                    message: t('spot:cancel_order_failed', {
+                        displayingId,
+                        side: order?.side,
+                        type: order?.type,
+                        token: `${order?.baseAsset}/${order?.quoteAsset}`
+                    })
+                };
+                // showNotification(
+                //     {
+                //         message: t('spot:close_order_failed', {
+                //             displayingId,
+                //             side: order?.side,
+                //             type: order?.type,
+                //             token: `${order?.baseAsset}/${order?.quoteAsset}`
+                //         }),
+                //         title: 'Failure',
+                //         type: 'failure'
+                //     },
+                //     null,
+                //     'bottom',
+                //     'bottom-right'
+                // );
+            }
+        } catch (error) {
+        } finally {
+            setLoaded(false);
+            setshowSuccess(true);
+        }
+    };
 
-                }), title: 'Failure', type: 'failure' }, null, 'bottom', 'bottom-right');
+    const onCloseAll = async () => {
+        if (loaded) return;
+        const orders = filteredOrders.map((rs) => ({ symbol: rs.symbol, displayingId: rs.displayingId }));
+        try {
+            setLoaded(true);
+            const res = await fetchAPI({
+                url: '/api/v3/spot/all_order',
+                options: {
+                    method: 'DELETE'
+                },
+                params: {
+                    orders: orders,
+                    allowNotification: true
+                }
+            });
+            const { status } = res;
+            if (status === ApiStatus.SUCCESS) {
+                alert.current = {
+                    type: 'success',
+                    title: t('common:success'),
+                    message: t('common:cancel_all_success')
+                };
+            } else {
+                alert.current = {
+                    type: 'error',
+                    title: t('common:failed'),
+                    message: t('common:cancel_all_failed')
+                };
+            }
+        } catch (error) {
+        } finally {
+            setShowCloseAll(false);
+            setLoaded(false);
+            setshowSuccess(true);
         }
     };
 
     const updateOrder = (data) => {
         if (data?.displayingId) {
-            if ([
-                ExchangeOrderEnum.Status.NEW,
-                ExchangeOrderEnum.Status.PARTIALLY_FILLED,
-            ].includes(data?.status)) {
+            if ([ExchangeOrderEnum.Status.NEW, ExchangeOrderEnum.Status.PARTIALLY_FILLED].includes(data?.status)) {
                 let _orders = orders || [];
                 const index = findIndex(_orders, { displayingId: data?.displayingId });
                 if (index < 0) {
@@ -81,7 +165,9 @@ const SpotOrderList = (props) => {
             } else {
                 let _orders = orders || [];
                 if (_orders.length) {
-                    _orders = filter(_orders, (o) => { return +o.displayingId !== +data?.displayingId; });
+                    _orders = filter(_orders, (o) => {
+                        return +o.displayingId !== +data?.displayingId;
+                    });
                     setOrders(_orders);
                 }
             }
@@ -113,209 +199,121 @@ const SpotOrderList = (props) => {
         };
     }, [userSocket]);
 
-    const customStyles = {
-        ...tableStyle,
-        table: {
-            style: {
-                ...tableStyle.table?.style,
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-                minHeight: loading ? 0 : '200px',
+    const columns = useMemo(() => {
+        return [
+            {
+                key: 'displayingId',
+                title: t('common:order_id'),
+                dataIndex: 'displayingId',
+                width: 120
             },
-        },
-        headCells: {
-            style: {
-                ...tableStyle.headCells?.style,
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                padding: 0,
+            {
+                key: 'createdAt',
+                title: t('common:time'),
+                dataIndex: 'createdAt',
+                width: 180,
+                render: (v) => <span>{formatTime(v, 'HH:mm:ss dd/MM/yyyy')}</span>
             },
-            activeSortStyle: {
-                cursor: 'pointer',
-                '&:focus': {
-                    outline: 'none',
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:focus': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:active': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
+            {
+                key: 'symbol',
+                title: t('common:pair'),
+                dataIndex: 'symbol',
+                width: 150,
+                render: (v, row) =>
+                    currentPair !== `${row?.baseAsset}-${row?.quoteAsset}` ? (
+                        <Link href={`/trade/${row?.baseAsset}-${row?.quoteAsset}`}>
+                            <a className="dark:text-white text-darkBlue">{`${row?.baseAsset}/${row?.quoteAsset}`}</a>
+                        </Link>
+                    ) : (
+                        `${row?.baseAsset}/${row?.quoteAsset}`
+                    )
             },
-            inactiveSortStyle: {
-                '&:focus': {
-                    outline: 'none',
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:focus': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:active': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
+            {
+                key: 'type',
+                title: t('common:order_type'),
+                dataIndex: 'type',
+                width: 150,
+                render: (v, row) => <TypeTable type={'type'} data={row} />
             },
-        },
-        headRow: {
-            style: {
-                ...tableStyle.headRow?.style,
-                borderBottom: 'none !important',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
+            {
+                key: 'side',
+                title: `${t('common:buy')}/${t('common:sell')}`,
+                dataIndex: 'side',
+                width: 100,
+                render: (v, row) => <TypeTable type={'side'} data={row} />
             },
-        },
-        rows: {
-            style: {
-                ...tableStyle.rows?.style,
-                borderBottom: 'none !important',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-                '&:hover': {
-                    background: darkMode ? '#212537' : '#F6F9FC',
-                },
+            {
+                key: 'order_price',
+                title: t('common:order_price'),
+                width: 150,
+                align: 'right',
+                render: (row) => formatBalance(row.price, 6)
             },
-        },
-        cells: {
-            style: {
-                ...tableStyle.cells?.style,
-                color: darkMode ? '#DBE3E6' : '#02083D',
-                padding: 0,
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#02083D',
-                },
+            {
+                key: 'open_quantity',
+                title: t('common:open_quantity'),
+                width: 150,
+                align: 'right',
+                render: (row) => formatNumber(row.quantity)
             },
-        },
-        pagination: {
-            style: {
-                ...tableStyle.pagination?.style,
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
+            {
+                key: 'filled',
+                title: t('common:filled'),
+                align: 'right',
+                width: 100,
+                render: (row) => {
+                    return <span>{formatBalance((row?.executedQty / row?.quantity) * 100, 2)}%</span>;
+                }
             },
-            pageButtonsStyle: {
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                fill: darkMode ? '#DBE3E6' : '#8B8C9B',
-                '&:hover:not(:disabled)': {
-                    backgroundColor: darkMode ? '#212738' : '#DBE3E6',
-                },
-                '&:focus': {
-                    outline: 'none',
-                    backgroundColor: darkMode ? '#212738' : '#DBE3E6',
-                },
-                '&:disabled': {
-                    cursor: 'unset',
-                    color: darkMode ? '#8B8C9B' : '#d1d1d1',
-                    fill: darkMode ? '#8B8C9B' : '#d1d1d1',
-                },
-            },
-        },
-    };
+            {
+                key: 'actions',
+                title: (
+                    <div
+                        onClick={() => {
+                            if (filteredOrders.length) {
+                                Store.removeAllNotifications();
+                                setShowCloseAll(true);
+                            }
+                        }}
+                        className="bg-gray-10 dark:bg-dark-2 px-4 py-2 text-txtPrimary dark:text-txtSecondary-dark rounded-md cursor-pointer font-semibold"
+                    >
+                        {t('common:cancel_all_orders')}
+                    </div>
+                ),
+                fixed: 'right',
+                align: 'center',
+                width: 180,
+                // visible: filteredOrders.length > 0,
+                className: filteredOrders.length > 0 ? '' : 'invisible',
+                render: (row) => (
+                    <div
+                        onClick={() => {
+                            closeOrder(row);
+                        }}
+                        className="bg-gray-10 dark:bg-dark-2 px-4 py-2 text-txtPrimary dark:text-txtSecondary-dark rounded-md cursor-pointer font-semibold"
+                    >
+                        {t('common:cancel_open_order')}
+                    </div>
+                )
+            }
+        ];
+    }, [toggle, currentPair, showCloseAll, loaded, filteredOrders]);
 
-    const columns = useMemo(() => [
-        {
-            name: t('common:order_id'),
-            selector: 'displayingId',
-            ignoreRowClick: true,
-            omit: false,
-            minWidth: '50px',
+    useEffect(
+        () => () => {
+            cancelToken.cancel();
         },
-        {
-            name: t('common:time'),
-            selector: 'createdAt',
-            ignoreRowClick: true,
-            omit: false,
-            minWidth: '100px',
-            cell: (row) => formatTime(row.createdAt),
-        },
-        {
-            name: t('common:pair'),
-            selector: 'symbol',
-            ignoreRowClick: true,
-            minWidth: '100px',
-            cell: (row) => currentPair !== `${row?.baseAsset}-${row?.quoteAsset}` ?
-                <Link href={`/trade/${row?.baseAsset}-${row?.quoteAsset}`}>
-                    <a className='dark:text-white text-darkBlue'>
-                        {row?.symbol}
-                    </a>
-                </Link>
-                : row?.symbol,
-        },
-        {
-            name: t('common:order_type'),
-            selector: 'type',
-            ignoreRowClick: true,
-            minWidth: '50px',
-        },
-        {
-            name: `${t('common:buy')}/${t('common:sell')}`,
-            selector: 'side',
-            ignoreRowClick: true,
-            minWidth: '50px',
-            conditionalCellStyles: [
-                {
-                    when: row => row.side === 'SELL',
-                    style: {
-                        color: '#E5544B !important',
-                    },
-                },
-                {
-                    when: row => row.side === 'BUY',
-                    style: {
-                        color: '#00C8BC !important',
-                    },
-                }],
-        },
-        {
-            name: t('common:order_price'),
-            ignoreRowClick: true,
-            right: true,
-            cell: (row) => formatBalance(row.price, 6),
-            minWidth: '80px',
-        },
-        {
-            name: t('common:open_quantity'),
-            ignoreRowClick: true,
-            right: true,
-            minWidth: '80px',
-            cell: (row) => row.quantity,
-        },
-        {
-            name: t('common:filled'),
-            minWidth: '80px',
-            right: true,
-            cell: (row) => {
-                return (
-                    <span>
-                        {formatBalance((row?.executedQty / row?.quantity) * 100, 2)}%
-                    </span>
-                );
-            },
-        },
-        {
-            name: '',
-            ignoreRowClick: true,
-            right: true,
-            minWidth: '40px',
-            // omit: !toggle,
-            cell: (row) => (
-                <span className="p-2 cursor-pointer" onClick={() => {
-                    closeOrder(row)
-                }}>
-                    <SvgCross  />
-                </span>
-            ),
-        },
-
-    ], [toggle, currentPair]);
+        []
+    );
 
     const getOrderList = async () => {
         setLoading(true);
         const { status, data } = await fetchAPI({
             url: API_GET_OPEN_ORDER,
             options: {
-                method: 'GET',
+                method: 'GET'
             },
+            cancelToken: cancelToken.token
         });
         if (status === ApiStatus.SUCCESS) {
             setOrders(data.orders);
@@ -328,22 +326,36 @@ const SpotOrderList = (props) => {
     }, [user]);
 
     return (
-        <DataTable
-            data={filteredOrders}
-            columns={columns}
-            className="h-full"
-            customStyles={customStyles}
-            noHeader
-            fixedHeader
-            fixedHeaderScrollHeight={`${props.orderListWrapperHeight - 100}px`}
-            dense
-            pagination
-            paginationPerPage={30}
-            paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
-            noDataComponent={<TableNoData bgColor={darkMode ? 'bg-dark-1' : '#FFFFFF'} />}
-            progressPending={loading}
-            progressComponent={<TableLoader height={props.height} />}
-        />
+        <>
+            <AlertModalV2
+                isVisible={showCloseAll}
+                onClose={() => setShowCloseAll(false)}
+                type="warning"
+                title={t('common:cancel_all_orders')}
+                message={t('common:cancel_all_message')}
+                textButton={t('common:confirm')}
+                onConfirm={onCloseAll}
+                loading={loaded}
+            />
+            <AlertModalV2
+                isVisible={showSuccess}
+                onClose={() => setshowSuccess(false)}
+                type={alert.current.type}
+                title={alert.current.title}
+                message={alert.current.message}
+            />
+            <TableV2
+                defaultSort={{ key: 'createdAt', direction: 'desc' }}
+                useRowHover
+                data={filteredOrders}
+                columns={columns}
+                rowKey={(item) => `${item?.displayingId}`}
+                loading={loading}
+                limit={10}
+                skip={0}
+                noBorder={!props.isPro || !filteredOrders.length}
+            />
+        </>
     );
 };
 

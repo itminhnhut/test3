@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { find, orderBy, sumBy } from 'lodash';
@@ -13,7 +13,8 @@ import StakingWallet from 'components/screens/Wallet/Staking';
 import FarmingWallet from 'components/screens/Wallet/Farming';
 import TransactionHistory from 'components/screens/Wallet/Transaction';
 import Axios from 'axios';
-import Tab from 'components/common/Tab';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import { useTranslation } from 'next-i18next';
 import colors from 'styles/colors';
 import styled from 'styled-components';
 import { API_FARMING_SUMMARY, API_STAKING_SUMMARY } from 'redux/actions/apis';
@@ -22,33 +23,45 @@ import { useAsync } from 'react-use';
 import { getFuturesMarketWatch, getMarketWatch, getUsdRate } from 'redux/actions/market';
 import useWindowFocus from 'hooks/useWindowFocus';
 import { PATHS } from 'constants/paths';
-import NeedLogin from 'components/common/NeedLogin';
+import NeedLoginV2 from 'components/common/NeedLoginV2';
 import { MIN_WALLET } from 'constants/constants';
+import PartnersWallet from './Partners';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import useWindowSize from 'hooks/useWindowSize';
+export const WIDTH_MD = 768;
 
 const INITIAL_STATE = {
     screen: null,
     screenIndex: null,
     allAssets: null,
-    allFuturesAsset: null,
     loadingStaking: false,
     stakingConfig: null,
     loadingFarming: false,
     farmingConfig: null,
     loadingUsdRate: false,
     usdRate: null,
-    exchangeEstBtc: null,
-    futuresEstBtc: null,
-    exchangeRefPrice: null,
-    futuresRefPrice: null,
-    stakingSummary: null,
-    farmingSummary: null,
+
     loadingSummary: false,
-    exchangeMarketWatch: null,
-    futuresMarketWatch: null,
     stakingEstBtc: null,
+    stakingSummary: null,
     stakingRefPrice: null,
+    farmingSummary: null,
     farmingEstBtc: null,
     farmingRefPrice: null,
+
+    exchangeEstBtc: null,
+    exchangeRefPrice: null,
+    exchangeMarketWatch: null,
+
+    allFuturesAsset: null,
+    futuresEstBtc: null,
+    futuresRefPrice: null,
+    futuresMarketWatch: null,
+
+    allPartnersAsset: null,
+    partnersEstBtc: null,
+    partnersRefPrice: null,
+    partnersMarketWatch: null
     // ... Add new state
 };
 
@@ -57,41 +70,47 @@ const AVAILBLE_KEY = 'available';
 const Wallet = () => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
-    const setState = state => set(prevState => ({ ...prevState, ...state }));
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
+    const [isHideAsset, setIsHideAsset] = useState(false);
 
     // Rdx
-    const auth = useSelector(state => state.auth?.user) || null;
-    const allWallet = useSelector(state => state.wallet?.SPOT) || null;
-    const allFuturesWallet = useSelector(state => state.wallet?.FUTURES) || null;
+    const auth = useSelector((state) => state.auth?.user) || null;
+    const allWallet = useSelector((state) => state.wallet?.SPOT) || null;
+    const allFuturesWallet = useSelector((state) => state.wallet?.FUTURES) || null;
+    const allPartnersWallet = useSelector((state) => state.wallet?.PARTNERS) || null;
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
 
     // Use Hooks
     const r = useRouter();
-    const [currentTheme,] = useDarkMode();
+    const [currentTheme] = useDarkMode();
     const focused = useWindowFocus();
+    const { t } = useTranslation(['common']);
 
     // Helper
     const walletMapper = (walletType, allWallet, assetConfig) => {
         if (!allWallet || !assetConfig) return;
         const mapper = [];
         if (Array.isArray(assetConfig) && assetConfig?.length) {
-            const _wallet = walletType === WalletType.SPOT ? assetConfig.filter(o => o.walletTypes?.[walletType])
-                : assetConfig.filter(o => ['VNDC', 'NAMI', 'NAC', 'USDT'].includes(o?.assetCode));
-            _wallet && _wallet.forEach(item => {
-                const originWallet = allWallet?.[item.id];
+            const _wallet =
+                walletType === WalletType.SPOT
+                    ? assetConfig.filter((o) => o.walletTypes?.[walletType])
+                    : assetConfig.filter((o) => ['VNDC', 'NAMI', 'NAC', 'USDT'].includes(o?.assetCode));
+            _wallet &&
+                _wallet.forEach((item) => {
+                    const originWallet = allWallet?.[item.id];
 
-                if (originWallet) {
-                    const value = originWallet?.value < MIN_WALLET ? 0 : originWallet?.value;
-                    const lockedValue = originWallet?.value < MIN_WALLET ? 0 : originWallet?.locked_value;
-                    const available = value - lockedValue;
+                    if (originWallet) {
+                        const value = originWallet?.value < MIN_WALLET ? 0 : originWallet?.value;
+                        const lockedValue = originWallet?.value < MIN_WALLET ? 0 : originWallet?.locked_value;
+                        const available = value - lockedValue;
 
-                    mapper.push({
-                        ...item,
-                        [AVAILBLE_KEY]: (isNaN(available) || available < MIN_WALLET) ? 0 : available,
-                        wallet: originWallet
-                    });
-                }
-            });
+                        mapper.push({
+                            ...item,
+                            [AVAILBLE_KEY]: isNaN(available) || available < MIN_WALLET ? 0 : available,
+                            wallet: originWallet
+                        });
+                    }
+                });
             // console.log('namidev-DEBUG: ___ ', orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']))
         }
         if (walletType === WalletType.SPOT) {
@@ -99,6 +118,9 @@ const Wallet = () => {
         }
         if (walletType === WalletType.FUTURES) {
             setState({ allFuturesAsset: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
+        }
+        if (walletType === WalletType.PARTNERS) {
+            setState({ allPartnersAsset: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
         }
     };
 
@@ -165,21 +187,54 @@ const Wallet = () => {
         usdRate && setState({ usdRate });
     };
 
+    const { width } = useWindowSize();
+    // const limitExchangeAsset = useMemo(() => {
+    //     let limit = 5;
+    //     if (width >= 1280) limit = 7;
+    //     return limit;
+    // }, [width]);
+
+    // const isSmallScreen = width < WIDTH_MD;
+    // const isSmallScreen = useMemo(() => {
+    //     return;
+    // }, [width]);
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
+    useEffect(() => {
+        setIsSmallScreen(width < WIDTH_MD);
+    }, [width]);
+
     // Render Handler
     const renderScreenTab = useCallback(() => {
         return (
-            <Tab series={SCREEN_TAB_SERIES}
-                currentIndex={state.screenIndex}
-                onChangeTab={(screenIndex) => {
-                    const current = SCREEN_TAB_SERIES.find(o => o?.key === screenIndex);
-                    // if (current?.code === WALLET_SCREENS.FARMING || current?.code === WALLET_SCREENS.STAKING) {
-                    //     r.push(`https://nami.exchange/wallet/account?type=${current?.code}`)
-                    // } else {
-                    r.push(`${PATHS.WALLET.DEFAULT}/${current?.code}`);
-                    // }
-                }}
-                tArr={['common']}
-            />
+            <div className="relative flex tracking-normal">
+                <Tabs isMobile tab={state.screenIndex} className="gap-6 border-b border-divider dark:border-divider-dark">
+                    {SCREEN_TAB_SERIES.map((e, index) => {
+                        return (
+                            <TabItem
+                                isActive={e?.key === state.screenIndex}
+                                key={e?.key}
+                                className={`text-left !px-0 !text-base !w-auto first:ml-4 md:first:ml-0`}
+                                value={e.key}
+                                onClick={() => {
+                                    const current = SCREEN_TAB_SERIES.find((o) => o?.key === e.key);
+                                    // if (current?.code === WALLET_SCREENS.FARMING || current?.code === WALLET_SCREENS.STAKING) {
+                                    //     r.push(`https://nami.exchange/wallet/account?type=${current?.code}`)
+                                    // } else {
+                                    r.push(`${PATHS.WALLET.DEFAULT}/${current?.code}`);
+                                }}
+                            >
+                                {t(`${e.localized ? e.localized : e.title}`)}
+                            </TabItem>
+                        );
+                    })}
+                </Tabs>
+                <div className="absolute right-0 hidden md:block">
+                    {/* <div /> */}
+                    <HrefButton variants="blank" className="w-auto !text-base" href={`/${WALLET_SCREENS.TRANSACTION_HISTORY}`}>
+                        {t('common:transaction_history')}
+                    </HrefButton>
+                </div>
+            </div>
         );
     }, [state.screenIndex]);
 
@@ -189,9 +244,8 @@ const Wallet = () => {
     }, []);
 
     useEffect(() => {
-        auth && reNewUsdRate()
-    }, [auth])
-
+        auth && reNewUsdRate();
+    }, [auth]);
 
     useEffect(() => {
         auth && reNewUsdRate();
@@ -219,8 +273,12 @@ const Wallet = () => {
     }, [allFuturesWallet, assetConfig]);
 
     useEffect(() => {
+        walletMapper(WalletType.PARTNERS, allPartnersWallet, assetConfig);
+    }, [allPartnersWallet, assetConfig]);
+
+    useEffect(() => {
         if (r?.query?.id) {
-            const _ = SCREEN_TAB_SERIES.find(o => o?.code === r.query.id);
+            const _ = SCREEN_TAB_SERIES.find((o) => o?.code === r.query.id);
             setState({
                 screenIndex: _?.key,
                 screen: _?.code
@@ -232,6 +290,7 @@ const Wallet = () => {
         const allAssetValue = state.usdRate;
         const exchangeList = [];
         const futuresList = [];
+        const partnersList = [];
 
         state.allAssets?.map((asset) => {
             const assetValue = +allAssetValue?.[asset?.id] || 0;
@@ -241,7 +300,7 @@ const Wallet = () => {
                 available: +asset?.[AVAILBLE_KEY],
                 totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
                 totalValueUsd: +asset?.wallet?.value * assetValue,
-                totalLockedUsd: +asset?.wallet?.locked_value * assetValue,
+                totalLockedUsd: +asset?.wallet?.locked_value * assetValue
             });
         });
 
@@ -253,26 +312,41 @@ const Wallet = () => {
                 available: +asset?.[AVAILBLE_KEY],
                 totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
                 totalValueUsd: +asset?.wallet?.value * assetValue,
-                totalLockedUsd: +asset?.wallet?.locked_value * assetValue,
+                totalLockedUsd: +asset?.wallet?.locked_value * assetValue
+            });
+        });
+
+        state.allPartnersAsset?.map((asset) => {
+            const assetValue = +allAssetValue?.[asset?.id] || 0;
+            partnersList.push({
+                assetCode: asset?.assetCode,
+                usdRate: +assetValue,
+                available: +asset?.[AVAILBLE_KEY],
+                totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
+                totalValueUsd: +asset?.wallet?.value * assetValue,
+                totalLockedUsd: +asset?.wallet?.locked_value * assetValue
             });
         });
 
         // traditional
         const totalExchange = sumBy(exchangeList, 'totalUsd');
         const totalFutures = sumBy(futuresList, 'totalUsd');
+        const totalPartners = sumBy(partnersList, 'totalUsd');
 
         const totalValueExchange = sumBy(exchangeList, 'totalValueUsd');
         const totalValueFutures = sumBy(futuresList, 'totalValueUsd');
+        const totalValuePartners = sumBy(partnersList, 'totalValueUsd');
 
         const lockedExchange = sumBy(exchangeList, 'totalLockedUsd');
         const lockedFutures = sumBy(futuresList, 'totalLockedUsd');
+        const lockedPartners = sumBy(partnersList, 'totalLockedUsd');
 
         // earn
         const namiUsdRate = allAssetValue?.['1'] || 1;
         const totalStaking = state.stakingSummary?.[0]?.summary?.total_balance * namiUsdRate;
         const totalFarming = state.farmingSummary?.[0]?.summary?.total_balance * namiUsdRate;
 
-        const btcDigit = find(state.allAssets, o => o?.assetCode === 'BTC')?.assetDigit;
+        const btcDigit = find(state.allAssets, (o) => o?.assetCode === 'BTC')?.assetDigit;
         // const usdDigit = find(state.allAssets, o => o?.assetCode === 'USDT')?.assetDigit;
         const btcUsdRate = allAssetValue?.['9'];
 
@@ -280,11 +354,11 @@ const Wallet = () => {
             setState({
                 stakingEstBtc: {
                     totalValue: totalStaking / btcUsdRate,
-                    assetDigit: 8,
+                    assetDigit: 8
                 },
                 stakingRefPrice: {
                     totalValue: totalStaking,
-                    assetDigit: 2,
+                    assetDigit: 2
                 }
             });
         }
@@ -293,11 +367,11 @@ const Wallet = () => {
             setState({
                 farmingEstBtc: {
                     totalValue: totalFarming / btcUsdRate,
-                    assetDigit: 8,
+                    assetDigit: 8
                 },
                 farmingRefPrice: {
                     totalValue: totalFarming,
-                    assetDigit: 2,
+                    assetDigit: 2
                 }
             });
         }
@@ -308,13 +382,13 @@ const Wallet = () => {
                     totalValue: totalValueExchange / btcUsdRate,
                     value: totalExchange / btcUsdRate,
                     locked: lockedExchange / btcUsdRate,
-                    assetDigit: btcDigit,
+                    assetDigit: btcDigit
                 },
                 exchangeRefPrice: {
                     totalValue: totalValueExchange,
                     value: totalExchange,
                     locked: lockedExchange,
-                    assetDigit: 2,
+                    assetDigit: 2
                 }
             });
         }
@@ -325,77 +399,120 @@ const Wallet = () => {
                     totalValue: totalValueFutures / btcUsdRate,
                     value: totalFutures / btcUsdRate,
                     locked: lockedFutures / btcUsdRate,
-                    assetDigit: btcDigit,
+                    assetDigit: btcDigit
                 },
                 futuresRefPrice: {
                     totalValue: totalValueFutures,
                     value: totalFutures,
                     locked: lockedFutures,
-                    assetDigit: 2,
+                    assetDigit: 2
+                },
+                partnersEstBtc: {
+                    totalValue: totalValuePartners / btcUsdRate,
+                    value: totalPartners / btcUsdRate,
+                    locked: lockedPartners / btcUsdRate,
+                    assetDigit: btcDigit
+                },
+                partnersRefPrice: {
+                    totalValue: totalValuePartners,
+                    value: totalPartners,
+                    locked: lockedPartners,
+                    assetDigit: 2
                 }
             });
         }
-    }, [state.allAssets, state.allFuturesAsset, state.stakingSummary, state.farmingSummary, state.usdRate]);
+    }, [state.allAssets, state.allFuturesAsset, state.allPartnersAsset, state.stakingSummary, state.farmingSummary, state.usdRate]);
 
     useAsync(async () => {
         if (state.screen === WALLET_SCREENS.EXCHANGE) {
-            const exchangeMarketWatch = await getMarketWatch()
-            exchangeMarketWatch && setState({ exchangeMarketWatch })
+            const exchangeMarketWatch = await getMarketWatch();
+            exchangeMarketWatch && setState({ exchangeMarketWatch });
         }
 
         if (state.screen === WALLET_SCREENS.FUTURES) {
-            const futuresMarketWatch = await getFuturesMarketWatch()
-            futuresMarketWatch && setState({ futuresMarketWatch })
+            const futuresMarketWatch = await getFuturesMarketWatch();
+            futuresMarketWatch && setState({ futuresMarketWatch });
         }
 
-    }, [state.screen])
+        if (state.screen === WALLET_SCREENS.PARTNERS) {
+            const futuresMarketWatch = await getFuturesMarketWatch();
+            futuresMarketWatch && setState({ futuresMarketWatch });
+        }
+    }, [state.screen]);
 
     return (
         <Background isDark={currentTheme === THEME_MODE.DARK}>
-            {auth ?
+            {auth ? (
                 <CustomContainer>
+                    <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left hidden md:block">
+                        {t('common:my_wallet')}
+                    </div>
                     {renderScreenTab()}
-                    <div className="mt-7">
-                        {state.screen === WALLET_SCREENS.OVERVIEW &&
+                    <div className="mt-8 px-4 md:px-0 text-txtPrimary dark:text-txtPrimary-dark">
+                        {state.screen === WALLET_SCREENS.OVERVIEW && (
                             <OverviewWallet
                                 allAssets={state.allAssets}
                                 exchangeEstBtc={state.exchangeEstBtc}
-                                futuresEstBtc={state.futuresEstBtc}
                                 exchangeRefPrice={state.exchangeRefPrice}
+                                futuresEstBtc={state.futuresEstBtc}
                                 futuresRefPrice={state.futuresRefPrice}
+                                partnersEstBtc={state.partnersEstBtc}
+                                partnersRefPrice={state.partnersRefPrice}
                                 stakingSummary={state.stakingSummary}
                                 farmingSummary={state.farmingSummary}
                                 stakingEstBtc={state.stakingEstBtc}
                                 stakingRefPrice={state.stakingRefPrice}
                                 farmingEstBtc={state.farmingEstBtc}
                                 farmingRefPrice={state.farmingRefPrice}
-                            />}
-                        {state.screen === WALLET_SCREENS.EXCHANGE &&
+                                isSmallScreen={isSmallScreen}
+                                isHideAsset={isHideAsset}
+                                setIsHideAsset={setIsHideAsset}
+                            />
+                        )}
+                        {state.screen === WALLET_SCREENS.EXCHANGE && (
                             <ExchangeWallet
                                 allAssets={state.allAssets}
                                 estBtc={state.exchangeEstBtc}
                                 estUsd={state.exchangeRefPrice}
                                 usdRate={state.usdRate}
                                 marketWatch={state.exchangeMarketWatch}
-                            />}
-                        {state.screen === WALLET_SCREENS.FUTURES &&
+                                isSmallScreen={isSmallScreen}
+                                isHideAsset={isHideAsset}
+                                setIsHideAsset={setIsHideAsset}
+                            />
+                        )}
+                        {state.screen === WALLET_SCREENS.FUTURES && (
                             <FuturesWallet
                                 estBtc={state.futuresEstBtc}
                                 estUsd={state.futuresRefPrice}
                                 usdRate={state.usdRate}
                                 marketWatch={state.futuresMarketWatch}
-                            />}
-                        {state.screen === WALLET_SCREENS.STAKING &&
-                            <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary} />}
-                        {state.screen === WALLET_SCREENS.FARMING &&
-                            <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary} />}
-                        {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory />}
+                                isSmallScreen={isSmallScreen}
+                                isHideAsset={isHideAsset}
+                                setIsHideAsset={setIsHideAsset}
+                            />
+                        )}
+                        {state.screen === WALLET_SCREENS.PARTNERS && (
+                            <PartnersWallet
+                                estBtc={state.partnersEstBtc}
+                                estUsd={state.partnersRefPrice}
+                                usdRate={state.usdRate}
+                                marketWatch={state.futuresMarketWatch}
+                                isSmallScreen={isSmallScreen}
+                                isHideAsset={isHideAsset}
+                                setIsHideAsset={setIsHideAsset}
+                            />
+                        )}
+                        {state.screen === WALLET_SCREENS.STAKING && <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary} />}
+                        {/* {state.screen === WALLET_SCREENS.FARMING && <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary} />}
+                        {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory />} */}
                     </div>
                 </CustomContainer>
-                : <div className="h-[480px] flex items-center justify-center">
-                    <NeedLogin addClass="flex items-center justify-center" />
+            ) : (
+                <div className="h-[480px] flex items-center justify-center">
+                    <NeedLoginV2 addClass="flex items-center justify-center" />
                 </div>
-            }
+            )}
         </Background>
     );
 };
@@ -419,43 +536,33 @@ const SCREEN_TAB_SERIES = [
         title: 'Futures',
         localized: null
     },
+    {
+        key: 3,
+        code: WALLET_SCREENS.PARTNERS,
+        title: 'Partners',
+        localized: 'common:partners'
+    }
     // {
     //     key: 3,
     //     code: WALLET_SCREENS.STAKING,
     //     title: 'Staking',
     //     localized: null
-    // },
+    // }
     // {
     //     key: 4,
     //     code: WALLET_SCREENS.FARMING,
     //     title: 'Farming',
     //     localized: null
     // },
-    // { key: 5, code: WALLET_SCREENS.TRANSACTION_HISTORY, title: 'Transaction History', localized: 'common:transaction_history' },
+    // { key: 5, code: WALLET_SCREENS.TRANSACTION_HISTORY, title: 'Transaction History', localized: 'common:transaction_history' }
 ];
 
 const SCREEN_IGNORE_REFRESH_USD_RATE = [WALLET_SCREENS.FARMING, WALLET_SCREENS.STAKING];
 
-const Background = styled.div.attrs({ className: 'w-full h-full pt-5' })`
-  background-color: ${({ isDark }) => isDark ? colors.darkBlue1 : '#F8F9FA'};
+const Background = styled.div.attrs({ className: 'w-full h-full' })`
+    background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#fff')};
 `;
 
-const CustomContainer = styled.div.attrs({ className: 'mal-container px-4' })`
-  @media (min-width: 1024px) {
-    max-width: 1000px !important;
-  }
-
-  @media (min-width: 1280px) {
-    max-width: 1260px !important;
-  }
-
-  @media (min-width: 1440px) {
-    max-width: 1400px !important;
-  }
-
-  @media (min-width: 1920px) {
-    max-width: 1440px !important;
-  }
-`;
+const CustomContainer = styled.div.attrs({ className: 'max-w-screen-v3 2xl:max-w-screen-xxl m-auto md:px-4 md:py-20' })``;
 
 export default Wallet;

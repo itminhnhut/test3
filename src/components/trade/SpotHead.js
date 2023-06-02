@@ -1,4 +1,4 @@
-import { formatPrice } from 'src/redux/actions/utils';
+import { formatNumber } from 'src/redux/actions/utils';
 // import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 
 const SpotHead = (props) => {
     const [symbolTicker, setSymbolTicker] = useState(null);
-    const { symbol } = props;
+    const { symbol, decimals } = props;
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
@@ -35,7 +35,7 @@ const SpotHead = (props) => {
     // const { t } = useTranslation(['common', 'spot']);
     return (
         <Head>
-            <title>{loading ? 'Loading' : `${formatPrice(symbolTicker?.p)} | ${symbolTicker?.s}`} | Nami Exchange</title>
+            <title>{loading ? 'Loading' : `${formatNumber(symbolTicker?.p, decimals?.price)} | ${symbolTicker?.s}`} | Nami Exchange</title>
             <meta property="og:title" content="Nami Exchange" key="title" />
         </Head>
     );

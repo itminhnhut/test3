@@ -9,14 +9,15 @@ import 'react-loading-skeleton/dist/skeleton.css';
 const Skeletor = (props) => {
     const { onusMode } = props;
     const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
     const _ = useMemo(() => {
         switch (currentTheme) {
             case THEME_MODE.DARK:
                 return { base: colors.darkBlue3, highlight: colors.darkBlue4 };
             case THEME_MODE.LIGHT:
-                return { base: colors.grey4, highlight: '#FCFCFC' };
+                return { base: colors.gray[4], highlight: '#FCFCFC' };
             default:
-                return { base: colors.grey4, highlight: '#FCFCFC' };
+                return { base: colors.gray[4], highlight: '#FCFCFC' };
         }
     }, [currentTheme]);
 
@@ -24,8 +25,8 @@ const Skeletor = (props) => {
         <Skeleton
             width={45}
             height={20}
-            baseColor={onusMode ? colors.darkBlue3 : _?.base}
-            highlightColor={onusMode ? colors.darkBlue4 : _?.highlight}
+            baseColor={onusMode ? (isDark ? colors.darkBlue3 : colors.gray[12]) : _?.base}
+            highlightColor={onusMode ? (isDark ? colors.darkBlue4 : colors.gray[13]) : _?.highlight}
             {...props}
         />
     );

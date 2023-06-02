@@ -63,7 +63,7 @@
 }
 
 .btn-red {
-  @apply bg-pink text-white;
+  @apply bg-red text-white;
 }
 
 .btn-secondary {
@@ -71,7 +71,7 @@
 }
 
 .button-common {
-  @apply bg-teal hover:bg-teal-300 text-white font-bold rounded;
+  @apply bg-teal dark:bg-dark-2 dark:text-txtSecondary-dark text-white font-bold rounded;
 }
 
 .btn-outline-primary-light {

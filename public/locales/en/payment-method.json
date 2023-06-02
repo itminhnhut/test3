@@ -3,5 +3,27 @@
     "payment_method_add": "Add payment method",
     "account_number": "Account number",
     "bank_name": "Bank name",
-    "confirm": "Confirm"
+    "transaction_details": "Transaction details",
+    "depsit_from_partners": "Deposit {{asset}} through partner",
+    "sell": "sell",
+    "buy": "buy",
+    "buy_title": "Deposit through partner",
+    "sell_title": "Withdraw through partner",
+    "payment_method": "Payment Method",
+    "privacy": "Internet banking is only applicable to Vietnamese. Please, use registed bank account matching to your Nami information account",
+    "input_bank_account": "Enter your account number",
+    "select_bank": "Select bank",
+    "owner_account": "Account holder",
+    "add": "Add",
+    "error_add": "Adding payment method error",
+    "bank_account_not_found": "No accounts found. Please check account number again",
+    "set_default_bank_success": "Default bank changed",
+    "please_input_account_num": "Please, enter your account number",
+    "validate_input_account": "Invalid account",
+    "remove": "Remove",
+    "confirm": {
+        "title": "Remove payment method",
+        "text": "Removed account can be re-added by adding payment method. However, this account can't be added on other Nami accounts",
+        "noti_text": "Remove payment method  successfully"
+    }
 }

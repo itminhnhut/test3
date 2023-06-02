@@ -4,29 +4,36 @@
     "title_desktop1": "Secure Spots and",
     "title_desktop2": "Futures Exchange",
     "description": "With the most effective cryptocurrency trading<br/>and investment platform",
-    "total_order_paid": "24h Volume",
-    "total_user": "Total Number Of Users",
-    "total_pairs": "Total Trading Pairs"
+    "total_order_paid": "volume 24h",
+    "total_user": "users",
+    "total_pairs": "pairs",
+    "download_app":"Download App"
   },
   "markettrend": {
-    "title": "Market Trend",
-    "top_gainer": "Top Gainer",
-    "top_loser": "Top Loser",
+    "title": "Trending",
+    "most_traded":"Top Volume",
+    "top_gainer": "Gainers",
+    "top_loser": "Losers",
     "top_vol": "Hot 24h",
-    "explore_market": "Explore Market"
+    "new_listing": "New Listing",
+    "explore_market": "More"
   },
   "first_award": {
     "title": "Join Nami Exchange now!",
     "title_1": "Own The First {{value}} In",
     "title_2": "Your Account Immediately",
-    "rule_1": "1. Simple operation",
-    "rule_2": "2. Ability to process <0>40,000+</0> transactions/second",
-    "rule_3": "3. <0>400+</0> trading pairs",
-    "rule_4": "4. Futures leverage up to <0>125x</0>",
-    "rule_5": "5. Transaction fees only from <0>0,06%</0>",
-    "rule_6": "6. <0>24/7</0> supporting",
+    "rule_1": "Simple operation",
+    "rule_2": "Ability to process <0>40,000+</0> transactions/second",
+    "rule_3": "<0>400+</0> trading pairs",
+    "rule_4": "Futures leverage up to <0>125x</0>",
+    "rule_5": "Transaction fees only from <0>0,06%</0>",
+    "rule_6": "<0>24/7</0> supporting",
+    "terms_of_service":"I agree to the <0>Nami Exchange Terms of Service</0>",
     "following_at": "Follow Us At",
-    "join_nami_by": "Register an account with"
+    "join_nami_by": "Register an account with",
+    "already_have_account":"Already registered?",
+    "login":"Login"
+
   },
   "journey": {
     "title": "Start Your Cryptocurrency Journey",
@@ -40,17 +47,18 @@
     "reason_3": "Possessing potential Tokens at a favorable price",
     "reason_3_description": "Offering prestigious projects first launched at Nami Launchpad and potential tokens with lower-than-market asking prices at NextGem.",
     "reason_4": "Improve Your Knowledge Of Cryptocurrencies",
-    "reason_4_description": "Nami Explained - The place to answer questions about the Crypto market"
+    "reason_4_description": "Bringing interesting knowledge and information about the cryptocurrency market"
   },
   "intro_app": {
-    "title_1": "Trade Anytime Anywhere With",
-    "title_2": "Nami Exchange application",
-    "description": "Deposit, withdraw and trade 24/7 on iOS and Android apps"
+    "try_now":"Try now",
+    "title":"Trade Anytime Anywhere",
+    "description": "Deposit, withdraw and trade 24/7 on iOS and Android apps",
+    "get_it":"Get it on"
   },
   "trade3step": {
     "title": "Trading Now With Just 3 Steps",
     "step_1": "Create Account",
-    "step_2": "Deposits Fiat/Crypto",
+    "step_2": "Deposit Crypto",
     "step_3": "Start Trading",
     "chill_a_bit": "Only 30 seconds"
   },

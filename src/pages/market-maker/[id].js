@@ -465,7 +465,7 @@ const MarketMaker = ({ token }) => {
         <>
             <LayoutWithHeader showBanner>
                 <div className="container mx-auto my-8">
-                    <p className="text-4xl text-black font-bold mt-10 mb-8">
+                    <p className="text-5xl text-black font-bold mt-10 mb-8">
                         Market Maker
                     </p>
                     <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mb-4">

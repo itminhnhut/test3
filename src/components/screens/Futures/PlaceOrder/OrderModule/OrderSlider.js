@@ -1,54 +1,58 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo, forwardRef, useImperativeHandle } from 'react';
 import Slider from 'components/trade/InputSlider';
+const initPercent = 0;
+const FuturesOrderSlider = forwardRef(({ quoteQty, onChange, isAuth, decimals, minQuoteQty, maxQuoteQty, pair }, ref) => {
+    const [percent, setPercent] = useState(isAuth && initPercent);
 
-const initPercent = 25;
+    useImperativeHandle(ref, () => ({
+        changePercent: changePercent
+    }));
 
-const FuturesOrderSlider = ({ size, onChange, isVndcFutures, side, currentType, pair, isAuth, maxSize, decimalScaleQty }) => {
-    const [percent, setPercent] = useState(isAuth && initPercent)
-    const timer = useRef(null);
-    const onPercentChange = ({ x }) => {
-        const _size = (+maxSize * x / 100).toFixed(decimalScaleQty);
-        onChange(_size)
-        setPercent(x)
-    }
+    const changePercent = (max) => {
+        const _percent = quoteQty ? (quoteQty * 100) / max : 0;
+        setPercent(_percent);
+    };
 
-    useEffect(() => {
-        const _size = +String(size).replace(/,/g, '')
-        setPercent(_size * 100 / maxSize);
-    }, [size, isVndcFutures])
-
-    const refresh = useRef(false);
-
-    useEffect(() => {
-        if (!refresh.current) refresh.current = true;
-    }, [maxSize])
-
-    useEffect(() => {
-        clearTimeout(timer.current);
-        timer.current = setTimeout(() => {
-            refresh.current = !refresh.current;
-        }, 500);
-    }, [pair])
-
-    useEffect(() => {
-        if (+maxSize) {
-            const _size = (+maxSize * initPercent / 100).toFixed(decimalScaleQty);
-            onChange(_size);
-            setPercent(initPercent)
-        } else if (!+maxSize) {
-            onChange(0);
-            setPercent(0)
+    const arrDot = useMemo(() => {
+        const size = 100 / 4;
+        const arr = [];
+        for (let i = 0; i <= 4; i++) {
+            arr.push(i * size);
         }
-
-    }, [currentType, refresh.current])
+        return arr;
+    }, []);
 
     useEffect(() => {
-        const _size = (+maxSize * initPercent / 100).toFixed(decimalScaleQty);
-        onChange(_size);
-        setPercent(initPercent)
-    }, [side])
+        setPercent(0);
+        onChange('');
+    }, [pair]);
 
-    return <Slider axis='x' x={percent} xmax={100} onChange={onPercentChange} />
-}
+    useEffect(() => {
+        const _percent = quoteQty ? (quoteQty * 100) / maxQuoteQty : 0;
+        setPercent(_percent);
+    }, [quoteQty]);
 
-export default FuturesOrderSlider
+    const onPercentChange = ({ x }) => {
+        if (maxQuoteQty < minQuoteQty) return;
+        if (!x) {
+            onChange(minQuoteQty);
+        } else {
+            const _x = arrDot.reduce((prev, curr) => {
+                let i = 0;
+                if (Math.abs(curr - x) < 2 || Math.abs(prev - x) < 2) {
+                    i = Math.abs(curr - x) < Math.abs(prev - x) ? curr : prev;
+                }
+                return i;
+            });
+            const value = +((+maxQuoteQty * (_x ? _x : x)) / 100).toFixed(decimals?.symbol);
+            onChange(value || '');
+            setPercent(_x ? _x : x);
+        }
+    };
+
+    return (
+        <Slider disabled={maxQuoteQty < minQuoteQty} useLabel labelSuffix="%" positionLabel="top" axis="x" x={percent} xmax={100} onChange={onPercentChange} />
+    );
+});
+
+export default FuturesOrderSlider;

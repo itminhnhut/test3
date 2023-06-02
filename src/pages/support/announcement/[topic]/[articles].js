@@ -41,14 +41,14 @@ const AnnouncementArticle = (props) => {
         };
     }, []);
 
-    useEffect(() => {
-        const themeLocal = localStorage.getItem("theme");
-        if (themeLocal === "dark") {
-            setTheme(THEME_MODE.DARK);
-        } else {
-            setTheme(THEME_MODE.LIGHT);
-        }
-    }, [router?.query]);
+    // useEffect(() => {
+    //     const themeLocal = localStorage.getItem("theme");
+    //     if (themeLocal === "dark") {
+    //         setTheme(THEME_MODE.DARK);
+    //     } else {
+    //         setTheme(THEME_MODE.LIGHT);
+    //     }
+    // }, [router?.query]);
 
     const renderAppHeader = () => {
         if (!isApp) return null
@@ -90,7 +90,7 @@ const AnnouncementArticle = (props) => {
                 </div>
                 <div
                     className='sm:mt-2 text-[10px] sm:text-xs lg:text-[16px] lg:mt-4 font-medium text-txtSecondary dark:text-txtSecondary-dark'>
-                    {formatTime(props?.data?.article?.created_at, 'dd-MM-yyyy')}
+                    {formatTime(props?.data?.article?.created_at, 'dd/MM/yyyy')}
                 </div>
                 <GhostContent content={props?.data?.article?.html}/>
             </TopicsLayout>

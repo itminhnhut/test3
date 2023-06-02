@@ -2,7 +2,20 @@ import SpotChart from 'src/components/chart/SpotChart';
 import { useTranslation } from 'next-i18next';
 
 const Chart = (props) => {
-    const { symbol, isOnSidebar, favorite, watchList, changeSymbolList, chartSize, parentCallback, initTimeFrame, extendsIndicators, clearExtendsIndicators, customChartFullscreen, fullScreen } = props;
+    const {
+        symbol,
+        isOnSidebar,
+        favorite,
+        watchList,
+        changeSymbolList,
+        chartSize,
+        parentCallback,
+        initTimeFrame,
+        extendsIndicators,
+        clearExtendsIndicators,
+        isPro,
+        chartKey
+    } = props;
     const { t } = useTranslation();
     if (!symbol) return null;
     return (
@@ -17,12 +30,12 @@ const Chart = (props) => {
                     initTimeFrame={initTimeFrame}
                     extendsIndicators={extendsIndicators}
                     clearExtendsIndicators={clearExtendsIndicators}
-                    customChartFullscreen={customChartFullscreen}
-                    fullScreen={fullScreen}
                     changeSymbolList={changeSymbolList}
                     watchList={watchList}
                     favorite={favorite}
                     parentCallback={parentCallback}
+                    isPro={isPro}
+                    chartKey={chartKey}
                 />
             </div>
         </div>

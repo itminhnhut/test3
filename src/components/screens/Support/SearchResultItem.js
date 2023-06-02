@@ -7,14 +7,17 @@ import Skeletor from 'components/common/Skeletor';
 import { useTranslation } from 'next-i18next';
 import { formatTime } from 'redux/actions/utils';
 import Parse from 'html-react-parser';
+import _ from 'lodash';
+import { stripHtml } from "string-strip-html";
+import useApp from 'hooks/useApp';
 
-const SearchResultItem = memo(({ article, loading = false }) => {
+const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
     const { width } = useWindowSize()
-    const { t, i18n: { language } } = useTranslation()
+    const isMobile = width < 640;
+    const { t, i18n: { language }} = useTranslation();
+    const isApp = useApp();
 
     // ? Memmoized
-    const iconSize = useMemo(() => width >= BREAK_POINTS.lg ? 20 : 16, [width])
-
     const getTopics = (topic) => {
         if (!topic) return null
         // console.log('namidev ', topic);
@@ -32,37 +35,28 @@ const SearchResultItem = memo(({ article, loading = false }) => {
                 {/* <ChevronRight strokeWidth={1.5} size={iconSize} className="mx-2"/> */}
             </>
         )
-        // switch (topic?.slug) {
-        //     case 'noti':
-
-        //     case 'faq':
-        //         return (
-        //             <>
-        //                 <Link href={PATHS.SUPPORT.FAQ}>
-        //                     <a className="!underline">{t('support-center:faq')}</a>
-        //                 </Link>
-        //                 <ChevronRight strokeWidth={1.5} size={iconSize} className="mx-2"/>
-        //             </>
-        //         )
-        // }
     }
 
-    const getCategory = (topic, tags) => {
-        const isFaq = !!tags.filter(o => o.slug === 'faq')?.length
-        // console.log('namidev ', topic, isFaq);
-        return null
-        const slugCollect = tags?.filter(o => o?.slug !== topic?.slug)
-        return (
-            <Link href={{
-                pathname: `${topic?.slug === 'noti' ? PATHS.SUPPORT.ANNOUNCEMENT : PATHS.SUPPORT.FAQ}/[topic]`,
-                query: { topic: slugCollect?.[0]?.slug?.replace(`${topic?.slug}-${language}-`, '') }
-            }}>
-                <a className="!underline">{slugCollect?.[0]?.name}</a>
-            </Link>
-        )
+    const getHighlightedText = (text, highlight) => {
+        text = stripHtml(text).result
+        try {
+            const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+            return parts.map((part, i) => part &&
+                <span key={i} style={part.toLowerCase() === highlight?.toLowerCase() ? { color: '#47cc85' } : {}}>
+                    {Parse(part)}
+                </span>)
+
+        } catch {
+            return text
+        }
+        // Split on highlight term and include term into parts, ignore case
+
     }
 
-    const buildArticleUrl = () => {
+
+
+    const buildArticleUrl = (article) => {
+      return PATHS.SUPPORT.ANNOUNCEMENT + `/announcement/${article?.slug}${isApp ? '?source=app' : ''}`;
         const isFaq = !!article?.tags.filter(o => o.slug === 'faq' || o.slug.includes('faq-'))?.length
 
         if (isFaq) {
@@ -77,34 +71,36 @@ const SearchResultItem = memo(({ article, loading = false }) => {
     }
 
     return (
-        <div className="mb-6 lg:mb-9">
+        <div className="mb-8 sm:mb-12">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <Link href={buildArticleUrl()}>
-                    <a target='_blank' className="font-bold text-sm lg:text-[18px] hover:text-dominant hover:!underline cursor-pointer">
+                <Link href={buildArticleUrl(article)} >
+                    <a target={isMobile?'_self':'_blank'} className="text-txtPrimary dark:text-gray-4 font-semibold text-base cursor-pointer hover:text-txtTextBtn dark:hover:text-teal">
                         {loading ?
-                            <div className="!min-w-[200px] lg:!w-[500px] xl:!w-[800px]"><Skeletor className="!w-full"/>
-                            </div> : article?.title}
+                            <div className="!min-w-[200px] lg:!w-[500px] xl:!w-[800px]"><Skeletor className="!w-full" />
+                            </div> : getHighlightedText(article?.title, keyword)}
                     </a>
                 </Link>
-                <div className="font-bold text-[10px] text-txtSecondary dark:text-txtSecondary-dark">
+                <div className="font-normal text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                     {loading ?
-                        <div className="hidden md:block md:!w-[100px]"><Skeletor className="!w-full" height={15}/>
+                        <div className="hidden md:block md:!w-[100px]"><Skeletor className="!w-full" height={15} />
                         </div> : formatTime(article?.raw_data?.created_at, 'dd-MM-yyyy')}
                 </div>
             </div>
             <div
-                className="mt-2.5 overflow-hidden font-medium text-xs lg:text-sm lg:mt-4 md:text-txtSecondary md:dark:text-txtSecondary-dark">
+                className="mt-2 text-darkBlue-5 font-normal text-xs sm:text-sm leading-5">
                 {loading ?
                     <>
-                        <div className="w-full"><Skeletor className="!w-full" height={15}/></div>
-                        <div className="w-full"><Skeletor className="!w-full" height={15}/></div>
-                        <div className="w-full"><Skeletor className="!w-full" height={15}/></div>
+                        <div className="w-full"><Skeletor className="!w-full" height={15} /></div>
+                        <div className="w-full"><Skeletor className="!w-full" height={15} /></div>
+                        <div className="w-full"><Skeletor className="!w-full" height={15} /></div>
                     </>
-                    : Parse(article?.html?.substring(0, 220)?.trim() + '...')}
+                    : getHighlightedText(article?.html?.substring(0, isMobile ? 70 : 240)?.trim() + '...', keyword)}
+
+
             </div>
             <div className="mt-2.5 flex items-center text-[10px] lg:text-sm font-medium">
                 {loading ?
-                    <div className="!min-w-[80px] lg:!w-[120px] xl:!w-[200px]"><Skeletor className="!w-full" height={15}/></div>
+                    <div className="!min-w-[80px] lg:!w-[120px] xl:!w-[200px]"><Skeletor className="!w-full" height={15} /></div>
                     : <>
                         {getTopics(article?.raw_data?.primary_tag)}
                         {/* {getCategory(article?.raw_data?.primary_tag, article?.raw_data?.tags)} */}
@@ -116,3 +112,18 @@ const SearchResultItem = memo(({ article, loading = false }) => {
 })
 
 export default SearchResultItem
+
+const Highlighted = ({ text = '', highlight = '' }) => {
+    if (!highlight.trim()) {
+        return <span>{text}</span>
+    }
+    const regex = new RegExp(`(${_.escapeRegExp(highlight)})`, 'gi')
+    const parts = text.split(regex)
+    return (
+        <span>
+            {parts.filter(part => part).map((part, i) => (
+                regex.test(part) ? <mark key={i}>{part}</mark> : <span key={i}>{part}</span>
+            ))}
+        </span>
+    )
+}

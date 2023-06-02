@@ -10,13 +10,13 @@
 @import "pages/swap";
 @import "pages/my";
 @import "pages/blog";
-@import "pages/trading-history.scss";
+//@import "pages/trading-history.scss";
 @import "pages/brokers.scss";
 @import "pages/signals.scss";
 @import "pages/campaign.scss";
 @import "pages/earning.scss";
 @import "pages/markets.scss";
-@import "pages/mobile/market";
+@import "pages/nao_futures/market";
 @import "pages/nao";
 
 
@@ -35,7 +35,9 @@
 @import "components/modal";
 @import "components/retable";
 @import "components/kline_chart";
+@import "components/toast";
 
 @import "helpers/custom";
 @import "helpers/contants";
 @import "ghost/ghost_screen";
+// @import "ghost/ghost_globals";

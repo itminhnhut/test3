@@ -40,7 +40,7 @@ const Info = ({ data, user }) => {
                             {data?.name ?? t('common:unknown')}
                         </div>
                         <div className='font-medium text-xs text-gray-6 uppercase'>
-                            {t('reference:referral.ranking')}: <span className='text-namiapp-green font-semibold'>{rank[data?.rank?.toString() ?? '1']}</span>
+                            {t('reference:referral.ranking')}: <span className='text-txtTextBtn font-semibold'>{rank[data?.rank?.toString() ?? '1']}</span>
                         </div>
                     </div>
                 </div>
@@ -55,9 +55,9 @@ const Info = ({ data, user }) => {
                             {data?.rank !== 5 ? t('reference:referral.next_level') : null}
                         </div>
                     </div>
-                    <div className='w-full bg-namiapp-black-2 flex'>
+                    <div className='w-full bg-hover-dark flex'>
                         <Progressbar
-                            background={colors.namiapp.green[2]}
+                            background={colors.green[1]}
                             percent={
                                 (data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100
                             }
@@ -65,7 +65,7 @@ const Info = ({ data, user }) => {
                             className={data?.volume?.current?.futures ? '!rounded-l-lg' : '!rounded-lg'}
                         />
                         <Progressbar
-                            background={colors.namiapp.green.DEFAULT}
+                            background={colors.teal}
                             percent={
                                 (data?.volume?.current?.futures / data?.volume?.target?.futures ?? 1) * 100
                             }
@@ -74,7 +74,7 @@ const Info = ({ data, user }) => {
                         />
                     </div>
                     <div className='w-full flex flex-col'>
-                        <div className='w-full flex justify-between font-medium text-xs text-namiapp-green-2'>
+                        <div className='w-full flex justify-between font-medium text-xs text-green-1'>
                             <div>
                                 Spot: {formatter.format(data?.volume?.current?.spot)} USDT
                             </div>
@@ -83,7 +83,7 @@ const Info = ({ data, user }) => {
                             </div> : null}
 
                         </div>
-                        <div className='w-full flex justify-between font-medium text-xs text-namiapp-green-1'>
+                        <div className='w-full flex justify-between font-medium text-xs text-teal'>
                             <div>
                                 Futures: {formatter.format(data?.volume?.current?.futures)} USDT
                             </div>
@@ -92,7 +92,7 @@ const Info = ({ data, user }) => {
                             </div> : null}
                         </div>
                     </div>
-                    <div className='mt-6 text-center leading-6 font-semibold text-sm text-namiapp-green-1 underline cursor-pointer'
+                    <div className='mt-6 text-center leading-6 font-semibold text-sm text-teal underline cursor-pointer'
                         onClick={() => setShowRef(true)}
                     >
                         {t('reference:referral.referral_code_management')}

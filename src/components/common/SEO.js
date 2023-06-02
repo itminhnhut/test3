@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-const APP_URL = process.env.APP_URL
+const APP_URL = process.env.NEXT_PUBLIC_WEB_V1
 
 const socialTags = (props) => {
     const {
@@ -17,11 +17,15 @@ const socialTags = (props) => {
         {name: 'twitter:title', content: title},
         {name: 'twitter:description', content: description},
         {name: 'twitter:creator', content: '@Nami'},
-        {name: 'twitter:image:src', content: image},
+        {name: 'twitter:image', content: image},
+        {name: 'twitter:image:alt', content: "Nami Exchange"},
         {name: 'twitter:card', content: 'summary_large_image'},
+
         {name: 'og:title', content: title},
+        {name: 'og:type', content: "website"},
         {name: 'og:url', content: APP_URL + url},
         {name: 'og:image', content: image},
+        {name: 'og:image:alt', content: 'Nami Exchange'},
         {name: 'og:site_name', content: 'Nami Exchange'},
         {name: 'og:description', content: description},
         {name: 'og:published_time', content: createdAt},
@@ -30,17 +34,18 @@ const socialTags = (props) => {
 };
 
 const SEO = (props) => {
+
     const {
         title,
         description,
         keywords,
-        image
+        image,
     } = props;
     return <Head>
         <title>{title}</title>
-        <meta key="name" itemprop="name" content={title}/>
+        <meta key="name" itemProp="name" content={title}/>
         <meta key="description" name="description" content={description}/>
-        <meta key="image" itemprop="image" content={image}/>
+        <meta key="image" itemProp="image" content={image}/>
         {keywords && <meta key="keywords" name="keywords" content={keywords}/>}
         {socialTags(props).map(({name, content}) => {
             return <meta key={name} name={name} content={content}/>;

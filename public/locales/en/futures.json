@@ -1,3 +1,4 @@
+
 {
     "mark_price": "Mark",
     "index_price": "Index",
@@ -28,6 +29,7 @@
         "type": "Type",
         "side": "Side",
         "open_price": "Entry Price",
+        "open": "Entry",
         "mark_price": "Market Price",
         "liquidation_price": "Liq. Price",
         "close_price": "Close Price",
@@ -330,6 +332,7 @@
         },
         "confirm_order_message": "Do you confirm to place order {{type}} {{symbol}} at the price {{price}}?",
         "confirm_order_message_market": "Do you confirm to place order {{type}} {{symbol}}?",
+        "login_medium": "Please login",
         "login_short": "Login",
         "available": "Available",
         "liq_price": "Liq. Price",
@@ -392,7 +395,7 @@
         "change_success": "Changed successfully",
         "tooltip_popup": "Choose asset for closing fee to get a corresponding discount and set a default asset for next orders by checking the box below.",
         "trading_fees": "Trading Fees",
-        "modify_order": "Modify order",
+        "modify_order": "Modify Order",
         "set_as_default_trading_fee": "Set as default trading fee",
         "close_all_positions": {
             "title": "Close All Positions",
@@ -423,14 +426,15 @@
             "position_list": "Position List",
             "orders": "orders",
             "order": "order",
-            "preview": "Preview"
+            "preview": "Preview",
+            "close_orders_success": "Close orders successfully"
         }
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",
     "maximum_leverage": "Maximum Leverage is",
     "positions": "Positions",
-    "open_orders": "Open Orders",
+    "open_orders": "Pending Orders",
     "load_more": "Load more",
     "countdown": "Countdown",
     "funding_fee": "Funding Fee",
@@ -475,7 +479,12 @@
         "funding_history": "Funding History",
         "funding_warning": "Risk Warning",
         "funding_warning_content": "Futures trading around the funding threshold with high funding rates contracts carries a lot of risk from the highly volatile market, you may experience bad experiences such as: </br>- Time difference between funding counter and device time vs server time up to 5 seconds </br>- Processing time for market orders (open, close, add volume...) is longer than other times, can be up to 10 seconds </br>- The minimum price gap for trigger prices (with limit orders, SL-TP settings...) can be up to 2% of the market price at the time of setting. </br>Please consider carefully before trading and manage your position well to avoid affecting the trading efficiency, NAO Futures will not be responsible for any loss that occurs when trading during extreme volatile market times.",
-        "funding_warning_accept": "I have understood and agree"
+        "network_warning_content": "We are currently acknowledging a significant drop in connection speed from Vietnam to international servers, including the Futures trading system server.  Depending on the device and internet service provider, some users from Vietnam may experience limitations in terms of chart display speed, price update speed or trading processing speed.</br></br>Users who encounter the above problems should consider carefully before trading to minimize risks. We will not be liable for any loss arising from server speed restrictions.</br></br>Please note that not all users from Vietnam face the above restrictions, users can still trade normally if the connection speed to the server is stable.</br></br>Best regards,",
+        "funding_warning_accept": "I have understood and agree",
+        "to_learn_funding": "To learn more about Funding Rates, see more at",
+        "vol_position": "Volume Position",
+        "funding_rate2": "Funding Rates",
+        "amount_of_asset": "Amount Of Asset Exchange"
     },
     "transaction_histories": "Transaction History",
     "order_information": "Infor",
@@ -506,5 +515,18 @@
     "max_order_size_limit_tooltip": "Maximum trading volume required to place an Limit order.",
     "max_order_size_market": "Max Market Order Volume",
     "max_order_size_market_tooltip": "Maximum trading volume required to place an Market or Stop Market order.",
-    "view_all_trading_rule": "View all trading rules."
+    "view_all_trading_rule": "View all trading rules.",
+    "the_glossary": "Glossary",
+    "order_canceled": "Order Canceled",
+    "share": {
+        "title": "Share",
+        "download": "Download",
+        "ref_id": "Referrer ID"
+    },
+    "terms": {
+        "title": "Terms and Agreements",
+        "desc": "To continue, please accept all of the followings",
+        "service": "I Accept Nami's Term Of Services.",
+        "futures": "I Accept Nami's Term Of Futures Trading."
+    }
 }

@@ -1,29 +1,19 @@
-import { Popover, Transition } from '@headlessui/react';
-import classNames from 'classnames';
-import Divider from 'components/common/Divider';
-import ReTable from 'components/common/ReTable';
-import RePagination from 'components/common/ReTable/RePagination';
 import ListFundingMobile from 'components/screens/Futures/FundingHistoryTabs/components/ListFundingMobile';
 import AssetLogo from 'components/wallet/AssetLogo';
-import useDarkMode from 'hooks/useDarkMode';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
-import { Fragment, useCallback, useEffect, useState, useRef, useMemo } from 'react';
-import { load } from 'react-cookies';
-import { isMobile } from 'react-device-detect';
-import { Search, X } from 'react-feather';
-import { useSelector } from 'react-redux';
-import { usePrevious } from 'react-use';
-import { formatNumber, getS3Url } from 'redux/actions/utils';
-import Skeletor from 'components/common/Skeletor';
-import { THEME_MODE } from 'hooks/useDarkMode';
+import { useEffect, useState, useMemo, useRef } from 'react';
+import { formatNumber } from 'redux/actions/utils';
 import { RETABLE_SORTBY } from 'components/common/ReTable';
-import MCard from 'components/common/MCard';
-import { ChevronDown } from 'react-feather';
 import { Countdown } from 'redux/actions/utils';
-import useLanguage from 'hooks/useLanguage';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis';
+import TableV2 from 'components/common/V2/TableV2';
+import SearchInput from 'src/components/markets/SearchInput';
+import Tooltip from 'components/common/Tooltip';
+import classNames from 'classnames';
+import ChevronDown from 'components/svg/ChevronDown';
+import PopoverV2 from 'components/common/V2/PopoverV2';
 
 export const CURRENCIES = [
     {
@@ -41,7 +31,6 @@ const sortDescending = (arr, key, isString) => {
     return arr.sort(function (a, b) {
         return a[key] - b[key];
     });
-
 };
 const sortAscending = (arr, key, isString) => {
     if (isString) return arr.sort((a, b) => a[key].localeCompare(b[key]));
@@ -52,7 +41,7 @@ const sortAscending = (arr, key, isString) => {
 
 const FILTER_OPTS = [
     {
-        label: 'futures:funding_history_tab:opt_default',
+        label: 'futures:funding_history_tab:opt_order_default_place',
         placeholder: 'futures:funding_history_tab:opt_default_place',
         index: 0,
         keySort: 'symbol',
@@ -98,46 +87,26 @@ const FILTER_OPTS = [
 
 export const DEFAULT_FUNDING_TIME_NULL = '00:00:00';
 
-export default function FundingHistory({ currency }) {
-    const [currentTheme] = useDarkMode();
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation();
+export default function FundingHistory({ currency, active }) {
+    const { t } = useTranslation();
     const { width } = useWindowSize();
-    const prevCurrency = usePrevious(currency);
-
+    const isMobile = width <= 992;
     const [isLoading, setIsLoading] = useState(true);
-    const tableRef = useRef(null);
-    const firstLoadRef = useRef(true)
-    // const marketWatch = useSelector((state) => state.futures?.marketWatch);
-    const [marketWatch, setMarketWatch] = useState([])
-    const publicSocket = useSelector((state) => state.socket.publicSocket);
-    const allAssetConfig = useSelector((state) => state.utils.assetConfig);
-
-
-    const [reload, setReload] = useState(false)
-    const [currentLocale, onChangeLang] = useLanguage()
+    const [marketWatch, setMarketWatch] = useState([]);
     const [dataTable, setDataTable] = useState([]);
-    const [selectedSymbol, setSelectedSymbol] = useState('');
-    const [selectedFilter, setSelectedFilter] = useState(FILTER_OPTS[0]);
-    const [filteredDataTable, setFilteredDataTable] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-
-    const subscribeFuturesSocket = (pair) => {
-        publicSocket.emit('subscribe:futures:ticker' + 'all');
-        publicSocket.emit('subscribe:futures:mini_ticker', 'all');
-    };
+    const [strSearch, setStrSearch] = useState('');
+    const [selectedFilter, setSelectedFilter] = useState(FILTER_OPTS[0]);
 
     useEffect(() => {
         FetchApi({
-            url: API_GET_FUTURES_MARKET_WATCH,
+            url: API_GET_FUTURES_MARKET_WATCH
         })
             .then(({ data = [] }) => {
-                setMarketWatch(data)
+                setMarketWatch(data);
             })
-            .catch((err) => console.error(err))
-    }, [])
+            .catch((err) => console.error(err));
+    }, []);
 
     /**
      * It generates the data table for the funding history page.
@@ -147,19 +116,17 @@ export default function FundingHistory({ currency }) {
         const res = marketWatchKies.reduce((pre, currentValue) => {
             const [value, data] = currentValue;
             if (data?.q === currency) {
-                // const config = allAssetConfig?.find((item) => item?.baseAsset === data?.baseAsset);                // console.log("config", config);
                 return [
                     ...pre,
                     {
                         asset: (
                             <div className="flex items-center">
-                                <AssetLogo assetCode={data?.b} size={32} />
+                                <AssetLogo assetCode={data?.b} size={isMobile ? 30 : 32} />
                                 <div className="ml-3 lg:ml-4">
                                     <p className="text-base font-semibold lg:font-medium leading-[22px] lg:leading-6 text-txtPrimary dark:text-txtPrimary-dark">
-                                        {`${data?.b + '/' + data?.q} `}
-                                        <span className="ml-2 lg:ml-[5px]">
-                                            {t('futures:funding_history_tab:perpetual')}
-                                        </span>
+                                        <span>{data?.b}</span>
+                                        <span className="text-darkBlue-5">/{data?.q}</span>
+                                        <span className="ml-3 lg:ml-4">{t('futures:funding_history_tab:perpetual')}</span>
                                     </p>
                                 </div>
                             </div>
@@ -177,349 +144,169 @@ export default function FundingHistory({ currency }) {
             } else return pre;
         }, []);
         setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
-        setIsLoading(false);
-    }
+    };
+
+    const timer = useRef(null);
+    useEffect(() => {
+        clearTimeout(timer.current);
+        timer.current = setTimeout(() => {
+            setIsLoading(false);
+        }, 200);
+    }, [dataTable]);
 
     useEffect(() => {
-        if (!publicSocket) return;
-        subscribeFuturesSocket();
-    }, [publicSocket]);
-
-    useEffect(() => {
-        const marketWatchKies = Object.entries(marketWatch || {});
         if (dataTable?.length) return;
-
-        // if (!marketWatch || !allAssetConfig || marketWatchKies?.length < 100) return setReload(!reload);
-        if (currency !== prevCurrency) {
-            setIsLoading(true);
-            setCurrentPage(1);
-        }
-        generateDataTable()
-    }, [marketWatch, currency, prevCurrency, dataTable]);
+        setIsLoading(true);
+        setCurrentPage(1);
+        generateDataTable();
+    }, [marketWatch]);
 
     useEffect(() => {
-        if (prevCurrency !== currency && dataTable?.length) {
+        setCurrentPage(1);
+    }, [active]);
+
+    useEffect(() => {
+        if (dataTable?.length > 0) {
             setCurrentPage(1);
-            generateDataTable()
+            generateDataTable();
         }
-    }, [dataTable, prevCurrency, currency, reload]);
+    }, [currency, selectedFilter]);
 
-    /**
-     * It takes in an item, sets the selected filter to that item, and then calls the generateDataTable
-     * function
-     * @param item - The item that was selected from the dropdown.
-     */
-    const handleChangeFilter = (item) => {
-
-        generateDataTable();
-        setSelectedFilter(item);
-        setCurrentPage(1);
-    };
-
-    /**
-     * It takes a search value, sets the selected symbol to the search value, and then filters the data
-     * table based on the search value
-     * @param searchValue - The value that the user has entered in the search box.
-     * @returns The filtered data table is being returned.
-     */
-    const handleSearch = (searchValue) => {
-        setSelectedSymbol(searchValue);
-        if (!searchValue) {
-            setFilteredDataTable([]);
-        } else {
-            const filterData = dataTable.filter(function (item) {
-                return item?.symbol.toLowerCase().includes(searchValue.toLowerCase());
-            });
-            setFilteredDataTable(filterData);
+    const dataFilter = useMemo(() => {
+        if (strSearch) {
+            setCurrentPage(1);
+            return dataTable.filter((item) => item?.symbol.toLowerCase().includes(strSearch.toLowerCase()));
         }
-        setCurrentPage(1);
-    };
+        return dataTable;
+    }, [dataTable, strSearch, currentPage]);
 
-    /**
-     * It renders a search bar and a link to the overview page
-     * @returns A div with a className of "flex flex-col justify-between mb-8 lg:flex-row lg:mb-[40px]
-     * px-4 lg:px-0"
-     */
-    const renderSearch = () => {
-        return (
-            <div className="flex flex-col justify-between px-4 lg:mb-8 lg:flex-row lg:px-0">
-                <div className="flex items-center justify-between gap-[22px] mb-6 lg:mb-0 mb:justify-end">
-                    <div className="flex items-center w-[165px] lg:w-[224px] pl-3 rounded-md h-9 lg:mt-0 lg:px-5 bg-bgInput dark:bg-bgInput-dark">
-                        <Search
-                            size={width >= 768 ? 20 : 16}
-                            className="text-txtSecondary dark:text-txtSecondary-dark"
-                        />
-                        <input
-                            className="py-[6px] w-[105px] lg:w-auto px-2 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark leading-6 placeholder:text-txtSecondary placeholder:dark:text-txtSecondary-dark bg-bgTabInactive dark:bg-bgTabInactive-dark"
-                            value={selectedSymbol}
-                            onChange={(e) => handleSearch(e?.target?.value)}
-                            placeholder={t('futures:funding_history_tab:find_pair')}
-                        />
-                        {selectedSymbol && (
-                            <X
-                                size={width >= 768 ? 20 : 16}
-                                className="cursor-pointer"
-                                onClick={() => {
-                                    setFilteredDataTable([]);
-                                    setSelectedSymbol('');
-                                    setCurrentPage(1);
-                                }}
-                            />
-                        )}
-                    </div>
-                    {isMobile ? (
-                        <div>
-                            <Popover className="relative">
-                                {({ open, close }) => (
-                                    <>
-                                        <Popover.Button>
-                                            <div className="p-2 bg-bgInput dark:bg-bgInput-dark rounded-md flex items-center justify-between w-[130px] xs:w-[160px] xxs:w-[170px] lg:w-[210px] h-9">
-                                                <p className="text-sm font-medium leading-5 truncate text-txtPrimary dark:text-txtPrimary-dark">
-                                                    {t(selectedFilter.placeholder)}
-                                                </p>
-                                                <ChevronDown
-                                                    size={16}
-                                                    className={classNames(
-                                                        'mt-1 ml-2 transition-transform duration-75 text-txtSecondary dark:txtSecondary-dark',
-                                                        { 'rotate-180': open }
-                                                    )}
-                                                />
-                                            </div>
-                                        </Popover.Button>
-                                        <Transition
-                                            as={Fragment}
-                                            enter="transition ease-out duration-200"
-                                            enterFrom="opacity-0 translate-y-1"
-                                            enterTo="opacity-100 translate-y-0"
-                                            leave="transition ease-in duration-150"
-                                            leaveFrom="opacity-100 translate-y-0"
-                                            leaveTo="opacity-0 translate-y-1"
-                                        >
-                                            <Popover.Panel className="absolute left-0 z-50 mt-2 rounded-md top-8 bg-bgPrimary dark:bg-bgPrimary-dark dark:border dark:border-darkBlue">
-                                                {FILTER_OPTS.map((item) => {
-                                                    const { label, index } = item;
-                                                    return (
-                                                        <>
-                                                            <div
-                                                                key={index}
-                                                                onClick={() => {
-                                                                    handleChangeFilter(item);
-                                                                    close();
-                                                                }}
-                                                                className={classNames(
-                                                                    'cursor-pointer px-3 py-3 w-[120px] xs:w-[160px] xxs:w-[170px] lg:min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col font-base leading-5',
-                                                                    {
-                                                                        'text-dominant':
-                                                                            selectedFilter.index ===
-                                                                            index
-                                                                    }
-                                                                )}
-                                                            >
-                                                                {t(label)}
-                                                            </div>
-                                                            <div className="px-3">
-                                                                <Divider />
-                                                            </div>
-                                                        </>
-                                                    );
-                                                })}
-                                            </Popover.Panel>
-                                        </Transition>
-                                    </>
-                                )}
-                            </Popover>
-                        </div>
-                    ) : null}
-                </div>
-                <a
-                    href={currentLocale === 'en'
-                        ? 'https://nami.exchange/en/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures'
-                        : 'https://nami.exchange/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures'
-                    }
-                    className={
-                        'underline cursor-pointer flex text-sm leading-6 lg:font-semibold font-medium text-txtBtnSecondary dark:text-txtBtnSecondary-dark'
-                    }
-                >
-                    {t('futures:funding_history_tab:link_overview')}
-                </a>
-            </div>
-        );
-    };
-
-    const renderPagination = useCallback(() => {
-        if (dataTable?.length === 0) return null;
-        return (
-            <div className="flex items-center justify-center mt-8">
-                <RePagination
-                    total={
-                        selectedSymbol
-                            ? filteredDataTable?.length
-                            : isLoading
-                                ? skeletons?.length
-                                : dataTable?.length
-                    }
-                    current={currentPage}
-                    pageSize={10}
-                    showTitle={false}
-                    onChange={(currentPage) => setCurrentPage(currentPage)}
-                    name="market_table___list"
-                />
-            </div>
-        );
-    }, [dataTable, currentPage]);
-
-    const columns = [
-        {
-            key: 'asset',
-            dataIndex: 'asset',
-            title: t('futures:funding_history_tab:contract'),
-            align: 'left',
-            width: '50%',
-            // sorter: false,
-            fixed: width >= 992 ? 'none' : 'left'
-        },
-        {
-            key: 'fundingTime',
-            dataIndex: 'fundingTime',
-            title: t('futures:funding_history_tab:time_left_to_next_funding'),
-            align: 'left',
-            width: '20%',
-            preventSort: true,
-            /* Telling the table to not sort the data in the column. */
-            // sorter: false,
-            // sorter:  (a, b) => b.fundingTime - a.fundingTime,
-            fixed: width >= 992 ? 'none' : 'left',
-            render: (data, item) =>
-                !item?.isSkeleton ? Countdown({
-                    date: data, onEnded: () => { generateDataTable() }
-                }) : item?.fundingTime
-        },
-        {
-            key: 'fundingRate',
-            dataIndex: 'fundingRate',
-            title: t('futures:funding_history_tab:funding_rate'),
-            align: 'left',
-            width: '20%',
-            fixed: width >= 992 ? 'none' : 'left',
-            render: (data, item) => (!item?.isSkeleton ? data + '%' : item?.fundingRate)
-        }
-    ];
-
-    const skeletons = useMemo(() => {
-        const skeletons = [];
-        for (let i = 0; i < 10; ++i) {
-            skeletons.push({ ...ROW_SKELETON, isSkeleton: true, key: `asset__skeleton__${i}` });
-        }
-        return skeletons;
-    }, []);
+    const columns = useMemo(() => {
+        return [
+            {
+                key: 'symbol',
+                dataIndex: 'asset',
+                title: t('futures:funding_history_tab:contract'),
+                align: 'left',
+                width: '50%',
+                fixed: width >= 992 ? 'none' : 'left'
+            },
+            {
+                key: 'fundingTime',
+                dataIndex: 'fundingTime',
+                title: t('futures:funding_history_tab:time_left_to_next_funding'),
+                align: 'left',
+                width: '30%',
+                preventSort: true,
+                fixed: width >= 992 ? 'none' : 'left',
+                render: (data, item) => (data ? <Countdown date={data} onEnded={generateDataTable} /> : '00:00:00')
+            },
+            {
+                key: 'fundingRate',
+                dataIndex: 'fundingRate',
+                title: t('futures:funding_history_tab:funding_rate'),
+                align: 'right',
+                width: '20%',
+                fixed: width >= 992 ? 'none' : 'left',
+                render: (data, item) => (!item?.isSkeleton ? data + '%' : item?.fundingRate)
+            }
+        ];
+    }, [dataTable, currency, currentPage]);
 
     return (
-        <div className="lg:px-12">
-            {renderSearch()}
-            {isMobile ? (
-                <ListFundingMobile
-                    dataTable={selectedSymbol ? filteredDataTable : dataTable || []}
-                    currency={currency}
-                />
-            ) : (
-                <>
-                    <MCard
-                        getRef={(ref) => (tableRef.current = ref)}
-                        style={
-                            currentTheme === THEME_MODE.LIGHT
-                                ? { boxShadow: '0px 7px 23px rgba(0, 0, 0, 0.05)' }
-                                : {}
-                        }
-                        addClass="relative mt-5 pt-0 pb-0 px-0 overflow-hidden"
+        <div className={classNames('mt-2 sm:mt-12 sm:border border-divider dark:border-divider-dark rounded-xl', { hidden: !active })}>
+            <Tooltip id={'funding'} place="top" effect="solid" isV3 className="max-w-[300px]" />
+            <div
+                className={classNames('sm:px-6 py-4 sm:border-b border-divider dark:border-divider-dark sm:flex items-center justify-between', {
+                    'space-y-6 pb-2': isMobile
+                })}
+            >
+                <div className={classNames('text-txtSecondary dark:text-txtSecondary-dark text-xs sm:text-sm space-x-1')}>
+                    <span>Funding Rates =</span>
+                    <span
+                        data-tip={`${t('futures:funding_history_tab:vol_position')} = ${t('futures:order_table:mark_price')} x ${t(
+                            'futures:funding_history_tab:amount_of_asset'
+                        )}`}
+                        data-for={'funding'}
+                        className="border-b border-darkBlue-5 border-dashed cursor-pointer"
                     >
-                        <ReTable
-                            useRowHover
-                            data={
-                                selectedSymbol
-                                    ? filteredDataTable
-                                    : isLoading
-                                        ? skeletons
-                                        : dataTable
-                            }
-                            sort={!isMobile}
-                            defaultSort={{ key: 'symbol', direction: 'asc' }}
-                            columns={columns}
-                            rowKey={(item) => item?.key}
-                            loading={!dataTable?.length || isLoading}
-                            scroll={{ x: true }}
-                            tableStatus={!!isLoading}
-                            tableStyle={{
-                                paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                                tableStyle: {
-                                    minWidth: '1300px !important'
-                                    // borderRadius: '20px !important'
-                                },
-                                headerStyle: {
-                                    fontSize: '0.875rem !important',
-                                    'margin-top': '24px !important',
-                                },
-                                headerFontStyle: {
-                                },
-                                // custom last row
-                                lastRowStyle: {
-                                    'padding-bottom': '42px'
-                                },
-                                rowStyle: {
-                                    'font-size': '14px !important',
-                                },
-                                shadowWithFixedCol: width < 1366,
-                                noDataStyle: {
-                                    minHeight: '480px'
-                                }
-                            }}
-                            paginationProps={{
-                                hide: true,
-                                current: currentPage,
-                                pageSize: 10,
-                                onChange: (currentPage) => setCurrentPage(currentPage)
-                            }}
-                        />
-                    </MCard>
-
-                    {renderPagination()}
-                </>
+                        {t('futures:funding_history_tab:vol_position')}
+                    </span>
+                    <span>x {t('futures:funding_history_tab:funding_rate2')}</span>
+                </div>
+                <div className="flex items-center space-x-4">
+                    <SearchInput
+                        placeholder={t('futures:funding_history_tab:find_pair')}
+                        // parentState={setStrSearch}
+                        customWrapperStyle={{ minWidth: isMobile ? 0 : 368 }}
+                        handleFilterAssetsList={setStrSearch}
+                    />
+                    {isMobile && <FilterTable selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />}
+                </div>
+            </div>
+            {isMobile ? (
+                <ListFundingMobile dataTable={dataFilter} currency={currency} loading={isLoading} isSearch={strSearch} />
+            ) : (
+                <TableV2
+                    defaultSort={{ key: 'symbol', direction: 'desc' }}
+                    useRowHover
+                    sort={!isMobile}
+                    data={dataFilter}
+                    columns={columns}
+                    rowKey={(item) => `${item?.key}`}
+                    loading={isLoading}
+                    limit={10}
+                    skip={0}
+                    onChangePage={setCurrentPage}
+                    page={currentPage}
+                    isSearch={strSearch}
+                    pagingClassName="border-none"
+                />
             )}
         </div>
     );
 }
 
-export const renderTimeLeft = ({ targetDate }) => {
-    const countDownDate = new Date(targetDate).getTime();
+const FilterTable = ({ selectedFilter, setSelectedFilter }) => {
+    const { t } = useTranslation();
+    const popover = useRef(null);
 
-    const [countDown, setCountDown] = useState(countDownDate - new Date().getTime());
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCountDown(countDownDate - new Date().getTime());
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [countDownDate]);
-
-    const getReturnValues = (countDown) => {
-        const days = Math.floor(countDown / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
-
-        return { days, hours, minutes, seconds };
+    const handleChangeFilter = (item) => {
+        if (setSelectedFilter) setSelectedFilter(item);
+        popover.current?.close();
     };
-    const result = getReturnValues(countDown);
 
-    const addPaddingString = (number) => (number.toString().length === 1 ? '0' + number : number);
-
-    return `${addPaddingString(result?.hours)}:${addPaddingString(
-        result?.minutes
-    )}:${addPaddingString(result?.seconds)}`;
-};
-
-const ROW_SKELETON = {
-    asset: <Skeletor width={200} />,
-    fundingTime: <Skeletor width={65} />,
-    fundingRate: <Skeletor width={65} />
+    return (
+        <PopoverV2
+            ref={popover}
+            label={
+                <div className="h-11 px-4 py-3 bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between space-x-2 w-[150px]">
+                    <p className="text-sm truncate">{t(selectedFilter.label)}</p>
+                    <ChevronDown size={16} />
+                </div>
+            }
+            className="w-full py-2 text-xs !mt-2 z-20"
+        >
+            <div className="flex flex-col">
+                {FILTER_OPTS.map((item) => {
+                    const { label, index } = item;
+                    return (
+                        <>
+                            <div
+                                key={index}
+                                onClick={() => {
+                                    handleChangeFilter(item);
+                                    close();
+                                }}
+                                className={classNames('cursor-pointer px-4 py-2 text-txtSecondary dark:text-txtSecondary-dark hover:bg-hover dark:hover:bg-hover-dark', {
+                                    '!text-txtPrimary dark:!text-white': selectedFilter.index === index
+                                })}
+                            >
+                                {t(label)}
+                            </div>
+                        </>
+                    );
+                })}
+            </div>
+        </PopoverV2>
+    );
 };

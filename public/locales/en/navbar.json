@@ -1,6 +1,6 @@
 {
     "menu": {
-        "spot": "Spot",
+        "spot": "Spot Trading",
         "trade": "Trade",
         "swap": "Swap",
         "wallet": "Wallet",
@@ -20,22 +20,27 @@
         "product": "Product",
         "market": "Market",
         "explained": "Explained",
-        "today": "Nami.Today",
+        "today": "Nami Today",
         "more": "More",
         "user": {
             "user": "User Control",
-            "profile": "Personal Profile",
+            "profile": "Personal Information",
             "security": "Security",
             "identify": "Identify",
             "reward_center": "Reward Center",
             "task_center": "Task Center",
             "referral": "Referral",
             "api_mng": "API Management",
-            "logout": "Log Out"
-        }
+            "logout": "Log Out",
+            "partner": "Partner",
+            "payment_method": "Payment Method",
+            "daily_reward": "Daily Trading Reward"
+        },
+        "top_referral": "Top Referral"
     },
     "submenu": {
         "convert": "Nami Swap",
+        "nami_insurance": "Nami Insurance",
         "convert_description": "Trade cryptocurrencies in one click",
         "spot": "Spot Trading",
         "spot_description": "Trading quickly with {{pairsLength}} tokens listed with high liquidity",
@@ -54,10 +59,14 @@
         "staking_description": "Staking NAMI to receive bonus interest up to 50%/year",
         "farming": "Farming",
         "farming_description": "Farming NAMI and get many potential tokens",
-        "referral": "Referral Report",
+        "referral": "Referral",
+        "profile_referral": "Referral",
         "referral_description": "Receive up to 20% commission from friends' trades",
-        "spot_wallet": "Exchange Wallet",
-        "futures_wallet": "Futures Wallet",
+        "transfer": "Transfer",
+        "transfer_description": "",
+        "overview_wallet": "Overview",
+        "spot_wallet": "Exchange",
+        "futures_wallet": "Futures",
         "staking_wallet": "Staking Wallet",
         "farming_wallet": "Farming Wallet",
         "classic": "Classic",
@@ -70,7 +79,11 @@
         "task_center": "Task Center",
         "api_mng": "API Management",
         "logout": "Log Out",
-        "user": "User Control"
+        "user": "User Control",
+        "profile": "Personal Information",
+        "partner": "Partner",
+        "payment_method": "Payment Method",
+        "daily_reward": "Daily Trading Reward"
     },
     "menu_grid": {
         "deposit": "Deposit",
@@ -105,9 +118,17 @@
     "language": "Language",
     "no_noti": "You have no new notifications",
     "noti": "Notification",
+    "mark_read": "Mark Read All",
     "unread_noti": "new notifications",
     "read_all_noti": "You have scrolled through all the notifications",
     "not_verified": "Not verified",
-    "pending_approval": "Pending approval",
-    "verified": "Verified"
+    "pending_approval": "Verifying",
+    "verified": "Verified",
+    "verify_account": "Verify account",
+    "use": "Use",
+    "get_discount": "to get discount",
+    "trade_on": "Download on the",
+    "scan_qr": "Scan the QR code to download Nami Exchange",
+    "down_with_qr": "Download Nami Exchange",
+    "footer_title": "Secure Spot and Futures Exchange"
 }

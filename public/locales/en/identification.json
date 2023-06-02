@@ -1,26 +1,44 @@
 {
+    "kyc_step": {
+        "title": "Account Verification",
+        "content": "For the account verification procedure to begin, please have the following documents available:",
+        "step_1": "Personal Information",
+        "step_2": "Payment methods",
+        "step_3": "ID card / passport",
+        "step_4": "Scan your face",
+        "scan": "Scan this code with Nami Exchange mobile app to start KYC process"
+    },
+    "current_futures": {
+        "title": "Current Features",
+        "buy_sell": "Buy & Sell Crypto via Partner",
+        "price_daily": "200,000,000 VNDC Daily",
+
+        "deposit": "Crypto Deposit Limit",
+        "withdrawal": "Crypto Withdrawal Limit",
+        "unlimited": "Unlimited",
+
+        "other": "Other Features",
+        "reward": "Reward Center"
+    },
     "title": "Account Verification",
     "title_2": "Verification Required",
-    "title_3": "Current Features",
     "personal": "Personal Information",
     "government": "Government - issued ID",
     "facial": "Facial Recognition",
     "timer": "Review time: 10 days",
     "qr_1": "Scan this code with Nami Exchange",
     "qr_2": "mobile app to start KYC process",
-    "buy_sell": "Buy & Sell crypto via Partner Limit",
-    "price_daily": "200,000,000 VNDC Daily",
-    "withdrawal": "Crypto Withdrawal Limit",
-    "unlimited": "Unlimited",
-    "deposit": "Crypto Deposit Limit",
-    "other": "Other Features",
-    "reward": "Reward Center",
     "account": {
         "not_verified": "Your account is currently not verified.",
-        "process": "Your KYC process is under review.",
+        "not_verified_content": "Complete verification to access services on Nami.",
+
+        "process": "Your KYC process is reviewing.",
+        "process_content": "Your request for account verification is being reviewed and processed as quickly as possible. When your account has been successfully authenticated, the system will notify you through email and app.",
+
         "congratulations": "Congratulations!",
         "not_verified_2": "Complete verification to access services on Nami.",
-        "verified": "Your account was successfully verified!"
+        "verified": "Your account has been verified."
     },
-    "title_tab": "Identification"
+    "title_tab": "Identification",
+    "kyc_title": "KYC"
 }

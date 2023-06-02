@@ -51,15 +51,15 @@ export const FEE_STRUCTURES = {
         VNDC: {
             DEDUCTION: 13,
             MAKER_TAKER: {
-                MAKER: ['0.042000', '0.06000'],
-                TAKER: ['0.042000', '0.06000'],
+                MAKER: ['0.04200', '0.06000'],
+                TAKER: ['0.04200', '0.06000'],
             },
         },
         USDT: {
             DEDUCTION: 13,
             MAKER_TAKER: {
-                MAKER: ['0.042000', '0.06000'],
-                TAKER: ['0.042000', '0.06000'],
+                MAKER: ['0.04200', '0.06000'],
+                TAKER: ['0.04200', '0.06000'],
             },
         },
     },
@@ -261,3 +261,10 @@ export const BINANCE_LEVERAGE_MARGIN = [
         amount: 199703
     }
 ]
+
+export const MODE_OTP = {
+    PHONE: 'phone',
+    EMAIL: 'email',
+    TFA: 'tfa',
+    SMART_OTP: 'smartOtp'
+};

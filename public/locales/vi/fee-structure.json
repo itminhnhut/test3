@@ -1,4 +1,5 @@
 {
+    "vip_upgrade": "Nâng cấp VIP",
     "title": "Biểu phí",
     "trading_fee": "Phí giao dịch tài khoản thường",
     "trading_fee_desc": "trên mỗi giao dịch khớp lệnh",
@@ -22,15 +23,23 @@
     "selling_vndc_hint": "Vượt quá 3 giao dịch trong một tháng, phí rút: 10,000 VNDC + 0.01% giá trị giao dịch",
     "trading_fee_t": "Biểu phí giao dịch",
     "depwdl_fee": "Biểu phí nạp rút",
-    "exchange_trading_fee": "Phí giao dịch Spot",
+    "exchange_trading_fee": "Phí giao dịch Exchange",
     "andor": "và/hoặc",
     "use_asset_deduction": "Giảm {{ value }} với {{ asset }}",
+    "see_fee_structures": "Xem biểu phí",
+    "current_fee_level": "Cấp hiện tại",
     "your_fee_level": "Cấp độ tài khoản:",
     "upgrade_level_suggest": "Bạn muốn nâng cấp VIP?",
+    "upgrade_level":"Nâng cấp VIP",
     "fee_rate": "Tỉ lệ phí",
+    "exchange_trading": "Giao dịch Exchange",
     "maker_taker_description": "\"Taker\" là lệnh giao dịch ở giá thị trường (market price).",
     "maker_taker_description_2": "\"Maker\" là lệnh giao dịch ở giá giới hạn (limited price).",
     "referral_description_value": "Giới thiệu bạn bè cùng giao dịch để nhận hoa hồng {{ value }}.",
     "swap_fee_description": "Với mỗi lệnh Futures đang mở, Nami Exchange áp dụng mức phí duy trì lệnh là 0.0015% trên khối lượng giao dịch trừ đi ký quỹ với mỗi giờ duy trì lệnh.",
-    "used_fee_deduction": "Bạn đang được hưởng ưu đãi phí giao dịch từ {{ token }}."
+    "used_fee_deduction": "Bạn đang được hưởng ưu đãi phí giao dịch từ {{ token }}.",
+    "fee_open_close": "Phí (Mở/Đóng)",
+    "fee_nami_open_close": "Phí NAMI (Mở/Đóng)",
+    "show_more": "Hiện thêm",
+    "show_less": "Hiện ít hơn"
 }
