@@ -53,7 +53,7 @@ const BannerInfo = ({ user, t, isMobile, isDark, typeProduct, setTypeProduct, fi
         <div className={`${isMobile ? 'pt-[76px]' : 'ml-8'} flex flex-col items-start justify-center gap-y-2 text-sm md:text-base`}>
             <span className="text-xl md:text-2xl">{user?.name ?? user?.username ?? user?.email ?? t('common:unknown')}</span>
             <div className="flex items-center">
-                {isNumber(vipLevel) ? <span className="text-green-2">VIP {vipLevel}</span> : <Skeletor width={50} />}
+                {isNumber(vipLevel) ? <span className="text-green-2">VIP {vipLevel}</span> : <Skeletor width={50} baseColor={colors.darkBlue3} highlightColor={colors.darkBlue4}/>}
 
                 <div className="w-1 h-1 rounded-full bg-gray-7 mx-2"></div>
                 <TextCopyable text={user?.code} copyIconColor="#fff" />

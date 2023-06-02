@@ -72,6 +72,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
     };
 
     useEffect(() => {
+        if (filter?.range?.endDate) return;
         fetchDataTradingPairs();
     }, [typeProduct, typeCurrency, filterPnl, filter]);
 
@@ -115,7 +116,13 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                 enabled: false,
                 position: 'nearest',
                 external: (context) => {
-                    if (!isMobile) externalTooltipHandler(context, isDark, t, isVndc, totalPosition, dataTradingPairs?.symbolsCount?.buckets);
+                    const { dataIndex } = context?.chart?.tooltip?.dataPoints?.['0'];
+                    const curData = dataTradingPairs?.symbolsCount?.buckets[dataIndex];
+
+                    const {key, doc_count, margin, profit} = curData
+                    const ratePnl = profit?.value / margin?.value
+                    const rate = doc_count / totalPosition;
+                    if (!isMobile) externalTooltipHandler(context, isDark, t, isVndc, doc_count, rate, profit?.value, ratePnl);
                 }
             }
         }
@@ -219,10 +226,11 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                                 </div>
                             </div>
                             <div className="flex items-center justify-between mt-2.5">
-                                <span className="txtSecond-3">
-                                    {t('portfolio:amount_position')} {formatNanNumber((showDetails?.doc_count * 100) / totalPosition, 2)}%
-                                </span>
-                                <span>{formatNanNumber(showDetails?.doc_count, 0)}</span>
+                                <span className="txtSecond-3">{t('portfolio:amount_position')}</span>
+                                <span>{`${formatNanNumber(showDetails?.doc_count, 0)} (${formatNanNumber(
+                                    (showDetails?.doc_count * 100) / totalPosition,
+                                    2
+                                )}%)`}</span>
                             </div>
                             {/* <div className="flex items-center justify-between mt-2.5">
                                 <span className="txtSecond-3">Tỷ lệ</span>
@@ -328,7 +336,7 @@ const generateThead = (isDark, label) => {
     return tableHead;
 };
 
-const externalTooltipHandler = (context, isDark, t, isVndc, totalPosition, data) => {
+const externalTooltipHandler = (context, isDark, t, isVndc, doc_count, rate, profit, ratePnl) => {
     // Tooltip Element
     const { chart, tooltip } = context;
     const tooltipEl = getOrCreateTooltip(chart, isDark);
@@ -344,13 +352,9 @@ const externalTooltipHandler = (context, isDark, t, isVndc, totalPosition, data)
         // begin:
         const { label, raw } = tooltip.dataPoints[0];
 
-        const curData = data?.find((obj) => obj.key?.slice(0, -4) === label.split('/')[0]);
-        const rate = formatNanNumber((raw * 100) / totalPosition, 2);
-        const profit = curData?.profit?.value;
-        const margin = curData?.margin?.value;
         const sign = profit > 0 ? '+' : '';
 
-        const pnl = `${sign}${formatNanNumber(profit, isVndc ? 0 : 4)} (${sign}${formatNanNumber((profit * 100) / margin, 2)}%)`;
+        const pnl = `${sign}${formatNanNumber(profit, isVndc ? 0 : 4)} (${sign}${formatNanNumber((ratePnl * 100), 2)}%)`;
 
         // Generate header
         const tableHead = generateThead(isDark, label);
@@ -361,13 +365,8 @@ const externalTooltipHandler = (context, isDark, t, isVndc, totalPosition, data)
 
         // Create first <li> element
         const liElement1 = document.createElement('li');
-        liElement1.textContent = `${t('portfolio:amount_position')}: ${curData?.doc_count} (${rate}%)`;
+        liElement1.textContent = `${t('portfolio:amount_position')}: ${doc_count} (${formatNanNumber((rate * 100), 2)}%)`;
         ulElement.appendChild(liElement1);
-
-        // Create second <li> element
-        // const liElement2 = document.createElement('li');
-        // liElement2.textContent = `Tỷ lệ: ${rate}%`;
-        // ulElement.appendChild(liElement2);
 
         const liElement3 = document.createElement('li');
         liElement3.textContent = `${t('portfolio:total_pnl')}: `;

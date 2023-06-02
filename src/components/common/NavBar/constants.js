@@ -166,7 +166,7 @@ export const MOBILE_NAV_DATA = [
                 localized: 'futures_portfolio',
                 // hide: true,
                 isNew: true,
-                url: '/portfolio',
+                url: PATHS?.FUTURES_PORTFOLIO,
                 child_lv1: []
             },
             {
@@ -378,7 +378,7 @@ export const USER_CP = [
         localized: 'futures_portfolio',
         // hide: true,
         isNew: true,
-        url: '/portfolio',
+        url: PATHS?.FUTURES_PORTFOLIO,
         child_lv1: []
     },
     {

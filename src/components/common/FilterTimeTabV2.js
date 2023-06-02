@@ -45,7 +45,7 @@ const FilterTimeTabV2 = ({
         if (timeTab === 'all') {
             setFilter({
                 range: {
-                    startDate: maxMonths ? convertDateToMs(subMonths(new Date(), maxMonths)) : null,
+                    startDate: null,
                     endDate: convertDateToMs(Date.now(), 'endOf'),
                     key: 'selection'
                 }

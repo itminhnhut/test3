@@ -27,7 +27,7 @@ const index = ({
     useEffect(() => {
         if (isCustom) {
             clearTimeout(timer.current);
-            wraper.current.style.height = active ? list.current.clientHeight + 'px' : 0;
+            wraper?.current?.style?.height = active ? list.current.clientHeight + 'px' : 0;
             timer.current = setTimeout(
                 () => {
                     setFlag(active);
@@ -40,14 +40,14 @@ const index = ({
     useEffect(() => {
         if (!wraper.current) return;
         setTimeout(() => {
-            wraper.current.style.height = active ? list.current.clientHeight + 'px' : 0;
+            wraper?.current?.style.height = active ? list.current.clientHeight + 'px' : 0;
         }, 100);
     }, [reload]);
 
     const handleOpen = () => {
         if (isCustom) return;
         clearTimeout(timer.current);
-        wraper.current.style.height = !open ? list.current.clientHeight + 'px' : 0;
+        wraper?.current?.style.height = !open ? list.current.clientHeight + 'px' : 0;
         timer.current = setTimeout(
             () => {
                 setFlag(!open);

@@ -30,7 +30,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
 
     const renderSumVolumns = useCallback(() => {
         const totalVolume = dataOverview?.totalVolume?.value;
-        const swapValue = formatNanNumber(totalVolume * usdRate, 4) + ' USD';
+        const swapValue = '$' + formatNanNumber(totalVolume * usdRate, 4);
         return (
             <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4' : 'flex-auto px-6 py-4'}>
                 <span>{t('transaction-history:modal_detail.volume')}</span>
@@ -73,7 +73,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
 
     const renderOtherSummary = useCallback(() => {
         const totalMargin = dataOverview?.totalMargin?.value;
-        const swapValue = formatNanNumber(totalMargin * usdRate, 4) + ' USD';
+        const swapValue = '$' + formatNanNumber(totalMargin * usdRate, 4);
         const avgLeverage = formatNanNumber(dataOverview?.avgLeverage?.value, 0);
 
         return (

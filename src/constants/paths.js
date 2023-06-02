@@ -123,7 +123,8 @@ export const PATHS = {
     SUPPORT,
     TRANSACTION_HISTORY,
     WITHDRAW_DEPOSIT,
-    PARNER_WITHDRAW_DEPOSIT
+    PARNER_WITHDRAW_DEPOSIT,
+    FUTURES_PORTFOLIO: '/statistics'
     // Add news path here
 };
 

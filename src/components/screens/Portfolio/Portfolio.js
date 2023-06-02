@@ -68,7 +68,7 @@ const Portfolio = () => {
 
     // Data Overview
     const [dataOverview, setDataOverview] = useState({
-        firstTimeTrade: '2023-04-21T07:39:35.002Z',
+        firstTimeTrade: '',
         overallStatistic: {}
     });
     const [isNeverTrade, setIsNeverTrade] = useState(false);
@@ -122,7 +122,8 @@ const Portfolio = () => {
     };
 
     useEffect(() => {
-        if (!filter) return;
+        if (!filter?.range?.endDate) return;
+
         fetchDataOverview();
         fetchDataPnlChanging();
     }, [typeProduct, typeCurrency, filter]);

@@ -33,7 +33,7 @@ const HeaderTooltip = ({ className, tooltipId, title, tooltipContent, isMobile =
                     </ul>
                 )}
             </Tooltip>
-            <div className="flex items-center cursor-pointer w-max" data-tip={isArray(tooltipContent) ? '' : tooltipContent} data-for={tooltipId}>
+            <div onClick={(e) => e.stopPropagation()} className="flex items-center cursor-pointer w-max" data-tip={isArray(tooltipContent) ? '' : tooltipContent} data-for={tooltipId}>
                 <div className="text-base md:text-2xl font-semibold pr-2">{title}</div>
                 <HelpIcon color="currentColor" />
             </div>

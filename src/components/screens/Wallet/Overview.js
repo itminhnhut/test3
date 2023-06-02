@@ -21,6 +21,7 @@ import Types from 'components/screens/Account/types';
 import EstBalance from 'components/common/EstBalance';
 import { TYPE_DW } from '../WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { PATHS } from 'constants/paths';
 
 const INITIAL_STATE = {
     // ...
@@ -90,7 +91,7 @@ const OverviewWallet = (props) => {
                         ? SECRET_STRING
                         : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + partnersEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}{' '}
                     BTC
-                    <button className="hidden md:block" onClick={() => router.push('/portfolio')}>
+                    <button className="hidden md:block" onClick={() => router.push(PATHS?.FUTURES_PORTFOLIO)}>
                         <PortfolioIcon  />
                     </button>
                 </div>
@@ -271,7 +272,7 @@ const OverviewWallet = (props) => {
                             </div>
                             <div>{renderOverviewEstBalance()}</div>
                             {/* <FuturePortfolioIcon size={24} /> */}
-                            <button className="md:hidden" onClick={() => router.push('/portfolio')}>
+                            <button className="md:hidden" onClick={() => router.push(PATHS?.FUTURES_PORTFOLIO)}>
                                 <PortfolioIcon  />
                             </button>
                         </div>

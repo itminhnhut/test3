@@ -84,7 +84,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
     };
 
     useEffect(() => {
-        if (!filter) return;
+        if (!filter?.range?.endDate) return;
 
         fetchTopPosition();
     }, [typeProduct, typeCurrency, filter]);
@@ -106,7 +106,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                 dataIndex: 'symbol',
                 title: t('portfolio:trading_pair'),
                 align: 'left',
-                width: 160,
+                width: 200,
                 render: (v, item) => (
                     <div className="whitespace-nowrap font-semibold flex items-center">
                         <span className="txtPri-1">{v?.slice(0, -4)}</span>

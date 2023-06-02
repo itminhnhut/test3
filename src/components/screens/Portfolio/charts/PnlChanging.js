@@ -39,7 +39,7 @@ const PnlChanging = ({
     filter = { startDate: null, endDate: null },
     isVndc = true
 }) => {
-    const [showDetails, setShowDetails] = useState(null)
+    const [showDetails, setShowDetails] = useState(null);
     const router = useRouter();
     const [pnlChartData, setPnlChartData] = useState({
         labels: [],
@@ -79,38 +79,6 @@ const PnlChanging = ({
             setShowDetails(item[0]?.index);
         },
         plugins: {
-            // tooltip: {
-            //     enabled: !isNeverTrade,
-            //     usePointStyle: true,
-            //     callbacks: {
-            //         title: function (context) {
-            //             if (dataPnl?.interval === INTERVAL.DAY) return context[0].label;
-            //             const { dataIndex } = context[0];
-            //             const curDate = new Date(dataPnl.labels[dataIndex]?.date);
-            //             if (dataPnl?.interval === INTERVAL.WEEK) return formatTime(curDate, 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM');
-            //             if (dataPnl?.interval === INTERVAL.MONTH)
-            //                 return formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
-            //         },
-            //         label: function (context) {
-            //             const { dataIndex, label, raw } = context;
-            //             let margin = dataPnl.values[dataIndex].margin ?? 1;
-            //             let pnl = dataPnl.values[dataIndex].pnl;
-            //             let ratePnl = pnl / margin;
-            //             return [
-            //                 ` - ${t('portfolio:pnl')}: ${raw > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`
-            //             ];
-            //         }
-            //     },
-            //     backgroundColor: isDark ? colors.dark['2'] : colors.gray['15'],
-            //     padding: 12,
-            //     titleColor: isDark ? colors.gray['7'] : colors.gray['1'],
-            //     titleFont: { weight: 'normal', size: 14, paddingBottom: 12, lineHeight: 1.43 },
-            //     titleAlign: 'left',
-            //     displayColors: false,
-            //     bodyColor: isDark ? colors.gray['4'] : colors.gray['2'],
-            //     bodyFont: { size: 16, lineHeight: 1.5 },
-            //     caretSize: 5
-            // },
             tooltip: {
                 enabled: false,
                 position: 'nearest',
@@ -118,13 +86,13 @@ const PnlChanging = ({
                     if (!isMobile) {
                         const { dataIndex } = context?.chart?.tooltip?.dataPoints?.['0'];
 
-                        const title = parseTitle(dataPnl.labels[dataIndex]?.date, dataPnl?.interval)
+                        const title = parseTitle(dataPnl.labels[dataIndex]?.date, dataPnl?.interval);
 
                         let margin = dataPnl.values[dataIndex].margin ?? 1;
                         let pnl = dataPnl.values[dataIndex].pnl;
                         let ratePnl = pnl / margin;
 
-                        externalTooltipHandler(context, isDark, t, isVndc, title, pnl, ratePnl);
+                        externalTooltipHandler(context, isDark, t, isVndc, title, pnl, ratePnl, dataIndex);
                     }
                 }
             }
@@ -220,55 +188,65 @@ const PnlChanging = ({
         <div className={`mt-12 md:p-8 transition-all ${isMobile ? 'bg-transparent' : 'rounded-xl bg-gray-13 dark:bg-dark-4'}`}>
             {isMobile ? (
                 <>
-                <CollapseV2
-                    className="w-full"
-                    divLabelClassname="w-full justify-between"
-                    chrevronStyled={{ size: 24, color: isDark ? '#E2E8F0' : '#1E1E1E' }}
-                    label={
-                        <HeaderTooltip
-                            isMobile
-                            title={t('portfolio:historical_pnl')}
-                            tooltipContent={t('portfolio:pnl_changing_tooltip')}
-                            tooltipId={'pnl_changing_tooltip'}
-                        />
-                    }
-                    labelClassname="text-base font-semibold"
-                    isDividerBottom={true}
-                >
-                    <div className="mt-6">
-                        <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
-                    </div>
-                    {/* Chu thich */}
-                    <div className="flex items-center gap-x-4 mt-9">
-                        <Note iconClassName="bg-green-6" title={t('portfolio:profit')} />
-                        <Note iconClassName="bg-red-2" title={t('portfolio:loss')} />
-                    </div>
-                    <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
-                        <BxsInfoCircle />
-                        <span>{t('portfolio:click_column_for_details')}</span>
-                    </div>
-                </CollapseV2>
-                <ModalV2 isVisible={isNumber(showDetails)} onBackdropCb={() => setShowDetails(null)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
-                    <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:historical_pnl_statistic')}</h1>
-                    {showDetails && (
-                        <MCard addClass={'!p-4 !font-semibold !mt-6'}>
-                            <div className="flex items-center justify-between">
-                                <span className="txtSecond-3">{t('common:day')}</span>
-                                <div className="whitespace-nowrap font-semibold flex items-center">
-                                    {parseTitle(dataPnl.labels[showDetails]?.date, dataPnl?.interval)}
+                    <CollapseV2
+                        className="w-full"
+                        divLabelClassname="w-full justify-between"
+                        chrevronStyled={{ size: 24, color: isDark ? '#E2E8F0' : '#1E1E1E' }}
+                        label={
+                            <HeaderTooltip
+                                isMobile
+                                title={t('portfolio:historical_pnl')}
+                                tooltipContent={t('portfolio:pnl_changing_tooltip')}
+                                tooltipId={'pnl_changing_tooltip'}
+                            />
+                        }
+                        labelClassname="text-base font-semibold"
+                        isDividerBottom={true}
+                    >
+                        <div className="mt-6">
+                            <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
+                        </div>
+                        {/* Chu thich */}
+                        <div className="flex items-center gap-x-4 mt-9">
+                            <Note iconClassName="bg-green-6" title={t('portfolio:profit')} />
+                            <Note iconClassName="bg-red-2" title={t('portfolio:loss')} />
+                        </div>
+                        <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
+                            <BxsInfoCircle />
+                            <span>{t('portfolio:click_column_for_details')}</span>
+                        </div>
+                    </CollapseV2>
+                    <ModalV2
+                        isVisible={isNumber(showDetails)}
+                        onBackdropCb={() => setShowDetails(null)}
+                        wrapClassName="px-6"
+                        className="dark:bg-dark"
+                        isMobile={true}
+                    >
+                        <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:historical_pnl_statistic')}</h1>
+                        {showDetails && (
+                            <MCard addClass={'!p-4 !font-semibold !mt-6'}>
+                                <div className="flex items-center justify-between">
+                                    <span className="txtSecond-3">{t('common:day')}</span>
+                                    <div className="whitespace-nowrap font-semibold flex items-center">
+                                        {parseTitle(dataPnl.labels[showDetails]?.date, dataPnl?.interval)}
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex items-center justify-between mt-2.5">
-                                <span className="txtSecond-3">{t('portfolio:pnl')}</span>
-                                <span className={dataPnl?.values?.[showDetails]?.pnl > 0 ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
-                                    {`${dataPnl?.values?.[showDetails]?.pnl > 0 ? '+' : ''}${formatNanNumber(dataPnl?.values?.[showDetails]?.pnl, isVndc ? 0 : 4)} (${
-                                        dataPnl?.values?.[showDetails]?.pnl > 0 ? '+' : ''
-                                    }${formatNanNumber((dataPnl?.values?.[showDetails]?.pnl * 100) / dataPnl?.values?.[showDetails]?.margin, 2)}%)`}
-                                </span>
-                            </div>
-                        </MCard>
-                    )}
-                </ModalV2>
+                                <div className="flex items-center justify-between mt-2.5">
+                                    <span className="txtSecond-3">{t('portfolio:pnl')}</span>
+                                    <span className={dataPnl?.values?.[showDetails]?.pnl > 0 ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
+                                        {`${dataPnl?.values?.[showDetails]?.pnl > 0 ? '+' : ''}${formatNanNumber(
+                                            dataPnl?.values?.[showDetails]?.pnl,
+                                            isVndc ? 0 : 4
+                                        )} (${dataPnl?.values?.[showDetails]?.pnl > 0 ? '+' : ''}${formatNanNumber(
+                                            (dataPnl?.values?.[showDetails]?.pnl * 100) / dataPnl?.values?.[showDetails]?.margin,
+                                            2
+                                        )}%)`}
+                                    </span>
+                                </div>
+                            </MCard>
+                        )}
+                    </ModalV2>
                 </>
             ) : (
                 <>
@@ -322,6 +300,8 @@ const getOrCreateTooltip = (chart, isDark) => {
         tooltipEl.style.position = 'absolute';
         tooltipEl.style.transform = 'translate(-50%, 0)';
         tooltipEl.style.transition = 'all .1s ease';
+        tooltipEl.style.width = '300px';
+        tooltipEl.style.height = '88px';
 
         const table = document.createElement('table');
         table.style.color = isDark ? colors.gray['4'] : colors.gray['15'];
@@ -357,7 +337,7 @@ const generateThead = (isDark, label) => {
     return tableHead;
 };
 
-const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl) => {
+const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl, dataIndex) => {
     // Tooltip Element
     const { chart, tooltip } = context;
     const tooltipEl = getOrCreateTooltip(chart, isDark);
@@ -424,9 +404,17 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl)
 
     const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
     const tooltipWidth = tooltipEl.offsetWidth;
+    const tooltipHeight = tooltipEl.offsetHeight;
 
-    tooltipEl.style.left = 28 + tooltipWidth / 2 + positionX + tooltip.caretX + 'px';
-    tooltipEl.style.top = positionY + 'px'; // Position tooltip based on the bar's center
+    /**
+     * tooltip.caretX: tọa độ x của current bar
+     */
+
+    const datasetIndex = tooltip.dataPoints[0].datasetIndex; // Get the index of the hovered dataset
+    // const barWidth = chart.getDatasetMeta(datasetIndex).data[tooltip.dataPoints[0].index].width; // Get the width of the hovered Bar column
+    const barEl = chart.getDatasetMeta(datasetIndex)?.data[dataIndex];
+    tooltipEl.style.left = positionX + barEl.x + barEl.width / 2 + tooltipWidth / 2 + 12 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
+    tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
     tooltipEl.style.font = tooltip.options.bodyFont.string;
     tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
     tooltipEl.style.opacity = 1;
@@ -455,16 +443,16 @@ const parseTitle = (stringDate, interval) => {
     const curDate = new Date(stringDate);
     switch (interval) {
         case INTERVAL.DAY:
-            title = formatTime(curDate, 'dd/MM') + ' - ' + formatTime(curDate, 'dd/MM');
+            title = formatTime(curDate, 'dd/MM');
             break;
         case INTERVAL.WEEK:
             title = formatTime(curDate, 'dd/MM') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM');
             break;
         case INTERVAL.MONTH:
-            title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
+            title = formatTime(curDate, 'MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'MM/yyyy');
             break;
         default:
             break;
     }
-    return title
+    return title;
 };
