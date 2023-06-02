@@ -169,6 +169,15 @@ export const MOBILE_NAV_DATA = [
                 child_lv1: []
             },
             {
+                key: 'futures_portfolio',
+                title: 'futures_portfolio',
+                localized: 'futures_portfolio',
+                // hide: true,
+                isNew: true,
+                url: PATHS?.FUTURES_PORTFOLIO,
+                child_lv1: []
+            },
+            {
                 key: 3,
                 title: 'partner',
                 localized: 'partner',
@@ -377,6 +386,15 @@ export const USER_CP = [
         // hide: true,
         isNew: true,
         url: '/reference',
+        child_lv1: []
+    },
+    {
+        key: 'futures_portfolio',
+        title: 'futures_portfolio',
+        localized: 'futures_portfolio',
+        // hide: true,
+        isNew: true,
+        url: PATHS?.FUTURES_PORTFOLIO,
         child_lv1: []
     },
     {

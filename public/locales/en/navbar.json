@@ -34,7 +34,8 @@
             "logout": "Log Out",
             "partner": "Partner",
             "payment_method": "Payment Method",
-            "daily_reward": "Daily Trading Reward"
+            "daily_reward": "Daily Trading Reward",
+            "futures_portfolio": "Futures Statistics"
         },
         "top_referral": "Top Referral"
     },
@@ -83,7 +84,8 @@
         "profile": "Personal Information",
         "partner": "Partner",
         "payment_method": "Payment Method",
-        "daily_reward": "Daily Trading Reward"
+        "daily_reward": "Daily Trading Reward",
+        "futures_portfolio": "Futures Statistics"
     },
     "menu_grid": {
         "deposit": "Deposit",

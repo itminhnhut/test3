@@ -268,3 +268,8 @@ export const MODE_OTP = {
     TFA: 'tfa',
     SMART_OTP: 'smartOtp'
 };
+
+export const FUTURES_PRODUCT = {
+    NAMI: { id: 0, name: 'Nami Futures'},
+    NAO: { id: 2, name: 'NAO Futures'}
+}

@@ -271,6 +271,11 @@ export const API_GET_FUTURES_SETTING = API_PREFIX + 'futures/setting';
 export const API_GET_NAO_FUTURES_SETTING = API_PREFIX + 'nao/setting';
 
 //portfolio
+export const API_FUTURES_STATISTIC_OVERVIEW = API_V3_PREFIX + 'wallet/history/futures-statistic/overview'
+export const API_FUTURES_STATISTIC_PAIRS = API_V3_PREFIX + 'wallet/history/futures-statistic/ah-my-favorite-pairs'
+export const API_FUTURES_STATISTIC_TOP_POSITIONS = API_V3_PREFIX + 'wallet/history/futures-statistic/top-positions'
+export const API_FUTURES_STATISTIC_PNL = API_V3_PREFIX + 'wallet/history/futures-statistic/pnl-fluctuation'
+
 export const API_PORTFOLIO_OVERVIEW = API_V3_PREFIX + 'portfolio/futures/overview';
 export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + 'portfolio/futures/account';
 export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + 'portfolio/futures/summary';

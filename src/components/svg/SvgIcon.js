@@ -125,12 +125,12 @@ const CloseIcon = ({ className, onClick, color, size }) => {
     );
 };
 
-const ArrowDropDownIcon = ({ className = '', color, size = 32, isFilled = true }) => {
+const ArrowDropDownIcon = ({ className = '', color, size = 32, isFilled = true, ...props }) => {
     const [currentTheme] = useDarkMode();
     const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E';
 
     return (
-        <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg {...props} className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             {isFilled ? (
                 <g clipPath="url(#ixety35iha)">
                     <path d="M4.666 6.667 7.999 10l3.334-3.333H4.666z" fill={color || defaultColor} />
@@ -651,7 +651,15 @@ const CheckedIcon = ({ size = 24, color = '#8694B3', ...props }) => {
     );
 };
 
-const PortfolioIcon = ({ className, size }) => (
+const PortfolioIconNoColor = ({className, size = 24}) => (
+    <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.674 11.353h-4.68a.324.324 0 0 1-.316-.25 3.768 3.768 0 0 0-2.794-2.784.324.324 0 0 1-.251-.316V3.324c0-.193.168-.342.36-.322a8.958 8.958 0 0 1 5.414 2.592 8.957 8.957 0 0 1 2.59 5.398.325.325 0 0 1-.323.36zM21 12.93a8.936 8.936 0 0 1-1.939 4.699.325.325 0 0 1-.483.027l-2.62-2.62-.69-.69a.324.324 0 0 1-.045-.401 3.73 3.73 0 0 0 .462-1.122.325.325 0 0 1 .315-.253h4.677c.194 0 .343.168.323.36z" fill="#8694B3"/>
+        <path d="M16.965 12.57a4.956 4.956 0 0 1-1.007 2.465l-.69-.69a.325.325 0 0 1-.045-.4c.211-.342.369-.72.462-1.122A.324.324 0 0 1 16 12.57h.965z" fill="#8694B3"/>
+        <path d="M17.72 18.516a.325.325 0 0 1-.026.482A8.957 8.957 0 0 1 12.024 21a8.967 8.967 0 0 1-6.38-2.643A8.965 8.965 0 0 1 3 12.017a9.035 9.035 0 0 1 2.643-6.423 8.956 8.956 0 0 1 5.414-2.592c.192-.02.36.13.36.322v4.68a.325.325 0 0 1-.252.315 3.762 3.762 0 0 0-2.896 3.656 3.76 3.76 0 0 0 3.756 3.756c.728 0 1.408-.208 1.984-.568a.325.325 0 0 1 .402.044l3.309 3.309z" fill="#8694B3"/>
+    </svg>
+)
+
+const PortfolioIcon = ({ className, size = 24, isNoColor = false }) => (
     <svg className={className} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#qj2barczia)">
             <path
@@ -869,8 +877,8 @@ const ArrowForwardIcon = ({ size = 24, color = '#fff', className }) => (
     </svg>
 );
 
-const CalendarFillIcon = ({ size = 24, color = 'currentColor' }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+const CalendarFillIcon = ({ size = 24, color = 'currentColor', className = '' }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
         <path
             d="M3.333 14.667h9.334c.735 0 1.333-.598 1.333-1.334V4c0-.735-.598-1.333-1.333-1.333h-1.334V1.333H10v1.334H6V1.333H4.667v1.334H3.333C2.598 2.667 2 3.265 2 4v9.333c0 .736.598 1.334 1.333 1.334zm0-10h9.334V6H3.333V4.667z"
             fill={color}
@@ -1151,6 +1159,29 @@ export const RemoveCircleIcon = ({ size = 16, ...props }) => (
     </svg>
 );
 
+const FutureNaoIcon = ({size = 20, ...props}) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.96 2a7.967 7.967 0 0 0-4.407 1.338H8.44a2.342 2.342 0 0 1 2.042 1.183l1.337 2.309 1.83 3.182-1.852 3.19h2.666a2.342 2.342 0 0 0 2.043-1.183l1.469-2.499a8.007 8.007 0 0 0-2.513-5.354A7.997 7.997 0 0 0 9.96 2z" fill="#3FEED9"/>
+        <path d="M3.08 14a8.03 8.03 0 0 0 3.386 3.184l-1.475-2.513a2.379 2.379 0 0 1 0-2.365L6.333 9.99l1.844-3.19h3.688l-1.342-2.315A2.352 2.352 0 0 0 8.473 3.3H5.588A8.018 8.018 0 0 0 3.08 14z" fill="#40C2EB"/>
+        <path d="M16.943 13.986a7.92 7.92 0 0 0 1.04-4.485l-1.476 2.5a2.35 2.35 0 0 1-2.006 1.176H8.144L6.3 10.001l-1.343 2.316a2.369 2.369 0 0 0 0 2.36l1.476 2.5a8.055 8.055 0 0 0 5.887.476 8.027 8.027 0 0 0 4.623-3.667z" fill="#1A6AD2"/>
+    </svg>
+)
+
+export const HelpIcon = ({size = 16, color = '#E2E8F0', ...props}) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 1.334a6.674 6.674 0 0 0-6.666 6.667 6.674 6.674 0 0 0 6.667 6.666 6.674 6.674 0 0 0 6.666-6.666 6.674 6.674 0 0 0-6.666-6.667zm.667 10.667H7.334v-1.334h1.333v1.334zm.651-3.257c-.13.105-.257.206-.357.306-.272.271-.293.518-.294.529v.088H7.334v-.111c0-.079.02-.785.684-1.45.13-.13.291-.261.46-.399.49-.396.811-.686.811-1.084a1.29 1.29 0 0 0-2.578 0H5.378a2.626 2.626 0 0 1 2.623-2.622 2.626 2.626 0 0 1 2.622 2.622c0 1.065-.786 1.7-1.305 2.121z" fill={color}/>
+    </svg>
+)
+
+export const FilterIcon = ({size = 24, color = '#E2E8F0', className = '', ...props}) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E';
+    return (
+    <svg {...props} className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3H4a1 1 0 0 0-1 1v2.59c0 .523.213 1.037.583 1.407L9 13.414V21a1.001 1.001 0 0 0 1.447.895l4-2c.339-.17.553-.516.553-.895v-5.586l5.417-5.417c.37-.37.583-.884.583-1.407V4a1 1 0 0 0-1-1zm-6.707 9.293A.996.996 0 0 0 13 13v5.382l-2 1V13a.996.996 0 0 0-.293-.707L5 6.59V5h14.001l.002 1.583-5.71 5.71z" fill={defaultColor}/>
+    </svg>
+)}
+
 export {
     FutureInsurance,
     ArrowDownIcon,
@@ -1225,5 +1256,7 @@ export {
     SaveAltIcon,
     FacebookIcon,
     TwitterIcon,
-    TelegramIcon
+    TelegramIcon,
+    FutureNaoIcon,
+    PortfolioIconNoColor
 };
