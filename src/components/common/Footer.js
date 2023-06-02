@@ -18,7 +18,7 @@ const Footer = () => {
                 { name: t('nami_trade'), route: 'https://nami.trade' },
                 { name: t('nami_io'), route: 'https://nami.io' },
                 { name: t('nami_assistant'), route: 'https://nami.assistant' },
-                { name: t('nami_today'), route: 'https://nami.today' },
+                // { name: t('nami_today'), route: 'https://nami.today' },
                 { name: t('nami_tv'), route: 'https://nami.tv' },
             ],
         },

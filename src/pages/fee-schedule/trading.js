@@ -698,13 +698,13 @@ const TradingFee = () => {
             </div>
 
             <div className="mt-12 md:mt-8 space-y-2 nami-list-disc">
-                <div className="flex items-center">
-                    {t('fee-structure:maker_taker_description')}
-                    <span className="ml-2">{t('fee-structure:maker_taker_description_2')}</span>
-                    <HrefButton variants="blank" className="!w-auto ml-3" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank">
-                        {t('common:read_more')}
-                    </HrefButton>
-                </div>
+                {/* <div className="flex items-center"> */}
+                {/*     {t('fee-structure:maker_taker_description')} */}
+                {/*     <span className="ml-2">{t('fee-structure:maker_taker_description_2')}</span> */}
+                {/*     <HrefButton variants="blank" className="!w-auto ml-3" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank"> */}
+                {/*         {t('common:read_more')} */}
+                {/*     </HrefButton> */}
+                {/* </div> */}
                 <div className="flex items-center">
                     {t('fee-structure:referral_description_value', { value: '20%' })}
                     <HrefButton variants="blank" className="!w-auto ml-3" href={PATHS.ACCOUNT.REFERRAL} target="_blank">

@@ -110,14 +110,14 @@ export const NAV_DATA = [
             }
         ]
     },
-    {
-        key: 3,
-        title: 'Nami.Today',
-        localized: 'today',
-        isNew: false,
-        url: 'https://nami.today/',
-        child_lv1: []
-    },
+    // {
+    //     key: 3,
+    //     title: 'Nami.Today',
+    //     localized: 'today',
+    //     isNew: false,
+    //     url: 'https://nami.today/',
+    //     child_lv1: []
+    // },
     {
         key: 4,
         title: 'Support Center',
@@ -324,15 +324,15 @@ export const MOBILE_NAV_DATA = [
         ]
     },
 
-    ,
-    {
-        key: 7,
-        title: 'Nami.Today',
-        localized: 'today',
-        isNew: false,
-        url: 'https://nami.today/',
-        child_lv1: []
-    },
+    // ,
+    // {
+    //     key: 7,
+    //     title: 'Nami.Today',
+    //     localized: 'today',
+    //     isNew: false,
+    //     url: 'https://nami.today/',
+    //     child_lv1: []
+    // },
     {
         key: 2,
         title: 'Support Center',
