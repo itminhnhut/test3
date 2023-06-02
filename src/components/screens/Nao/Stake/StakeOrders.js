@@ -14,6 +14,90 @@ import { useSelector } from 'react-redux';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 
+
+// const mock = [
+//     {
+//         status: 2,
+//         _id: uniqueId(),
+//         poolId: '64378550a3d8dc6589cbe798',
+//         type: 1,
+//         amount: 20000,
+//         createdAt: '2023-04-13T04:30:32.868Z',
+//         updatedAt: '2023-04-13T04:30:32.868Z',
+//         __v: 0
+//     },
+//     {
+//         status: 2,
+//         _id: uniqueId(),
+//         poolId: '64378550a3d8dc6589cbe798',
+//         type: 1,
+//         amount: 10000,
+//         createdAt: '2023-04-13T04:30:08.158Z',
+//         updatedAt: '2023-04-13T04:30:08.158Z',
+//         __v: 0
+//     },
+//     {
+//         status: 2,
+//         _id: uniqueId(),
+//         poolId: '64378550a3d8dc6589cbe798',
+//         type: 1,
+//         amount: 20000,
+//         createdAt: '2023-04-13T04:30:32.868Z',
+//         updatedAt: '2023-04-13T04:30:32.868Z',
+//         __v: 0
+//     },
+//     {
+//         status: 2,
+//         _id: uniqueId(),
+//         poolId: '64378550a3d8dc6589cbe798',
+//         type: 1,
+//         amount: 10000,
+//         createdAt: '2023-04-13T04:30:08.158Z',
+//         updatedAt: '2023-04-13T04:30:08.158Z',
+//         __v: 0
+//     },
+//     {
+//         status: 2,
+//         _id: uniqueId(),
+//         poolId: '64378550a3d8dc6589cbe798',
+//         type: 1,
+//         amount: 20000,
+//         createdAt: '2023-04-13T04:30:32.868Z',
+//         updatedAt: '2023-04-13T04:30:32.868Z',
+//         __v: 0
+//     },
+//     {
+//         status: 2,
+//         _id: uniqueId(),
+//         poolId: '64378550a3d8dc6589cbe798',
+//         type: 1,
+//         amount: 10000,
+//         createdAt: '2023-04-13T04:30:08.158Z',
+//         updatedAt: '2023-04-13T04:30:08.158Z',
+//         __v: 0
+//     },
+//     {
+//         status: 2,
+//         _id: uniqueId(),
+//         poolId: '64378550a3d8dc6589cbe798',
+//         type: 1,
+//         amount: 20000,
+//         createdAt: '2023-04-13T04:30:32.868Z',
+//         updatedAt: '2023-04-13T04:30:32.868Z',
+//         __v: 0
+//     },
+//     {
+//         status: 2,
+//         _id: uniqueId(),
+//         poolId: '64378550a3d8dc6589cbe798',
+//         type: 1,
+//         amount: 10000,
+//         createdAt: '2023-04-13T04:30:08.158Z',
+//         updatedAt: '2023-04-13T04:30:08.158Z',
+//         __v: 0
+//     }
+// ];
+
 const StakeOrders = ({ assetConfig }) => {
     const { t } = useTranslation();
     const [dataSource, setDataSource] = useState([]);
@@ -84,7 +168,7 @@ const StakeOrders = ({ assetConfig }) => {
                             <Skeletor width={20} height={20} circle />
                         </div>
                     </div>
-                    <div className="flex items-center justify-between leading-6 text-sm pt-2">
+                    <div className="flex items-center justify-between leading-6 text-sm mb:text-base mb pt-2">
                         <Skeletor width={100} height={10} />
                         <Skeletor width={100} height={10} />
                     </div>
@@ -114,18 +198,18 @@ const StakeOrders = ({ assetConfig }) => {
                                         {/* {idx !== 0 && <Divider className="w-full !my-4" />} */}
                                         <div className="py-3">
                                             <div className="flex items-center justify-between">
-                                                <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-sm">
+                                                <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-sm mb:text-base">
                                                     {t(`nao:pool:${item?.type === 1 ? 'lock2' : 'unlock'}`)} NAO
                                                 </div>
                                                 <div className="flex items-center space-x-2">
-                                                    <div className="text-sm font-semibold">
+                                                    <div className="text-sm mb:text-base font-semibold">
                                                         {formatNumber(item?.amount, assetConfig[447]?.assetDigit ?? 2)}{' '}
                                                         NAO
                                                     </div>
                                                     {/* <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" /> */}
                                                 </div>
                                             </div>
-                                            <div className="flex items-center justify-between text-xs pt-2">
+                                            <div className="flex items-center justify-between text-xs mb:text-sm pt-2">
                                                 <div className="text-txtSecondary dark:text-txtSecondary-dark">
                                                     {formatTime(item?.createdAt, 'dd/MM/yyyy HH:mm:ss')}
                                                 </div>
@@ -140,7 +224,7 @@ const StakeOrders = ({ assetConfig }) => {
                         <div className="flex flex-col justify-center items-center">
                             <div className={`flex items-center justify-center flex-col m-auto h-full min-h-[300px]`}>
                                 {isDark ? <NoDataDarkIcon /> : <NoDataLightIcon />}
-                                <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1">{t('nao:pool:no_transaction_history')}</div>
+                                <div className="text-xs mb:text-sm text-txtSecondary dark:text-txtSecondary-dark mt-1">{t('nao:pool:no_transaction_history')}</div>
                             </div>
                         </div>
                     )}

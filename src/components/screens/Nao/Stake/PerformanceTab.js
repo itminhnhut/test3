@@ -20,7 +20,89 @@ import { days, RangePopover } from '../Section/NaoPerformance';
 import classNames from 'classnames';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import { ArrowRight } from '../Section/NaoPool';
-import { Swiper } from 'swiper/react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+// const mock = [
+//     {
+//         _id: '6459c1bc9401d9667b650cf0',
+//         interest: {
+//             1: 222,
+//             22: 0.2006470868551077,
+//             72: 42135.88823957262,
+//             86: 0,
+//             447: 2.006470868551077
+//         },
+//         fromTime: '2023-04-30T17:00:00.000Z',
+//         toTime: '2023-05-07T16:59:59.999Z',
+//         interestUSD: {
+//             1: 2.5994871794871792,
+//             22: 0,
+//             72: 1.8006789845971205,
+//             86: 0,
+//             447: 0.09054842893974092
+//         }
+//     },
+//     {
+//         _id: '6459c1bc9401d9667b650cf1',
+//         interest: {
+//             1: 222,
+//             22: 0.2006470868551077,
+//             72: 42135.88823957262,
+//             86: 0,
+//             447: 2.006470868551077
+//         },
+//         fromTime: '2023-05-07T17:00:00.000Z',
+//         toTime: '2023-05-14T16:59:59.999Z',
+//         interestUSD: {
+//             1: 2.5994871794871792,
+//             22: 0,
+//             72: 1.8006789845971205,
+//             86: 0,
+//             447: 0.09054842893974092
+//         }
+//     },
+//     {
+//         _id: '6459c1bc9401d9667b650cf2',
+//         interest: {
+//             1: 222,
+//             22: 0.2006470868551077,
+//             72: 42135.88823957262,
+//             86: 0,
+//             447: 2.006470868551077
+//         },
+//         fromTime: '2023-05-14T17:00:00.000Z',
+//         toTime: '2023-05-21T16:59:59.999Z',
+//         interestUSD: {
+//             1: 2.5994871794871792,
+//             22: 0,
+//             72: 1.8006789845971205,
+//             86: 0,
+//             447: 0.09054842893974092
+//         }
+//     },
+//     {
+//         _id: '6459c1bc9401d9667b650cf3',
+//         interest: {
+//             1: 222,
+//             22: 0.2006470868551077,
+//             72: 42135.88823957262,
+//             86: 0,
+//             447: 2.006470868551077
+//         },
+//         fromTime: '2023-05-28T17:00:00.000Z',
+//         toTime: '2023-06-05T16:59:59.999Z',
+//         interestUSD: {
+//             1: 2.5994871794871792,
+//             22: 0,
+//             72: 1.8006789845971205,
+//             86: 0,
+//             447: 0.09054842893974092
+//         }
+//     }
+// ];
+
+const DeskStakingHistoryWrapper = styled.div`
+    height: ${(props) => `${props.height || 0}px`};
+`
 
 const getAssets = createSelector([(state) => state.utils, (utils, params) => params], (utils, params) => {
     const assets = {};
@@ -44,7 +126,6 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         i18n: { language }
     } = useTranslation();
     const [listHistory, setListHistory] = useState([]);
-    console.log('listHistory:', listHistory);
     const assetConfig = useSelector((state) => getAssets(state));
     const router = useRouter();
     const [tab, setTab] = useState(0);
@@ -57,6 +138,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
 
     const [actIdx, setActIdx] = useState(0);
     const sliderRef = useRef(null);
+    const deskProfitRef = useRef(null);
     const onNavigate = (isNext) => {
         if (sliderRef.current) {
             sliderRef.current.swiper[isNext ? 'slideNext' : 'slidePrev']();
@@ -236,35 +318,33 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             const sumUSDT = Object.values(item.interestUSD).reduce((a, b) => a + b, 0);
                             weekNumber--;
                             return (
-                                <div index={index}>
-                                    <div className="w-full">
-                                        <div className="flex text-txtSecondary dark:text-txtSecondary-dark">
-                                            <div className="">
-                                                {t('nao:pool:week', { value: listHistory.length - index })} {formatTime(item.fromTime, 'dd/MM/yyyy')} -{' '}
-                                                {formatTime(item.toTime, 'dd/MM/yyyy')}
-                                            </div>
-                                            <div className="ml-8">
-                                                {t('nao:pool:equivalent')} ${formatNumber(sumUSDT, 4)}
-                                            </div>
+                                <div className="w-full" key={item["_id"] || index}>
+                                    <div className="flex text-txtSecondary dark:text-txtSecondary-dark">
+                                        <div className="">
+                                            {t('nao:pool:week', { value: listHistory.length - index })} {formatTime(item.fromTime, 'dd/MM/yyyy')} -{' '}
+                                            {formatTime(item.toTime, 'dd/MM/yyyy')}
                                         </div>
-                                        <div className="pt-6 sm:pt-8 flex flex-col space-y-4 sm:space-y-6">
-                                            <div className="w-full sm:p-0.5">
-                                                <HistoryInterest item={item} assetId={447} logoPath="/images/nao/ic_nao.png" />
+                                        <div className="ml-8">
+                                            {t('nao:pool:equivalent')} ${formatNumber(sumUSDT, 4)}
+                                        </div>
+                                    </div>
+                                    <div className="pt-6 mb:pt-8 flex flex-col space-y-4 mb:space-y-6">
+                                        <div className="w-full mb:p-0.5">
+                                            <HistoryInterest item={item} assetId={447} logoPath="/images/nao/ic_nao.png" />
+                                        </div>
+                                        <div className="w-full mb:p-0.5">
+                                            <HistoryInterest item={item} assetId={72} logoPath="/images/nao/ic_vndc.png" />
+                                        </div>
+                                        <div className="w-full mb:p-0.5">
+                                            <HistoryInterest item={item} assetId={1} logoPath={`/images/coins/64/${1}.png`} />
+                                        </div>
+                                        {item.interest?.[86] && item.interest?.[86] > 0 ? (
+                                            <div className="w-full  mb:p-0.5">
+                                                <HistoryInterest item={item} assetId={86} logoPath={'/images/nao/ic_onus.png'} />
                                             </div>
-                                            <div className="w-full sm:p-0.5">
-                                                <HistoryInterest item={item} assetId={72} logoPath="/images/nao/ic_vndc.png" />
-                                            </div>
-                                            <div className="w-full sm:p-0.5">
-                                                <HistoryInterest item={item} assetId={1} logoPath={`/images/coins/64/${1}.png`} />
-                                            </div>
-                                            {item.interest?.[86] && item.interest?.[86] > 0 ? (
-                                                <div className="w-full  sm:p-0.5">
-                                                    <HistoryInterest item={item} assetId={86} logoPath={'/images/nao/ic_onus.png'} />
-                                                </div>
-                                            ) : null}
-                                            <div className="w-full sm:p-0.5">
-                                                <HistoryInterest item={item} assetId={22} logoPath={`/images/coins/64/${22}.png`} />
-                                            </div>
+                                        ) : null}
+                                        <div className="w-full mb:p-0.5">
+                                            <HistoryInterest item={item} assetId={22} logoPath={`/images/coins/64/${22}.png`} />
                                         </div>
                                     </div>
                                 </div>
@@ -395,10 +475,10 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
             <div className="mt-12 mb:mt-20">
                 <TextLiner className="pb-2 mb:!text-2xl !text-xl">{t('common:transaction_history')}</TextLiner>
                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">{t('nao:pool:history_description')}</div>
-                <div className="mt-8">
+                <div className="mt-8 hidden mb:block">
                     <div className="flex -m-3">
                         <div className="w-1/2 p-3">
-                            <CardNao className="!p-6 w-full">
+                            <CardNao className="!p-6 w-full" ref={deskProfitRef}>
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="text-txtPrimary dark:text-txtPrimary-dark text-lg font-semibold">{t('nao:pool:profit')}</div>
 
@@ -429,6 +509,18 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                 </Swiper>
                             </CardNao>
                         </div>
+                        <div className="w-1/2 p-3">
+                            <CardNao className="!py-6 h-full flex flex-col justify-between !px-2">
+                                <div className="text-txtPrimary dark:text-txtPrimary-dark text-lg font-semibold px-4">Staking</div>
+                                <DeskStakingHistoryWrapper
+                                    // height={deskProfitRef?.current ? deskProfitRef.current.offsetHeight - 114 : 0}
+                                    height={264}
+                                    className="overflow-y-auto px-4"
+                                >
+                                    <StakeOrders assetConfig={assetConfig} />
+                                </DeskStakingHistoryWrapper>
+                            </CardNao>
+                        </div>
                     </div>
                 </div>
                 <div className="mb:hidden">
@@ -443,7 +535,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     <TabContent active={tab === 0}>
                         {tab === 0 &&
                             (listHistory.length > 0 ? (
-                                <div className="grid sm:grid-cols-2 gap-3">
+                                <div className="grid mb:grid-cols-2 gap-3">
                                     {listHistory.map((item, index) => {
                                         const sumUSDT = Object.values(item.interestUSD).reduce((a, b) => a + b, 0);
                                         return (

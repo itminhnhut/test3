@@ -23,6 +23,7 @@ import { useRouter } from 'next/router';
 ('next/router');
 import { useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
 import NaoHeader from 'components/screens/Nao/NaoHeader';
+import NaoFooter from 'components/screens/Nao/NaoFooter';
 
 const getAssetNao = createSelector([(state) => state.utils.assetConfig, (utils, params) => params], (assets, params) => {
     return assets.find((rs) => rs.assetCode === params);
@@ -68,9 +69,10 @@ const Stake = () => {
             <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0 mb:block hidden">
                 <NaoHeader />
             </div>
-            <div className="mb_only:sticky top-0 z-10 px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
-                <div className="stake_header bg-bgPrimary dark:bg-bgPrimary-dark relative z-[9]">
-                    {/* <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
+            <div className="mb:min-h-[calc(100vh-16.75rem)]">
+                <div className="mb_only:sticky top-0 z-10 px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                    <div className="stake_header bg-bgPrimary dark:bg-bgPrimary-dark relative z-[9]">
+                        {/* <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                     language={language} t={t} />
                 <div className="flex items-center justify-between px-4 pt-6">
                     <img src={getS3Url("/images/nao/ic_nao.png")} alt="" width={40} height={40} />
@@ -87,31 +89,35 @@ const Stake = () => {
                         </div>
                     }
                 </div> */}
-                    <div className="flex items-center pb-4 pt-6 mb:pt-20 mb:pb-12">
-                        <ChevronLeft size={20} onClick={() => router.back()} className="mb:hidden mr-2" />
-                        <label onClick={() => router.back()} className="font-semibold mb:text-5xl">
-                            {t('nao:governance_pool')}
-                        </label>
+                        <div className="flex items-center pb-4 pt-6 mb:pt-20 mb:pb-12">
+                            <ChevronLeft size={20} onClick={() => router.back()} className="mb:hidden mr-2" />
+                            <label onClick={() => router.back()} className="font-semibold mb:text-5xl">
+                                {t('nao:governance_pool')}
+                            </label>
+                        </div>
+                        <Tabs isMobile={isMobile} tab={tab}>
+                            <TabItem className="py-4 mb:w-[fit-content]" onClick={() => setTab(0)} active={tab === 0}>
+                                {t('nao:pool:stake_nao')}
+                            </TabItem>
+                            <TabItem className="py-4 mb:w-[fit-content]" onClick={() => setTab(1)} active={tab === 1}>
+                                {t('nao:pool:performance')}
+                            </TabItem>
+                        </Tabs>
                     </div>
-                    <Tabs isMobile={isMobile} tab={tab}>
-                        <TabItem className="py-4 mb:w-[fit-content]" onClick={() => setTab(0)} active={tab === 0}>
-                            {t('nao:pool:stake_nao')}
-                        </TabItem>
-                        <TabItem className="py-4 mb:w-[fit-content]" onClick={() => setTab(1)} active={tab === 1}>
-                            {t('nao:pool:performance')}
-                        </TabItem>
-                    </Tabs>
+                </div>
+                <div className="px-4 nao:px-0 max-w-[72.5rem] w-full m-auto !mt-0">
+                    <div className={`h-full w-full ${!tab ? 'py-8' : 'py-6'}`}>
+                        <div className={tab !== 0 ? 'hidden' : ''}>
+                            <StakeTab ref={refStake} assetNao={assetNao} dataSource={dataSource} getStake={getStake} />
+                        </div>
+                        <div className={tab !== 1 ? 'hidden' : height < 600 ? 'min-h-[600px] relative' : ''}>
+                            <PerformanceTab onShowLock={onShowLock} assetNao={assetNao} isSmall={height < 600} dataSource={dataSource} />
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="px-4 nao:px-0 max-w-[72.5rem] w-full m-auto !mt-0">
-                <div className={`h-full w-full ${!tab ? 'py-8' : 'py-6'}`}>
-                    <div className={tab !== 0 ? 'hidden' : ''}>
-                        <StakeTab ref={refStake} assetNao={assetNao} dataSource={dataSource} getStake={getStake} />
-                    </div>
-                    <div className={tab !== 1 ? 'hidden' : height < 600 ? 'min-h-[600px] relative' : ''}>
-                        <PerformanceTab onShowLock={onShowLock} assetNao={assetNao} isSmall={height < 600} dataSource={dataSource} />
-                    </div>
-                </div>
+            <div className="hidden mb:block">
+                <NaoFooter />
             </div>
         </LayoutNaoToken>
     );
