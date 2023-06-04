@@ -42,6 +42,7 @@ const ContestWeekRanks = ({
     const isMobile = width <= 640;
     const limit = isMobile ? 10 : 20;
     const rank = 'individual_rank_volume';
+    const checked = useRef(false);
 
     useEffect(() => {
         setPage(1);
@@ -167,7 +168,8 @@ const ContestWeekRanks = ({
         for (let i = 0; i < weeks.numWeeks; i++) {
             const start = new Date(weeks.weeks[i].start).getTime();
             const end = new Date(weeks.weeks[i].end).getTime();
-            if (now > start && now < end) {
+            if (now > start && now < end && !checked.current) {
+                checked.current = true;
                 onFilter(i);
             }
             rs.push(
