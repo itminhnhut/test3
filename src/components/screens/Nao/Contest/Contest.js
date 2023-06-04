@@ -210,8 +210,8 @@ export const seasons = [
     },
     {
         season: 10,
-        start: '2023-06-04T17:00:00.000Z',
-        end: '2023-07-02T17:00:00.000Z',
+        start: '2023-05-31T10:00:00.000Z',
+        end: '2023-06-30T10:00:00.000Z',
         contest_id: 13,
         title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 7', en: 'NAO Futures VNDC – Nami Championship Season 7' },
         title: { vi: 'NAO Futures VNDC', en: 'NAO Futures VNDC' },
@@ -224,6 +224,10 @@ export const seasons = [
         rules: {
             vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-7',
             en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-7'
+        },
+        weekly_contest_time: {
+            start: '2023-06-04T17:00:00.000Z',
+            end: '2023-07-02T17:00:00.000Z'
         },
         total_rewards: '500,000,000 VNDC',
         total_weekly_rewards: '66,000,000 VNDC',

@@ -14,7 +14,17 @@ import RePagination from 'components/common/ReTable/RePagination';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import { addDays, endOfDay, endOfWeek } from 'date-fns';
 
-const ContestWeekRanks = ({ previous, contest_id, total_weekly_rewards, quoteAsset: q, lastUpdated, top_ranks_week, userID, minVolumeInd, start, end }) => {
+const ContestWeekRanks = ({
+    previous,
+    contest_id,
+    total_weekly_rewards,
+    quoteAsset: q,
+    lastUpdated,
+    top_ranks_week,
+    userID,
+    minVolumeInd,
+    weekly_contest_time: { start, end }
+}) => {
     const [tab, setTab] = useState(0);
     const [quoteAsset, setQuoteAsset] = useState(q);
     const {
