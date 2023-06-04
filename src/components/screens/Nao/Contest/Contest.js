@@ -210,8 +210,8 @@ export const seasons = [
     },
     {
         season: 10,
-        start: '2023-05-31T10:00:00.000Z',
-        end: '2023-06-30T10:00:00.000Z',
+        start: '2023-05-31T17:00:00.000Z',
+        end: '2023-06-30T17:00:00.000Z',
         contest_id: 13,
         title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 7', en: 'NAO Futures VNDC – Nami Championship Season 7' },
         title: { vi: 'NAO Futures VNDC', en: 'NAO Futures VNDC' },
