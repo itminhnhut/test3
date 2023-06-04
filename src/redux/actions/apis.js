@@ -273,6 +273,11 @@ export const API_GET_FUTURES_SETTING = API_PREFIX + 'futures/setting';
 export const API_GET_NAO_FUTURES_SETTING = API_PREFIX + 'nao/setting';
 
 //portfolio
+export const API_FUTURES_STATISTIC_OVERVIEW = API_V3_PREFIX + 'wallet/history/futures-statistic/overview'
+export const API_FUTURES_STATISTIC_PAIRS = API_V3_PREFIX + 'wallet/history/futures-statistic/ah-my-favorite-pairs'
+export const API_FUTURES_STATISTIC_TOP_POSITIONS = API_V3_PREFIX + 'wallet/history/futures-statistic/top-positions'
+export const API_FUTURES_STATISTIC_PNL = API_V3_PREFIX + 'wallet/history/futures-statistic/pnl-fluctuation'
+
 export const API_PORTFOLIO_OVERVIEW = API_V3_PREFIX + 'portfolio/futures/overview';
 export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + 'portfolio/futures/account';
 export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + 'portfolio/futures/summary';
@@ -299,6 +304,9 @@ export const API_CHECK_REFERRAL = API_V3_PREFIX + 'users/referral/is-exist';
 export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends-v2';
 export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + 'users/referral/commission-history';
 export const API_GET_REFERRAL_FRIENDS_BY_CODE = API_V3_PREFIX + 'users/referral/:code/friends-detail';
+export const API_GET_CONTEST_REFERRAL = API_V3_PREFIX + 'users/referral/getTopReferral';
+
+
 
 // convert small balance to Nami
 export const API_GET_NAMI_RATE = API_V3_PREFIX + 'convert/nami_asset_value';

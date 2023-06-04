@@ -169,7 +169,7 @@
         "team": "Tên đội",
         "team_label": "Đội",
         "total_trades": "Số lệnh",
-        "name": "Tên",
+        "name": "Họ và tên",
         "captain": "Đội trưởng",
         "information": "Thông tin",
         "team_ranking": "Bảng xếp hạng đội nhóm",
@@ -241,7 +241,14 @@
         "rules": "Thể lệ",
         "week": "Tuần {{value}}",
         "start_time": "Thời gian bắt đầu",
-        "end_time": "Thời gian kết thúc"
+        "end_time": "Thời gian kết thúc",
+        "referral": {
+            "description": "Tranh giải cá nhân với tổng giải thưởng ",
+            "score": "Điểm",
+            "ranking": "Bảng xếp hạng",
+            "number_of_friends": "Số bạn bè",
+            "tooltip_friends": "Bạn bè cần hoàn tất KYC trong thời gian diễn ra chương trình, đọc thêm tại “Thể lệ chi tiết”"
+        }
     },
     "year_summary": {
         "title": "Tổng kết NAO Futures {{version}}",

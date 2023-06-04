@@ -238,6 +238,9 @@ module.exports = {
             dark: {
                 ...commonColors.dark,
                 DEFAULT: commonColors.dark.dark
+            },
+            purple: {
+                ...commonColors.purple
             }
         },
         extend: {

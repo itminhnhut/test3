@@ -48,6 +48,7 @@
     "hours": "hours",
     "second": "second",
     "seconds": "seconds",
+    "week": "Week",
     "day": "day",
     "days": "days",
     "month": "month",
@@ -236,7 +237,9 @@
         "max_opt": "Tối đa",
         "view_history": "View History",
         "reset": "Đặt lại",
-        "view_portfolio": "Xem Portfolio"
+        "view_portfolio": "Xem Portfolio",
+        "apply": "Apply",
+        "select_time": "Select time"
     },
     "global_notice": {
         "launchpad_maintain": "To provide the best experience for Investors, <span>Nami.Exchange</span> will suspend <span>Off-chain Deposit/Withdrawal</span> before and after 1 hour from the time of Launchpad. Investors can still use <span>On-Chain Deposit/Withdrawal</span>.",
@@ -288,7 +291,7 @@
         "time": {
             "all": "All",
             "days": "24h",
-            "week": "Week",
+            "week": "1 Week",
             "1month": "1 Month",
             "3month": "3 Month"
         },
@@ -343,6 +346,7 @@
     "several_days": "Several Days",
     "filter": "Filter",
     "custom": "Custom",
+    "custom_2": "Custom",
     "custom_date": "Custom Date",
     "countdown_tooltip": "For reference only, actual funding time will be determined based on server time",
     "users": "{{value}} users",
@@ -376,6 +380,7 @@
     "select_intervals": "Select Intervals",
     "chat_with_support": "Chat with Support",
     "others": "Others",
+    "others_2": "Others",
     "convert": "Convert",
     "futures_short": "Futures",
     "spot_short": "Exchange",
@@ -383,6 +388,14 @@
     "gainers": "Gainers",
     "losers": "Losers",
     "trending": "Trending",
+    "position": {
+        "buy": "Buy",
+        "sell": "Sell",
+        "sum_buy": "Total Buy position",
+        "sum_sell": "Total Sell position",
+        "max_profit": "Lợi nhuận cao nhất",
+        "min_profit": "Lợi nhuận thấp nhất"
+    },
     "no_assets_available": "No assets available for conversion",
     "confirm_convert": "Conversion confirmation",
     "convert_success": "Successful conversion",
