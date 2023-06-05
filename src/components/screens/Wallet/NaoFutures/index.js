@@ -310,7 +310,7 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                                         <ButtonV2 variants="secondary" className="px-6 py-3 !space-x-2 !font-semibold !text-base !w-auto">
                                             <PortfolioIcon size={16} />
 
-                                            <span>Thống kê</span>
+                                            <span>{t('wallet:statistics')}</span>
                                         </ButtonV2>
                                     </a>
                                 </Link>
@@ -332,7 +332,7 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                     <a className="block w-full">
                         <ButtonV2 variants="secondary" className="py-3 !space-x-2 !font-semibold !text-base w-full">
                             <PortfolioIcon size={16} />
-                            <span>Thống kê</span>
+                            <span>{t('wallet:statistics')}</span>
                         </ButtonV2>
                     </a>
                 </Link>

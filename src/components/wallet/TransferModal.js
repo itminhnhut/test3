@@ -494,25 +494,27 @@ const TransferModal = ({ isMobile, alert }) => {
                         dropList: () =>
                             state.openList?.toWalletList && (
                                 <div className="shadow-card_light space-y-3 absolute py-4 z-20 mt-1 rounded-xl left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
-                                    {Object.keys(ALLOWED_WALLET_TO).map((walletType) => {
-                                        // const isDisable = state.fromWallet === walletType;
-                                        return (
-                                            <div
-                                                key={`wallet_type_to__${walletType}`}
-                                                className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
-                                                onClick={() => onSetWallet('toWallet', walletType)}
-                                            >
-                                                {renderWalletWithType({ walletType: ALLOWED_WALLET_TO[walletType], isDropdown: false })}
-                                                {ALLOWED_WALLET_TO[walletType] === state.toWallet && (
-                                                    <CheckCircleIcon
-                                                        size={16}
-                                                        color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
-                                                        checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}
-                                                    />
-                                                )}
-                                            </div>
-                                        );
-                                    })}
+                                    {Object.keys(ALLOWED_WALLET_TO)
+                                        .filter((wallet) => wallet !== state.fromWallet)
+                                        .map((walletType) => {
+                                            // const isDisable = state.fromWallet === walletType;
+                                            return (
+                                                <div
+                                                    key={`wallet_type_to__${walletType}`}
+                                                    className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
+                                                    onClick={() => onSetWallet('toWallet', walletType)}
+                                                >
+                                                    {renderWalletWithType({ walletType: ALLOWED_WALLET_TO[walletType], isDropdown: false })}
+                                                    {ALLOWED_WALLET_TO[walletType] === state.toWallet && (
+                                                        <CheckCircleIcon
+                                                            size={16}
+                                                            color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
+                                                            checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}
+                                                        />
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
                                 </div>
                             )
                     })}

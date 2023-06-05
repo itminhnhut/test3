@@ -362,7 +362,11 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                 >
                     {t('common:withdraw')}
                 </ButtonV2>
-                <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" variants="secondary">
+                <ButtonV2
+                    onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.NAO_FUTURES }))}
+                    className="px-6"
+                    variants="secondary"
+                >
                     {t('common:transfer')}
                 </ButtonV2>
             </div>
@@ -454,7 +458,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                     setTransferModal({
                                         isVisible: true,
                                         fromWallet: WalletType.SPOT,
-                                        toWallet: WalletType.FUTURES,
+                                        toWallet: WalletType.NAO_FUTURES,
                                         asset: curAssetCodeAction
                                     })
                                 )
@@ -778,7 +782,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                                 setTransferModal({
                                     isVisible: true,
                                     fromWallet: WalletType.SPOT,
-                                    toWallet: WalletType.FUTURES,
+                                    toWallet: WalletType.NAO_FUTURES,
                                     asset: assetName
                                 })
                             )

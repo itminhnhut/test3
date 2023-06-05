@@ -216,7 +216,7 @@ const OverviewWallet = (props) => {
                 break;
             case TRANSFER + EXCHANGE:
                 flag.current = true;
-                dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }));
+                dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.NAO_FUTURES }));
                 break;
             case 'details_exchange':
                 if (flag.current) {
@@ -300,7 +300,7 @@ const OverviewWallet = (props) => {
                             </div>
                             <div>{renderOverviewEstBalance()}</div>
                             {/* <FuturePortfolioIcon size={24} /> */}
-                            <PortfolioIcon className="md:hidden" />
+                            {/* <PortfolioIcon className="md:hidden" /> */}
                         </div>
                     </div>
                     <div className="hidden md:block">
@@ -372,7 +372,7 @@ const OverviewWallet = (props) => {
                             </ButtonV2>
                             <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
                             <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(STATS, '/statistics')}>
-                                Thống kê
+                                {t('wallet:statistics')}
                             </ButtonV2>
                         </div>
                     </div>
@@ -398,7 +398,7 @@ const OverviewWallet = (props) => {
                             </ButtonV2>
                             <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
                             <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(STATS, '/statistics')}>
-                                Thống kê
+                                {t('wallet:statistics')}
                             </ButtonV2>
                         </div>
                     </div>
