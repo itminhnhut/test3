@@ -181,7 +181,7 @@ const OverviewWallet = (props) => {
 
     const [isShowAction, setIsShowAction] = useState({});
     const { EXCHANGE, FUTURES, PARTNERS, NAO_FUTURES } = ActionType;
-    const { DEPOSIT, WITHDRAW, TRANSFER, STATS } = ActionCategory;
+    const { DEPOSIT, WITHDRAW, TRANSFER } = ActionCategory;
     const flag = useRef(false);
     const onHandleClick = (key, href) => {
         switch (key) {
@@ -196,10 +196,6 @@ const OverviewWallet = (props) => {
             case PARTNERS:
                 flag.current = true;
                 setIsShowAction({ [PARTNERS]: true });
-                break;
-            case STATS:
-                flag.current = true;
-                router.push(href);
                 break;
             case DEPOSIT + EXCHANGE:
                 flag.current = true;
@@ -374,10 +370,6 @@ const OverviewWallet = (props) => {
                             <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(TRANSFER + FUTURES)}>
                                 {t('common:transfer')}
                             </ButtonV2>
-                            <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
-                            <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(STATS, '/statistics')}>
-                                {t('wallet:statistics')}
-                            </ButtonV2>
                         </div>
                     </div>
                 </CardWallet>
@@ -399,10 +391,6 @@ const OverviewWallet = (props) => {
                         <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
                             <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(TRANSFER + NAO_FUTURES)}>
                                 {t('common:transfer')}
-                            </ButtonV2>
-                            <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
-                            <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(STATS, '/statistics')}>
-                                {t('wallet:statistics')}
                             </ButtonV2>
                         </div>
                     </div>
@@ -554,8 +542,7 @@ export const ActionType = {
 const ActionCategory = {
     WITHDRAW: 'WITHDRAW',
     DEPOSIT: 'DEPOSIT',
-    TRANSFER: 'TRANSFER',
-    STATS: 'STATS'
+    TRANSFER: 'TRANSFER'
 };
 
 const CardWallet = styled.div.attrs(({ onClick, isSmallScreen }) => ({
