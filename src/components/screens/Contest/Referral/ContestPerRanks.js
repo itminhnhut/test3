@@ -21,7 +21,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
     const { width } = useWindowSize();
     const [dataSource, setDataSource] = useState([]);
     const [top3, setTop3] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const lastUpdatedTime = useRef(null);
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
@@ -222,6 +222,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                 <div className="dark:bg-dark-4 rounded-xl border border-divider dark:border-none">
                     <Table
                         loading={loading}
+                        limit={limit}
                         noItemsMessage={t('nao:contest:no_rank')}
                         dataSource={dataFilter}
                         classWrapper="!text-sm sm:!text-base !mt-0"
