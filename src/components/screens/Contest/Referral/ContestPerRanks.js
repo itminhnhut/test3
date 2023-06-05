@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { TextLiner, CardNao, Table, Column, Tooltip, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
@@ -98,6 +98,24 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
         );
     };
 
+    const loader = useMemo(() => {
+        const arr = [];
+        for (let i = 1; i <= limit; i++) {
+            arr.push(
+                <CardNao key={i} className={`flex gap-4 sm:gap-6 p-4 mt-3 border border-divider dark:border-none`}>
+                    <div className="flex flex-col space-y-6">
+                        <Skeletor width={200} height={24} />
+                        <div className="flex items-center justify-between">
+                            <Skeletor width={200} height={20} />
+                            <Skeletor width={20} height={20} />
+                        </div>
+                    </div>
+                </CardNao>
+            );
+        }
+        return arr;
+    }, [limit]);
+
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
@@ -156,68 +174,76 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                 </div>
             )}
             {width <= 640 ? (
-                <>
-                    {Array.isArray(dataSource) && dataSource?.length > 0 ? (
-                        dataFilter.map((item, index) => {
-                            return (
-                                <CardNao key={index} className={`flex gap-4 sm:gap-6 p-4 mt-3 border border-divider dark:border-none`}>
-                                    <div className="flex-1 text-sm sm:text-base space-y-7">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center space-x-3">
-                                                <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
-                                                    <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
-                                                </div>
-                                                <div>
-                                                    <div className="flex items-center space-x-2">
+                loading ? (
+                    loader
+                ) : (
+                    <>
+                        {Array.isArray(dataSource) && dataSource?.length > 0 ? (
+                            dataFilter.map((item, index) => {
+                                return (
+                                    <CardNao key={index} className={`flex gap-4 sm:gap-6 p-4 mt-3 border border-divider dark:border-none`}>
+                                        <div className="flex-1 text-sm sm:text-base space-y-7">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center space-x-3">
+                                                    {/* <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
+                                                    <ImageNao
+                                                        className="object-cover w-14 h-14 rounded-full"
+                                                        src={getS3Url('/images/logo/nami_hawaii.png')}
+                                                        alt=""
+                                                    />
+                                                </div> */}
+                                                    <div>
+                                                        {/* <div className="flex items-center space-x-2">
                                                         <label className="font-semibold capitalize max-w-[200px] truncate">{capitalize(item?.name)}</label>
                                                         {item?.is_onus_master && <TickFbIcon size={16} />}
+                                                    </div> */}
+                                                        <div className="cursor-pointer text-base">{item?.[userID]}</div>
                                                     </div>
-                                                    <div className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">ID: {item?.[userID]}</div>
+                                                </div>
+                                                <div className="min-w-[24px] text-txtSecondary dark:text-txtSecondary-dark">
+                                                    {loading ? (
+                                                        <Skeletor width={24} height={24} circle />
+                                                    ) : item?.[rank] && item?.[rank] <= top_ranks_per ? (
+                                                        <div className="w-6 h-6 flex-shrink-0 text-center relative font-SourceCodePro">
+                                                            <img
+                                                                src={getS3Url('/images/nao/contest/ic_top_teal.png')}
+                                                                className="w-6 h-6"
+                                                                width="24"
+                                                                height="24"
+                                                                alt=""
+                                                            />
+                                                            <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
+                                                                {index + 4}
+                                                            </span>
+                                                        </div>
+                                                    ) : (
+                                                        item?.[rank] || null
+                                                    )}
                                                 </div>
                                             </div>
-                                            <div className="min-w-[24px] text-txtSecondary dark:text-txtSecondary-dark">
-                                                {loading ? (
-                                                    <Skeletor width={24} height={24} circle />
-                                                ) : item?.[rank] && item?.[rank] <= top_ranks_per ? (
-                                                    <div className="w-6 h-6 flex-shrink-0 text-center relative font-SourceCodePro">
-                                                        <img
-                                                            src={getS3Url('/images/nao/contest/ic_top_teal.png')}
-                                                            className="w-6 h-6"
-                                                            width="24"
-                                                            height="24"
-                                                            alt=""
-                                                        />
-                                                        <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
-                                                            {index + 4}
-                                                        </span>
-                                                    </div>
-                                                ) : (
-                                                    item?.[rank] || null
-                                                )}
+                                            <div className="flex items-center justify-between">
+                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                    {t('nao:contest:referral:number_of_friends')}
+                                                </label>
+                                                <span className="text-right">{formatNumber(item?.total, 0)}</span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center justify-between">
-                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">
-                                                {t('nao:contest:referral:number_of_friends')}
-                                            </label>
-                                            <span className="text-right">{formatNumber(item?.total, 0)}</span>
-                                        </div>
-                                    </div>
-                                </CardNao>
-                            );
-                        })
-                    ) : (
-                        <div className={`flex items-center justify-center flex-col m-auto pt-8`}>
-                            <div className="block dark:hidden">
-                                <NoDataLightIcon />
+                                    </CardNao>
+                                );
+                            })
+                        ) : (
+                            <div className={`flex items-center justify-center flex-col m-auto pt-8`}>
+                                <div className="block dark:hidden">
+                                    <NoDataLightIcon />
+                                </div>
+                                <div className="hidden dark:block">
+                                    <NoDataDarkIcon />
+                                </div>
+                                <div className="mt-1 text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:no_rank')}</div>
                             </div>
-                            <div className="hidden dark:block">
-                                <NoDataDarkIcon />
-                            </div>
-                            <div className="mt-1 text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:no_rank')}</div>
-                        </div>
-                    )}
-                </>
+                        )}
+                    </>
+                )
             ) : (
                 <div className="dark:bg-dark-4 rounded-xl border border-divider dark:border-none">
                     <Table
@@ -235,7 +261,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                             fieldName={rank}
                             cellRender={renderRank}
                         />
-                        <Column minWidth={300} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
+                        {/* <Column minWidth={300} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} /> */}
                         <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'Nami ID'} fieldName={userID} />
                         <Column
                             minWidth={100}
