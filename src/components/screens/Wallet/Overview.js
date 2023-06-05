@@ -275,7 +275,11 @@ const OverviewWallet = (props) => {
                 <ButtonV2 onClick={() => router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL))} className="px-6" variants="secondary">
                     {t('common:withdraw')}
                 </ButtonV2>
-                <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" variants="secondary">
+                <ButtonV2
+                    onClick={() => dispatch(setTransferModal({ isVisible: true, toWallet: WalletType.NAO_FUTURES }))}
+                    className="px-6"
+                    variants="secondary"
+                >
                     {t('common:transfer')}
                 </ButtonV2>
             </div>
