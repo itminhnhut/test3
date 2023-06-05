@@ -198,13 +198,13 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
                                         text: t('dw_partner:take_money_already')
                                     };
-                                    reportBtn = (
-                                        <AppealButton
-                                            onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
-                                            timeDispute={state?.orderDetail?.countdownTimeDispute}
-                                            timeExpire={state.orderDetail?.timeExpire}
-                                        />
-                                    );
+                                    // reportBtn = (
+                                    //     <AppealButton
+                                    //         onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
+                                    //         timeDispute={state?.orderDetail?.countdownTimeDispute}
+                                    //         timeExpire={state.orderDetail?.timeExpire}
+                                    //     />
+                                    // );
                                 }
                             }
                         }
@@ -298,13 +298,13 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
                                         text: t('dw_partner:take_money_already')
                                     };
-                                    reportBtn = (
-                                        <AppealButton
-                                            onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
-                                            timeDispute={state?.orderDetail?.countdownTimeDispute}
-                                            timeExpire={state.orderDetail?.timeExpire}
-                                        />
-                                    );
+                                    // reportBtn = (
+                                    //     <AppealButton
+                                    //         onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
+                                    //         timeDispute={state?.orderDetail?.countdownTimeDispute}
+                                    //         timeExpire={state.orderDetail?.timeExpire}
+                                    //     />
+                                    // );
                                 }
                             }
                         }
@@ -345,7 +345,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         {secondaryBtn?.text}
                     </ButtonV2>
                 )}
-                {reportBtn}
+                {/* update 09/05/2023 -> bỏ button khiếu nại*/}
+                {/* {reportBtn} */}
             </div>
         );
     }, [mode, state?.orderDetail, t]);

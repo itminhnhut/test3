@@ -48,6 +48,7 @@
     "hours": "giờ",
     "second": "giây",
     "seconds": "giây",
+    "week": "Tuần",
     "day": "ngày",
     "days": "ngày",
     "month": "tháng",
@@ -236,7 +237,9 @@
         "max_opt": "Tối đa",
         "view_history": "Xem lịch sử",
         "reset": "Đặt lại",
-        "view_portfolio": "Xem Portfolio"
+        "view_portfolio": "Xem Portfolio",
+        "apply": "Áp dụng",
+        "select_time": "Chọn thời gian"
     },
     "global_notice": {
         "launchpad_maintain": "Để mang lại trải nghiệm tốt nhất cho nhà đầu tư, <span>Nami.Exchange</span> sẽ tạm dừng <span>Nạp/Rút Off-Chain</span> trước và sau 1 tiếng tính từ thời điểm Launchpad diễn ra. Nhà đầu tư vẫn có thể dùng <span>Nạp/Rút On-Chain</span>.",
@@ -339,6 +342,7 @@
     "several_days": "Nhiều ngày",
     "filter": "Lọc",
     "custom": "Tùy chỉnh",
+    "custom_2": "Tùy chọn",
     "custom_date": "Tùy chỉnh",
     "countdown_tooltip": "Thời gian đếm ngược chỉ mang tính chất tham khảo, thời gian chi trả funding thực tế sẽ phụ thuộc vào giờ tiêu chuẩn của máy chủ",
     "close_order": "Đóng lệnh",
@@ -372,6 +376,7 @@
     "select_intervals": "Chọn khung thời gian",
     "chat_with_support": "Chat với hỗ trợ",
     "others": "Tác vụ",
+    "others_2": "Khác",
     "convert": "Chuyển đổi",
     "futures_short": "Futures",
     "spot_short": "Exchange",
@@ -379,6 +384,14 @@
     "favourite": "Yêu thích",
     "gainers": "Tăng giá",
     "losers": "Giảm giá",
+    "position": {
+        "buy": "Vị thế Mua",
+        "sell": "Vị thế Bán",
+        "sum_buy": "Tổng vị thế Mua",
+        "sum_sell": "Tổng vị thế Bán",
+        "max_profit": "Lợi nhuận cao nhất",
+        "min_profit": "Lợi nhuận thấp nhất"
+    },
     "no_assets_available": "Không có tài sản khả dụng để quy đổi",
     "confirm_convert": "Xác nhận chuyển đổi",
     "convert_success": "Chuyển đổi thành công",

@@ -22,6 +22,7 @@ const index = ({
     pagingPrevNext,
     onRowClick,
     showPaging = true,
+    textEmptyCustom,
     ...props
 }) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -79,7 +80,7 @@ const index = ({
                 isNamiV2
                 height={height}
                 loading={loading}
-                emptyText={<NoData loading={loading} isSearch={!!isSearch} className="!text-base" />}
+                emptyText={<NoData text={textEmptyCustom} loading={loading} isSearch={!!isSearch} className="!text-base" />}
                 onRowClick={onRowClick}
                 {...props}
             />

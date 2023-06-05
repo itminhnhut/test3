@@ -2,7 +2,7 @@ import React, { memo, useContext, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { emitWebViewEvent, formatCurrency, formatNumber, getS3Url } from 'redux/actions/utils';
+import { emitWebViewEvent, formatCurrency, formatNumber, getS3Url, getSignature } from 'redux/actions/utils';
 import OrderBalance from 'components/screens/Nao_futures/Futures/TabOrders/OrderBalance';
 import TradingLabel from 'components/trade/TradingLabel';
 import { useSelector } from 'react-redux';
@@ -15,12 +15,16 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
     const ordersList = useSelector(state => state?.futures?.ordersList)
     const context = useContext(AlertContext);
     const [disabled, setDisabled] = useState(false)
-
+    const auth = useSelector((state) => state.auth?.user);
     const onOrder = (side, price) => {
         if (disabled || isError) return;
         setDisabled(true);
         const sl = price - ((side === VndcFutureOrderType.Side.BUY ? price : -price) * 0.05)
         const tp = price + ((side === VndcFutureOrderType.Side.SELL ? -price : price) * 0.05)
+
+        const timestamp = Date.now()
+        const signature = getSignature(auth?.code, timestamp)
+
         const params = {
             symbol: pairConfig?.symbol,
             type: VndcFutureOrderType.Type.MARKET,
@@ -31,7 +35,9 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
             sl: +sl.toFixed(decimals.decimalScalePrice),
             tp: +tp.toFixed(decimals.decimalScalePrice),
             quoteQty,
-            useQuoteQty: true
+            useQuoteQty: true,
+            timestamp,
+            signature
         };
         placeFuturesOrder(params, { alert: context?.alert }, t, () => {
             setDisabled(false)

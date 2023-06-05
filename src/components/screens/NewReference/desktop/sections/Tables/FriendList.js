@@ -37,6 +37,10 @@ const KYCApprovedTag = ({ t }) => (
 
 const DEFAULT_TOKENS = [
     {
+        value: 447,
+        title: 'NAO'
+    },
+    {
         value: 1,
         title: 'NAMI'
     },

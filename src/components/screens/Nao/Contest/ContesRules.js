@@ -1,10 +1,7 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
-
+import React, { Fragment, useEffect, useMemo, useState, useRef } from 'react';
 import Image from 'next/image';
-
 import { ButtonNao, ButtonNaoVariants, CardNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
-
 import { getS3Url } from 'redux/actions/utils';
 import Countdown from 'react-countdown';
 import { useRouter } from 'next/router';
@@ -38,6 +35,20 @@ const ContesRules = ({
     const router = useRouter();
     const { width } = useWindowSize();
     const isMobile = width && width <= 640;
+
+    const renderTimer = (formatted) => (
+        <div className="flex items-center space-x-2">
+            {Object.keys(formatted).map((time, idx) => {
+                return (
+                    <div key={idx} className="rounded-lg min-w-[68px] px-2 py-4 flex flex-col items-center justify-center bg-gray-12 dark:bg-dark-4">
+                        <span className="text-2xl font-semibold">{formatted[time]}</span>
+                        <span className="text-sm uppercase">{t(`common:${time}`)}</span>
+                    </div>
+                );
+            })}
+        </div>
+    );
+
     const renderCountDown = (classNameContainer, classNameCountdown) => {
         const CONTEST_TIME = {
             START: new Date(start).getTime(),
@@ -48,23 +59,12 @@ const ContesRules = ({
             return (
                 <>
                     <div className={classNames('font-light text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
-                        {t('nao:contest:start_in')}
+                        {t('nao:contest:start_in')}:
                     </div>
                     <Countdown
                         date={CONTEST_TIME.START} // countdown 60s
-                        renderer={({ formatted: { days, hours, minutes, seconds } }) => (
-                            <div
-                                className={classNames('text-sm sm:text-base flex', classNameCountdown)}
-                                dangerouslySetInnerHTML={{
-                                    __html: t('nao:contest:date', {
-                                        days,
-                                        hours,
-                                        minutes
-                                    })
-                                }}
-                            ></div>
-                        )}
-                        onComplete={() => setIsLoadingEmail(false)}
+                        renderer={({ formatted }) => renderTimer(formatted)}
+                        // onComplete={() => setIsLoadingEmail(false)}
                     />
                 </>
             );
@@ -72,31 +72,20 @@ const ContesRules = ({
             return (
                 <>
                     <div className={classNames('font-light text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark', classNameContainer)}>
-                        {t('nao:contest:end_in')}
+                        {t('nao:contest:end_in')}:
                     </div>
                     <Countdown
                         date={CONTEST_TIME.END} // countdown 60s
-                        renderer={({ formatted: { days, hours, minutes, seconds } }) => (
-                            <div
-                                className={classNames('text-sm sm:text-base flex', classNameCountdown)}
-                                dangerouslySetInnerHTML={{
-                                    __html: t('nao:contest:date', {
-                                        days,
-                                        hours,
-                                        minutes
-                                    })
-                                }}
-                            ></div>
-                        )}
-                        onComplete={() => setIsLoadingEmail(false)}
+                        renderer={({ formatted }) => renderTimer(formatted)}
+                        // onComplete={() => setIsLoadingEmail(false)}
                     />
                 </>
             );
         } else {
             return (
-                <>
-                    <div className="text-sm sm:text-base flex text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:ended')}</div>
-                </>
+                <div className="w-full sm:px-20 rounded-md bg-gray-12 dark:bg-dark-2 py-3">
+                    <div className="text-sm sm:text-base text-center text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:ended')}</div>
+                </div>
             );
         }
     };
@@ -124,8 +113,8 @@ const ContesRules = ({
     }, [seasons]);
 
     return (
-        <section className="contest_rules pb-12 py-6 sm:py-20 w-full flex flex-col sm:flex-row sm:justify-between">
-            <div className="text-center sm:text-left flex flex-col flex-wrap sm:block">
+        <section className="contest_rules pb-12 py-6 sm:py-20 w-full flex flex-col lg:flex-row sm:justify-between">
+            <div className="items-center text-center lg:text-left lg:items-left flex flex-col flex-wrap sm:block">
                 <div className="font-semibold text-xl sm:text-2xl text-teal">{t('nao:contest:tournament')}</div>
                 <div className="font-semibold text-xl sm:text-6xl pt-3 sm:pt-4">
                     <div>{title?.[language]}</div>
@@ -136,31 +125,36 @@ const ContesRules = ({
                     {t(`nao:contest:description${!!top_ranks_team ? '' : '_individual'}`)}
                     <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
-                <div className="sm_only:!w-full w-fit sm:px-20 rounded-md bg-gray-12 dark:bg-dark-2 py-3 flex flex-row items-center justify-center mt-8 sm:mt-4">
-                    {renderCountDown('!font-normal mr-3', '!font-semibold')}
-                </div>
-                <div className="flex flex-row mt-3 sm:mt-7 justify-center sm:justify-start w-full">
-                    {inHome ? (
-                        <ButtonNao
-                            onClick={() => router.push('/contest')}
-                            className="!h-11 sm:h-12 px-6 text-sm sm:test-base font-semibold w-max !rounded-md mr-3 sm_only:flex-1 sm_only:px-1"
-                            primary
-                        >
-                            {t('nao:contest:ranking')}
-                        </ButtonNao>
-                    ) : (
-                        <ButtonNao onClick={onRedirect} className="!h-11 sm:h-12 px-6 text-sm sm:text-base font-semibold w-max !rounded-md mr-3 sm_only:flex-1">
-                            {t('nao:contest:detail_rules')}
-                        </ButtonNao>
-                    )}
-                    {isMobile ? (
-                        <TournamentList t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
-                    ) : (
-                        <DropdownPreSeason inHome={inHome} t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
-                    )}
+                <div className="w-max m-auto lg:m-0 flex flex-col items-center lg:items-start">
+                    <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 mt-5 sm:mt-4 w-full">
+                        {renderCountDown('!font-normal', '!font-semibold')}
+                    </div>
+                    <div className="flex flex-row mt-8 sm:mt-10 sm_only:w-full">
+                        {inHome ? (
+                            <ButtonNao
+                                onClick={() => router.push('/contest')}
+                                className="!h-11 sm:h-12 px-6 text-sm sm:test-base font-semibold w-max !rounded-md mr-3 sm_only:flex-1 sm_only:px-1"
+                                primary
+                            >
+                                {t('nao:contest:ranking')}
+                            </ButtonNao>
+                        ) : (
+                            <ButtonNao
+                                onClick={onRedirect}
+                                className="!h-11 sm:h-12 px-6 text-sm sm:text-base font-semibold w-max !rounded-md mr-3 sm_only:flex-1"
+                            >
+                                {t('nao:contest:detail_rules')}
+                            </ButtonNao>
+                        )}
+                        {isMobile ? (
+                            <TournamentList t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
+                        ) : (
+                            <DropdownPreSeason inHome={inHome} t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
+                        )}
+                    </div>
                 </div>
             </div>
-            <div className="mt-10 sm:mt-0 text-center">
+            <div className="mt-10 lg:mt-0 text-center">
                 {season === seasonConfig ? (
                     <Image
                         src={getS3Url('/images/contest/bg_contest_v1.png')}
@@ -170,10 +164,9 @@ const ContesRules = ({
                         alt={title_champion?.[language]}
                     />
                 ) : (
-                    <Image
+                    <img
                         src={'/images/nao/contest/ic_contest_info.webp'}
-                        width="300px"
-                        height="292px"
+                        className="w-[300px] sm:w-[400px] m-auto"
                         title={title_champion?.[language]}
                         alt={title_champion?.[language]}
                     />
@@ -220,7 +213,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
                             variant={ButtonNaoVariants.SECONDARY}
                             className="!h-11 sm:h-12 px-6 text-sm sm:test-base font-semibold w-full !rounded-md flex items-center space-x-2 tournaments sm_only:px-1"
                         >
-                            <span>{t('nao:contest:tournaments')}</span>
+                            <span className="whitespace-nowrap">{t('nao:contest:tournaments')}</span>
                             <ArrowDropDownIcon
                                 size={16}
                                 color="currentColor"
@@ -332,7 +325,7 @@ const TournamentList = ({ t, seasonsFilter, router, season, language }) => {
                 className="!h-11 sm:h-12 px-4 text-sm font-semibold w-full !rounded-md flex items-center space-x-2 tournaments sm_only:px-1"
                 onClick={() => setShowTournaments(true)}
             >
-                <span>{t('nao:contest:tournaments')}</span>
+                <span className="whitespace-nowrap">{t('nao:contest:tournaments')}</span>
                 <ArrowDropDownIcon size={16} color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" />
             </ButtonNao>
         </div>

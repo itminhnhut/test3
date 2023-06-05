@@ -35,12 +35,14 @@
             "logout": "Log Out",
             "partner": "Partner",
             "payment_method": "Payment Method",
-            "daily_reward": "Daily Trading Reward"
-        }
+            "daily_reward": "Daily Trading Reward",
+            "futures_portfolio": "Futures Statistics"
+        },
+        "top_referral": "Top Referral"
     },
     "submenu": {
         "convert": "Nami Swap",
-        "nami_insurance":"Nami Insurance",
+        "nami_insurance": "Nami Insurance",
         "convert_description": "Trade cryptocurrencies in one click",
         "spot": "Spot Trading",
         "spot_description": "Trading quickly with {{pairsLength}} tokens listed with high liquidity",
@@ -83,7 +85,8 @@
         "profile": "Personal Information",
         "partner": "Partner",
         "payment_method": "Payment Method",
-        "daily_reward": "Daily Trading Reward"
+        "daily_reward": "Daily Trading Reward",
+        "futures_portfolio": "Futures Statistics"
     },
     "menu_grid": {
         "deposit": "Deposit",
