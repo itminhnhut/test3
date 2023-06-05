@@ -21,7 +21,7 @@ import SearchBoxV2 from 'components/common/SearchBoxV2';
 import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
 import Image from 'next/image';
-import { BxChevronDown } from 'components/svg/SvgIcon';
+import { BxChevronDown, PortfolioIcon } from 'components/svg/SvgIcon';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const INITIAL_STATE = {
@@ -305,10 +305,12 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                                     {t('common:transfer')}
                                 </ButtonV2>
 
-                                <Link href={'/nao'} passHref>
+                                <Link href={'/statistics'} passHref>
                                     <a className="block">
-                                        <ButtonV2 variants="secondary" className="px-6 py-3 !font-semibold !text-base !w-auto">
-                                            Thống kê
+                                        <ButtonV2 variants="secondary" className="px-6 py-3 !space-x-2 !font-semibold !text-base !w-auto">
+                                            <PortfolioIcon size={16} />
+
+                                            <span>Thống kê</span>
                                         </ButtonV2>
                                     </a>
                                 </Link>
@@ -326,10 +328,11 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                     {t('common:transfer')}
                 </ButtonV2>
 
-                <Link href={'/nao'} passHref>
+                <Link href={'/statistics'} passHref>
                     <a className="block w-full">
-                        <ButtonV2 variants="secondary" className="py-3 !font-semibold !text-base w-full">
-                            Thống kê
+                        <ButtonV2 variants="secondary" className="py-3 !space-x-2 !font-semibold !text-base w-full">
+                            <PortfolioIcon size={16} />
+                            <span>Thống kê</span>
                         </ButtonV2>
                     </a>
                 </Link>

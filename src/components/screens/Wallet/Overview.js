@@ -181,7 +181,7 @@ const OverviewWallet = (props) => {
 
     const [isShowAction, setIsShowAction] = useState({});
     const { EXCHANGE, FUTURES, PARTNERS, NAO_FUTURES } = ActionType;
-    const { DEPOSIT, WITHDRAW, TRANSFER } = ActionCategory;
+    const { DEPOSIT, WITHDRAW, TRANSFER, STATS } = ActionCategory;
     const flag = useRef(false);
     const onHandleClick = (key, href) => {
         switch (key) {
@@ -196,6 +196,10 @@ const OverviewWallet = (props) => {
             case PARTNERS:
                 flag.current = true;
                 setIsShowAction({ [PARTNERS]: true });
+                break;
+            case STATS:
+                flag.current = true;
+                router.push(href);
                 break;
             case DEPOSIT + EXCHANGE:
                 flag.current = true;
@@ -328,7 +332,7 @@ const OverviewWallet = (props) => {
                                     className="min-w-[32px] min-h-[32px] w-[32px] h-[32px] flex items-center justify-center text-medium text-xs rounded-full
                                          bg-gray-10 group-hover:bg-white dark:group-hover:bg-bgButtonDisabled-dark dark:bg-bgButtonDisabled-dark text-txtSecondary dark:text-txtSecondary-dark "
                                 >
-                                    +6
+                                    {Array.isArray(allAssets) ? '+' + allAssets.length - limitExchangeAsset : ''}
                                 </div>
                             </button>
                         </div>
@@ -366,6 +370,10 @@ const OverviewWallet = (props) => {
                             <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(TRANSFER + FUTURES)}>
                                 {t('common:transfer')}
                             </ButtonV2>
+                            <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
+                            <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(STATS, '/statistics')}>
+                                Thống kê
+                            </ButtonV2>
                         </div>
                     </div>
                 </CardWallet>
@@ -387,6 +395,10 @@ const OverviewWallet = (props) => {
                         <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
                             <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(TRANSFER + NAO_FUTURES)}>
                                 {t('common:transfer')}
+                            </ButtonV2>
+                            <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
+                            <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(STATS, '/statistics')}>
+                                Thống kê
                             </ButtonV2>
                         </div>
                     </div>
@@ -498,7 +510,7 @@ const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
         case ActionType.FUTURES:
             listActions = [TRANSFER];
             break;
-        case ActionType.FUTURES:
+        case ActionType.PARTNERS:
             listActions = [TRANSFER];
             break;
         case ActionType.NAO_FUTURES:
@@ -538,7 +550,8 @@ export const ActionType = {
 const ActionCategory = {
     WITHDRAW: 'WITHDRAW',
     DEPOSIT: 'DEPOSIT',
-    TRANSFER: 'TRANSFER'
+    TRANSFER: 'TRANSFER',
+    STATS: 'STATS'
 };
 
 const CardWallet = styled.div.attrs(({ onClick, isSmallScreen }) => ({
