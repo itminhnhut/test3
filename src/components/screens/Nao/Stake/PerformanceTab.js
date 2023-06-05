@@ -318,10 +318,10 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             const sumUSDT = Object.values(item.interestUSD).reduce((a, b) => a + b, 0);
                             weekNumber--;
                             return (
-                                <div className="w-full" key={item["_id"] || index}>
+                                <div className="w-full" key={item['_id'] || index}>
                                     <div className="flex text-txtSecondary dark:text-txtSecondary-dark">
                                         <div className="">
-                                            {t('nao:pool:week', { value: listHistory.length - index })} {formatTime(item.fromTime, 'dd/MM/yyyy')} -{' '}
+                                            {t('nao:pool:week', { value: weekNumber })} {formatTime(item.fromTime, 'dd/MM/yyyy')} -{' '}
                                             {formatTime(item.toTime, 'dd/MM/yyyy')}
                                         </div>
                                         <div className="ml-8">
