@@ -49,8 +49,8 @@ const ALLOWED_WALLET_FROM = {
 
 const ALLOWED_WALLET_TO = {
     SPOT: WalletType.SPOT,
-    FUTURES: WalletType.FUTURES
-    // NAO_FUTURES: WalletType.NAO_FUTURES
+    FUTURES: WalletType.FUTURES,
+    NAO_FUTURES: WalletType.NAO_FUTURES
 };
 
 const NOT_ALLOWED_WALLET_TO = Object.values(ALLOWED_WALLET_FROM).filter((wallet) => !Object.values(ALLOWED_WALLET_TO).includes(wallet));
@@ -75,10 +75,12 @@ export const WalletTypeV1 = {
 export const MinTransferFromBroker = {
     NAMI: 500,
     VNDC: 100000,
-    USDT: 5
+    USDT: 5,
+    NAO: 100
 };
 
-const ALLOWED_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT'];
+const ALLOWED_ASSET = ['VNDC', 'NAMI', 'USDT', 'NAC', 'NAO'];
+const ALLOWED_ASSET_FUTURES = ['VNDC', 'NAMI', 'USDT', 'NAC'];
 
 const INITIAL_STATE = {
     fromWallet: null,
@@ -199,7 +201,7 @@ const TransferModal = ({ isMobile, alert }) => {
 
         return {
             ..._,
-            available
+            available: isNaN(available) ? 0 : available
         };
     }, [state.asset, state.allWallets, state.maxValue, isVisible]);
 
@@ -470,8 +472,9 @@ const TransferModal = ({ isMobile, alert }) => {
                     </div>
                     <button
                         disabled={isNotAllowToRevert}
-                        className={classNames('rounded-full hover:opacity-75 transition  cursor-pointer select-none', {
-                            'cursor-not-allowed': isNotAllowToRevert
+                        className={classNames('rounded-full transition  select-none', {
+                            'cursor-not-allowed opacity-60': isNotAllowToRevert,
+                            'hover:opacity-75 cursor-pointer': !isNotAllowToRevert
                         })}
                         onClick={revertWallet}
                     >
@@ -715,38 +718,50 @@ const TransferModal = ({ isMobile, alert }) => {
 
             const currentWallets = currentWalletMapping?.[state.fromWallet];
 
+            const isFuturesWalletSelected = state.fromWallet === WalletType.FUTURES || state.toWallet === WalletType.FUTURES;
+
+            const allowAssets = isFuturesWalletSelected ? ALLOWED_ASSET_FUTURES : ALLOWED_ASSET;
+
             allWallets = assetConfig
-                .filter((asset) => ALLOWED_ASSET.includes(asset?.assetCode))
+                .filter((asset) => {
+                    return allowAssets.includes(asset?.assetCode);
+                })
                 ?.map((item) => ({
                     ...item,
                     wallet: currentWallets?.[item?.id]
                 }));
             allWallets = orderBy(allWallets, (o) => o?.wallet?.value - o?.wallet?.locked_value, 'desc');
-            setState({ allWallets });
+
+            // RESET asset to VNDC
+            // if current asset is NAO && one of the wallet is FUTURES.
+            const asset = isFuturesWalletSelected && state.asset === 'NAO' ? allowAssets[0] : state.asset;
+
+            setState({ allWallets, asset });
         }
-    }, [state.fromWallet, allFuturesWallet, allPartnersWallet, allExchangeWallet, allNAOsWallet, assetConfig]);
+    }, [state.asset, state.fromWallet, state.toWallet, allFuturesWallet, allPartnersWallet, allExchangeWallet, allNAOsWallet, assetConfig]);
 
     useEffect(() => {
         const _errors = {};
         const minAmount = MinTransferFromBroker[state.asset];
 
-        if (state.fromWallet === WalletType.BROKER && +minAmount > 0 && +state.amount < minAmount) {
+        if (state.fromWallet === WalletType.BROKER && +minAmount > 0 && +state.amount < +minAmount) {
             _errors.minAmount = t('wallet:errors.minimum_amount', { min: `${formatNumber(minAmount)} ${state.asset}` });
         } else {
             _errors.minAmount = null;
         }
 
-        if (currentWallet?.available >= 0 && state.amount >= 0) {
+        if (currentWallet?.available >= 0 && +state.amount >= 0) {
             if (currentWallet?.available < +state.amount) {
                 _errors.insufficient = t('wallet:errors.invalid_insufficient_balance');
             } else {
                 _errors.insufficient = null;
-                setState({
-                    errors: {
-                        ...state.errors,
-                        insufficient: null
-                    }
-                });
+                // setState({
+                //     errors: {
+                //         ...state.errors,
+                //         insufficient: null
+                //     }
+                // });
+                // return;
             }
         } else {
             _errors.insufficient = null;

@@ -30,7 +30,7 @@ const INITIAL_STATE = {
 };
 
 const AVAILBLE_KEY = 'partners_available';
-const PARTNERS_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT'];
+const PARTNERS_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT', 'NAO'];
 
 const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, isHideAsset, setIsHideAsset }) => {
     // Init State
@@ -38,7 +38,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Rdx
-    const wallets = useSelector((state) => state.wallet.PARTNERS);
+    const wallets = useSelector((state) => state.wallet?.PARTNERS) || null;
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
 
     // Use Hooks
@@ -46,26 +46,6 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
     const { width } = useWindowSize();
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
-    // Helper
-    const walletMapper = (allWallet, assetConfig) => {
-        if (!allWallet || !assetConfig) return;
-        const mapper = [];
-        if (Array.isArray(assetConfig) && assetConfig?.length) {
-            const partners = assetConfig.filter((o) => PARTNERS_ASSET.includes(o?.assetCode));
-            partners &&
-                partners.forEach(
-                    (item) =>
-                        allWallet?.[item.id] &&
-                        mapper.push({
-                            ...item,
-                            [AVAILBLE_KEY]: allWallet?.[item?.id]?.value - allWallet?.[item?.id]?.locked_value,
-                            wallet: allWallet?.[item?.id]
-                        })
-                );
-        }
-        setState({ allAssets: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
-    };
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
@@ -241,6 +221,24 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
     }, [estBtc, isHideAsset, currentTheme]);
 
     useEffect(() => {
+        const walletMapper = (allWallet, assetConfig) => {
+            if (!allWallet || !assetConfig) return;
+            const mapper = [];
+            if (Array.isArray(assetConfig) && assetConfig?.length) {
+                const partners = assetConfig.filter((o) => PARTNERS_ASSET.includes(o?.assetCode));
+                partners &&
+                    partners.forEach(
+                        (item) =>
+                            allWallet?.[item.id] &&
+                            mapper.push({
+                                ...item,
+                                [AVAILBLE_KEY]: allWallet?.[item?.id]?.value - allWallet?.[item?.id]?.locked_value,
+                                wallet: allWallet?.[item?.id]
+                            })
+                    );
+            }
+            setState({ allAssets: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
+        };
         walletMapper(wallets, assetConfig);
     }, [wallets, assetConfig]);
 

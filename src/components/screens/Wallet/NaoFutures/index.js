@@ -33,7 +33,7 @@ const INITIAL_STATE = {
 };
 
 const AVAILBLE_KEY = 'futures_available';
-const FUTURES_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT'];
+const FUTURES_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT', 'NAO'];
 
 const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, isHideAsset, setIsHideAsset }) => {
     // Init State
