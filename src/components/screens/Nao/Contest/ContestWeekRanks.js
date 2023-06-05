@@ -34,7 +34,7 @@ const ContestWeekRanks = ({
     const { width } = useWindowSize();
     const [dataSource, setDataSource] = useState([]);
     const [top3, setTop3] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const lastUpdatedTime = useRef(null);
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
@@ -221,13 +221,13 @@ const ContestWeekRanks = ({
             {top3.length > 0 && (
                 <div className="flex flex-wrap gap-3 sm:gap-6 text-sm sm:text-base">
                     {top3.map((item, index) => (
-                        <CardNao key={index} className="!p-4 sm:!p-5 !min-w-min">
+                        <CardNao key={index} className="!p-4 sm:!p-5">
                             <div className="flex items-center justify-between gap-2">
                                 <div className="flex items-center space-x-4">
                                     <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
                                         <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
                                     </div>
-                                    <div className="sm:space-y-[2px] flex flex-col">
+                                    <div className="sm:space-y-[2px] flex flex-col" style={{ wordBreak: 'break-word' }}>
                                         <div className="flex items-center gap-2 text-lg font-semibold capitalize">
                                             <span>{capitalize(item?.name)}</span>
                                             {item?.is_onus_master && <TickFbIcon size={16} />}

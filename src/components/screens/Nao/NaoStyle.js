@@ -27,7 +27,7 @@ export const TextLiner = styled.div.attrs({
 
 export const CardNao = styled.div.attrs(({ noBg, customHeight, bgCorner, bgStake }) => ({
     className: classNames(
-        `p-6 sm:px-10 sm:py-9 rounded-xl min-w-full sm:min-w-[372px] ${
+        `p-6 sm:px-10 sm:py-9 rounded-xl w-full min-w-full sm:min-w-[320px] ${
             customHeight ? customHeight : 'sm:min-h-[180px]'
         } flex flex-col justify-between flex-1 relative`,
         // { 'border-dashed border-[0.5px] border-[#7686B1]': noBg },
