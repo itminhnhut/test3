@@ -332,7 +332,7 @@ const OverviewWallet = (props) => {
                                     className="min-w-[32px] min-h-[32px] w-[32px] h-[32px] flex items-center justify-center text-medium text-xs rounded-full
                                          bg-gray-10 group-hover:bg-white dark:group-hover:bg-bgButtonDisabled-dark dark:bg-bgButtonDisabled-dark text-txtSecondary dark:text-txtSecondary-dark "
                                 >
-                                    {Array.isArray(allAssets) ? '+' + allAssets.length - limitExchangeAsset : ''}
+                                    {Array.isArray(allAssets) ? `+${allAssets.length - limitExchangeAsset}` : ''}
                                 </div>
                             </button>
                         </div>
