@@ -11,13 +11,13 @@ const EventPage = () => {
     );
 };
 
-export const getStaticProps = async ({ locale, params, query }) => {
+export const getStaticProps = async (ctx) => {
+    const { locale, query } = ctx;
     return {
         props: {
             ...(await serverSideTranslations(locale, ['common', 'navbar'])),
             theme: query?.theme || 'dark',
             language: query?.language || 'en',
-            params: params
         }
     };
 };
