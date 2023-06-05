@@ -545,7 +545,7 @@ const SwapModule = ({ width, pair }) => {
     const renderSwapBtn = useCallback(() => {
         if (!auth) {
             return (
-                <HrefButton className="block mt-8 !w-full !max-w-none text-base !font-semibold" href={getLoginUrl('sso', 'login')} variants="primary">
+                <HrefButton className="block mt-8 !w-full !max-w-none text-base !font-semibold" href={getLoginUrl('sso')} variants="primary">
                     {t('common:signin_now')}
                 </HrefButton>
             );
@@ -874,15 +874,17 @@ const SwapModule = ({ width, pair }) => {
                                             {t('common:available_balance')}:{' '}
                                             {formatNumber(availabelAsset?.fromAsset, find(assetConfig, { assetCode: state?.fromAsset })?.assetDigit || 0)}
                                         </span>
-                                        <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                handleDepositIconBtn();
-                                            }}
-                                        >
-                                            <SvgAddCircle size={13.3} color={colors.teal} className="cursor-pointer" />
-                                        </button>
+                                        {auth && (
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    handleDepositIconBtn();
+                                                }}
+                                            >
+                                                <SvgAddCircle size={13.3} color={colors.teal} className="cursor-pointer" />
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                                 {renderFromInput()}

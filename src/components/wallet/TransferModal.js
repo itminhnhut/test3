@@ -591,7 +591,7 @@ const TransferModal = ({ isMobile, alert }) => {
         const isInsufficient = currentWallet?.available < +state.amount;
         if (!auth) {
             return (
-                <HrefButton className="block mt-8 !w-full !max-w-none text-base !font-semibold" href={getLoginUrl('sso', 'login')} variants="primary">
+                <HrefButton className="block mt-8 !w-full !max-w-none text-base !font-semibold" href={getLoginUrl('sso')} variants="primary">
                     {t('common:sign_in')}
                 </HrefButton>
             );

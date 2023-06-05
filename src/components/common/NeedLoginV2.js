@@ -24,7 +24,7 @@ const NeedLoginV2 = ({ message, addClass }) => {
         <div className={addClass ? 'relative w-full h-full ' + addClass : 'relative w-full h-full '}>
             <div>
                 <img src={getS3Url('/images/screen/swap/login-success.png')} alt="" className="mx-auto h-[124px] w-[124px]" />
-                <HrefButton className="mt-4" href={getLoginUrl('sso', 'login')}>
+                <HrefButton className="mt-4" href={getLoginUrl('sso')}>
                     {_message}
                 </HrefButton>
             </div>
