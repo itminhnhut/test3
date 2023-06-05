@@ -19,6 +19,7 @@ import HideSmallBalance from 'components/common/HideSmallBalance';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -44,7 +45,10 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
     // Use Hooks
     const [currentTheme] = useDarkMode();
     const { width } = useWindowSize();
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const dispatch = useDispatch();
 
     // Render Handler
@@ -295,7 +299,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
             </ButtonV2>
 
             <div className="mt-12 md:mt-16 flex items-center justify-between">
-                <div className="t-common-v2 hidden md:block">{t('wallet:commission')}</div>
+                <div className="t-common-v2 hidden md:block">{language === LANGUAGE_TAG.VI ? 'Ví hoa hồng' : t('wallet:commission')}</div>
                 {isSmallScreen ? (
                     <div className="w-full flex items-center justify-between">
                         <SearchBoxV2

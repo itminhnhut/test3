@@ -22,6 +22,7 @@ import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
 import Image from 'next/image';
 import { BxChevronDown } from 'components/svg/SvgIcon';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -47,7 +48,10 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
     // Use Hooks
     const [currentTheme] = useDarkMode();
     const { width } = useWindowSize();
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const dispatch = useDispatch();
 
     // Helper
@@ -332,7 +336,7 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
             </div>
 
             <div className="mt-12 md:mt-16 flex items-center justify-between">
-                <div className="t-common-v2 hidden md:block">NAO Futures</div>
+                <div className="t-common-v2 hidden md:block">{language === LANGUAGE_TAG.VI ? 'Ví' : ''} NAO Futures</div>
                 {isSmallScreen ? (
                     <div className="w-full flex items-center justify-between">
                         <SearchBoxV2

@@ -10,7 +10,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { useRouter } from 'next/router';
 import { WalletType } from 'redux/actions/const';
-import { EXCHANGE_ACTION } from 'pages/wallet';
+import { EXCHANGE_ACTION, WALLET_SCREENS } from 'pages/wallet';
 import SvgWalletOverview from 'components/svg/SvgWalletOverview';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -21,6 +21,7 @@ import Types from 'components/screens/Account/types';
 import EstBalance from 'components/common/EstBalance';
 import { TYPE_DW } from '../WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import Image from 'next/image';
 
 const INITIAL_STATE = {
     // ...
@@ -33,6 +34,8 @@ const OverviewWallet = (props) => {
         exchangeRefPrice,
         futuresEstBtc,
         futuresRefPrice,
+        naoFuturesEstBtc,
+        naoFuturesRefPrice,
         partnersEstBtc,
         partnersRefPrice,
         stakingEstBtc,
@@ -120,6 +123,19 @@ const OverviewWallet = (props) => {
         );
     }, [futuresEstBtc, futuresRefPrice, isHideAsset]);
 
+    const renderNAOFuturesEstBalance = useCallback(() => {
+        return (
+            <span>
+                {isHideAsset
+                    ? SECRET_STRING
+                    : formatWallet(naoFuturesEstBtc?.totalValue, naoFuturesEstBtc?.assetDigit) +
+                      ' BTC ' +
+                      '~ $' +
+                      formatWallet(naoFuturesRefPrice?.totalValue, 2)}
+            </span>
+        );
+    }, [naoFuturesEstBtc, naoFuturesRefPrice, isHideAsset]);
+
     const renderPartnersEstBalance = useCallback(() => {
         return (
             <span>
@@ -164,7 +180,7 @@ const OverviewWallet = (props) => {
     const router = useRouter();
 
     const [isShowAction, setIsShowAction] = useState({});
-    const { EXCHANGE, FUTURES, PARTNERS } = ActionType;
+    const { EXCHANGE, FUTURES, PARTNERS, NAO_FUTURES } = ActionType;
     const { DEPOSIT, WITHDRAW, TRANSFER } = ActionCategory;
     const flag = useRef(false);
     const onHandleClick = (key, href) => {
@@ -203,7 +219,7 @@ const OverviewWallet = (props) => {
                     flag.current = false;
                     return;
                 }
-                router.push('/wallet/exchange');
+                router.push(`/wallet/${WALLET_SCREENS.EXCHANGE}`);
                 break;
             case TRANSFER + FUTURES:
                 flag.current = true;
@@ -214,7 +230,19 @@ const OverviewWallet = (props) => {
                     flag.current = false;
                     return;
                 }
-                router.push('/wallet/futures');
+                router.push(`/wallet/${WALLET_SCREENS.FUTURES}`);
+                break;
+
+            case TRANSFER + NAO_FUTURES:
+                flag.current = true;
+                dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.NAO_FUTURES, toWallet: WalletType.SPOT }));
+                break;
+            case 'details_nao_futures':
+                if (flag.current) {
+                    flag.current = false;
+                    return;
+                }
+                router.push(`/wallet/${WALLET_SCREENS.NAO_FUTURES}`);
                 break;
             case TRANSFER + PARTNERS:
                 flag.current = true;
@@ -225,7 +253,7 @@ const OverviewWallet = (props) => {
                     flag.current = false;
                     return;
                 }
-                router.push('/wallet/partners');
+                router.push(`/wallet/${WALLET_SCREENS.PARTNERS}`);
                 break;
             default:
                 break;
@@ -341,6 +369,28 @@ const OverviewWallet = (props) => {
                         </div>
                     </div>
                 </CardWallet>
+                <CardWallet onClick={() => onHandleClick('details_nao_futures')} isSmallScreen={isSmallScreen}>
+                    <AssetBalance
+                        title="NAO Futures"
+                        icon={<Image width={20} height={20} src={getS3Url('/images/nao/ic_nao.png')} />}
+                        renderEstBalance={renderNAOFuturesEstBalance}
+                        isSmallScreen={isSmallScreen}
+                        onHandleClick={onHandleClick}
+                        triggerName={ActionType.NAO_FUTURES}
+                    />
+                    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
+                        {!isSmallScreen && (
+                            <div className="flex items-center text-base font-normal text-gray-15 dark:text-gray-4 mr-3">
+                                <Trans>{t('wallet:futures_overview')}</Trans>
+                            </div>
+                        )}
+                        <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
+                            <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(TRANSFER + NAO_FUTURES)}>
+                                {t('common:transfer')}
+                            </ButtonV2>
+                        </div>
+                    </div>
+                </CardWallet>
                 <CardWallet onClick={() => onHandleClick('details_partners')} isSmallScreen={isSmallScreen}>
                     <AssetBalance
                         title={t('wallet:commission')}
@@ -437,17 +487,6 @@ const AssetBalance = ({ title, icon, renderEstBalance, isSmallScreen, onHandleCl
     );
 };
 
-const CardWallet = styled.div.attrs(({ onClick, isSmallScreen }) => ({
-    className: `dark:bg-dark-4 bg-white cursor-pointer group hover:bg-gray-13 dark:hover:bg-hover-dark text-txtPrimary dark:text-txtPrimary-dark font-semibold
-     ${
-         isSmallScreen
-             ? 'p-4 rounded-xl first:mt-0 mt-4 bg-gray-13 text-base'
-             : 'p-8 flex flex-col lg:flex-row first:rounded-t-xl last:rounded-b-xl border-r border-l first:border-t last:border-b border-divider dark:border-transparent text-2xl leading-[30px]'
-     }
-     `,
-    onClick: onClick
-}))``;
-
 const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
     const keys = Object.keys(isShowAction);
     const { DEPOSIT, WITHDRAW, TRANSFER } = ActionCategory;
@@ -459,7 +498,10 @@ const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
         case ActionType.FUTURES:
             listActions = [TRANSFER];
             break;
-        case ActionType.PARTNERS:
+        case ActionType.FUTURES:
+            listActions = [TRANSFER];
+            break;
+        case ActionType.NAO_FUTURES:
             listActions = [TRANSFER];
             break;
         default:
@@ -490,13 +532,24 @@ const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
 export const ActionType = {
     EXCHANGE: 'EXCHANGE',
     FUTURES: 'FUTURES',
-    PARTNERS: 'PARTNERS'
+    PARTNERS: 'PARTNERS',
+    NAO_FUTURES: 'NAO_FUTURES'
 };
-
 const ActionCategory = {
     WITHDRAW: 'WITHDRAW',
     DEPOSIT: 'DEPOSIT',
     TRANSFER: 'TRANSFER'
 };
+
+const CardWallet = styled.div.attrs(({ onClick, isSmallScreen }) => ({
+    className: `dark:bg-dark-4 bg-white cursor-pointer group hover:bg-gray-13 dark:hover:bg-hover-dark text-txtPrimary dark:text-txtPrimary-dark font-semibold
+     ${
+         isSmallScreen
+             ? 'p-4 rounded-xl first:mt-0 mt-4 bg-gray-13 text-base'
+             : 'p-8 flex flex-col lg:flex-row first:rounded-t-xl last:rounded-b-xl border-r border-l first:border-t last:border-b border-divider dark:border-transparent text-2xl leading-[30px]'
+     }
+     `,
+    onClick: onClick
+}))``;
 
 export default OverviewWallet;

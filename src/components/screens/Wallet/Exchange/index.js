@@ -28,6 +28,7 @@ import NoData from 'components/common/V2/TableV2/NoData';
 import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceToNami';
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -49,7 +50,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
 
     // Use Hooks
     const r = useRouter();
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const { width } = useWindowSize();
     const [currentTheme] = useDarkMode();
     const dispatch = useDispatch();
@@ -534,7 +538,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
 
             {/* Khi nao co Function Chuyen so du nho thanh Nami thi enable code nay */}
             <div className="mt-12 md:mt-16 lg:items-center lg:justify-between">
-                <div className="t-common-v2 hidden md:block">{t('wallet:spot_short')}</div>
+                <div className="t-common-v2 hidden md:block">
+                    {language === LANGUAGE_TAG.VI ? 'Ví' : ''} {t('wallet:spot_short')}
+                </div>
                 <div className="flex items-end justify-between md:pt-8">
                     <TransferSmallBalanceToNami className="hidden md:flex" width={width} allAssets={allAssets} />
 

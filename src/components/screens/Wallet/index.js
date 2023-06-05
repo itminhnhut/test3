@@ -29,6 +29,7 @@ import PartnersWallet from './Partners';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import useWindowSize from 'hooks/useWindowSize';
 import NAOFuturesWallet from './NaoFutures';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 export const WIDTH_MD = 768;
 
 const INITIAL_STATE = {
@@ -93,7 +94,10 @@ const Wallet = () => {
     const r = useRouter();
     const [currentTheme] = useDarkMode();
     const focused = useWindowFocus();
-    const { t } = useTranslation(['common']);
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation(['common']);
 
     // Helper
     const walletMapper = (walletType, allWallet, assetConfig) => {
@@ -239,13 +243,11 @@ const Wallet = () => {
                                 value={e.key}
                                 onClick={() => {
                                     const current = SCREEN_TAB_SERIES.find((o) => o?.key === e.key);
-                                    // if (current?.code === WALLET_SCREENS.FARMING || current?.code === WALLET_SCREENS.STAKING) {
-                                    //     r.push(`https://nami.exchange/wallet/account?type=${current?.code}`)
-                                    // } else {
                                     r.push(`${PATHS.WALLET.DEFAULT}/${current?.code}`);
                                 }}
                             >
-                                {t(`${e.localized ? e.localized : e.title}`)}
+                                {index > 0 && language === LANGUAGE_TAG.VI ? 'Ví' : ''}{' '}
+                                {e.title === 'Partners' && language === LANGUAGE_TAG.VI ? 'hoa hồng' : t(`${e.localized ? e.localized : e.title}`)}
                             </TabItem>
                         );
                     })}
@@ -509,6 +511,8 @@ const Wallet = () => {
                                 exchangeRefPrice={state.exchangeRefPrice}
                                 futuresEstBtc={state.futuresEstBtc}
                                 futuresRefPrice={state.futuresRefPrice}
+                                naoFuturesEstBtc={state.naoFuturesEstBtc}
+                                naoFuturesRefPrice={state.naoFuturesRefPrice}
                                 partnersEstBtc={state.partnersEstBtc}
                                 partnersRefPrice={state.partnersRefPrice}
                                 stakingSummary={state.stakingSummary}
