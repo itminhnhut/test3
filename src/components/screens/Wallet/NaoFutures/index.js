@@ -283,7 +283,7 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                 <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 ">
                     <div className="flex w-full items-center justify-between mb-6 md:mb-12 ">
                         <EstBalance onClick={() => setIsHideAsset(!isHideAsset)} isHide={isHideAsset} isSmallScreen={isSmallScreen} />
-                        <Link href={'/nao/stake'} passHref>
+                        <Link href={'/nao'} passHref>
                             <a className="block">
                                 <ButtonV2 className="!h-auto !py-0 items-center font-semibold space-x-2" variants="text">
                                     <span>NAO Goverance</span>
