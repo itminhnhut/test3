@@ -127,7 +127,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                 </div>
                                 {/* Phương thức nhận tiền */}
 
-                                {mode === MODE.USER && isHiddenBankInformation ? (
+                                {isHiddenBankInformation ? (
                                     <div className="flex flex-col w-full flex-1 justify-center items-center">
                                         <div>{isDark ? <NoDataDarkIcon /> : <NoDataLightIcon />}</div>
                                         <div className="txtSecond-2">Chỉ hiển thị khi đối tác xác nhận lệnh</div>
