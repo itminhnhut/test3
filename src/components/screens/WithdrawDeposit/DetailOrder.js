@@ -381,6 +381,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     mode={mode}
                 />
                 <GroupInforCard
+                    isDark={isDark}
                     mode={mode}
                     assetCode={assetCode}
                     orderDetail={state.orderDetail}

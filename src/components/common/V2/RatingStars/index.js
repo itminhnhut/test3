@@ -1,30 +1,38 @@
 import classNames from 'classnames';
 import { StarPurpleIcon } from 'components/svg/SvgIcon';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { isFunction } from 'redux/actions/utils';
 
-const index = ({ wrapClassname, starLength = 5, defaultStar = 0, children }) => {
+const RatingStars = ({ wrapClassname, starLength = 5, defaultStar = 0, children }) => {
     const [state, set] = useState({
-        hoverStars: defaultStar,
-        isRated: defaultStar > 0 ? true : false
+        hoverStars: defaultStar
     });
+
+    const chosenStar = useRef(defaultStar);
 
     const setRatingState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
     return (
         <>
-            <div className={classNames('flex gap-4', wrapClassname)}>
+            <div
+                onMouseLeave={() => {
+                    setRatingState({ hoverStars: chosenStar.current });
+                }}
+                className={classNames('flex space-x-4', wrapClassname)}
+            >
                 {[...Array(starLength).keys()].map((star) => (
                     <div
+                        onClick={() => {
+                            setRatingState({ hoverStars: star + 1 });
+                            chosenStar.current = star + 1;
+                        }}
                         onMouseOver={() => {
-                            if (state.isRated) return;
                             setRatingState({ hoverStars: star + 1 });
                         }}
                         key={star}
                         className={classNames('cursor-pointer text-txtSecondary dark:text-txtSecondary-dark ', {
                             '!text-yellow-100': state.hoverStars >= star + 1
                         })}
-                        onClick={() => setRatingState({ hoverStars: star + 1, isRated: state.isRated ? false : true })}
                     >
                         <StarPurpleIcon size={32} color="currentColor" />
                     </div>
@@ -35,4 +43,4 @@ const index = ({ wrapClassname, starLength = 5, defaultStar = 0, children }) => 
     );
 };
 
-export default index;
+export default RatingStars;

@@ -8,16 +8,8 @@ import Skeletor from 'components/common/Skeletor';
 import FilterTimeTab from 'components/common/FilterTimeTab';
 import Tooltip from 'components/common/Tooltip';
 
-const SessionGeneral = () => {
+const SessionGeneral = ({ filter, setFilter }) => {
     const { t } = useTranslation();
-
-    const [filter, setFilter] = useState({
-        range: {
-            startDate: null,
-            endDate: null,
-            key: 'selection'
-        }
-    });
 
     const { data, loading, error } = useFetchApi(
         {
@@ -74,11 +66,11 @@ const SessionGeneral = () => {
                                 <span className="text-txtPrimary dark:text-txtPrimary-dark" />
                             </Trans>
                         </h1>
-                        <div className="pt-4 txtPri-6 flex">
+                        <div className="pt-4 txtPri-6 flex items-center">
                             <span className="text-green-3 dark:text-green-2">
                                 {loading ? <Skeletor width="50px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
                             </span>
-                            {loading ? <Skeletor width="50px" /> : <span>/{formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}</span>}
+                            /{loading ? <Skeletor width="40px" /> : <span>{formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}</span>}
                         </div>
                     </div>
                 </CardWrapper>

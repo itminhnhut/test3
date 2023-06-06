@@ -58,27 +58,27 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
                         viewProof = null;
                     const isReject = log.status === PartnerOrderStatusLog.DISPUTED || log.status === PartnerOrderStatusLog.REJECTED;
                     const isCurrent = logIndex === originArr.length - 1;
-                    switch (log.type) {
-                        case PartnerOrderLog.CREATED:
-                            contentLog = 'created';
-                            break;
-                        case PartnerOrderLog.ACCEPTED:
-                            contentLog = 'accept';
-                            break;
-                        case PartnerOrderLog.REJECTED:
-                            contentLog = 'reject';
-                            break;
-                        case PartnerOrderLog.CANCELED:
-                            contentLog = 'cancel';
 
-                            break;
-                        case PartnerOrderLog.TRANSFERRED_FIAT:
+                    const renderLog = {
+                        [PartnerOrderLog.CREATED]: () => {
+                            contentLog = 'created';
+                        },
+                        [PartnerOrderLog.ACCEPTED]: () => {
+                            contentLog = 'accept';
+                        },
+                        [PartnerOrderLog.REJECTED]: () => {
+                            contentLog = 'reject';
+                        },
+                        [PartnerOrderLog.CANCELED]: () => {
+                            contentLog = 'cancel';
+                        },
+                        [PartnerOrderLog.TRANSFERRED_FIAT]: () => {
                             contentLog = 'transferred';
-                            break;
-                        case PartnerOrderLog.RECEIVED_FIAT:
+                        },
+                        [PartnerOrderLog.RECEIVED_FIAT]: () => {
                             contentLog = 'received_fiat';
-                            break;
-                        case PartnerOrderLog.UPLOADED:
+                        },
+                        [PartnerOrderLog.UPLOADED]: () => {
                             contentLog = 'uploaded_proof';
                             viewProof =
                                 lastIndexUploadType === logIndex &&
@@ -91,46 +91,47 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
                                         <span>{t('dw_partner:logs.view_proof')}</span>
                                     </div>
                                 ) : null;
-                            break;
-                        case PartnerOrderLog.DISPUTED:
+                        },
+                        [PartnerOrderLog.DISPUTED]: () => {
                             contentLog = 'dispute';
                             contentObj = {
                                 mode: t(`dw_partner:${side === SIDE.BUY ? MODE.PARTNER : MODE.USER}`).toLowerCase()
                             };
-                            break;
-                        case PartnerOrderLog.COMPLETED_DISPUTE:
+                        },
+                        [PartnerOrderLog.COMPLETED_DISPUTE]: () => {
                             contentLog = 'resolve_dispute';
                             contentObj = {
                                 mode: t(`dw_partner:${side === SIDE.BUY ? MODE.PARTNER : MODE.USER}`).toLowerCase()
                             };
-                            break;
-                        case PartnerOrderLog.TIMEOUT_NOT_ACCEPT:
+                        },
+                        [PartnerOrderLog.TIMEOUT_NOT_ACCEPT]: () => {
                             contentLog = 'timeout_not_accept';
-                            break;
-                        case PartnerOrderLog.TIMEOUT_NOT_RECEIVE:
+                        },
+                        [PartnerOrderLog.TIMEOUT_NOT_RECEIVE]: () => {
                             contentLog = 'timeout_not_receive';
                             contentObj = {
                                 mode: t(`dw_partner:${side === SIDE.BUY ? MODE.PARTNER : MODE.USER}`).toLowerCase()
                             };
-                            break;
-                        case PartnerOrderLog.TIMEOUT_NOT_TRANSFER:
+                        },
+                        [PartnerOrderLog.TIMEOUT_NOT_TRANSFER]: () => {
                             contentLog = 'timeout_not_transfer';
                             contentObj = {
                                 mode: t(`dw_partner:${side === SIDE.BUY ? MODE.USER : MODE.PARTNER}`).toLowerCase()
                             };
-                            break;
-                        case PartnerOrderLog.SYSTEM_UPDATE_DISPUTE:
+                        },
+                        [PartnerOrderLog.SYSTEM_UPDATE_DISPUTE]: () => {
                             contentLog = 'system_dispute';
-                            break;
-                        case PartnerOrderLog.SYSTEM_UPDATE_REJECT:
+                        },
+                        [PartnerOrderLog.SYSTEM_UPDATE_REJECT]: () => {
                             contentLog = 'system_reject';
-                            break;
-                        case PartnerOrderLog.SYSTEM_UPDATE_SUCCESS:
+                        },
+                        [PartnerOrderLog.SYSTEM_UPDATE_SUCCESS]: () => {
                             contentLog = 'system_success';
-                            break;
-                        default:
-                            break;
-                    }
+                        },
+                        [-1]: () => undefined
+                    };
+
+                    renderLog[log.type ?? -1]?.();
 
                     return (
                         <React.Fragment key={logIndex}>

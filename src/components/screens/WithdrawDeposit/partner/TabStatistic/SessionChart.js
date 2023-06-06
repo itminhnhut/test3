@@ -21,21 +21,12 @@ const TabStatistic = [
     { value: 'commission', localized: 'common:partners' }
 ];
 
-const SessionChart = () => {
+const SessionChart = ({ filter, setFilter }) => {
     const [typeTab, setTypeTab] = useState(TabStatistic[0].value);
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
     const { t } = useTranslation();
-
-    const [filter, setFilter] = useState({
-        range: {
-            startDate: null,
-            endDate: null,
-            interval: 'd',
-            key: 'selection'
-        }
-    });
 
     const [showModalDetail, setShowModalDetail] = useState(null);
     // const [curToken, setCurToken] = useState(72);
@@ -179,7 +170,7 @@ const SessionChart = () => {
                     </div>
 
                     {/* Filter */}
-                    <FilterTimeTab filter={filter} setFilter={setFilter} className="mb-6" />
+                    {/* <FilterTimeTab filter={filter} setFilter={setFilter} className="mb-6" /> */}
                 </div>
                 <div className=" w-full max-h-[450px] mt-8">
                     <ChartJS type="bar" data={chartData} options={options} height="450px" />

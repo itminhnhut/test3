@@ -256,7 +256,7 @@ const CardInput = () => {
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t('dw_partner:rate')}</div>
                         <div className="txtPri-1 flex items-center space-x-1">
-                            <span>1 {assetCode} =</span>
+                            <span>1 {assetCode} ≈</span>
                             <span>{loadingRate ? <Skeletor width="40px" height="15px" /> : formatBalanceFiat(rate, 'VNDC')}</span>
                             <span>VND</span>
                         </div>
