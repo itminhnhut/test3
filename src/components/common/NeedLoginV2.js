@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { getLoginUrl, getS3Url } from 'redux/actions/utils';
-import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const NeedLoginV2 = ({ message, addClass }) => {
     const {
@@ -24,9 +24,9 @@ const NeedLoginV2 = ({ message, addClass }) => {
         <div className={addClass ? 'relative w-full h-full ' + addClass : 'relative w-full h-full '}>
             <div>
                 <img src={getS3Url('/images/screen/swap/login-success.png')} alt="" className="mx-auto h-[124px] w-[124px]" />
-                <HrefButton className="mt-4" href={getLoginUrl('sso')}>
+                <ButtonV2 className="mt-4" onClick={() => router.push(getLoginUrl('sso'))} variants="primary">
                     {_message}
-                </HrefButton>
+                </ButtonV2>
             </div>
         </div>
     );
