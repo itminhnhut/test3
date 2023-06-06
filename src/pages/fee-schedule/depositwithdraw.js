@@ -85,7 +85,7 @@ const DepositWithdrawFee = () => {
                 align: 'left',
                 // preventSort: true
                 render: (row, item) => (
-                    <div className="flex items-center">
+                    <div className="flex items-center ml-3">
                         <AssetLogo assetCode={item?.assetCode} size={width >= BREAK_POINTS['2xl'] ? 32 : 24} />
                         <span className="ml-2.5 text-base font-semibold">{item?.assetCode}</span>
                     </div>
@@ -108,36 +108,36 @@ const DepositWithdrawFee = () => {
                     </div>
                 )
             },
-            {
-                key: 'deposit_fee',
-                dataIndex: 'deposit_fee',
-                title: t('wallet:deposit_fee'),
-                width: '20%',
-                align: 'left',
-                preventSort: true,
-                render: () => <span className="text-base text-dominant">{t('common:free')}</span>
-            },
+            // {
+            //     key: 'deposit_fee',
+            //     dataIndex: 'deposit_fee',
+            //     title: t('wallet:deposit_fee'),
+            //     width: '20%',
+            //     align: 'left',
+            //     preventSort: true,
+            //     render: () => <span className="text-base text-dominant">{t('common:free')}</span>
+            // },
 
-            {
-                key: 'min_withdraw',
-                dataIndex: 'min_withdraw',
-                title: t('wallet:min_withdraw'),
-                width: '20%',
-                align: 'right',
-                preventSort: true,
-                render: (row, item) => {
-                    const assetDigit = state.configs?.find((o) => o.assetCode === item?.assetCode)?.assetDigit;
-                    return (
-                        <div>
-                            {item?.networkList?.map((network, index) => (
-                                <div key={`minWithdraw__${index}`} className="mb-1 text-base last:mb-0">
-                                    {formatNumber(network?.withdrawMin, assetDigit, network?.withdrawMin === 0 ? 6 : 0)}
-                                </div>
-                            ))}
-                        </div>
-                    );
-                }
-            },
+            // {
+            //     key: 'min_withdraw',
+            //     dataIndex: 'min_withdraw',
+            //     title: t('wallet:min_withdraw'),
+            //     width: '20%',
+            //     align: 'right',
+            //     preventSort: true,
+            //     render: (row, item) => {
+            //         const assetDigit = state.configs?.find((o) => o.assetCode === item?.assetCode)?.assetDigit;
+            //         return (
+            //             <div>
+            //                 {item?.networkList?.map((network, index) => (
+            //                     <div key={`minWithdraw__${index}`} className="mb-1 text-base last:mb-0">
+            //                         {formatNumber(network?.withdrawMin, assetDigit, network?.withdrawMin === 0 ? 6 : 0)}
+            //                     </div>
+            //                 ))}
+            //             </div>
+            //         );
+            //     }
+            // },
             {
                 key: 'withdraw_fee',
                 dataIndex: 'withdraw_fee',
@@ -148,9 +148,10 @@ const DepositWithdrawFee = () => {
                 preventSort: true,
                 render: (row, item) => {
                     const assetDigit = state.configs?.find((o) => o.assetCode === item?.assetCode)?.assetDigit;
+                    const sortedNetworkList = item?.networkList.sort((a, b) => parseFloat(a.withdrawFee) - parseFloat(b.withdrawFee));
                     return (
-                        <div>
-                            {item?.networkList?.map((network, index) => (
+                        <div className="mr-3">
+                            {sortedNetworkList.map((network, index) => (
                                 <div key={`withdrawFee__${index}`} className={index === item?.withdrawFee?.length - 1 ? ' text-base' : 'mb-1 text-base'}>
                                     {formatNumber(network?.withdrawFee, assetDigit, network?.withdrawFee === 0 ? 6 : 0)}
                                 </div>
@@ -345,4 +346,4 @@ export const getStaticProps = async ({ locale }) => ({
     }
 });
 
-export default withTabLayout({ routes: TAB_ROUTES.FEE_STRUCTURE, containerClassname: 'px-4 md:pt-20 fee-schedule ' })(DepositWithdrawFee);
+export default withTabLayout({ routes: TAB_ROUTES.FEE_STRUCTURE, containerClassname: 'px-4 md:pt-20 fee-schedule !-mb-4' })(DepositWithdrawFee);

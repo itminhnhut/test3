@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import { formatNumber, getS3Url } from 'redux/actions/utils';
+import { formatNumber, getLoginUrl, getS3Url } from 'redux/actions/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { API_GET_FUTURE_FEE_CONFIGS, API_GET_VIP, API_SET_ASSET_AS_FEE } from 'redux/actions/apis';
-import { BREAK_POINTS, FEE_STRUCTURES, FEE_TABLE, ROOT_TOKEN } from 'constants/constants';
+import { BREAK_POINTS, FEE_TABLE, ROOT_TOKEN } from 'constants/constants';
 import { ApiStatus, TRADING_MODE } from 'redux/actions/const';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
-import { orderBy, range, throttle } from 'lodash';
+import { orderBy, throttle } from 'lodash';
 import { PATHS } from 'constants/paths';
-
 import Axios from 'axios';
 import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout';
 import useWindowSize from 'hooks/useWindowSize';
@@ -18,17 +17,37 @@ import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 import Skeletor from 'components/common/Skeletor';
 import Empty from 'components/common/Empty';
 import ExchangeFeeMobileList from 'components/screens/FeeSchedule/ExchangeFeeMobileList';
-import FuturesFeeMobileList from 'components/screens/FeeSchedule/FuturesFeeMobileList';
-
+import FuturesFeeMobileList, { FuturesFeeMobileListV2 } from 'components/screens/FeeSchedule/FuturesFeeMobileList';
 import NamiCircle from 'components/svg/NamiCircle';
-import SwitchV2 from 'components/common/V2/SwitchV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Crown from 'components/svg/Crown';
 import classnames from 'classnames';
 import useDarkMode from 'hooks/useDarkMode';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
-import TableV2 from 'components/common/V2/TableV2';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import { MoneyIcon } from 'components/svg/SvgIcon';
+import { fees } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import AssetLogo from 'components/wallet/AssetLogo';
+import FeeSettingModal from 'components/screens/FeeSchedule/FeeSettingModal';
+
+const NAMI_NAO_TYPE = [
+    {
+        id: 0,
+        name: 'VNDC_SUB_TAB',
+        content: {
+            vi: 'VNDC',
+            en: 'VNDC'
+        }
+    },
+    {
+        id: 1,
+        name: 'USDT_SUB_TAB',
+        content: {
+            vi: 'USDT',
+            en: 'USDT'
+        }
+    }
+];
 
 const INITIAL_STATE = {
     tabIndex: 0,
@@ -40,10 +59,14 @@ const INITIAL_STATE = {
     loadingVipLevel: false,
     assetFee: null,
     promoteFee: null,
-    loadingAssetFee: false
-
-    // ...
+    loadingAssetFee: false,
+    subTabIndex: 0,
+    isVisible: false,
+    configTabIndex: 0,
+    subConfigTabIndex: 0
 };
+
+const feesWithoutOnus = fees.filter((rs) => !(rs.assetId === 86));
 
 const TradingFee = () => {
     // Init state
@@ -65,9 +88,7 @@ const TradingFee = () => {
         i18n: { language }
     } = useTranslation();
     const { width } = useWindowSize();
-
     const [currentTheme] = useDarkMode();
-
     const handleHideScrollBar = () => {
         const malLayout = document.querySelector('.mal-layouts');
         if (window.innerWidth < 650) {
@@ -81,19 +102,6 @@ const TradingFee = () => {
     };
     useEffect(handleHideScrollBar, []);
     // Helper
-    const getFuturesFeeConfigs = async () => {
-        !state.futuresFeeConfig && setState({ loadingFuturesFeeConfigs: true });
-        try {
-            const { data } = await Axios.get(API_GET_FUTURE_FEE_CONFIGS);
-            if (data?.status === ApiStatus.SUCCESS && data?.data) {
-                setState({ futuresFeeConfig: data.data });
-            }
-        } catch (e) {
-            console.log(`Can't get futures fee config `, e);
-        } finally {
-            setState({ loadingFuturesFeeConfigs: false });
-        }
-    };
 
     const getVip = async () => {
         setState({ loadingVipLevel: true });
@@ -109,35 +117,6 @@ const TradingFee = () => {
         }
     };
 
-    const onUseAssetAsFee = throttle(async (action = 'get', currency = undefined, assetCode = 'NAMI') => {
-        setState({ loadingAssetFee: true });
-
-        try {
-            if (action === 'get') {
-                const { data } = await Axios.get(API_SET_ASSET_AS_FEE);
-                if (data?.status === ApiStatus.SUCCESS && data?.data) {
-                    setState({
-                        assetFee: data.data,
-                        promoteFee: {
-                            exchange: data?.data?.promoteSpot,
-                            futures: data?.data?.promoteFutures
-                        }
-                    });
-                }
-            }
-            if (action === 'set' && currency !== undefined) {
-                const { data } = await Axios.post(API_SET_ASSET_AS_FEE, { currency });
-                if (data?.status === ApiStatus.SUCCESS && data?.data) {
-                    setState({ assetFee: data.data });
-                }
-            }
-        } catch (e) {
-            console.log(`Can't ${action} ${assetCode} as asset fee `, e);
-        } finally {
-            setState({ loadingAssetFee: false });
-        }
-    }, 800);
-
     // Render Handler
     const renderNamiAvailable = useCallback(() => {
         if (!namiWallets)
@@ -150,17 +129,6 @@ const TradingFee = () => {
         const available = namiWallets?.value - namiWallets?.locked_value;
         return <span className="whitespace-nowrap ml-1.5">{available ? formatNumber(available, assetConfig?.assetDigit) : '0.0000'} NAMI</span>;
     }, [namiWallets, assetConfig]);
-
-    const renderUseAssetAsFeeBtn = useCallback(() => {
-        const nextAssetFee = state.assetFee?.feeCurrency === 1 ? 0 : 1;
-        return (
-            <SwitchV2
-                disabled={state.loadingAssetFee}
-                checked={!!state.assetFee?.feeCurrency}
-                onChange={() => !state.loadingAssetFee && onUseAssetAsFee('set', nextAssetFee)}
-            />
-        );
-    }, [state.assetFee, state.loadingAssetFee]);
 
     const renderFeeTab = useCallback(() => {
         return (
@@ -179,30 +147,48 @@ const TradingFee = () => {
         );
     }, [state.tabIndex, TRADING_FEE_TAB]);
 
+    const renderFeeTabMb = useCallback(() => {
+        return (
+            <Tabs tab={state.tabIndex}>
+                {TRADING_FEE_TAB.map((tab) => (
+                    <TabItem
+                        key={`trading_fee_Tab__${tab.dataIndex}`}
+                        value={tab.index}
+                        className="!text-left !px-0 !mr-6 !w-auto"
+                        onClick={() => setState({ tabIndex: tab.index })}
+                    >
+                        {tab.localized ? t(tab.localized, { action: 'Exchange' }) : tab.title}
+                    </TabItem>
+                ))}
+            </Tabs>
+        );
+    }, [state.tabIndex, TRADING_FEE_TAB]);
+
     const renderFuturesTableFee = useCallback(() => {
         let tableStatus;
 
         const columns = [
             {
                 key: 'symbol',
-                dataIndex: 'symbol',
-                title: t('common:pair'),
-                width: 200,
-                fixed: 'left',
-                align: 'left'
-            },
-            {
-                key: 'max_leverage',
-                dataIndex: 'max_leverage',
-                title: t('common:max_leverage'),
-                width: 200,
-                align: 'right'
+                dataIndex: 'assetCode',
+                title: 'Coin/Token',
+                align: 'left',
+                render: (assetCode) => {
+                    return (
+                        <div className="flex items-center font-semibold text-sm sm:text-base py-4">
+                            {width >= 768 && <AssetLogo assetCode={assetCode} size={width >= 1024 ? 32 : 28} />}
+                            <div className={width >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap' + ' truncate'}>
+                                <span className="text-txtPrimary dark:text-txtPrimary-dark">{assetCode}</span>
+                            </div>
+                        </div>
+                    );
+                }
             },
             {
                 key: 'fee',
-                dataIndex: 'fee',
+                dataIndex: 'ratio',
                 title: (
-                    <span>
+                    <span className="ml-1">
                         {' '}
                         {t('common:fee')}
                         <span className="ml-1">
@@ -210,23 +196,8 @@ const TradingFee = () => {
                         </span>
                     </span>
                 ),
-                width: 200,
-                align: 'right'
-            },
-            {
-                key: 'fee_promote',
-                dataIndex: 'fee_promote',
-                title: (
-                    <span>
-                        {' '}
-                        {t('common:fee')} NAMI
-                        <span className="ml-1">
-                            ({t('common:open')}/{t('common:close')})
-                        </span>
-                    </span>
-                ),
-                width: 200,
-                align: 'right'
+                align: 'right',
+                render: (ratio) => <span>{`${ratio} / ${ratio}`}</span>
             }
         ];
 
@@ -239,8 +210,6 @@ const TradingFee = () => {
             }
         });
 
-        // console.log('namidev-DEBUG: FILTERED => ', dataFilter)
-
         const data = dataHandler({
             tabIndex: state.tabIndex,
             data: orderBy(dataFilter || state.futuresFeeConfig, ['name'], ['asc']),
@@ -250,42 +219,30 @@ const TradingFee = () => {
         if (!data?.length) {
             tableStatus = <Empty />;
         }
-
+        const dataForTable = getRenderFutureFeeData(state.tabIndex, state.subTabIndex);
         return (
             <ReTable
-                // sort
-                // defaultSort={{ key: 'symbol', direction: 'asc' }}
                 useRowHover
-                data={data}
+                data={dataForTable}
                 columns={columns}
                 rowKey={(item) => item?.key}
                 tableStatus={tableStatus}
                 scroll={{ x: true }}
                 tableStyle={{
                     paddingHorizontal: width >= 768 ? '2rem' : '0.75rem',
-                    tableStyle: { minWidth: '992px !important' },
+                    tableStyle: { minWidth: '768px !important' },
                     headerStyle: {},
                     rowStyle: {},
-                    shadowWithFixedCol: width <= 992,
+                    shadowWithFixedCol: width <= BREAK_POINTS.lg,
                     noDataStyle: {
                         minHeight: '280px'
                     },
                     backgroundColor: '#0c0e14 !important'
                 }}
-                paginationProps={{
-                    current: state.currentFuturesFeePage,
-                    pageSize: 10,
-                    onChange: (currentFuturesFeePage) => {
-                        window.document.getElementById('trading_fee').scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                        setState({ currentFuturesFeePage });
-                    }
-                }}
                 isNamiV2
             />
         );
-    }, [state.tabIndex, state.loadingFuturesFeeConfigs, state.currentFuturesFeePage, width]);
+    }, [state.tabIndex, state.loadingFuturesFeeConfigs, state.currentFuturesFeePage, width, state.subTabIndex]);
 
     const renderExchangeTableFee = useCallback(() => {
         const columns = [
@@ -297,8 +254,6 @@ const TradingFee = () => {
                 fixed: 'left',
                 align: 'left'
             },
-            // { key: 'vol_30d', dataIndex: 'vol_30d', title: t('common:vol_trade_in', { duration: '30d' }), width: 100, align: 'left' },
-            // { key: 'andor', dataIndex: 'andor', title: t('fee-structure:andor'), width: 100, align: 'left' },
             {
                 key: 'nami_holding',
                 dataIndex: 'nami_holding',
@@ -363,98 +318,9 @@ const TradingFee = () => {
         );
     }, [state.tabIndex, state.vipLevel, width]);
 
-    const renderExchangeDeduction = useCallback(() => {
-        if (!state.assetFee && state.loadingAssetFee) {
-            return (
-                <>
-                    <Skeletor width={150} height={16} />
-                </>
-            );
-        }
-
-        const promote = state.promoteFee?.exchange;
-
-        if (typeof promote !== 'number') {
-            return null;
-        }
-
-        return (
-            <div className="flex flex-wrap items-center">
-                {language === LANGUAGE_TAG.VI ? (
-                    <>
-                        Dùng NAMI để được giảm phí <span className="ml-1 whitespace-nowrap text-teal">(chiết khấu {promote * 100}%)</span>
-                    </>
-                ) : (
-                    <>
-                        Using NAMI deduction <span className="ml-1 whitespace-nowrap text-teal">({promote * 100}% discount)</span>
-                    </>
-                )}
-            </div>
-        );
-    }, [state.promoteFee?.exchange, state.loadingAssetFee, state.assetFee, language]);
-
-    const renderFuturesDeduction = useCallback(() => {
-        if (!state.assetFee && state.loadingAssetFee) {
-            return (
-                <>
-                    <Skeletor width={150} height={16} />
-                </>
-            );
-        }
-
-        const promote = state.promoteFee?.futures;
-
-        if (typeof promote !== 'number') {
-            return null;
-        }
-
-        return (
-            <div className="flex flex-wrap items-center">
-                {language === LANGUAGE_TAG.VI ? (
-                    <>
-                        Dùng NAMI để được giảm phí <span className="ml-1 text-teal whitespace-nowrap">(chiết khấu {promote * 100}%)</span>
-                    </>
-                ) : (
-                    <>
-                        Using NAMI deduction <span className="ml-1 text-teal whitespace-nowrap">({promote * 100}% discount)</span>
-                    </>
-                )}
-            </div>
-        );
-    }, [state.promoteFee?.futures, state.loadingAssetFee, state.assetFee, language]);
-
-    const renderUsedNamiMsg = useCallback(() => {
-        // if (state.assetFee?.feeCurrency !== 1) return null;
-        return <div className="mt-6 text-teal">(*) {t('fee-structure:used_fee_deduction', { token: `${ROOT_TOKEN} tokens` })}</div>;
-    }, [state.assetFee?.feeCurrency]);
-
-    const renderUserFeeConfig = useCallback(
-        (maker, taker) => {
-            return state.assetFee?.feeCurrency === 1 ? (
-                <>
-                    <span className="mr-2 font-semibold text-txtPrimary dark:text-txtPrimary-dark">{maker}%</span>
-                    <span>{taker}%</span>
-                </>
-            ) : (
-                <>
-                    <span>{maker}%</span>
-                    <span className="ml-2 font-semibold text-txtPrimary dark:text-txtPrimary-dark">{taker}%</span>
-                </>
-            );
-        },
-        [state.assetFee?.feeCurrency]
-    );
-
     useEffect(() => {
         getVip();
-        onUseAssetAsFee('get');
     }, []);
-
-    useEffect(() => {
-        state.tabIndex !== 0 && getFuturesFeeConfigs();
-    }, [state.tabIndex]);
-
-    // useEffect(() => console.log('namidev-DEBUG: FEE STATE ', state), [state])
 
     const buyNami = namiWallets && (
         <Link
@@ -466,10 +332,18 @@ const TradingFee = () => {
             <a className="text-teal font-semibold whitespace-nowrap hover:!underline ml-4 mt-0">{t('common:buy')} NAMI</a>
         </Link>
     );
-
     const userVipLevel = () =>
         !auth ? (
-            <></>
+            <>
+                <div className="font-semibold leading-normal pt-2">
+                    <span className="text-gray-4">{t('fee-structure:login_view_your_fee')}</span>
+                    {typeof window !== 'undefined' && (
+                        <Link href={getLoginUrl('sso', 'login')}>
+                            <a className="cursor-pointer ml-3 w-[85px] text-txtTextBtn-dark">{t('fee-structure:login')}</a>
+                        </Link>
+                    )}
+                </div>
+            </>
         ) : (
             <>
                 <div
@@ -490,13 +364,20 @@ const TradingFee = () => {
                         <span className="font-semibold">{renderNamiAvailable()}</span>
                         {buyNami}
                     </div>
-
-                    <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
-                        <ButtonV2 className="absolute bottom-0 inset-x-6 translate-y-[40%] !px-6 !w-auto">
-                            <span className="mr-2">{t('fee-structure:vip_upgrade')}</span>
-                            <Crown />
+                    <div className="absolute bottom-0 translate-y-[70%] px-6 h-[92px] w-full  flex flex-col gap-3">
+                        {/* <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}> */}
+                        <ButtonV2 className="!w-auto" onClick={() => setState({ isVisible: true })}>
+                            <MoneyIcon size={'16px'} />
+                            <span className="!ml-2">{t('fee-structure:fee_setting')}</span>
                         </ButtonV2>
-                    </Link>
+                        {/* </Link> */}
+                        <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
+                            <ButtonV2 className="!w-auto !h-[36px] !bg-transparent">
+                                <Crown fill={'#47cc85'} />
+                                <span className="!ml-2 text-txtTextBtn-dark">{t('fee-structure:vip_upgrade')}</span>
+                            </ButtonV2>
+                        </Link>
+                    </div>
                 </div>
                 <div className="hidden md:flex flex-wrap items-center justify-between mt-20">
                     <div>
@@ -513,134 +394,20 @@ const TradingFee = () => {
                             {buyNami}
                         </div>
                     </div>
-                    <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
-                        <ButtonV2 className="!px-6 !w-auto">
-                            <span className="mr-2">{t('fee-structure:vip_upgrade')}</span>
-                            <Crown />
+                    <div className="flex items-center justify-between gap-3">
+                        {/* sửa màu button */}
+                        <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
+                            <ButtonV2 className="!px-6 !w-auto !bg-transparent">
+                                <Crown fill={'#47cc85'} />
+                                <span className="!ml-2 text-txtTextBtn-dark">{t('fee-structure:vip_upgrade')}</span>
+                            </ButtonV2>
+                        </Link>
+                        {/* thêm button fee setting */}
+                        <ButtonV2 className="!px-6 !w-auto" onClick={() => setState({ isVisible: true })}>
+                            <MoneyIcon size={'16px'} />
+                            <span className="!ml-2">{t('fee-structure:fee_setting')}</span>
                         </ButtonV2>
-                    </Link>
-                </div>
-
-                <div className="relative mt-12 p-6 nami-light-shadow bg-white dark:bg-darkBlue-3 rounded-xl">
-                    <div
-                        className={classnames(
-                            'relative z-10 w-full flex md:flex-row flex-col gap-10',
-                            'divide-y md:divide-y-0 md:divide-x divide-divider dark:divide-divider-dark'
-                        )}
-                    >
-                        <div className="space-y-4 flex-1">
-                            <div className="font-semibold">
-                                <div>{t('fee-structure:exchange_trading_fee')}</div>
-                            </div>
-
-                            <div className="flex">
-                                <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
-                                <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderExchangeDeduction()}</span>
-                            </div>
-
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                                <div className="flex justify-between sm:block">
-                                    <span className="inline-block min-w-[35px] mr-9">Maker</span>
-                                    <span className="float-right">
-                                        {state.vipLevel
-                                            ? renderUserFeeConfig(
-                                                  FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[0].replace('%', ''),
-                                                  FEE_TABLE[state.vipLevel].maker_taker.split(' ')[0].replace('%', '')
-                                              )
-                                            : renderUserFeeConfig(
-                                                  FEE_TABLE[0].maker_taker_deducted.split(' ')[0].replace('%', ''),
-                                                  FEE_TABLE[0].maker_taker.split(' ')[0].replace('%', '')
-                                              )}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                                <div className="flex justify-between sm:block">
-                                    <span className="inline-block min-w-[35px] mr-9">Taker</span>
-                                    <span className="float-right">
-                                        {state.vipLevel
-                                            ? renderUserFeeConfig(
-                                                  FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[2].replace('%', ''),
-                                                  FEE_TABLE[state.vipLevel].maker_taker.split(' ')[2].replace('%', '')
-                                              )
-                                            : renderUserFeeConfig(
-                                                  FEE_TABLE[0].maker_taker_deducted.split(' ')[2].replace('%', ''),
-                                                  FEE_TABLE[0].maker_taker.split(' ')[2].replace('%', '')
-                                              )}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4 pt-10 md:pt-0 md:pl-10 flex-1">
-                            <div className="font-semibold">
-                                <div>{language === LANGUAGE_TAG.VI && 'Phí '}USDT Futures</div>
-                            </div>
-
-                            <div className="flex">
-                                <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
-                                <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderFuturesDeduction()}</span>
-                            </div>
-
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                                <div className="flex justify-between sm:block">
-                                    <span className="inline-block min-w-[35px] mr-9">Maker</span>
-                                    <span className="float-right">
-                                        {renderUserFeeConfig(
-                                            FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[0],
-                                            FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[1]
-                                        )}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                                <div className="flex justify-between sm:block">
-                                    <span className="inline-block min-w-[35px] mr-9">Taker</span>
-                                    <span className="float-right">
-                                        {renderUserFeeConfig(
-                                            FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[0],
-                                            FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[1]
-                                        )}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4 pt-10 md:pt-0 md:pl-10 flex-1">
-                            <div className="font-semibold">
-                                <div>{language === LANGUAGE_TAG.VI && 'Phí '}VNDC Futures</div>
-                            </div>
-
-                            <div className="flex">
-                                <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
-                                <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderFuturesDeduction()}</span>
-                            </div>
-
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                                <div className="flex justify-between sm:block">
-                                    <span className="inline-block min-w-[35px] mr-9">Maker</span>
-                                    <span className="float-right">
-                                        {renderUserFeeConfig(
-                                            FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[0],
-                                            FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[1]
-                                        )}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                                <div className="flex justify-between sm:block">
-                                    <span className="inline-block min-w-[35px] mr-9">Taker</span>
-                                    <span className="float-right">
-                                        {renderUserFeeConfig(
-                                            FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[0],
-                                            FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[1]
-                                        )}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    {renderUsedNamiMsg()}
                 </div>
             </>
         );
@@ -648,10 +415,24 @@ const TradingFee = () => {
     return (
         <>
             {userVipLevel()}
-            <div className="mt-20 mb-8 text-2xl font-semibold">{t('fee-structure:fee_rate')}</div>
+            <div className="mt-20 mb-6 md:!mb-8 text-xl md:!text-2xl font-semibold">{t('fee-structure:fee_rate')}</div>
 
             <div id="trading_fee" className="hidden md:block">
-                <div className="flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-xl px-8 pt-8">{renderFeeTab()}</div>
+                <div className="flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-xl px-8 pt-4">{renderFeeTab()}</div>
+                {state.tabIndex === 1 || state.tabIndex === 2 ? (
+                    <div className="py-8 sm:py-6 flex items-center border border-b-0 border-divider dark:border-divider-dark px-8 sm:border-b-[1px] flex-wrap justify-between">
+                        {state.tabIndex === 1 || state.tabIndex === 2 ? (
+                            <TokenTypes
+                                type={state.subTabIndex}
+                                setType={(index) => {
+                                    setState({ subTabIndex: index });
+                                }}
+                                types={[...NAMI_NAO_TYPE]}
+                                lang={language}
+                            />
+                        ) : null}
+                    </div>
+                ) : null}
                 <div className="border border-divider dark:border-divider-dark rounded-b-xl pb-8">
                     {state.tabIndex === 0 && renderExchangeTableFee()}
                     {state.tabIndex !== 0 && renderFuturesTableFee()}
@@ -659,29 +440,24 @@ const TradingFee = () => {
             </div>
 
             <div className="md:hidden">
-                <div className="flex gap-x-2 py-2 overflow-x-auto sticky top-0 bg-white dark:bg-dark-dark no-scrollbar">
-                    {TRADING_FEE_TAB.map((tab) => {
-                        return (
-                            <div
-                                key={tab.index}
-                                onClick={() => setState({ tabIndex: tab.index })}
-                                className={classnames(
-                                    'px-4 py-2 text-sm border rounded-full font-semibold whitespace-nowrap cursor-pointer',
-                                    'transition duration-100',
-                                    {
-                                        'border-teal bg-teal/[.1] text-teal': state.tabIndex === tab.index,
-                                        'border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark': state.tabIndex !== tab.index
-                                    }
-                                )}
-                            >
-                                {tab.title}
-                            </div>
-                        );
-                    })}
-                </div>
+                <div className="border-b-[1px] border-divider dark:border-divider-dark -mx-4 px-4">{renderFeeTabMb()}</div>
+                {state.tabIndex === 1 || state.tabIndex === 2 ? (
+                    <div className="pt-6 flex items-center justify-between">
+                        {state.tabIndex === 1 || state.tabIndex === 2 ? (
+                            <TokenTypes
+                                type={state.subTabIndex}
+                                setType={(index) => {
+                                    setState({ subTabIndex: index });
+                                }}
+                                types={[...NAMI_NAO_TYPE]}
+                                lang={language}
+                            />
+                        ) : null}
+                    </div>
+                ) : null}
                 {state.tabIndex === 0 && <ExchangeFeeMobileList t={t} />}
                 {[1, 2].includes(state.tabIndex) && (
-                    <FuturesFeeMobileList
+                    <FuturesFeeMobileListV2
                         t={t}
                         currentQuote={
                             {
@@ -690,26 +466,32 @@ const TradingFee = () => {
                             }[state.tabIndex]
                         }
                         loading={state.loadingFuturesFeeConfigs}
-                        data={state.futuresFeeConfig}
+                        data={getRenderFutureFeeData(state.tabIndex, state.subTabIndex)}
                     />
                 )}
             </div>
 
             <div className="mt-12 md:mt-8 space-y-2 nami-list-disc">
-                <div className='flex items-center'>
+                <div className="flex items-center">
                     {t('fee-structure:maker_taker_description')}
                     <span className="ml-2">{t('fee-structure:maker_taker_description_2')}</span>
-                    <HrefButton variants='blank' className="!w-auto ml-3" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank">
+                    <HrefButton variants="blank" className="!w-auto ml-3" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank">
                         {t('common:read_more')}
                     </HrefButton>
                 </div>
-                <div className='flex items-center'>
+                <div className="flex items-center">
                     {t('fee-structure:referral_description_value', { value: '20%' })}
-                    <HrefButton variants='blank' className="!w-auto ml-3" href={PATHS.ACCOUNT.REFERRAL} target="_blank">
+                    <HrefButton variants="blank" className="!w-auto ml-3" href={PATHS.ACCOUNT.REFERRAL} target="_blank">
                         {t('common:read_more')}
                     </HrefButton>
                 </div>
             </div>
+            <FeeSettingModal
+                configFeeTab={TRADING_FEE_TAB}
+                isVisible={state.isVisible}
+                onBackdropCb={() => setState({ isVisible: false })}
+                vipLevel={state.vipLevel || 0}
+            />
         </>
     );
 };
@@ -717,29 +499,26 @@ const TradingFee = () => {
 const TRADING_FEE_TAB = [
     {
         index: 0,
-        dataIndex: 'exchange',
-        title: 'Exchange',
-        localized: 'fee-structure:exchange_trading'
+        dataIndex: 'SPOT',
+        title: 'Spot'
     },
     {
         index: 1,
-        dataIndex: 'usdt_futures',
-        title: 'USDT Futures'
+        dataIndex: 'NAMI',
+        title: 'NAMI Futures'
     },
     {
         index: 2,
-        dataIndex: 'vndc_futures',
-        title: 'VNDC Futures'
+        dataIndex: 'NAO',
+        title: 'NAO Futures'
     }
 ];
 
 const dataHandler = (props) => {
     const { tabIndex, data, loading, utils } = props;
-
     const result = [];
     const skeleton = [];
     let rowLoading;
-
     if (tabIndex === 0) {
         rowLoading = TRADING_FEE_ROW_LOADING;
     } else {
@@ -757,7 +536,6 @@ const dataHandler = (props) => {
     }
 
     if (!Array.isArray(data) || !data || !data.length) return [];
-
     switch (tabIndex) {
         case 0:
             data.forEach((d) => {
@@ -768,8 +546,6 @@ const dataHandler = (props) => {
                             VIP {d.level} {utils?.currentLevel === d.level && <NamiCircle className="ml-2" />}
                         </span>
                     ),
-                    // vol_30d: <span className="text-sm">{d.vol_30d}</span>,
-                    // andor: <span className="text-sm">{d.andor}</span>,
                     nami_holding: <span>≥ {formatNumber(d.nami_holding, 0)}</span>,
                     maker_taker: <span>{d.maker_taker}</span>,
                     maker_taker_deducted: <span>{d.maker_taker_deducted}</span>
@@ -814,6 +590,53 @@ const dataHandler = (props) => {
     return result;
 };
 
+const TokenTypes = ({ type, setType, types, lang, className }) => {
+    return (
+        <div className={classnames('flex items-center space-x-3 h-9 sm:h-12 font-normal text-sm overflow-auto no-scrollbar', className)}>
+            {types.map((e) => (
+                <div
+                    key={e.id}
+                    className={classnames(
+                        ` ${
+                            type !== e.id && 'text-txtTextBtn-tonal_dark'
+                        } flex items-center h-full flex-auto justify-center px-4 text-sm sm:text-base rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap`,
+                        {
+                            'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
+                            'border-divider dark:border-divider-dark': e.id !== type
+                        }
+                    )}
+                    onClick={() => setType(e.id)}
+                >
+                    {e?.content[lang]}
+                </div>
+            ))}
+        </div>
+    );
+};
+
+const getRenderFutureFeeData = (tabIndex, subTabIndex) => {
+    const codeOfAssetOrder = [];
+    const dataForTable = [];
+    if (feesWithoutOnus && feesWithoutOnus.length > 0) {
+        if (tabIndex === 1 && subTabIndex === 0) {
+            codeOfAssetOrder = [72, 1];
+        } else if (tabIndex === 1 && subTabIndex === 1) {
+            codeOfAssetOrder = [22, 1];
+        } else if (tabIndex === 2 && subTabIndex === 0) {
+            codeOfAssetOrder = [72, 447, 1];
+        } else if (tabIndex === 2 && subTabIndex === 1) {
+            codeOfAssetOrder = [22, 447, 1];
+        }
+        codeOfAssetOrder.forEach((assetCode) => {
+            const foundFee = feesWithoutOnus.find((fee) => fee.assetId === assetCode);
+            if (foundFee) {
+                dataForTable.push(foundFee);
+            }
+        });
+    }
+    return dataForTable;
+};
+
 const FUTURES_FEE_ROW_LOADING = {
     symbol: <Skeletor width={65} />,
     max_leverage: <Skeletor width={65} />,
@@ -830,8 +653,6 @@ const TRADING_FEE_ROW_LOADING = {
     maker_taker_deducted: <Skeletor width={65} />
 };
 
-const GRAPHICS_WIDTH = '200px';
-
 export const getStaticProps = async ({ locale }) => ({
     props: {
         ...(await serverSideTranslations(locale, ['common', 'navbar', 'fee-structure']))
@@ -840,5 +661,5 @@ export const getStaticProps = async ({ locale }) => ({
 
 export default withTabLayout({
     routes: TAB_ROUTES.FEE_STRUCTURE,
-    containerClassname: 'px-4 md:pt-20  fee-schedule '
+    containerClassname: 'px-4 md:pt-20 fee-schedule !pb-0 !-mb-4'
 })(TradingFee);

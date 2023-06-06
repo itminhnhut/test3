@@ -15,6 +15,9 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import useApp from 'hooks/useApp';
 import { ChevronLeft } from 'react-feather';
 import router from 'next/router';
+import { IconHelperV2 } from 'components/common/Icons';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import styled from 'styled-components';
 
 export const CURRENCIES = [
     {
@@ -31,7 +34,7 @@ const initColumns = [
     {
         title: 'min_order_size',
         tooltip: 'min_order_size_tooltips',
-        width: 200
+        width: 190
     },
     {
         title: 'max_order_size_limit',
@@ -94,6 +97,7 @@ const TradingRules = () => {
     const [currency, setCurrency] = useState(CURRENCIES[0].value);
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [currentTheme] = useDarkMode();
 
     useEffect(() => {
         if (!publicSocket) return;
@@ -212,10 +216,12 @@ const TradingRules = () => {
                 dataIndex: 'symbol',
                 title: <span className="text-sm">{t('futures:funding_history_tab:contract')}</span>,
                 align: 'left',
-                width: 250,
+                // width: 250,
+                width: 274,
                 sorter: false,
-                fixed: width >= 992 ? 'none' : 'left',
-                render: (data, item) => renderLogo(item)
+                fixed: 'left',
+                render: (data, item) => renderLogo(item),
+                className: 'custom-style mr-6'
             }
         ].concat(
             initColumns.map((c) => {
@@ -248,9 +254,20 @@ const TradingRules = () => {
             {isMobile && <GlossaryModal isVisible={showModal} onClose={() => setShowModal(false)} />}
             <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20', { 'pt-12': isApp })}>
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
-                    <div className="flex justify-between mb-7 sm:mb-20">
-                        <div className="text-xl sm:text-[2rem] sm;leading-[2.375rem] font-semibold ">{t('futures:trading_rules')}</div>
-                        {isMobile && <HelperIcon onClick={() => setShowModal(true)} />}
+                    <div className="flex justify-between sm:justify-start sm:items-center sm:gap-2 mb-7 sm:mb-20">
+                        <div className="text-xl sm:text-[2rem] sm:leading-[2.375rem] font-semibold ">{t('futures:trading_rules')}</div>
+                        {isMobile ? (
+                            <HelperIcon onClick={() => setShowModal(true)} />
+                        ) : (
+                            <div data-for={'trading_rules'} data-tip={t('futures:trading_rules_tooltip')}>
+                                <Tooltip id={'trading_rules'} place="bottom" effect="solid" isV3></Tooltip>
+                                <IconHelperV2
+                                    size={24}
+                                    color={currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e'}
+                                    symbolColor={currentTheme === THEME_MODE.DARK ? '#1e1e1e' : '#e2e8f0'}
+                                />
+                            </div>
+                        )}
                     </div>
                     <div className="sm:flex items-center justify-between mb-8">
                         <div className="flex items-center space-x-4 text-sm sm:text-base mb-12 sm:mb-0">
@@ -311,28 +328,42 @@ const TradingRules = () => {
                             <NoData />
                         )
                     ) : (
-                        <TableV2
-                            defaultSort={{ key: 'asset', direction: 'desc' }}
-                            useRowHover
-                            sort={!isMobile}
-                            data={dataSource}
-                            columns={columns}
-                            rowKey={(item) => `${item?.key}`}
-                            loading={loading}
-                            limit={10}
-                            skip={0}
-                            onChangePage={setCurrentPage}
-                            page={currentPage}
-                            isSearch={strSearch}
-                            className="border border-divider dark:border-divider-dark rounded-xl"
-                            pagingClassName="border-none"
-                        />
+                        <Wrapper>
+                            <TableV2
+                                defaultSort={{ key: 'asset', direction: 'desc' }}
+                                useRowHover
+                                sort={!isMobile}
+                                data={dataSource}
+                                columns={columns}
+                                rowKey={(item) => `${item?.key}`}
+                                loading={loading}
+                                limit={10}
+                                skip={0}
+                                onChangePage={setCurrentPage}
+                                page={currentPage}
+                                isSearch={strSearch}
+                                className="border border-divider dark:border-divider-dark rounded-xl"
+                                pagingClassName="border-none"
+                            />
+                        </Wrapper>
                     )}
                 </div>
             </div>
         </MaldivesLayout>
     );
 };
+
+const Wrapper = styled.div`
+    table {
+        .custom-style:first-of-type {
+            &::after {
+                left: unset !important;
+                right: 0px !important;
+                visibility: visible !important;
+            }
+        }
+    }
+`;
 
 export default TradingRules;
 

@@ -448,25 +448,20 @@
     "funding_history_tab": {
         "tab_ratio_realtime": "Tỷ lệ funding theo thời gian thực",
         "tab_history": "Lịch sử funding",
-
         "find_pair": "Tìm hợp đồng",
-
         "opt_order_default": "Sắp xếp theo mặc định",
         "opt_default": "Sắp xếp theo mặc định",
         "opt_contract_a_z": "Theo hợp đồng (A->Z)",
         "opt_contract_z_a": "Theo hợp đồng (Z->A)",
         "opt_rate_inc": "Theo tỷ lệ tăng dần",
         "opt_rate_desc": "Theo tỷ lệ giảm dần",
-
         "opt_order_default_place": "Mặc định",
         "opt_default_place": "Mặc định",
         "opt_contract_a_z_place": "Tên hợp đồng (A->Z)",
         "opt_contract_z_a_place": "Tên hợp đồng (Z->A)",
         "opt_rate_inc_place": "Tỷ lệ funding tăng dần",
         "opt_rate_desc_place": "Tỷ lệ funding giảm dần",
-
         "contract": "Hợp đồng",
-
         "link_overview": "Giới thiệu tỷ lệ funding",
         "pair": "Cặp",
         "time_left_to_next_funding": "Thời gian đến funding tiếp theo",
@@ -474,7 +469,6 @@
         "days": "ngày",
         "more": "Xem thêm",
         "hours": "giờ",
-
         "funding_range": "Khoảng funding",
         "perpetual": "Vĩnh cửu",
         "information": "Thông tin",
@@ -502,7 +496,6 @@
     "max_leverage": "Đòn bẩy tối đa",
     "swap_fee": "Phí swap",
     "order": "lệnh",
-
     "min_order_size_tooltips": "Khối lượng giao dịch tối thiểu khi đặt lệnh.",
     "max_order_size_tooltips": "Khối lượng giao dịch tối đa khi đặt lệnh.",
     "total_max_trading_volumn_tooltips": "Tổng khối lượng giao dịch tối đa có thể mở của một cặp giao dịch.",
@@ -529,5 +522,6 @@
         "desc": "Để tiếp tục, vui lòng đồng ý với điều khoản của Nami",
         "service": "Đồng ý thoả thuận sử dụng của Nami.",
         "futures": "Đồng ý thoả thuận giao dịch tại Nami Futures."
-    }
+    },
+    "trading_rules_tooltip": "Áp dụng cho cả NAMI Futures và NAO Futures"
 }

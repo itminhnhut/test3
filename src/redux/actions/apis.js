@@ -98,6 +98,8 @@ export const API_CLOSE_ALL_ORDERS_BY_CONDTION = API_V3_PREFIX + 'futures/vndc/cl
 export const API_DCA_ORDER = API_V3_PREFIX + 'futures/vndc/dca-order';
 export const API_PARTIAL_CLOSE_ORDER = API_V3_PREFIX + 'futures/vndc/partialcloseorderv2';
 
+export const API_FEE_SETTING_NAMI_FUTURE = API_PREFIX + 'futures/fee_asset';
+export const API_FEE_SETTING_NAO_FUTURE = API_PREFIX + 'nao/fee_asset';
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price';
 export const API_GET_SWAP_HISTORY = API_V3_PREFIX + 'swap/history';
@@ -335,5 +337,5 @@ export const API_SET_PHONE_VERIFY = API_PREFIX + 'user/set_phone_verify';
 
 // internal
 export const API_INTERNAL_FIND_USER = API_V3_PREFIX + 'spot/internal-find-user';
-export const API_INTERNAL_TRANSFER= API_V3_PREFIX + 'spot/internal-transfer';
+export const API_INTERNAL_TRANSFER = API_V3_PREFIX + 'spot/internal-transfer';
 export const API_INTERNAL_TRANSFER_HISTORY = API_V3_PREFIX + 'spot/internal-transfer-history';
