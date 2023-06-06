@@ -23,6 +23,7 @@ import DarkNote from 'components/common/DarkNote';
 import DetailOrderHeader from './components/DetailOrderHeader';
 import Skeletor from 'components/common/Skeletor';
 import DetailLog from './components/DetailLog';
+import Error404 from 'components/common/404';
 
 export const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
@@ -67,6 +68,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         }),
         [state.orderDetail]
     );
+    const isRejectedOrNotAccept = status?.status === PartnerOrderStatus.REJECTED || status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING;
 
     const assetCode = getAssetCode(state.orderDetail?.baseAssetId);
 
@@ -366,6 +368,9 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     if (auth && auth?.kyc_status !== 2) return <ModalNeedKyc isOpenModalKyc={true} />;
     // End handle not Login || not KYC
 
+    // not show detail if view from partner
+    if (mode === MODE.PARTNER && isRejectedOrNotAccept) return <Error404 />;
+
     return (
         <div className="w-full h-full pt-20 pb-[120px] px-4">
             <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full">
@@ -382,12 +387,12 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 />
                 <GroupInforCard
                     isDark={isDark}
+                    isHiddenBankInformation={isRejectedOrNotAccept}
                     mode={mode}
                     assetCode={assetCode}
                     orderDetail={state.orderDetail}
                     side={side}
                     setModalQr={() => setState({ isShowQr: true })}
-                    status={status}
                 />
                 {/* Lưu ý */}
                 {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
