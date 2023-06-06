@@ -149,6 +149,8 @@
     "disabled_smart_otp_title": "Vô hiệu hoá",
     "disabled_smart_otp_des": "Tính năng Smart OTP đã bị vô hiệu hoá do nhập mã Smart OTP sai 5 lần. Vui lòng sử dụng các hình thức xác thực OTP khác hoặc thiết lập lại Smart OTP để tiếp tục sử dụng.",
     "verify_by_email": "Xác thực bằng Email",
+    "verify_now": "Xác thực ngay",
+    "not_have_payment_content": "Bạn có thể tùy chọn thực hiện xác thực hình thức thanh toán để sử dụng tính năng Nạp Rút qua đối tác của Nami.",
     "error": {
         "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
         "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",

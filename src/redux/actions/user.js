@@ -119,7 +119,7 @@ export function getMe(resetCache = false) {
                     method: 'GET'
                 },
                 params: {
-                    resetCache
+                    resetCache: true
                 }
             });
             if (status === 'ok') {

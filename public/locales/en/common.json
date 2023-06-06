@@ -454,5 +454,7 @@
     "reload": "Reload",
     "waiting_verify_ekyc": "Waiting for eKYC verification",
     "waiting_verify_ekyc_des": "You have submitted successfully. Please wait a few minutes for the results.",
-    "kyc_status": "KYC status"
+    "kyc_status": "KYC status",
+    "account_locking": "Account is temporarily locked",
+    "account_locking_content": "Your account has been temporarily locked due to AML-CFT compliance terms. Please contact our support for more details."
 }

@@ -61,7 +61,8 @@ const UserWD = ({ type, children, side }) => {
             }
         })
             .then(({ status, data }) => {
-                if (status === ApiStatus.SUCCESS) setIsHaveBank(!!data);
+                console.log("____data: ", data);
+                if (status === ApiStatus.SUCCESS) setIsHaveBank(data && data?.length > 0);
             })
             .finally(() => setLoadingListUserBank(false));
     };
@@ -128,20 +129,16 @@ export default UserWD;
 const ModalAddPaymentMethod = ({ isVisible, t }) => {
     return (
         <ModalV2
-            // isMobile={isMobile || width < WIDTH_MD}
             isVisible={isVisible}
-            // onBackdropCb={onBackdropCb}
             className="!max-w-[488px]"
             wrapClassName="p-8 flex flex-col tracking-normal"
-            // customHeader={isFunction(onBackdropCb) ? null : () => <></>}
-            // btnCloseclassName="!pt-0"
             closeButton={false}
         >
             <img width={124} height={124} src={getS3Url('/images/payment_method/illustration_homepage.png')} className="mx-auto mt-4" />
             <div className="mb-4 mt-6 txtPri-3 text-center capitalize">{t('common:notice')}</div>
-            <div className="text-center txtSecond-2">{t('wallet:errors.invalid_kyc_status')}</div>
+            <div className="text-center txtSecond-2">{t('dw_partner:not_have_payment_content')}</div>
             <HrefButton className="mt-10 mb-3" href="/account/payment-method?isAdd=true">
-                {'Xác thực thanh toán'}
+                {t('dw_partner:verify_now')}
             </HrefButton>
         </ModalV2>
     );

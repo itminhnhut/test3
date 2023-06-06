@@ -7,8 +7,7 @@ import { WIDTH_MD } from 'components/screens/Wallet';
 import useWindowSize from 'hooks/useWindowSize';
 import { isFunction } from 'lodash';
 import { KYC_STATUS } from 'redux/actions/const';
-import { SuccessIcon } from 'components/screens/NewReference/mobile/sections/Info/AddNewRef';
-import { ErrorIcon } from 'components/screens/Nao/AlertNaoV2Modal';
+import { ErrorIcon, SuccessIcon } from './V2/ModalV2/AlertModalV2';
 
 const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile, auth }) => {
     if (!isOpenModalKyc) return null;
@@ -35,10 +34,10 @@ const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile, auth }) => {
                     <div className="flex flex-col items-center">
                         {isWaitingEkyc ? <SuccessIcon /> : <ErrorIcon />}
                         <div className="mt-6 mb-4 font-semibold text-2xl text-txtPrimary dark:text-gray-4 text-center">
-                            {isWaitingEkyc ? t('common:waiting_verify_ekyc') : t('navbar:temp_locking')}
+                            {isWaitingEkyc ? t('common:waiting_verify_ekyc') : t('common:account_locking')}
                         </div>
                         <span className="text-gray-1 dark:text-gray-7 text-center">
-                            {isWaitingEkyc ? t('common:waiting_verify_ekyc_des') : t('common:waiting_verify_ekyc_des')}
+                            {isWaitingEkyc ? t('common:waiting_verify_ekyc_des') : t('common:account_locking_content')}
                         </span>
                         <HrefButton className="mt-10 mb-3" href="/account/identification">
                             {t('common:kyc_status')}

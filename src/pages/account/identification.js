@@ -109,9 +109,9 @@ const LockingKycCard = ({ t, className }) => {
     return (
         <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
             <img className="mx-auto w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc_wait.png')} />
-            <p className="text-teal font-semibold text-xl md:text-2xl mb-1 mt-6">{t('identification:account.locking')}</p>
-            <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('identification:account.locking_content')}</span>
-            <TextButton className={'mt-1'} onClick={() => window.fcWidget.open({ name: 'Inbox', replyText: '' })}>
+            <p className="text-teal font-semibold text-xl md:text-2xl mb-1 mt-6">{t('common:account_locking')}</p>
+            <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('common:account_locking_content')}</span>
+            <TextButton className={'mt-1'} onClick={() => window?.fcWidget?.open({ name: 'Inbox', replyText: '' })}>
                 {t('common:chat_with_support')}
             </TextButton>
         </div>

@@ -450,5 +450,7 @@
     "reload": "Tải lại",
     "waiting_verify_ekyc": "Chờ xác thực eKYC",
     "waiting_verify_ekyc_des": "Bạn đã gửi thông tin eKYC thành công. Vui lòng chờ kết quả trong ít phút.",
-    "kyc_status": "Trạng thái KYC"
+    "kyc_status": "Trạng thái KYC",
+    "account_locking": "Tài khoản bị tạm khoá",
+    "account_locking_content": "Tài khoản của bạn đã bị tạm khóa do các điều khoản tuân thủ AML-CFT. Vui lòng liên hệ bộ phận hỗ trợ để biết thêm chi tiết."
 }

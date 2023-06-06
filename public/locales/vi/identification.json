@@ -31,8 +31,6 @@
         "not_verified_content": "Hoàn tất xác minh để truy cập các dịch vụ của Nami",
         "process": "Yêu cầu xác minh đang chờ duyệt",
         "process_content": "Yêu cầu xác minh của bạn sẽ được xử lý trong thời gian sớm nhất. Hệ thống sẽ gửi thông báo qua email và ứng dụng khi tài khoản xác thực thành công.",
-        "locking": "Tài khoản bị tạm khoá",
-        "locking_content": "Tài khoản của bạn đã bị tạm khóa do các điều khoản tuân thủ AML-CFT. Vui lòng liên hệ bộ phận hỗ trợ để biết thêm chi tiết.",
         "congratulations": "Chúc mừng!",
         "not_verified_2": "Hoàn tất xác minh để truy cập các dịch vụ của Nami",
         "verified": "Tài khoản của bạn đã được xác minh."
