@@ -19,6 +19,7 @@ const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile, auth }) => {
     const [currentLocale] = useLanguage();
     const { width } = useWindowSize();
 
+
     return (
         <ModalV2
             isMobile={isMobile || width < WIDTH_MD}

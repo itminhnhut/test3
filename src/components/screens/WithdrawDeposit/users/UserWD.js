@@ -12,13 +12,12 @@ import { BxsBookIcon } from 'components/svg/SvgIcon';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { TYPE_DW } from '../constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { dwLinkBuilder } from 'redux/actions/utils';
+import { dwLinkBuilder, getS3Url } from 'redux/actions/utils';
 import { API_GET_USER_BANK_LIST } from 'redux/actions/apis';
 import Spinner from 'components/svg/Spinner';
 import colors from 'styles/colors';
 import ModalV2 from 'components/common/V2/ModalV2';
 import FetchApi from 'utils/fetch-api';
-import { getS3Url } from 'utils/reference-utils';
 import { ApiStatus } from 'redux/actions/const';
 
 const getLinkSupport = (isVi) =>
