@@ -368,6 +368,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
     const renderUserControl = useCallback(() => {
         const { avatar, code, kyc_status, partner_type } = auth;
+        const isLocking = kyc_status === KYC_STATUS.LOCKING;
         const isNotVerified = kyc_status === KYC_STATUS.NO_KYC;
         const isVerified = kyc_status >= KYC_STATUS.APPROVED;
         const items = [];
@@ -420,10 +421,8 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                             </div>
                         </div>
                         {!isNotVerified && (
-                            <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 text-center">
-                                <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}>
-                                    {isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
-                                </div>
+                            <TagV2 type={isLocking ? 'failed' : isVerified ? 'success' : 'warning'} className="py-2 px-3 text-center !text-sm !ml-4">
+                                {isLocking ? t('navbar:temp_locking') : isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
                             </TagV2>
                         )}
                     </div>

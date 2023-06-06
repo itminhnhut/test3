@@ -6,9 +6,15 @@ import { getS3Url } from 'redux/actions/utils';
 import { WIDTH_MD } from 'components/screens/Wallet';
 import useWindowSize from 'hooks/useWindowSize';
 import { isFunction } from 'lodash';
+import { KYC_STATUS } from 'redux/actions/const';
+import { SuccessIcon } from 'components/screens/NewReference/mobile/sections/Info/AddNewRef';
+import { ErrorIcon } from 'components/screens/Nao/AlertNaoV2Modal';
 
-const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile }) => {
+const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile, auth }) => {
     if (!isOpenModalKyc) return null;
+
+    const isWaitingEkyc = auth?.kyc_status === KYC_STATUS.PENDING_APPROVAL;
+    const isLockingEkyc = auth?.kyc_status === KYC_STATUS.LOCKING;
 
     const { t } = useTranslation(['common', 'wallet']);
     const [currentLocale] = useLanguage();
@@ -24,26 +30,52 @@ const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile }) => {
             customHeader={isFunction(onBackdropCb) ? null : () => <></>}
             btnCloseclassName="!pt-0"
         >
-            <img width={isMobile ? 80 : 124} height={isMobile ? 80 : 124} src={getS3Url('/images/screen/account/kyc_require.png')} className="mx-auto mt-4" />
+            {isLockingEkyc || isWaitingEkyc ? (
+                <>
+                    <div className="flex flex-col items-center">
+                        {isWaitingEkyc ? <SuccessIcon /> : <ErrorIcon />}
+                        <div className="mt-6 mb-4 font-semibold text-2xl text-txtPrimary dark:text-gray-4 text-center">
+                            {isWaitingEkyc ? t('common:waiting_verify_ekyc') : t('navbar:temp_locking')}
+                        </div>
+                        <span className="text-gray-1 dark:text-gray-7 text-center">
+                            {isWaitingEkyc ? t('common:waiting_verify_ekyc_des') : t('common:waiting_verify_ekyc_des')}
+                        </span>
+                        <HrefButton className="mt-10 mb-3" href="/account/identification">
+                            {t('common:kyc_status')}
+                        </HrefButton>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <img
+                        width={isMobile ? 80 : 124}
+                        height={isMobile ? 80 : 124}
+                        src={getS3Url('/images/screen/account/kyc_require.png')}
+                        className="mx-auto mt-4"
+                    />
 
-            <div className="mb-4 mt-6 txtPri-3 text-center capitalize">{t('wallet:required_kyc')}</div>
-            <div className="text-center txtSecond-2">{t('wallet:errors.invalid_kyc_status')}</div>
-            <HrefButton className="mt-10 mb-3" href="https://nami.exchange/account/identification">
-                {t('common:kyc_now')}
-            </HrefButton>
-            <HrefButton
-                href={
-                    currentLocale === 'en'
-                        ? 'https://nami.exchange/support/announcement/announcement/important-update-about-nami-exchange-identity-verification-kyc'
-                        : 'https://nami.exchange/vi/support/announcement/thong-bao/cap-nhat-quy-dinh-ve-xac-thuc-tai-khoan-kyc'
-                }
-                target="_blank"
-                variants="secondary"
-            >
-                {t('common:view_manual')}
-            </HrefButton>
+                    <div className="mb-4 mt-6 txtPri-3 text-center capitalize">{t('wallet:required_kyc')}</div>
+                    <div className="text-center txtSecond-2">{t('wallet:errors.invalid_kyc_status')}</div>
+                    <HrefButton className="mt-10 mb-3" href="https://nami.exchange/account/identification">
+                        {t('common:kyc_now')}
+                    </HrefButton>
+                    <HrefButton
+                        href={
+                            currentLocale === 'en'
+                                ? 'https://nami.exchange/support/announcement/announcement/important-update-about-nami-exchange-identity-verification-kyc'
+                                : 'https://nami.exchange/vi/support/announcement/thong-bao/cap-nhat-quy-dinh-ve-xac-thuc-tai-khoan-kyc'
+                        }
+                        target="_blank"
+                        variants="secondary"
+                    >
+                        {t('common:view_manual')}
+                    </HrefButton>
+                </>
+            )}
         </ModalV2>
     );
 };
 
 export default ModalNeedKyc;
+
+

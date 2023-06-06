@@ -12,11 +12,9 @@
         "title": "Current Features",
         "buy_sell": "Buy & Sell Crypto via Partner",
         "price_daily": "200,000,000 VNDC Daily",
-
         "deposit": "Crypto Deposit Limit",
         "withdrawal": "Crypto Withdrawal Limit",
         "unlimited": "Unlimited",
-
         "other": "Other Features",
         "reward": "Reward Center"
     },
@@ -31,10 +29,10 @@
     "account": {
         "not_verified": "Your account is currently not verified.",
         "not_verified_content": "Complete verification to access services on Nami.",
-
         "process": "Your KYC process is reviewing.",
         "process_content": "Your request for account verification is being reviewed and processed as quickly as possible. When your account has been successfully authenticated, the system will notify you through email and app.",
-
+        "locking": "Account is temporarily locked",
+        "locking_content": "Your account has been temporarily locked due to AML-CFT compliance terms. Please contact our support for more details.",
         "congratulations": "Congratulations!",
         "not_verified_2": "Complete verification to access services on Nami.",
         "verified": "Your account has been verified."

@@ -32,6 +32,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
 
     const { user: auth } = useSelector((state) => state.auth) || null;
     const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
+    const isLocking = auth?.kyc_status === KYC_STATUS.LOCKING;
     const isVerified = auth?.kyc_status >= KYC_STATUS.APPROVED;
     const isPartner = auth?.partner_type === 2;
 
@@ -239,10 +240,11 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     </div>
                                 </div>
                                 {!isNotVerified ? (
-                                    <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
-                                        <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}>
-                                            {isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
-                                        </div>
+                                    <TagV2 type={isLocking ? 'failed' : isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
+                                        {/* <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}> */}
+                                        {/* {isVerified ? t('navbar:verified') : t('navbar:pending_approval')} */}
+                                        {isLocking ? t('navbar:temp_locking') : isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
+                                        {/* </div> */}
                                     </TagV2>
                                 ) : (
                                     <ButtonV2 onClick={() => window.open(PATHS.ACCOUNT.IDENTIFICATION)} className="max-w-[150px] !text-sm">
@@ -259,7 +261,13 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                         {page === 'futures' ? (
                             <div className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark ">
                                 <div>{t('navbar:menu.mode')}</div>
-                                <FuturesSetting isDrawer spotState={spotState} resetDefault={resetDefault} onChangeSpotState={onChangeSpotState} className="px-0" />
+                                <FuturesSetting
+                                    isDrawer
+                                    spotState={spotState}
+                                    resetDefault={resetDefault}
+                                    onChangeSpotState={onChangeSpotState}
+                                    className="px-0"
+                                />
                             </div>
                         ) : (
                             <a className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark " onClick={themeToggle}>

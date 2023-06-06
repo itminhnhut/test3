@@ -27,9 +27,17 @@ const KYCPendingTag = ({ t }) => (
         {t('profile:kyc_wait')}
     </TagV2>
 );
+
 const KYCVerifiedTag = ({ t }) => (
     <TagV2 className="ml-3" type="success">
         {t('profile:kyc_verified')}
+    </TagV2>
+);
+
+// chờ Ekyc xác minh
+const KYCTempLocking = ({ t }) => (
+    <TagV2 className="ml-3" type="failed">
+        {t('navbar:temp_locking')}
     </TagV2>
 );
 
@@ -76,7 +84,8 @@ export default function AccountLayout({ children }) {
                                     {{
                                         [KYC_STATUS.NO_KYC]: <KYCUnVerifiedTag t={t} />,
                                         [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                                        [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
+                                        [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />,
+                                        [KYC_STATUS.LOCKING]: <KYCTempLocking t={t} />
                                     }[auth?.user?.kyc_status] || null}
                                 </div>
                                 <TextCopyable

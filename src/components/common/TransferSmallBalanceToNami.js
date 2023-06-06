@@ -311,7 +311,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
             </ModalV2>
 
             {/* If user have not KYC yet */}
-            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} onBackdropCb={() => setIsOpenModalKyc(false)} />
+            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} onBackdropCb={() => setIsOpenModalKyc(false)} auth={auth} />
 
             {/* Modal Confirm */}
             <ModalConfirm

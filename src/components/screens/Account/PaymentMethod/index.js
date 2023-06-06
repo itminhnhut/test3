@@ -294,7 +294,7 @@ const index = () => {
                 isDark={isDark}
                 fetchListUserBank={fetchListUserBank}
             />
-            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
+            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} auth={user} />
         </div>
     );
 };

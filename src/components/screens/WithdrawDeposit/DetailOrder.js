@@ -363,7 +363,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         );
     }
 
-    if (auth && auth?.kyc_status !== 2) return <ModalNeedKyc isOpenModalKyc={true} />;
+    if (auth && auth?.kyc_status !== 2) return <ModalNeedKyc isOpenModalKyc={true} auth={auth} />;
     // End handle not Login || not KYC
 
     return (

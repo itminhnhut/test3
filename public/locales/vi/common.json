@@ -447,5 +447,8 @@
         "reward_received": "Nhận thưởng thành công"
     },
     "wallet": "Ví {{wallet}}",
-    "reload": "Tải lại"
+    "reload": "Tải lại",
+    "waiting_verify_ekyc": "Chờ xác thực eKYC",
+    "waiting_verify_ekyc_des": "Bạn đã gửi thông tin eKYC thành công. Vui lòng chờ kết quả trong ít phút.",
+    "kyc_status": "Trạng thái KYC"
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
@@ -13,6 +13,13 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { TYPE_DW } from '../constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { dwLinkBuilder } from 'redux/actions/utils';
+import { API_GET_USER_BANK_LIST } from 'redux/actions/apis';
+import Spinner from 'components/svg/Spinner';
+import colors from 'styles/colors';
+import ModalV2 from 'components/common/V2/ModalV2';
+import FetchApi from 'utils/fetch-api';
+import { getS3Url } from 'utils/reference-utils';
+import { ApiStatus } from 'redux/actions/const';
 
 const getLinkSupport = (isVi) =>
     isVi ? 'https://nami.exchange/vi/support/faq/nap-rut-tien-ma-hoa' : 'https://nami.exchange/support/faq/crypto-deposit-withdrawal';
@@ -39,11 +46,38 @@ const UserWD = ({ type, children, side }) => {
     } = useTranslation();
     const router = useRouter();
     const auth = useSelector((state) => state.auth.user) || null;
+    const [currentTheme] = useDarkMode();
+
+    const [loadingListUserBank, setLoadingListUserBank] = useState(false);
+    const [isHaveBank, setIsHaveBank] = useState(true);
+    const fetchListUserBank = () => {
+        setLoadingListUserBank(true);
+
+        // Fetch list bank accounts
+        FetchApi({
+            url: API_GET_USER_BANK_LIST,
+            options: {
+                method: 'GET'
+            }
+        })
+            .then(({ status, data }) => {
+                if (status === ApiStatus.SUCCESS) setIsHaveBank(!!data);
+            })
+            .finally(() => setLoadingListUserBank(false));
+    };
+
+    useEffect(() => {
+        fetchListUserBank();
+    }, []);
 
     return (
         // Set up Container styled: max-w, text, background
         <div className="px-4 pt-20 pb-[120px] bg-gray-13 dark:bg-dark font-normal text-base text-gray-15 dark:text-gray-4 tracking-normal">
-            {auth && auth?.kyc_status === 2 ? (
+            {loadingListUserBank ? (
+                <div className="min-h-[50vh] flex w-full justify-center items-center">
+                    <Spinner size={50} color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
+                </div>
+            ) : auth && auth?.kyc_status === 2 ? (
                 <div className="max-w-screen-v3 mx-auto 2xl:max-w-screen-xxl">
                     <h1 className="mb-8 font-semibold text-[32px] leading-[38px]">{side === SIDE.BUY ? t('common:deposit') : t('common:withdraw')}</h1>
 
@@ -75,15 +109,40 @@ const UserWD = ({ type, children, side }) => {
                 </div>
             ) : auth && auth?.kyc_status !== 2 ? (
                 <></>
+            ) : !isHaveBank ? (
+                <></>
             ) : (
                 <div className="h-[480px] flex items-center justify-center">
                     <NeedLoginV2 addClass="flex items-center justify-center" />
                 </div>
             )}
 
-            <ModalNeedKyc isOpenModalKyc={auth && auth?.kyc_status !== 2} />
+            <ModalNeedKyc isOpenModalKyc={auth && auth?.kyc_status !== 2} auth={auth} />
+            <ModalAddPaymentMethod isVisible={!isHaveBank} t={t}/>
         </div>
     );
 };
 
 export default UserWD;
+
+const ModalAddPaymentMethod = ({ isVisible, t }) => {
+    return (
+        <ModalV2
+            // isMobile={isMobile || width < WIDTH_MD}
+            isVisible={isVisible}
+            // onBackdropCb={onBackdropCb}
+            className="!max-w-[488px]"
+            wrapClassName="p-8 flex flex-col tracking-normal"
+            // customHeader={isFunction(onBackdropCb) ? null : () => <></>}
+            // btnCloseclassName="!pt-0"
+            closeButton={false}
+        >
+            <img width={124} height={124} src={getS3Url('/images/payment_method/illustration_homepage.png')} className="mx-auto mt-4" />
+            <div className="mb-4 mt-6 txtPri-3 text-center capitalize">{t('common:notice')}</div>
+            <div className="text-center txtSecond-2">{t('wallet:errors.invalid_kyc_status')}</div>
+            <HrefButton className="mt-10 mb-3" href="/account/payment-method?isAdd=true">
+                {'Xác thực thanh toán'}
+            </HrefButton>
+        </ModalV2>
+    );
+};

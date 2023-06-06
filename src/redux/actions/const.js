@@ -776,6 +776,7 @@ export const OLD_LS_KEYS = [
 ];
 
 export const KYC_STATUS = {
+    LOCKING: -1,
     NO_KYC: 0,
     PENDING_APPROVAL: 1,
     APPROVED: 2,

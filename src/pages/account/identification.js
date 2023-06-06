@@ -15,6 +15,7 @@ import PlayFilled from 'components/svg/PlayFilled';
 import { createElement } from 'react';
 import colors from 'styles/colors';
 import { KYC_STATUS } from 'redux/actions/const';
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
@@ -76,7 +77,7 @@ const KYCStepCard = ({ t, className }) => {
                 </div>
                 <div className="text-center mt-5">
                     <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('identification:kyc_step:scan')}</span>
-                    <div className="flex mt-6 justify-between gap-4 max-w-[290px] m-auto gap-4">
+                    <div className="flex mt-5 justify-between max-w-[290px] m-auto gap-4">
                         <Link href="https://apps.apple.com/app/id1480302334">
                             <a target="_blank" className="bg-gray-10 dark:bg-dark-2 rounded-md px-3 py-2">
                                 <img className="m-auto" src={getS3Url(`/images/download_applestore_${currentTheme}.png`)} alt="" />
@@ -100,6 +101,19 @@ const ProcessKycCard = ({ t, className }) => {
             <img className="mx-auto w-[7.5rem] w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc_wait.png')} />
             <p className="text-teal font-semibold tetx-xl md:text-2xl mb-1 mt-6">{t('identification:account.process')}</p>
             <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('identification:account.process_content')}</span>
+        </div>
+    );
+};
+
+const LockingKycCard = ({ t, className }) => {
+    return (
+        <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
+            <img className="mx-auto w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc_wait.png')} />
+            <p className="text-teal font-semibold text-xl md:text-2xl mb-1 mt-6">{t('identification:account.locking')}</p>
+            <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('identification:account.locking_content')}</span>
+            <TextButton className={'mt-1'} onClick={() => window.fcWidget.open({ name: 'Inbox', replyText: '' })}>
+                {t('common:chat_with_support')}
+            </TextButton>
         </div>
     );
 };
@@ -182,6 +196,12 @@ function Identification() {
             {user?.kyc_status === KYC_STATUS.PENDING_APPROVAL && (
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-8 my-12">
                     <ProcessKycCard t={t} className="md:col-span-2" />
+                    <KYCStepCard t={t} className="md:col-span-3" />
+                </div>
+            )}
+            {user?.kyc_status === KYC_STATUS.LOCKING && (
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-8 my-12">
+                    <LockingKycCard t={t} className="md:col-span-2" />
                     <KYCStepCard t={t} className="md:col-span-3" />
                 </div>
             )}

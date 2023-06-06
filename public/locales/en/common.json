@@ -451,5 +451,8 @@
         "reward_received": "Reward received successfully"
     },
     "wallet": "{{wallet}} Wallet",
-    "reload": "Reload"
+    "reload": "Reload",
+    "waiting_verify_ekyc": "Waiting for eKYC verification",
+    "waiting_verify_ekyc_des": "You have submitted successfully. Please wait a few minutes for the results.",
+    "kyc_status": "KYC status"
 }
