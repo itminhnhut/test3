@@ -70,24 +70,24 @@ const Support = () => {
 
     const renderFaqCategories = () => {
         return (
-            <div className='grid justify-between w-full gap-4 sm:dark:bg-darkBlue-3 rounded-xl sm:p-6 dark:shadow-none sm:shadow-card_light' style={{
-                gridTemplateColumns: "repeat(auto-fill, 280px)",
-            }}>
+            <div
+                className="grid justify-between w-full gap-4 sm:dark:bg-darkBlue-3 rounded-xl sm:p-6 dark:shadow-none sm:shadow-card_light"
+                style={{
+                    gridTemplateColumns: 'repeat(auto-fill, 280px)'
+                }}
+            >
                 {SupportCategories.faq[language].map((faq) => (
-                    <Link href={
-                        (language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.FAQ +
-                        `/${faq.displaySlug}${isApp ? '?source=app' : ''}`
-                    }
+                    <Link
+                        href={(language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.FAQ + `/${faq.displaySlug}${isApp ? '?source=app' : ''}`}
                         key={faq.displaySlug}
                     >
                         <a>
-                            <div className='flex gap-4 sm:p-4 w-full sm:w-[280px] h-[48px] sm:h-[68px] items-center sm:hover:!bg-hover sm:dark:hover:!bg-hover-dark rounded-xl text-txtPrimary dark:text-gray-4 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
-                                <div className='h-9 w-9 flex items-center justify-center rounded-full sm:bg-teal/10'>
-                                    <Image
-                                        src={getSupportCategoryIcons(faq.id)}
-                                        width={24}
-                                        height={24}
-                                    />
+                            <div
+                                className="flex gap-4 sm:p-4 w-full sm:w-[280px] h-[48px] sm:h-[68px] items-center sm:hover:!bg-hover sm:dark:hover:!bg-hover-dark rounded-xl text-txtPrimary dark:text-gray-4 font-normal text-sm sm:font-semibold sm:text-base"
+                                key={faq.id}
+                            >
+                                <div className="h-9 w-9 flex items-center justify-center rounded-full sm:bg-teal/10">
+                                    <Image src={getS3Url(getSupportCategoryIcons(faq.id))} width={24} height={24} />
                                 </div>
                                 {faq?.title}
                             </div>
@@ -95,31 +95,28 @@ const Support = () => {
                     </Link>
                 ))}
             </div>
-        )
+        );
     }
 
     const renderAnnouncementCategories = () => {
-        return (
-            SupportCategories.announcements[language].map((announcement) => (
-                <Link href={
-                    (language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.ANNOUNCEMENT +
-                    `/${announcement.displaySlug}${isApp ? '?source=app' : ''}`
-                }
-                    key={announcement.displaySlug}
-                >
-                    <a className={classNames({ 'w-[calc(50%-8px)]': isMobile, 'flex-1 min-w-[236px] w-full': !isMobile })}>
-                        <div key={announcement.id} className={classNames('w-full h-[140px]  sm:h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-transparent dark:bg-darkBlue-3 truncate text-txtPrimary dark:text-gray-4 font-semibold sm:font-medium  text-sm sm:text-[20px] dark:hover:!bg-hover-dark border dark:border-none border-divider shadow-card_light dark:shadow-none')}>
-                            <Image
-                                src={getSupportCategoryIcons(announcement.id)}
-                                width={isMobile ? 48 : 52}
-                                height={isMobile ? 48 : 52}
-                            />
-                            {announcement?.title || '--'}
-                        </div>
-                    </a>
-                </Link>
-            ))
-        )
+        return SupportCategories.announcements[language].map((announcement) => (
+            <Link
+                href={(language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.ANNOUNCEMENT + `/${announcement.displaySlug}${isApp ? '?source=app' : ''}`}
+                key={announcement.displaySlug}
+            >
+                <a className={classNames({ 'w-[calc(50%-8px)]': isMobile, 'flex-1 min-w-[236px] w-full': !isMobile })}>
+                    <div
+                        key={announcement.id}
+                        className={classNames(
+                            'w-full h-[140px]  sm:h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-transparent dark:bg-darkBlue-3 truncate text-txtPrimary dark:text-gray-4 font-semibold sm:font-medium  text-sm sm:text-[20px] dark:hover:!bg-hover-dark border dark:border-none border-divider shadow-card_light dark:shadow-none'
+                        )}
+                    >
+                        <Image src={getS3Url(getSupportCategoryIcons(announcement.id))} width={isMobile ? 48 : 52} height={isMobile ? 48 : 52} />
+                        {announcement?.title || '--'}
+                    </div>
+                </a>
+            </Link>
+        ));
     }
 
     useAsync(async () => {
