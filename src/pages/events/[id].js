@@ -25,7 +25,7 @@ export async function getStaticPaths() {
 export const getStaticProps = async ({ locale, params, query }) => {
     return {
         props: {
-            ...(await serverSideTranslations(locale, ['common', 'navbar'])),
+            ...(await serverSideTranslations(locale, ['common', 'navbar', 'marketing_events'])),
             theme: query?.theme || 'dark',
             language: query?.language || 'en',
             params: params
