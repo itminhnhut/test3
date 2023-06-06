@@ -268,6 +268,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                         padding: 8
                     },
                     grid: {
+                        drawTicks: false,
                         display: false,
                         drawBorder: true,
                         borderColor: currentTheme === THEME_MODE.DARK ? baseColors.divider.dark : baseColors.divider.DEFAULT

@@ -81,7 +81,7 @@ const MadivesLayout = ({
                     hideProgressBar
                     closeButton={false}
                     theme={theme === THEME_MODE.LIGHT ? 'light' : 'dark'}
-                    className="nami-toast !top-[104px]"
+                    className="nami-toast !top-[92px] md:!top-[104px]"
                 />
                 <ReactNotifications className="fixed z-[9000] pointer-events-none w-full h-full" />
                 {!hideNavBar && !hideInApp && !isApp && (

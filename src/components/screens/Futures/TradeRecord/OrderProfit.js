@@ -79,7 +79,7 @@ const OrderProfit = ({
                                 <>
                                     <IconArrowOnus
                                         className={`w-[7px] mr-[2px] ${profit > 0 ? '' : 'rotate-180'}`}
-                                        color={profit > 0 ? colors.onus.green : colors.onus.red}
+                                        color={profit > 0 ? colors.teal : colors.red2}
                                     />
                                     {percent + '%'}
                                 </>

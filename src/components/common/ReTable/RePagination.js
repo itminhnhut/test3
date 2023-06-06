@@ -65,15 +65,22 @@ const scrollAfterPageChange = (id) => {
 
 const PaginationWrapper = styled.div`
     .rc-pagination-item,
+    .rc-pagination-prev,
+    .rc-pagination-next {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
+    .rc-pagination-item,
     .rc-pagination-prev button,
     .rc-pagination-next button {
         border: none !important;
         background-color: transparent;
 
-        a {
+        /* a {
             font-family: Barlow, serif !important;
             font-weight: 500 !important;
-        }
+        } */
 
         @media (min-width: 1366px) {
             a {
@@ -87,7 +94,11 @@ const PaginationWrapper = styled.div`
     .rc-pagination-next button {
         color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.darkBlue)};
         border-radius: 50%;
-        height: 100%;
+        width: 2.25rem;
+        height: 2.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .rc-pagination-item-active a,
@@ -104,11 +115,13 @@ const PaginationWrapper = styled.div`
 
     .rc-pagination-next button:after,
     .rc-pagination-prev button:after {
-        background-color: ${({ isDark }) => (isDark ? colors.dark[2] : colors.white)};
+        background-color: ${({ isDark }) => (isDark ? colors.dark[2] : colors.gray[11])};
         border-radius: 50%;
-        width: 1.75rem;
-        height: 1.75rem;
-        line-height: 0.9;
+        width: 2.25rem;
+        height: 2.25rem;
+        line-height: 1.1;
+        vertical-align: middle;
+        text-align: center;
     }
 
     .rc-pagination-prev .rc-pagination-item-link,

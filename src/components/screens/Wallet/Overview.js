@@ -22,6 +22,7 @@ import EstBalance from 'components/common/EstBalance';
 import { TYPE_DW } from '../WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import Image from 'next/image';
+import { PATHS } from 'constants/paths';
 
 const INITIAL_STATE = {
     // ...
@@ -88,11 +89,14 @@ const OverviewWallet = (props) => {
     const renderOverviewEstBalance = useCallback(() => {
         return (
             <>
-                <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
+                <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary flex items-center gap-x-3">
                     {isHideAsset
                         ? SECRET_STRING
                         : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + partnersEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}{' '}
                     BTC
+                    <button className="hidden md:block" onClick={() => router.push(PATHS?.FUTURES_PORTFOLIO)}>
+                        <PortfolioIcon  />
+                    </button>
                 </div>
                 <div className="font-normal text-sm md:text-base mt-1">
                     {isHideAsset
