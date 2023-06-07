@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import 'keen-slider/keen-slider.min.css';
 import styled from 'styled-components';
-
-const getEventImg = (img_endpoint) => `https://${process.env.NEXT_PUBLIC_SPACES_BUCKET}.${process.env.NEXT_PUBLIC_SPACES_ENDPOINT}/${img_endpoint}`;
+import { getEventImg, getS3Url } from 'redux/actions/utils';
 
 const CarouselItem = ({ banner, link, title }) => {
     return (

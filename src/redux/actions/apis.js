@@ -350,4 +350,4 @@ export const API_INTERNAL_TRANSFER = API_V3_PREFIX + 'spot/internal-transfer';
 export const API_INTERNAL_TRANSFER_HISTORY = API_V3_PREFIX + 'spot/internal-transfer-history';
 
 // marketing events
-// export const API_MARKETING_EVENT = API_V3_PREFIX + 'marketing/nami-exchange-events';
+export const API_MARKETING_EVENT = API_V3_PREFIX + 'marketing/nami-exchange-events';

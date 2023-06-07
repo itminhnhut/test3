@@ -16,7 +16,7 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import styled from 'styled-components';
 import { isFunction } from 'lodash';
 
-const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside  }) => {
+const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside, minDate, maxDate }) => {
     const [showPicker, setShowPicker] = useState(false);
     const wrapperRef = useRef(null);
 
@@ -46,7 +46,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
     const Component = !isCalendar ? DateRangePicker : Calendar;
 
     useEffect(() => {
-        if (!initDate?.startDate && !initDate?.endDate) {
+        if (!initDate?.startDate && !initDate?.endDate && !isCalendar) {
             setDate({ ...initDate, ...(!initDate?.key && { key: 'selection' }) });
         }
     }, [initDate]);
@@ -194,6 +194,8 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                             monthDisplayFormat="MMMM yyyy"
                             moveRangeOnFirstSelection={false}
                             showSelectionPreview={true}
+                            minDate={minDate}
+                            maxDate={maxDate}
                         />
                     </DatePickerWrapper>
                     <ButtonV2 onClick={onConfirm} className="mx-6 mt-2 mb-8 w-auto">

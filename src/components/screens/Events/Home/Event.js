@@ -194,7 +194,7 @@ const Event = () => {
                 <EventCarousel data={mock} />
             </div>
             <div className="pt-4 mb:pt-12">
-                <EventList />
+                <EventList data={mock} />
             </div>
         </div>
     );

@@ -442,6 +442,7 @@ export function render24hChange(ticker, showPrice = false, className = '') {
 export function getS3Url(url) {
     return process.env.NEXT_PUBLIC_CDN + url;
 }
+export const getEventImg = (img_endpoint) => `https://${process.env.NEXT_PUBLIC_SPACES_BUCKET}.${process.env.NEXT_PUBLIC_SPACES_ENDPOINT}/${img_endpoint}`;
 
 export function getV1Url(url) {
     return process.env.NEXT_PUBLIC_WEB_V1 + url;
