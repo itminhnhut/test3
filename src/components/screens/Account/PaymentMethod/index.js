@@ -50,11 +50,11 @@ const index = () => {
     const [dataTable, setDataTable] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [loadingSetDefault, setLoadingSetDefault] = useState(false);
-    const [isAddPhone, setIsAddPhone] = useState(false)
+    const [isAddPhone, setIsAddPhone] = useState(false);
     const router = useRouter();
     const { isAdd } = router.query;
 
-    const setIsOpenModalAddNew = (value, isSuccess) => {
+    const setIsOpenModalAddNew = (value) => {
         router.replace(
             {
                 //   pathname: '/...',
@@ -67,8 +67,6 @@ const index = () => {
                 shallow: true
             }
         );
-
-        setIsAddPhone(isSuccess && !user.phone)
     };
 
     const fetchListUserBank = () => {
@@ -292,7 +290,8 @@ const index = () => {
             {/* Popup if user have not KYC yet */}
             <ModalAddPaymentMethod
                 isOpenModalAdd={isAdd?.toLowerCase() === 'true'}
-                onBackdropCb={() => setIsOpenModalAddNew(false)}
+                onBackdropCb={() => setIsOpenModalAddNew()}
+                onSuccess={() => setIsAddPhone(!user.phone)}
                 t={t}
                 user={user}
                 isDark={isDark}

@@ -30,7 +30,7 @@ const initState = {
     result: { modalShow: false, title: '', msg: '', type: '' }
 };
 
-const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, fetchListUserBank }) => {
+const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, fetchListUserBank, onSuccess }) => {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(initState.result);
     const [isSuccess, setIsSuccess] = useState(initState.isSuccess);
@@ -56,7 +56,7 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
 
     useEffect(() => {
         if (!isSuccess) return;
-        onBackdropCb(isSuccess);
+        onBackdropCb();
         const timer = setTimeout(() => {
             setResult((prev) => ({
                 ...prev,
@@ -113,6 +113,7 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
         setResult(initState.result);
         setIsSuccess(initState.isSuccess);
         setHelperTextBankNumber(initState.helperTextBankNumber);
+        if(onSuccess) onSuccess()
     };
 
     const onBlurInputBankNumber = (e) => {
