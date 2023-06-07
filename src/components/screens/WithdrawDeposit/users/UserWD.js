@@ -61,7 +61,6 @@ const UserWD = ({ type, children, side }) => {
             }
         })
             .then(({ status, data }) => {
-                console.log('_____data: ', data);
                 if (status === ApiStatus.SUCCESS) setIsMustHaveBank(!data || data?.length === 0);
             })
             .finally(() => setLoadingListUserBank(false));
