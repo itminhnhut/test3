@@ -118,7 +118,7 @@ const UserWD = ({ type, children, side }) => {
                 </div>
             )}
 
-            <ModalNeedKyc isOpenModalKyc={auth && auth?.kyc_status !== 2} auth={auth} isShowLocking={false} />
+            <ModalNeedKyc isOpenModalKyc={auth && auth?.kyc_status !== 2} auth={auth} />
             <ModalAddPaymentMethod isVisible={isMustHaveBank} t={t} isDark={isDark} />
         </div>
     );
