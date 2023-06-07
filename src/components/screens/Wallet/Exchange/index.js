@@ -706,7 +706,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                 <li>
                     <Link
                         href={PATHS.EXCHANGE?.TRADE?.getPair(undefined, {
-                            pair: `${assetName}-${pair?.quoteAsset}`
+                            pair: `${item.assetCode}-${pair?.quoteAsset}`
                         })}
                         prefetch={false}
                     >
@@ -745,34 +745,26 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                 text-gray-1 dark:text-txtPrimary-dark text-left text-base font-normal
                 ${isShow ? 'block' : 'hidden'} ${cssPopover()}`}
             >
-                <li className={cssLi}>
-                    <a
+                <li>
+                    <Link
                         href={PATHS.EXCHANGE?.SWAP?.getSwapPair({
                             fromAsset: 'USDT',
-                            toAsset: assetName
+                            toAsset: item.assetCode
                         })}
                     >
-                        {utils?.translator('common:buy')}
-                    </a>
+                        <a className={cssLi}>{utils?.translator('common:buy')}</a>
+                    </Link>
                 </li>
                 {!noMarket && tradeButton}
-                <li
-                    className={cssLi}
-                    onClick={() =>
-                        // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: item?.assetCode || assetName }))
-                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, item?.assetCode || assetName))
-                    }
-                >
-                    {utils?.translator('common:deposit')}
+                <li>
+                    <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, item?.assetCode || assetName)}>
+                        <a className={cssLi}>{utils?.translator('common:deposit')}</a>
+                    </Link>
                 </li>
-                <li
-                    className={cssLi}
-                    onClick={() =>
-                        // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: item?.assetCode || assetName }))
-                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL, item?.assetCode || assetName))
-                    }
-                >
-                    {utils?.translator('common:withdraw')}
+                <li>
+                    <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL, item?.assetCode || assetName)}>
+                        <a className={cssLi}>{utils?.translator('common:withdraw')}</a>
+                    </Link>
                 </li>
                 {ALLOWED_FUTURES_TRANSFER.includes(assetName) && (
                     <li
