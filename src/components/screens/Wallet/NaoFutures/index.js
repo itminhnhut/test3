@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { formatNumber as formatWallet, setTransferModal } from 'redux/actions/utils';
+import { formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { PartnersIcon } from 'components/svg/SvgIcon';
 
 import { SECRET_STRING } from 'utils';
 
@@ -11,14 +10,18 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import MCard from 'components/common/MCard';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { orderBy } from 'lodash';
-import Skeletor from 'components/common/Skeletor';
 import { WalletType } from 'redux/actions/const';
+import Link from 'next/link';
+import { PATHS } from 'constants/paths';
+import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
 import HideSmallBalance from 'components/common/HideSmallBalance';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
+import Image from 'next/image';
+import { BxChevronDown, PortfolioIcon } from 'components/svg/SvgIcon';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const INITIAL_STATE = {
@@ -30,16 +33,16 @@ const INITIAL_STATE = {
     allAssets: null
 };
 
-const AVAILBLE_KEY = 'partners_available';
-const PARTNERS_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT', 'NAO'];
+const AVAILBLE_KEY = 'futures_available';
+const FUTURES_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT', 'NAO'];
 
-const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, isHideAsset, setIsHideAsset }) => {
+const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, isHideAsset, setIsHideAsset }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Rdx
-    const wallets = useSelector((state) => state.wallet?.PARTNERS) || null;
+    const wallets = useSelector((state) => state.wallet.NAO_FUTURES);
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
 
     // Use Hooks
@@ -51,8 +54,29 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
     } = useTranslation();
     const dispatch = useDispatch();
 
+    // Helper
+    const walletMapper = (allWallet, assetConfig) => {
+        if (!allWallet || !assetConfig) return;
+        const mapper = [];
+        if (Array.isArray(assetConfig) && assetConfig?.length) {
+            const futures = assetConfig.filter((o) => FUTURES_ASSET.includes(o?.assetCode));
+            futures &&
+                futures.forEach(
+                    (item) =>
+                        allWallet?.[item.id] &&
+                        mapper.push({
+                            ...item,
+                            [AVAILBLE_KEY]: allWallet?.[item?.id]?.value - allWallet?.[item?.id]?.locked_value,
+                            wallet: allWallet?.[item?.id]
+                        })
+                );
+        }
+        setState({ allAssets: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
+    };
+
     // Render Handler
     const renderAssetTable = useCallback(() => {
+        if (isSmallScreen) return null;
         const columns = [
             {
                 key: 'assetCode',
@@ -84,8 +108,8 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                 )
             },
             {
-                key: 'partners_available',
-                dataIndex: 'partners_available',
+                key: 'futures_available',
+                dataIndex: 'futures_available',
                 title: t('common:available_balance'),
                 align: 'right',
                 width: 213,
@@ -109,14 +133,15 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
 
                     return (
                         <span className="whitespace-nowrap">
-                            {isHideAsset
-                                ? SECRET_STRING
-                                : v
-                                ? // <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
-                                  //     <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
-                                  // </Link>
-                                  lockedValue
-                                : '0.0000'}
+                            {isHideAsset ? (
+                                SECRET_STRING
+                            ) : v ? (
+                                <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
+                                    <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
+                                </Link>
+                            ) : (
+                                '0.0000'
+                            )}
                         </span>
                     );
                 }
@@ -166,7 +191,6 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
         ];
 
         return (
-            // <div className="mt-8 border border-divider-dark dark:border-divider-dark rounded-xl">
             <TableV2
                 sort
                 defaultSort={{ key: 'wallet.value', direction: 'desc' }}
@@ -181,18 +205,20 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                 isSearch={!!state.search}
                 height={404}
                 pagingClassName="border-none"
-                tableStyle={{ fontSize: '16px', padding: '16px' }}
                 className="border border-divider dark:border-divider-dark rounded-xl pt-4 mt-8"
+                tableStyle={{ fontSize: '16px', padding: '16px' }}
             />
+            // <div className="mt-8 py-4 border border-divider-dark dark:border-divider-dark rounded-xl">
             // </div>
         );
     }, [state.tableData, width, usdRate, isHideAsset]);
 
     const renderEstWallet = useCallback(() => {
         return (
-            <div className="mt-[24px] md:mt-12 flex items-center justify-between">
+            <div className="flex items-center justify-between">
                 <div className="hidden md:flex rounded-full dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
-                    <PartnersIcon size={32} />
+                    <Image src={getS3Url('/images/nao/ic_nao.png')} width={32} height={32} />
+                    {/* <SvgWalletFutures size={32} /> */}
                 </div>
                 <div>
                     <div className="t-common-v2">{isHideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)} BTC</div>
@@ -225,32 +251,14 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
     }, [estBtc, isHideAsset, currentTheme]);
 
     useEffect(() => {
-        const walletMapper = (allWallet, assetConfig) => {
-            if (!allWallet || !assetConfig) return;
-            const mapper = [];
-            if (Array.isArray(assetConfig) && assetConfig?.length) {
-                const partners = assetConfig.filter((o) => PARTNERS_ASSET.includes(o?.assetCode));
-                partners &&
-                    partners.forEach(
-                        (item) =>
-                            allWallet?.[item.id] &&
-                            mapper.push({
-                                ...item,
-                                [AVAILBLE_KEY]: allWallet?.[item?.id]?.value - allWallet?.[item?.id]?.locked_value,
-                                wallet: allWallet?.[item?.id]
-                            })
-                    );
-            }
-            setState({ allAssets: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
-        };
         walletMapper(wallets, assetConfig);
     }, [wallets, assetConfig]);
 
     useEffect(() => {
         if (state.allAssets && Array.isArray(state.allAssets)) {
             let tableData = state.allAssets;
-            const minSmallBalance = 0;
 
+            const minSmallBalance = 0;
             if (state.hideSmallAsset) {
                 tableData = tableData.filter((item) => item?.wallet?.value > minSmallBalance);
             }
@@ -272,34 +280,66 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                 addClass={`mt-5 !p-8 rounded-xl 
              ${currentTheme === THEME_MODE.DARK ? ' bg-bgTabInactive-dark border border-divider-dark' : ' bg-white shadow-card_light border-none'}`}
             >
-                <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 flex justify-between items-end">
-                    <div>
+                <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 ">
+                    <div className="flex w-full items-center justify-between mb-6 md:mb-12 ">
                         <EstBalance onClick={() => setIsHideAsset(!isHideAsset)} isHide={isHideAsset} isSmallScreen={isSmallScreen} />
-                        {renderEstWallet()}
+                        <Link href={'/nao'} passHref>
+                            <a className="block">
+                                <ButtonV2 className="!h-auto !py-0 items-center font-semibold space-x-2" variants="text">
+                                    <span>NAO Goverance</span>
+                                    <BxChevronDown color="currentColor" size={16} />
+                                </ButtonV2>
+                            </a>
+                        </Link>
                     </div>
+                    <div className="flex justify-between items-end">
+                        {renderEstWallet()}
+                        <div className="hidden md:block">
+                            <div className="flex space-x-3 justify-end h-full w-full ">
+                                <ButtonV2
+                                    onClick={() =>
+                                        dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.NAO_FUTURES, toWallet: WalletType.SPOT }))
+                                    }
+                                    className="px-6 py-3 !w-auto !font-semibold !text-base"
+                                >
+                                    {t('common:transfer')}
+                                </ButtonV2>
 
-                    <div className="hidden md:block">
-                        <div className="flex items-end justify-end h-full w-full ">
-                            <ButtonV2
-                                onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.BROKER, toWallet: WalletType.SPOT }))}
-                                className="!px-6 !py-3 !font-semibold !text-base"
-                            >
-                                {t('common:transfer')}
-                            </ButtonV2>
+                                <Link href={'/statistics'} passHref>
+                                    <a className="block">
+                                        <ButtonV2 variants="secondary" className="px-6 py-3 !space-x-2 !font-semibold !text-base !w-auto">
+                                            <PortfolioIcon size={16} />
+
+                                            <span>{t('wallet:statistics')}</span>
+                                        </ButtonV2>
+                                    </a>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
                 {renderAvailableBalance()}
             </MCard>
-            <ButtonV2
-                onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.BROKER, toWallet: WalletType.SPOT }))}
-                className="py-3 !font-semibold !text-base w-full md:hidden mt-6"
-            >
-                {t('common:transfer')}
-            </ButtonV2>
+            <div className="flex items-center space-x-3 md:hidden  mt-6">
+                <ButtonV2
+                    onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.NAO_FUTURES, toWallet: WalletType.SPOT }))}
+                    className="py-3 !font-semibold !text-base w-full"
+                >
+                    {t('common:transfer')}
+                </ButtonV2>
+
+                <Link href={'/statistics'} passHref>
+                    <a className="block w-full">
+                        <ButtonV2 variants="secondary" className="py-3 !space-x-2 !font-semibold !text-base w-full">
+                            <PortfolioIcon size={16} />
+                            <span>{t('wallet:statistics')}</span>
+                        </ButtonV2>
+                    </a>
+                </Link>
+            </div>
 
             <div className="mt-12 md:mt-16 flex items-center justify-between">
-                <div className="t-common-v2 hidden md:block">{language === LANGUAGE_TAG.VI ? 'Ví hoa hồng' : t('wallet:commission')}</div>
+                <div className="t-common-v2 hidden md:block">{language === LANGUAGE_TAG.VI ? 'Ví' : ''} NAO Futures</div>
                 {isSmallScreen ? (
                     <div className="w-full flex items-center justify-between">
                         <SearchBoxV2
@@ -346,7 +386,6 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                 )}
             </div>
 
-            {/* {renderAssetTable()} */}
             <div className="hidden md:block">{renderAssetTable()}</div>
             <div className="md:hidden flex flex-col gap-4 mt-4 mb-20 text-sm dark:text-gray-4 text-gray-15">
                 {state?.tableData && state?.tableData?.length > 0 ? (
@@ -424,19 +463,11 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
 
 const ASSET_ROW_LIMIT = 8;
 
-const ROW_LOADING_SKELETON = {
-    asset: <Skeletor width={65} />,
-    total: <Skeletor width={65} />,
-    available: <Skeletor width={65} />,
-    in_order: <Skeletor width={65} />,
-    operation: <Skeletor width={125} />
-};
-
 const renderOperationLink = (assetName, translator, dispatch) => {
     return (
         <ButtonV2
             variants="text"
-            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.BROKER, toWallet: WalletType.SPOT, asset: assetName }))}
+            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.NAO_FUTURES, toWallet: WalletType.SPOT, asset: assetName }))}
             className="!md:text-base text-sm"
         >
             {translator('common:transfer')}
@@ -444,4 +475,4 @@ const renderOperationLink = (assetName, translator, dispatch) => {
     );
 };
 
-export default PartnersWallet;
+export default NAOFuturesWallet;

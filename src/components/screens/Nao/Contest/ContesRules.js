@@ -125,11 +125,11 @@ const ContesRules = ({
                     {t(`nao:contest:description${!!top_ranks_team ? '' : '_individual'}`)}
                     <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
-                <div className="w-max m-auto lg:m-0 flex flex-col items-center lg:items-start">
+                <div className="w-full sm:w-max m-auto lg:m-0 flex flex-col items-center lg:items-start">
                     <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 mt-5 sm:mt-4 w-full">
                         {renderCountDown('!font-normal', '!font-semibold')}
                     </div>
-                    <div className="flex flex-row mt-8 sm:mt-10 sm_only:w-full">
+                    <div className="flex flex-row mt-8 sm:mt-10 sm_only:w-full whitespace-nowrap">
                         {inHome ? (
                             <ButtonNao
                                 onClick={() => router.push('/contest')}
@@ -165,7 +165,7 @@ const ContesRules = ({
                     />
                 ) : (
                     <img
-                        src={'/images/nao/contest/ic_contest_info.webp'}
+                        src={getS3Url('/images/nao/contest/ic_contest_info.webp')}
                         className="w-[300px] sm:w-[400px] m-auto"
                         title={title_champion?.[language]}
                         alt={title_champion?.[language]}
