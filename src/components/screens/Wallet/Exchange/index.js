@@ -326,6 +326,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
 
         return (
             <TableV2
+                onChangePage={(page) => {
+                    setState({ currentPage: page });
+                }}
+                page={state.currentPage}
                 sort
                 defaultSort={{ key: 'wallet.value', direction: 'desc' }}
                 useRowHover
@@ -553,7 +557,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             <SearchBoxV2
                                 value={state.search}
                                 onChange={(value) => {
-                                    setState({ search: value });
+                                    setState({ search: value, currentPage: 1 });
                                 }}
                                 onFocus={() => setState({ currentPage: 1 })}
                                 wrapperClassname="w-[180px]"
@@ -562,7 +566,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             <HideSmallBalance
                                 onClick={() =>
                                     setState({
-                                        hideSmallAsset: !state.hideSmallAsset
+                                        hideSmallAsset: !state.hideSmallAsset,
+                                        currentPage: 1
                                     })
                                 }
                                 isHide={state.hideSmallAsset}
@@ -575,7 +580,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             <HideSmallBalance
                                 onClick={() =>
                                     setState({
-                                        hideSmallAsset: !state.hideSmallAsset
+                                        hideSmallAsset: !state.hideSmallAsset,
+                                        currentPage: 1
                                     })
                                 }
                                 isHide={state.hideSmallAsset}
@@ -585,9 +591,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             <SearchBoxV2
                                 value={state.search}
                                 onChange={(value) => {
-                                    setState({ search: value });
+                                    setState({ search: value, currentPage: 1 });
                                 }}
-                                onFocus={() => setState({ currentPage: 1 })}
                                 width={width}
                             />
                         </div>
