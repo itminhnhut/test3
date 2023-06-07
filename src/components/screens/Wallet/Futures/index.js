@@ -20,6 +20,8 @@ import HideSmallBalance from 'components/common/HideSmallBalance';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { PortfolioIcon } from 'components/svg/SvgIcon';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -45,7 +47,10 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
     // Use Hooks
     const [currentTheme] = useDarkMode();
     const { width } = useWindowSize();
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const dispatch = useDispatch();
 
     // Helper
@@ -116,7 +121,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
             {
                 key: 'wallet.locked_value',
                 dataIndex: ['wallet', 'locked_value'],
-                title: t('common:in_order'),
+                title: t('wallet:locked'),
                 align: 'right',
                 width: 213,
                 render: (v, item) => {
@@ -234,7 +239,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
                     </span>
                 </div>
                 <div className="pl-4 border-l border-divider dark:border-divider-dark md:flex md:border-none md:items-center">
-                    <div className="txtSecond-1">{t('common:in_order')}: &nbsp;</div>
+                    <div className="txtSecond-1">{t('wallet:locked')}: &nbsp;</div>
                     <div className="mt-2 md:mt-0">
                         {isHideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
                     </div>
@@ -280,7 +285,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
                     </div>
 
                     <div className="hidden md:block">
-                        <div className="flex items-end justify-end h-full w-full ">
+                        <div className="flex space-x-3 justify-end h-full w-full">
                             <ButtonV2
                                 onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
                                 // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
@@ -288,21 +293,43 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
                             >
                                 {t('common:transfer')}
                             </ButtonV2>
+
+                            <Link href={'/statistics'} passHref>
+                                <a className="block">
+                                    <ButtonV2 variants="secondary" className="px-6 py-3 !space-x-2 !font-semibold !text-base !w-auto">
+                                        <PortfolioIcon size={16} />
+
+                                        <span>{t('wallet:statistics')}</span>
+                                    </ButtonV2>
+                                </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
                 {renderAvailableBalance()}
             </MCard>
-            <ButtonV2
-                onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
-                // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
-                className="py-3 !font-semibold !text-base w-full md:hidden mt-6"
-            >
-                {t('common:transfer')}
-            </ButtonV2>
+            <div className="flex items-center space-x-3 md:hidden  mt-6">
+                <ButtonV2
+                    onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
+                    // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
+                    className="py-3 !font-semibold !text-base w-full"
+                >
+                    {t('common:transfer')}
+                </ButtonV2>
+                <Link href={'/statistics'} passHref>
+                    <a className="block w-full">
+                        <ButtonV2 variants="secondary" className="py-3 !space-x-2 !font-semibold !text-base w-full">
+                            <PortfolioIcon size={16} />
+                            <span>{t('wallet:statistics')}</span>
+                        </ButtonV2>
+                    </a>
+                </Link>
+            </div>
 
             <div className="mt-12 md:mt-16 flex items-center justify-between">
-                <div className="t-common-v2 hidden md:block">Futures</div>
+                <div className="t-common-v2 hidden md:block">
+                    {language === LANGUAGE_TAG.VI ? 'Ví' : ''} {t('wallet:nami_futures_short')}
+                </div>
                 {isSmallScreen ? (
                     <div className="w-full flex items-center justify-between">
                         <SearchBoxV2
@@ -394,7 +421,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-3">
-                                            <span className="txtSecond-2">{t('common:in_order')}</span>
+                                            <span className="txtSecond-2">{t('wallet:locked')}</span>
                                             <span className="txtPri-1">
                                                 {isHideAsset
                                                     ? SECRET_STRING

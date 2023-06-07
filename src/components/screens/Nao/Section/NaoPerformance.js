@@ -255,7 +255,7 @@ const NaoPerformance = memo(() => {
                 </div>
             </div>
             <div className="pt-5 sm:pt-6 flex items-center flex-wrap gap-4 sm:gap-5">
-                <CardNao className="rounded-lg">
+                <CardNao className="rounded-lg whitespace-nowrap !min-w-max">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
                         {t('nao:onus_performance:total_volume')}
                     </label>
@@ -270,7 +270,7 @@ const NaoPerformance = memo(() => {
                         </span>
                     </div>
                 </CardNao>
-                <CardNao className="rounded-lg">
+                <CardNao className="rounded-lg !min-w-max">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
                         {t('nao:onus_performance:total_orders')}
                     </label>
@@ -283,7 +283,7 @@ const NaoPerformance = memo(() => {
                         </span>
                     </div>
                 </CardNao>
-                <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark">
+                <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark !min-w-max !py-6 sm:!py-8">
                     <div className="flex items-center justify-between">
                         <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
                             {t('nao:onus_performance:total_fee')}

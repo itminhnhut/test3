@@ -62,6 +62,7 @@ const ReTable = memo(
         pagination,
         paginationProps,
         tableStyle,
+        rcTableContent,
         emptyText,
         useRowHover,
         isNamiV2,
@@ -426,6 +427,8 @@ const ReTableWrapperV2 = styled.div`
         .rc-table-tbody {
             min-height: ${({ height, empty }) => empty && `${height - 70}px`};
         }
+        ${({ rcTableContent }) => (rcTableContent ? { ...rcTableContent } : '')};
+
     }
 
     .rc-table-cell-fix-left,
@@ -453,7 +456,7 @@ const ReTableWrapperV2 = styled.div`
             min-height: ${({ height }) => `${height}px`};
         }
     }
-    /* 
+    /*
     .rc-table-cell-fix-left-first::after,
     .rc-table-cell-fix-left-last::after,
     .rc-table-cell-fix-right-first::after,
@@ -512,7 +515,7 @@ const ReTableWrapperV2 = styled.div`
         }
     }
     .rc-table-ping-left tbody::after {
-        box-shadow: ${({ isDark }) => (isDark ? '20px 0px 20px 0px rgba(0,0,0,0.9)' : '12px 0 20px 0 rgba(0, 0, 0, 0.3)')};
+        box-shadow: ${({ isDark }) => (isDark ? '20px 0px 20px 0px rgba(0,0,0,0.9)' : '')} // '12px 0 20px 0 rgba(0, 0, 0, 0.3)')};
         left: -40px !important;
     }
 

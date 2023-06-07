@@ -275,7 +275,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     Stake NAO
                 </ButtonNao> */}
             </div>
-            <div className="mt-6 grid sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="mt-6 grid md:grid-cols-2 gap-4 sm:gap-6">
                 <CardNao className="sm:!min-w-[50%] sm:!px-10 sm:!py-12 sm:!flex-row sm:items-start !min-h-[124px] flex">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg">{t('nao:pool:nao_staked')}</label>
                     <div className="sm:text-right flex flex-col gap-1 mt-4 sm:mt-0">

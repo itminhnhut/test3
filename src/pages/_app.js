@@ -152,6 +152,7 @@ const App = ({ Component, pageProps }) => {
             !router.pathname.includes('luckydraw') &&
             !router.pathname.includes('fee-schedule') &&
             !router.pathname.includes('support') &&
+            !router.pathname.includes('portfolio') &&
             !isMobile
         ) {
             function initFreshChat() {

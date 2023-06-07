@@ -3,7 +3,8 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 export const EPS = 0.00000001;
 
 export const LOCAL_STORAGE_KEY = {
-    THEME: 'theme'
+    THEME: 'theme',
+    HIDE_BALANCE:'hide_wallet_balance'
 };
 
 const TokenConfigNetwork = {
