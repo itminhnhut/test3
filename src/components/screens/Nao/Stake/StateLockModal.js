@@ -87,7 +87,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                 params: { amount: Number(amount) }
             });
             if (status === ApiStatus.SUCCESS) {
-                context.alert.show(
+                context.alertV2.show(
                     'success',
                     t(`nao:pool:${isLock ? 'stake' : 'unstake'}_success`),
                     t(`nao:pool:${isLock ? 'stake' : 'unstake'}_message`),
@@ -144,16 +144,17 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
             />
             <div
                 className={classNames(
-                    'fixed inset-0 m-auto h-full w-full mb:h-[fit-content] z-[91] bg-bgPrimary dark:bg-bgPrimary-dark disabled-zoom max-w-[800px] mb:max-h-[90%] mb:rounded-xl',
+                    'fixed inset-0 m-auto h-full w-full mb:h-[fit-content] z-[91] bg-bgPrimary dark:bg-bgPrimary-dark disabled-zoom mb:max-h-[90%] mb:rounded-xl mb:border border-divider dark:border-divider-dark',
                     { invisible: !visible },
-                    { visible: visible }
+                    { visible: visible },
+                    isLock ? 'mb:max-w-[800px]' : 'mb:max-w-[488px]'
                 )}
             >
                 <div className="h-full">
-                    <SvgCross size={24} onClick={onClose} color="currentColor" className="hidden mb:block ml-auto mr-8 mt-8 cursor-pointer" />
+                    <SvgCross size={24} onClick={onClose} color="currentColor" className="hidden mb:block ml-auto mr-8 mt-8 cursor-pointer stroke-2" />
                     <div className="flex items-center px-4 py-6 mb-6 mb:px-8 mb:mb-2">
                         <ChevronLeft size={20} onClick={onClose} className="mb:hidden mr-2" />
-                        <label onClick={onClose} className="font-semibold mb:text-4xl">
+                        <label onClick={onClose} className="font-semibold mb:text-2xl">
                             {t(`nao:pool:${isLock ? 'lock' : 'unlock'}`)} NAO
                         </label>
                     </div>
@@ -165,7 +166,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                 thousandSeparator
                                 allowNegative={false}
                                 labelClassName="hidden"
-                                className={`flex-grow text-txtPrimary dark:text-txtSecondary-dark w-full !text-sm mb:!text-base`}
+                                className={`flex-grow text-txtPrimary dark:text-txtPrimary-dark w-full !text-sm mb:!text-base`}
                                 containerClassName={`w-full dark:bg-dark-2 text-sm lg:text-base`}
                                 value={amount}
                                 decimalScale={assetNao?.assetDigit}
@@ -202,7 +203,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                             </div>
                         </div>
                         {isLock && (
-                            <div className="mt-12 mb:mt-0">
+                            <div className="mt-12 mb:mt-0 mb:rounded-xl mb:!bg-gray-13 mb:dark:!bg-dark-4 mb:pt-4">
                                 <Tooltip
                                     id="tooltip-profit-est"
                                     className="w-full sm_only:!max-w-[calc(100%-2rem)] sm_only:!mx-4 sm_only:after:!left-10 sm_only:after:translate-x-[-50%]"
@@ -218,10 +219,10 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                         return { top, left };
                                     }}
                                 />
-                                <label className="text-sm mb:text-base text-txtPrimary dark:text-txtPrimary-dark leading-6 font-semibold">
+                                <label className="text-sm mb:text-base text-txtPrimary dark:text-txtPrimary-dark leading-6 font-semibold mb:px-4 mb:mt-4">
                                     {t('nao:pool:lock_overview')}
                                 </label>
-                                <CardNao className="mt-2 !p-4 space-y-2 !bg-gray-13 dark:!bg-dark-4 !min-w-0">
+                                <CardNao className="mt-2 !p-4 space-y-2 mb:space-y-3 !bg-gray-13 dark:!bg-dark-4 !min-w-0 mb:!block mb:!min-h-0">
                                     <div className="text-sm mb:text-base flex justify-between items-center">
                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:pool:qty_lock')}</div>
                                         <span className="font-semibold">{formatNumber(data?.availableStaked, assetNao?.assetDigit ?? 8)} NAO</span>
@@ -257,7 +258,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                             <div className="text-txtSecondary dark:text-txtSecondary-dark mt-2">{t(`nao:pool:description_${isLock ? 'lock' : 'unlock'}`)}</div>
                         </CardNao>
                     </div>
-                    <div className="w-full px-4 pt-8 pb-12 mb:px-8 mb:pt-10 mb:pb-8 border-t mb:border-0 border-divider dark:border-divider-dark bg-white dark:bg-dark">
+                    <div className="w-full px-4 pt-8 pb-12 mb:px-8 mb:pt-10 mb:pb-8 border-t mb:border-0 border-divider dark:border-divider-dark bg-white dark:bg-dark mb:rounded-b-xl">
                         <ButtonNao
                             onClick={onSave}
                             className={`py-3 font-semibold ${
@@ -296,8 +297,14 @@ const AlertModal = ({ visible, onConfirm, onClose, t, isLock, amount, decimal, d
     }, [data]);
 
     return (
-        <ModalV2 isMobile isVisible={visible} onBackdropCb={onClose} wrapClassName="pb-12" className="mb:!max-w-[488px]">
-            <label className="text-[20px] font-semibold leading-6">{t(`nao:pool:confirm_${isLock ? 'lock' : 'unlock'}`)}</label>
+        <ModalV2
+            isMobile
+            isVisible={visible}
+            onBackdropCb={onClose}
+            wrapClassName="pb-12"
+            className="mb:!max-w-[488px] mb:border border-divider dark:border-divider-dark"
+        >
+            <label className="text-[20px] font-semibold leading-6 mb:text-2xl">{t(`nao:pool:confirm_${isLock ? 'lock' : 'unlock'}`)}</label>
             <div className="text-sm mb:text-base mt-8 mb:mt-6 bg-gray-13 dark:bg-dark-4 p-4 mb:!bg-transparent mb:border border-divider dark:border-divider-dark rounded-xl flex flex-col space-y-3">
                 <div className="flex items-center justify-between">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t(`nao:pool:amount_${isLock ? 'lock' : 'unlock'}`)}</label>

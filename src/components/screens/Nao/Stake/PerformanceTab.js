@@ -227,7 +227,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     <img src={getS3Url(logoPath)} width={32} height={32} alt="" />
                 </div>
                 <div className="ml-3 flex-1">
-                    <div className="flex justify-between text-sm mb:text-base font-semibold">
+                    <div className="flex justify-between text-sm mb:text-base font-semibold mb:mb-1">
                         <div className="">{assetConfig[assetId]?.assetCode}</div>
                         <div className="">
                             {formatNumber((data.estimate?.[assetId] || 0) * (data.percent / 100 || 0), assetConfig[assetId]?.assetDigit ?? 8)}
@@ -248,7 +248,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                 <div className="flex items-center w-full">
                     <img src={getS3Url(logoPath)} width={20} height={20} alt="" />
                     <div className="ml-3 flex-1">
-                        <div className="flex justify-between text-sm font-semibold">
+                        <div className="flex justify-between text-sm font-semibold mb:mb-1">
                             <div className="">{assetConfig[assetId]?.assetCode}</div>
                             <div className="">{formatNumber(item.interest?.[assetId] || 0, assetConfig[assetId]?.assetDigit ?? 8)}</div>
                         </div>
@@ -359,18 +359,18 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
 
     return !dataSource?.isNewUser ? (
         <>
-            <div>
+            <div className="mb:mt-9">
                 <TextLiner className="mb-2 !text-xl mb:!text-2xl text-txtPrimary dark:text-txtPrimary-dark">{t('nao:pool:per_overview')}</TextLiner>
                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm flex items-center justify-between">
                     <span className="text-sm mb:text-base">{t('nao:pool:per_description')}</span>
-                    <RangePopover
+                    {/* <RangePopover
                         language={language}
                         active={days.find((d) => d.value === filter.day)}
                         onChange={handleChangeDateRange}
                         className="flex order-last"
                         popoverClassName={'lg:mr-2 '}
                         btnClassName="!h-auto"
-                    />
+                    /> */}
                 </div>
                 {/* <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end mt-6 mb-8">
                     <RangePopover
@@ -403,14 +403,14 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         </button>
                     </div>
                 </div> */}
-                <div className="mt-6 ">
+                <div className="mt-6 mb:mt-8">
                     <div className="flex flex-col-reverse flex-wrap -m-2 mb:-m-3 mb:flex-row ">
                         <div className="w-full p-2 mb:w-1/2 mb:p-3 ">
                             <CardNao className="!p-4 mb:!p-8 rounded-xl border mb:justify-start border-divider dark:border-none h-full">
                                 <label className="text-txtPrimary dark:text-txtPrimary-dark font-semibold leading-6 mb:text-lg">
                                     {t('nao:pool:total_revenue')}
                                 </label>
-                                <div className="flex items-center mt-6 mb:mt-8">
+                                <div className="flex items-center mt-6 mb:mt-9">
                                     <div className="text-xl mb:text-2xl font-semibold">≈ {formatNumber(data.totalProfit, 0)} VNDC</div>
                                 </div>
                                 <div className="text-xs mb:text-base text-txtSecondary dark:text-txtSecondary-dark mt-0.5 mb:mt-2">
@@ -451,7 +451,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                             </span>
                                             <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                                         </div>
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm mb:text-base">
                                             {formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}
                                         </div>
                                     </div>
@@ -474,39 +474,50 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
             </div>
             <div className="mt-12 mb:mt-20">
                 <TextLiner className="pb-2 mb:!text-2xl !text-xl">{t('common:transaction_history')}</TextLiner>
-                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">{t('nao:pool:history_description')}</div>
+                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm mb:text-base">{t('nao:pool:history_description')}</div>
                 <div className="mt-8 hidden mb:block">
                     <div className="flex -m-3">
                         <div className="w-1/2 p-3">
                             <CardNao className="!p-6 w-full" ref={deskProfitRef}>
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="text-txtPrimary dark:text-txtPrimary-dark text-lg font-semibold">{t('nao:pool:profit')}</div>
+                                {listHistory.length ? (
+                                    <>
+                                        <div className="flex items-center justify-between mb-2">
+                                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-lg font-semibold">{t('nao:pool:profit')}</div>
 
-                                    <div className="flex space-x-2">
-                                        <ArrowRight
-                                            onClick={() => onNavigate(false)}
-                                            disabled={actIdx === 0}
-                                            className={classNames('rotate-180 cursor-pointer')}
-                                        />
-                                        <ArrowRight
-                                            onClick={() => onNavigate(true)}
-                                            disabled={listHistory.length === 0 || actIdx === listHistory.length - 1}
-                                            className={classNames('cursor-pointer')}
-                                        />
+                                            <div className="flex space-x-2">
+                                                <ArrowRight
+                                                    onClick={() => onNavigate(false)}
+                                                    disabled={actIdx === 0}
+                                                    className={classNames('rotate-180 cursor-pointer')}
+                                                />
+                                                <ArrowRight
+                                                    onClick={() => onNavigate(true)}
+                                                    disabled={listHistory.length === 0 || actIdx === listHistory.length - 1}
+                                                    className={classNames('cursor-pointer')}
+                                                />
+                                            </div>
+                                        </div>
+                                        <Swiper
+                                            onSlideChange={({ activeIndex }) => setActIdx(activeIndex)}
+                                            ref={sliderRef}
+                                            loop={false}
+                                            lazy
+                                            grabCursor
+                                            className={`mySwiper`}
+                                            slidesPerView={1}
+                                            spaceBetween={10}
+                                        >
+                                            {renderSlide()}
+                                        </Swiper>
+                                    </>
+                                ) : (
+                                    <div className="my-6 flex flex-col justify-center items-center">
+                                        <div className={`flex items-center justify-center flex-col m-auto h-full min-h-[306px]`}>
+                                            {isDark ? <NoDataDarkIcon /> : <NoDataLightIcon />}
+                                            <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1">{t('nao:pool:history_nodata')}</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <Swiper
-                                    onSlideChange={({ activeIndex }) => setActIdx(activeIndex)}
-                                    ref={sliderRef}
-                                    loop={false}
-                                    lazy
-                                    grabCursor
-                                    className={`mySwiper`}
-                                    slidesPerView={1}
-                                    spaceBetween={10}
-                                >
-                                    {renderSlide()}
-                                </Swiper>
+                                )}
                             </CardNao>
                         </div>
                         <div className="w-1/2 p-3">
@@ -514,7 +525,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                 <div className="text-txtPrimary dark:text-txtPrimary-dark text-lg font-semibold px-4">Staking</div>
                                 <DeskStakingHistoryWrapper
                                     // height={deskProfitRef?.current ? deskProfitRef.current.offsetHeight - 114 : 0}
-                                    height={264}
+                                    height={328}
                                     className="overflow-y-auto px-4"
                                 >
                                     <StakeOrders assetConfig={assetConfig} />
@@ -593,12 +604,12 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     <NoDataDarkIcon />
                 </div>
                 <div className="text-center mt-6">
-                    <TextLiner className="!text-lg !w-full !pb-0 !normal-case">{t('nao:pool:you_not_staked')}</TextLiner>
-                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark mt-4">{t('nao:pool:share_revenue_nodata')}</div>
+                    <TextLiner className="!text-lg mb:!text-xl !w-full !pb-0 !normal-case">{t('nao:pool:you_not_staked')}</TextLiner>
+                    <div className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark mt-4">{t('nao:pool:share_revenue_nodata')}</div>
                 </div>
             </div>
-            <div className="w-full px-4 mt-12">
-                <ButtonNao onClick={onShowLock} className="font-semibold py-3 w-full">
+            <div className="w-full mt-12">
+                <ButtonNao onClick={onShowLock} className="font-semibold py-3 px-6 w-full mb:w-[fit-content] m-auto">
                     {t('nao:pool:stake_now')}
                 </ButtonNao>
             </div>
