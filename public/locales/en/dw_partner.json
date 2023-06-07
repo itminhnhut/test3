@@ -63,6 +63,7 @@
     "bank": "Bank",
     "no_bank": "No bank found",
     "transfer_description": "Description",
+    "only_show_when_confirm":"Displayed only when the partner confirms the order",
     "rating_modal": {
         "title": "Partner Review",
         "description": "How satisfied are you with this partner's transaction?",

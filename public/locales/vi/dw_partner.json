@@ -62,6 +62,7 @@
     "bank": "Ngân hàng",
     "no_bank": "Không tìm thấy ngân hàng",
     "transfer_description": "Nội dung chuyển khoản",
+    "only_show_when_confirm":"Chỉ hiển thị khi đối tác xác nhận lệnh",
     "rating_modal": {
         "title": "Đánh giá đối tác",
         "description": "Bạn có hài lòng khi giao dịch với đối tác này không?",
