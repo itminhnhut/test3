@@ -56,7 +56,7 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
 
     useEffect(() => {
         if (!isSuccess) return;
-        onBackdropCb();
+        onBackdropCb(isSuccess);
         const timer = setTimeout(() => {
             setResult((prev) => ({
                 ...prev,

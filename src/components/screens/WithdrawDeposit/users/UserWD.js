@@ -46,9 +46,10 @@ const UserWD = ({ type, children, side }) => {
     const router = useRouter();
     const auth = useSelector((state) => state.auth.user) || null;
     const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
 
     const [loadingListUserBank, setLoadingListUserBank] = useState(false);
-    const [isHaveBank, setIsHaveBank] = useState(true);
+    const [isMustHaveBank, setIsMustHaveBank] = useState(false);
     const fetchListUserBank = () => {
         setLoadingListUserBank(true);
 
@@ -60,22 +61,23 @@ const UserWD = ({ type, children, side }) => {
             }
         })
             .then(({ status, data }) => {
-                console.log("____data: ", data);
-                if (status === ApiStatus.SUCCESS) setIsHaveBank(data && data?.length > 0);
+                console.log('_____data: ', data);
+                if (status === ApiStatus.SUCCESS) setIsMustHaveBank(!data || data?.length === 0);
             })
             .finally(() => setLoadingListUserBank(false));
     };
 
     useEffect(() => {
+        if (type === TYPE_DW.CRYPTO) return;
         fetchListUserBank();
-    }, []);
+    }, [type]);
 
     return (
         // Set up Container styled: max-w, text, background
         <div className="px-4 pt-20 pb-[120px] bg-gray-13 dark:bg-dark font-normal text-base text-gray-15 dark:text-gray-4 tracking-normal">
             {loadingListUserBank ? (
                 <div className="min-h-[50vh] flex w-full justify-center items-center">
-                    <Spinner size={50} color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
+                    <Spinner size={50} color={isDark ? colors.darkBlue5 : colors.gray['1']} />
                 </div>
             ) : auth && auth?.kyc_status === 2 ? (
                 <div className="max-w-screen-v3 mx-auto 2xl:max-w-screen-xxl">
@@ -109,7 +111,7 @@ const UserWD = ({ type, children, side }) => {
                 </div>
             ) : auth && auth?.kyc_status !== 2 ? (
                 <></>
-            ) : !isHaveBank ? (
+            ) : isMustHaveBank ? (
                 <></>
             ) : (
                 <div className="h-[480px] flex items-center justify-center">
@@ -117,26 +119,30 @@ const UserWD = ({ type, children, side }) => {
                 </div>
             )}
 
-            <ModalNeedKyc isOpenModalKyc={auth && auth?.kyc_status !== 2} auth={auth} />
-            <ModalAddPaymentMethod isVisible={!isHaveBank} t={t}/>
+            <ModalNeedKyc isOpenModalKyc={auth && auth?.kyc_status !== 2} auth={auth} isShowLocking={false} />
+            <ModalAddPaymentMethod isVisible={isMustHaveBank} t={t} isDark={isDark} />
         </div>
     );
 };
 
 export default UserWD;
 
-const ModalAddPaymentMethod = ({ isVisible, t }) => {
+const ModalAddPaymentMethod = ({ isVisible, t, isDark }) => {
     return (
-        <ModalV2
-            isVisible={isVisible}
-            className="!max-w-[488px]"
-            wrapClassName="p-8 flex flex-col tracking-normal"
-            closeButton={false}
-        >
-            <img width={124} height={124} src={getS3Url('/images/payment_method/illustration_homepage.png')} className="mx-auto mt-4" />
+        <ModalV2 isVisible={isVisible} className="!max-w-[488px]" wrapClassName="p-8 flex flex-col tracking-normal" closeButton={false}>
+            <img
+                width={124}
+                height={124}
+                src={
+                    process.env.NODE_ENV === 'development'
+                        ? `/images/screen/payment/phone_${isDark ? 'dark' : 'light'}.png`
+                        : getS3Url(`/images/screen/payment/phone_${isDark ? 'dark' : 'light'}.png`)
+                }
+                className="mx-auto"
+            />
             <div className="mb-4 mt-6 txtPri-3 text-center capitalize">{t('common:notice')}</div>
             <div className="text-center txtSecond-2">{t('dw_partner:not_have_payment_content')}</div>
-            <HrefButton className="mt-10 mb-3" href="/account/payment-method?isAdd=true">
+            <HrefButton className="mt-10" href="/account/payment-method?isAdd=true">
                 {t('dw_partner:verify_now')}
             </HrefButton>
         </ModalV2>

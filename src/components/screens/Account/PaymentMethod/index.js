@@ -22,6 +22,7 @@ import { useRouter } from 'next/router';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { X } from 'react-feather';
 import { getS3Url } from 'redux/actions/utils';
+import DWAddPhoneNumber from 'components/common/DWAddPhoneNumber';
 
 const LIMIT_ROW = 5;
 
@@ -49,10 +50,11 @@ const index = () => {
     const [dataTable, setDataTable] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [loadingSetDefault, setLoadingSetDefault] = useState(false);
+    const [isAddPhone, setIsAddPhone] = useState(false)
     const router = useRouter();
     const { isAdd } = router.query;
 
-    const setIsOpenModalAddNew = (value) => {
+    const setIsOpenModalAddNew = (value, isSuccess) => {
         router.replace(
             {
                 //   pathname: '/...',
@@ -65,6 +67,8 @@ const index = () => {
                 shallow: true
             }
         );
+
+        setIsAddPhone(isSuccess && !user.phone)
     };
 
     const fetchListUserBank = () => {
@@ -295,6 +299,7 @@ const index = () => {
                 fetchListUserBank={fetchListUserBank}
             />
             <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} auth={user} />
+            <DWAddPhoneNumber isVisible={isAddPhone} onBackdropCb={(isSuccess) => setIsAddPhone(false, isSuccess)} />
         </div>
     );
 };
