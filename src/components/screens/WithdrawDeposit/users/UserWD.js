@@ -45,6 +45,7 @@ const UserWD = ({ type, children, side }) => {
     } = useTranslation();
     const router = useRouter();
     const auth = useSelector((state) => state.auth.user) || null;
+    const isOpenModalKyc = auth && auth?.kyc_status !== 2
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
@@ -108,7 +109,7 @@ const UserWD = ({ type, children, side }) => {
                     </div>
                     {children}
                 </div>
-            ) : auth && auth?.kyc_status !== 2 ? (
+            ) : isOpenModalKyc ? (
                 <></>
             ) : isMustHaveBank ? (
                 <></>
@@ -118,8 +119,8 @@ const UserWD = ({ type, children, side }) => {
                 </div>
             )}
 
-            <ModalNeedKyc isOpenModalKyc={auth && auth?.kyc_status !== 2} auth={auth} />
-            <ModalAddPaymentMethod isVisible={isMustHaveBank} t={t} isDark={isDark} />
+            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} auth={auth} />
+            <ModalAddPaymentMethod isVisible={!isOpenModalKyc && isMustHaveBank} t={t} isDark={isDark} />
         </div>
     );
 };
