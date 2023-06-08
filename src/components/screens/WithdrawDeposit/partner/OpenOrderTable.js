@@ -84,7 +84,7 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
                                     {/* {t('dw_partner:rate')} */}
                                     </div>
                                 <div className="txtSecond-3">
-                                    1 {assetCode} ≈ {formatBalanceFiat(orderDetail?.price, 'VNDC')} VND
+                                    1 {assetCode} = {formatBalanceFiat(orderDetail?.price, 'VNDC')} VND
                                 </div>
                             </div>
                         </div>
