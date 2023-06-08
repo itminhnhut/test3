@@ -65,53 +65,55 @@ export default function FundingHistory(props) {
             : 'https://nami.exchange/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures';
 
     return (
-        <MaldivesLayout contentWrapperStyle={{ overflow: 'hidden' }}>
-            {isApp && !router.query?.head && (
-                <div className="p-4 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-20">
-                    <ChevronLeft onClick={() => router.back()} className="text-txtPrimary dark:text-white" />
-                </div>
-            )}
-            <Background className={isApp && !router.query?.head ? 'mt-12' : ''} isDark={currentTheme === THEME_MODE.DARK}>
-                <div className={'max-w-screen-v3 2xl:max-w-screen-xxl m-auto'}>
-                    <div className="text-xl sm:text-[2rem] sm:leading-[2.375rem] font-semibold">{t('futures:information')}</div>
-                    <div className="sm:space-x-3 mt-4 sm:mt-6 mb-6 sm:mb-[3.75rem] flex flex-wrap text-sm sm:text-base">
-                        <span>{t('futures:funding_history_tab:to_learn_funding')}:</span>
-                        <a
-                            href={urlPost + (isApp ? '?source=app' : '')}
-                            className={'cursor-pointer flex text-sm sm:text-base font-semibold text-teal'}
-                            target={isApp ? '_self' : '_blank'}
-                        >
-                            {t('futures:funding_history_tab:link_overview')}
-                        </a>
+        <MaldivesLayout>
+            <div className="flex flex-col relative overflow-auto sm_only:max-h-screen">
+                {isApp && !router.query?.head && (
+                    <div className="p-4 border-b border-divider dark:border-divider-dark sticky top-0 w-full bg-white dark:bg-dark z-20">
+                        <ChevronLeft onClick={() => router.back()} className="text-txtPrimary dark:text-white" />
                     </div>
-                    <div className="sm:space-x-12 flex flex-col-reverse sm:flex-row justify-between">
-                        <Tabs tab={selectedTab} className="gap-6 border-b border-divider dark:border-divider-dark sm:w-max">
-                            {SCREEN_TAB_SERIES?.map((rs) => (
-                                <TabItem key={rs.key} V2 className="!px-0" value={rs.key} onClick={(isClick) => isClick && setSelectedTab(rs.key)}>
-                                    {t(rs.localized)}
-                                </TabItem>
-                            ))}
-                        </Tabs>
-                        <div className="flex items-center space-x-4 text-sm sm:text-base mb-4 sm:mb-0">
-                            {CURRENCIES.map((rs) => (
-                                <div
-                                    key={rs.value}
-                                    className={classNames(
-                                        'text-txtSecondary dark:text-txtSecondary-dark px-4 py-2 sm:py-3 border border-divider dark:border-divider-dark rounded-full cursor-pointer',
-                                        {
-                                            '!border-teal !text-teal font-semibold bg-teal/[0.1]': selectedCurrency === rs.value
-                                        }
-                                    )}
-                                    onClick={() => setSelectedCurrency(rs.value)}
-                                >
-                                    {rs.name}
-                                </div>
-                            ))}
+                )}
+                <Background isDark={currentTheme === THEME_MODE.DARK}>
+                    <div className={'max-w-screen-v3 2xl:max-w-screen-xxl m-auto'}>
+                        <div className="text-xl sm:text-[2rem] sm:leading-[2.375rem] font-semibold">{t('futures:information')}</div>
+                        <div className="sm:space-x-3 mt-4 sm:mt-6 mb-6 sm:mb-[3.75rem] flex flex-wrap text-sm sm:text-base">
+                            <span>{t('futures:funding_history_tab:to_learn_funding')}:</span>
+                            <a
+                                href={urlPost + (isApp ? '?source=app' : '')}
+                                className={'cursor-pointer flex text-sm sm:text-base font-semibold text-teal'}
+                                target={isApp ? '_self' : '_blank'}
+                            >
+                                {t('futures:funding_history_tab:link_overview')}
+                            </a>
                         </div>
+                        <div className="sm:space-x-12 flex flex-col-reverse sm:flex-row justify-between">
+                            <Tabs tab={selectedTab} className="gap-6 border-b border-divider dark:border-divider-dark sm:w-max">
+                                {SCREEN_TAB_SERIES?.map((rs) => (
+                                    <TabItem key={rs.key} V2 className="!px-0" value={rs.key} onClick={(isClick) => isClick && setSelectedTab(rs.key)}>
+                                        {t(rs.localized)}
+                                    </TabItem>
+                                ))}
+                            </Tabs>
+                            <div className="flex items-center space-x-4 text-sm sm:text-base mb-4 sm:mb-0">
+                                {CURRENCIES.map((rs) => (
+                                    <div
+                                        key={rs.value}
+                                        className={classNames(
+                                            'text-txtSecondary dark:text-txtSecondary-dark px-4 py-2 sm:py-3 border border-divider dark:border-divider-dark rounded-full cursor-pointer',
+                                            {
+                                                '!border-teal !text-teal font-semibold bg-teal/[0.1]': selectedCurrency === rs.value
+                                            }
+                                        )}
+                                        onClick={() => setSelectedCurrency(rs.value)}
+                                    >
+                                        {rs.name}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        {renderTabContent()}
                     </div>
-                    {renderTabContent()}
-                </div>
-            </Background>
+                </Background>
+            </div>
         </MaldivesLayout>
     );
 }
