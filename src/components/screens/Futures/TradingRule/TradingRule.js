@@ -240,13 +240,13 @@ const TradingRules = () => {
 
     return (
         <MaldivesLayout>
-            {isApp && (
+            {isApp && !router.query?.head && (
                 <div className="px-4 py-3 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
                     <ChevronLeft onClick={() => router.back()} className="text-txtPrimary dark:text-white" />
                 </div>
             )}
             {isMobile && <GlossaryModal isVisible={showModal} onClose={() => setShowModal(false)} />}
-            <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20', { 'pt-12': isApp })}>
+            <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20', { 'pt-12': isApp && !router.query?.head })}>
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                     <div className="flex justify-between mb-7 sm:mb-20">
                         <div className="text-xl sm:text-[2rem] sm;leading-[2.375rem] font-semibold ">{t('futures:trading_rules')}</div>

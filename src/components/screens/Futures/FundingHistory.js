@@ -78,7 +78,7 @@ export default function FundingHistory(props) {
                                     : 'https://nami.exchange/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures'
                             }
                             className={'cursor-pointer flex text-sm sm:text-base font-semibold text-teal'}
-                            target="_blank"
+                            target={isApp ? '_self' : '_blank'}
                         >
                             {t('futures:funding_history_tab:link_overview')}
                         </a>

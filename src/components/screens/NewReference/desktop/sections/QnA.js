@@ -4,6 +4,7 @@ import { Line } from 'components/screens/NewReference/mobile';
 import RefCard from 'components/screens/NewReference/RefCard';
 import Link from 'next/link';
 import { theme } from '../../../../../../tailwind.config';
+import useApp from 'hooks/useApp';
 
 const title = {
     en: 'FAQ',
@@ -87,10 +88,12 @@ const TermData = [
 ];
 
 const QnA = ({ id, t, language }) => {
+    const isApp = useApp();
+    const params = isApp ? '?source=app' : '';
     const policyLink =
         language === 'vi'
-            ? 'https://nami.exchange/vi/support/announcement/tin-tuc-ve-nami/ra-mat-chuong-trinh-doi-tac-phat-trien-cong-dong-nami'
-            : 'https://nami.exchange/support/announcement/nami-news/official-launching-of-nami-community-development-partnership-program';
+            ? 'https://nami.exchange/vi/support/announcement/tin-tuc-ve-nami/ra-mat-chuong-trinh-doi-tac-phat-trien-cong-dong-nami' + params
+            : 'https://nami.exchange/support/announcement/nami-news/official-launching-of-nami-community-development-partnership-program' + params;
 
     const renderData = (dataSource) => {
         return (
