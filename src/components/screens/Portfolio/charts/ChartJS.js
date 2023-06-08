@@ -37,6 +37,7 @@ const ChartJS = memo(
         height = '100%',
         width = '100%',
         plugins,
+        redraw = true,
         options = {
             responsive: true,
             maintainAspectRatio: false
@@ -48,10 +49,10 @@ const ChartJS = memo(
                 chart = <Line options={options} data={data} width={width} height={height} />;
                 break;
             case 'bar':
-                chart = <Bar options={options} data={data} width={width} height={height} plugins={plugins} redraw={true} />;
+                chart = <Bar options={options} data={data} width={width} height={height} plugins={plugins} redraw={redraw} />;
                 break;
             case 'doughnut':
-                chart = <Doughnut options={options} data={data} width={width} height={height} plugins={plugins} redraw={true} />;
+                chart = <Doughnut options={options} data={data} width={width} height={height} plugins={plugins} redraw={redraw} />;
                 break;
             case 'bubble':
                 chart = <Bubble options={options} data={data} width={width} height={height} />;

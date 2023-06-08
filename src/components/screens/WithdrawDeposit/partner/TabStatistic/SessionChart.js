@@ -8,17 +8,24 @@ import colors from 'styles/colors';
 import { formatTime, formatSwapRate, convertDateToMs, formatNanNumber } from 'redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useFetchApi from 'hooks/useFetchApi';
-import { API_GET_COMMISSION_STATISTIC_PARTNER } from 'redux/actions/apis';
+import { API_GET_COMMISSION_STATISTIC_PARTNER, API_GET_PARTNER_STATS_VOLUME_COMMISSION } from 'redux/actions/apis';
 import FilterTimeTab from 'components/common/FilterTimeTab';
 import DarkNote from 'components/common/DarkNote';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import moment from 'moment';
 import { isNumber } from 'lodash';
+import Spiner from 'components/common/V2/LoaderV2/Spiner';
 
 const TabStatistic = [
-    { value: 'depositwithdraw', localized: 'dw_partner:total_dw' },
-    { value: 'commission', localized: 'common:partners' }
+    {
+        value: 'depositwithdraw',
+        localized: 'dw_partner:total_dw'
+    },
+    {
+        value: 'commission',
+        localized: 'common:partners'
+    }
 ];
 
 const SessionChart = ({ filter, setFilter }) => {
@@ -28,21 +35,22 @@ const SessionChart = ({ filter, setFilter }) => {
 
     const { t } = useTranslation();
 
-    const [showModalDetail, setShowModalDetail] = useState(null);
+    const [dataIndex, setDataIndex] = useState(null);
     // const [curToken, setCurToken] = useState(72);
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: []
     });
+    console.log('chartData:', chartData);
 
     const { data, loading, error } = useFetchApi(
         {
-            url: API_GET_COMMISSION_STATISTIC_PARTNER,
+            url: API_GET_PARTNER_STATS_VOLUME_COMMISSION,
+            // url: API_GET_COMMISSION_STATISTIC_PARTNER,
             params: {
-                from: convertDateToMs(filter?.range?.startDate),
+                from: !filter?.range?.startDate ? null : convertDateToMs(filter?.range?.startDate),
                 to: convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf'),
                 type: typeTab,
-                currency: 72,
                 interval: filter?.range?.interval || 'd'
             }
         },
@@ -53,26 +61,26 @@ const SessionChart = ({ filter, setFilter }) => {
     useEffect(() => {
         if (!data) return;
         setChartData({
-            labels: filter?.range?.interval ? data.labels.map((week) => `${t('futures:week')} ${week}`) : data.labels,
+            labels: data.labels.map((label) => `${formatTime(new Date(label.date), data.interval === 'month' ? 'MM/yyyy' : 'dd/MM')}`),
             datasets: [
                 {
                     fill: false,
                     label: false,
-                    data: data.data.filter((arr) => arr.some((obj) => obj.side === 'BUY')).map((arr) => arr.find((obj) => obj.side === 'BUY').value),
+                    data: data.values.map((value) => value.totalBuy),
                     backgroundColor: colors.green[6]
                     // stack: 'pnl'
                 },
                 {
                     fill: false,
                     label: false,
-                    data: data.data.filter((arr) => arr.some((obj) => obj.side === 'SELL')).map((arr) => arr.find((obj) => obj.side === 'SELL').value),
+                    data: data.values.map((value) => value.totalSell),
                     backgroundColor: colors.purple[1],
                     borderRadius: { topLeft: 2, topRight: 2, bottomLeft: 0, bottomRight: 0 }
                     // stack: 'pnl'
                 }
             ]
         });
-    }, [data]);
+    }, [data, typeTab]);
 
     const options = {
         responsive: true,
@@ -139,7 +147,7 @@ const SessionChart = ({ filter, setFilter }) => {
         onClick: (event, elements) => {
             if (elements.length > 0) {
                 // do something with the clicked bar, e.g. update state, show a tooltip, etc.
-                setShowModalDetail(elements[0].index);
+                setDataIndex(elements[0].index);
             }
         },
         onHover: (event, chartElement) => {
@@ -173,7 +181,13 @@ const SessionChart = ({ filter, setFilter }) => {
                     {/* <FilterTimeTab filter={filter} setFilter={setFilter} className="mb-6" /> */}
                 </div>
                 <div className=" w-full max-h-[450px] mt-8">
-                    <ChartJS type="bar" data={chartData} options={options} height="450px" />
+                    {loading ? (
+                        <div className="h-[450px] flex justify-center items-center">
+                            <Spiner isDark={isDark} size={52} />
+                        </div>
+                    ) : (
+                        <ChartJS type="bar" data={chartData} options={options} height="450px" redraw={false} />
+                    )}
                 </div>
                 {/* Chu thich */}
                 <div className="flex justify-between items-center mt-6">
@@ -185,11 +199,11 @@ const SessionChart = ({ filter, setFilter }) => {
                 </div>
             </CardWrapper>
             <ModalDetailChart
-                isVisible={isNumber(showModalDetail)}
-                onClose={() => setShowModalDetail(null)}
+                isVisible={isNumber(dataIndex)}
+                onClose={() => setDataIndex(null)}
                 t={t}
-                data={data?.data?.[showModalDetail]}
-                dateString={data?.labels?.[showModalDetail]}
+                data={data?.values?.[dataIndex]}
+                dateString={data?.labels?.[dataIndex]?.date}
                 typeTab={typeTab}
             />
         </div>
@@ -199,22 +213,12 @@ const SessionChart = ({ filter, setFilter }) => {
 const ModalDetailChart = ({ onClose, isVisible, t, data, dateString, typeTab }) => {
     if (!isVisible) return null;
 
-    let buy = 0,
-        sell = 0,
-        totalBuySell = 0;
-
-    data.forEach((item) => {
-        if (item.value) {
-            if (item.side === SIDE.BUY) buy = item.value;
-            else if (item.side === SIDE.SELL) sell = item.value;
-            totalBuySell += item.value;
-        }
-    });
+    let totalBuySell = data.totalBuy + data.totalSell;
 
     // Today is 06/04/2023: input '04/03' (MM/dd) => output 04/04/2023
     // Today is 06/04/2023: input '04/07' (MM/dd) => output 07/04/2022
     const currentYear = moment().year();
-    const parsedDate = moment(dateString, 'MM/DD').year(currentYear);
+    const parsedDate = moment(dateString).year(currentYear);
     if (parsedDate.isAfter(moment())) {
         parsedDate.year(currentYear - 1);
     }
@@ -243,11 +247,11 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dateString, typeTab }) 
                 <CardWrapper className="!p-4 mt-3 bg-gray-13">
                     <div className="flex items-center justify-between">
                         <span className="txtSecond-4">{typeTab === TabStatistic[0].value ? t('dw_partner:buy_volume') : t('dw_partner:buy_commission')}</span>
-                        <div>{formatNanNumber(buy, 0)} VNDC</div>
+                        <div>{formatNanNumber(data.totalBuy, 0)} VNDC</div>
                     </div>
                     <div className="flex items-center justify-between mt-3">
                         <span className="txtSecond-4">{typeTab === TabStatistic[0].value ? t('dw_partner:sell_volume') : t('dw_partner:sell_commission')}</span>
-                        <div>{formatNanNumber(sell, 0)} VNDC</div>
+                        <div>{formatNanNumber(data.totalSell, 0)} VNDC</div>
                     </div>
                 </CardWrapper>
             </div>
