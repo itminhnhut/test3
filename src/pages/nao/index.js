@@ -14,6 +14,8 @@ import { API_USER_VOTE } from "redux/actions/apis";
 import ContesRules from "components/screens/Nao/Contest/ContesRules";
 import { SectionNao } from "components/screens/Nao/NaoStyle";
 import { seasons } from 'components/screens/Nao/Contest/Contest';
+import NaoHeader from "components/screens/Nao/NaoHeader";
+import NaoFooter from "components/screens/Nao/NaoFooter";
 
 const getAssetNao = createSelector(
     [(state) => state.utils.assetConfig, (utils, params) => params],
@@ -72,44 +74,31 @@ const NaoDashboard = () => {
         }
     };
 
-    const onDownload = (key) => {
-        let url = "";
-        switch (key) {
-            case "app_store":
-                url =
-                    "https://apps.apple.com/us/app/onus-invest-btc-eth-doge/id1498452975";
-                break;
-            case "google_play":
-                url = "https://play.google.com/store/apps/details?id=com.vndc";
-                break;
-            default:
-                break;
-        }
-        window.open(url, "_blank");
-    };
-
     const current = seasons.find(season => season.active)
 
     return (
-        <LayoutNaoToken>
-            <div className="nao_section">
-                <NaoInfo
-                    dataSource={dataSource}
-                    assetNao={assetNao}
-                    ammData={ammData}
-                />
-                <NaoPerformance />
-                <NaoPool dataSource={dataSource} assetNao={assetNao} />
-                <NaoProposals listProposal={listProposal} assetNao={assetNao} />
+        <LayoutNaoToken isHeader={false}>
+            <div className="min-h-screen">
+                <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
+                    <NaoHeader/>
+                </div>
+                <div className="nao_section px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                    <NaoInfo dataSource={dataSource} assetNao={assetNao} ammData={ammData} />
+                </div>
+                <div className="bg-gray-13 dark:bg-dark mt-12 sm:mt-20 rounded-t-3xl">
+                    <div className="nao_section px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                        <NaoPerformance />
+                        <NaoPool dataSource={dataSource} assetNao={assetNao} />
+                        <NaoProposals listProposal={listProposal} assetNao={assetNao} />
 
-                <section id="nao_pool" className="pt-10 sm:pt-20">
-                    <SectionNao
-                        noBg
-                        className="px-6 sm:px-10 rounded-xl min-w-full sm:min-w-[372px] flex flex-col justify-between flex-1 relative"
-                    >
-                        <ContesRules season={current?.season ?? 1} seasons={seasons} {...current} inHome={true} />
-                    </SectionNao>
-                </section>
+                        <section id="nao_pool" className="pb-20 pt-12 sm:pt-20 sm:pb-[120px]">
+                            <SectionNao noBg className="px-3 sm:px-10 rounded-xl min-w-full sm:min-w-[372px] flex flex-col justify-between flex-1 relative bg-bgPrimary dark:bg-bgPrimary-dark">
+                                <ContesRules season={current?.season ?? 1} seasons={seasons} {...current} inHome={true} />
+                            </SectionNao>
+                        </section>
+                    </div>
+                </div>
+                <NaoFooter noSpacingTop />
             </div>
         </LayoutNaoToken>
     );

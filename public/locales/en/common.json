@@ -48,6 +48,7 @@
     "hours": "hours",
     "second": "second",
     "seconds": "seconds",
+    "week": "Week",
     "day": "day",
     "days": "days",
     "month": "month",
@@ -117,7 +118,7 @@
     "feedback_sent_failed": "Something went wrong. Please try again later.",
     "feedback_send_contact": "If you have further questions, please contact us via support@nami.exchange or hotline: 19003098. See <1>FAQs</1>.",
     "otp_verify": "Please enter the verification code on the Google Authenticator to continue.",
-    "otp_verify_expired": "Code is invalid. Please try again.",
+    "otp_verify_expired": "The verification code is invalid, please try again.",
     "published_at": "Published on",
     "category": "Category",
     "share": "Share",
@@ -165,8 +166,9 @@
     "resend": "Resend",
     "close": "Close",
     "error_code": "Code",
+    "error": "Error",
     "scan": "Scan",
-    "important_notes": "Important notes",
+    "important_note": "Important note",
     "common_status": {
         "finished": "Finished",
         "cancelled": "Cancelled"
@@ -235,7 +237,9 @@
         "max_opt": "Tối đa",
         "view_history": "View History",
         "reset": "Đặt lại",
-        "view_portfolio": "Xem Portfolio"
+        "view_portfolio": "Xem Portfolio",
+        "apply": "Apply",
+        "select_time": "Select time"
     },
     "global_notice": {
         "launchpad_maintain": "To provide the best experience for Investors, <span>Nami.Exchange</span> will suspend <span>Off-chain Deposit/Withdrawal</span> before and after 1 hour from the time of Launchpad. Investors can still use <span>On-Chain Deposit/Withdrawal</span>.",
@@ -287,7 +291,7 @@
         "time": {
             "all": "All",
             "days": "24h",
-            "week": "Week",
+            "week": "1 Week",
             "1month": "1 Month",
             "3month": "3 Month"
         },
@@ -342,6 +346,7 @@
     "several_days": "Several Days",
     "filter": "Filter",
     "custom": "Custom",
+    "custom_2": "Custom",
     "custom_date": "Custom Date",
     "countdown_tooltip": "For reference only, actual funding time will be determined based on server time",
     "users": "{{value}} users",
@@ -375,6 +380,7 @@
     "select_intervals": "Select Intervals",
     "chat_with_support": "Chat with Support",
     "others": "Others",
+    "others_2": "Others",
     "convert": "Convert",
     "futures_short": "Futures",
     "spot_short": "Exchange",
@@ -382,6 +388,14 @@
     "gainers": "Gainers",
     "losers": "Losers",
     "trending": "Trending",
+    "position": {
+        "buy": "Buy",
+        "sell": "Sell",
+        "sum_buy": "Total Buy position",
+        "sum_sell": "Total Sell position",
+        "max_profit": "Lợi nhuận cao nhất",
+        "min_profit": "Lợi nhuận thấp nhất"
+    },
     "no_assets_available": "No assets available for conversion",
     "confirm_convert": "Conversion confirmation",
     "convert_success": "Successful conversion",
@@ -394,8 +408,48 @@
     "denined": "Denied",
     "processing": "Processing",
     "deny": "Deny",
+    "accept": "Accept",
+    "reject": "Reject",
+    "proof": "Proof",
     "download_view": {
         "title": "Download the application now",
         "desc": "Over 600 trading pairs with leverage up to x125"
-    }
+    },
+    "luckydraw": {
+        "not_ticket_title": "You don't have any lucky ticket",
+        "ticket_title": "You've {{value}} lucky tickets",
+        "ticket_des": "Reach {{vndc}} VNDC daily volume to have a chance of winning {{nao}} NAO from NAO Futures",
+        "received_tickets": "You have used up all your lucky tickets today, wish you a successful trading day.",
+        "trade": "Trade now",
+        "open_now": "Open",
+        "pull_ticket": "Pull the ticket out to see the gift",
+        "goodluck": "Wish you better luck next time!",
+        "congrat_first": "Congratulation! You have received",
+        "get_now": "Get it now",
+        "continue": "Continue",
+        "conditions": "Bonus conditions",
+        "vol_trade": "Trade volume today",
+        "the_promotion_end_title": "The promotion has ended",
+        "the_promotion_end_description": "The Daily Trading Rewards Lucky Draw promotion has ended, please come back later.",
+        "reward_title": "Daily Trading Reward",
+        "reward_desc": "Trading everyday to claim your rewards for each milestone of trading volume",
+        "today_trading": "Today's trading volume:",
+        "claim_now": "Claim Now",
+        "claim_success": "Congratulations, you have received",
+        "volume_tooltip": "Daily volume includes both VNDC and USDT Futures and will automatically reset at 00:00 everyday (UTC+7)",
+        "start": "Start",
+        "back_to_trading": "Back to trading",
+        "reward_desc_trading": "Trading volume is not enough to claim next reward, please trade an additional volume of {{vol}} for {{value}} bonus.",
+        "reward_desc_trading_over": "Congratulations on getting all your bonus milestones today. Wishing you efficient and successful trading!",
+        "updated_vol": "Updated every 20 minutes",
+        "last_updated_time": "Last Updated",
+        "take_reward": "Take Reward",
+        "login_trade": "Log in and start trading Futures now to receive attractive daily rewards from Nami Exchange",
+        "share": "Share To",
+        "more": "More",
+        "download": "Download",
+        "reward_received": "Reward received successfully"
+    },
+    "wallet": "{{wallet}} Wallet",
+    "reload": "Reload"
 }

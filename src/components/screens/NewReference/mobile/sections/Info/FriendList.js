@@ -1,59 +1,71 @@
-import React, { useState } from 'react';
-import PopupModal from 'src/components/screens/NewReference/PopupModal';
-import { formatTime } from 'redux/actions/utils';
-import { NoData } from '../..';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
-import { useEffect } from 'react';
+
 import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_FRIENDS_BY_REF } from 'redux/actions/apis';
-import { useRef } from 'react';
+
 import { IconLoading } from 'components/common/Icons';
-import colors from 'styles/colors';
 import ModalV2 from 'components/common/V2/ModalV2';
 import InputV2 from 'components/common/V2/InputV2';
+import PopupModal from 'src/components/screens/NewReference/PopupModal';
 
+import { NoData } from 'components/screens/NewReference/mobile';
+
+import { formatTime } from 'redux/actions/utils';
 import { Search } from 'react-feather';
 import classNames from 'classnames';
+import colors from 'styles/colors';
+
+const LIMIT = 10;
+const PAGE = 0;
 
 const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
     const { t } = useTranslation();
-    const [friendList, setFriendList] = useState([]);
-    const [more, setMore] = useState(10);
-    const [loading, setLoading] = useState(false);
-    const hasNext = useRef(false);
+    const [page, setPage] = useState(PAGE);
     const [search, setSearch] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [friendList, setFriendList] = useState([]);
+
+    const hasNext = useRef(false);
 
     const doClose = () => {
         setFriendList([]);
         onClose();
-        setMore(10);
+        setPage(PAGE);
     };
 
     const handleListFriend = _.throttle(async () => {
         setLoading(true);
+        const params = {
+            limit: LIMIT,
+            page
+        };
+        if (search) params.code = search.trim();
+
         FetchApi({
             url: API_NEW_REFERRAL_FRIENDS_BY_REF.replace(':code', code),
             options: {
                 method: 'GET'
             },
-            params: {
-                code: search,
-                limit: more
-            }
+            params
         }).then(({ data, status }) => {
             if (status === 'ok') {
                 hasNext.current = data.hasNext;
                 setFriendList(data.results);
-            } else {
-                setFriendList([]);
             }
             setLoading(false);
         });
-    }, 300);
+    }, 500);
 
     useEffect(() => {
-        handleListFriend();
-    }, [more, code, search]);
+        const fetchSearchUser = setTimeout(handleSearchToUser, 500);
+        return () => clearTimeout(fetchSearchUser);
+    }, [search]);
+
+    const handleSearchToUser = async () => {
+        setFriendList([]);
+        await handleListFriend();
+    };
 
     const handleChangeSearch = (value) => {
         setSearch(value);
@@ -77,10 +89,12 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                     <div>{t('reference:table.referral_date')}</div>
                 </div>
                 {loading ? (
-                    <IconLoading color={colors.teal} />
+                    <div className="flex flex-col gap-4 h-[300px] overflow-auto no-scrollbar">
+                        <IconLoading color={colors.teal} />
+                    </div>
                 ) : friendList.length ? (
                     <>
-                        <div className="flex flex-col gap-4 max-h-[400px] h-full overflow-auto no-scrollbar">
+                        <div className="flex flex-col gap-4 h-[300px] overflow-auto no-scrollbar">
                             {friendList.map((data, index) => {
                                 return (
                                     <div className="w-full flex items-center justify-between" key={index}>
@@ -97,7 +111,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                             {hasNext.current ? (
                                 <div
                                     className="mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer"
-                                    onClick={() => setMore(99999999999)}
+                                    onClick={() => setPage((prev) => prev + 1)}
                                 >
                                     {t('reference:referral.show_more')}
                                 </div>
@@ -130,7 +144,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                         <div>NamiID</div>
                         <div>{t('reference:referral.referral_date')}</div>
                     </div>
-                    <div className="flex flex-col gap-2 max-h-[400px] h-full overflow-auto no-scrollbar text-gray-6 text-sm font-semibold">
+                    <div className="flex flex-col gap-2 max-h-[300px] h-full overflow-auto no-scrollbar text-gray-6 text-sm font-semibold">
                         {friendList.map((data, index) => {
                             return (
                                 <div className="w-full flex items-center justify-between text-sm font-medium leading-6" key={index}>
@@ -141,7 +155,10 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                         })}
                     </div>
                     {hasNext.current ? (
-                        <div className="mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer" onClick={() => setMore(99999999999)}>
+                        <div
+                            className="mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer"
+                            onClick={() => setPage((prev) => prev + 1)}
+                        >
                             {t('reference:referral.show_more')}
                         </div>
                     ) : null}

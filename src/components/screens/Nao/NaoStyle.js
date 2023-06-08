@@ -3,30 +3,37 @@ import colors from 'styles/colors';
 import classNames from 'classnames';
 import CTooltip from 'components/common/Tooltip';
 import { Children, useMemo, useState } from 'react';
-import useWindowSize from 'hooks/useWindowSize';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import _ from 'lodash';
+import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import CheckCircle from 'components/svg/CheckCircle';
+import CrossCircle from 'components/svg/CrossCircle';
+import { WarningFilledIcon, RemoveCircleIcon } from 'components/svg/SvgIcon';
+import { IconArrowOnus } from 'components/common/Icons';
 
 export const TextLiner = styled.div.attrs({
-    className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-nao-white'
+    className: 'text-xl sm:text-2xl font-semibold w-max text-txtPrimary dark:text-txtPrimary-dark'
 })`
-    background: ${({ liner }) => liner && `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)`};
+    background: ${({ liner }) => liner && colors.teal};
     -webkit-background-clip: ${({ liner }) => liner && `text`};
     -webkit-text-fill-color: ${({ liner }) => liner && `transparent`};
     background-clip: ${({ liner }) => liner && `text`};
     text-fill-color: ${({ liner }) => liner && `transparent`};
 `;
 
-export const CardNao = styled.div.attrs(({ noBg, customHeight }) => ({
+export const CardNao = styled.div.attrs(({ noBg, customHeight, bgCorner, bgStake }) => ({
     className: classNames(
-        `p-6 sm:px-10 sm:py-9 rounded-xl min-w-full sm:min-w-[372px] ${
+        `p-6 sm:px-10 sm:py-9 rounded-xl w-full min-w-full sm:min-w-[320px] ${
             customHeight ? customHeight : 'sm:min-h-[180px]'
         } flex flex-col justify-between flex-1 relative`,
         // { 'border-dashed border-[0.5px] border-[#7686B1]': noBg },
-        { 'bg-nao-bg/[0.15]': !noBg }
+        { 'bg-white dark:bg-darkBlue-3': !noBg && !bgCorner && !bgStake },
+        { 'bg-nao-corner-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full': !noBg && bgCorner && !bgStake },
+        { 'bg-nao-stake-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full': !noBg && !bgCorner && bgStake }
     )
 }))`
     background-image: ${({ noBg, stroke = 0.8 }) =>
@@ -35,7 +42,7 @@ export const CardNao = styled.div.attrs(({ noBg, customHeight }) => ({
 `;
 
 export const SectionNao = styled.div.attrs(({ noBg }) => ({
-    className: classNames({ 'bg-nao-bg/[0.15]': !noBg })
+    className: classNames({ 'bg-white dark:bg-darkBlue-3': !noBg })
 }))`
     background-image: ${({ noBg, stroke = 0.8 }) =>
         noBg &&
@@ -47,16 +54,19 @@ export const Divider = styled.div.attrs({
 })`
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%237686B1' stroke-width='2' stroke-dasharray='3 %2c 10' stroke-dashoffset='8' stroke-linecap='square'/%3e%3c/svg%3e");
 `;
-
-export const ButtonNao = styled.div.attrs(({ border, disabled }) => ({
-    className: classNames('text-center text-sm px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer h-10', {
-        'border border-nao-blue2 !bg-nao-bg3': border,
-        'text-opacity-20 text-nao-white !bg-nao-bg3': disabled,
-        'bg-nao-bg4': !disabled
+export const ButtonNaoVariants = {
+    PRIMARY: 'PRIMARY',
+    SECONDARY: 'SECONDARY',
+    DANGER: 'DANGER'
+};
+export const ButtonNao = styled.div.attrs(({ disabled, variant, active = true }) => ({
+    className: classNames('text-center text-sm sm:text-base px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer py-3', {
+        'bg-bgBtnPrimary text-txtBtnPrimary': active && (!variant || variant === ButtonNaoVariants.PRIMARY), // default theme is primary
+        'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': variant === ButtonNaoVariants.SECONDARY || active === false,
+        'bg-red-2 text-white': variant === ButtonNaoVariants.DANGER,
+        '!bg-gray-12 dark:!bg-dark-2 text-txtDisabled dark:text-txtDisabled-dark': disabled
     })
-}))`
-    background: ${({ active, isActive }) => (isActive ? (active ? colors.nao.blue2 : '') : colors.nao.blue2)};
-`;
+}))``;
 
 export const BackgroundHeader = styled.div.attrs({
     className: 'relative z-[9]'
@@ -67,20 +77,27 @@ export const BackgroundHeader = styled.div.attrs({
 export const Progressbar = styled.div.attrs(({ height = 6 }) => ({
     className: `rounded-lg transition-all`
 }))`
-    background: ${({ background }) => (background ? background : 'linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)')};
+    background: ${({ background }) => (background ? background : colors.teal)};
     width: ${({ percent }) => `${percent > 100 ? 100 : percent}%`};
     height: ${({ height }) => `${height || 6}px`};
 `;
 
-export const Tooltip = ({ id, arrowColor, backgroundColor, className, children, place = 'top' }) => {
+export const Tooltip = ({ id, arrowColor, backgroundColor, className, children, place = 'top', ...restProps }) => {
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
+    const defaultTooltipBg = isDark ? colors.dark[1] : colors.gray[15];
+
     return (
         <CTooltip
             id={id}
             place={place}
             effect="solid"
-            className={classNames(`!opacity-100 !rounded-lg max-w-[250px] sm:max-w sm:w-full ${className} `, { '!-mt-5 ': place === 'top' })}
-            arrowColor={arrowColor ?? colors.nao.tooltip2}
-            backgroundColor={backgroundColor ?? colors.nao.tooltip2}
+            className={classNames(
+                `!opacity-100 !rounded-lg max-w-[250px] sm:max-w sm:w-full !bg-gray-15 dark:!bg-dark-1 text-white dark:text-gray-4 ${className}`
+            )}
+            arrowColor={arrowColor ?? defaultTooltipBg}
+            backgroundColor={backgroundColor ?? defaultTooltipBg}
+            {...restProps}
         >
             {children}
         </CTooltip>
@@ -95,7 +112,7 @@ export const Column = ({ title, maxWidth, minWidth, width, sortable, align = 'le
     );
 };
 
-export const Table = ({ dataSource, children, classHeader = '', onRowClick, noItemsMessage, loading = false, classWrapper = '' }) => {
+export const Table = ({ dataSource, children, classHeader = '', onRowClick, noItemsMessage, loading = false, classWrapper = '', limit = 10 }) => {
     const mouseDown = useRef(false);
     const startX = useRef(null);
     const scrollLeft = useRef(null);
@@ -176,16 +193,27 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
             }
         };
     }, [content.current]);
+
+    const loader = useMemo(() => {
+        const arr = [];
+        for (let i = 1; i <= limit; i++) {
+            arr.push(i);
+        }
+        return arr;
+    }, [limit]);
+
     const isScroll = checkScrollBar(content.current, 'vertical');
     const _children = Children.toArray(children.filter((child) => child.props?.visible === true || child.props?.visible === undefined));
+    const _dataSource = loading ? loader : dataSource;
+
     return (
-        <CardNao id="nao-table" noBg className={classNames('mt-8 !p-6 !justify-start', classWrapper)}>
+        <CardNao id="nao-table" className={classNames('mt-6 !p-0 !justify-start', classWrapper)}>
             <div ref={content} className={classNames('overflow-auto nao-table-content min-h-[200px]')}>
                 <div
                     ref={header}
                     className={classNames(
-                        'z-10 py-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden min-w-max w-full',
-                        'px-3 nao-table-header flex items-center text-nao-grey text-sm font-medium justify-between',
+                        'z-10 pt-10 pb-6 border-b border-divider dark:border-divider-dark bg-transparent overflow-hidden min-w-max w-full',
+                        'px-6 nao-table-header flex items-center text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base justify-between',
                         // 'pr-7'
                         classHeader
                     )}
@@ -195,7 +223,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                             key={indx}
                             {...item.props}
                             classHeader={classNames(
-                                'whitespace-nowrap mx-2 min-h-[10px]',
+                                'whitespace-nowrap mx-2 min-h-[10px] text-sm',
                                 { 'flex-1': indx !== 0 },
                                 { 'ml-0': indx === 0 },
                                 { 'mr-0': indx === _children.length - 1 }
@@ -204,18 +232,18 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                     ))}
                 </div>
                 <div
-                    className={classNames(' mt-3 overflow-none', {
+                    className={classNames(' my-3 overflow-none', {
                         'pr-[10px]': isScroll
                     })}
                 >
-                    {Array.isArray(dataSource) && dataSource?.length > 0 ? (
-                        dataSource.map((item, index) => {
+                    {Array.isArray(_dataSource) && _dataSource?.length > 0 ? (
+                        _dataSource.map((item, index) => {
                             return (
                                 <div
                                     onClick={() => _onRowClick(item, index)}
                                     style={{ minWidth: 'fit-content' }}
                                     key={`row_${index}`}
-                                    className={classNames('px-3 flex items-center flex-1 w-full', { 'bg-nao/[0.15] rounded-lg': index % 2 !== 0 })}
+                                    className={classNames('px-6 flex items-center flex-1 w-full hover:bg-hover dark:hover:bg-hover-dark')}
                                 >
                                     {_children.map((child, indx) => {
                                         const width = child?.props?.width;
@@ -238,7 +266,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                                                 style={{ width, maxWidth, minWidth, textAlign: align }}
                                                 key={indx}
                                                 className={classNames(
-                                                    `min-h-[56px] flex items-center text-sm ${className} ${_align}`,
+                                                    `min-h-[56px] flex items-center text-sm sm:text-base ${className} ${_align}`,
                                                     'break-words mx-2',
                                                     { 'flex-1': indx !== 0 },
                                                     { 'ml-0': indx === 0 },
@@ -269,9 +297,16 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                             );
                         })
                     ) : (
-                        <div className={`flex items-center justify-center flex-col m-auto`}>
-                            <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
-                            <div className="text-xs text-nao-grey mt-1">{noItemsMessage ? noItemsMessage : t('common:no_data')}</div>
+                        <div className={`flex items-center justify-center flex-col m-auto pb-8`}>
+                            <div className="block dark:hidden">
+                                <NoDataLightIcon />
+                            </div>
+                            <div className="hidden dark:block">
+                                <NoDataDarkIcon />
+                            </div>
+                            <div className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark mt-1">
+                                {noItemsMessage ? noItemsMessage : t('common:no_data')}
+                            </div>
                         </div>
                     )}
                 </div>
@@ -281,12 +316,16 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
 };
 
 export const getColor = (value) => {
-    return !!value ? (value > 0 ? 'text-nao-green2' : 'text-nao-red') : '';
+    return !!value ? (value > 0 ? 'text-teal' : 'text-red') : '';
 };
 
 export const renderPnl = (data, item) => {
-    const prefix = !!data && data > 0 ? '+' : '';
-    return <div className={`${getColor(data)}`}>{prefix + formatNumber(data, 2, 0, true)}%</div>;
+    return (
+        <div className={classNames('flex items-center', getColor(data))}>
+            <IconArrowOnus className={classNames('w-[7px] mr-1.5', data > 0 ? '' : 'rotate-180')} color="currentColor" />
+            {Math.abs(+data).toFixed(2)} %
+        </div>
+    );
 };
 
 export const useOutside = (ref, cb, container) => {
@@ -311,7 +350,7 @@ export const useOutsideAlerter = (ref, cb) => {
     useEffect(() => {
         const handleClickOutside = (event, cb) => {
             if (ref.current && !ref.current?.contains(event.target)) {
-              if (cb) cb();
+                if (cb) cb();
             }
         };
         document.addEventListener('mousedown', (event) => handleClickOutside(event, cb));
@@ -353,19 +392,23 @@ export const TextField = (props) => {
 
     return (
         <div className="w-full space-y-[6px]">
-            <div className="text-xs leading-6 text-onus-grey">{label}</div>
-            <WrapInput error={error} focus={focus}>
+            <div className="text-xs sm:text-sm leading-6 text-txtSecondary dark:text-txtSecondary-dark">{label}</div>
+            <WrapInput error={error} focus={focus} readOnly={readOnly}>
                 <input
-                    className={`w-full text-sm ${readOnly ? 'text-onus-grey' : ''} ${className}`}
+                    className={`w-full text-sm sm:text-base ${readOnly ? 'text-txtSecondary dark:text-txtSecondary-dark' : ''} ${className}`}
                     onFocus={onFocus}
                     onBlur={_onBlur}
                     readOnly={readOnly}
                     {...propsTextField}
                 />
-                {prefix && <div className={`${prefixClassName} text-sm leading-6 text-onus-grey whitespace-nowrap`}>{prefix}</div>}
+                {prefix && (
+                    <div className={`${prefixClassName} text-sm sm:text-base leading-6 text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap`}>
+                        {prefix}
+                    </div>
+                )}
             </WrapInput>
             {error && helperText && (
-                <div className="flex items-center space-x-2 text-xs text-nao-red">
+                <div className="flex items-center space-x-2 text-xs sm:text-sm text-red-2">
                     <WarningIcon />
                     <span>{helperText}</span>
                 </div>
@@ -375,17 +418,24 @@ export const TextField = (props) => {
 };
 
 export const WrapInput = styled.div.attrs(({ error }) => ({
-    className: classNames('w-full border-b border-nao-grey pb-[5px] relative flex items-center justify-between', { 'border-b border-nao-red': error })
+    className: classNames('w-full relative flex items-center justify-between bg-gray-12 dark:bg-dark-2 px-3 py-2 rounded-md', { 'border border-red-2': error })
 }))`
+    :hover {
+        border: ${({ readOnly }) => (readOnly ? 'none' : `solid 1px ${colors.teal}`)};
+        &::after {
+            display: none;
+        }
+    }
     &::after {
         content: '';
         position: absolute;
         width: 100%;
-        transform: ${({ error, focus }) => (!error && focus ? `scaleX(1)` : `scaleX(0)`)};
-        height: 1px;
+        visibility: ${({ error, focus, readOnly }) => (!readOnly && !error && focus ? `visible` : `hidden`)};
+        height: calc(100% + 2px);
         bottom: -1px;
         left: 0;
-        background-color: ${() => colors.onus.base};
+        border: solid 1px ${colors.teal};
+        border-radius: 0.375rem;
         transform-origin: bottom left;
         transition: all 0.3s ease-out;
     }
@@ -431,36 +481,33 @@ export const ImageNao = ({ src, fallBack, ...props }) => {
     );
 };
 
-
-
 export const TabsNao = styled.div.attrs({
-    className: 'flex items-center space-x-4 relative mt-4'
+    className: 'flex items-center space-x-4 relative mt-6 sm:mt-8'
 })`
-    &::after {
+    /* &::after {
         content: '';
         position: absolute;
         bottom: 0;
         height: 2px;
         width: 100%;
-        background: linear-gradient(101.26deg, #49e8d5 -5.29%, #093dd1 113.82%);
-    }
+        background: ${colors.teal};
+    } */
 `;
 
-export const TabItemNao = styled.div.attrs({
-    className: 'px-8 py-6 cursor-pointer relative'
-})`
-    background: rgba(97, 144, 149, 0.15);
-    border-radius: 12px 12px 0px 0px;
-    color: ${({ active }) => (active ? colors.nao.white : colors.nao.grey)};
-    font-weight: 600;
-    &::after {
+export const TabItemNao = styled.div.attrs(({ active }) => ({
+    className: classNames('py-2 px-5 cursor-pointer relative rounded-3xl border', {
+        '!border-teal text-teal font-semibold': active,
+        ' border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark': !active
+    })
+}))`
+    /* &::after {
         display: ${({ active }) => (active ? 'block' : 'none')};
         content: '';
         position: absolute;
         inset: 0;
         border-radius: 12px 12px 0px 0px;
         padding: 2px;
-        background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%);
+        background: ${colors.teal};
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
@@ -469,14 +516,13 @@ export const TabItemNao = styled.div.attrs({
     &:first-child::before {
         content: '';
         position: absolute;
-        /* inset: 0; */
         left: 0;
         bottom: 0;
         z-index: 3;
         border-bottom: ${({ active }) => `${active ? 2 : 0}px solid #000921`};
         height: ${({ active }) => (active ? 0 : '2px')};
         width: ${({ active }) => `calc(100% + ${active ? '-2px' : '18px'})`};
-        background: linear-gradient(101.26deg, #49e8d5 -5.29%, #093dd1 113.82%);
+        background: ${colors.teal};
     }
     &::before {
         content: '';
@@ -487,5 +533,43 @@ export const TabItemNao = styled.div.attrs({
         border-bottom: ${({ active }) => `${active ? 2 : 0}px solid #000921`};
         height: ${({ active }) => (active ? '0' : '2px')};
         width: ${({ active }) => `calc(100% + ${active ? '-2px' : '18px'})`};
-    }
+    } */
 `;
+
+export const VoteStatus = ({ iconClassName = '', className = '', status, statusText = '', textClassName = '' }) => {
+    const renderStatus = () => {
+        switch (status) {
+            case 'Processing':
+                return (
+                    <>
+                        <WarningFilledIcon className={iconClassName} />
+                        <span className={`font-semibold ${textClassName}`}>{statusText}</span>
+                    </>
+                );
+            case 'Executed':
+                return (
+                    <>
+                        <CheckCircle className={iconClassName} />
+                        <span className={`font-semibold ${textClassName}`}>{statusText}</span>
+                    </>
+                );
+            case 'Failed':
+                return (
+                    <>
+                        <CrossCircle className={iconClassName} />
+                        <span className={`font-semibold ${textClassName}`}>{statusText}</span>
+                    </>
+                );
+            case 'Canceled':
+                return (
+                    <>
+                        <RemoveCircleIcon className={iconClassName} />
+                        <span className={`font-semibold ${textClassName}`}>{statusText}</span>
+                    </>
+                );
+            default:
+                return null;
+        }
+    };
+    return <div className={`flex space-x-1 sm:space-x-2 items-center ${className}`}>{renderStatus()}</div>;
+};

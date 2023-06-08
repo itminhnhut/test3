@@ -19,7 +19,7 @@ import colors from 'styles/colors';
 import { buildLogoutUrl } from 'src/utils';
 import { useWindowSize } from 'utils/customHooks';
 import { PATHS } from 'constants/paths';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 import classNames from 'classnames';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import LanguageSetting from './LanguageSetting';
@@ -27,14 +27,22 @@ import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
 
 import TagV2 from '../V2/TagV2';
 import { ChevronRight } from 'react-feather';
-import { BxsUserIcon, FutureExchangeIcon, FutureIcon, FuturePortfolioIcon, FutureWalletIcon, SuccessfulTransactionIcon } from '../../svg/SvgIcon';
+import {
+    BxChevronDown,
+    BxsUserIcon,
+    FutureExchangeIcon,
+    FutureIcon,
+    FuturePortfolioIcon,
+    FutureWalletIcon,
+    SuccessfulTransactionIcon
+} from '../../svg/SvgIcon';
 import NavbarIcons from './Icons';
 import AuthButton from './AuthButton';
 import Button from '../V2/ButtonV2/Button';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-
+const DailyLuckydraw = dynamic(() => import('components/screens/DailyLuckydraw'));
 // ** Dynamic
 const NotificationList = dynamic(() => import('src/components/notification/NotificationList'), { ssr: false });
 const PocketNavDrawer = dynamic(() => import('src/components/common/NavBar/PocketNavDrawer'), {
@@ -69,6 +77,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     const { width } = useWindowSize();
     const { t } = useTranslation(['navbar', 'common', 'profile']);
     const [isFromFrame, setIsFromFrame] = useState(false);
+    const [showDailyLucky, setShowDailyLucky] = useState(false);
 
     // * Memmoized Variable
     const navTheme = useMemo(() => {
@@ -191,8 +200,8 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                 child_lv1.map((child) => {
                     itemsLevel1.push(
                         <Link href={child.url} key={`${child.title}_${child.key}`}>
-                            <a className="mal-navbar__link__group___item___childen__lv1___item">
-                                {t(`navbar:submenu.${child.localized}`)} {child.isNew && <div className="mal-dot__newest" />}22222
+                            <a target={child?.notSameOrigin ? '_blank' : '_self'} className="mal-navbar__link__group___item___childen__lv1___item">
+                                {t(`navbar:submenu.${child.localized}`)} {child.isNew && <div className="mal-dot__newest" />}
                             </a>
                         </Link>
                     );
@@ -340,6 +349,31 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
         );
     }, [name, currentTheme, navTheme.color]);
 
+    const onClickItemControl = (item) => {
+        switch (item?.title) {
+            default:
+                break;
+        }
+    };
+
+    const renderItemUserControl = (item) => {
+        const Icon = NavbarIcons?.[item.localized === 'referral' ? 'profile_referral' : item.localized];
+        return (
+            <a onClick={() => !item?.url && onClickItemControl(item)} className="mal-navbar__dropdown___item rounded-xl justify-between !text-base">
+                <div className="flex items-center font-normal">
+                    <div className="dark:text-txtSecondary-dark text-txtSecondary">
+                        <Icon color="currentColor" size={24} />
+                    </div>
+
+                    {t(`navbar:menu.user.${item.localized}`)}
+                </div>
+                <div className=" text-txtPrimary dark:text-txtPrimary-dark">
+                    <BxChevronDown className="!mr-0" size={24} color="currentColor" />
+                </div>
+            </a>
+        );
+    };
+
     const renderUserControl = useCallback(() => {
         const { avatar, code, kyc_status, partner_type } = auth;
         const isNotVerified = kyc_status === KYC_STATUS.NO_KYC;
@@ -359,21 +393,16 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
         USER_CP.map((item) => {
             if (item.hide) return null;
-            if (item.isPartner && partner_type === 0) return null;
+            if (item.isPartner && partner_type !== 2) return null;
             const Icon = NavbarIcons?.[item.localized === 'referral' ? 'profile_referral' : item.localized];
             items.push(
-                <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
-                    <a className="mal-navbar__dropdown___item rounded-xl justify-between !text-base">
-                        <div className="flex items-center font-normal">
-                            <div className="dark:text-txtSecondary-dark text-txtSecondary">
-                                <Icon color="currentColor" size={24} />
-                            </div>
-
-                            {t(`navbar:menu.user.${item.localized}`)}
-                        </div>
-                        <ChevronRight className="!mr-0" size={16} />
-                    </a>
-                </Link>
+                item.url ? (
+                    <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
+                        {renderItemUserControl(item)}
+                    </Link>
+                ) : (
+                    renderItemUserControl(item)
+                )
             );
         });
 
@@ -421,11 +450,13 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                     {state.loadingVipLevel ? <PulseLoader size={3} color={colors.teal} /> : `VIP ${state.vipLevel || '0'}`}
                                 </div>
                             </div>
-                            <div className="flex items-center ">
+                            <div className="flex items-center space-x-1 ">
                                 <div className=" ">
                                     {t('navbar:use')} <span className="text-dominant uppercase">NAMI</span> - {t('navbar:get_discount')}
                                 </div>
-                                <ChevronRight className="!mr-0 ml-1" size={16} />
+                                <div className=" text-txtPrimary dark:text-txtPrimary-dark">
+                                    <BxChevronDown className="!mr-0" size={24} color="currentColor" />
+                                </div>
                             </div>
                         </div>
                     </Link>

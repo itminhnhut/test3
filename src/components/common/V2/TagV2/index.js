@@ -32,7 +32,7 @@ const typeStyles = {
     }
 };
 
-function TagV2({ type = TYPES.DEFAULT, children, className = '', icon = true }) {
+function TagV2({ type = TYPES.DEFAULT, children, className = '', icon = true, labelClassname = '' }) {
     const style = typeStyles[type];
 
     const [theme] = useDarkMode();
@@ -43,7 +43,7 @@ function TagV2({ type = TYPES.DEFAULT, children, className = '', icon = true }) 
         <span
             className={classnames(
                 className,
-                `flex items-center leading-7 rounded-full w-fit px-3 md:px-4 py-1 select-none ${
+                `flex items-center leading-7 rounded-full min-w-[fit-content] w-fit px-3 md:px-4 py-1 select-none ${
                     style && style?.backgroundColor ? style.backgroundColor : 'bg-gray-11 dark:bg-divider-dark/[0.5]'
                 }`
             )}
@@ -56,7 +56,7 @@ function TagV2({ type = TYPES.DEFAULT, children, className = '', icon = true }) 
                 })}
             <span
                 // style={{ color: style.color || defaultColor }}
-                className={`text-xs md:text-sm ${style?.colorContent ? style.colorContent : 'text-gray-1 dark:text-gray-7'}`}
+                className={`text-xs md:text-sm ${style?.colorContent ? style.colorContent : 'text-gray-1 dark:text-gray-7'} ${labelClassname}`}
             >
                 {children}
             </span>

@@ -186,10 +186,10 @@ export function getWallet() {
     };
 }
 
-export function getUserFuturesBalance() {
+export function getUserFuturesBalance(isNao = false) {
     return async (dispatch) => {
         try {
-            const { data } = await Axios.get(API_GET_USER_BALANCE_V2, { params: { type: 2 } }); // old wallet type
+            const { data } = await Axios.get(API_GET_USER_BALANCE_V2, { params: { type: 2, isNao } }); // old wallet type
 
             if (data && data.status === ApiStatus.SUCCESS) {
                 dispatch({
@@ -1153,3 +1153,19 @@ export const getVip = () => async (dispatch) => {
         }
     } catch (error) {}
 };
+
+export function getBalance(type, walletType) {
+    return async (dispatch) => {
+        try {
+            const { data } = await Axios.get(API_GET_USER_BALANCE_V2, { params: { type } });
+
+            if (data && data.status === ApiStatus.SUCCESS) {
+                dispatch({
+                    type: types.UPDATE_WALLET,
+                    walletType: walletType,
+                    payload: data.data
+                });
+            }
+        } catch (e) {}
+    };
+}

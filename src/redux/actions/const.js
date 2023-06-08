@@ -3,7 +3,8 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 export const EPS = 0.00000001;
 
 export const LOCAL_STORAGE_KEY = {
-    THEME: 'theme'
+    THEME: 'theme',
+    HIDE_BALANCE:'hide_wallet_balance'
 };
 
 const TokenConfigNetwork = {
@@ -66,7 +67,8 @@ export const TokenConfigV1 = {
 
 export const TRADING_MODE = {
     EXCHANGE: 1,
-    FUTURES: 2
+    FUTURES: 2,
+    NAO: 3
 };
 
 export const customModalStyles = {
@@ -473,7 +475,8 @@ export const WalletType = {
     POOL: 'POOL',
     BROKER: 'BROKER',
     EARN: 'EARN',
-    ONUS: 'ONUS'
+    ONUS: 'ONUS',
+    NAO_FUTURES: 'NAO_FUTURES'
 };
 
 export const EarnWalletType = {
@@ -514,6 +517,7 @@ export const PublicSocketEvent = {
     FUTURES_MINI_TICKER_UPDATE: 'futures:mini_ticker:update',
     FUTURES_MARK_PRICE_UPDATE: 'futures:mark_price:update',
     FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error',
+    FUTURE_PROCESSING_ORDER_ERROR_NAO: 'future:processing_order_error_nao',
     // FUTURES_RECENT_TRADE_ADD: 'futures:recent_trade:add',
 
     IEO_PERCENTAGE_UPDATE: 'ieo:project_update',
@@ -577,6 +581,7 @@ export const ExchangeOrderEnum = {
         TOO_MUCH_ORDERS: 'TOO_MUCH_ORDERS',
         INSTRUMENTS_DO_NOT_MATCH: 'INSTRUMENTS_DO_NOT_MATCH',
         INSTRUMENT_NOT_LISTED_FOR_TRADING_YET: 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET',
+        NAO_IS_MAINTAINED: "NAO_IS_MAINTAINED",
         INVALID_PRICE: 'INVALID_PRICE',
         INVALID_TICK_SIZE: 'INVALID_TICK_SIZE',
         INVALID_STEP_SIZE: 'INVALID_STEP_SIZE',
@@ -828,9 +833,12 @@ export const UserSocketEvent = {
     EXCHANGE_PLACE_MARKET_ORDER_RESULT: 'exchange:place_market_order_result',
     UPDATE_BALANCE: 'user:update_balance',
     FUTURES_OPEN_ORDER: 'future:update_opening_order',
+    FUTURES_OPEN_ORDER_NAO: 'future:update_opening_order_nao',
     FUTURE_DONE_CLOSING_ALL_ORDERS: 'future:done_closing_all_orders',
     FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error',
-    PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER'
+    FUTURE_PROCESSING_ORDER_ERROR_NAO: 'future:processing_order_error_nao',
+    PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER',
+    SMART_OTP: 'SMART_OTP'
 };
 
 export const EarnOrder_Status = {
@@ -887,11 +895,17 @@ export const ApiResultCreateOrder = {
     INVALID_OTP: 'INVALID_OTP',
     TOO_MUCH_REQUEST: 'TOO_MUCH_REQUEST',
     NOT_FOUND_PARTNER: 'NOT_FOUND_PARTNER',
-    NOT_ENOUGH_MONEY: 'NOT_ENOUGH_MONEY'
+    NOT_ENOUGH_MONEY: 'NOT_ENOUGH_MONEY',
+    INVALID_AMOUNT: 'INVALID_AMOUNT',
+    EXCEEDING_PERMITTED_LIMIT: 'EXCEEDING_PERMITTED_LIMIT',
+    NOT_FOUND_ORDER: 'NOT_FOUND_ORDER',
+    SECRET_INVALID: 'SECRET_INVALID',
+    SOTP_INVALID: 'SOTP_INVALID',
+    SOTP_INVALID_EXCEED_TIME: 'SOTP_INVALID_EXCEED_TIME'
 };
 
 export const DEFAULT_PARTNER_MIN = {
-    [SIDE.SELL]:100e3,
+    [SIDE.SELL]: 100e3,
     [SIDE.BUY]: 100e3
 };
 
@@ -911,6 +925,38 @@ export const PartnerPersonStatus = {
     PENDING: 0,
     TRANSFERRED: 1,
     DISPUTED: 2
+};
+
+export const PartnerOrderLog = {
+    CREATED: 0,
+    CANCELED: 1,
+    REJECTED: 2,
+    ACCEPTED: 3,
+    TRANSFERRED_FIAT: 4,
+    RECEIVED_FIAT: 5,
+    UPLOADED: 6,
+    DISPUTED: 7,
+    COMPLETED_DISPUTE: 8,
+    TIMEOUT_NOT_ACCEPT: 9,
+    TIMEOUT_NOT_TRANSFER: 10,
+    TIMEOUT_NOT_RECEIVE: 11,
+    SYSTEM_UPDATE_SUCCESS: 12,
+    SYSTEM_UPDATE_REJECT: 13,
+    SYSTEM_UPDATE_DISPUTE: 14
+};
+
+export const PartnerOrderStatusLog = {
+    PENDING: 0,
+    PROCESSING: 1,
+    SUCCESS: 2,
+    REJECTED: 3,
+    DISPUTED: 4
+};
+
+export const PartnerAcceptStatus = {
+    PENDING: PartnerPersonStatus.PENDING,
+    ACCEPTED: PartnerPersonStatus.TRANSFERRED,
+    DENIED: PartnerPersonStatus.DISPUTED
 };
 
 export const PartnerReasonDisputed = {

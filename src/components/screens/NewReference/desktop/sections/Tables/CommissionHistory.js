@@ -201,8 +201,6 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 </div>
                 <TableV2
                     loading={loading}
-                    // sort
-                    // defaultSort={{ key: 'code', direction: 'desc' }}
                     useRowHover
                     data={dataSource?.results || []}
                     page={page}
@@ -214,7 +212,6 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                     limit={limit}
                     skip={0}
                     noBorder={true}
-                    // isSearch={!!state.search}
                     height={404}
                     pagingClassName="border-none"
                     className="border-t border-divider dark:border-divider-dark pt-4 mt-8"
@@ -226,46 +223,6 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                         onChange: null
                     }}
                 />
-                {/* <div className='border-t border-divider dark:border-divider-dark'>
-                    <ReTable
-                        // defaultSort={{ key: 'namiId', direction: 'desc' }}
-                        className="friendlist-table"
-                        data={loading ? skeletons : dataSource?.results || []}
-                        columns={columns}
-                        rowKey={(item) => item?.key}
-                        loading={!dataSource?.results?.length}
-                        scroll={{ x: true }}
-                        emptyText={<NoData />}
-                        // tableStatus={}
-                        tableStyle={{
-                            // paddingHorizontal: '1.75rem',
-                            // tableStyle: { minWidth: '1300px !important' },
-                            headerStyle: { paddingTop: '8px' },
-                            shadowWithFixedCol: false,
-                            noDataStyle: {
-                                minHeight: '480px'
-                            },
-                            rowStyle: {
-                                minWidth: '100px',
-                            },
-                        }}
-                        isNamiV2
-                    // paginationProps={{
-                    //     hide: true,
-                    //     current: page,
-                    //     pageSize: limit,
-                    //     onChange: (currentPage) => setPage(currentPage)
-                    // }}
-                    />
-                </div>
-                <div className='w-full mt-6 flex justify-center'>
-                    <RePagination
-                        total={dataSource?.total ?? 0}
-                        current={page}
-                        pageSize={limit}
-                        onChange={page => setPage(page)}
-                    />
-                </div> */}
             </div>
         </div>
     );

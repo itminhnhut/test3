@@ -60,6 +60,19 @@ body {
 //  height: 100%;
 //}
 
+
+@layer components {
+    .container {
+        @apply max-w-screen-v3 2xl:max-w-screen-xxl m-auto;
+
+        @media (max-width: 1216px) {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+    }
+}
+
+
 body {
     @apply text-txtPrimary dark:text-txtPrimary-dark;
 
@@ -172,10 +185,14 @@ body {
         }
     }
 
+    .vertical-divider {
+        @apply border-divider dark:border-divider-dark h-auto mx-4 md:mx-6 border-l-[1px];
+    }
+
     .t-common {
         @apply font-bold text-[20px] leading-[34px]
-    md:text-[26px] md:leading-[40px]
-    text-txtPrimary dark:text-txtPrimary-dark;
+        md:text-[26px] md:leading-[40px]
+        text-txtPrimary dark:text-txtPrimary-dark;
     }
 
     .t-common-v2 {
@@ -242,6 +259,16 @@ body {
         // [size, leading]: [16px, 24px], #768394 -> #8694b2
         @apply font-normal text-base
         text-gray-1 dark:text-gray-7 tracking-normal;
+    }
+
+    .txtSecond-5 {
+        // [size, leading]: [12px, 16px] -> [14px, 20px], #768394 -> #8694b2
+        @apply font-normal text-xs md:text-sm
+        text-gray-1 dark:text-gray-7 tracking-normal;
+    }
+
+    .bg-teal-blur {
+        background-color: rgba(71, 204, 133, 0.1);
     }
 
     .value-up {
@@ -812,22 +839,24 @@ input[type='number'] {
         &::-webkit-scrollbar {
             width: 6px !important;
             border-radius: 8px !important;
-            height: 0;
+            height: 14px;
         }
 
         /* Track */
         &::-webkit-scrollbar-track {
-            background: #0e1d32 !important;
+            @apply bg-gray-11 dark:bg-dark-2 rounded-md;
         }
 
         /* Handle */
         &::-webkit-scrollbar-thumb {
-            background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
+            @apply bg-white dark:bg-dark-1 border-gray-11 border-solid dark:border-dark-2 border-4 rounded-lg;
+            // background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
         }
 
         /* Handle on hover */
         &::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
+            @apply bg-teal;
+            background: #47cc85 !important;
         }
     }
 }
@@ -843,18 +872,20 @@ input[type='number'] {
 
     /* Track */
     &::-webkit-scrollbar-track {
-        background: #0e1d32 !important;
+       @apply bg-gray-11 dark:bg-darkBlue-6 rounded-md;
     }
 
     /* Handle */
     &::-webkit-scrollbar-thumb {
-        background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
+        @apply bg-teal;
+        background-color: #47cc85 !important;
         background-clip: padding-box;
     }
 
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
+        @apply bg-teal;
+        background-color: #47cc85 !important;
     }
 }
 

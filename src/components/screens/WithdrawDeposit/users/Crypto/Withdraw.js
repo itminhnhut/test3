@@ -1,39 +1,41 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { ChevronLeft, ChevronRight } from 'react-feather';
 import { find, isNumber } from 'lodash';
-import { countDecimals, eToNumber, formatWallet, shortHashAddress, formatNumber, dwLinkBuilder } from 'redux/actions/utils';
+import { countDecimals, eToNumber, shortHashAddress, formatNumber } from 'redux/actions/utils';
 import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper';
-import { PATHS } from 'constants/paths';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OtpInput from 'react-otp-input';
 import ModalV2 from 'components/common/V2/ModalV2';
 import styled from 'styled-components';
 import colors from 'styles/colors';
-import useWindowFocus from 'hooks/useWindowFocus';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { AddressInput, AmountInput, ErrorMessage, Information, MemoInput, NetworkInput } from 'components/screens/Wallet/Exchange/Withdraw';
+import { AddressInput, AmountInput, Information, MemoInput, NetworkInput } from 'components/screens/Wallet/Exchange/Withdraw';
 import WithdrawHistory from 'components/screens/Wallet/Exchange/Withdraw/WithdrawHistory';
 import classNames from 'classnames';
-import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import { roundToDown } from 'round-to';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import toast from 'utils/toast';
 import { CopyIcon } from 'components/svg/SvgIcon';
 import Countdown from 'react-countdown-now';
+import CustomOtpInput from '../../components/CustomOtpInput';
+import { MODE_OTP } from 'constants/constants';
+import FetchApi from 'utils/fetch-api';
+import { ApiStatus, UserSocketEvent, WithdrawResult } from 'redux/actions/const';
+import { API_WITHDRAW_V4 } from 'redux/actions/apis';
+import { isObject } from 'lodash';
 
-const errorMessageMapper = (t, error) => {
+const errorMessageMapper = (t, error, data) => {
     switch (error) {
         case WITHDRAW_RESULT.MissingOtp:
             return t('wallet:withdraw_prompt.input_otp_suggest');
         case WITHDRAW_RESULT.InvalidOtp:
-            return t('wallet:errors.wrong_otp');
+            return t('common:otp_verify_expired');
         case WITHDRAW_RESULT.NotEnoughBalance:
             return t('error:BALANCE_NOT_ENOUGH');
         case WITHDRAW_RESULT.UnsupportedAddress:
+            return t('error:INVALID_ADDRESS');
+        case WITHDRAW_RESULT.InvalidAddress:
             return t('error:INVALID_ADDRESS');
         case WITHDRAW_RESULT.AmountExceeded:
         case WITHDRAW_RESULT.AmountTooSmall:
@@ -44,6 +46,10 @@ const errorMessageMapper = (t, error) => {
             return t('error:INVALID_KYC_STATUS');
         case WITHDRAW_RESULT.WithdrawDisabled:
             return t('wallet:errors.withdraw_disabled');
+        case WITHDRAW_RESULT.SOTP_INVALID:
+            return t('dw_partner:error.invalid_smart_otp', { timesErr: data?.count ?? 1 });
+        case WITHDRAW_RESULT.SECRET_INVALID:
+            return t('dw_partner:error.invalid_secret', {timesErr: data?.count ?? 1})
         case WITHDRAW_RESULT.Unknown:
         default:
             return t('error:UNKNOWN_ERROR');
@@ -51,7 +57,7 @@ const errorMessageMapper = (t, error) => {
 };
 
 // Other error show modal
-const errorShowOnlyMessage = [WITHDRAW_RESULT.MissingOtp, WITHDRAW_RESULT.InvalidOtp];
+// const errorShowOnlyMessage = [WITHDRAW_RESULT.MissingOtp, WITHDRAW_RESULT.InvalidOtp];
 
 const PHASE_CONFIRM = {
     INFO: 1,
@@ -59,102 +65,124 @@ const PHASE_CONFIRM = {
     RESULT: 3
 };
 
-const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, address, memo, amount, assetDigit, assetCode, currentTheme, closeModal }) => {
+const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amount, assetDigit, assetCode, currentTheme, closeModal }) => {
     const [phase, setPhase] = useState(PHASE_CONFIRM.INFO);
     const [loading, setLoading] = useState(false);
+    const [loadingResend, setLoadingResend] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
-    const remaining_time = useRef({
-        timer: Date.now(),
-        value: 0
-    });
-    const [expired, setExpired] = useState(false);
-    const [otp, setOtp] = useState({
-        email: null,
-        tfa: null
-    });
+    const [otpMode, setOtpMode] = useState(MODE_OTP.EMAIL);
+    const [expiredTime, setExpiredTime] = useState(0);
+    const [showAlertDisableSmartOtp, setShowAlertDisableSmartOtp] = useState(false)
+    const { t, i18n: { language } } = useTranslation();
+    let auth = useSelector((state) => state.auth) || null;
+    // const userSocket = useSelector((state) => state.socket.userSocket);
+
+    // useEffect(() => {
+    //     if (userSocket) {
+    //         userSocket.on(UserSocketEvent.SMART_OTP, (data) => {
+    //             // make sure the socket displayingId is the current details/[id] page
+    //             console.log("_____data: ", data);
+    //             if(data === WITHDRAW_RESULT.PIN_INVALID_EXCEED_TIME) {
+    //                 console.log("____PIN_INVALID_EXCEED_TIME");
+    //             }
+    //         });
+    //     }
+    //     return () => {
+    //         if (userSocket) {
+    //             userSocket.removeListener(UserSocketEvent.SMART_OTP, (data) => {
+    //                 console.log('socket removeListener SMART_OTP:', data);
+    //             });
+    //         }
+    //     };
+    // }, [userSocket]);
 
     const onClose = () => {
         closeModal();
-        setOtp({
-            email: null,
-            tfa: null
-        });
-        setExpired(false);
         setPhase(PHASE_CONFIRM.INFO);
     };
 
-    const { t } = useTranslation();
+    const alertErr = (errStatus, dataErr) => {
+        console.log("______alertErr: ", errStatus, dataErr)
 
-    const postData = async (otp) => {
-        const result = await withdrawHelper(selectedAsset?.assetId, amount, selectedNetwork?.network, address, memo, otp);
-        return result;
-    };
-
-    const onConfirmInfo = async () => {
-        if (remaining_time.current.timer > Date.now()) {
-            setPhase(PHASE_CONFIRM.OTP);
-        } else {
-            await postData().then((rs) => {
-                if (rs?.data?.remaining_time) {
-                    remaining_time.current = {
-                        timer: Date.now() + rs?.data?.remaining_time,
-                        value: rs?.data?.remaining_time ?? 0
-                    };
-                    setPhase(PHASE_CONFIRM.OTP);
-                } else {
-                    toast({
-                        text: errorMessageMapper(t),
-                        type: 'error'
-                    });
-                }
-            });
-        }
-        setExpired(false);
-    };
-
-    const onConfirmOTP = async () => {
-        try {
-            setLoading(true);
-            const { data, status } = await postData(otp);
-            if (status === 'ok') {
-                setShowAlert(true);
-                if (onClose) onClose();
-            } else {
-                toast({
-                    text: errorMessageMapper(t, data),
-                    type: 'error'
-                });
-            }
-        } catch (error) {
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const onPaste = async () => {
-        const pasteCode = await navigator.clipboard.readText();
-        setOtp({
-            ...otp,
-            email: pasteCode
+        return toast({
+            text: errorMessageMapper(t, errStatus, dataErr),
+            type: 'warning',
+            duration: 2000
         });
+    };
+
+    const handlePostOrder = async (otp) => {
+        otp ?  setLoading(true) : setLoadingResend(true);
+        try {
+            const res = await FetchApi({
+                url: API_WITHDRAW_V4,
+                options: {
+                    method: 'POST'
+                },
+                params: {
+                    assetId: selectedAsset?.assetId,
+                    amount,
+                    network: selectedNetwork?.network,
+                    withdrawTo: address,
+                    tag: memo,
+                    otp,
+                    locale: language
+                }
+            })
+
+            const { status, data } = res;
+
+            if (status === ApiStatus.SUCCESS) {
+                setPhase(PHASE_CONFIRM.OTP);
+
+                if (data?.use_smart_otp) {
+                    setOtpMode(MODE_OTP.SMART_OTP);
+                } else if (data?.remaining_time) {
+                    setExpiredTime(Date.now() + data.remaining_time);
+                    setOtpMode(MODE_OTP.EMAIL);
+                } else {
+                    setShowAlert(true);
+                    // if (onClose) onClose();
+                }
+            } else if(status === WITHDRAW_RESULT.EXCEEDED_SMART_OTP) {
+                setShowAlertDisableSmartOtp(true)
+            } else if(status === WITHDRAW_RESULT.TOO_MUCH_REQUEST) {
+                setExpiredTime(Date.now() + data.remaining_time);
+                setPhase(PHASE_CONFIRM.OTP);
+                setOtpMode(MODE_OTP.EMAIL);
+            } else if (status === ApiStatus.ERROR) {
+                if(!isObject(res.data)) alertErr(res?.data)
+                else alertErr()
+            } else alertErr(res?.status, res?.data)
+            return res;
+        } catch (error) {
+            alertErr(errorMessageMapper(t, error));
+        } finally {
+            otp ? setLoading(false) : setLoadingResend(false);
+        }
     };
 
     return (
         <>
             <AlertModalV2
                 isVisible={showAlert}
-                onClose={() => setShowAlert(false)}
+                onClose={() => {setShowAlert(false); setTimeout(onClose, 200);}}
                 type="success"
                 title={t('wallet:withdraw_prompt:title_success')}
                 message={t('wallet:withdraw_prompt:desc_success')}
             />
-            <ModalV2 isVisible={open} className="!max-w-[488px]" onBackdropCb={onClose}>
+            <ModalV2
+                isVisible={open}
+                // isVisible={true}
+                className="!max-w-[488px]"
+                onBackdropCb={onClose}
+            >
                 {
                     // CONFIRM PHASE
                     phase === PHASE_CONFIRM.INFO && (
                         <>
-                            <div className="text-center mb-4">
-                                <p className="text-xl font-semibold">{t('wallet:withdraw_confirmation')}</p>
+                            <div className="text-center mb-8">
+                                <p className="text-2xl font-semibold">{t('wallet:withdraw_confirmation')}</p>
                             </div>
                             <div className="space-y-2">
                                 {[
@@ -172,15 +200,19 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
                                     },
                                     {
                                         title: t('common:amount'),
-                                        value: `${formatNumber(amount, assetDigit)} ${assetCode}`
+                                        value: `${amount ? formatNumber(amount, assetDigit) : '--'} ${assetCode ?? ''}`
                                     },
                                     {
                                         title: t('common:fee'),
-                                        value: `${formatNumber(selectedNetwork?.withdrawFee, assetDigit)} ${assetCode}`
+                                        value: `${selectedNetwork?.withdrawFee ? formatNumber(selectedNetwork?.withdrawFee, assetDigit) : '--'} ${
+                                            assetCode ?? ''
+                                        }`
                                     },
                                     {
                                         title: t('wallet:will_receive'),
-                                        value: `${formatNumber(amount - selectedNetwork?.withdrawFee, assetDigit)} ${assetCode}`
+                                        value: `${
+                                            amount - selectedNetwork?.withdrawFee ? formatNumber(amount - selectedNetwork?.withdrawFee, assetDigit) : '--'
+                                        } ${assetCode ?? ''}`
                                     },
                                     {
                                         title: t('wallet:network'),
@@ -201,7 +233,7 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
                                 <ButtonV2 variants="secondary" onClick={onClose}>
                                     {t('common:cancel')}
                                 </ButtonV2>
-                                <ButtonV2 loading={loading} onClick={onConfirmInfo}>
+                                <ButtonV2 disabled={loadingResend} loading={loadingResend} onClick={() => handlePostOrder()}>
                                     {t('common:continue')}
                                 </ButtonV2>
                             </div>
@@ -212,90 +244,34 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
                 {
                     // OTP PHASE
                     phase === PHASE_CONFIRM.OTP && (
-                        <div className="space-y-6">
-                            {/* <p className="text-xl font-semibold">
-                                {t('common:verify')} {otpModes.includes('tfa') ? '2FA' : ''}
-                            </p> */}
-                            <div className={classNames('hidden', { '!block': otpModes.includes('email') })}>
-                                <div className="text-xl font-semibold mb-4">{t('common:email_authentication')}</div>
-                                <span className="text-txtSecondary dark:text-txtSecondary"> {t('wallet:withdraw_prompt.email_description')}</span>
-                                <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
-                                    <OtpInput
-                                        value={otp?.email}
-                                        onChange={(value) =>
-                                            setOtp({
-                                                ...otp,
-                                                email: value
-                                            })
-                                        }
-                                        numInputs={6}
-                                        placeholder="------"
-                                        isInputNum
-                                    />
-                                </OtpWrapper>
-                            </div>
-                            <div className={classNames('hidden', { '!block': otpModes.includes('tfa') })}>
-                                <div className="text-xl font-semibold mb-4">{t('common:tfa_authentication')}</div>
-                                <div className="text-txtSecondary dark:text-txtSecondary">{t('wallet:withdraw_prompt.google_description')}</div>
-                                <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
-                                    <OtpInput
-                                        value={otp?.tfa}
-                                        onChange={(value) =>
-                                            setOtp({
-                                                ...otp,
-                                                tfa: value
-                                            })
-                                        }
-                                        numInputs={6}
-                                        placeholder="------"
-                                        isInputNum
-                                    />
-                                </OtpWrapper>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <div className="space-x-2">
-                                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:do_not_receive_email')}</span>
-                                    {expired ? (
-                                        <span onClick={onConfirmInfo} className="text-teal font-semibold cursor-pointer">
-                                            {t('wallet:resend', { value: `${remaining_time.current.value / 1000}s` })}
-                                        </span>
-                                    ) : (
-                                        <Countdown
-                                            now={() => Date.now()}
-                                            date={remaining_time.current.timer}
-                                            renderer={({ minutes, seconds }) => {
-                                                return (
-                                                    <span className="font-semibold text-teal">
-                                                        {minutes}:{seconds}
-                                                    </span>
-                                                );
-                                            }}
-                                            onComplete={() => setExpired(true)}
-                                        />
-                                    )}
-                                </div>
-                                <div onClick={onPaste} className="flex items-center space-x-2 text-teal font-semibold cursor-pointer">
-                                    <CopyIcon size={16} color={colors.teal} />
-                                    <span>{t('common:paste')}</span>
-                                </div>
-                            </div>
-                            <ButtonV2 disabled={String(otp.email || otp.tfa).length < 6} className="!mt-10" onClick={onConfirmOTP} loading={loading}>
-                                {t('common:confirm')}
-                            </ButtonV2>
-                        </div>
+                        <CustomOtpInput
+                            otpExpireTime={expiredTime}
+                            loading={loading}
+                            onConfirm={(otp) => handlePostOrder(otp)}
+                            loadingResend={loadingResend}
+                            onResend={() => handlePostOrder()}
+                            modeOtp={otpMode}
+                            isUse2fa={otpMode === MODE_OTP.EMAIL ? auth.user?.isTfaEnabled : false}
+                        />
                     )
                 }
-                {/* {
-                    // RESULT PHASE
-                    phase === PHASE_CONFIRM.RESULT && (
-                        <div className="flex flex-col items-center text-center">
-                            <WarningTriangle size={64} />
-                            <p className="text-2xl mt-8 mb-4 font-semibold">{t('wallet:withdraw_failed_title')}</p>
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{errorMessageMapper(t, withdrawResult?.data)}</span>
-                        </div>
-                    )
-                } */}
             </ModalV2>
+            <AlertModalV2
+                isVisible={showAlertDisableSmartOtp}
+                onClose={() => {
+                    setShowAlertDisableSmartOtp(false);
+                    setTimeout(onClose, 150);
+                    // setPhase(PHASE_CONFIRM.INFO);
+                }}
+                textButton={t('dw_partner:verify_by_email')}
+                onConfirm={() => {
+                    handlePostOrder(null);
+                    setShowAlertDisableSmartOtp(false)
+                }}
+                type="error"
+                title={t('dw_partner:disabled_smart_otp_title')}
+                message={t('dw_partner:disabled_smart_otp_des')}
+            />
         </>
     );
 };
@@ -340,8 +316,6 @@ const CryptoWithdraw = ({ assetId }) => {
         t,
         i18n: { language }
     } = useTranslation();
-    const router = useRouter();
-    const focused = useWindowFocus();
 
     const selectedAsset = useMemo(() => find(paymentConfigs, { assetCode: assetId }), [paymentConfigs, assetId]);
     const assetBalance = useMemo(() => walletAssets[selectedAsset?.assetId], [walletAssets, selectedAsset]);
@@ -442,11 +416,6 @@ const CryptoWithdraw = ({ assetId }) => {
         return () => clearInterval(interval);
     }, [resendTimeOut]);
 
-    // Handle check KYC:
-    const isOpenModalKyc = useMemo(() => {
-        return auth ? auth?.kyc_status !== 2 : false;
-    }, [auth]);
-
     return (
         <div>
             <div
@@ -469,14 +438,6 @@ const CryptoWithdraw = ({ assetId }) => {
 
                 <AddressInput t={t} value={state.address} onChange={(address) => setState({ address })} isValid={state.validator?.address} />
 
-                <NetworkInput
-                    t={t}
-                    networkList={selectedAsset?.networkList}
-                    selected={state.selectedNetwork}
-                    onChange={(network) => setState({ selectedNetwork: network })}
-                    currentTheme={currentTheme}
-                />
-
                 {state?.selectedNetwork?.memoRegex && (
                     <MemoInput
                         t={t}
@@ -485,6 +446,14 @@ const CryptoWithdraw = ({ assetId }) => {
                         errorMessage={state.validator.memo ? '' : t('wallet:errors.invalid_memo')}
                     />
                 )}
+
+                <NetworkInput
+                    t={t}
+                    networkList={selectedAsset?.networkList}
+                    selected={state.selectedNetwork}
+                    onChange={(network) => setState({ selectedNetwork: network })}
+                    currentTheme={currentTheme}
+                />
 
                 <Information
                     className="!mt-6"
@@ -507,6 +476,7 @@ const CryptoWithdraw = ({ assetId }) => {
                 otpModes={otpModes}
                 selectedAsset={selectedAsset}
                 selectedNetwork={state.selectedNetwork}
+                // open={true}
                 open={state.openWithdrawConfirm}
                 closeModal={() => setState({ openWithdrawConfirm: false })}
                 address={state.address}
@@ -517,7 +487,7 @@ const CryptoWithdraw = ({ assetId }) => {
                 currentTheme={currentTheme}
             />
             <div>
-                <div className="text-2xl font-semibold mb-6 mt-20">{t('wallet:withdraw_history')}</div>
+                <div className="text-2xl font-semibold mb-6 mt-20">{t('common:global_label.history')}</div>
                 <WithdrawHistory />
             </div>
         </div>

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'next-i18next';
+import { Trans, useTranslation } from 'next-i18next';
 import CardWrapper from 'components/common/CardWrapper';
-import { formatNumber } from 'utils/reference-utils';
-import { convertDateToMs, formatAbbreviateNumber, formatNanNumber, formatPercentage } from 'redux/actions/utils';
+import { convertDateToMs, formatAbbreviateNumber, formatNanNumber, formatPercentage, getS3Url } from 'redux/actions/utils';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_REPORT_PARTNER } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
 import FilterTimeTab from 'components/common/FilterTimeTab';
+import Tooltip from 'components/common/Tooltip';
 
 const SessionGeneral = () => {
     const { t } = useTranslation();
@@ -36,7 +36,7 @@ const SessionGeneral = () => {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
                 <div className="font-semibold text-[20px] leading-6">{t('dw_partner:report_commission')}</div>
-                <FilterTimeTab filter={filter} setFilter={setFilter} />
+                <FilterTimeTab isTabAll filter={filter} setFilter={setFilter} />
             </div>
 
             {/* Body */}
@@ -56,12 +56,24 @@ const SessionGeneral = () => {
 
                         {/* bottom */}
                         <div>
-                            <h1 className="txtSecond-3">{t('dw_partner:commission_rate')}</h1>
+                            <Tooltip place="top" effect="solid" isV3 id="commission-rate-description">
+                                <div className="max-w-[300px] py-2 text-sm z-50">{t('dw_partner:commission_rate_description')}</div>
+                            </Tooltip>
+                            <div data-tip="" className="inline-block" data-for="commission-rate-description" id="commission-rate-description">
+                                <h1 className="txtSecond-3 nami-underline-dotted">{t('dw_partner:commission_rate')}</h1>{' '}
+                            </div>
+
                             <div className="pt-4 txtPri-5">{loading ? <Skeletor width="100px" /> : `${formatPercentage(data?.commissionRate * 100, 2)}%`}</div>
                         </div>
                     </div>
                     <div className="w-1/2 flex flex-col items-end justify-center">
-                        <h1 className="txtSecond-3">{t('dw_partner:total_volume')}</h1>
+                        <h1 className="txtSecond-3">
+                            <Trans i18nKey="dw_partner:total_volume">
+                                <span className="text-teal" />
+
+                                <span className="text-txtPrimary dark:text-txtPrimary-dark" />
+                            </Trans>
+                        </h1>
                         <div className="pt-4 txtPri-6 flex">
                             <span className="text-green-3 dark:text-green-2">
                                 {loading ? <Skeletor width="50px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
@@ -70,7 +82,7 @@ const SessionGeneral = () => {
                         </div>
                     </div>
                 </CardWrapper>
-                <CardWrapper className="flex-auto flex gap-x-6 justify-between">
+                <CardWrapper className="flex gap-x-6 justify-between">
                     <div className="max-w-[237px] flex flex-col">
                         <div className="txtPri-5 pb-4">{t('dw_partner:standard_partner')}</div>
                         <div className="txtSecond-3 text-left flex items-center flex-auto">{t('dw_partner:standard_partner_des')}</div>
@@ -78,8 +90,8 @@ const SessionGeneral = () => {
                     <div
                         className="min-w-[168px] min-h-[168px]"
                         style={{
-                            // backgroundImage: `url('${getS3Url('/images/reference/background_mobile.png')}')`,
-                            backgroundImage: `url('/images/screen/partner/RegisterPartnerSuccess.png')`,
+                            backgroundImage: `url('${getS3Url('/images/screen/partner/RegisterPartnerSuccess.png')}')`,
+                            // backgroundImage: `url('/images/screen/partner/RegisterPartnerSuccess.png')`,
                             backgroundSize: 'cover'
                         }}
                     ></div>

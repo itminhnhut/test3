@@ -66,12 +66,12 @@ const TradingInput = ({
             <div
                 className={classNames(
                     `relative flex items-center px-[12px] py-2.5 rounded-md border border-transparent w-full ${
-                        onusMode ? 'hover:border-onus-green bg-onus-input' : 'bg-gray-10 dark:bg-darkBlue-3'
+                        onusMode ? 'hover:border-teal bg-gray-12 dark:bg-dark-2' : 'bg-gray-10 dark:bg-darkBlue-3'
                     }`,
-                    { '!border-dominant': !onusMode && isFocus && !isError },
-                    { 'border-onus-green': onusMode && isFocus },
+                    { '!border-teal': !onusMode && isFocus && !isError },
+                    { 'border-green-2': onusMode && isFocus },
                     { '!border-red': !onusMode && isError },
-                    { '!border-onus-red': onusMode && isError },
+                    { '!border-red-2': onusMode && isError },
                     { 'h-11 sm:h-12': !onusMode },
                     containerClassName
                 )}
@@ -100,7 +100,7 @@ const TradingInput = ({
                                 <div
                                     className={classNames('px-2 py-1.5 sm:px-6 sm:py-[10px] rounded-md  dark:bg-hover-dark text-xs sm:text-sm', {
                                         'bg-darkBlue text-white dark:text-gray-4': !onusMode,
-                                        'bg-gray-3': onusMode
+                                        'bg-gray-15 dark:bg-dark-2 text-white dark:text-gray-4': onusMode
                                     })}
                                 >
                                     {validator?.msg}
@@ -108,7 +108,7 @@ const TradingInput = ({
                                 <div
                                     className={classNames('w-[8px] h-[6px] dark:bg-hover-dark', {
                                         'bg-darkBlue text-white dark:text-gray-4': !onusMode,
-                                        'bg-gray-3': onusMode
+                                        'bg-gray-15 dark:bg-dark-2 text-white dark:text-gray-4': onusMode
                                     })}
                                     style={{
                                         clipPath: 'polygon(50% 100%, 0 0, 100% 0)'

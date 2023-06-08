@@ -28,6 +28,7 @@ import classnames from 'classnames';
 import useDarkMode from 'hooks/useDarkMode';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import TableV2 from 'components/common/V2/TableV2';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 
 const INITIAL_STATE = {
     tabIndex: 0,
@@ -93,6 +94,8 @@ const TradingFee = () => {
             setState({ loadingFuturesFeeConfigs: false });
         }
     };
+
+    console.log(state.futuresFeeConfig?.filter((rs) => String(rs.name).includes('NAMI')));
 
     const getVip = async () => {
         setState({ loadingVipLevel: true });
@@ -695,20 +698,18 @@ const TradingFee = () => {
             </div>
 
             <div className="mt-12 md:mt-8 space-y-2 nami-list-disc">
-                <div>
-                    {t('fee-structure:maker_taker_description')}
-                    <span className="ml-2">{t('fee-structure:maker_taker_description_2')}</span>
-                    <Link href={PATHS.REFERENCE.MAKER_TAKER}>
-                        <a className="ml-3 text-teal font-semibold hover:!underline" target="_blank">
-                            {t('common:read_more')}
-                        </a>
-                    </Link>
-                </div>
-                <div>
+                {/* <div className="flex items-center"> */}
+                {/*     {t('fee-structure:maker_taker_description')} */}
+                {/*     <span className="ml-2">{t('fee-structure:maker_taker_description_2')}</span> */}
+                {/*     <HrefButton variants="blank" className="!w-auto ml-3" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank"> */}
+                {/*         {t('common:read_more')} */}
+                {/*     </HrefButton> */}
+                {/* </div> */}
+                <div className="flex items-center">
                     {t('fee-structure:referral_description_value', { value: '20%' })}
-                    <Link href={PATHS.ACCOUNT.REFERRAL}>
-                        <a className="ml-3 text-teal font-semibold hover:!underline">{t('common:read_more')}</a>
-                    </Link>
+                    <HrefButton variants="blank" className="!w-auto ml-3" href={PATHS.ACCOUNT.REFERRAL} target="_blank">
+                        {t('common:read_more')}
+                    </HrefButton>
                 </div>
             </div>
         </>

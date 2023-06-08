@@ -4596,7 +4596,7 @@ html.theme-dark .pane-legend .pane-legend-minbtn .expand, html.theme-dark .pane-
   text-overflow: ellipsis;
 }
 .pane-legend-line span {
-  font-size: 9pt;
+  font-size: 0.75rem !important;
   line-height: 20px;
   vertical-align: middle;
   pointer-events: auto;

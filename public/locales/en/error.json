@@ -111,6 +111,7 @@
     "INVALID_USER": "You need to login to continue",
     "ACCOUNT_BAN_TRADE": "Current Account",
     "INSTRUMENT_NOT_LISTED_FOR_TRADING_YET": "This trading pair is under maintenance, please come back later.",
+    "NAO_IS_MAINTAINED": "From 10:00 am (UTC+7) on 12/05/2023 NAO Futures stops accepting new order requests and add volume to activated positions. NAO Futures will be taken over and operated on Nami Exchange app in May 2023",
     "BALANCE_INSUFFICIENT": "Your balance is not enough",
     "NOT_FOUND_ORDER": "Order not found",
     "ORDER_ALREADY_CLOSED": "The order has been closed",
@@ -272,6 +273,7 @@
     "REMOVE_FUTURES_MARGIN_INVALID_PROFIT_RATIO": "For the safety of your position, this feature is not supported with the current rate of return.",
     "INVALID_CLOSE_VOLUME": "Invalid partial closed volume",
     "INVALID_LEVERAGE": "Invalid Leverage",
-    "MAINTAIN":"This function is under maintenance, please come back later"
+    "MAINTAIN":"This function is under maintenance, please come back later",
+    "ORDER_ALREADY_ACTIVE":"Cannot cancel an activated pending order, please reload the Positions list for updates."
   }
 }

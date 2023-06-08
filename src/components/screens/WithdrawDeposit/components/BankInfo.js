@@ -19,7 +19,8 @@ export const BankInfo = ({
     additionalActions,
     t,
     showDropdownIcon,
-    disabled
+    disabled,
+    mustBeShow
 }) => {
     const [search, setSearch] = useState('');
     return (
@@ -30,6 +31,7 @@ export const BankInfo = ({
             loadingList={loadingBanks}
             showDropdownIcon={showDropdownIcon}
             disabled={disabled}
+            mustBeShow={mustBeShow}
             label={
                 <>
                     {showTooltip && (
@@ -43,7 +45,6 @@ export const BankInfo = ({
                     </div>
                 </>
             }
-            imgSize={40}
             data={banks && filterSearch(banks, ['bankName', 'bankKey', 'accountNumber'], search)}
             search={search}
             setSearch={setSearch}
@@ -84,7 +85,6 @@ export const BankInfo = ({
                             }}
                             endIcon={item._id === selectedBank?._id && <CheckCircle size={16} color="currentColor " />}
                             endIconPosition="center"
-                            imgSize={40}
                         />
                     );
                 }

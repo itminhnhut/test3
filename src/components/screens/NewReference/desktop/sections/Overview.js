@@ -626,11 +626,11 @@ const ModalShareRefCode = ({ code, open, onClose, t }) => {
 
     return (
         <ModalV2 isVisible={open} onBackdropCb={onClose} className="w-[36.75rem]">
-            <p className="text-[22px] leading-6 font-semibold mb-6">{t('reference:referral.share.title')}</p>
+            <p className="text-2xl font-semibold mb-6">{t('reference:referral.share.title')}</p>
             <div ref={ref} className="h-[380px] w-[524px] rounded-xl p-6 py-4 relative overflow-hidden">
-                <img className="absolute inset-0" src={getS3Url('/images/reference/bg_share_ref_code.png')} alt="" />
+                <img className="absolute inset-0" src="https://nami.exchange/bg_share_ref_code.png" alt="" />
                 <div className="absolute inset-x-4">
-                    <img width={99} src={getS3Url('/images/logo/nami-logo-v2.png')} alt="Nami exchange" />
+                    <img width={99} src="https://nami.exchange/nami-logo-v2.png" alt="Nami exchange" />
                     <div className="mt-12">
                         <p className="text-2xl text-teal font-semibold mb-4">{t('reference:referral.share.title_2')}</p>
                         <p className="mr-48">
@@ -646,7 +646,7 @@ const ModalShareRefCode = ({ code, open, onClose, t }) => {
                     </div>
                 </div>
                 <div className="absolute bottom-0 inset-x-0 h-[6.25rem] rounded-b-xl flex items-center justify-between px-6 py-4">
-                    <img className="absolute inset-x-0" src={getS3Url('/images/reference/bg_share_ref_code_2.png')} alt="" />
+                    <img className="absolute inset-x-0" src="https://nami.exchange/bg_share_ref_code_2.png" alt="" />
                     <div className="flex-1 z-10">
                         <div className="text-txtSecondary-dark whitespace-nowrap">{t('reference:referral.share.scan_and_join')}</div>
                         <div className="text-lg text-white font-semibold">

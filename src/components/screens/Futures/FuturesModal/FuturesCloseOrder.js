@@ -18,9 +18,12 @@ import SelectV2 from 'components/common/V2/SelectV2';
 import { API_GET_FUTURES_ORDER, API_PARTIAL_CLOSE_ORDER } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import { useDispatch } from 'react-redux';
+import { getOrdersList } from 'redux/actions/futures';
 
 const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, decimals, pairConfig, forceFetchOrder }) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const _lastPrice = marketWatch ? marketWatch[order?.symbol]?.lastPrice : lastPrice;
     const pairTicker = marketWatch[order?.symbol];
     const quoteAsset = pairTicker?.quoteAsset;
@@ -40,7 +43,8 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
         status: '',
         title: '',
         message: '',
-        notes: ''
+        notes: '',
+        isBtn: false
     });
 
     const isMaket = useMemo(() => {
@@ -205,6 +209,11 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
         }, []);
     }, [pairConfig, t]);
 
+    const getOrders = () => {
+        dispatch(getOrdersList());
+        setShowAlert(false);
+    };
+
     const onConfirm = async () => {
         try {
             const params = {
@@ -213,7 +222,8 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
                 price: +price,
                 useQuoteQty: true,
                 closeVolume: +volume,
-                special_mode: 1
+                special_mode: 1,
+                type: isPending ? 'CANCEL_ORDER' : 'CLOSE_POSITION'
             };
             let isLargeVolume = false;
             const isPartialClose = partialClose && percent < 100;
@@ -260,7 +270,8 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
                     status: 'error',
                     title: t('common:failed'),
                     message: t(`error:futures:${status || 'UNKNOWN'}`),
-                    notes: requestId
+                    notes: requestId,
+                    isBtn: true
                 };
             }
         } catch (error) {
@@ -288,6 +299,7 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
                 title={message.current?.title}
                 message={message.current?.message}
                 notes={message.current?.notes}
+                customButton={message.current?.isBtn && <ButtonV2 onClick={getOrders}>{t('common:reload')}</ButtonV2>}
             />
             {isPending ? (
                 <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>

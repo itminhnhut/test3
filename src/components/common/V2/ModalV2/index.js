@@ -73,19 +73,19 @@ const ModalV2 = ({
                     <div
                         ref={wrapperRef}
                         className={classnames(
-                            'w-full absolute overflow-auto max-h-[90%] border border-transparent dark:!border-divider-dark',
+                            'w-full absolute overflow-auto max-h-[90%] border-transparent dark:!border-divider-dark',
                             {
                                 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl max-w-[90%] min-w-[390px]':
                                     !isMobile || (width && width >= 820),
-                                '!border-none': isMobile
+                                border: !isMobile
                             },
                             className
                         )}
                     >
                         <div
                             className={classnames(
-                                `px-8 pb-8 h-full bg-white dark:bg-dark text-base`,
-                                { '!px-6 pb-6': isMobile, 'pt-6 sm:pt-8': !closeButton || loading },
+                                `h-full bg-white dark:bg-dark text-base`,
+                                { 'px-8 pb-8': !isMobile, 'px-6 pb-6': isMobile, 'pt-6 sm:pt-8': !closeButton || loading },
                                 wrapClassName
                             )}
                         >

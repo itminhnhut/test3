@@ -35,11 +35,15 @@
             "api_mng": "Quản lý API",
             "logout": "Đăng xuất",
             "partner": "Đối tác",
-            "payment_method": "Phương thức thanh toán"
-        }
+            "payment_method": "Phương thức thanh toán",
+            "daily_reward": "Thưởng giao dịch hàng ngày",
+            "futures_portfolio": "Thống kê Futures"
+        },
+        "top_referral": "Đua TOP giới thiệu"
     },
     "submenu": {
         "convert": "Nami Swap",
+        "nami_insurance": "Nami Insurance",
         "convert_description": "Giao dịch crypto chỉ với một lần click",
         "spot": "Giao dịch Spot",
         "spot_description": "Giao dịch {{pairsLength}} token được niêm yết với thanh khoản cao",
@@ -59,6 +63,7 @@
         "farming": "Farming",
         "farming_description": "Farm NAMI và nhận nhiều token tiềm năng",
         "referral": "Báo cáo hoa hồng",
+        "profile_referral": "Giới thiệu",
         "referral_description": "Nhận hoa hồng lên tới 20% từ giao dịch của bạn bè",
         "transfer": "Chuyển đổi",
         "transfer_description": "Chuyển đổi nhanh từ ví Exchange sang ví Futures chỉ với một lần chạm",
@@ -91,7 +96,12 @@
         "stake_nao": "Stake NAO",
         "stake_nao_description": "Stake NAO, nhận lãi đến 20% hàng tuần",
         "race_top": "Đua top NAO",
-        "race_top_description": "Đua top NAO, nhận nhiều giải thưởng hấp dẫn"
+        "race_top_description": "Đua top NAO, nhận nhiều giải thưởng hấp dẫn",
+        "profile": "Thông tin cá nhân",
+        "partner": "Đối tác",
+        "payment_method": "Phương thức thanh toán",
+        "daily_reward": "Thưởng giao dịch hàng ngày",
+        "futures_portfolio": "Thống kê Futures"
     },
     "menu_grid": {
         "deposit": "Nạp",
