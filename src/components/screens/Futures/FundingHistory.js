@@ -59,10 +59,15 @@ export default function FundingHistory(props) {
         );
     };
 
+    const urlPost =
+        language === 'en'
+            ? 'https://nami.exchange/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-nao-futures'
+            : 'https://nami.exchange/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures';
+
     return (
-        <MaldivesLayout>
+        <MaldivesLayout contentWrapperStyle={{ overflow: 'hidden' }}>
             {isApp && !router.query?.head && (
-                <div className="p-4 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
+                <div className="p-4 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-20">
                     <ChevronLeft onClick={() => router.back()} className="text-txtPrimary dark:text-white" />
                 </div>
             )}
@@ -72,11 +77,7 @@ export default function FundingHistory(props) {
                     <div className="sm:space-x-3 mt-4 sm:mt-6 mb-6 sm:mb-[3.75rem] flex flex-wrap text-sm sm:text-base">
                         <span>{t('futures:funding_history_tab:to_learn_funding')}:</span>
                         <a
-                            href={
-                                language === 'en'
-                                    ? 'https://nami.exchange/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-nao-futures'
-                                    : 'https://nami.exchange/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures'
-                            }
+                            href={urlPost + (isApp ? '?source=app' : '')}
                             className={'cursor-pointer flex text-sm sm:text-base font-semibold text-teal'}
                             target={isApp ? '_self' : '_blank'}
                         >

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import Divider from 'components/common/Divider';
 import { usePrevious } from 'react-use';
@@ -24,8 +24,8 @@ export default function ListFundingMobile({ dataTable, currency, loading, isSear
 
     const Item = ({ item, index, isLastItem, hasMore }) => {
         return (
-            <>
-                <div className="flex flex-col items-start justify-between w-full py-8 sm:px-6" key={item.asset}>
+            <Fragment key={item.asset}>
+                <div className="flex flex-col items-start justify-between w-full py-8 sm:px-6">
                     <div className="mb-6">{item.asset}</div>
                     <div className="space-y-3 w-full">
                         <div className="flex justify-between w-full">
@@ -50,7 +50,7 @@ export default function ListFundingMobile({ dataTable, currency, loading, isSear
                 ) : (
                     <Divider />
                 )}
-            </>
+            </Fragment>
         );
     };
 
