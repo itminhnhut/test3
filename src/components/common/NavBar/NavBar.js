@@ -47,6 +47,8 @@ export const NAVBAR_USE_TYPE = {
     DARK: THEME_MODE.DARK
 };
 
+const ALLOW_DROPDOWN = ['product', 'trade', 'commission', 'nao'];
+
 const NAV_HIDE_THEME_BUTTON = ['maldives_landingpage'];
 
 const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, spotState, resetDefault, onChangeSpotState }) => {
@@ -125,7 +127,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
         const feeNavObj = NAV_DATA.find((o) => o.localized === 'fee');
 
         return NAV_DATA.map((item) => {
-            const { key, title, localized, isNew, url, child_lv1 } = item;
+            const { key, title, localized, isNew, url, child_lv1, isVertical } = item;
 
             if (item.hide) return null;
 
@@ -181,7 +183,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
             if (child_lv1 && child_lv1.length) {
                 const itemsLevel1 = [];
                 const itemsLevel1withIcon = [];
-                const useDropdownWithIcon = localized === 'product' || localized === 'trade';
+                const useDropdownWithIcon = ALLOW_DROPDOWN.includes(localized);
                 const useOneCol = localized === 'trade';
 
                 const shouldDot = child_lv1.findIndex((o) => o.isNew);
@@ -190,7 +192,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     itemsLevel1.push(
                         <Link href={child.url} key={`${child.title}_${child.key}`}>
                             <a className="mal-navbar__link__group___item___childen__lv1___item">
-                                {t(`navbar:submenu.${child.localized}`)} {child.isNew && <div className="mal-dot__newest" />}
+                                {t(`navbar:submenu.${child.localized}`)} {child.isNew && <div className="mal-dot__newest" />}22222
                             </a>
                         </Link>
                     );
@@ -229,7 +231,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                         {t(`navbar:submenu.${child.localized}`)}
                                         {/* {child.isNew && <div className="mal-dot__newest"/> */}
                                     </div>
-                                    <div className="mal-navbar__link__group___item___childen__lv1___item2___c__description">
+                                    <div className="!font-normal mal-navbar__link__group___item___childen__lv1___item2___c__description">
                                         {t(
                                             `navbar:submenu.${child.localized}_description`,
                                             child.localized === 'spot'
@@ -246,22 +248,29 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         itemsLevel1withIcon.push(
                             <Link href={child.url} key={`${child.title}_${child.key}`} passHref>
                                 <div
-                                    className={
+                                    className={classNames(
+                                        '!pt-0 !pr-0',
                                         useOneCol
                                             ? 'mal-navbar__link__group___item___childen__lv1___col1 min-w-[350px]'
-                                            : 'mal-navbar__link__group___item___childen__lv1___col2 w-1/2 flex'
-                                    }
+                                            : 'mal-navbar__link__group___item___childen__lv1___col2 w-1/2 flex',
+                                        {
+                                            '!w-full': isVertical,
+                                            'w-[48%]': !isVertical,
+                                            hidden: child.isHide
+                                        }
+                                    )}
                                 >
                                     <a className={'mal-navbar__link__group___item___childen__lv1___item2'}>
                                         <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
                                             {Icon ? (
                                                 <Icon size={24} />
                                             ) : (
-                                                <img
-                                                    src={getS3Url(getIcon(child.localized))}
-                                                    width={width >= 2560 ? '38' : '32'}
-                                                    height={width >= 2560 ? '38' : '32'}
-                                                    alt=""
+                                                <Image
+                                                    // src={getS3Url(getIcon(child.localized))}
+                                                    src={getIcon(child.localized)}
+                                                    width={width >= 2560 ? '38' : '24'}
+                                                    height={width >= 2560 ? '38' : '24'}
+                                                    alt={child.title}
                                                 />
                                             )}
                                         </div>
@@ -270,7 +279,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                                 {t(`navbar:submenu.${child.localized}`)}
                                                 {/* {child.isNew && <div className="mal-dot__newest"/> */}
                                             </div>
-                                            <div className="mal-navbar__link__group___item___childen__lv1___item2___c__description">
+                                            <div className="!font-normal mal-navbar__link__group___item___childen__lv1___item2___c__description">
                                                 {t(
                                                     `navbar:submenu.${child.localized}_description`,
                                                     child.localized === 'spot'
@@ -298,13 +307,12 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                             </div>
                             <SvgIcon name="chevron_down" size={16} className="chevron__down !ml-1" color={colors.gray[7]} style={{ marginLeft: 4 }} />
                             <div
-                                className={`mal-navbar__link__group___item___childen__lv1
-                                           ${useDropdownWithIcon ? 'mal-navbar__link__group___item___childen__lv1__w__icon' : ''}
-                                           ${
-                                               useOneCol && useDropdownWithIcon
-                                                   ? 'mal-navbar__link__group___item___childen__lv1__w__icon flex-col !min-w-0'
-                                                   : ''
-                                           }`}
+                                className={classNames('mal-navbar__link__group___item___childen__lv1', {
+                                    'mal-navbar__link__group___item___childen__lv1__w__icon': useDropdownWithIcon,
+                                    'mal-navbar__link__group___item___childen__lv1__w__icon flex-col !min-w-0': useOneCol && useDropdownWithIcon,
+                                    'flex-col !min-w-[346px] gap-4': isVertical,
+                                    'gap-y-4 gap-x-6 !border-0': !isVertical
+                                })}
                             >
                                 {useDropdownWithIcon ? itemsLevel1withIcon : itemsLevel1}
                             </div>
@@ -375,7 +383,13 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">
-                                <img width={48} height={48} className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover" src={avatar || DefaultAvatar} alt="avatar_user" />
+                                <img
+                                    width={48}
+                                    height={48}
+                                    className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover"
+                                    src={avatar || DefaultAvatar}
+                                    alt="avatar_user"
+                                />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username"> {auth?.username || auth?.name || auth?.email}</div>
@@ -439,7 +453,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     const renderWallet = () => {
         return (
             <div className="mal-navbar__dropdown">
-                <div className="mal-navbar__dropdown__wrapper">
+                <div className="mal-navbar__dropdown__wrapper flex flex-col gap-3">
                     <Link href={PATHS.WALLET.DEFAULT}>
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
                             <FuturePortfolioIcon size={24} />
@@ -630,31 +644,29 @@ export const NavBarBottomShadow = ({ style = {}, className = '' }) => {
     );
 };
 
+const getNavIcon = {
+    sport: 'ic_exchange.png',
+    futures: 'ic_futures.png',
+    swap: 'ic_swap_v2.png',
+    copytrade: 'ic_copytrade.png',
+    staking: 'ic_staking.png',
+    farming: 'ic_farming.png',
+    referral: 'ic_referral.png',
+    launchpad: 'ic_rocket.png',
+    classic: 'ic_trade_classic.png',
+    advance: 'ic_trade_advance.png',
+    report_commission: 'nav/ic_report_commission.png',
+    race_top_referral: 'nav/ic_race_top_referral.png',
+    whitepaper: 'nav/ic_whitepaper.png',
+    noti: 'nav/ic_noti.png',
+    pool: 'nav/ic_pool.png',
+    stake_nao: 'nav/ic_stake_nao.png',
+    race_top: 'nav/ic_race_top.png'
+};
+
 const getIcon = (localized) => {
-    switch (localized) {
-        case 'spot':
-            return '/images/icon/ic_exchange.png';
-        case 'futures':
-            return '/images/icon/ic_futures.png';
-        case 'swap':
-            return '/images/icon/ic_swap_v2.png';
-        case 'copytrade':
-            return '/images/icon/ic_copytrade.png';
-        case 'staking':
-            return '/images/icon/ic_staking.png';
-        case 'farming':
-            return '/images/icon/ic_farming.png';
-        case 'referral':
-            return '/images/icon/ic_referral.png';
-        case 'launchpad':
-            return '/images/icon/ic_rocket.png';
-        case 'classic':
-            return '/images/icon/ic_trade_classic.png';
-        case 'advance':
-            return '/images/icon/ic_trade_advance.png';
-        default:
-            return '';
-    }
+    if (!localized) return '';
+    return `/images/icon/${getNavIcon[localized]}`;
 };
 
 export default NavBar;
