@@ -36,9 +36,9 @@ export const CardNao = styled.div.attrs(({ noBg, customHeight, bgCorner, bgStake
         { 'bg-nao-stake-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full': !noBg && !bgCorner && bgStake }
     )
 }))`
-    background-image: ${({ noBg, stroke = 0.8 }) =>
+    background-image: ${({ noBg, stroke = 0.8, strokeColor = '%237686B1' }) =>
         noBg &&
-        `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%237686B1' stroke-width='${stroke}' stroke-dasharray='4 %2c 6' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e")`};
+        `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='${strokeColor}' stroke-width='${stroke}' stroke-dasharray='4 %2c 6' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e")`};
 `;
 
 export const SectionNao = styled.div.attrs(({ noBg }) => ({
@@ -47,6 +47,7 @@ export const SectionNao = styled.div.attrs(({ noBg }) => ({
     background-image: ${({ noBg, stroke = 0.8 }) =>
         noBg &&
         `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%237686B1' stroke-width='${stroke}' stroke-dasharray='4 %2c 6' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e")`};
+
 `;
 
 export const Divider = styled.div.attrs({

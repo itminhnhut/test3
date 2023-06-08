@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import LayoutNaoToken, { AlertContext } from 'components/common/layouts/LayoutNaoToken';
 import { emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
-import { ButtonNaoVariants, Progressbar, ButtonNao, CardNao, VoteStatus } from 'components/screens/Nao/NaoStyle';
+import { ButtonNaoVariants, Progressbar, ButtonNao, CardNao, VoteStatus, Tooltip } from 'components/screens/Nao/NaoStyle';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import FetchApi from 'utils/fetch-api';
 import { API_USER_POOL, API_USER_VOTE } from 'redux/actions/apis';
@@ -15,6 +15,8 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
 import { useWindowSize } from 'utils/customHooks';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
+import AlertModal from 'components/screens/Nao_futures/AlertModal';
 // import Tooltip from 'components/common/Tooltip';
 
 const getAssetNao = createSelector([(state) => state.utils.assetConfig, (utils, params) => params], (assets, params) => {
@@ -113,7 +115,7 @@ export default function Vote() {
                         }}
                     ></div>
                     <div
-                        className="description text-sm sm:text-base"
+                        className="description text-sm sm:text-base sm:mt-8 mt:6"
                         dangerouslySetInnerHTML={{
                             __html: t('nao:vote:vote_notice')
                         }}
@@ -172,13 +174,13 @@ export default function Vote() {
 
     return (
         <LayoutNaoToken>
-            <div className="flex flex-col sm:flex-row items-center sm:space-x-12 justify-between pt-12 sm:pt-20">
+            <div className="flex flex-col sm:flex-row sm:space-x-12 justify-between pt-12 sm:pt-20">
                 <div className="w-full">
                     <h3 className="text-5xl font-semibold mb-8 sm:mb-12">{voteName && voteName[language]}</h3>
                     <div className="hidden lg:block">{description()}</div>
                 </div>
                 <div className="w-full sm:max-w-[470px]">
-                    <CardNao className="!min-h-0 space-y-4 sm:space-y-6 lg:w-full !min-w-[280px] !px-4 !py-6 sm:!p-8 text-sm sm:text-base">
+                    <CardNao className="!min-h-0 space-y-4 sm:space-y-6 lg:w-full !min-w-[280px] !px-4 !py-6 sm:!p-8 text-sm sm:text-base border border-divider dark:border-none">
                         <div>
                             <div className="flex flex-row justify-between">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:vote:voted_for')}</span>
@@ -261,14 +263,19 @@ const VoteProposalModal = ({ onClose, numberOfNao, handleSubmitVote, summary, is
             {/* <Tooltip isV3={true} id={'voting'} place="top" effect="solid" className="w-[400px]" /> */}
             <ModalV2 isVisible onBackdropCb={onClose} className="!max-w-[488px]" isMobile={isMobile}>
                 <div className="flex flex-col">
-                    <div data-tip="" data-for="voting" className="text-2xl text-gray-4 py-0.5 font-semibold mb-4 w-max">
+                    <div
+                        data-tip=""
+                        data-for="voting"
+                        className="text-2xl text-txtPrimary dark:text-txtPrimary-dark py-0.5 font-semibold mb-4 w-max flex space-x-2 items-center"
+                    >
                         {t('nao:vote:vote_for_proposal')}
+                        {/* <QuestionMarkIcon isFilled /> */}
                     </div>
                     <p className="text-txtSecondary dark:text-txtSecondary-dark mb-6">{summary}</p>
-                    <CardNao className="!min-h-0 w-full !p-4">
+                    <CardNao className="!bg-gray-13 dark:!bg-darkBlue-3 !min-h-0 w-full !p-4">
                         <div className="flex items-start justify-between">
                             <div className="flex flex-col space-y-1">
-                                <span className="font-semibold text-gray-4">{t('nao:vote:voting_power')}</span>
+                                <span className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('nao:vote:voting_power')}</span>
                                 <p className="text-txtSecondary dark:text-txtSecondary-dark ">{formatTime(new Date(), 'dd/MM/yyyy')}</p>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -277,11 +284,11 @@ const VoteProposalModal = ({ onClose, numberOfNao, handleSubmitVote, summary, is
                             </div>
                         </div>
                     </CardNao>
-                    <CardNao className="!min-h-0 w-full !p-4 mt-4">
+                    <CardNao className="!bg-gray-13 dark:!bg-darkBlue-3 !min-h-0 w-full !p-4 mt-4">
                         <div className="flex flex-col space-y-2">
                             <div className="flex items-center space-x-2 text-txtSecondary-dark">
                                 <BxsInfoCircle className="" size={16} color={'currentColor'} />
-                                <span className="font-semibold text-gray-4">{t('nao:note')}</span>
+                                <span className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('nao:note')}</span>
                             </div>
                             <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:vote:vote_remind')}</span>
                         </div>
@@ -309,15 +316,30 @@ const VoteProposalModal = ({ onClose, numberOfNao, handleSubmitVote, summary, is
 };
 const VoteSuccessModal = ({ onClose, summary, type }) => {
     const { t } = useTranslation();
+    const context = useContext(AlertContext);
+
+    useEffect(() => {
+        console.log({type})
+        context.alertV2.show(
+            'success',
+            type ? t('nao:vote:voted_successfully') : t('nao:vote:rejected_successfully'),
+            summary,
+            null,
+            null,
+            onClose
+        );
+    }, []);
+
     return (
-        <AlertModalV2
-            isVisible
-            onClose={onClose}
-            type="success"
-            title={type ? t('nao:vote:voted_successfully') : t('nao:vote:rejected_successfully')}
-            message={summary}
-            isButton={false}
-        />
+        // <AlertModalV2
+        //     isVisible
+        //     onClose={onClose}
+        //     type="success"
+        //     title={type ? t('nao:vote:voted_successfully') : t('nao:vote:rejected_successfully')}
+        //     message={summary}
+        //     isButton={false}
+        // />
+        <></>
     );
 };
 

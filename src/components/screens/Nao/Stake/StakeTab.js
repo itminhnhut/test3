@@ -15,6 +15,7 @@ import { requestNao } from 'redux/actions/nao';
 import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
 import classNames from 'classnames';
 import Image from 'next/image';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const getBalance = createSelector([(state) => state.wallet?.NAO_FUTURES, (wallet, params) => params], (wallet, params) => {
     return wallet ? wallet[params]?.value - wallet[params]?.locked_value : 0;
@@ -25,6 +26,8 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
         t,
         i18n: { language }
     } = useTranslation();
+    const [theme] = useDarkMode();
+    const isDark = theme === THEME_MODE.DARK;
     const [hidden, setHidden] = useState(true);
     const [showLockModal, setShowLockModal] = useState(false);
     const isLock = useRef(false);
@@ -250,7 +253,12 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                     </div>
                 </div>
             </CardNao>
-            <CardNao noBg className="hidden mb:block lg:!p-8 !py-6 !px-4 mb:w-[calc(50%-0.5rem)] lg:!w-[calc(41.7%-0.5rem)] mb:min-w-0 mb:flex-none">
+            <CardNao
+                noBg
+                stroke={1.2}
+                strokeColor={isDark ? '%237686B1' : '%23768394'}
+                className="hidden mb:block lg:!p-8 !py-6 !px-4 mb:w-[calc(50%-0.5rem)] lg:!w-[calc(41.7%-0.5rem)] mb:min-w-0 mb:flex-none"
+            >
                 <div className="flex items-center space-x-6 py-12">
                     <BackgroundImage className="flex-shrink-0 lg:!w-[7.5rem] lg:!h-[7.5rem] mb:w-[6rem] mb:h-[6rem] p-4">
                         <img src={getS3Url('/images/nao/ic_nao_large.png')} alt="" width="120" height="120" />
