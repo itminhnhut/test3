@@ -13,6 +13,7 @@ import { isMobile } from 'react-device-detect';
 import { useSelector } from 'react-redux';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import Skeletor from '../Skeletor';
+import Head from 'next/head';
 
 const NavBar = dynamic(() => import('src/components/common/NavBar/NavBar'), {
     ssr: false,
@@ -58,6 +59,11 @@ const MadivesLayout = ({
 
     return (
         <>
+            {isApp && (
+                <Head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
+                </Head>
+            )}
             <div
                 className={`mal-layouts flex flex-col `}
                 // style={
@@ -75,7 +81,7 @@ const MadivesLayout = ({
                     hideProgressBar
                     closeButton={false}
                     theme={theme === THEME_MODE.LIGHT ? 'light' : 'dark'}
-                    className="nami-toast !top-[104px]"
+                    className="nami-toast !top-[92px] md:!top-[104px]"
                 />
                 <ReactNotifications className="fixed z-[9000] pointer-events-none w-full h-full" />
                 {!hideNavBar && !hideInApp && !isApp && (

@@ -234,9 +234,13 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
                 }
             } else {
                 const requestId = data?.requestId && `(${data?.requestId.substring(0, 8)})`;
-                context.alert.show('error', t('common:failed'), t(`error:futures:ORDER_ALREADY_ACTIVE`), requestId, getOrders, null, {
-                    confirmTitle: t('common:reload')
-                });
+                if (status === 'ORDER_ALREADY_ACTIVE') {
+                    context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`), requestId, getOrders, null, {
+                        confirmTitle: t('common:reload')
+                    });
+                } else {
+                    context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`), requestId);
+                }
             }
         } catch (e) {
             if (e.message === 'Network Error' || !navigator?.onLine) {

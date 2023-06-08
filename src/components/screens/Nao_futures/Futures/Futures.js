@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FUTURES_DEFAULT_SYMBOL } from 'pages/futures';
 import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
-import { ApiStatus, UserSocketEvent } from 'redux/actions/const';
+import { ApiStatus, UserSocketEvent, TRADING_MODE } from 'redux/actions/const';
 import { LOCAL_STORAGE_KEY } from 'constants/constants';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Nao_futures/Futures/TabOrders/TabOrders';
-import { fetchFuturesSetting, getFuturesMarketWatch, getOrdersList, updateSymbolView } from 'redux/actions/futures';
+import { fetchFuturesSetting, getFuturesMarketWatch, getOrdersList, updateSymbolView, getFuturesFavoritePairs } from 'redux/actions/futures';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import PlaceOrderMobile from 'components/screens/Nao_futures/Futures/PlaceOrder/PlaceOrderMobile';
 import ChartMobile from 'components/screens/Nao_futures/Futures/Chart/ChartMobile';
@@ -128,6 +128,7 @@ const FuturesMobile = () => {
         dispatch(fetchFuturesSetting({ isNao: true }));
         getCampaignStatus();
         emitWebViewEvent('nami_futures');
+        dispatch(getFuturesFavoritePairs(TRADING_MODE.NAO));
     }, []);
 
     useEffect(() => {

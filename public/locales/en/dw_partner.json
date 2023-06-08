@@ -29,6 +29,7 @@
     "will_transfer": "You will transfer",
     "will_received": "You will receive",
     "verify": "Verify",
+    "verify_2": "Verify",
     "verify_smart_otp": "Nami Smart OTP  Verification",
     "otp_code_send_to_email": "Please enter the 6-digit code sent to your email.",
     "otp_code_send_to_smartOtp": "Please enter the 6-digit code sent to your email in order to proceed with the Nami Smart OTP setting.",
@@ -148,7 +149,7 @@
     "resend_otp_success": "A new OTP has been sent to your phone number.",
     "disabled_smart_otp_title": "Deactivation",
     "disabled_smart_otp_des": "Smart OTP feature has been deactivated due to incorrect Smart OTP input 5 times. Please verify transactions with another OTP methods or reactivate Smart OTP to continue using.",
-    "verify_by_email": "Email authentification",
+    "verify_by_email": "Email Authentification",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
         "max_amount": "Maximum amount is {{amount}} {{asset}}",
@@ -163,7 +164,7 @@
         "missing_phone": "This field is required",
         "not_found_order": "Order #{{displayingId}} not found or being processed, please reload or contact support.",
         "invalid_otp": "OTP is invalid. Please try again.",
-        "invalid_secret": "Please confirm PIN code in app first.",
+        "invalid_secret": "Verification code is incorrect {{timesErr}}/5, please get OTP from Nami Exchange App.",
         "invalid_smart_otp": "Verification code is incorrect {{timesErr}}/5, please try again"
     },
     "filter": {

@@ -29,6 +29,7 @@
     "will_transfer": "Bạn cần chuyển",
     "will_received": "Bạn sẽ nhận",
     "verify": "Xác thực",
+    "verify_2": "Xác nhận",
     "verify_smart_otp": "Xác thực Nami Smart OTP",
     "otp_code_send_to_email": "Nhập mã 6 kí tự đã được gửi đến email của bạn",
     "email_verification_code": "Mã xác thực email",
@@ -163,7 +164,7 @@
         "missing_phone": "Trường thông tin bắt buộc",
         "not_found_order": "Không tìm thấy lệnh #{{displayingId}} hoặc đang được xử lý, vui lòng tải lại hoặc liên hệ hỗ trợ",
         "invalid_otp": "Mã OTP không hợp lệ. Vui lòng thử lại.",
-        "invalid_secret": "Vui lòng xác nhận mã PIN trong ứng dụng điện thoại trước.",
+        "invalid_secret": "Mã xác thực không chính xác {{timesErr}}/5, vui lòng lấy OTP từ ứng dụng Nami Exchange.",
         "invalid_smart_otp": "Mã xác thực không chính xác {{timesErr}}/5, vui lòng nhập lại."
     },
     "filter": {

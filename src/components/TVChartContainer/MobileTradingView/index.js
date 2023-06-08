@@ -80,17 +80,13 @@ export class MobileTradingView extends React.PureComponent {
 
         if (prevProps.theme !== this.props.theme) {
             const newTheme = this.isDark ? 'Dark' : 'Light';
-            if (
-                this.state.chartStatus === ChartStatus.LOADED &&
-                newTheme !== this.theme &&
-                this.widget
-            ) {
+            if (this.state.chartStatus === ChartStatus.LOADED && newTheme !== this.theme && this.widget) {
                 this.widget.changeTheme(newTheme);
                 this.widget.applyOverrides({
                     'scalesProperties.lineColor': '#202C4C',
                     'paneProperties.background': this.chartBg,
                     'paneProperties.vertGridProperties.color': this.chartBg,
-                    'paneProperties.horzGridProperties.color': this.chartBg,
+                    'paneProperties.horzGridProperties.color': this.chartBg
                 });
                 this.theme = newTheme;
             }
@@ -151,21 +147,41 @@ export class MobileTradingView extends React.PureComponent {
         }
     };
 
-    createIndicator = (name, cb) => this.widget.activeChart().createStudy(name, false, false, undefined, cb);
+    createIndicator = (name, input, cb) => {
+        if (input) {
+            let ids = [];
+            input.forEach((item, idx) => {
+                this.widget.activeChart().createStudy(name, false, false, item, (id) => {
+                    ids.push(id);
+                    if (idx === input.length - 1) cb(ids);
+                });
+            });
+        } else {
+            this.widget.activeChart().createStudy(name, false, false, undefined, cb);
+        }
+    };
 
-    handleChangeIndicator = (type) => (value) => {
+    handleChangeIndicator = (type) => (value, item) => {
         const indicatorStateKey = type === 'main' ? 'mainIndicator' : 'subIndicator';
-        const studyId = this.state[indicatorStateKey]?.id;
-        if (studyId) {
-            this.widget.activeChart().removeEntity(studyId);
+        const studyName = this.state[indicatorStateKey]?.name;
+        if (studyName) {
+            const currentStudies = this.widget.activeChart().getAllStudies();
+            const dataFilter = currentStudies.filter((rs) => rs.name === studyName);
+            if (Array.isArray(dataFilter) && dataFilter.length > 1) {
+                dataFilter.forEach((item) => {
+                    this.widget.activeChart().removeEntity(item.id);
+                });
+            } else {
+                this.widget.activeChart().removeEntity(this.state[indicatorStateKey]?.id);
+            }
         }
         if (value) {
-            this.createIndicator(value, (id) => {
+            this.createIndicator(value, item?.input, (id) => {
                 this.setState({
                     ...this.state,
                     [indicatorStateKey]: {
-                        id,
-                        name: value
+                        name: value,
+                        id
                     }
                 });
             });
@@ -243,8 +259,7 @@ export class MobileTradingView extends React.PureComponent {
     async newOrder(displayingId, order) {
         const isMatched = !(order.status === 0 || (order.status === 2 && order.openPrice == null));
         try {
-            const color = this.getOrderType(order)
-                .startsWith('BUY') ? colors.green[2] : colors.red[2];
+            const color = this.getOrderType(order).startsWith('BUY') ? colors.green[2] : colors.red[2];
             const colorSl = colors.red[2];
             const colorTp = colors.green[2];
             const line = this.widget
@@ -459,7 +474,7 @@ export class MobileTradingView extends React.PureComponent {
             user_id: this.props.userId,
             fullscreen: this.props.fullscreen,
             autosize: true,
-            loading_screen: { backgroundColor: this.chartBg, },
+            loading_screen: { backgroundColor: this.chartBg },
             studies_overrides: {
                 'volume.volume.color.0': colors.red[2],
                 'volume.volume.color.1': colors.green[2],
@@ -474,7 +489,20 @@ export class MobileTradingView extends React.PureComponent {
                 'macd.histogram.color': '#00ffff',
                 'macd.macd.color': '#e9a55d',
                 'macd.signal.color': '#f263f3',
-                'relative strength index.plot.color': '#00ffff'
+                'relative strength index.plot.color': '#00ffff',
+
+                'moving average.plot.linewidth': 3,
+
+                'moving average exponential.plot.linewidth': 3,
+
+                'bollinger bands.median.linewidth': 2,
+                'bollinger bands.upper.linewidth': 2,
+                'bollinger bands.lower.linewidth': 2,
+
+                'macd.signal.linewidth': 2,
+                'macd.macd.linewidth': 2,
+
+                'relative strength index.plot.linewidth': 2,
             },
             timezone: getTradingViewTimezone(),
             overrides: {
@@ -558,8 +586,10 @@ export class MobileTradingView extends React.PureComponent {
                 .setTooltip(formatPrice(high[2], this.props.exchangeConfig, base).toString())
                 .setArrowColor('rgb(187,187,187)')
                 .setTextColor(this.isDark ? colors.gray[7] : colors.gray[1])
-                .setArrowHeight(7)
-            const lowArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
+                .setArrowHeight(7);
+            const lowArrow = this.widget
+                .chart()
+                .createExecutionShape({ disableUndo: false })
                 .setPrice(low[3])
                 .setTime(low[0])
                 .setDirection('buy')
@@ -567,7 +597,7 @@ export class MobileTradingView extends React.PureComponent {
                 .setTooltip(formatPrice(low[3], this.props.exchangeConfig, base).toString())
                 .setArrowColor('rgb(187,187,187)')
                 .setTextColor(this.isDark ? colors.gray[7] : colors.gray[1])
-                .setArrowHeight(7)
+                .setArrowHeight(7);
 
             this.drawnHighLowArrows = { highArrow, lowArrow };
         }
@@ -614,10 +644,7 @@ export class MobileTradingView extends React.PureComponent {
     render() {
         return (
             <>
-                <div
-                    className="relative flex flex-grow flex-col h-full bg-bgPrimary dark:bg-bgPrimary-dark"
-                    id="chart-container"
-                >
+                <div className="relative flex flex-grow flex-col h-full bg-bgPrimary dark:bg-bgPrimary-dark" id="chart-container">
                     <div
                         className={classNames(`absolute w-full h-full flex justify-center items-center`, {
                             hidden: this.state.chartStatus === ChartStatus.LOADED
@@ -625,7 +652,7 @@ export class MobileTradingView extends React.PureComponent {
                     >
                         <IconLoading color={colors.green[2]} />
                     </div>
-                    {this.props.showTimeFrame &&
+                    {this.props.showTimeFrame && (
                         <div className="w-full border-b border-divider/70 dark:border-divider-dark py-2 dragHandleArea z-10">
                             <ChartOptions
                                 pair={this.props.symbol}
@@ -644,7 +671,7 @@ export class MobileTradingView extends React.PureComponent {
                                 handleOpenIndicatorModal={this.handleOpenIndicatorModal}
                             />
                         </div>
-                    }
+                    )}
                     <div id={this.containerId} className={`h-full pr-2 ${this.props.classNameChart}`} style={this.props.styleChart} />
                     <div>
                         {this.state.chartStatus === ChartStatus.LOADED && (
@@ -704,7 +731,7 @@ const Funding = ({ symbol }) => {
                 null,
                 {
                     hideCloseButton: true,
-                    confirmTitle: t("futures:funding_history_tab:funding_warning_accept"),
+                    confirmTitle: t('futures:funding_history_tab:funding_warning_accept'),
                     textClassname: '!text-left overflow-y-auto !max-h-[300px] yes-scrollbar',
                     noUseOutside: true
                 }
@@ -736,7 +763,7 @@ const Funding = ({ symbol }) => {
                 null,
                 {
                     hideCloseButton: true,
-                    confirmTitle: t("futures:funding_history_tab:funding_warning_accept"),
+                    confirmTitle: t('futures:funding_history_tab:funding_warning_accept'),
                     textClassname: '!text-left overflow-y-auto !max-h-[300px] yes-scrollbar',
                     noUseOutside: true
                 }
@@ -797,35 +824,44 @@ const Funding = ({ symbol }) => {
             </div>
         </>
     );
-}
+};
 
-const ModalFundingRate = ({ onClose, t ,symbol}) => {
+const ModalFundingRate = ({ onClose, t, symbol }) => {
     const router = useRouter();
     const [currentTheme] = useDarkMode();
 
     const onRedirect = () => {
-        router.push(`/${router.locale}/futures/funding-history?theme=${currentTheme}&source=frame&symbol=${symbol}`);
+        router.push(`/${router.locale}/futures/funding-history?theme=${currentTheme}&source=app&symbol=${symbol}`);
     };
 
     const onDetail = () => {
-        const url = router.locale === 'en'
-            ? '/support/faq/noti-en-announcement/apply-funding-rates-on-nami-futures-and-nao-futures?theme=dark&source=frame'
-            : '/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures?theme=dark&source=frame'
-        router.push(url)
-    }
+        const url =
+            router.locale === 'en'
+                ? '/support/faq/noti-en-announcement/apply-funding-rates-on-nami-futures-and-nao-futures?theme=dark&source=frame'
+                : '/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures?theme=dark&source=frame';
+        router.push(url);
+    };
 
-    return <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
-    >
-        <div className="text-2xl font-semibold text-center">{t('futures:funding_rate')}</div>
-        <div className="text-sm pt-4 text-center text-txtSecondary dark:text-txtSecondary-dark">
-            {t('futures:funding_rate_des')} <span onClick={onDetail} className="text-teal font-semibold">{t('common:read_more')}</span>
-        </div>
-        <div className="flex items-center space-x-4 pt-8 text-center">
-            <div onClick={onClose} className="w-full font-semibold bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 rounded-md px-2 py-3">{t('common:close')}</div>
-            <div onClick={onRedirect} className="w-full font-semibold bg-bgBtnPrimary text-txtBtnPrimary rounded-md px-2 py-3">{t('futures:funding_history')}</div>
-        </div>
-    </Modal>
-}
+    return (
+        <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}>
+            <div className="text-2xl font-semibold text-center">{t('futures:funding_rate')}</div>
+            <div className="text-sm pt-4 text-center text-txtSecondary dark:text-txtSecondary-dark">
+                {t('futures:funding_rate_des')}{' '}
+                <span onClick={onDetail} className="text-teal font-semibold">
+                    {t('common:read_more')}
+                </span>
+            </div>
+            <div className="flex items-center space-x-4 pt-8 text-center">
+                <div onClick={onClose} className="w-full font-semibold bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 rounded-md px-2 py-3">
+                    {t('common:close')}
+                </div>
+                <div onClick={onRedirect} className="w-full font-semibold bg-bgBtnPrimary text-txtBtnPrimary rounded-md px-2 py-3">
+                    {t('futures:funding_history')}
+                </div>
+            </div>
+        </Modal>
+    );
+};
 
 MobileTradingView.defaultProps = {
     symbol: 'BTCUSDT',

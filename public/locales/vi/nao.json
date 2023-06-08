@@ -147,6 +147,7 @@
         "second": "hai",
         "third": "ba",
         "description": "Tranh giải cá nhân và đội nhóm với tổng giải thưởng ",
+        "description_individual": "Tranh giải cá nhân với tổng giải thưởng xấp xỉ ",
         "detail_rules": "Thể lệ chi tiết",
         "ranking": "Bảng xếp hạng",
         "start_in": "Bắt đầu sau",
@@ -168,7 +169,7 @@
         "team": "Tên đội",
         "team_label": "Đội",
         "total_trades": "Số lệnh",
-        "name": "Tên",
+        "name": "Họ và tên",
         "captain": "Đội trưởng",
         "information": "Thông tin",
         "team_ranking": "Bảng xếp hạng đội nhóm",
@@ -233,7 +234,21 @@
         "id_onus_futures": "ID",
         "contest_ranking": "BXH giải đấu",
         "contest_special": "BXH đặc biệt",
-        "tournament": "Giải đấu"
+        "tournament": "Giải đấu",
+        "weekly_ranking": "Bảng xếp hạng tuần",
+        "monthly_ranking": "Bảng xếp hạng theo tháng",
+        "weekly_ranking_desc": "Người dùng đủ điều kiện sẽ được xét hạng và tranh giải thưởng hàng tuần trị giá {{value}}. Đọc thêm tại “Thể lệ chi tiết”.",
+        "rules": "Thể lệ",
+        "week": "Tuần {{value}}",
+        "start_time": "Thời gian bắt đầu",
+        "end_time": "Thời gian kết thúc",
+        "referral": {
+            "description": "Tranh giải cá nhân với tổng giải thưởng ",
+            "score": "Điểm",
+            "ranking": "Bảng xếp hạng",
+            "number_of_friends": "Số bạn bè",
+            "tooltip_friends": "Bạn bè cần hoàn tất KYC trong thời gian diễn ra chương trình, đọc thêm tại “Thể lệ chi tiết”"
+        }
     },
     "year_summary": {
         "title": "Tổng kết NAO Futures {{version}}",

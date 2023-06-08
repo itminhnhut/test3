@@ -3,7 +3,8 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 export const EPS = 0.00000001;
 
 export const LOCAL_STORAGE_KEY = {
-    THEME: 'theme'
+    THEME: 'theme',
+    HIDE_BALANCE:'hide_wallet_balance'
 };
 
 const TokenConfigNetwork = {
@@ -66,7 +67,8 @@ export const TokenConfigV1 = {
 
 export const TRADING_MODE = {
     EXCHANGE: 1,
-    FUTURES: 2
+    FUTURES: 2,
+    NAO: 3
 };
 
 export const customModalStyles = {
@@ -835,7 +837,8 @@ export const UserSocketEvent = {
     FUTURE_DONE_CLOSING_ALL_ORDERS: 'future:done_closing_all_orders',
     FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error',
     FUTURE_PROCESSING_ORDER_ERROR_NAO: 'future:processing_order_error_nao',
-    PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER'
+    PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER',
+    SMART_OTP: 'SMART_OTP'
 };
 
 export const EarnOrder_Status = {

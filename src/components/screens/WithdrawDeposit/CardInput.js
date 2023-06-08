@@ -25,7 +25,7 @@ const ModalOtp = dynamic(() => import('./components/ModalOtp'));
 const DWAddPhoneNumber = dynamic(() => import('components/common/DWAddPhoneNumber'));
 
 const CardInput = () => {
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const {
         input,
         partner,
@@ -344,7 +344,7 @@ const CardInput = () => {
             <DWAddPhoneNumber isVisible={isOpenModalAddPhone} onBackdropCb={() => setIsOpenModalAddPhone(false)} />
 
             <ModalOtp
-                onConfirm={(otp) => onMakeOrderHandler(otp)}
+                onConfirm={(otp) => onMakeOrderHandler(otp, language)}
                 isVisible={state.showOtp}
                 otpExpireTime={state.otpExpireTime}
                 onClose={() => {
@@ -364,7 +364,7 @@ const CardInput = () => {
             />
             <AlertModalV2
                 isVisible={state.showAlertDisableSmartOtp}
-                onClose={() => setState({ showAlertDisableSmartOtp: false })}
+                onClose={() => setState({showAlertDisableSmartOtp: false, showOtp: false})}
                 textButton={t('dw_partner:verify_by_email')}
                 onConfirm={() => {
                     setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false });

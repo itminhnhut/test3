@@ -316,8 +316,8 @@ const FavouriteButton = ({ pairConfig }) => {
     const isFavorite = useMemo(() => favoritePairs.includes(pair), [favoritePairs, pairConfig]);
 
     const handleSetFavorite = async () => {
-        await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.FUTURES, pair);
-        dispatch(getFuturesFavoritePairs());
+        await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.NAO, pair);
+        dispatch(getFuturesFavoritePairs(TRADING_MODE.NAO));
     };
 
     return <div className="cursor-pointer flex items-center text-txtSecondary dark:text-txtSecondary-dark" onClick={handleSetFavorite}>

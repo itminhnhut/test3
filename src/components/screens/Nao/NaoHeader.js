@@ -31,9 +31,11 @@ const category = [
     { label: "governance_pool", el: "nao_pool", url: "/nao" },
     // { label: 'buy_token', el: 'nao_token' },
     { label: "Stake NAO", link: "/nao/stake", options: "_self" },
-    { label: "voting", el: "nao_proposal", url: "/nao" },
+    // { label: "voting", el: "nao_proposal", url: "/nao" },
+    { label: "contest_futures", link: "/contest", options: "_self" },
+    // { label: "voting", el: "nao_proposal", url: "/nao" },
     // { label: "contest_futures", link: "/contest", options: "_self" },
-    { label: 'NAO Futures v1', link: '/nao/summary', options: '_self' }
+    // { label: 'NAO Futures v1', link: '/nao/summary', options: '_self' }
 ];
 
 const onDownload = (key) => {

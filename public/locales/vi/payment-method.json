@@ -3,7 +3,6 @@
     "payment_method_add": "Thêm phương thức thanh toán",
     "account_number": "Số tài khoản",
     "bank_name": "Tài khoản ngân hàng",
-    "confirm": "Xác nhận",
     "transaction_details": "Chi tiết giao dịch",
     "depsit_from_partners": "Nạp {{asset}} qua ĐTKD",
     "sell": "bán",
@@ -20,5 +19,11 @@
     "bank_account_not_found": "Không tìm thấy tài khoản tương ứng. Vui lòng kiểm tra lại",
     "set_default_bank_success": "Đã thay đổi ngân hàng mặc định",
     "please_input_account_num": "Vui lòng nhập số tài khoản",
-    "validate_input_account": "Số tài khoản không hợp lệ"
+    "validate_input_account": "Số tài khoản không hợp lệ",
+    "remove": "Xoá",
+    "confirm": {
+        "title": "Xóa phương thức thanh toán",
+        "text": "Tài khoản bị xóa có thể thêm lại bằng cách thêm phương thức thanh toán. Tài khoản bị xóa không thể thêm trên tài khoản Nami khác",
+        "noti_text": "Xóa phương thức thanh toán thành công"
+    }
 }

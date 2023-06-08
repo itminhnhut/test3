@@ -36,6 +36,7 @@ export const WITHDRAW_RESULT = {
     AMOUNT_EXCEEDED: 'invalid_max_amount',
     TOO_MUCH_REQUEST: 'TOO_MUCH_REQUEST',
     SECRET_INVALID: 'SECRET_INVALID',
+    // invalid_smart_otp: 'invalid_smart_otp',
 
     INVALID_KYC_STATUS: 'invalid_kyc_status',
     InvalidUser: 'invalid_user',
@@ -50,5 +51,6 @@ export const WITHDRAW_RESULT = {
     InvalidOtp: 'invalid_otp',
     SOTP_INVALID: 'SOTP_INVALID',
     Unknown: 'unknown_error',
-    EXCEEDED_SMART_OTP: 'SOTP_INVALID_EXCEED_TIME'
+    EXCEEDED_SMART_OTP: 'SOTP_INVALID_EXCEED_TIME',
+    PIN_INVALID_EXCEED_TIME: 'PIN_INVALID_EXCEED_TIME'
 };

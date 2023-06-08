@@ -15,10 +15,12 @@ import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
 
 import Image from 'next/image';
-
+import { SocialFireIcon } from '../../../svg/SvgIcon';
 import classNames from 'classnames';
 import NaoHeader from '../NaoHeader';
 import NaoFooter from '../NaoFooter';
+import ContestWeekRanks from 'components/screens/Nao/Contest/ContestWeekRanks';
+
 const ListRankings = dynamic(() => import('./ListRankings'));
 const currencies = [
     { label: 'VNDC', value: 'VNDC' },
@@ -200,11 +202,41 @@ export const seasons = [
         total_rewards: '1,000,000,000 VNDC',
         quoteAsset: 'VNDC',
         time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
-        active: true,
+        active: false,
         top_ranks_per: 20,
         top_ranks_team: 10,
         lastUpdated: true,
         hasTabCurrency: true
+    },
+    {
+        season: 10,
+        start: '2023-05-31T17:00:00.000Z',
+        end: '2023-06-30T17:00:00.000Z',
+        contest_id: 13,
+        title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 7', en: 'NAO Futures VNDC – Nami Championship Season 7' },
+        title: { vi: 'NAO Futures VNDC', en: 'NAO Futures VNDC' },
+        title_champion: { vi: 'Nami Championship mùa 7', en: 'Nami Championship Season 7' },
+        minVolumeInd: {
+            vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để được xếp hạng',
+            en: 'Traders need to meet the Basic Conditions to be ranked. For details',
+            isHtml: false
+        },
+        rules: {
+            vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-7',
+            en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-7'
+        },
+        weekly_contest_time: {
+            start: '2023-06-04T17:00:00.000Z',
+            end: '2023-07-02T17:00:00.000Z'
+        },
+        total_rewards: '500,000,000 VNDC',
+        total_weekly_rewards: '66,000,000 VNDC',
+        quoteAsset: 'VNDC',
+        // time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
+        active: true,
+        top_ranks_per: 20,
+        top_ranks_week: 20,
+        lastUpdated: true
     }
 ];
 
@@ -238,6 +270,8 @@ const Contest = (props) => {
     const [tab, setTab] = useState(initState.tab);
     const [data, setData] = useState([]);
     const [loadingSpecial, setLoadingSpecial] = useState(initState.loadingSpecial);
+    const showPnl = ![9, 10, 11, 12, 13].includes(props?.contest_id);
+    const userID = props?.contest_id >= 13 ? 'code' : 'onus_user_id';
 
     const handleChangTab = async (value) => {
         setTab(value);
@@ -331,8 +365,6 @@ const Contest = (props) => {
     //     if (props?.lastUpdated) renderLastUpdated(props?.contest_id);
     // }, [props?.contest_id, props?.lastUpdated]);
 
-    const showPnl = ![9, 10, 11, 12].includes(props?.contest_id);
-
     const params = useMemo(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -346,31 +378,31 @@ const Contest = (props) => {
 
     const renderTab = () => {
         return (
-            <ul className="tabMenu">
-                <li
-                    className={classNames('font-semibold mr-4 text-xs sm:text-sm w-[34%] sm:w-[162px] sm:h-[72px] flex relative', {
-                        active: tab === initState.tab1
-                    })}
+            <div className="flex items-center space-x-2 py-6">
+                <div
                     onClick={() => handleChangTab(initState.tab1)}
+                    className={classNames(
+                        'rounded-full ring-[1px] ring-divider dark:ring-divider-dark px-4 sm:px-5 py-2 sm:py-3 text-sm sm:text-base cursor-pointer text-txtSecondary-dark',
+                        {
+                            '!ring-teal !text-teal font-semibold': tab === initState.tab1
+                        }
+                    )}
                 >
                     {t('nao:contest:contest_ranking')}
-                </li>
-                <li
-                    className={classNames('font-semibold text-xs sm:text-sm w-[60%] sm:w-[250px] sm:h-[72px] flex relative !pl-2 sm:!pl-8 !justify-start', {
-                        active: tab === initState.tab2
-                    })}
+                </div>
+                <div
                     onClick={() => handleChangTab(initState.tab2)}
+                    className={classNames(
+                        'flex items-center space-x-2 rounded-full ring-[1px] ring-divider dark:ring-divider-dark px-4 sm:px-5 py-2 sm:py-3 text-sm sm:text-base cursor-pointer text-txtSecondary-dark',
+                        {
+                            '!ring-teal !text-teal font-semibold': tab === initState.tab2
+                        }
+                    )}
                 >
-                    {t('nao:contest:contest_special')}
-                    <div className="wrapper_star right-0 absolute top-0 border-[#24E0CF] bg-bgNaoStart flex items-center border-solid rounded-b-xl py-1 px-[18px]">
-                        <Image src={getS3Url('/images/contest/ic_star.png')} width="16px" height="16px" />
-                        <div className="ml-2 font-semibold text-sm leading-6">HOT</div>
-                    </div>
-                </li>
-                <li className="hidden lg:inline absolute right-0 top-0">
-                    <Image src={getS3Url('/images/contest/bg_champion.png')} width="274px" height="187px" />
-                </li>
-            </ul>
+                    <SocialFireIcon />
+                    <span>{t('nao:contest:contest_special')}</span>
+                </div>
+            </div>
         );
     };
 
@@ -378,23 +410,32 @@ const Contest = (props) => {
         return (
             <>
                 {props.top_ranks_master && <ContestMasterRank {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort="pnl" />}
-                <ContestTeamRanks
-                    {...props}
-                    onShowDetail={onShowDetail}
-                    lastUpdatedTime={lastUpdatedTime}
-                    params={params}
-                    sort={params.team}
-                    showPnl={showPnl}
-                    currencies={currencies}
-                />
-                <ContestPerRanks
-                    {...props}
-                    lastUpdatedTime={lastUpdatedTime}
-                    params={params}
-                    sort={params.individual}
-                    showPnl={showPnl}
-                    currencies={currencies}
-                />
+                {props.top_ranks_team && (
+                    <ContestTeamRanks
+                        {...props}
+                        onShowDetail={onShowDetail}
+                        lastUpdatedTime={lastUpdatedTime}
+                        params={params}
+                        sort={params.team}
+                        showPnl={showPnl}
+                        currencies={currencies}
+                        userID={userID}
+                    />
+                )}
+
+                {props.top_ranks_week && <ContestWeekRanks {...props} lastUpdatedTime={lastUpdatedTime} userID={userID} />}
+
+                {props.top_ranks_per && (
+                    <ContestPerRanks
+                        {...props}
+                        lastUpdatedTime={lastUpdatedTime}
+                        params={params}
+                        sort={params.individual}
+                        showPnl={showPnl}
+                        currencies={currencies}
+                        userID={userID}
+                    />
+                )}
             </>
         );
     };
@@ -407,7 +448,7 @@ const Contest = (props) => {
     };
     const renderContentTab2 = () => {
         return (
-            <section id="content2" className={`${tab === initState?.tab2 ? 'inline' : 'hidden'}`}>
+            <section id="content2" className={`${tab === initState?.tab2 ? 'inline sm_only:pb-6' : 'hidden'}`}>
                 <ListRankings data={KLGD5?.data || []} loading={loadingSpecial} />
                 <ListRankings isList type="vol_3" data={KLGD3?.data || []} rank_metadata="vol_3" loading={loadingSpecial} />
                 <ListRankings isList type="vol_2" data={KLGD2?.data || []} rank_metadata="vol_2" loading={loadingSpecial} />
@@ -417,7 +458,7 @@ const Contest = (props) => {
     };
     return (
         <LayoutNaoToken isHeader={false}>
-            {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} />}
+            {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} userID={userID} />}
             {showInvitations && (
                 <InvitationsDetail
                     {...props}
@@ -428,25 +469,32 @@ const Contest = (props) => {
                 />
             )}
             <div className="min-h-screen">
-                <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
+                <div className="px-4 nao:px-0 max-w-[72.5rem] w-full m-auto !mt-0">
                     <NaoHeader />
                 </div>
                 <div className="nao_section">
-                    <div className="px-4 sm_only:pt-6 max-w-[72.5rem] w-full m-auto">
+                    <div className="px-4 nao:px-0 sm_only:pt-6 max-w-[72.5rem] w-full m-auto">
                         <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
                     </div>
                     <div className="bg-gray-13 dark:bg-dark rounded-t-3xl">
-                        <div className="px-4 pb-20 sm:pb-[120px] max-w-[72.5rem] w-full m-auto">
-                        <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} currencies={currencies} />
-                        {props?.season == SEASON_SPECIAL ? (
-                            <div className="tab1 overflow-hidden pt-[68px] lg:pt-[234px]">
-                                {renderTab()}
-                                {renderContentTab1()}
-                                {renderContentTab2()}
-                            </div>
-                        ) : (
-                            renderContestRank()
-                        )}
+                        <div className="px-4 pb-14 sm:pb-[120px] max-w-[72.5rem] nao:px-0 w-full m-auto">
+                            <ContestInfo
+                                {...props}
+                                ref={refInfo}
+                                onShowDetail={onShowDetail}
+                                onShowInvitations={onShowInvitations}
+                                currencies={currencies}
+                                userID={userID}
+                            />
+                            {props?.season == SEASON_SPECIAL ? (
+                                <div>
+                                    {renderTab()}
+                                    {renderContentTab1()}
+                                    {renderContentTab2()}
+                                </div>
+                            ) : (
+                                renderContestRank()
+                            )}
                         </div>
                     </div>
                 </div>

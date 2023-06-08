@@ -4,7 +4,7 @@ import colors from 'styles/colors';
 import Copy from 'components/svg/Copy';
 import { useEffect, useState } from 'react';
 
-export default function TextCopyable({ text = '', showingText, className = '', timeout = 3000 }) {
+export default function TextCopyable({ text = '', showingText, className = '', timeout = 3000, copyIconColor }) {
     const [copied, setCopied] = useState(false);
 
     const onCopy = () => {
@@ -31,7 +31,7 @@ export default function TextCopyable({ text = '', showingText, className = '', t
                         onCopy();
                     }}
                 >
-                    {copied ? <Check size={16} color={colors.teal} /> : <Copy />}
+                    {copied ? <Check size={16} color={colors.teal} /> : <Copy color={copyIconColor}/>}
                 </div>
             </CopyToClipboard>
         </span>
