@@ -477,6 +477,8 @@ const TradingFee = () => {
             </Link>
         ));
 
+    const upgradeUrl =
+        (language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN) + (isApp ? '?source=app' : '');
     const userVipLevel = () =>
         !auth ? (
             <></>
@@ -501,7 +503,7 @@ const TradingFee = () => {
                         {buyNami}
                     </div>
 
-                    <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
+                    <Link href={upgradeUrl}>
                         <ButtonV2 className="absolute bottom-0 inset-x-6 translate-y-[40%] !px-6 !w-auto">
                             <span className="mr-2">{t('fee-structure:vip_upgrade')}</span>
                             <Crown />
@@ -523,7 +525,7 @@ const TradingFee = () => {
                             {buyNami}
                         </div>
                     </div>
-                    <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
+                    <Link href={upgradeUrl}>
                         <ButtonV2 className="!px-6 !w-auto">
                             <span className="mr-2">{t('fee-structure:vip_upgrade')}</span>
                             <Crown />
