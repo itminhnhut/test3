@@ -39,7 +39,7 @@ module.exports = {
             serif: ['serif'],
             inter: ['Inter', 'sans-serif'],
             'SF-Pro': ['SF-Pro'],
-            'SourceCodePro': ['SourceCodePro'],
+            SourceCodePro: ['SourceCodePro']
         },
         fontSize: {
             xxs: [
@@ -100,21 +100,21 @@ module.exports = {
             '4xl': [
                 '2rem',
                 {
-                    lineHeight: '2.375rem',
-                },
+                    lineHeight: '2.375rem'
+                }
             ], //32px
             '5xl': [
                 '2.25rem',
                 {
-                    lineHeight: '3rem',
-                },
+                    lineHeight: '3rem'
+                }
             ], //36px
             '6xl': [
                 '2.75rem',
                 {
-                    lineHeight: '3.625rem',
-                },
-            ], //44px
+                    lineHeight: '3.625rem'
+                }
+            ] //44px
         },
         // TODO split text, background
         colors: {
@@ -254,6 +254,7 @@ module.exports = {
                 xsm: '320px',
                 xs: '319px',
                 sm_only: { max: defaultTheme.screens.sm },
+                mb_only: { max: '820px' }
             },
             spacing: {
                 128: '32rem',
@@ -430,7 +431,7 @@ module.exports = {
                 'nao-corner': "url('/images/nao/bg-corner-light.webp')",
                 'nao-corner-mb': "url('/images/nao/bg-corner-light-mb.webp')",
                 'nao-corner-dark': "url('/images/nao/bg-corner.webp')",
-                'nao-corner-mb-dark': "url('/images/nao/bg-corner-mb.webp')",
+                'nao-corner-mb-dark': "url('/images/nao/bg-corner-mb.webp')"
             },
             backgroundSize: {
                 auto: 'auto',
@@ -440,7 +441,7 @@ module.exports = {
                 initial: 'initial',
                 revert: 'revert',
                 unset: 'unset',
-                full: '100% 100%',
+                full: '100% 100%'
             },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
@@ -468,13 +469,13 @@ module.exports = {
             fill: {
                 fillPrimary: {
                     DEFAULT: commonColors.white,
-                    dark: commonColors.dark.dark,
+                    dark: commonColors.dark.dark
                 },
                 fillSecondary: {
                     DEFAULT: commonColors.gray[12],
-                    dark: commonColors.dark[2],
-                },
-            },
+                    dark: commonColors.dark[2]
+                }
+            }
         }
     },
     variants: {

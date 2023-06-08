@@ -36,7 +36,8 @@
             "payment_method": "Payment Method",
             "daily_reward": "Daily Trading Reward",
             "futures_portfolio": "Futures Statistics"
-        }
+        },
+        "top_referral": "Top Referral"
     },
     "submenu": {
         "convert": "Nami Swap",

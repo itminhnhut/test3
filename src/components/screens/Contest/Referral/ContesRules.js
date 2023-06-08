@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState, useRef } from 'react';
-import Image from 'next/image';
+import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { ButtonNao, ButtonNaoVariants, CardNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
@@ -13,21 +12,7 @@ import Modal from 'components/common/ReModal';
 import SvgCross from 'components/svg/Cross';
 import { useWindowSize } from 'utils/customHooks';
 
-const ContesRules = ({
-    inHome = false,
-    seasonConfig = '',
-    previous,
-    season,
-    start,
-    end,
-    seasons,
-    title,
-    title_champion,
-    rules,
-    total_rewards,
-    title_detail,
-    top_ranks_team
-}) => {
+const ContesRules = ({ season, start, end, seasons, title, title_champion, rules, total_rewards }) => {
     const {
         t,
         i18n: { language }
@@ -38,9 +23,9 @@ const ContesRules = ({
 
     const renderTimer = (formatted) => (
         <div className="flex items-center space-x-2">
-            {Object.keys(formatted).map((time, idx) => {
+            {Object.keys(formatted).map((time) => {
                 return (
-                    <div key={idx} className="rounded-lg min-w-[68px] px-2 py-4 flex flex-col items-center justify-center bg-gray-12 dark:bg-dark-4">
+                    <div className="rounded-lg min-w-[68px] px-2 py-4 flex flex-col items-center justify-center bg-gray-12 dark:bg-dark-4">
                         <span className="text-2xl font-semibold">{formatted[time]}</span>
                         <span className="text-sm uppercase">{t(`common:${time}`)}</span>
                     </div>
@@ -83,9 +68,9 @@ const ContesRules = ({
             );
         } else {
             return (
-                <div className="w-full sm:px-20 rounded-md bg-gray-12 dark:bg-dark-2 py-3">
-                    <div className="text-sm sm:text-base text-center text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:ended')}</div>
-                </div>
+                <>
+                    <div className="text-sm sm:text-base flex text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:ended')}</div>
+                </>
             );
         }
     };
@@ -105,7 +90,6 @@ const ContesRules = ({
         router.push(typeof rules === 'object' ? rules[language] : rules);
     };
 
-    const current = seasons[seasons.length - 1];
     const seasonsFilter = useMemo(() => {
         const dataFilter = orderBy(seasons, 'season', 'desc');
         const active = dataFilter.findIndex((rs) => rs.active);
@@ -113,64 +97,41 @@ const ContesRules = ({
     }, [seasons]);
 
     return (
-        <section className="contest_rules pb-12 py-6 sm:py-20 w-full flex flex-col lg:flex-row sm:justify-between">
-            <div className="items-center text-center lg:text-left lg:items-left flex flex-col flex-wrap sm:block">
-                <div className="font-semibold text-xl sm:text-2xl text-teal">{t('nao:contest:tournament')}</div>
-                <div className="font-semibold text-xl sm:text-6xl pt-3 sm:pt-4">
-                    <div>{title?.[language]}</div>
-                    <div className="whitespace-nowrap">{title_champion?.[language]}</div>
-                </div>
+        <section className="contest_rules relative pt-10 lg:pt-0">
+            <div className="container flex items-center flex-col lg:flex-row sm:justify-between w-full min-h-[582px]">
+                <div className="text-center sm:text-left flex flex-col flex-wrap sm:block">
+                    <div className="font-semibold text-xl sm:text-2xl text-teal">{t('nao:contest:tournament')}</div>
+                    <div className="font-semibold text-xl sm:text-6xl pt-3">
+                        <div>{title?.[language]}</div>
+                        <div className="max-w-[768px] xl:w-[calc(1216px/2)] 2xl:w-[calc(1440px/2)]">{title_champion?.[language]}</div>
+                    </div>
 
-                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base pt-6 sm:pt-8">
-                    {t(`nao:contest:description${!!top_ranks_team ? '' : '_individual'}`)}
-                    <span className="text-teal font-semibold">{total_rewards}</span>
-                </div>
-                <div className="w-full sm:w-max m-auto lg:m-0 flex flex-col items-center lg:items-start">
-                    <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 mt-5 sm:mt-4 w-full">
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base pt-1 sm:pt-3">
+                        {t(`nao:contest:referral:description`)}
+                        <span className="text-teal font-semibold">{total_rewards}</span>
+                    </div>
+                    <div className="sm_only:!w-full w-fit flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3 mt-5 sm:mt-4">
                         {renderCountDown('!font-normal', '!font-semibold')}
                     </div>
-                    <div className="flex flex-row mt-8 sm:mt-10 sm_only:w-full whitespace-nowrap">
-                        {inHome ? (
-                            <ButtonNao
-                                onClick={() => router.push('/contest')}
-                                className="!h-11 sm:h-12 px-6 text-sm sm:test-base font-semibold w-max !rounded-md mr-3 sm_only:flex-1 sm_only:px-1"
-                                primary
-                            >
-                                {t('nao:contest:ranking')}
-                            </ButtonNao>
-                        ) : (
-                            <ButtonNao
-                                onClick={onRedirect}
-                                className="!h-11 sm:h-12 px-6 text-sm sm:text-base font-semibold w-max !rounded-md mr-3 sm_only:flex-1"
-                            >
-                                {t('nao:contest:detail_rules')}
-                            </ButtonNao>
-                        )}
-                        {isMobile ? (
-                            <TournamentList t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
-                        ) : (
-                            <DropdownPreSeason inHome={inHome} t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
-                        )}
+                    <div className="flex space-x-4 mt-8 sm:mt-10 justify-center sm:justify-start w-full">
+                        <ButtonNao onClick={onRedirect} className="px-6 w-max sm_only:flex-1">
+                            {t('nao:contest:detail_rules')}
+                        </ButtonNao>
+                        {seasonsFilter.length > 1 &&
+                            (isMobile ? (
+                                <TournamentList t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
+                            ) : (
+                                <DropdownPreSeason t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
+                            ))}
                     </div>
                 </div>
-            </div>
-            <div className="mt-10 lg:mt-0 text-center">
-                {season === seasonConfig ? (
-                    <Image
-                        src={getS3Url('/images/contest/bg_contest_v1.png')}
-                        width="544px"
-                        height="354px"
-                        title={title_champion?.[language]}
-                        alt={title_champion?.[language]}
-                    />
-                ) : (
-                    <img
-                        src={getS3Url('/images/nao/contest/ic_contest_info.webp')}
-                        className="w-[300px] sm:w-[400px] m-auto"
-                        title={title_champion?.[language]}
-                        alt={title_champion?.[language]}
-                    />
-                )}
+                <img
+                    src={getS3Url('/images/contest/referral/ic_banner_v2.png')}
+                    className="lg:absolute 2xl:relative right-0 sm:h-[480px] lg:h-[380px] xl:h-[582px] pt-12 lg:pt-0"
+                    height={582}
+                    title={title_champion?.[language]}
+                    alt={title_champion?.[language]}
+                />
             </div>
         </section>
     );
@@ -211,9 +172,9 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
                     <Popover.Button className="w-full">
                         <ButtonNao
                             variant={ButtonNaoVariants.SECONDARY}
-                            className="!h-11 sm:h-12 px-6 text-sm sm:test-base font-semibold w-full !rounded-md flex items-center space-x-2 tournaments sm_only:px-1"
+                            className="!h-11 sm:!h-12 px-6 text-sm sm:test-base font-semibold w-full !rounded-md flex items-center space-x-2 tournaments sm_only:px-1"
                         >
-                            <span className="whitespace-nowrap">{t('nao:contest:tournaments')}</span>
+                            <span>{t('nao:contest:tournaments')}</span>
                             <ArrowDropDownIcon
                                 size={16}
                                 color="currentColor"
@@ -244,7 +205,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
                                 {seasonsFilter.map((item, index) => (
                                     <div
                                         onClick={() => {
-                                            router.push(`/contest/${item.season}`);
+                                            router.push(`/contest/referral/${item.season}`);
                                             close();
                                         }}
                                         key={index}
@@ -262,12 +223,6 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
         </Popover>
     );
 };
-
-const DropDonwIcon = ({ className = '' }) => (
-    <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 6L12 10L4 10L8 6Z" fill="currentColor" />
-    </svg>
-);
 
 // To do: continue styling
 const TournamentList = ({ t, seasonsFilter, router, season, language }) => {
@@ -307,7 +262,7 @@ const TournamentList = ({ t, seasonsFilter, router, season, language }) => {
                         {seasonsFilter.map((item, index) => (
                             <div
                                 onClick={() => {
-                                    router.push(`/contest/${item.season}`);
+                                    router.push(`/contest/referral/${item.season}`);
                                     setShowTournaments(false);
                                 }}
                                 key={index}
@@ -325,7 +280,7 @@ const TournamentList = ({ t, seasonsFilter, router, season, language }) => {
                 className="!h-11 sm:h-12 px-4 text-sm font-semibold w-full !rounded-md flex items-center space-x-2 tournaments sm_only:px-1"
                 onClick={() => setShowTournaments(true)}
             >
-                <span className="whitespace-nowrap">{t('nao:contest:tournaments')}</span>
+                <span>{t('nao:contest:tournaments')}</span>
                 <ArrowDropDownIcon size={16} color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" />
             </ButtonNao>
         </div>
