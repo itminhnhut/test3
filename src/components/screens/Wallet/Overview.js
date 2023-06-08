@@ -14,7 +14,7 @@ import { EXCHANGE_ACTION, WALLET_SCREENS } from 'pages/wallet';
 import SvgWalletOverview from 'components/svg/SvgWalletOverview';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { PartnersIcon, MoreHorizIcon, PortfolioIcon, FutureExchangeIcon } from 'components/svg/SvgIcon';
+import { PartnersIcon, MoreHorizIcon, FutureExchangeIcon } from 'components/svg/SvgIcon';
 import styled from 'styled-components';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Types from 'components/screens/Account/types';
@@ -94,9 +94,6 @@ const OverviewWallet = (props) => {
                         ? SECRET_STRING
                         : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + partnersEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}{' '}
                     BTC
-                    <button className="hidden md:block" onClick={() => router.push(PATHS?.FUTURES_PORTFOLIO)}>
-                        <PortfolioIcon  />
-                    </button>
                 </div>
                 <div className="font-normal text-sm md:text-base mt-1">
                     {isHideAsset
