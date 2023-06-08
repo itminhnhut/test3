@@ -74,15 +74,6 @@ export const NAV_DATA = [
             //     child_lv2: [],
             // },
             {
-                key: 2,
-                title: 'Swap',
-                localized: 'swap',
-                isNew: false,
-                url: '/swap',
-                child_lv2: []
-            },
-
-            {
                 key: 3,
                 title: 'Referral',
                 localized: 'referral',
@@ -229,15 +220,15 @@ export const NAV_DATA = [
         isNew: false,
         url: '/support',
         child_lv1: []
-    },
-    {
-        key: 'top_referral',
-        title: 'Top Referral',
-        localized: 'top_referral',
-        isNew: false,
-        url: '/contest/referral',
-        child_lv1: []
     }
+    // {
+    //     key: 'top_referral',
+    //     title: 'Top Referral',
+    //     localized: 'top_referral',
+    //     isNew: false,
+    //     url: '/contest/referral',
+    //     child_lv1: []
+    // }
 ];
 
 export const MOBILE_NAV_DATA = [
