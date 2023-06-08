@@ -79,6 +79,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
     const [search, setSearch] = useState('')
     const [referencePrice, setReferencePrice] = useState([])
     const refTabsMarkets = useRef(null);
+    const searching = useRef(false);
 
     const dispatch = useDispatch()
     const favoritePairRaws = useSelector((state) => state.futures.favoritePairs) || []
@@ -97,6 +98,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
 
     const changeSearch = useCallback(
         debounce((value) => {
+            searching.current = true;
             setSearch(value)
         }, 300),
         []
@@ -111,6 +113,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
     }
 
     const changeSort = (field) => () => {
+        searching.current = false;
         if (field !== sort.field) {
             setSort({ field, direction: 'asc' })
         } else {
@@ -198,6 +201,10 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
 
     const filter = useRef({ field: '', direction: '' })
 
+    const formatSymbol=(item)=>{
+        return item.baseAsset + '/' + item.quoteAsset + ' ' + item.baseAsset + item.quoteAsset;
+    }
+
     const dataFilter = useMemo(() => {
         if (!Array.isArray(data)) return [];
         // if (data.length <= 0) {
@@ -220,9 +227,20 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
         //     return sub;
         // }
         if (search) {
-            return data.filter((item) => {
-                return item.baseAsset.includes(search?.toUpperCase() || '')
-            })
+            return data
+                .filter((item) => {
+                    return String(formatSymbol(item)).toLowerCase().indexOf(search?.toLowerCase()) > -1;
+                })
+                .sort((a, b) => {
+                    if (formatSymbol(a).toLowerCase().indexOf(search.toLowerCase()) > formatSymbol(b).toLowerCase().indexOf(search.toLowerCase())) {
+                        return 1;
+                    } else if (formatSymbol(a).toLowerCase().indexOf(search.toLowerCase()) < formatSymbol(b).toLowerCase().indexOf(search.toLowerCase())) {
+                        return -1;
+                    } else {
+                        if (formatSymbol(a) > formatSymbol(b)) return 1;
+                        else return -1;
+                    }
+                });
         }
         return orderBy(data, [filter.current.field], [filter.current.direction]).filter(((item, index) => {
             if (tab.active === TABS.FAVOURITE) {
@@ -236,8 +254,9 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
     }, [tab, data, search])
 
     const dataSource = useMemo(() => {
-        return orderBy(dataFilter, [sort.field], [sort.direction])
+        return searching.current ? dataFilter : orderBy(dataFilter, [sort.field], [sort.direction]);
     }, [sort, dataFilter])
+
 
     const onChangeTab = (t) => {
         switch (t) {
