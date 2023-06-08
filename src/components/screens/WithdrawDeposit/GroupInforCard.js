@@ -95,13 +95,13 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                 <div className="flex justify-between items-center mb-4">
                                     <div className="txtPri-1 ">{t(`dw_partner:${otherMode}`)}</div>
 
-                                    {((side === SIDE.BUY && mode === MODE.USER && !isHiddenBankInformation) ||
-                                        (side === SIDE.SELL && mode === MODE.PARTNER)) && (
-                                        <ButtonV2 onClick={setModalQr} className="!py-0 flex ml-auto items-center gap-x-2 w-auto" variants="text">
-                                            <QrCodeScannIcon />
-                                            QR Code
-                                        </ButtonV2>
-                                    )}
+                                    {!isHiddenBankInformation &&
+                                        ((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
+                                            <ButtonV2 onClick={setModalQr} className="!py-0 flex ml-auto items-center gap-x-2 w-auto" variants="text">
+                                                <QrCodeScannIcon />
+                                                QR Code
+                                            </ButtonV2>
+                                        )}
                                 </div>
                                 <div className="w-full flex flex-col items-center text-center ">
                                     {!orderDetail ? (
