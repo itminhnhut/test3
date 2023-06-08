@@ -373,7 +373,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
 
     return (
         <div className="w-full h-full pt-20 pb-[120px] px-4">
-            <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full space-y-12">
+            <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full">
                 <DetailOrderHeader
                     status={status}
                     refetchOrderDetail={() => {
@@ -385,45 +385,41 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     side={side}
                     mode={mode}
                 />
-
-                <div className="space-y-6">
-                    <GroupInforCard
-                        isDark={isDark}
-                        isHiddenBankInformation={isRejectedOrNotAccept}
-                        mode={mode}
-                        assetCode={assetCode}
-                        orderDetail={state.orderDetail}
-                        side={side}
-                        setModalQr={() => setState({ isShowQr: true })}
-                    />
-                    {/* Lưu ý */}
-                    {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) &&
-                        status.status !== PartnerOrderStatus.REJECTED && (
-                            <div className="w-full rounded-md border border-divider dark:border-0 dark:bg-darkBlue-3 py-4 px-6">
-                                <DarkNote title={t('wallet:note')} />
-                                <div className="txtSecond-2 mt-2">
-                                    {status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? (
-                                        t('dw_partner:note_waiting_confirm')
-                                    ) : (
-                                        <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />
-                                    )}
-                                </div>
-                            </div>
-                        )}
-                    {((side === SIDE.SELL && mode === MODE.USER) || (side === SIDE.BUY && mode === MODE.PARTNER)) &&
-                        status?.status === PartnerOrderStatus.DISPUTED && (
-                            <div className="w-full rounded-md border border-divider dark:border-0 dark:bg-darkBlue-3 py-4 px-6">
-                                <DarkNote title={t('wallet:note')} />
-                                <div className="txtSecond-2 mt-2">{t('dw_partner:note_complete_dispute')}</div>
-                            </div>
-                        )}
-                </div>
+                <GroupInforCard
+                    isDark={isDark}
+                    isHiddenBankInformation={isRejectedOrNotAccept}
+                    mode={mode}
+                    assetCode={assetCode}
+                    orderDetail={state.orderDetail}
+                    side={side}
+                    setModalQr={() => setState({ isShowQr: true })}
+                />
+                {/* Lưu ý */}
+                {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
+                    <div className="w-full rounded-md border border-divider dark:border-0 dark:bg-darkBlue-3 py-4 px-6">
+                        <DarkNote title={t('wallet:note')} />
+                        <div className="txtSecond-2 mt-2">
+                            {status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? (
+                                t('dw_partner:note_waiting_confirm')
+                            ) : (
+                                <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />
+                            )}
+                        </div>
+                    </div>
+                )}
+                {((side === SIDE.SELL && mode === MODE.USER) || (side === SIDE.BUY && mode === MODE.PARTNER)) &&
+                    status?.status === PartnerOrderStatus.DISPUTED && (
+                        <div className="w-full rounded-md border border-divider dark:border-0 dark:bg-darkBlue-3 py-4 px-6">
+                            <DarkNote title={t('wallet:note')} />
+                            <div className="txtSecond-2 mt-2">{t('dw_partner:note_complete_dispute')}</div>
+                        </div>
+                    )}
 
                 <DetailLog orderDetail={state.orderDetail} mode={mode} onShowProof={() => setState({ isShowProof: true })} />
 
                 {/* Actions */}
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-8">
                     {renderButton()}
 
                     <div className="flex justify-end ">

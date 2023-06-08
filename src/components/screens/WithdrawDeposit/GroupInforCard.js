@@ -31,7 +31,7 @@ const RENDER_INFORMATION = [
         icon: <BxsUserCircle color="currentColor" size={16} />,
         mode: [MODE.PARTNER],
         render: ({ data }) => data || null
-    },
+    }
     // {
     //     key: 'analyticMetadata.count',
     //     icon: <OrderIcon color="currentColor" size={16} />,
@@ -42,36 +42,12 @@ const RENDER_INFORMATION = [
     //         </>
     //     )
     // },
-    {
-        key: 'analyticMetadata.avgTime',
-        icon: <TimerIcon color="currentColor" size={16} />,
-        mode: [MODE.USER],
-        render: ({ t, data, totalOrder }) => (totalOrder > 0 ? formatTimePartner(t, data) : null)
-    }
-];
-
-const DETAIL_PAYMENT_INFORMATION = [
-    {
-        title: 'dw_partner:bank',
-        copyText: 'transferMetadata.bankName'
-    },
-    {
-        title: 'wallet:account_number',
-        copyText: 'transferMetadata.accountNumber'
-    },
-    {
-        title: 'dw_partner:beneficiary',
-        copyText: 'transferMetadata.accountName'
-    },
-    {
-        title: 'common:amount',
-        copyText: 'quoteQty',
-        showingText: (data) => `${formatBalance(data, 0)} VND`
-    },
-    {
-        title: 'dw_partner:transfer_description',
-        copyText: 'transferMetadata.note'
-    }
+    // {
+    //     key: 'analyticMetadata.avgTime',
+    //     icon: <TimerIcon color="currentColor" size={16} />,
+    //     mode: [MODE.USER],
+    //     render: ({ t, data, totalOrder }) => (totalOrder > 0 ? formatTimePartner(t, data) : null)
+    // }
 ];
 
 const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDark, isHiddenBankInformation }) => {
@@ -83,7 +59,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
     } = useTranslation();
 
     return (
-        <div className="">
+        <div className="mb-12">
             <h1 className="text-[18px] font-semibold mb-6">{t('dw_partner:transaction_bank_receipt')}</h1>
 
             <div className="mb-6">
@@ -145,7 +121,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                     {/* Thông tin chuyển khoản */}
                     <div className="w-full md:w-3/5 p-3">
                         <div className="flex flex-col min-h-full">
-                            <div className="flex-1 flex flex-col overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6">
+                            <div className="flex-1 flex flex-col justify-between overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6">
                                 <div className="flex justify-between mb-4 items-center">
                                     <div className="txtPri-1">{t('dw_partner:payment_method')}</div>
                                 </div>
@@ -154,29 +130,11 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                 {isHiddenBankInformation ? (
                                     <div className="flex flex-col w-full flex-1 justify-center items-center">
                                         <div>{isDark ? <NoDataDarkIcon /> : <NoDataLightIcon />}</div>
-                                        <div className="txtSecond-2">{t('dw_partner:only_show_when_confirm')}</div>
+                                        <div className="txtSecond-2">Chỉ hiển thị khi đối tác xác nhận lệnh</div>
                                     </div>
                                 ) : (
                                     <div className="flex flex-col gap-y-4">
-                                        {DETAIL_PAYMENT_INFORMATION.map((detail) => {
-                                            const fullContent = get(orderDetail, detail.copyText);
-
-                                            return (
-                                                <div className="flex items-center justify-between">
-                                                    <span className="txtSecond-2">{t(detail.title)}</span>
-                                                    {!orderDetail ? (
-                                                        <Skeletor width="100px" />
-                                                    ) : (
-                                                        <TextCopyable
-                                                            className="gap-x-1 txtPri-1 text-right"
-                                                            text={fullContent}
-                                                            showingText={detail?.showingText && detail?.showingText(fullContent)}
-                                                        />
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                        {/* <div className="flex items-center justify-between">
+                                        <div className="flex items-center justify-between">
                                             <span className="txtSecond-2">{t('dw_partner:transfer_description')}</span>
                                             {!orderDetail ? (
                                                 <Skeletor width="100px" />
@@ -219,7 +177,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                                     text={orderDetail?.quoteQty}
                                                 />
                                             )}
-                                        </div> */}
+                                        </div>
                                     </div>
                                 )}
                             </div>

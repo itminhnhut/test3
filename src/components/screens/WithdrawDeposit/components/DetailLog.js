@@ -49,8 +49,8 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
     const lastIndexUploadType = logs.map((log) => log.type).lastIndexOf(PartnerOrderLog.UPLOADED);
 
     return logs && logs.length ? (
-        <div className="space-y-6">
-            <div className="text-[18px] font-semibold">{t('common:global_label.history')}</div>
+        <div className="mt-12">
+            <div className="text-[18px] font-semibold mb-6">{t('common:global_label.history')}</div>
             <div className="dark:bg-darkBlue-3 border-divider border dark:border-0 bg-bgPrimary rounded-xl p-6 space-y-4 ">
                 {logs.map((log, logIndex, originArr) => {
                     let contentLog = '',
