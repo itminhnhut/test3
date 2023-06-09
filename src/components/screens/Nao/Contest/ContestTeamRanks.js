@@ -50,7 +50,7 @@ const ContestTeamRanks = ({
     const { width } = useWindowSize();
     const [dataSource, setDataSource] = useState([]);
     const [top3, setTop3] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
@@ -128,9 +128,9 @@ const ContestTeamRanks = ({
     const renderTeam = (data, item) => {
         return (
             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
+                <div className="w-6 h-6 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
-                        className="object-cover rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
+                        className="object-cover rounded-[50%] min-w-[1.5rem] min-h-[1.5rem] max-w-[1.5rem] max-h-[1.5rem]"
                         src={item?.avatar}
                         width="32"
                         height="32"
@@ -169,7 +169,7 @@ const ContestTeamRanks = ({
         );
     };
     return (
-        <section className="contest_individual_ranks pt-8">
+        <section className="contest_individual_ranks py-6 sm:pb-14">
             {minVolumeTeam && (
                 <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-team-rank">
                     <div
@@ -226,7 +226,7 @@ const ContestTeamRanks = ({
             {hasTabCurrency && (
                 <TabsNao>
                     {currencies.map((rs) => (
-                        <TabItemNao onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
+                        <TabItemNao key={rs.value} onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
                             {rs.label}
                         </TabItemNao>
                     ))}
@@ -235,17 +235,16 @@ const ContestTeamRanks = ({
             {top3.length > 0 && (
                 <div className="flex flex-wrap gap-3 sm:gap-6 sm:mt-6 mt-8 text-sm sm:text-base">
                     {top3.map((item, index) => (
-                        <CardNao key={index} className="!p-4 sm:!p-5">
-                            <div className="flex items-center justify-between flex-1 gap-5">
+                        <CardNao key={index} className="!p-4 sm:!p-5 ">
+                            <div className="flex items-center justify-between gap-2">
                                 <div className="flex items-center space-x-4">
                                     <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
                                         <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
                                     </div>
-                                    <div className="space-y-1 flex flex-col">
+                                    <div className="space-y-1 flex flex-col" style={{ wordBreak: 'break-word' }}>
                                         <div className="flex items-center gap-2 font-semibold capitalize">
                                             <span>{capitalize(item?.name)}</span>
                                             {item?.is_group_master && <TickFbIcon size={18} />}
-                                            {/* {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />} */}
                                         </div>
                                         <span className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer capitalize">
                                             {capitalize(item?.leader_name)}
@@ -257,10 +256,10 @@ const ContestTeamRanks = ({
                             <div className="h-8"></div>
                             <div className="rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
-                                    <span className="font-semibold">
-                                        {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                    </span>
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                        {t('nao:contest:volume')} ({quoteAsset})
+                                    </div>
+                                    <span className="font-semibold">{formatNumber(item?.total_volume, 0)}</span>
                                 </div>
                                 {tab === 'pnl' ? (
                                     <div className="flex items-center justify-between gap-2 mt-2 sm:mt-4">
@@ -333,10 +332,10 @@ const ContestTeamRanks = ({
                                                 <span className="text-right font-semibold capitalize">{capitalize(item?.leader_name)}</span>
                                             </div>
                                             <div className="flex items-center justify-between pt-3">
-                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
-                                                <span className="text-right font-semibold">
-                                                    {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                                </span>
+                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                    {t('nao:contest:volume')} ({quoteAsset})
+                                                </label>
+                                                <span className="text-right font-semibold">{formatNumber(item?.total_volume, 0)}</span>
                                             </div>
                                             <div className="flex items-center justify-between pt-3">
                                                 <label className="text-txtSecondary dark:text-txtSecondary-dark">
@@ -374,7 +373,7 @@ const ContestTeamRanks = ({
                     </div>
                 </>
             ) : (
-                <div className="dark:bg-dark-4 rounded-xl">
+                <div className="dark:bg-dark-4 bg-white rounded-xl">
                     <Table
                         loading={loading}
                         noItemsMessage={t('nao:contest:no_rank')}
@@ -388,7 +387,7 @@ const ContestTeamRanks = ({
                             fieldName={rank}
                             cellRender={renderRank}
                         />
-                        <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
+                        <Column minWidth={280} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                         <Column
                             minWidth={150}
                             className="text-txtPrimary dark:text-txtPrimary-dark capitalize"

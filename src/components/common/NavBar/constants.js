@@ -110,20 +110,28 @@ export const NAV_DATA = [
             }
         ]
     },
-    {
-        key: 3,
-        title: 'Nami.Today',
-        localized: 'today',
-        isNew: false,
-        url: 'https://nami.today/',
-        child_lv1: []
-    },
+    // {
+    //     key: 3,
+    //     title: 'Nami.Today',
+    //     localized: 'today',
+    //     isNew: false,
+    //     url: 'https://nami.today/',
+    //     child_lv1: []
+    // },
     {
         key: 4,
         title: 'Support Center',
         localized: 'support_center',
         isNew: false,
         url: '/support',
+        child_lv1: []
+    },
+    {
+        key: 'top_referral',
+        title: 'Top Referral',
+        localized: 'top_referral',
+        isNew: false,
+        url: '/contest/referral',
         child_lv1: []
     }
 ];
@@ -158,6 +166,15 @@ export const MOBILE_NAV_DATA = [
                 localized: 'profile_referral',
                 isNew: true,
                 url: '/reference',
+                child_lv1: []
+            },
+            {
+                key: 'futures_portfolio',
+                title: 'futures_portfolio',
+                localized: 'futures_portfolio',
+                // hide: true,
+                isNew: true,
+                url: PATHS?.FUTURES_PORTFOLIO,
                 child_lv1: []
             },
             {
@@ -307,15 +324,15 @@ export const MOBILE_NAV_DATA = [
         ]
     },
 
-    ,
-    {
-        key: 7,
-        title: 'Nami.Today',
-        localized: 'today',
-        isNew: false,
-        url: 'https://nami.today/',
-        child_lv1: []
-    },
+    // ,
+    // {
+    //     key: 7,
+    //     title: 'Nami.Today',
+    //     localized: 'today',
+    //     isNew: false,
+    //     url: 'https://nami.today/',
+    //     child_lv1: []
+    // },
     {
         key: 2,
         title: 'Support Center',
@@ -331,6 +348,14 @@ export const MOBILE_NAV_DATA = [
         localized: 'support',
         isNew: false,
         url: '/',
+        child_lv1: []
+    },
+    {
+        key: 'top_referral',
+        title: 'Top Referral',
+        localized: 'top_referral',
+        isNew: false,
+        url: '/contest/referral',
         child_lv1: []
     }
 ];
@@ -361,6 +386,15 @@ export const USER_CP = [
         // hide: true,
         isNew: true,
         url: '/reference',
+        child_lv1: []
+    },
+    {
+        key: 'futures_portfolio',
+        title: 'futures_portfolio',
+        localized: 'futures_portfolio',
+        // hide: true,
+        isNew: true,
+        url: PATHS?.FUTURES_PORTFOLIO,
         child_lv1: []
     },
     {

@@ -10,7 +10,7 @@ import {
     Tooltip,
     Filler,
     // @ts-ignore
-    Legend,
+    Legend
 } from 'chart.js';
 import { Line, Bar, Doughnut, Bubble } from 'react-chartjs-2';
 
@@ -23,34 +23,43 @@ Chart.register(
     ArcElement,
     Title,
     Tooltip,
-    Filler,
+    Filler
     // Legend
 );
 
-import React, { memo } from 'react'
+import React, { memo } from 'react';
 
 // @ts-ignore
-const ChartJS = memo(({ type, data, height = '100%', width = '100%', plugins, options = {
-    responsive: true,
-    maintainAspectRatio: false,
-} }) => {
-    let chart = <Line options={options} data={data} width={width} height={height} />
-    switch (type) {
-        case 'area':
-            chart = <Line options={options} data={data} width={width} height={height} />
-            break
-        case 'bar':
-            chart = <Bar options={options} data={data} width={width} height={height} />
-            break
-        case 'doughnut':
-            chart = <Doughnut options={options} data={data} width={width} height={height} plugins={plugins} redraw={true}/>
-            break
-        case 'bubble':
-            chart = <Bubble options={options} data={data} width={width} height={height} />
-            break
+const ChartJS = memo(
+    ({
+        type,
+        data,
+        height = '100%',
+        width = '100%',
+        plugins,
+        options = {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    }) => {
+        let chart = <Line options={options} data={data} width={width} height={height} />;
+        switch (type) {
+            case 'area':
+                chart = <Line options={options} data={data} width={width} height={height} />;
+                break;
+            case 'bar':
+                chart = <Bar options={options} data={data} width={width} height={height} plugins={plugins} redraw={true} />;
+                break;
+            case 'doughnut':
+                chart = <Doughnut options={options} data={data} width={width} height={height} plugins={plugins} redraw={true} />;
+                break;
+            case 'bubble':
+                chart = <Bubble options={options} data={data} width={width} height={height} />;
+                break;
+        }
+
+        return chart;
     }
+);
 
-    return chart
-})
-
-export default ChartJS
+export default ChartJS;

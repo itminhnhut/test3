@@ -104,6 +104,8 @@ const TradingFee = () => {
     useEffect(handleHideScrollBar, []);
     // Helper
 
+    console.log(state.futuresFeeConfig?.filter((rs) => String(rs.name).includes('NAMI')));
+
     const getVip = async () => {
         setState({ loadingVipLevel: true });
         try {

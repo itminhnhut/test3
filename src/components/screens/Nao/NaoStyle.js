@@ -13,6 +13,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import CheckCircle from 'components/svg/CheckCircle';
 import CrossCircle from 'components/svg/CrossCircle';
 import { WarningFilledIcon, RemoveCircleIcon } from 'components/svg/SvgIcon';
+import { IconArrowOnus } from 'components/common/Icons';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-xl sm:text-2xl font-semibold w-max text-txtPrimary dark:text-txtPrimary-dark'
@@ -26,7 +27,7 @@ export const TextLiner = styled.div.attrs({
 
 export const CardNao = styled.div.attrs(({ noBg, customHeight, bgCorner, bgStake }) => ({
     className: classNames(
-        `p-6 sm:px-10 sm:py-9 rounded-xl min-w-full sm:min-w-[372px] ${
+        `p-6 sm:px-10 sm:py-9 rounded-xl w-full min-w-full sm:min-w-[320px] ${
             customHeight ? customHeight : 'sm:min-h-[180px]'
         } flex flex-col justify-between flex-1 relative`,
         // { 'border-dashed border-[0.5px] border-[#7686B1]': noBg },
@@ -59,15 +60,12 @@ export const ButtonNaoVariants = {
     DANGER: 'DANGER'
 };
 export const ButtonNao = styled.div.attrs(({ disabled, variant, active = true }) => ({
-    className: classNames(
-        'text-center text-sm sm:text-base px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer py-[10px] sm:py-3',
-        {
-            'bg-bgBtnPrimary text-txtBtnPrimary': active && (!variant || variant === ButtonNaoVariants.PRIMARY), // default theme is primary
-            'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': variant === ButtonNaoVariants.SECONDARY || active === false,
-            'bg-red-2 text-white': variant === ButtonNaoVariants.DANGER,
-            '!bg-gray-12 dark:!bg-dark-2 text-txtDisabled dark:text-txtDisabled-dark': disabled
-        }
-    )
+    className: classNames('text-center text-sm sm:text-base px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer py-3', {
+        'bg-bgBtnPrimary text-txtBtnPrimary': active && (!variant || variant === ButtonNaoVariants.PRIMARY), // default theme is primary
+        'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': variant === ButtonNaoVariants.SECONDARY || active === false,
+        'bg-red-2 text-white': variant === ButtonNaoVariants.DANGER,
+        '!bg-gray-12 dark:!bg-dark-2 text-txtDisabled dark:text-txtDisabled-dark': disabled
+    })
 }))``;
 
 export const BackgroundHeader = styled.div.attrs({
@@ -114,7 +112,7 @@ export const Column = ({ title, maxWidth, minWidth, width, sortable, align = 'le
     );
 };
 
-export const Table = ({ dataSource, children, classHeader = '', onRowClick, noItemsMessage, loading = false, classWrapper = '' }) => {
+export const Table = ({ dataSource, children, classHeader = '', onRowClick, noItemsMessage, loading = false, classWrapper = '', limit = 10 }) => {
     const mouseDown = useRef(false);
     const startX = useRef(null);
     const scrollLeft = useRef(null);
@@ -195,8 +193,19 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
             }
         };
     }, [content.current]);
+
+    const loader = useMemo(() => {
+        const arr = [];
+        for (let i = 1; i <= limit; i++) {
+            arr.push(i);
+        }
+        return arr;
+    }, [limit]);
+
     const isScroll = checkScrollBar(content.current, 'vertical');
     const _children = Children.toArray(children.filter((child) => child.props?.visible === true || child.props?.visible === undefined));
+    const _dataSource = loading ? loader : dataSource;
+
     return (
         <CardNao id="nao-table" className={classNames('mt-6 !p-0 !justify-start', classWrapper)}>
             <div ref={content} className={classNames('overflow-auto nao-table-content min-h-[200px]')}>
@@ -214,7 +223,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                             key={indx}
                             {...item.props}
                             classHeader={classNames(
-                                'whitespace-nowrap mx-2 min-h-[10px]',
+                                'whitespace-nowrap mx-2 min-h-[10px] text-sm',
                                 { 'flex-1': indx !== 0 },
                                 { 'ml-0': indx === 0 },
                                 { 'mr-0': indx === _children.length - 1 }
@@ -223,12 +232,12 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                     ))}
                 </div>
                 <div
-                    className={classNames(' mt-3 overflow-none', {
+                    className={classNames(' my-3 overflow-none', {
                         'pr-[10px]': isScroll
                     })}
                 >
-                    {Array.isArray(dataSource) && dataSource?.length > 0 ? (
-                        dataSource.map((item, index) => {
+                    {Array.isArray(_dataSource) && _dataSource?.length > 0 ? (
+                        _dataSource.map((item, index) => {
                             return (
                                 <div
                                     onClick={() => _onRowClick(item, index)}
@@ -295,7 +304,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                             <div className="hidden dark:block">
                                 <NoDataDarkIcon />
                             </div>
-                            <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1">
+                            <div className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark mt-1">
                                 {noItemsMessage ? noItemsMessage : t('common:no_data')}
                             </div>
                         </div>
@@ -311,8 +320,12 @@ export const getColor = (value) => {
 };
 
 export const renderPnl = (data, item) => {
-    const prefix = !!data && data > 0 ? '+' : '';
-    return <div className={`${getColor(data)}`}>{prefix + formatNumber(data, 2, 0, true)}%</div>;
+    return (
+        <div className={classNames('flex items-center', getColor(data))}>
+            <IconArrowOnus className={classNames('w-[7px] mr-1.5', data > 0 ? '' : 'rotate-180')} color="currentColor" />
+            {Math.abs(+data).toFixed(2)} %
+        </div>
+    );
 };
 
 export const useOutside = (ref, cb, container) => {
@@ -469,7 +482,7 @@ export const ImageNao = ({ src, fallBack, ...props }) => {
 };
 
 export const TabsNao = styled.div.attrs({
-    className: 'flex items-center space-x-4 relative mt-4'
+    className: 'flex items-center space-x-4 relative mt-6 sm:mt-8'
 })`
     /* &::after {
         content: '';
@@ -483,11 +496,10 @@ export const TabsNao = styled.div.attrs({
 
 export const TabItemNao = styled.div.attrs(({ active }) => ({
     className: classNames('py-2 px-5 cursor-pointer relative rounded-3xl border', {
-        '!border-teal text-teal': active,
+        '!border-teal text-teal font-semibold': active,
         ' border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark': !active
     })
 }))`
-    font-weight: 600;
     /* &::after {
         display: ${({ active }) => (active ? 'block' : 'none')};
         content: '';

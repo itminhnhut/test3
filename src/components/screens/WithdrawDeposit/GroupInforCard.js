@@ -29,7 +29,7 @@ const RENDER_INFORMATION = [
         icon: <BxsUserCircle color="currentColor" size={16} />,
         mode: [MODE.PARTNER],
         render: ({ data }) => data || null
-    },
+    }
     // {
     //     key: 'analyticMetadata.count',
     //     icon: <OrderIcon color="currentColor" size={16} />,
@@ -59,11 +59,10 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, mode = MODE.USE
     return (
         <div className="mb-12">
             <h1 className="text-[18px] font-semibold mb-6">{t('dw_partner:transaction_bank_receipt')}</h1>
-            {/* Không hiển thị thông tin lệnh đôi với màn USER - BUY khi đối tác chưa accept */}
-            {mode === MODE.USER &&
-            side === SIDE.BUY &&
-            status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING &&
-            status?.status === PartnerOrderStatus.PENDING ? null : (
+            {/* Không hiển thị thông tin lệnh đôi với side BUY. Với điều kiện: */}
+            {side === SIDE.BUY &&
+            // lệnh huỷ hoặc đối tác chưa accept
+            (status?.status === PartnerOrderStatus.REJECTED || status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING) ? null : (
                 <div className="mb-6">
                     <div className="flex -m-3 flex-wrap items-stretch">
                         {/* Chi tiết giao dịch */}
@@ -84,7 +83,10 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, mode = MODE.USE
                                         {!orderDetail ? (
                                             <Skeletor circle width={80} height={80} />
                                         ) : (
-                                            <img src={orderDetail?.[`${otherMode}Metadata`]?.avatar || DefaultAvatar} className="mb-6 object-cover w-20 h-20 rounded-full" />
+                                            <img
+                                                src={orderDetail?.[`${otherMode}Metadata`]?.avatar || DefaultAvatar}
+                                                className="mb-6 object-cover w-20 h-20 rounded-full"
+                                            />
                                         )}
 
                                         <div className="txtPri-1 capitalize font-semibold mb-3">

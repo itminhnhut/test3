@@ -18,17 +18,26 @@ import styled from 'styled-components';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import Image from 'next/image';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
-import SwapWarning from 'components/svg/SwapWarning';
+import useDebounce from 'hooks/useDebounce';
 
 const regex = /^[0-9]*$/; // chỉ cho phép nhập các ký tự từ 0 đến 9 hoặc giá trị rỗng
 
+const initState = {
+    bankNumber: '',
+    isSuccess: false,
+    selectedBank: {},
+    helperTextBankNumber: '',
+    result: { modalShow: false, title: '', msg: '', type: '' }
+};
+
 const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, fetchListUserBank }) => {
-    const [bankNumber, setBankNumber] = useState('');
-    const [selectedBank, setSelectedBank] = useState({});
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState(null);
-    const [helperTextBankNumber, setHelperTextBankNumber] = useState('');
+    const [result, setResult] = useState(initState.result);
+    const [isSuccess, setIsSuccess] = useState(initState.isSuccess);
     const [listBankAvailable, setListBankAvailable] = useState([]);
+    const [bankNumber, setBankNumber] = useState(initState.bankNumber);
+    const [selectedBank, setSelectedBank] = useState(initState.selectedBank);
+    const [helperTextBankNumber, setHelperTextBankNumber] = useState(initState.helperTextBankNumber);
 
     useEffect(() => {
         fetchAPI({
@@ -45,57 +54,66 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
             .finally(() => {});
     }, []);
 
-    const handleBtnAdd = () => {
-        setLoading(true);
+    useEffect(() => {
+        if (!isSuccess) return;
+        onBackdropCb();
+        const timer = setTimeout(() => {
+            setResult((prev) => ({
+                ...prev,
+                type: 'success',
+                title: t('common:success'),
+                modalShow: true
+            }));
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [isSuccess]);
 
-        fetchAPI({
-            url: API_ADD_USER_BANK_ACCOUNT,
-            options: {
-                method: 'POST'
-            },
-            params: {
-                bankCode: selectedBank?.bank_code,
-                accountNumber: bankNumber
-            }
-        })
-            .then(({ status, data }) => {
-                let isSuccess = status === ApiStatus.SUCCESS;
-                setResult({
-                    isSuccess,
-                    msg: isSuccess ? '' : t('payment-method:bank_account_not_found')
-                });
-                if (isSuccess) fetchListUserBank();
-            })
-            .catch((e) => {
-                setResult({
-                    isSuccess: false,
-                    msg: t('error:COMMON_ERROR')
-                });
-            })
-            .finally(() => {
-                setLoading(false);
+    const handleBtnAdd = async () => {
+        try {
+            setLoading(true);
+            const { status, data } = await fetchAPI({
+                url: API_ADD_USER_BANK_ACCOUNT,
+                options: {
+                    method: 'POST'
+                },
+                params: {
+                    bankCode: selectedBank?.bank_code,
+                    accountNumber: bankNumber
+                }
             });
+            const isSuccess = status === ApiStatus.SUCCESS;
+
+            if (isSuccess && data) {
+                fetchListUserBank();
+                setSelectedBank(initState.selectedBank);
+                setBankNumber(initState.bankNumber);
+                setHelperTextBankNumber(initState.helperTextBankNumber);
+                setIsSuccess((prev) => !prev);
+            } else {
+                setResult({
+                    type: 'error',
+                    modalShow: true,
+                    title: t('payment-method:error_add'),
+                    msg: t('payment-method:bank_account_not_found')
+                });
+            }
+        } catch (error) {
+            setResult({
+                modalShow: true,
+                type: 'error',
+                title: t('payment-method:error_add'),
+                msg: t('error:COMMON_ERROR')
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const onCloseAlert = () => {
-        setHelperTextBankNumber('');
-        setResult(null);
+        setResult(initState.result);
+        setIsSuccess(initState.isSuccess);
+        setHelperTextBankNumber(initState.helperTextBankNumber);
     };
-
-    const renderAlertNotification = useCallback(() => {
-        if (!result) return null;
-
-        return (
-            <AlertModalV2
-                isVisible={result}
-                // isVisible={true}
-                onClose={onCloseAlert}
-                type={result.isSuccess ? 'success' : 'error'}
-                title={result.isSuccess ? t('common:success') : t('payment-method:error_add')}
-                message={result.isSuccess ? '' : result.msg}
-            />
-        );
-    }, [result]);
 
     const onBlurInputBankNumber = (e) => {
         if (!bankNumber) {
@@ -117,81 +135,110 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
         }
     };
 
+    const renderAlertNotification = useCallback(() => {
+        return (
+            <AlertModalV2
+                isVisible={result.modalShow}
+                // isVisible={true}
+                onClose={onCloseAlert}
+                type={result.type}
+                title={result.title}
+                message={result.msg}
+            />
+        );
+    }, [result.modalShow]);
+
     return (
-        <ModalV2
-            loading={loading}
-            isVisible={isOpenModalAdd}
-            onBackdropCb={onBackdropCb}
-            className="!max-w-[488px]"
-            wrapClassName="px-0 flex flex-col tracking-normal overflow-auto"
-            btnCloseclassName="px-8"
-        >
-            {/* Title */}
-            <div className="txtPri-3 px-8">{t('payment-method:payment_method_add')}</div>
+        <>
+            <ModalV2
+                loading={loading}
+                isVisible={isOpenModalAdd}
+                onBackdropCb={onBackdropCb}
+                className="!max-w-[488px]"
+                wrapClassName="px-0 flex flex-col tracking-normal overflow-auto"
+                btnCloseclassName="px-8"
+            >
+                {/* Title */}
+                <div className="txtPri-3 px-8">{t('payment-method:payment_method_add')}</div>
 
-            {/* Notice */}
-            <div className="p-4 bg-gray-13 dark:bg-dark-4 flex items-center mt-6 mb-8 gap-x-4">
-                <BxsInfoCircle size={24} color={isDark ? colors.gray[7] : colors.gray[1]} />
-                <div className="text-xs leading-[16px]">{t('payment-method:privacy')}</div>
-            </div>
+                {/* Notice */}
+                <div className="p-4 bg-gray-13 dark:bg-dark-4 flex items-center mt-6 mb-8 gap-x-4">
+                    <BxsInfoCircle size={24} color={isDark ? colors.gray[7] : colors.gray[1]} />
+                    <div className="text-xs leading-[16px]">{t('payment-method:privacy')}</div>
+                </div>
 
-            <div className="px-8 flex flex-col gap-y-4 txtSecond-3">
-                {/* Banner Info */}
-                <div
-                    style={{
-                        backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${isDark ? 'dark' : 'light'}.png`)})`
-                    }}
-                    className="rounded-xl bg-cover bg-center dark:shadow-popover "
-                >
-                    <div className="w-full border p-6 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
-                        {user?.avatar ? (
-                            <img src={user?.avatar} alt="avatar_user" className="rounded-full w-12 h-12 bg-cover" />
-                        ) : (
-                            // <Image width={48} height={48} objectFit="cover" src={user?.avatar} alt="avatar_user" className="rounded-full" />
-                            <BxsUserCircle size={48} />
-                        )}
-                        <div>
-                            <div className="txtPri-1 pl-[1px]">{user?.name ?? '_'}</div>
-                            <div className="mt-1">{t('payment-method:owner_account')}</div>
+                <div className="px-8 flex flex-col gap-y-4 txtSecond-3">
+                    {/* Banner Info */}
+                    <div
+                        style={{
+                            backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${isDark ? 'dark' : 'light'}.png`)})`
+                        }}
+                        className="rounded-xl bg-cover bg-center dark:shadow-popover "
+                    >
+                        <div className="w-full border p-6 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
+                            {user?.avatar ? (
+                                <img src={user?.avatar} alt="avatar_user" className="rounded-full w-12 h-12 bg-cover" />
+                            ) : (
+                                // <Image width={48} height={48} objectFit="cover" src={user?.avatar} alt="avatar_user" className="rounded-full" />
+                                <BxsUserCircle size={48} />
+                            )}
+                            <div>
+                                <div className="txtPri-1 pl-[1px]">{user?.name ?? '_'}</div>
+                                <div className="mt-1">{t('payment-method:owner_account')}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Bank name */}
-                <div className="flex flex-col gap-y-2">
-                    <span className="text-sm">{t('payment-method:bank_name')}</span>
-                    <BankNameInput t={t} listData={listBankAvailable} selected={selectedBank} onChange={(bank) => setSelectedBank(bank)} isDark={isDark} />
+                    {/* Bank name */}
+                    <div className="flex flex-col gap-y-2">
+                        <span className="text-sm">{t('payment-method:bank_name')}</span>
+                        <BankNameInput
+                            t={t}
+                            isDark={isDark}
+                            selected={selectedBank}
+                            isResetSearch={isSuccess}
+                            listData={listBankAvailable}
+                            onChange={(bank) => setSelectedBank(bank)}
+                        />
+                    </div>
+                    {/* Bank number */}
+                    <div className="flex flex-col gap-y-2">
+                        <span className="text-sm">{t('payment-method:account_number')}</span>
+                        <InputV2
+                            // type="number"
+                            allowClear
+                            className="!pb-0"
+                            value={bankNumber}
+                            error={helperTextBankNumber}
+                            onBlur={onBlurInputBankNumber}
+                            onFocus={() => setHelperTextBankNumber('')}
+                            onChange={(value) => onChangeBankNumber(value)}
+                            placeholder={t('payment-method:input_bank_account')}
+                        />
+                    </div>
                 </div>
-                {/* Bank number */}
-                <div className="flex flex-col gap-y-2">
-                    <span className="text-sm">{t('payment-method:account_number')}</span>
-                    <InputV2
-                        // type="number"
-                        className="!pb-0"
-                        value={bankNumber}
-                        onChange={(value) => onChangeBankNumber(value)}
-                        placeholder={t('payment-method:input_bank_account')}
-                        allowClear
-                        onBlur={onBlurInputBankNumber}
-                        error={helperTextBankNumber}
-                        onFocus={() => setHelperTextBankNumber('')}
-                    />
-                </div>
-            </div>
-            {/* Button action */}
-            <ButtonV2 disabled={!bankNumber || !selectedBank?.bank_code} loading={loading} className="mx-8 mt-10 w-auto" onClick={handleBtnAdd}>
-                {t('payment-method:add')}
-            </ButtonV2>
-
+                {/* Button action */}
+                <ButtonV2 disabled={!bankNumber || !selectedBank?.bank_code} loading={loading} className="mx-8 mt-10 w-auto" onClick={handleBtnAdd}>
+                    {t('payment-method:add')}
+                </ButtonV2>
+            </ModalV2>
             {renderAlertNotification()}
-        </ModalV2>
+        </>
     );
 };
 
-const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark }) => {
+const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark, isResetSearch }) => {
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
     const [search, setSearch] = useState('');
+    const reboundSearch = useDebounce(search, 300);
+
+    useEffect(() => {
+        if (isResetSearch.current) {
+            setSearch('');
+            isResetSearch.current = false;
+        }
+    }, [isResetSearch.current]);
 
     useOutsideClick(ref, () => {
         setOpen(false);
@@ -200,11 +247,14 @@ const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark }) =>
     const [listItems, setListItems] = useState([]);
 
     useEffect(() => {
-        if (!search && listData?.length === 0) setListItems([]);
-        else {
-            setListItems(listData.filter((eachData) => eachData.bank_name.toLowerCase().includes(search.toLowerCase())));
+        if (!reboundSearch && listData?.length === 0) {
+            setListItems([]);
+        } else {
+            const bankByName = listData.filter((bank) => bank.bank_name.toLowerCase().includes(reboundSearch.toLowerCase()));
+            const bankByKey = listData.filter((bank) => bank.bank_key.toLowerCase().includes(reboundSearch.toLowerCase()));
+            setListItems([...bankByName, ...bankByKey]);
         }
-    }, [search, listData]);
+    }, [reboundSearch, listData]);
 
     const internalOnChange = (bank) => {
         if (isFunction(onChange)) onChange(bank);
@@ -251,11 +301,11 @@ const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark }) =>
                         />
                     </div>
                     <ul className="mt-6 max-h-[200px] overflow-y-auto">
-                        {listItems?.length ? (
-                            listItems.map((item) => (
+                        {listItems?.length > 0 ? (
+                            listItems.map((item, key) => (
                                 <li
                                     className="cursor-pointer flex items-center justify-between py-3 px-4 mt-3 first:mt-0 hover:bg-hover dark:hover:bg-hover-dark transition"
-                                    key={item?.bank_code}
+                                    key={`${item?.bank_code}_${item?.bank_key}_${key}`}
                                     onClick={() => internalOnChange(item)}
                                 >
                                     <div className={`flex items-center gap-x-3`}>
@@ -281,7 +331,7 @@ const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark }) =>
 };
 
 const BankList = styled.div.attrs(({ ref }) => ({
-    className: `transition absolute right-0 bottom-full py-4 mb-2 w-full max-h-[292px] z-20 rounded-xl 
+    className: `transition absolute right-0 bottom-full py-4 mb-2 w-full max-h-[292px] z-20 rounded-xl
     border border-divider dark:border-divider-dark bg-white dark:bg-dark-4
     shadow-card_light dark:shadow-popover`,
     ref: ref

@@ -16,7 +16,8 @@ import {
     BxsGift as daily_reward,
     BxsLogoutCircle as logout,
     PartnerIcon as partner,
-    FutureInsurance as nami_insurance
+    FutureInsurance as nami_insurance,
+    PortfolioIconNoColor as futures_portfolio
 } from '../../svg/SvgIcon';
 
 export default {
@@ -37,5 +38,6 @@ export default {
     logout,
     partner,
     payment_method,
-    nami_insurance
+    nami_insurance,
+    futures_portfolio
 };

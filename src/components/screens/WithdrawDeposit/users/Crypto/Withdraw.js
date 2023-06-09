@@ -21,7 +21,7 @@ import Countdown from 'react-countdown-now';
 import CustomOtpInput from '../../components/CustomOtpInput';
 import { MODE_OTP } from 'constants/constants';
 import FetchApi from 'utils/fetch-api';
-import { ApiStatus, WithdrawResult } from 'redux/actions/const';
+import { ApiStatus, UserSocketEvent, WithdrawResult } from 'redux/actions/const';
 import { API_WITHDRAW_V4 } from 'redux/actions/apis';
 import { isObject } from 'lodash';
 
@@ -30,7 +30,7 @@ const errorMessageMapper = (t, error, data) => {
         case WITHDRAW_RESULT.MissingOtp:
             return t('wallet:withdraw_prompt.input_otp_suggest');
         case WITHDRAW_RESULT.InvalidOtp:
-            return t('wallet:errors.wrong_otp');
+            return t('common:otp_verify_expired');
         case WITHDRAW_RESULT.NotEnoughBalance:
             return t('error:BALANCE_NOT_ENOUGH');
         case WITHDRAW_RESULT.UnsupportedAddress:
@@ -49,7 +49,7 @@ const errorMessageMapper = (t, error, data) => {
         case WITHDRAW_RESULT.SOTP_INVALID:
             return t('dw_partner:error.invalid_smart_otp', { timesErr: data?.count ?? 1 });
         case WITHDRAW_RESULT.SECRET_INVALID:
-            return t('dw_partner:error.invalid_secret')
+            return t('dw_partner:error.invalid_secret', {timesErr: data?.count ?? 1})
         case WITHDRAW_RESULT.Unknown:
         default:
             return t('error:UNKNOWN_ERROR');
@@ -73,17 +73,32 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
     const [otpMode, setOtpMode] = useState(MODE_OTP.EMAIL);
     const [expiredTime, setExpiredTime] = useState(0);
     const [showAlertDisableSmartOtp, setShowAlertDisableSmartOtp] = useState(false)
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     let auth = useSelector((state) => state.auth) || null;
+    // const userSocket = useSelector((state) => state.socket.userSocket);
+
+    // useEffect(() => {
+    //     if (userSocket) {
+    //         userSocket.on(UserSocketEvent.SMART_OTP, (data) => {
+    //             // make sure the socket displayingId is the current details/[id] page
+    //             console.log("_____data: ", data);
+    //             if(data === WITHDRAW_RESULT.PIN_INVALID_EXCEED_TIME) {
+    //                 console.log("____PIN_INVALID_EXCEED_TIME");
+    //             }
+    //         });
+    //     }
+    //     return () => {
+    //         if (userSocket) {
+    //             userSocket.removeListener(UserSocketEvent.SMART_OTP, (data) => {
+    //                 console.log('socket removeListener SMART_OTP:', data);
+    //             });
+    //         }
+    //     };
+    // }, [userSocket]);
 
     const onClose = () => {
         closeModal();
         setPhase(PHASE_CONFIRM.INFO);
-    };
-
-    const postData = async (otp) => {
-        const result = await withdrawHelper(selectedAsset?.assetId ?? '72', amount ?? 0, selectedNetwork?.network ?? 'ETH', address ?? '', memo, otp);
-        return result;
     };
 
     const alertErr = (errStatus, dataErr) => {
@@ -110,7 +125,8 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
                     network: selectedNetwork?.network,
                     withdrawTo: address,
                     tag: memo,
-                    otp
+                    otp,
+                    locale: language
                 }
             })
 
@@ -126,10 +142,14 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
                     setOtpMode(MODE_OTP.EMAIL);
                 } else {
                     setShowAlert(true);
-                    if (onClose) onClose();
+                    // if (onClose) onClose();
                 }
             } else if(status === WITHDRAW_RESULT.EXCEEDED_SMART_OTP) {
                 setShowAlertDisableSmartOtp(true)
+            } else if(status === WITHDRAW_RESULT.TOO_MUCH_REQUEST) {
+                setExpiredTime(Date.now() + data.remaining_time);
+                setPhase(PHASE_CONFIRM.OTP);
+                setOtpMode(MODE_OTP.EMAIL);
             } else if (status === ApiStatus.ERROR) {
                 if(!isObject(res.data)) alertErr(res?.data)
                 else alertErr()
@@ -146,7 +166,7 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
         <>
             <AlertModalV2
                 isVisible={showAlert}
-                onClose={() => setShowAlert(false)}
+                onClose={() => {setShowAlert(false); setTimeout(onClose, 200);}}
                 type="success"
                 title={t('wallet:withdraw_prompt:title_success')}
                 message={t('wallet:withdraw_prompt:desc_success')}
@@ -238,7 +258,11 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
             </ModalV2>
             <AlertModalV2
                 isVisible={showAlertDisableSmartOtp}
-                onClose={() => setShowAlertDisableSmartOtp(false)}
+                onClose={() => {
+                    setShowAlertDisableSmartOtp(false);
+                    setTimeout(onClose, 150);
+                    // setPhase(PHASE_CONFIRM.INFO);
+                }}
                 textButton={t('dw_partner:verify_by_email')}
                 onConfirm={() => {
                     handlePostOrder(null);

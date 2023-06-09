@@ -12,9 +12,10 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 const KIND = {
-    Spot: { vi: 'KL Spot', en: 'Spot Volume' },
-    Futures: { vi: 'KL Futures', en: 'Futures Volume' },
-    Staking: { vi: 'KL Daily Staking', en: 'Daily Staking Vol' }
+    Spot: { vi: 'KL Nami Spot', en: 'Nami Spot Vol' },
+    Futures: { vi: 'KL Nami Futures', en: 'Nami Futures Vol' },
+    Staking: { vi: 'KL Nami Daily Staking', en: 'Nami Daily Staking Vol' },
+    nao_futures: { vi: 'KL NAO Futures', en: 'NAO Futures Vol' }
 };
 
 const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onChangeOption, defaultOption, t, language, assetConfig }) => {
@@ -104,6 +105,10 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                 <div className="flex flex-row justify-between mb-4 last:mb-0">
                     <div className="text-gray-1 dark:text-gray-7">{KIND['Staking']?.[language]}</div>
                     <div className="font-semibold">{handleTotal(valueOrderVol, totalOrderVol?.staking)}</div>
+                </div>
+                <div className="flex flex-row justify-between mb-4 last:mb-0">
+                    <div className="text-gray-1 dark:text-gray-7">{KIND['nao_futures']?.[language]}</div>
+                    <div className="font-semibold">{handleTotal(valueOrderVol, totalOrderVol?.nao_futures)}</div>
                 </div>
             </div>
 

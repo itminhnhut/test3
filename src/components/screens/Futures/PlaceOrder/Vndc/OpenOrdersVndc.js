@@ -223,7 +223,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 dataIndex: 'symbol',
                 title: t('common:pair'),
                 align: 'left',
-                width: 224,
+                width: 170,
                 render: (row, item) => {
                     let specialOrder;
                     if (item?.metadata?.dca_order_metadata) {
@@ -256,14 +256,15 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 key: 'pnl',
                 visible: isPosition,
                 title: 'PNL (ROE%)',
-                align: 'right',
+                align: 'left',
                 width: 138,
                 render: (row) => {
                     if (!isPosition) return undefined;
                     const isVndc = row?.symbol.indexOf('VNDC') !== -1;
                     return (
                         <OrderProfit
-                            className="w-full"
+                            className="w-full !text-sm"
+                            percentClassName="!justify-start"
                             key={row.displaying_id}
                             order={row}
                             initPairPrice={marketWatch[row?.symbol]}
@@ -283,10 +284,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 width: 204,
                 render: (row, item) =>
                     item?.order_value ? (
-                        <div
-                            onClick={() => onHandleClick('vol', item)}
-                            className="w-full flex justify-between items-center gap-3 font-normal text-sm text-txtSecondary dark:text-darkBlue-5"
-                        >
+                        <div className="w-full flex items-center space-x-3 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
+                            <Edit onClick={() => onHandleClick('vol', item)} className="cursor-pointer hover:opacity-60" />
                             <div className="flex flex-col gap-1">
                                 <div>
                                     {t('common:vol')}:{' '}
@@ -299,7 +298,6 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                                     <span className="text-txtPrimary dark:text-gray-4">{formatNumber(item?.margin, item?.decimalScalePrice, 0, true)}</span>
                                 </div>
                             </div>
-                            <Edit />
                         </div>
                     ) : (
                         '-'
@@ -317,7 +315,6 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                         <div>
                             {t('common:market')}:{' '}
                             <span className="text-txtPrimary dark:text-gray-4">
-                                {' '}
                                 {marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true)}
                             </span>
                         </div>
@@ -335,7 +332,10 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 align: 'left',
                 width: 228,
                 render: (row) => (
-                    <div className="flex items-center w-full justify-between">
+                    <div className="flex items-center w-full space-x-3">
+                        {row.status !== VndcFutureOrderType.Status.CLOSED && (
+                            <Edit onClick={() => onHandleClick('sltp', row)} className="cursor-pointer hover:opacity-60" />
+                        )}
                         <div className="flex flex-col gap-1 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
                             <div>
                                 SL:{' '}
@@ -354,9 +354,6 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                                 </span>
                             </div>
                         </div>
-                        {row.status !== VndcFutureOrderType.Status.CLOSED && (
-                            <Edit onClick={() => onHandleClick('sltp', row)} className="ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60" />
-                        )}
                     </div>
                 ),
                 sortable: false
@@ -399,7 +396,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('futures:order_table:volume'),
                 align: 'left',
                 width: 138,
-                render: (row, item) => formatNumber(item?.order_value, item?.decimalScalePrice, 0, true),
+                render: (row, item) => <span className="text-sm">{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</span>,
                 sortable: false
             },
             {
@@ -407,7 +404,10 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('futures:order_table:last_price'),
                 align: 'right',
                 width: 138,
-                render: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true),
+                render: (row) =>
+                    marketWatch[row?.symbol] && (
+                        <span className="text-sm">{formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true)}</span>
+                    ),
                 sortable: true
             },
             {
@@ -416,7 +416,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('futures:calulator:liq_price'),
                 align: 'right',
                 width: 144,
-                render: (row) => renderLiqPrice(row, false),
+                render: (row) => <span className="text-sm">{renderLiqPrice(row, false)}</span>,
                 sortable: true
             },
             {
@@ -425,7 +425,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('futures:margin'),
                 align: 'right',
                 width: 120,
-                render: (row) => formatNumber(row?.margin, row?.decimalScalePrice, 0, true),
+                render: (row) => <span className="text-sm">{formatNumber(row?.margin, row?.decimalScalePrice, 0, true)}</span>,
                 sortable: true
             },
             {
@@ -654,6 +654,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 data={dataFilter}
                 onRowClick={(e) => onHandleClick('detail', e)}
                 columns={columns}
+                shadowWithFixedCol
                 scroll={{ x: true }}
                 height={400}
                 tableStyle={{

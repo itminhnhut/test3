@@ -86,7 +86,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
     const empty = () => {
         return (
             <div className={`pt-12 sm:py-8`}>
-                <NoData textClassName="!text-sm" isAuth text={t('nao:contest:no_rank')} />
+                <NoData textClassName="!text-sm sm:!text-base" isAuth text={t('nao:contest:no_rank')} />
             </div>
         );
     };
@@ -95,7 +95,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
         return (
             <>
                 {data?.users?.length > 0 ? (
-                    <div className="pt-6 sm:pt-8 flex flex-row justify-between flex-wrap gap-3 sm:gap-6">
+                    <div className="pt-6 sm:pt-14 sm:pb-6 flex flex-row justify-between flex-wrap gap-3 sm:gap-6">
                         {data?.users?.map((item, index) => {
                             return (
                                 <CardNao key={index} className="!p-4 sm:!p-6">

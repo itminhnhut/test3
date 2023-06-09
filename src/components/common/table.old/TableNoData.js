@@ -4,7 +4,7 @@ import { getS3Url } from 'redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { NoDataDarkIcon, NoDataLightIcon } from '../V2/TableV2/NoData';
 
-const TableNoData = ({ bgColor, width, className = '', title, isMobile }) => {
+const TableNoData = ({ bgColor, width, className = '', title, titleClassname = '', isMobile }) => {
     const [currentTheme] = useDarkMode()
     const { t } = useTranslation();
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -17,7 +17,7 @@ const TableNoData = ({ bgColor, width, className = '', title, isMobile }) => {
             <div className="dark:block hidden">
                 <NoDataDarkIcon />
             </div>
-            <div className="text-xs text-black-400 mt-2">{title ?? t('common:no_data')}</div>
+            <div className={`text-xs text-black-400 mt-2 ${titleClassname}`}>{title ?? t('common:no_data')}</div>
         </div>
     );
 };

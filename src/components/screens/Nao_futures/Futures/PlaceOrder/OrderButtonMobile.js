@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from 'react';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useTranslation } from 'next-i18next';
-import { emitWebViewEvent, formatNumber, getType } from 'redux/actions/utils';
+import { emitWebViewEvent, formatNumber, getSignature, getType } from 'redux/actions/utils';
 import { FuturesOrderTypes, FuturesOrderTypes as OrderTypes, FuturesSettings } from 'redux/reducers/futures';
 import { getPrice } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
 import { placeFuturesOrder, reFetchOrderListInterval } from 'redux/actions/futures';
@@ -31,7 +31,7 @@ const OrderButtonMobile = ({
     const [disabled, setDisabled] = useState(false);
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const auth = useSelector((state) => state.auth?.user);
     const isBuy = VndcFutureOrderType.Side.BUY === side;
     const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -58,6 +58,8 @@ const OrderButtonMobile = ({
     const handlePlaceOrder = async () => {
         const requestId = Math.floor(Date.now() / 2000);
         setDisabled(true);
+        const timestamp = Date.now()
+        const signature = getSignature(auth?.code, timestamp)
         const params = {
             product: 2,
             symbol: pairConfig?.symbol,
@@ -70,7 +72,9 @@ const OrderButtonMobile = ({
             tp: tp,
             quoteQty,
             useQuoteQty: true,
-            requestId
+            requestId,
+            signature,
+            timestamp
         };
         placeFuturesOrder(params, { alert: context?.alert }, t, () => {
             setTimeout(() => {

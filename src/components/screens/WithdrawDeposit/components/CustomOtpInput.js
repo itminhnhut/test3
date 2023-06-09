@@ -199,7 +199,7 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
 
             <div className="mt-10">
                 <ButtonV2 onClick={async () => await onConfirmHandler(state.otp)} loading={loading || auth?.loadingUser} disabled={!isValidInput(state.otp)}>
-                    {t('common:confirm')}
+                    {t('dw_partner:verify_2')}
                 </ButtonV2>
             </div>
         </>

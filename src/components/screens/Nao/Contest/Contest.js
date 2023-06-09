@@ -19,6 +19,8 @@ import { SocialFireIcon } from '../../../svg/SvgIcon';
 import classNames from 'classnames';
 import NaoHeader from '../NaoHeader';
 import NaoFooter from '../NaoFooter';
+import ContestWeekRanks from 'components/screens/Nao/Contest/ContestWeekRanks';
+
 const ListRankings = dynamic(() => import('./ListRankings'));
 const currencies = [
     { label: 'VNDC', value: 'VNDC' },
@@ -223,11 +225,17 @@ export const seasons = [
             vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-7',
             en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-7'
         },
-        total_rewards: '200,000,000 VNDC',
+        weekly_contest_time: {
+            start: '2023-06-04T17:00:00.000Z',
+            end: '2023-07-02T17:00:00.000Z'
+        },
+        total_rewards: '500,000,000 VNDC',
+        total_weekly_rewards: '66,000,000 VNDC',
         quoteAsset: 'VNDC',
         // time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
         active: true,
         top_ranks_per: 20,
+        top_ranks_week: 20,
         lastUpdated: true
     }
 ];
@@ -370,7 +378,7 @@ const Contest = (props) => {
 
     const renderTab = () => {
         return (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 py-6">
                 <div
                     onClick={() => handleChangTab(initState.tab1)}
                     className={classNames(
@@ -414,15 +422,20 @@ const Contest = (props) => {
                         userID={userID}
                     />
                 )}
-                <ContestPerRanks
-                    {...props}
-                    lastUpdatedTime={lastUpdatedTime}
-                    params={params}
-                    sort={params.individual}
-                    showPnl={showPnl}
-                    currencies={currencies}
-                    userID={userID}
-                />
+
+                {props.top_ranks_week && <ContestWeekRanks {...props} lastUpdatedTime={lastUpdatedTime} userID={userID} />}
+
+                {props.top_ranks_per && (
+                    <ContestPerRanks
+                        {...props}
+                        lastUpdatedTime={lastUpdatedTime}
+                        params={params}
+                        sort={params.individual}
+                        showPnl={showPnl}
+                        currencies={currencies}
+                        userID={userID}
+                    />
+                )}
             </>
         );
     };
@@ -435,7 +448,7 @@ const Contest = (props) => {
     };
     const renderContentTab2 = () => {
         return (
-            <section id="content2" className={`${tab === initState?.tab2 ? 'inline' : 'hidden'}`}>
+            <section id="content2" className={`${tab === initState?.tab2 ? 'inline sm_only:pb-6' : 'hidden'}`}>
                 <ListRankings data={KLGD5?.data || []} loading={loadingSpecial} />
                 <ListRankings isList type="vol_3" data={KLGD3?.data || []} rank_metadata="vol_3" loading={loadingSpecial} />
                 <ListRankings isList type="vol_2" data={KLGD2?.data || []} rank_metadata="vol_2" loading={loadingSpecial} />
@@ -456,15 +469,15 @@ const Contest = (props) => {
                 />
             )}
             <div className="min-h-screen">
-                <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
+                <div className="px-4 nao:px-0 max-w-[72.5rem] w-full m-auto !mt-0">
                     <NaoHeader />
                 </div>
                 <div className="nao_section">
-                    <div className="px-4 sm_only:pt-6 max-w-[72.5rem] w-full m-auto">
+                    <div className="px-4 nao:px-0 sm_only:pt-6 max-w-[72.5rem] w-full m-auto">
                         <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
                     </div>
                     <div className="bg-gray-13 dark:bg-dark rounded-t-3xl">
-                        <div className="px-4 pb-20 sm:pb-[120px] max-w-[72.5rem] w-full m-auto">
+                        <div className="px-4 pb-14 sm:pb-[120px] max-w-[72.5rem] nao:px-0 w-full m-auto">
                             <ContestInfo
                                 {...props}
                                 ref={refInfo}

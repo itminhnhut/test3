@@ -9,7 +9,7 @@ import { PATHS } from 'constants/paths';
 import { useCallback, useEffect, useState } from 'react';
 import { getLastedArticles, getSupportCategories } from 'utils';
 import { useTranslation } from 'next-i18next';
-import { formatTime } from 'redux/actions/utils';
+import { formatTime, getS3Url } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import useApp from 'hooks/useApp';
 import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
@@ -64,21 +64,23 @@ const SupportAnnouncement = () => {
             )
         }
 
-        return SupportCategories.announcements[language]?.map(cat => (
-            <Link key={cat.id} href={{
-                pathname: PATHS.SUPPORT.TOPICS,
-                query: appUrlHandler({ topic: cat.displaySlug }, isApp)
-            }}>
+        return SupportCategories.announcements[language]?.map((cat) => (
+            <Link
+                key={cat.id}
+                href={{
+                    pathname: PATHS.SUPPORT.TOPICS,
+                    query: appUrlHandler({ topic: cat.displaySlug }, isApp)
+                }}
+            >
                 <a className="block w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5">
                     <TopicItem
-                        icon={<Image src={getSupportCategoryIcons(cat.id)} layout="responsive" width="24"
-                            height="24" />}
+                        icon={<Image src={getS3Url(getSupportCategoryIcons(cat.id))} layout="responsive" width="24" height="24" />}
                         title={cat.title}
                         description={cat?.description || '---'}
                     />
                 </a>
             </Link>
-        ))
+        ));
     }, [loading])
 
     const renderLastedArticles = useCallback(() => {

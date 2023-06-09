@@ -142,7 +142,7 @@ const FuturesSetting = memo(
                 if (resetDefault) resetDefault({ [FuturesSettings.order_confirm]: true, [FuturesSettings.show_sl_tp_order_line]: true });
             }, 500);
         };
-        console.log('isActive', props);
+
         return (
             <Popover className="relative h-full">
                 {({ open }) => (
