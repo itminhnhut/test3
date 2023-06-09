@@ -259,7 +259,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         if (!additionalData) return;
                                         const assetLength = additionalData?.assets
                                             ? additionalData?.assets?.length
-                                            : Object.keys(additionalData?.reward?.tokens)?.length;
+                                            : Object.keys(additionalData?.reward?.tokens || {})?.length;
                                         formatKeyData = `${assetLength < 10 ? `0${assetLength}` : assetLength}`;
                                         break;
                                     case COLUMNS_TYPE.WALLET_TYPE:
