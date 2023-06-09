@@ -41,7 +41,6 @@ const SessionChart = ({ filter, setFilter }) => {
         labels: [],
         datasets: []
     });
-    console.log('chartData:', chartData);
 
     const { data, loading, error } = useFetchApi(
         {
@@ -61,7 +60,15 @@ const SessionChart = ({ filter, setFilter }) => {
     useEffect(() => {
         if (!data) return;
         setChartData({
-            labels: data.labels.map((label) => `${formatTime(new Date(label.date), data.interval === 'month' ? 'MM/yyyy' : 'dd/MM')}`),
+            labels: data.labels.map((label, index, originArr) => {
+                const dateFormat = data.interval === 'month' ? 'MM/yyyy' : 'dd/MM';
+                let timeToFormat = label.date;
+                if (data.interval === 'week') {
+                    timeToFormat = index === 0 ? filter?.range?.startDate : index === originArr.length - 1 ? filter?.range?.endDate : label.date;
+                }
+
+                return `${formatTime(new Date(timeToFormat), dateFormat)}`;
+            }),
             datasets: [
                 {
                     fill: false,
@@ -80,7 +87,7 @@ const SessionChart = ({ filter, setFilter }) => {
                 }
             ]
         });
-    }, [data, typeTab]);
+    }, [data, typeTab, filter?.range?.startDate, filter?.range?.endDate]);
 
     const options = {
         responsive: true,
@@ -202,30 +209,30 @@ const SessionChart = ({ filter, setFilter }) => {
                 isVisible={isNumber(dataIndex)}
                 onClose={() => setDataIndex(null)}
                 t={t}
-                data={data?.values?.[dataIndex]}
-                dateString={data?.labels?.[dataIndex]?.date}
+                data={data}
+                dateLabel={chartData?.labels?.[dataIndex]}
+                dataIndex={dataIndex}
                 typeTab={typeTab}
             />
         </div>
     );
 };
 
-const ModalDetailChart = ({ onClose, isVisible, t, data, dateString, typeTab }) => {
+const ModalDetailChart = ({ onClose, isVisible, t, data, dateLabel, dataIndex, typeTab }) => {
     if (!isVisible) return null;
 
-    let totalBuySell = data.totalBuy + data.totalSell;
-
-    // Today is 06/04/2023: input '04/03' (MM/dd) => output 04/04/2023
-    // Today is 06/04/2023: input '04/07' (MM/dd) => output 07/04/2022
-    const currentYear = moment().year();
-    const parsedDate = moment(dateString).year(currentYear);
-    if (parsedDate.isAfter(moment())) {
-        parsedDate.year(currentYear - 1);
-    }
+    const dataValues = data?.values?.[dataIndex];
+    const dataDate = data?.labels?.[dataIndex]?.date;
+    const dataInterval = data?.interval;
+    const isTail = dataIndex === data?.values?.length - 1;
+    let totalBuySell = dataValues?.totalBuy + dataValues?.totalSell;
+    const week = dataInterval === 'week' && {
+        start: formatTime(moment(dataDate).startOf('isoWeek').toString(), 'dd/MM'),
+        end: formatTime(moment(dataDate).endOf('isoWeek').toString(), 'dd/MM')
+    };
 
     return (
         <ModalV2
-            // isVisible={true}
             isVisible={isVisible}
             onBackdropCb={onClose}
             className={`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider `}
@@ -236,7 +243,11 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dateString, typeTab }) 
                 <CardWrapper className="!p-4 my-6 bg-gray-13">
                     <div className="flex items-center justify-between">
                         <span className="txtSecond-4">{t('common:time')}</span>
-                        <div>{formatTime(parsedDate, 'dd/MM/yyyy')}</div>
+                        <div>
+                            {isTail && week && `${week.start}-`}
+                            {dateLabel}
+                            {!isTail && week && `-${week.end}`}
+                        </div>
                     </div>
                     <div className="flex items-center justify-between mt-3">
                         <span className="txtSecond-4">{t('common:total')}</span>
@@ -247,11 +258,11 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dateString, typeTab }) 
                 <CardWrapper className="!p-4 mt-3 bg-gray-13">
                     <div className="flex items-center justify-between">
                         <span className="txtSecond-4">{typeTab === TabStatistic[0].value ? t('dw_partner:buy_volume') : t('dw_partner:buy_commission')}</span>
-                        <div>{formatNanNumber(data.totalBuy, 0)} VNDC</div>
+                        <div>{formatNanNumber(dataValues?.totalBuy, 0)} VNDC</div>
                     </div>
                     <div className="flex items-center justify-between mt-3">
                         <span className="txtSecond-4">{typeTab === TabStatistic[0].value ? t('dw_partner:sell_volume') : t('dw_partner:sell_commission')}</span>
-                        <div>{formatNanNumber(data.totalSell, 0)} VNDC</div>
+                        <div>{formatNanNumber(dataValues?.totalSell, 0)} VNDC</div>
                     </div>
                 </CardWrapper>
             </div>
