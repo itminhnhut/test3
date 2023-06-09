@@ -54,7 +54,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                 }
             });
 
-            setDataDw(data)
+            setDataDw(data);
         } catch (error) {
         } finally {
             setLoadingDataDW(false);
@@ -154,12 +154,20 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                 {/* Tổng giá trị nạp */}
                 <div className="flex items-center justify-between">
                     <span>{t('futures:Tổng giá trị nạp')}</span>
-                    {loadingDataDW ? <Skeletor width={150} /> : <span className="txtPri-1">{formatNanNumber(dataDw.totalDeposit?.total?.value, isVnd ? 0 : 4)}</span>}
+                    {loadingDataDW ? (
+                        <Skeletor width={150} />
+                    ) : (
+                        <span className="txtPri-1">{formatNanNumber(dataDw.totalDeposit?.total?.value, isVnd ? 0 : 4)}</span>
+                    )}
                 </div>
                 {/* Tổng giá trị rút */}
                 <div className="flex items-center justify-between">
                     <span>{t('futures:Tổng giá trị rút')}</span>
-                    {loadingDataDW ? <Skeletor width={150} /> : <span className="txtPri-1">{formatNanNumber(dataDw.totalWithdraw?.total?.value, isVnd ? 0 : 4)}</span>}
+                    {loadingDataDW ? (
+                        <Skeletor width={150} />
+                    ) : (
+                        <span className="txtPri-1">{formatNanNumber(dataDw.totalWithdraw?.total?.value, isVnd ? 0 : 4)}</span>
+                    )}
                 </div>
                 {/* Tỷ lệ % thắng */}
                 <div className="flex items-center justify-between">
@@ -238,8 +246,8 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                 typeCurrency={typeCurrency}
                 timeFilter={timeFilter}
                 firstTimeTrade={firstTimeTrade}
-                isDark={isDark}
                 t={t}
+                winRate={dataOverview?.winRate?.value}
             />
         </div>
     );
@@ -251,7 +259,7 @@ const CardFill = styled.div.attrs(({ key, className, onClick }) => ({
     onClick: onClick
 }))``;
 
-const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurrency, timeFilter, firstTimeTrade, isDark, t, isMobile }) => {
+const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurrency, timeFilter, firstTimeTrade, t, isMobile, winRate }) => {
     const content = useRef();
     const negative = totalPnl < 0;
     const refCode = useSelector((state) => state.auth?.user?.code_refer);
@@ -329,6 +337,7 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                             firstTimeTrade={firstTimeTrade}
                             t={t}
                             refCode={refCode}
+                            winRate={winRate}
                         />
                     )
                 }
@@ -374,6 +383,7 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                             firstTimeTrade={firstTimeTrade}
                             t={t}
                             refCode={refCode}
+                            winRate={winRate}
                         />
                         <div className="w-full text-gray-15 dark:text-gray-4">
                             <div className="text-2xl font-semibold">Thông tin muốn chia sẻ</div>
@@ -425,7 +435,8 @@ const ImageShare = ({
     timeFilter,
     firstTimeTrade,
     t,
-    refCode
+    refCode,
+    winRate
 }) => (
     <div ref={content} className={`min-w-[342px] max-w-[342px] bg-dark border border-divider-dark relative ${className}`}>
         <div
@@ -442,7 +453,7 @@ const ImageShare = ({
             <div>% PNL Tích luỹ</div>
             <div className={`text-5xl ${negative ? 'text-red-2' : 'text-teal'} font-semibold`}>
                 {!negative && '+'}
-                {formatNanNumber(Math.abs(totalPnl * 100) / totalMargin, 2)}%
+                {formatNanNumber((totalPnl * 100) / totalMargin, 2)}%
             </div>
             <div className={`h-11 w-full flex items-center justify-center transition-all duration-75`}>
                 <div className={`${!isShowTotalPnl && 'hidden'} flex justify-center items-center flex-col`}>
@@ -454,8 +465,8 @@ const ImageShare = ({
                 </div>
                 {isShowRate && isShowTotalPnl && <div className={`border-divider-dark border-l-[1px] h-9 mx-6`}></div>}
                 <div className={`${!isShowRate && 'hidden'} flex justify-center items-center flex-col`}>
-                    <div>Tỷ lệ % {negative ? 'thua' : 'thắng'}</div>
-                    <div className="text-gray-4 text-sm font-semibold">{formatNanNumber(Math.abs(totalPnl * 100) / totalMargin, 2)}%</div>
+                    <div>Tỷ lệ % thắng</div>
+                    <div className="text-gray-4 text-sm font-semibold">{formatNanNumber(winRate, 2)}%</div>
                 </div>
             </div>
 
