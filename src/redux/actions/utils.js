@@ -1423,10 +1423,10 @@ export const convertDateToMs = (date = 0, type = 'startOf') => {
     return moment.utc(moment(+date).endOf('day')).unix() * 1000;
 };
 
+const md5 = require('md5')
+export const getSignature = (userId, timestamp)=> {
+    return md5(userId.slice(0, 10)+timestamp)
+}
 export const formatPair = (pair = 'BTCVNDC', t) => {
-    return pair === 'other' ? t('common:others_2') : `${pair?.slice(0, -4)}/${pair?.slice(-4)}`;
-};
-const md5 = require('md5');
-export const getSignature = (userId, timestamp) => {
-    return md5(userId.slice(0, 10) + timestamp);
-};
+    return pair === 'other' ? t('common:others_2') : `${pair?.slice(0, -4)}/${pair?.slice(-4)}`
+}

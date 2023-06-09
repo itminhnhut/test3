@@ -165,8 +165,8 @@ const ContesRules = ({
                     />
                 ) : (
                     <img
-                        src={getS3Url('/images/nao/contest/ic_contest_info.webp')}
-                        className="w-[300px] sm:w-[400px] m-auto"
+                        src={getS3Url(`/images/nao/contest/ic_contest${season >= 10 ? '.png' : '_info.webp'}`)}
+                        className={`m-auto ${season >= 10 ? 'w-[320px] sm:w-[430px]' : 'w-[300px] sm:w-[400px]'}`}
                         title={title_champion?.[language]}
                         alt={title_champion?.[language]}
                     />

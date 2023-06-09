@@ -252,7 +252,7 @@ const MarketTable = ({
         const translater = (key) => {
             switch (key) {
                 case 'pair':
-                    return language === 'vi' ? 'Cặp' : 'Pair';
+                    return <span className='pl-10 sm:pl-14'>{language === 'vi' ? 'Cặp' : 'Pair'}</span>;
                 case 'last_price':
                     return language === 'vi' ? 'Giá gần nhất' : 'Last Price';
                 case 'change_24h':
@@ -272,7 +272,7 @@ const MarketTable = ({
             }
         };
 
-        let pairColumnsWidth = 248;
+        let pairColumnsWidth = 300;
         let starColumnWidth = 64;
 
         if (!data?.length) pairColumnsWidth = 128;
@@ -362,36 +362,6 @@ const MarketTable = ({
 
         const columns = [
             {
-                key: 'star',
-                fixed: 'left',
-                align: 'left',
-                width: starColumnWidth,
-                sortable: true,
-                visibile: auth,
-                render: (_row, item) => {
-                    const {
-                        baseAsset,
-                        baseAssetId,
-                        quoteAsset,
-                        quoteAssetId,
-                    } = initMarketWatchItem(item);
-                    return auth ? <FavActionButton
-                        b={{
-                            b: baseAsset,
-                            i: baseAssetId
-                        }}
-                        q={{
-                            q: quoteAsset,
-                            i: quoteAssetId
-                        }}
-                        list={restProps.favoriteList}
-                        lang={language}
-                        mode={tradingMode}
-                        favoriteRefresher={restProps.favoriteRefresher}
-                    /> : null
-                },
-            },
-            {
                 key: 's',
                 dataIndex: 's',
                 title: translater('pair'),
@@ -400,8 +370,18 @@ const MarketTable = ({
                 sortable: true,
                 width: pairColumnsWidth,
                 render: (_row, item) => {
-                    return renderPair(item.b, item.q, item.lbl, width, tradingMode, language, restProps.futuresConfigs)
-                },
+                    return (
+                        <Pair
+                            item={item}
+                            width={width}
+                            tradingMode={tradingMode}
+                            language={language}
+                            futuresConfigs={restProps.futuresConfigs}
+                            favoriteList={restProps.favoriteList}
+                            favoriteRefresher={restProps.favoriteRefresher}
+                        />
+                    );
+                }
             },
             {
                 key: 'p',
@@ -410,10 +390,14 @@ const MarketTable = ({
                 align: 'right',
                 width: 168,
                 sortable: true,
-                render: (row, item) => <div>
-                    <div className="whitespace-nowrap">{formatPrice(row)}</div>
-                    <div className='text-txtSecondary dark:text-txtSecondary-dark font-normal text-xs'>${formatPrice(item?.q === 'VNDC' ? item?.p / 23415 : restProps.referencePrice[`${item?.q}/USD`] * item?.p, 4)}</div>
-                </div>
+                render: (row, item) => (
+                    <div>
+                        <div className="whitespace-nowrap">{formatPrice(row)}</div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark font-normal text-xs">
+                            ${formatPrice(item?.q === 'VNDC' ? item?.p / 23415 : restProps.referencePrice[`${item?.q}/USD`] * item?.p, 4)}
+                        </div>
+                    </div>
+                )
             },
             {
                 key: 'change_24h',
@@ -459,9 +443,9 @@ const MarketTable = ({
                 key: 'operation',
                 dataIndex: 'operation',
                 align: 'center',
-                width: (restProps.tabIndex === 1 || (restProps.tabIndex === 0 && restProps.favType === 0)) ? 224 : 164,
+                width: restProps.tabIndex === 1 || (restProps.tabIndex === 0 && restProps.favType === 0) ? 224 : 164,
                 render: (_row, item) => renderTradeLink(item.b, item.q, language, tradingMode)
-            },
+            }
         ];
 
         return (
@@ -479,7 +463,7 @@ const MarketTable = ({
                 showPaging={false}
                 height={'300px'}
                 tableStyle={{
-                    padding: '20px 16px',
+                    padding: '12px 16px',
                     headerStyle: {
                         padding: '0px'
                     },
@@ -732,19 +716,23 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
         if (baseAsset && quoteAsset) {
             result.push({
                 key: `market_row___${baseAsset}_${quoteAsset}`,
-                star: isAuth ? <FavActionButton b={{
-                    b: baseAsset,
-                    i: baseAssetId
-                }}
-                    q={{
-                        q: quoteAsset,
-                        i: quoteAssetId
-                    }}
-                    list={favoriteList}
-                    lang={lang}
-                    mode={mode} favoriteRefresher={favoriteRefresher}
-                /> : null,
-                pair: renderPair(baseAsset, quoteAsset, label, screenWidth, mode, lang, futuresConfigs),
+                star: isAuth ? (
+                    <FavActionButton
+                        b={{
+                            b: baseAsset,
+                            i: baseAssetId
+                        }}
+                        q={{
+                            q: quoteAsset,
+                            i: quoteAssetId
+                        }}
+                        list={favoriteList}
+                        lang={lang}
+                        mode={mode}
+                        favoriteRefresher={favoriteRefresher}
+                    />
+                ) : null,
+                pair: <Pair item={{ b: baseAsset, q: quoteAsset, lbl: label }} width={screenWidth} tradingMode={mode} lang={lang} futuresConfigs={futuresConfigs} />,
                 last_price: <span className="whitespace-nowrap sm:text-base text-sm">{formatPrice(lastPrice)}</span>,
                 change_24h: render24hChange(item, false, 'justify-end !text-sm sm:!text-base sm:!font-normal'),
                 market_cap: renderMarketCap(lastPrice, supply),
@@ -788,10 +776,11 @@ const ROW_LOADING_SKELETON = {
     operation: <Skeletor width={65} />
 };
 
-const renderPair = (b, q, lbl, w, mode, lang = 'vi', futuresConfigs) => {
+const Pair = ({ item, width, tradingMode, lang = 'vi', futuresConfigs, favoriteList, favoriteRefresher }) => {
+    const { b, q, lbl } = item;
     let url = lang === 'vi' ? '/vi' : '';
     let hasLeverage = false;
-    switch (mode) {
+    switch (tradingMode) {
         case TRADING_MODE.FUTURES:
             url = url + '/futures/' + b + q;
             hasLeverage = true;
@@ -803,22 +792,45 @@ const renderPair = (b, q, lbl, w, mode, lang = 'vi', futuresConfigs) => {
             break;
     }
 
-    const symbolLeverageConfig = hasLeverage ? futuresConfigs?.find(e => e?.pair == (b + q))?.leverageConfig : null;
-    const leverage = (symbolLeverageConfig?.max ?? 0) ?? null;
+    const symbolLeverageConfig = hasLeverage ? futuresConfigs?.find((e) => e?.pair == b + q)?.leverageConfig : null;
+    const leverage = symbolLeverageConfig?.max ?? 0 ?? null;
+    const { baseAsset, baseAssetId, quoteAsset, quoteAssetId } = initMarketWatchItem(item);
 
     return (
-        <a href={url} target="_blank" className="hover:underline">
-            <div className="flex items-center font-semibold text-sm sm:text-base">
-                {w >= 768 && <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28} />}
-                <div className={w >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap' + ' truncate'}>
-                    <span className="text-txtPrimary dark:text-txtPrimary-dark">{b}</span>
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">/{q}</span>
+        <div className='flex items-center space-x-8'>
+            {favoriteList && (
+                <FavActionButton
+                    b={{
+                        b: baseAsset,
+                        i: baseAssetId
+                    }}
+                    q={{
+                        q: quoteAsset,
+                        i: quoteAssetId
+                    }}
+                    list={favoriteList}
+                    lang={lang}
+                    mode={tradingMode}
+                    favoriteRefresher={favoriteRefresher}
+                />
+            )}
+            <a href={url} target="_blank" className="hover:underline">
+                <div className="flex items-center font-semibold text-sm sm:text-base">
+                    {width >= 768 && <AssetLogo assetCode={b} size={width >= 1024 ? 32 : 28} />}
+                    <div className={width >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap' + ' truncate'}>
+                        <span className="text-txtPrimary dark:text-txtPrimary-dark">{b}</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">/{q}</span>
+                    </div>
+                    {leverage ? (
+                        <div className="px-1 py-[2px] whitespace-nowrap bg-bgButtonDisabled dark:bg-bgButtonDisabled-dark text-txtPrimary dark:text-txtPrimary-dark rounded-[3px] font-semibold text-xs leading-4 ml-2">
+                            {leverage}x
+                        </div>
+                    ) : (
+                        <MarketLabel labelType={lbl} />
+                    )}
                 </div>
-                {leverage ? <div className="px-1 py-[2px] bg-bgButtonDisabled dark:bg-bgButtonDisabled-dark text-txtPrimary dark:text-txtPrimary-dark rounded-[3px] font-semibold text-xs leading-4 ml-2">
-                    {leverage}x
-                </div> : <MarketLabel labelType={lbl} />}
-            </div>
-        </a>
+            </a>
+        </div>
     );
 };
 

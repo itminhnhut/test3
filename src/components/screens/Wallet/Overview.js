@@ -94,9 +94,9 @@ const OverviewWallet = (props) => {
                         ? SECRET_STRING
                         : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + partnersEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}{' '}
                     BTC
-                    <button className="hidden md:block" onClick={() => router.push(PATHS?.FUTURES_PORTFOLIO)}>
-                        <PortfolioIcon  />
-                    </button>
+                    {/* <button className="hidden md:block" onClick={() => router.push(PATHS?.FUTURES_PORTFOLIO)}>
+                        <PortfolioIcon />
+                    </button> */}
                 </div>
                 <div className="font-normal text-sm md:text-base mt-1">
                     {isHideAsset
