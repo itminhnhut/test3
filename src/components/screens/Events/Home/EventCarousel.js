@@ -6,6 +6,26 @@ import React, { useState } from 'react';
 import 'keen-slider/keen-slider.min.css';
 import styled from 'styled-components';
 import { getEventImg, getS3Url } from 'redux/actions/utils';
+import useQuery from 'hooks/useQuery';
+import FetchApi from 'utils/fetch-api';
+import { API_MARKETING_EVENTS } from 'redux/actions/apis';
+
+const Wrapper = styled.div`
+    .dots {
+        padding: 0 unset;
+        align-items: center;
+        .dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            transition: all 150ms ease-in-out;
+            border-radius: 50%;
+            &.active {
+                width: 2.5rem;
+                border-radius: 24px;
+            }
+        }
+    }
+`;
 
 const CarouselItem = ({ banner, link, title }) => {
     return (
@@ -19,29 +39,12 @@ const CarouselItem = ({ banner, link, title }) => {
     );
 };
 
-const Wrapper = styled.div`
-    .dots {
-        padding: 0 unset;
-        align-items: center;
-        .dot {
-            width: 0.5rem;
-            height: 0.5rem;
-            transition: all 150ms ease-in-out ;
-            border-radius: 50%;
-            &.active {
-                width: 2.5rem;
-                border-radius: 24px;
-            }
-        }
-    }
-`;
-
-
 /**
  *
  * @param {{ data: Array<{ _id: string, thumbnailImgEndpoint?: string, bannerImgEndpoint?: string, title: string, startTime: string , endTime: string, anticipate: bool, prize: string, postLink: string, isHot: bool, creatorName: string, priority: number, isHidden: bool }> }} props
  */
-const EventCarousel = ({ data = [] }) => {
+
+const Carousel = ({ data }) => {
     const [activeItem, setActiveItem] = useState(0);
     const [sliderRef, slider] = useKeenSlider({
         initial: 0,
@@ -69,6 +72,7 @@ const EventCarousel = ({ data = [] }) => {
         );
     };
 
+
     return (
         <Wrapper>
             <div className="keen-slider" ref={sliderRef}>
@@ -81,28 +85,31 @@ const EventCarousel = ({ data = [] }) => {
     );
 };
 
-const propTypes = {
-    data: PropTypes.arrayOf(
-        PropTypes.shape({
-            thumbnailImgEndpoint: PropTypes.string,
-            bannerImgEndpoint: PropTypes.string,
-            title: PropTypes.string.isRequired,
-            startTime: PropTypes.string.isRequired,
-            endTime: PropTypes.string.isRequired,
-            anticipate: PropTypes.bool.isRequired,
-            prize: PropTypes.string.isRequired,
-            postLink: PropTypes.string.isRequired,
-            isHot: PropTypes.bool.isRequired,
-            creatorName: PropTypes.string.isRequired,
-            priority: PropTypes.number.isRequired,
-            isHidden: PropTypes.bool.isRequired
-        })
-    ).isRequired
+const EventCarousel = () => {
+    const { isLoading, data } = useQuery(['event_carousel'], async () => {
+        const res = await FetchApi({
+            url: API_MARKETING_EVENTS,
+            options: {
+                method: 'GET'
+            }
+        });
+        return res.data.events;
+    }, {
+        cache: true,
+        ttl: '2h'
+    });
+
+    return (
+        <>
+            {!isLoading &&
+                (data?.length ? (
+                    <Carousel data={data} />
+                ) : (
+                    <Image src="/images/featured/common-featured.png" alt="events" width={1216} height={440} className="object-cover" />
+                ))}
+            {isLoading && 'Loading'}
+        </>
+    );
 };
-
-const defaultProps = [];
-
-EventCarousel.propTypes = propTypes;
-EventCarousel.defaultProps = defaultProps;
 
 export default EventCarousel;

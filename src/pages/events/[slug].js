@@ -6,23 +6,24 @@ import { NAVBAR_USE_TYPE } from 'components/common/NavBar/NavBar';
 
 const EventDetailPage = ({}) => {
     const { query, isFallback } = useRouter();
-    console.log({query})
 
     return (
         <MaldivesLayout navMode={NAVBAR_USE_TYPE.FLUENT}>
-            <div className="max-w-screen-v3 2xl:max-w-screen-xxl mx-auto">{isFallback ? 'loading' : `Event id: ${query?.id}`}</div>
+            <div className="max-w-screen-v3 2xl:max-w-screen-xxl mx-auto">{isFallback ? 'loading' : `Event slug: ${query?.slug}`}</div>
         </MaldivesLayout>
     );
 }
 
 export async function getStaticPaths() {
     return {
-        paths: [{ params: { id: '1' } }, { params: { id: '2' } }],
-        fallback: true // can also be true or 'blocking'
+        paths: [{ params: { slug: '1' } }, { params: { slug: '2' } }],
+        fallback: true // can also be false or 'blocking'
     };
 }
 
 export const getStaticProps = async ({ locale, params, query }) => {
+    console.log({params})
+
     return {
         props: {
             ...(await serverSideTranslations(locale, ['common', 'navbar', 'marketing_events'])),

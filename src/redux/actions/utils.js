@@ -1426,3 +1426,5 @@ const md5 = require('md5')
 export const getSignature = (userId, timestamp)=> {
     return md5(userId.slice(0, 10)+timestamp)
 }
+
+export const isBrowser = () => typeof window !== 'undefined';
