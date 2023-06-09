@@ -166,6 +166,8 @@ const Portfolio = () => {
                         dataOverview={dataOverview?.overallStatistic}
                         loadingOverview={loadingOverview}
                         typeCurrency={typeCurrency}
+                        timeFilter={filter?.range}
+                        firstTimeTrade={dataOverview.firstTimeTrade}
                     />
 
                     {/* Bien dong loi nhuan */}

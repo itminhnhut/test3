@@ -120,31 +120,31 @@ const FilterTimeTabV2 = ({
     };
 
     const onChange = (e) => {
-        const monthsDifference = differenceInMonths(e?.selection?.startDate, e?.selection?.endDate);
-        if (Math.abs(monthsDifference) >= 3) {
-            toast({
-                text: t('portfolio:error.max_months_filter', { maxMonths: maxMonths }),
-                type: 'error',
-                className: '!max-w-[358px] !min-w-[358px] !mx-auto mt'
-            });
-            throw 'error';
-        } else {
-            const startDate = e?.selection?.startDate;
-            const endDate = e?.selection?.endDate;
+        // const monthsDifference = differenceInMonths(e?.selection?.startDate, e?.selection?.endDate);
+        // if (Math.abs(monthsDifference) >= 3) {
+        //     toast({
+        //         text: t('portfolio:error.max_months_filter', { maxMonths: maxMonths }),
+        //         type: 'error',
+        //         className: '!max-w-[358px] !min-w-[358px] !mx-auto mt'
+        //     });
+        //     throw 'error';
+        // } else {
+        const startDate = e?.selection?.startDate;
+        const endDate = e?.selection?.endDate;
 
-            setFilter({
-                range: {
-                    startDate: startDate
-                        ? convertDateToMs(isNumber(startDate) ? startDate : startDate.getTime())
-                        : maxMonths
-                        ? convertDateToMs(subMonths(new Date(), maxMonths))
-                        : null, // date.getTime(),
-                    endDate: endDate ? convertDateToMs(isNumber(endDate) ? endDate : endDate.getTime(), 'endOf') : null,
-                    key: 'selection'
-                }
-            });
-            setIsCustomDay(true);
-        }
+        setFilter({
+            range: {
+                startDate: startDate
+                    ? convertDateToMs(isNumber(startDate) ? startDate : startDate.getTime())
+                    : maxMonths
+                    ? convertDateToMs(subMonths(new Date(), maxMonths))
+                    : null, // date.getTime(),
+                endDate: endDate ? convertDateToMs(isNumber(endDate) ? endDate : endDate.getTime(), 'endOf') : null,
+                key: 'selection'
+            }
+        });
+        setIsCustomDay(true);
+        // }
     };
 
     const onConfirm = () => {
@@ -165,11 +165,9 @@ const FilterTimeTabV2 = ({
                                     setTimeTab(item.value);
                                     setIsCustomDay(false);
                                 }}
-                                className={classNames(' border rounded-full cursor-pointer font-normal whitespace-nowrap', {
-                                    'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== item.value,
-                                    'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === item.value,
-                                    'text-base px-5 py-3': !isMobile,
-                                    'text-sm px-4 py-2': isMobile
+                                className={classNames(' rounded-md cursor-pointer font-normal whitespace-nowrap text-sm px-4 py-2', {
+                                    'text-txtSecondary dark:text-txtSecondary-dark bg-gray-13 dark:bg-dark-4': timeTab !== item.value,
+                                    'text-teal bg-teal/[.1] !font-semibold': timeTab === item.value
                                 })}
                             >
                                 {t(item.localized)}
@@ -186,11 +184,9 @@ const FilterTimeTabV2 = ({
                                     return 'custom';
                                 });
                             }}
-                            className={classNames('border rounded-full cursor-pointer font-normal select-none flex items-center', {
-                                'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== 'custom',
-                                'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === 'custom',
-                                'text-base px-5 py-3': !isMobile,
-                                'text-sm px-4 py-2': isMobile
+                            className={classNames('rounded-md cursor-pointer font-normal select-none flex items-center text-sm px-4 py-2', {
+                                'text-txtSecondary dark:text-txtSecondary-dark bg-gray-13 dark:bg-dark-4': timeTab !== 'custom',
+                                'text-teal bg-teal/[.1] !font-semibold': timeTab === 'custom'
                             })}
                         >
                             {!isMobile && <CalendarFillIcon className="mr-2" color={timeTab === 'custom' ? colors.teal : '#8694b2'} size={20} />}
@@ -202,6 +198,7 @@ const FilterTimeTabV2 = ({
                         </div>
                     ) : (
                         <DatePickerV2
+                            maxMonths={maxMonths}
                             initDate={filter?.range}
                             onChange={onChange}
                             month={isMobile ? 1 : 2}
@@ -220,11 +217,9 @@ const FilterTimeTabV2 = ({
                                             return 'custom';
                                         })
                                     }
-                                    className={classNames('border rounded-full cursor-pointer font-normal select-none flex items-center', {
-                                        'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== 'custom',
-                                        'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === 'custom',
-                                        'text-base px-5 py-3': !isMobile,
-                                        'text-sm px-4 py-2': isMobile
+                                    className={classNames('rounded-md cursor-pointer font-normal select-none flex items-center text-sm px-4 py-2', {
+                                        'text-txtSecondary dark:text-txtSecondary-dark bg-gray-13 dark:bg-dark-4': timeTab !== 'custom',
+                                        'text-teal bg-teal/[.1] !font-semibold': timeTab === 'custom'
                                     })}
                                 >
                                     {!isMobile && <CalendarFillIcon className="mr-2" color={timeTab === 'custom' ? colors.teal : '#8694b2'} size={20} />}
@@ -235,6 +230,7 @@ const FilterTimeTabV2 = ({
                                     </span>
                                 </div>
                             }
+                            customHeaderCalendar={maxMonths ? () => <div className="px-8 pb-3 txtSecond-3">*Chỉ hỗ trợ tra cứu lịch trong 3 tháng</div> : null}
                         />
                     )}
                 </div>
