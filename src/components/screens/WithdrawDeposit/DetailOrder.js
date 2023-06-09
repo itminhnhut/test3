@@ -211,7 +211,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         // user logic
                         else {
                             if (!isPartnerAccepted) {
-                                primaryBtn = {
+                                secondaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                     text: t('common:cancel_order')
                                 };
@@ -278,7 +278,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             }
                         } else {
                             if (!isPartnerAccepted) {
-                                primaryBtn = {
+                                secondaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                     text: t('common:cancel_order')
                                 };

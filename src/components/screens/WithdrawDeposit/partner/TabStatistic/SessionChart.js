@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 import CardWrapper from 'components/common/CardWrapper';
 import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs';
@@ -8,11 +8,9 @@ import colors from 'styles/colors';
 import { formatTime, formatSwapRate, convertDateToMs, formatNanNumber } from 'redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useFetchApi from 'hooks/useFetchApi';
-import { API_GET_COMMISSION_STATISTIC_PARTNER, API_GET_PARTNER_STATS_VOLUME_COMMISSION } from 'redux/actions/apis';
-import FilterTimeTab from 'components/common/FilterTimeTab';
+import { API_GET_PARTNER_STATS_VOLUME_COMMISSION } from 'redux/actions/apis';
 import DarkNote from 'components/common/DarkNote';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
 import moment from 'moment';
 import { isNumber } from 'lodash';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
@@ -28,7 +26,14 @@ const TabStatistic = [
     }
 ];
 
-const SessionChart = ({ filter, setFilter }) => {
+const getTrueDate = ({ interval, isFirst = false, isLast = false, startDate, endDate }) => {
+    let timeToFormat;
+    if (interval === 'week') {
+        timeToFormat = isFirst ? startDate : isLast ? endDate : null;
+    }
+    return timeToFormat;
+};
+const SessionChart = ({ filter }) => {
     const [typeTab, setTypeTab] = useState(TabStatistic[0].value);
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -61,13 +66,17 @@ const SessionChart = ({ filter, setFilter }) => {
         if (!data) return;
         setChartData({
             labels: data.labels.map((label, index, originArr) => {
+                const { startDate, endDate } = filter.range;
                 const dateFormat = data.interval === 'month' ? 'MM/yyyy' : 'dd/MM';
-                let timeToFormat = label.date;
-                if (data.interval === 'week') {
-                    timeToFormat = index === 0 ? filter?.range?.startDate : index === originArr.length - 1 ? filter?.range?.endDate : label.date;
-                }
-
-                return `${formatTime(new Date(timeToFormat), dateFormat)}`;
+                const realDate =
+                    getTrueDate({
+                        interval: data?.interval,
+                        startDate,
+                        endDate,
+                        isFirst: index === 0,
+                        isLast: index === originArr.length - 1
+                    }) || label.date;
+                return `${formatTime(new Date(realDate), dateFormat)}`;
             }),
             datasets: [
                 {
@@ -89,78 +98,81 @@ const SessionChart = ({ filter, setFilter }) => {
         });
     }, [data, typeTab, filter?.range?.startDate, filter?.range?.endDate]);
 
-    const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        indexAxis: 'x',
-        barPercentage: 0.15,
+    const options = useMemo(
+        () => ({
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'x',
+            barPercentage: 0.15,
 
-        borderSkipped: false,
-        plugins: {
-            title: { align: 'left' },
-            tooltip: {
-                enabled: false // <-- this option disables tooltips
-            }
-        },
-        scales: {
-            x: {
-                beginAtZero: false,
-                stacked: true,
-                ticks: {
-                    color: colors.darkBlue5,
-                    showLabelBackdrop: false,
-                    padding: 8,
-                    fontSize: 12,
-                    lineHeight: 16,
-                    crossAlign: 'near'
-                },
-                grid: {
-                    display: false,
-                    drawBorder: true,
-                    borderColor: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT
+            borderSkipped: false,
+            plugins: {
+                title: { align: 'left' },
+                tooltip: {
+                    enabled: false // <-- this option disables tooltips
                 }
             },
-            y: {
-                stacked: true,
-                ticks: {
-                    color: colors.darkBlue5,
-                    callback: function (value, index, ticks) {
-                        return formatSwapRate(value);
+            scales: {
+                x: {
+                    beginAtZero: false,
+                    stacked: true,
+                    ticks: {
+                        color: colors.darkBlue5,
+                        showLabelBackdrop: false,
+                        padding: 8,
+                        fontSize: 12,
+                        lineHeight: 16,
+                        crossAlign: 'near'
                     },
-                    crossAlign: 'far',
-                    padding: 8,
-                    fontSize: 12,
-                    lineHeight: 16,
-                    beginAtZero: true
-                },
-                grid: {
-                    drawTicks: false,
-                    borderDash: [1, 4],
-                    borderDashOffset: 1,
-                    // display: false,
-                    drawBorder: false,
-                    // borderDash: [1, 4],
-                    // color: colors.divider.DEFAULT,
-                    color: function (context) {
-                        if (context.tick.value === 0) {
-                            return 'transparent';
-                        }
-                        return isDark ? colors.divider.dark : colors.divider.DEFAULT;
+                    grid: {
+                        display: false,
+                        drawBorder: true,
+                        borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT
                     }
-                    // drawBorder: true
+                },
+                y: {
+                    stacked: true,
+                    ticks: {
+                        color: colors.darkBlue5,
+                        callback: function (value, index, ticks) {
+                            return formatSwapRate(value);
+                        },
+                        crossAlign: 'far',
+                        padding: 8,
+                        fontSize: 12,
+                        lineHeight: 16,
+                        beginAtZero: true
+                    },
+                    grid: {
+                        drawTicks: false,
+                        borderDash: [1, 4],
+                        borderDashOffset: 1,
+                        // display: false,
+                        drawBorder: false,
+                        // borderDash: [1, 4],
+                        // color: colors.divider.DEFAULT,
+                        color: function (context) {
+                            if (context.tick.value === 0) {
+                                return 'transparent';
+                            }
+                            return isDark ? colors.divider.dark : colors.divider.DEFAULT;
+                        }
+                        // drawBorder: true
+                    }
                 }
+            },
+            onClick: (event, elements) => {
+                if (elements.length > 0) {
+                    // do something with the clicked bar, e.g. update state, show a tooltip, etc.
+                    setDataIndex(elements[0].index);
+                }
+            },
+            onHover: (event, chartElement) => {
+                event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
             }
-        },
-        onClick: (event, elements) => {
-            if (elements.length > 0) {
-                // do something with the clicked bar, e.g. update state, show a tooltip, etc.
-                setDataIndex(elements[0].index);
-            }
-        },
-        onHover: (event, chartElement) => {
-            event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
-        }
-    };
+        }),
+        [isDark, colors]
+    );
 
     return (
         <div className="mt-20">
@@ -210,25 +222,32 @@ const SessionChart = ({ filter, setFilter }) => {
                 onClose={() => setDataIndex(null)}
                 t={t}
                 data={data}
-                dateLabel={chartData?.labels?.[dataIndex]}
                 dataIndex={dataIndex}
                 typeTab={typeTab}
+                filter={filter}
             />
         </div>
     );
 };
 
-const ModalDetailChart = ({ onClose, isVisible, t, data, dateLabel, dataIndex, typeTab }) => {
+const ModalDetailChart = ({ onClose, isVisible, t, data, dataIndex, typeTab, filter }) => {
     if (!isVisible) return null;
+
+    const {
+        range: { startDate, endDate }
+    } = filter;
 
     const dataValues = data?.values?.[dataIndex];
     const dataDate = data?.labels?.[dataIndex]?.date;
     const dataInterval = data?.interval;
-    const isTail = dataIndex === data?.values?.length - 1;
-    let totalBuySell = dataValues?.totalBuy + dataValues?.totalSell;
+    const isLast = dataIndex === data?.values?.length - 1;
+    const trueDate = getTrueDate({ interval: dataInterval, startDate, endDate, isFirst: dataIndex === 0, isLast }) || dataDate;
+    const dateLabel = formatTime(new Date(trueDate), dataInterval === 'month' ? 'MM/yyyy' : 'dd/MM/yyyy');
+    const totalBuySell = dataValues?.totalBuy + dataValues?.totalSell;
+
     const week = dataInterval === 'week' && {
-        start: formatTime(moment(dataDate).startOf('isoWeek').toString(), 'dd/MM'),
-        end: formatTime(moment(dataDate).endOf('isoWeek').toString(), 'dd/MM')
+        start: formatTime(moment(dataDate).startOf('isoWeek').toString(), 'dd/MM/yyyy'),
+        end: formatTime(moment(dataDate).endOf('isoWeek').toString(), 'dd/MM/yyyy')
     };
 
     return (
@@ -244,9 +263,9 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dateLabel, dataIndex, t
                     <div className="flex items-center justify-between">
                         <span className="txtSecond-4">{t('common:time')}</span>
                         <div>
-                            {isTail && week && `${week.start}-`}
+                            {isLast && week && `${week.start}-`}
                             {dateLabel}
-                            {!isTail && week && `-${week.end}`}
+                            {!isLast && week && `-${week.end}`}
                         </div>
                     </div>
                     <div className="flex items-center justify-between mt-3">
