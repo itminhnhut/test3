@@ -64,6 +64,8 @@ const Portfolio = () => {
         firstTimeTrade: '',
         overallStatistic: {}
     });
+
+    console.log("____dataOverview: ", dataOverview);
     const [isNeverTrade, setIsNeverTrade] = useState(false);
     const [loadingOverview, setLoadingOverview] = useState(false);
     const fetchDataOverview = async () => {
@@ -168,6 +170,7 @@ const Portfolio = () => {
                         typeCurrency={typeCurrency}
                         timeFilter={filter?.range}
                         firstTimeTrade={dataOverview.firstTimeTrade}
+                        typeProduct={typeProduct}
                     />
 
                     {/* Bien dong loi nhuan */}
