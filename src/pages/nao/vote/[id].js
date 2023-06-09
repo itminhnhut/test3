@@ -80,6 +80,7 @@ export default function Vote() {
     }, [auth]);
 
     async function handleSubmitVote(votedYes) {
+        return setIsShowSuccessModal(true);
         if (loading) return;
         setLoading(true);
         setIsShowProposalModal(false);
@@ -261,7 +262,13 @@ const VoteProposalModal = ({ onClose, numberOfNao, handleSubmitVote, summary, is
     return (
         <>
             {/* <Tooltip isV3={true} id={'voting'} place="top" effect="solid" className="w-[400px]" /> */}
-            <ModalV2 isVisible onBackdropCb={onClose} className="!max-w-[488px]" isMobile={isMobile}>
+            <ModalV2
+                isVisible
+                onBackdropCb={onClose}
+                className="!max-w-[488px]"
+                isMobile={isMobile}
+                containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
+            >
                 <div className="flex flex-col">
                     <div
                         data-tip=""
@@ -319,7 +326,6 @@ const VoteSuccessModal = ({ onClose, summary, type }) => {
     const context = useContext(AlertContext);
 
     useEffect(() => {
-        console.log({type})
         context.alertV2.show(
             'success',
             type ? t('nao:vote:voted_successfully') : t('nao:vote:rejected_successfully'),

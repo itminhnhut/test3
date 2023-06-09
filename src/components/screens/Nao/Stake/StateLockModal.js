@@ -29,7 +29,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     const [percent, setPercent] = useState(0);
     const { t } = useTranslation();
     const arrPercent = ['25', '50', '75', '100'];
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState();
     const [showAlert, setShowAlert] = useState(false);
     const [loading, setLoading] = useState(false);
     const isChangeSlide = useRef(false);
@@ -175,6 +175,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                 inputMode="decimal"
                                 allowedDecimalSeparators={[',', '.']}
                                 errorTooltip={false}
+                                placeholder="0"
                                 // renderText={(e) => console.log(e)}
                             />
                             <div className="my-6 -mx-2">

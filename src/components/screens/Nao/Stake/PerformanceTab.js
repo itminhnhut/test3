@@ -410,7 +410,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                 <label className="text-txtPrimary dark:text-txtPrimary-dark font-semibold leading-6 mb:text-lg">
                                     {t('nao:pool:total_revenue')}
                                 </label>
-                                <div className="flex items-center mt-6 mb:mt-9">
+                                <div className="flex items-center mt-6 mb:mt-[44px]">
                                     <div className="text-xl mb:text-2xl font-semibold">≈ {formatNumber(data.totalProfit, 0)} VNDC</div>
                                 </div>
                                 <div className="text-xs mb:text-base text-txtSecondary dark:text-txtSecondary-dark mt-0.5 mb:mt-2">

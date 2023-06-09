@@ -204,7 +204,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                 }}
                             />
                             <div
-                                className="mr-3 font-semibold border-b border-gray-1 dark:border-gray-7 border-dashed text-sm"
+                                className="mr-3 font-semibold border-b border-gray-1 dark:border-gray-7 border-dashed text-sm mb:text-base"
                                 data-tip={t('nao:pool:tooltip_auto')}
                                 data-for="tooltip-auto"
                             >
@@ -270,7 +270,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                         <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm lg:text-base">{t('nao:pool:revenue_share_from_trade')}</div>
                     </div>
                 </div>
-                <div className="mt-5 space-x-2 flex items-center font-semibold text-txtPrimary dark:text-txtSecondary-dark">
+                <div className="mt-5 space-x-3 flex items-center font-semibold text-txtPrimary dark:text-txtSecondary-dark">
                     <div
                         onClick={() => onRedirect('whitepaper')}
                         className="w-full py-3 px-5 bg-gray-12 dark:bg-dark-2 flex justify-center items-center text-sm lg:text-base font-semibold rounded-md"
