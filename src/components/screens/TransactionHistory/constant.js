@@ -20,6 +20,7 @@ export const TRANSACTION_TYPES = {
     STAKING: 'staking',
     TRANSFER: 'transfer',
     FUTURES: 'futures',
+    NAO_FUTURES: 'nao',
     EXCHANGE: 'exchange',
     FUTURES_FEE: 'futures_fee',
     EXCHANGE_FEE: 'exchange_fee',
@@ -38,12 +39,12 @@ export const TransactionTabs = [
     },
     {
         key: TRANSACTION_TYPES.DEPOSIT,
-        localized: 'deposit',
+        localized: 'deposit_onchain',
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.DEPOSIT)
     },
     {
         key: TRANSACTION_TYPES.WITHDRAW,
-        localized: 'withdraw',
+        localized: 'withdraw_onchain',
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.WITHDRAW)
     },
     {
@@ -60,6 +61,11 @@ export const TransactionTabs = [
         key: TRANSACTION_TYPES.FUTURES,
         localized: 'futures',
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.FUTURES)
+    },
+    {
+        key: TRANSACTION_TYPES.NAO_FUTURES,
+        localized: 'nao',
+        href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.NAO_FUTURES)
     },
     {
         key: TRANSACTION_TYPES.CONVERT,
@@ -97,7 +103,8 @@ export const COLUMNS_TYPE = {
     STAKING_SNAPSHOT: 'staking_snapshot',
     FIAT_USER: 'fiat_user',
     SIDETYPE: 'sidetype',
-    FUTURES_ORDER_VALUE: 'futures_order_value'
+    FUTURES_ORDER_VALUE: 'futures_order_value',
+    CONVERT_ASSET: 'convert_asset'
 };
 
 export const modalDetailColumn = {
@@ -105,9 +112,24 @@ export const modalDetailColumn = {
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
         { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
         { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
-        { keys: ['additionalData.fromQty', 'additionalData.fromAsset'], localized: 'modal_detail.convert_from' },
-        // { keys: ['additionalData.toQty', 'additionalData.toAsset'], localized: 'modal_detail.to' },
-        { keys: ['rate'], localized: 'modal_detail.avg_price', type: COLUMNS_TYPE.RATE }
+        {
+            keys: ['additionalData.displayingId'],
+            backupKeys: ['result.metadata.displayingId'],
+            localized: 'modal_detail.order_id'
+        },
+        {
+            keys: ['additionalData.fromQty', 'additionalData.fromAsset'],
+            backupKeys: ['result.metadata.fromQty', 'result.metadata.fromAsset'],
+            localized: 'modal_detail.from',
+            type: COLUMNS_TYPE.CONVERT_ASSET
+        },
+        {
+            keys: ['additionalData.toQty', 'additionalData.toAsset'],
+            backupKeys: ['result.metadata.toQty', 'result.metadata.toAsset'],
+            localized: 'modal_detail.to',
+            type: COLUMNS_TYPE.CONVERT_ASSET
+        },
+        { keys: ['rate'], localized: 'modal_detail.rate', type: COLUMNS_TYPE.RATE }
     ],
     [TRANSACTION_TYPES.CONVERTSMALLBALANCE]: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, primaryTeal: true, isAddress: true },
@@ -121,7 +143,7 @@ export const modalDetailColumn = {
         { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
         { keys: ['additionalData.metadata.address'], localized: 'modal_detail.from', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
         { keys: ['additionalData.to.address'], localized: 'modal_detail.to', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
-        { keys: ['additionalData.fee.value'], localized: 'modal_detail.fee',type:COLUMNS_TYPE.DEPOSIT_WITHDRAW_FEE },
+        { keys: ['additionalData.fee.value'], localized: 'modal_detail.fee', type: COLUMNS_TYPE.DEPOSIT_WITHDRAW_FEE },
         { keys: ['additionalData.network'], localized: 'modal_detail.network' },
         { keys: ['additionalData.metadata.txhash'], localized: 'modal_detail.txhash', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true }
     ],

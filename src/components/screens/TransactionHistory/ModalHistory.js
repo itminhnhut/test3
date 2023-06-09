@@ -31,13 +31,14 @@ export const WalletTypeById = {
 
 const NULL_ASSET = '--';
 
-const mappingTokensRewardType = (detail) => {
-    const tokens = get(detail, 'additionalData.reward.tokens');
-    if (!tokens) return [];
-
-    const assets = Object.keys(tokens).map((key) => ({ assetId: +key, value: tokens[key] }));
-
-    return assets;
+const parseObjToString = ({ keys, object }) => {
+    return keys
+        .filter((key) => {
+            // filter number & string value.
+            return isNumber(get(object, key)) || isString(get(object, key));
+        })
+        .map((key, index) => (index >= 1 ? ' ' : '') + get(object, key))
+        .join('');
 };
 
 const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categoryConfig, language }) => {
@@ -144,7 +145,8 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                 {detailTx?.categoryContent?.[language] ?? t('transaction-history:default_category')}
                             </div>
                             <div className="mb-6">
-                                {detailTx.type === 'convert' ? (
+                                {/* convert === 'SWAP'. category 135 is SWAP FEE */}
+                                {detailTx.type === 'convert' && detailTx.result.category !== 135 ? (
                                     <div className="flex items-center space-x-2">
                                         <div>
                                             <AssetLogo
@@ -188,15 +190,19 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                             {modalDetailColumn?.[detailTx.type]?.map((col) => {
                                 let additionalData;
 
-                                const keyData = col.keys
-                                    .filter((key) => {
-                                        // filter number & string value.
-                                        return isNumber(get(detailTx, key)) || isString(get(detailTx, key));
-                                    })
-                                    .map((key, index) => (index >= 1 ? ' ' : '') + get(detailTx, key))
-                                    .join('');
+                                const keyData = parseObjToString({
+                                    keys: col.keys,
+                                    object: detailTx
+                                });
 
-                                let formatKeyData = keyData;
+                                let formatKeyData =
+                                    keyData ||
+                                    (col?.backupKeys
+                                        ? parseObjToString({
+                                              keys: col.backupKeys,
+                                              object: detailTx
+                                          })
+                                        : null);
                                 let symbol, asset;
                                 switch (col.type) {
                                     case COLUMNS_TYPE.COPIEDABLE:
@@ -263,11 +269,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         formatKeyData = `${assetLength < 10 ? `0${assetLength}` : assetLength}`;
                                         break;
                                     case COLUMNS_TYPE.WALLET_TYPE:
-                                        formatKeyData = (
-                                            <div className="">
-                                                {renderWallet(WalletTypeById?.[keyData])}
-                                            </div>
-                                        );
+                                        formatKeyData = <div className="">{renderWallet(WalletTypeById?.[keyData])}</div>;
                                         break;
                                     case COLUMNS_TYPE.NAMI_SYSTEM:
                                         formatKeyData = t('transaction-history:nami_system');
@@ -309,6 +311,14 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                                 {customFormatBalance(+fee, assetData?.assetDigit || 0)} {assetData?.assetCode}{' '}
                                             </div>
                                         );
+                                        break;
+                                    case COLUMNS_TYPE.CONVERT_ASSET:
+                                        let qty = get(detailTx, col.keys[0]) || get(detailTx, col.backupKeys[0]);
+                                        let assetCode = get(detailTx, col.keys[1]) || get(detailTx, col.backupKeys[1]);
+
+                                        const config = assetConfig?.find((e) => e?.assetCode === assetCode);
+
+                                        formatKeyData = `${customFormatBalance(+qty, config?.assetDigit || 0)} ${assetCode}`;
                                         break;
 
                                     default:

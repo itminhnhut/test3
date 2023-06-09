@@ -17,14 +17,8 @@ import axios from 'axios';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
 import { isNull } from 'lodash';
 import usePrevious from 'hooks/usePrevious';
-import { formatLocalTimezoneToUTC } from 'utils/helpers';
 
 const LIMIT = 10;
-
-const namiSystem = {
-    en: 'Nami system',
-    vi: 'Hệ thống Nami'
-};
 
 export const customFormatBalance = (number, digit, acceptNegative = true) => {
     return formatBalance(+number < 0 ? Math.ceil(number) : number, digit, acceptNegative);
@@ -96,13 +90,19 @@ const TransactionHistory = ({ id }) => {
                 [id]: id,
                 all: null,
                 [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
-                [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW
+                [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
+                [TRANSACTION_TYPES.NAO_FUTURES]: TRANSACTION_TYPES.FUTURES
             }[id];
 
             // neu la withdraw hoac deposit thi se co gia tri isNegative, cac truong hop khac se undefined
             const isNegative = {
                 deposit: false,
                 withdraw: true
+            }[id];
+
+            const walletType = {
+                futures: 2,
+                nao: 9
             }[id];
 
             // only 'all' tab is able to filter
@@ -124,7 +124,8 @@ const TransactionHistory = ({ id }) => {
                 limit: LIMIT,
                 skip: currentPage * LIMIT,
                 category: category?.category_id || undefined,
-                currency: asset?.id || undefined
+                currency: asset?.id || undefined,
+                walletType
             };
             try {
                 setLoading(true);
@@ -253,11 +254,12 @@ const TransactionHistory = ({ id }) => {
                     </div>
                     <div className="flex mb-12 ">
                         <TabV2
+                            wrapperClassName="!gap-3"
                             activeTabKey={id}
                             onChangeTab={onChangeTab}
                             tabs={TransactionTabs.map((tab) => ({
                                 key: tab.key,
-                                children: <div className="capitalize">{t('transaction-history:tab.' + tab.localized)}</div>
+                                children: <div className="">{t('transaction-history:tab.' + tab.localized)}</div>
                             }))}
                         />
                     </div>
