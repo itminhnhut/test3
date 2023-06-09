@@ -1015,6 +1015,7 @@ export const setBottomTab = (tab) => async (dispatch) => {
 };
 
 export const encodeUrlFromApp = (url, isAuth = false) => {
+    
     if (!isAuth) return encodeURI(process.env.NEXT_PUBLIC_WEB_V1 + url);
     return encodeurl(`${process.env.NEXT_PUBLIC_WEB_V1}/api/v1/redirect_from_app?target=${process.env.NEXT_PUBLIC_WEB_V1}${url}`);
 };
