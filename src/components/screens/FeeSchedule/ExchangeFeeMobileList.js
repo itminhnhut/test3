@@ -24,7 +24,7 @@ export default function ExchangeFeeMobileList({ t }) {
                         </div>
 
                         <div className="flex justify-between items-center text-sm">
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="text-txtSecondary dark:text-txtSecondary-dark w-1/2">
                                 <span>Maker/Taker </span>
                                 <span className="text-teal whitespace-nowrap">
                                     (

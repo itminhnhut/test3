@@ -344,6 +344,7 @@ const TradingRules = () => {
                                 isSearch={strSearch}
                                 className="border border-divider dark:border-divider-dark rounded-xl"
                                 pagingClassName="border-none"
+                                shadowWithFixedCol={false}
                             />
                         </Wrapper>
                     )}

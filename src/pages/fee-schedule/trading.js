@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { formatNumber, getLoginUrl, getS3Url } from 'redux/actions/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { API_GET_FUTURE_FEE_CONFIGS, API_GET_VIP, API_SET_ASSET_AS_FEE } from 'redux/actions/apis';
-import { BREAK_POINTS, FEE_TABLE, ROOT_TOKEN } from 'constants/constants';
+import { BREAK_POINTS, FEE_TABLE, NAMI_FEE_FUTURE, ROOT_TOKEN } from 'constants/constants';
 import { ApiStatus, TRADING_MODE } from 'redux/actions/const';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { orderBy, throttle } from 'lodash';
@@ -66,7 +66,8 @@ const INITIAL_STATE = {
     subConfigTabIndex: 0
 };
 
-const feesWithoutOnus = fees.filter((rs) => !(rs.assetId === 86));
+const naoFeesWithoutOnus = fees.filter((rs) => !(rs.assetId === 86));
+const namiFees = NAMI_FEE_FUTURE;
 
 const TradingFee = () => {
     // Init state
@@ -119,12 +120,13 @@ const TradingFee = () => {
 
     // Render Handler
     const renderNamiAvailable = useCallback(() => {
-        if (!namiWallets)
+        if (!namiWallets) {
             return (
                 <span className="ml-1.5">
                     <Skeletor width={105} />
                 </span>
             );
+        }
 
         const available = namiWallets?.value - namiWallets?.locked_value;
         return <span className="whitespace-nowrap ml-1.5">{available ? formatNumber(available, assetConfig?.assetDigit) : '0.0000'} NAMI</span>;
@@ -139,6 +141,7 @@ const TradingFee = () => {
                         value={tab.index}
                         className="!text-left !px-0"
                         onClick={() => setState({ tabIndex: tab.index })}
+                        isActive={state.tabIndex === tab.index}
                     >
                         {tab.localized ? t(tab.localized, { action: 'Exchange' }) : tab.title}
                     </TabItem>
@@ -156,6 +159,7 @@ const TradingFee = () => {
                         value={tab.index}
                         className="!text-left !px-0 !mr-6 !w-auto"
                         onClick={() => setState({ tabIndex: tab.index })}
+                        isActive={state.tabIndex === tab.index}
                     >
                         {tab.localized ? t(tab.localized, { action: 'Exchange' }) : tab.title}
                     </TabItem>
@@ -171,7 +175,7 @@ const TradingFee = () => {
             {
                 key: 'symbol',
                 dataIndex: 'assetCode',
-                title: 'Coin/Token',
+                title: t('fee-structure:asset'),
                 align: 'left',
                 render: (assetCode) => {
                     return (
@@ -190,7 +194,7 @@ const TradingFee = () => {
                 title: (
                     <span className="ml-1">
                         {' '}
-                        {t('common:fee')}
+                        {t('fee-structure:basic_fee')}
                         <span className="ml-1">
                             ({t('common:open')}/{t('common:close')})
                         </span>
@@ -233,7 +237,7 @@ const TradingFee = () => {
                     tableStyle: { minWidth: '768px !important' },
                     headerStyle: {},
                     rowStyle: {},
-                    shadowWithFixedCol: width <= BREAK_POINTS.lg,
+                    // shadowWithFixedCol: width <= BREAK_POINTS.lg,
                     noDataStyle: {
                         minHeight: '280px'
                     },
@@ -251,7 +255,6 @@ const TradingFee = () => {
                 dataIndex: 'level',
                 title: t('common:fee_level'),
                 width: 100,
-                fixed: 'left',
                 align: 'left'
             },
             {
@@ -307,7 +310,7 @@ const TradingFee = () => {
                     tableStyle: { minWidth: '768px !important' },
                     headerStyle: {},
                     rowStyle: {},
-                    shadowWithFixedCol: width < BREAK_POINTS.lg,
+                    // shadowWithFixedCol: width < BREAK_POINTS.lg,
                     noDataStyle: {
                         minHeight: '280px'
                     },
@@ -329,19 +332,35 @@ const TradingFee = () => {
                 toAsset: 'NAMI'
             })}
         >
-            <a className="text-teal font-semibold whitespace-nowrap hover:!underline ml-4 mt-0">{t('common:buy')} NAMI</a>
+            <a className="text-teal hover:text-txtTextBtn-pressed font-semibold whitespace-nowrap ml-4 mt-0">{t('common:buy')} NAMI</a>
         </Link>
     );
+
     const userVipLevel = () =>
         !auth ? (
             <>
                 <div className="font-semibold leading-normal pt-2">
-                    <span className="text-gray-4">{t('fee-structure:login_view_your_fee')}</span>
-                    {typeof window !== 'undefined' && (
-                        <Link href={getLoginUrl('sso', 'login')}>
-                            <a className="cursor-pointer ml-3 w-[85px] text-txtTextBtn-dark">{t('fee-structure:login')}</a>
-                        </Link>
-                    )}
+                    <div className={`flex flex-col space-y-3 items-center justify-center`}>
+                        <img className="max-h-[124px]" src={getS3Url('/images/icon/ic_login.png')} />
+                        <div className="flex space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
+                            <span
+                                onClick={() => {
+                                    window.location.href = getLoginUrl('sso');
+                                }}
+                                className="text-teal hover:underline cursor-pointer font-semibold"
+                                dangerouslySetInnerHTML={{ __html: t('common:sign_in') }}
+                            />
+                            <div>{t('common:or')}</div>
+                            <span
+                                onClick={() => {
+                                    window.location.href = getLoginUrl('sso', 'register');
+                                }}
+                                className="text-teal hover:underline cursor-pointer font-semibold"
+                                dangerouslySetInnerHTML={{ __html: t('common:sign_up') }}
+                            />
+                            <div>{t('fee-structure:to_experience')}</div>
+                        </div>
+                    </div>
                 </div>
             </>
         ) : (
@@ -399,7 +418,7 @@ const TradingFee = () => {
                         <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
                             <ButtonV2 className="!px-6 !w-auto !bg-transparent">
                                 <Crown fill={'#47cc85'} />
-                                <span className="!ml-2 text-txtTextBtn-dark">{t('fee-structure:vip_upgrade')}</span>
+                                <span className="!ml-2 text-txtTextBtn-dark hover:!text-txtTextBtn-pressed">{t('fee-structure:vip_upgrade')}</span>
                             </ButtonV2>
                         </Link>
                         {/* thêm button fee setting */}
@@ -420,7 +439,7 @@ const TradingFee = () => {
             <div id="trading_fee" className="hidden md:block">
                 <div className="flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-xl px-8 pt-4">{renderFeeTab()}</div>
                 {state.tabIndex === 1 || state.tabIndex === 2 ? (
-                    <div className="py-8 sm:py-6 flex items-center border border-b-0 border-divider dark:border-divider-dark px-8 sm:border-b-[1px] flex-wrap justify-between">
+                    <div className="py-8 sm:py-6 flex items-center border border-b-0 border-divider dark:border-divider-dark px-8 flex-wrap justify-between">
                         {state.tabIndex === 1 || state.tabIndex === 2 ? (
                             <TokenTypes
                                 type={state.subTabIndex}
@@ -476,13 +495,18 @@ const TradingFee = () => {
                     {t('fee-structure:maker_taker_description')}
                     <span className="ml-2">{t('fee-structure:maker_taker_description_2')}</span>
                     <HrefButton variants="blank" className="!w-auto ml-3" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank">
-                        {t('common:read_more')}
+                        {t('fee-structure:read_more')}
                     </HrefButton>
                 </div>
                 <div className="flex items-center">
                     {t('fee-structure:referral_description_value', { value: '20%' })}
-                    <HrefButton variants="blank" className="!w-auto ml-3" href={PATHS.ACCOUNT.REFERRAL} target="_blank">
-                        {t('common:read_more')}
+                    <HrefButton
+                        variants="blank"
+                        className="!w-auto ml-3"
+                        href={language === LANGUAGE_TAG.VI ? PATHS.ACCOUNT.REFERRAL_VI : PATHS.ACCOUNT.REFERRAL}
+                        target="_blank"
+                    >
+                        {t('fee-structure:read_more')}
                     </HrefButton>
                 </div>
             </div>
@@ -617,7 +641,7 @@ const TokenTypes = ({ type, setType, types, lang, className }) => {
 const getRenderFutureFeeData = (tabIndex, subTabIndex) => {
     const codeOfAssetOrder = [];
     const dataForTable = [];
-    if (feesWithoutOnus && feesWithoutOnus.length > 0) {
+    if (naoFeesWithoutOnus && naoFeesWithoutOnus.length > 0) {
         if (tabIndex === 1 && subTabIndex === 0) {
             codeOfAssetOrder = [72, 1];
         } else if (tabIndex === 1 && subTabIndex === 1) {
@@ -628,7 +652,12 @@ const getRenderFutureFeeData = (tabIndex, subTabIndex) => {
             codeOfAssetOrder = [22, 447, 1];
         }
         codeOfAssetOrder.forEach((assetCode) => {
-            const foundFee = feesWithoutOnus.find((fee) => fee.assetId === assetCode);
+            const foundFee = null;
+            if (tabIndex === 1) {
+                foundFee = namiFees.find((fee) => fee.assetId === assetCode);
+            } else {
+                foundFee = naoFeesWithoutOnus.find((fee) => fee.assetId === assetCode);
+            }
             if (foundFee) {
                 dataForTable.push(foundFee);
             }

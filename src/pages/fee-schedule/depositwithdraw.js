@@ -79,9 +79,9 @@ const DepositWithdrawFee = () => {
             {
                 key: 'assetCode',
                 dataIndex: 'assetCode',
-                title: 'Coin / Token',
+                title: t('fee-structure:asset'),
                 width: '20%',
-                fixed: 'left',
+                // fixed: 'left',
                 align: 'left',
                 // preventSort: true
                 render: (row, item) => (
@@ -141,7 +141,7 @@ const DepositWithdrawFee = () => {
             {
                 key: 'withdraw_fee',
                 dataIndex: 'withdraw_fee',
-                title: t('wallet:withdraw_fee'),
+                title: t('common:fee'),
 
                 width: '20%',
                 align: 'right',
@@ -288,21 +288,19 @@ const DepositWithdrawFee = () => {
         if (language === LANGUAGE_TAG.VI) {
             return (
                 <>
-                    Với mỗi lần rút token, người dùng sẽ trả một khoản phí cố định để trang trải chi phí giao dịch khi chuyển token ra khỏi tài khoản Nami.
-                    {width >= BREAK_POINTS.sm && <br />}
-                    Tỷ lệ phí rút được xác định bởi blockchain và có thể dao động mà không cần báo trước do các yếu tố như sự tắc nghẽn mạng.
-                    {width >= BREAK_POINTS.sm && <br />}
-                    Vui lòng kiểm tra thông tin phí cập nhật gần nhất được liệt kê cho mỗi token dưới đây.
+                    - Với mỗi lần rút tài sản số, người dùng sẽ cần trả một khoản phí giao dịch để xử lý lệnh theo tỷ lệ được quyết định bởi blockchain
+                    {width >= BREAK_POINTS.sm && <br />}- Tỷ lệ phí rút có thể thay đổi liên tục do đặc thù của mỗi blockchain
+                    {width >= BREAK_POINTS.sm && <br />}- Vui lòng kiểm tra kỹ thông tin về phí giao dịch khi thực hiện lệnh rút mỗi loại tài sản số
                 </>
             );
         } else {
             return (
                 <>
-                    For each withdrawal, a flat fee is paid by users to cover the transaction costs of moving the cryptocurrency out of their Nami account.
-                    {width >= BREAK_POINTS.sm && <br />}
-                    Withdrawals rates are determined by the blockchain network and can fluctuate without notice due to factors such as network congestion.
-                    {width >= BREAK_POINTS.sm && <br />}
-                    Please check the most recent data listed on each withdrawal page.
+                    - With each withdrawal of tokens, users will need to pay a transaction fee to process the order according to the rate decided by the
+                    blockchain
+                    {width >= BREAK_POINTS.sm && <br />}- The rate of withdrawal fees is subject to change continuously due to the peculiarities of each
+                    blockchain
+                    {width >= BREAK_POINTS.sm && <br />}- Please check carefully the transaction fee information when making a withdrawal order for each token
                 </>
             );
         }

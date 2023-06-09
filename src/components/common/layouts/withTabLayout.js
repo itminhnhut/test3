@@ -39,8 +39,6 @@ export default (props) => (WrappedComponent) => {
         const renderTabLink = useCallback(() => {
             if (!(routes || Object.keys(routes).length) || (hideInApp && isApp)) return null;
 
-          
-
             return Object.values(routes).map((route) => {
                 const path = getLastestSourcePath(route?.pathname);
                 const isActive = state.currentLastestPath === path;
@@ -78,7 +76,7 @@ export default (props) => (WrappedComponent) => {
                                 className={
                                     hideInApp && isApp
                                         ? 'flex items-center mb-8 lg:mb-10'
-                                        : 'flex items-center mb-8 lg:mb-10 border-b border-divider dark:border-divider-dark'
+                                        : 'flex items-center mb-8 lg:mb-10 border-b border-divider dark:border-divider-dark fee-trading-tabs'
                                 }
                             >
                                 {renderTabLink()}
@@ -99,9 +97,15 @@ const Background = styled.div.attrs({ className: 'w-full h-full pt-5 pb-24 lg:pb
         .fee-schedule {
             padding: 16px;
             a {
-                width: 50%;
                 margin-right: 0;
+                font-size: 14px;
+                margin-right: 8px;
+                padding-left: 16px;
             }
+        }
+        .fee-trading-tabs {
+            margin-left: -16px;
+            margin-right: -16px;
         }
     }
 `;

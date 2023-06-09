@@ -142,7 +142,7 @@ export const NoDataDarkIcon = ({ size }) => {
     );
 };
 
-const NotFoundDarkIcon = () => (
+export const NotFoundDarkIcon = () => (
     <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             d="M53.636 60.49c0 8.972-5.271 16.71-12.87 20.265-7.652-2.78-13.13-10.136-13.13-18.752 0-9.903 7.246-18.144 16.703-19.683a22.348 22.348 0 0 1 9.297 18.17z"
