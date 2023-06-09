@@ -65,7 +65,6 @@ const Portfolio = () => {
         overallStatistic: {}
     });
 
-    console.log("____dataOverview: ", dataOverview);
     const [isNeverTrade, setIsNeverTrade] = useState(false);
     const [loadingOverview, setLoadingOverview] = useState(false);
     const fetchDataOverview = async () => {

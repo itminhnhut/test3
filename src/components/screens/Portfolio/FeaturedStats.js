@@ -312,6 +312,11 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
         }
     };
 
+    const handleShareAction = async (value) => {
+        if(value !== 'save') return;
+        await onDownLoad()
+    }
+
     return (
         <>
             <ModalLoading isVisible={loading} onBackdropCb={() => setLoading(false)} />
@@ -409,7 +414,7 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                             <div className="mt-10 text-2xl font-semibold">Chia sẻ đến</div>
                             <div className="flex items-center justify-start flex-wrap gap-4 mt-6">
                                 {list.map((item, key) => (
-                                    <div onClick={async () => await onDownLoad()} key={key} className="cursor-pointer flex flex-col items-center min-w-[58px]">
+                                    <div onClick={() => handleShareAction(item.event)} key={key} className="first:cursor-pointer flex flex-col items-center min-w-[58px]">
                                         <CardFill className="!p-2 !rounded-md">{item.icon}</CardFill>
                                         <span className="mt-2 text-xs text-txtSecondary dark:text-txtSecondary-dark">{item.name}</span>
                                     </div>

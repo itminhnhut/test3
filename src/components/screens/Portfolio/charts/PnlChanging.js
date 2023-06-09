@@ -17,7 +17,7 @@ import { formatNanNumber } from 'redux/actions/utils';
 import { isNumber } from 'lodash';
 import ModalV2 from 'components/common/V2/ModalV2';
 import MCard from 'components/common/MCard';
-const { addMonths, addWeeks } = require('date-fns');
+const { addMonths, addWeeks, subDays, getDay, addDays } = require('date-fns');
 
 const INTERVAL = {
     DAY: 'day',
@@ -44,7 +44,7 @@ const PnlChanging = ({
 
     useEffect(() => {
         if (dataPnl?.labels?.length > 0) {
-            let labels = dataPnl.labels.map((obj) => parseTitle(obj.date, dataPnl?.interval));
+            let labels = dataPnl.labels.map((obj) => parseTitle(obj.date, dataPnl?.interval, false, filter.startDate));
             let values = dataPnl.values.map((obj) => obj.pnl);
 
             setPnlChartData({
@@ -82,7 +82,7 @@ const PnlChanging = ({
                     if (!isMobile) {
                         const { dataIndex } = context?.chart?.tooltip?.dataPoints?.['0'];
 
-                        const title = parseTitle(dataPnl.labels[dataIndex]?.date, dataPnl?.interval, true);
+                        const title = parseTitle(dataPnl.labels[dataIndex]?.date, dataPnl?.interval, true, filter.startDate);
 
                         let margin = dataPnl.values[dataIndex].margin ?? 1;
                         let pnl = dataPnl.values[dataIndex].pnl;
@@ -225,7 +225,7 @@ const PnlChanging = ({
                                 <div className="flex items-center justify-between">
                                     <span className="txtSecond-3">{t('common:global_label.date')}</span>
                                     <div className="whitespace-nowrap font-semibold flex items-center">
-                                        {parseTitle(dataPnl.labels[showDetails]?.date, dataPnl?.interval)}
+                                        {parseTitle(dataPnl.labels[showDetails]?.date, dataPnl?.interval, false, filter.startDate)}
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between mt-2.5">
@@ -444,7 +444,7 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
         tooltipCaretEl = document.createElement('div');
 
         if (tooltip.caretX + tooltipWidth > chartWidth) {
-            tooltipCaretEl.style.right = - barEl.width - 6 - 3 + 'px'; //barEl.width;
+            tooltipCaretEl.style.right = -barEl.width - 6 - 3 + 'px'; //barEl.width;
         } else {
             tooltipCaretEl.style.left = -barEl.width - 6 - 3 + 'px'; //barEl.width;
         }
@@ -464,20 +464,25 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
     tooltipEl.appendChild(tooltipCaretEl);
 };
 
-const parseTitle = (stringDate, interval, isDetails = false) => {
+const parseTitle = (stringDate, interval, isDetails = false, startDate) => {
+    const dayOfWeek = getDay(new Date(startDate));
+
+    // Calculate the delta from Monday (assuming Monday is the start of the week)
+    const delta = (dayOfWeek + 6) % 7;
+
     let title = '';
-    const curDate = new Date(stringDate);
+    const curDate = addDays(new Date(stringDate), delta);
     switch (interval) {
         case INTERVAL.DAY:
             title = formatTime(curDate, isDetails ? 'dd/MM/yyyy' : 'dd/MM');
             break;
         case INTERVAL.WEEK:
             if (!isDetails) title = formatTime(curDate, 'dd/MM');
-            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM/yyyy');
+            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(subDays(addWeeks(curDate, 1), 1), 'dd/MM/yyyy');
             break;
         case INTERVAL.MONTH:
             if (!isDetails) title = formatTime(curDate, 'MM/yyyy');
-            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
+            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(subDays(addMonths(curDate, 1), 1), 'dd/MM/yyyy');
             break;
         default:
             break;
