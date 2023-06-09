@@ -180,7 +180,7 @@ export default function Vote() {
                     <div className="hidden lg:block">{description()}</div>
                 </div>
                 <div className="w-full sm:max-w-[470px]">
-                    <CardNao className="!min-h-0 space-y-4 sm:space-y-6 lg:w-full !min-w-[280px] !px-4 !py-6 sm:!p-8 text-sm sm:text-base border border-divider dark:border-none">
+                    <CardNao className="!min-h-0 space-y-4 sm:space-y-6 lg:w-full !min-w-[280px] !px-4 !py-6 sm:!p-8 text-sm sm:text-base shadow-card_light">
                         <div>
                             <div className="flex flex-row justify-between">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:vote:voted_for')}</span>
