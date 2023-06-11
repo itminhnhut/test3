@@ -213,7 +213,7 @@ const ContestPerRanks = ({ previous, contestId, minVolumeInd, lastUpdated, top_r
                                                                 alt=""
                                                             />
                                                             <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
-                                                                {index + 4}
+                                                                {item?.[rank]}
                                                             </span>
                                                         </div>
                                                     ) : (
