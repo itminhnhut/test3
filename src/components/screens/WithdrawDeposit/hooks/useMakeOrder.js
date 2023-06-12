@@ -24,6 +24,50 @@ const useMakeOrder = ({ setState, input }) => {
         router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + order.displayingId);
     };
 
+    const makeOrderErrorHandler = (orderResponse) => {
+        const errorHandler = {
+            [ApiResultCreateOrder.NOT_FOUND_PARTNER]: () => {
+                toast({ text: t('dw_partner:error.not_found_partner'), type: 'warning' });
+                return true;
+            },
+            [ApiResultCreateOrder.NOT_ENOUGH_MONEY]: () => {
+                toast({ text: t('dw_partner:error.not_enough_money'), type: 'warning' });
+                return true;
+            },
+            [ApiResultCreateOrder.INVALID_AMOUNT]: () => {
+                toast({ text: t('dw_partner:error.reach_limit_withdraw', { asset: assetCode }), type: 'warning' });
+                return true;
+            },
+            [ApiResultCreateOrder.EXCEEDING_PERMITTED_LIMIT]: () => {
+                setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                    visible: true,
+                    type: ORDER_TYPES.ERROR_EXCEEDING_LIMIT
+                });
+                return true;
+            },
+            [ApiResultCreateOrder.SECRET_INVALID]: () => {
+                toast({
+                    text: t('dw_partner:error.invalid_secret', { timesErr: orderResponse?.data?.count ?? 1 }),
+                    type: 'warning'
+                });
+                return true;
+            },
+            [ApiResultCreateOrder.SOTP_INVALID]: () => {
+                toast({
+                    text: t('dw_partner:error.invalid_smart_otp', { timesErr: orderResponse?.data?.count ?? 1 }),
+                    type: 'warning'
+                });
+                return true;
+            },
+            [ApiResultCreateOrder.SOTP_INVALID_EXCEED_TIME]: () => {
+                setState({ showAlertDisableSmartOtp: true });
+                return true;
+            }
+        };
+
+        return errorHandler[orderResponse?.status]?.() || toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
+    };
+
     const onMakeOrderHandler = async (otp, locale) => {
         try {
             setState({ loadingConfirm: true });
@@ -38,14 +82,11 @@ const useMakeOrder = ({ setState, input }) => {
                 locale
             });
 
-            console.log("____orderResponse: ", orderResponse);
-
-            if (orderResponse && (orderResponse.status === ApiStatus.SUCCESS || orderResponse.status === ApiResultCreateOrder.TOO_MUCH_REQUEST)) {
-                // ____________here
-                if(orderResponse.data.use_smart_otp) {
-                    setState({showOtp: true, isUseSmartOtp: true })
+            if (orderResponse?.status === ApiStatus.SUCCESS || orderResponse?.status === ApiResultCreateOrder.TOO_MUCH_REQUEST) {
+                if (orderResponse?.data?.use_smart_otp) {
+                    setState({ showOtp: true, isUseSmartOtp: true });
                 } else {
-                    if (orderResponse.data.remaining_time) {
+                    if (orderResponse?.data?.remaining_time) {
                         setState({ showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time, isUseSmartOtp: false });
                     } else {
                         onMakeOrderSuccess(orderResponse.data);
@@ -57,31 +98,12 @@ const useMakeOrder = ({ setState, input }) => {
                     toast({ text: t('common:otp_verify_expired'), type: 'warning' });
                     setState({ loadingConfirm: false });
                     return orderResponse;
-                } else {
-                    if (orderResponse?.status === ApiResultCreateOrder.NOT_FOUND_PARTNER) {
-                        toast({ text: t('dw_partner:error.not_found_partner'), type: 'warning' });
-                    } else if (orderResponse?.status === ApiResultCreateOrder.NOT_ENOUGH_MONEY) {
-                        toast({ text: t('dw_partner:error.not_enough_money'), type: 'warning' });
-                    } else if (orderResponse?.status === ApiResultCreateOrder.INVALID_AMOUNT) {
-                        toast({ text: t('dw_partner:error.reach_limit_withdraw', { asset: assetCode }), type: 'warning' });
-                    } else if (orderResponse?.status === ApiResultCreateOrder.EXCEEDING_PERMITTED_LIMIT) {
-                        setModalState(MODAL_TYPE.AFTER_CONFIRM, {
-                            visible: true,
-                            type: ORDER_TYPES.ERROR_EXCEEDING_LIMIT
-                        });
-                    } else if(orderResponse?.status === ApiResultCreateOrder.SECRET_INVALID) {
-                        toast({ text: t('dw_partner:error.invalid_secret', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
-                    } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID) {
-                        toast({ text: t('dw_partner:error.invalid_smart_otp', {timesErr: orderResponse?.data?.count ?? 1}), type: 'warning' });
-                    } else if(orderResponse?.status === ApiResultCreateOrder.SOTP_INVALID_EXCEED_TIME) {
-                        setState({ showAlertDisableSmartOtp: true })
-                    } else toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }
+                makeOrderErrorHandler(orderResponse);
             }
 
             setState({ loadingConfirm: false });
-            return orderResponse
-            // sell;
+            return orderResponse;
         } catch (error) {
             console.log('error:', error);
             setState({ loadingConfirm: false });
