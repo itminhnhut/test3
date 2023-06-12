@@ -78,7 +78,7 @@ export const NAV_DATA = [
                 title: 'Referral',
                 localized: 'referral',
                 isNew: false,
-                isHide: true,
+                hide: true,
                 url: '/reference',
                 child_lv2: []
             }
@@ -344,22 +344,6 @@ export const MOBILE_NAV_DATA = [
         child_lv1: [
             {
                 key: 0,
-                title: 'Spot',
-                localized: 'spot',
-                isNew: false,
-                url: '/trade',
-                child_lv2: []
-            },
-            {
-                key: 1,
-                title: 'Futures',
-                localized: 'futures',
-                isNew: false,
-                url: '/futures',
-                child_lv1: []
-            },
-            {
-                key: 7,
                 title: 'Swap',
                 localized: 'swap',
                 isNew: false,
@@ -367,10 +351,27 @@ export const MOBILE_NAV_DATA = [
                 child_lv2: []
             },
             {
+                key: 1,
+                title: 'Spot',
+                localized: 'spot',
+                isNew: false,
+                url: '/trade',
+                child_lv2: []
+            },
+            {
+                key: 2,
+                title: 'Futures',
+                localized: 'futures',
+                isNew: false,
+                url: '/futures',
+                child_lv1: []
+            },
+            {
                 key: 6,
                 title: 'Referral',
                 localized: 'referral',
                 isNew: false,
+                hide: true,
                 url: '/reference',
                 child_lv2: []
             }
@@ -386,10 +387,88 @@ export const MOBILE_NAV_DATA = [
         ]
     },
     {
+        key: 9,
+        title: 'Hoa hồng',
+        localized: 'commission',
+        // hide: true,
+        isNew: true,
+        isVertical: true,
+        url: '/',
+        child_lv1: [
+            {
+                key: 0,
+                title: 'Report Commission',
+                localized: 'report_commission',
+                isNew: false,
+                url: '/trade',
+                child_lv2: []
+            },
+            {
+                key: 1,
+                title: 'Race Top Referral',
+                localized: 'race_top_referral',
+                isNew: false,
+                url: '/futures',
+                child_lv1: []
+            }
+        ]
+    },
+    {
+        key: 10,
+        title: 'Dự án NAO',
+        localized: 'nao',
+        // hide: true,
+        isNew: true,
+        url: '/',
+        child_lv1: [
+            {
+                key: 0,
+                title: 'Whitepaper',
+                localized: 'whitepaper',
+                isNew: false,
+                url: '/trade',
+                child_lv2: []
+            },
+            {
+                key: 1,
+                title: 'Noti',
+                localized: 'noti',
+                isNew: false,
+                url: '/futures',
+                child_lv1: []
+            },
+            {
+                key: 2,
+                title: 'Pool',
+                localized: 'pool',
+                isNew: false,
+                url: '/futures',
+                child_lv1: []
+            },
+            {
+                key: 3,
+                title: 'Stake Nao',
+                localized: 'stake_nao',
+                isNew: false,
+                url: '/futures',
+                child_lv1: []
+            },
+            {
+                key: 4,
+                title: 'Race Top',
+                localized: 'race_top',
+                isNew: false,
+                url: '/futures',
+                child_lv1: []
+            }
+        ]
+    },
+    {
         key: 8,
         title: 'Trade',
         localized: 'trade',
         isNew: false,
+        hide: true,
         url: '/',
         child_lv1: [
             {
@@ -442,6 +521,7 @@ export const MOBILE_NAV_DATA = [
         title: 'Support',
         localized: 'support',
         isNew: false,
+        // hide: true,
         url: '/',
         child_lv1: []
     },
@@ -449,6 +529,7 @@ export const MOBILE_NAV_DATA = [
         key: 'top_referral',
         title: 'Top Referral',
         localized: 'top_referral',
+        hide: true,
         isNew: false,
         url: '/contest/referral',
         child_lv1: []

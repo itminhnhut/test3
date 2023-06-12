@@ -189,7 +189,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                 }
             }
 
-            if (child_lv1 && child_lv1.length) {
+            if (child_lv1.length) {
                 const itemsLevel1 = [];
                 const itemsLevel1withIcon = [];
                 const useDropdownWithIcon = ALLOW_DROPDOWN.includes(localized);
@@ -265,7 +265,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                         {
                                             '!w-full': isVertical,
                                             'w-[48%]': !isVertical,
-                                            hidden: child.isHide
+                                            hidden: child.hide
                                         }
                                     )}
                                 >
@@ -517,7 +517,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
     useAsync(async () => {
         const pairs = await getMarketWatch();
-        if (pairs && pairs.length) setState({ pairsLength: pairs.length });
+        if (pairs.length) setState({ pairsLength: pairs.length });
     }, []);
 
     useEffect(() => {
