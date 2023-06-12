@@ -108,6 +108,22 @@ const Portfolio = () => {
                 }
             });
 
+            // remove from here
+            // const min = -100000;
+            // const max = 100000;
+            // const mock = data.values.map((x) => {
+            //     const mockProfit = Math.floor(Math.random() * (max - 0 + 1)) + 0;
+            //     const mockLoss = Math.floor(Math.random() * (0 - min + 1)) + min;
+            //     return {
+            //         loss: Math.floor(Math.random() * (0 - min + 1)) + min,
+            //         profit: mockProfit,
+            //         margin: mockLoss,
+            //         pnl: mockProfit + mockLoss
+            //     };
+            // });
+            // setDataPnlChanging({ ...data, values: mock });
+            // remove to here
+
             setDataPnlChanging(data);
         } catch (error) {
         } finally {

@@ -43,9 +43,14 @@ const PnlChanging = ({
     });
 
     useEffect(() => {
+        console.log('___________', dataPnl.values);
         if (dataPnl?.labels?.length > 0) {
             let labels = dataPnl.labels.map((obj) => parseTitle(obj.date, dataPnl?.interval, false, filter.startDate));
             let values = dataPnl.values.map((obj) => obj.pnl);
+
+            // const min = -100000;
+            // const max = 100000;
+            // let values = dataPnl.values.map((obj) => Math.floor(Math.random() * (max - min + 1)) + min);
 
             setPnlChartData({
                 labels: labels || [],
@@ -205,7 +210,7 @@ const PnlChanging = ({
                         tooltipContent={t('portfolio:pnl_changing_tooltip')}
                         tooltipId={'pnl_changing_tooltip'}
                     />
-                    <div className="mt-6">
+                    <div className="mt-6 !relative">
                         <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
                     </div>
                     {/* Chu thich */}
@@ -271,7 +276,7 @@ const PnlChanging = ({
                         </div>
                     ) : (
                         <div>
-                            <div className=" w-full max-h-[450px] mt-8">
+                            <div className="!relative w-full max-h-[450px] mt-8">
                                 <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
                             </div>
                             {/* Chu thich */}
@@ -338,6 +343,7 @@ const generateThead = (isDark, label) => {
     th.style.fontSize = '14px';
     th.style.fontWeight = 'normal';
     th.style.paddingBottom = '12px';
+    th.style.whiteSpace = 'nowrap'
     const text = document.createTextNode(label);
 
     th.appendChild(text);
@@ -382,6 +388,7 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
         spanElement.className = 'red-2 font-semibold';
         spanElement.style.color = pnl > 0 ? colors.green['2'] : colors.red['2'];
         spanElement.textContent = `${pnl > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`;
+        liElement3.style.whiteSpace = 'nowrap';
         liElement3.appendChild(spanElement);
         ulElement.appendChild(liElement3);
 
@@ -417,6 +424,7 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
 
     const datasetIndex = tooltip.dataPoints[0].datasetIndex; // Get the index of the hovered dataset
     const barEl = chart.getDatasetMeta(datasetIndex)?.data[dataIndex];
+
     /**
      * tooltip.caretX: tọa độ x của current bar
      * barEl.width: độ rộng của current bar
@@ -426,21 +434,30 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
     // Trường hợp những Bar cuối sẽ bị overflow
     let tooltipCaretClassName;
 
-    if (tooltip.caretX + tooltipWidth > chartWidth) {
-        tooltipEl.style.left = positionX + barEl.x - tooltipWidth / 2 - 12 - barEl.width / 2 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
-        tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
+    // console.log(barEl.x, tooltipWidth, chartWidth);
+    if (barEl.x + tooltipWidth > chartWidth) {
+        tooltipEl.style.left = barEl.x - tooltipWidth / 2 - barEl.width - 6 -1 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
         tooltipEl.style.font = tooltip.options.bodyFont.string;
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
         tooltipEl.style.opacity = 1;
         tooltipCaretClassName = 'tooltip-caret-right';
     } else {
         tooltipEl.style.left = positionX + barEl.x + barEl.width / 2 + tooltipWidth / 2 + 12 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
-        tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
         tooltipEl.style.font = tooltip.options.bodyFont.string;
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
         tooltipEl.style.opacity = 1;
         tooltipCaretClassName = 'tooltip-caret-left';
     }
+
+    const baseY = barEl.base;
+    let calcY;
+    if (barEl.y > baseY) {
+        // Trường bar hợp nằm dưới đường Zero
+        calcY = baseY + barEl.height / 2 - tooltipHeight / 2;
+    } else {
+        calcY = baseY - barEl.height / 2 - tooltipHeight / 2;
+    }
+    tooltipEl.style.top = calcY + 'px'; // positionY + tooltip.caretY / 2 + 'px';
 
     // Create caret:
     let tooltipCaretEl = tooltipEl.querySelector(`.${tooltipCaretClassName}`);
