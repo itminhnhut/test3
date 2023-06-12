@@ -31,7 +31,7 @@ const CarouselItem = ({ banner, link, title }) => {
     return (
         <div className="keen-slider__slide p-0" title={title}>
             <Link href={link} passHref>
-                <a target="_blank" className="block bg-gray rounded-2xl overflow-hidden leading-[0]">
+                <a  className="block bg-gray rounded-2xl overflow-hidden leading-[0]">
                     <Image src={getEventImg(banner)} alt={title} width={1216} height={440} className="object-cover" />
                 </a>
             </Link>
@@ -76,7 +76,7 @@ const Carousel = ({ data }) => {
         <Wrapper>
             <div className="keen-slider" ref={sliderRef}>
                 {data.map((item, idx) => (
-                    <CarouselItem banner={item.bannerImgEndpoint} link="#" key={item._id || idx} title={item.title} />
+                    <CarouselItem banner={item.bannerImgEndpoint} link={`/events/${item.slug || '#'}`} key={item._id || idx} title={item.title} />
                 ))}
             </div>
             <div className="keen-slider__dots__wrapper">{renderDots()}</div>

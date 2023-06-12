@@ -209,7 +209,7 @@ const EventList = () => {
                 </div>
             </div>
             <div className="py-4 mb:py-5">
-                {data?.event?.length ? (
+                {data?.events?.length ? (
                     <>
                         {data?.events?.map((event) => (
                             <div className="relative flex mt-4 mb:mt-7 rounded-xl overflow-hidden flex-wrap mb:flex-nowrap bg-white dark:bg-dark-4 border dark:border-none border-divider shadow-card_light">
