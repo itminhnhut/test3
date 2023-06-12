@@ -20,8 +20,15 @@ import CheckBox from 'components/common/CheckBox';
 import DomToImage from 'dom-to-image';
 import ModalLoading from 'components/common/ModalLoading';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { FUTURES_PRODUCT } from 'constants/constants';
+import { useTranslation } from 'next-i18next';
 
-const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loadingOverview, typeProduct, typeCurrency, timeFilter, firstTimeTrade }) => {
+const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typeProduct, typeCurrency, timeFilter, firstTimeTrade }) => {
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+
     const [usdRate, setUsdRate] = useState();
     const [openModalShare, setOpenModalShare] = useState(null);
     useEffect(() => {
@@ -74,9 +81,13 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
             <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4' : 'pt-4'}>
                 <span>{t('transaction-history:modal_detail.volume')}</span>
                 <div className="text-base md:text-2xl font-semibold text-gray-15 dark:text-gray-4 mt-2 md:mt-4">
-                    {loadingOverview ? <Skeletor width={150} /> : formatNanNumber(totalVolume, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
+                    {loadingOverview ? (
+                        <Skeletor width={isMobile ? 80 : 150} height={20} />
+                    ) : (
+                        formatNanNumber(totalVolume, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)
+                    )}
                 </div>
-                <div className="mt-1 md:mt-2">{loadingOverview ? <Skeletor width={150} /> : swapValue}</div>
+                <div className="mt-1 md:mt-2">{loadingOverview ? <Skeletor width={isMobile ? 60 : 150} height={12} /> : swapValue}</div>
             </div>
         );
     }, [isMobile, loadingOverview, dataOverview, usdRate]);
@@ -100,10 +111,10 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                         '!text-red-2 !dark:text-red': totalPnl < 0
                     })}
                 >
-                    {loadingOverview ? <Skeletor width={150} /> : `${sign}${formatNanNumber(totalPnl, isVnd ? 0 : 4)}`}
+                    {loadingOverview ? <Skeletor width={isMobile ? 80 : 150} height={20} /> : `${sign}${formatNanNumber(totalPnl, isVnd ? 0 : 4)}`}
                 </div>
                 {loadingOverview ? (
-                    <Skeletor width={50} />
+                    <Skeletor width={isMobile ? 60 : 150} height={12} />
                 ) : totalPnl === 0 ? (
                     <div className="mt-1 md:mt-2">0%</div>
                 ) : (
@@ -126,7 +137,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                 <div className="flex items-center justify-between">
                     <span>{t('futures:margin')}</span>
                     {loadingOverview ? (
-                        <Skeletor width={200} />
+                        <Skeletor className="!my-0.5" width={isMobile ? 150 : 200} height={16} />
                     ) : (
                         <div className="text-right">
                             <span className="txtPri-1">{formatNanNumber(totalMargin, isVnd ? 0 : 4)}</span>
@@ -137,7 +148,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                 <div className="flex items-center justify-between">
                     <span>{t('portfolio:position')}</span>
                     {loadingOverview ? (
-                        <Skeletor width={200} />
+                        <Skeletor width={isMobile ? 150 : 200} height={16} className="!my-0.5" />
                     ) : (
                         <div className="text-right">
                             <span className="txtPri-1">{dataOverview?.totalPositions?.value}</span>
@@ -149,30 +160,38 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                 </div>
                 <div className="flex items-center justify-between">
                     <span>{t('portfolio:avg_leverage')}</span>
-                    {loadingOverview ? <Skeletor width={50} /> : <span className="txtPri-1">{avgLeverage ? `${avgLeverage}X` : '-'}</span>}
+                    {loadingOverview ? (
+                        <Skeletor width={isMobile ? 30 : 50} height={16} className="!my-0.5" />
+                    ) : (
+                        <span className="txtPri-1">{avgLeverage ? `${avgLeverage}X` : '-'}</span>
+                    )}
                 </div>
                 {/* Tổng giá trị nạp */}
                 <div className="flex items-center justify-between">
-                    <span>{t('futures:Tổng giá trị nạp')}</span>
+                    <span>{t('portfolio:total_deposit')}</span>
                     {loadingDataDW ? (
-                        <Skeletor width={150} />
+                        <Skeletor width={isMobile ? 100 : 150} height={16} />
                     ) : (
                         <span className="txtPri-1">{formatNanNumber(dataDw.totalDeposit?.total?.value, isVnd ? 0 : 4)}</span>
                     )}
                 </div>
                 {/* Tổng giá trị rút */}
                 <div className="flex items-center justify-between">
-                    <span>{t('futures:Tổng giá trị rút')}</span>
+                    <span>{t('portfolio:total_withdraw')}</span>
                     {loadingDataDW ? (
-                        <Skeletor width={150} />
+                        <Skeletor width={isMobile ? 120 : 150} height={16} />
                     ) : (
                         <span className="txtPri-1">{formatNanNumber(dataDw.totalWithdraw?.total?.value, isVnd ? 0 : 4)}</span>
                     )}
                 </div>
                 {/* Tỷ lệ % thắng */}
                 <div className="flex items-center justify-between">
-                    <span>{t('futures:Tỷ lệ % thắng')}</span>
-                    {loadingOverview ? <Skeletor width={100} /> : <span className="txtPri-1">{formatNanNumber(dataOverview?.winRate?.value, 2)}%</span>}
+                    <span className={language === 'vi' ? '' : 'capitalize'}>{t('portfolio:win_rate')}</span>
+                    {loadingOverview ? (
+                        <Skeletor width={isMobile ? 70 : 100} height={16} />
+                    ) : (
+                        <span className="txtPri-1">{formatNanNumber(dataOverview?.winRate?.value, 2)}%</span>
+                    )}
                 </div>
             </div>
         );
@@ -190,9 +209,9 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                             tooltipContent={t('portfolio:key_metrics_tooltip')}
                             tooltipId={'key_metrics_tooltip'}
                         />
-                        <TextButton onClick={() => setOpenModalShare(true)} className="w-auto !py-[3px]">
+                        <TextButton onClick={() => setOpenModalShare(true)} className="w-auto !py-[3px] text-sm">
                             <ShareIcon size={16} className="cursor-pointer" color={'currentColor'} />
-                            <span className="ml-2">Chia sẻ PNL của tôi</span>
+                            <span className="ml-2">{t('common:share')}</span>
                         </TextButton>
                     </div>
                     <div className="mt-6">
@@ -216,7 +235,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                         />
                         <TextButton onClick={() => setOpenModalShare(true)} className="w-auto !py-[3px]">
                             <ShareIcon size={16} className="cursor-pointer" color={'currentColor'} />
-                            <span className="ml-2">Chia sẻ PNL của tôi</span>
+                            <span className="ml-2">{t('common:share')}</span>
                         </TextButton>
                     </div>
                     <div className="flex items-stretch w-full gap-x-8 text-gray-1 dark:text-gray-7 mt-8">
@@ -248,6 +267,7 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                 firstTimeTrade={firstTimeTrade}
                 t={t}
                 winRate={dataOverview?.winRate?.value}
+                typeProduct={typeProduct}
             />
         </div>
     );
@@ -259,7 +279,7 @@ const CardFill = styled.div.attrs(({ key, className, onClick }) => ({
     onClick: onClick
 }))``;
 
-const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurrency, timeFilter, firstTimeTrade, t, isMobile, winRate }) => {
+const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurrency, timeFilter, firstTimeTrade, t, isMobile, winRate, typeProduct }) => {
     const content = useRef();
     const negative = totalPnl < 0;
     const refCode = useSelector((state) => state.auth?.user?.code_refer);
@@ -312,20 +332,16 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
         }
     };
 
-    const handleShareAction = async (value) => {
-        if(value !== 'save') return;
-        await onDownLoad()
-    }
-
     return (
         <>
             <ModalLoading isVisible={loading} onBackdropCb={() => setLoading(false)} />
             <ModalV2
-                // loading={loading}
+                loading={loading}
                 isVisible={isVisible}
                 // isVisible={true}
                 onBackdropCb={onBackdropCb}
-                className="!max-w-[800px]"
+                className={`${!isMobile && '!max-w-[488px]' }!min-w-[488px] !dark:bg-dark-4`}
+                wrapClassName={!isMobile && 'dark:!bg-dark-4'}
                 isMobile={isMobile}
                 divOtherWorld={
                     isMobile && (
@@ -343,19 +359,20 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                             t={t}
                             refCode={refCode}
                             winRate={winRate}
+                            typeProduct={typeProduct}
                         />
                     )
                 }
             >
                 {isMobile ? (
                     <div className="w-full text-gray-15 dark:text-gray-4 text-base">
-                        <div className="text-xl font-semibold">Thông tin muốn chia sẻ</div>
+                        <div className="text-xl font-semibold">{t('portfolio:option_info_to_share')}</div>
                         <div className="flex items-center mt-6">
                             <CheckBox
                                 className="mr-12"
                                 boxContainerClassName="w-4 h-4"
                                 labelClassName="tracking-normal text-gray-15 dark:text-gray-4"
-                                label={'Tổng PNL'}
+                                label={t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? "VNDC" : "USDT" })}
                                 onChange={() => setIsShowTotalPnl((prev) => !prev)}
                                 active={isShowTotalPnl}
                                 sizeCheckIcon={12}
@@ -363,18 +380,18 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                             <CheckBox
                                 boxContainerClassName="w-4 h-4"
                                 labelClassName="tracking-normal text-gray-15 dark:text-gray-4"
-                                label={'Tỷ lệ % thắng'}
+                                label={t('portfolio:win_rate')}
                                 onChange={() => setIsShowRate((prev) => !prev)}
                                 active={isShowRate}
                                 sizeCheckIcon={12}
                             />
                         </div>
-                        <ButtonV2 className="mt-8" onClick={async () => await onDownLoad()}>
-                            Tải ảnh
+                        <ButtonV2 className="mt-8" onClick={onDownLoad}>
+                            {t('common:save')}
                         </ButtonV2>
                     </div>
                 ) : (
-                    <div className="flex gap-x-8">
+                    <div className="flex flex-col items-center justify-center">
                         <ImageShare
                             className="w-full"
                             content={content}
@@ -389,37 +406,46 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                             t={t}
                             refCode={refCode}
                             winRate={winRate}
+                            typeProduct={typeProduct}
                         />
-                        <div className="w-full text-gray-15 dark:text-gray-4">
-                            <div className="text-2xl font-semibold">Thông tin muốn chia sẻ</div>
-                            <CheckBox
-                                className="mt-6"
-                                boxContainerClassName="w-6 h-6"
-                                labelClassName="tracking-normal text-base text-gray-15 dark:text-gray-4"
-                                label={'Tổng PNL'}
-                                onChange={() => setIsShowTotalPnl((prev) => !prev)}
-                                active={isShowTotalPnl}
-                                sizeCheckIcon={20}
-                            />
-                            <CheckBox
-                                className="mt-6"
-                                boxContainerClassName="w-6 h-6"
-                                labelClassName="tracking-normal text-base text-gray-15 dark:text-gray-4"
-                                label={'Tỷ lệ % thắng'}
-                                onChange={() => setIsShowRate((prev) => !prev)}
-                                active={isShowRate}
-                                sizeCheckIcon={20}
-                            />
+                        <div className="w-full text-gray-15 dark:text-gray-4 mt-6">
+                            <div className="text-2xl font-semibold">{t('portfolio:option_info_to_share')}</div>
+                            <div className="flex items-center mt-4">
+                                <CheckBox
+                                    className="mr-12"
+                                    boxContainerClassName="w-5 h-5"
+                                    labelClassName="tracking-normal text-gray-15 dark:text-gray-4"
+                                    label={t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? "VNDC" : "USDT" })}
+                                    onChange={() => setIsShowTotalPnl((prev) => !prev)}
+                                    active={isShowTotalPnl}
+                                    sizeCheckIcon={20}
+                                />
+                                <CheckBox
+                                    boxContainerClassName="w-5 h-5"
+                                    labelClassName="tracking-normal text-gray-15 dark:text-gray-4"
+                                    label={t('portfolio:win_rate')}
+                                    onChange={() => setIsShowRate((prev) => !prev)}
+                                    active={isShowRate}
+                                    sizeCheckIcon={20}
+                                />
+                            </div>
+                            <ButtonV2 className="mt-10" onClick={onDownLoad}>
+                                {t('common:save')}
+                            </ButtonV2>
 
-                            <div className="mt-10 text-2xl font-semibold">Chia sẻ đến</div>
+                            {/* <div className="mt-10 text-2xl font-semibold">{t('common:luckydraw.share')}</div>
                             <div className="flex items-center justify-start flex-wrap gap-4 mt-6">
                                 {list.map((item, key) => (
-                                    <div onClick={() => handleShareAction(item.event)} key={key} className="first:cursor-pointer flex flex-col items-center min-w-[58px]">
+                                    <div
+                                        onClick={() => handleShareAction(item.event)}
+                                        key={key}
+                                        className="first:cursor-pointer flex flex-col items-center min-w-[58px]"
+                                    >
                                         <CardFill className="!p-2 !rounded-md">{item.icon}</CardFill>
                                         <span className="mt-2 text-xs text-txtSecondary dark:text-txtSecondary-dark">{item.name}</span>
                                     </div>
                                 ))}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 )}
@@ -441,64 +467,75 @@ const ImageShare = ({
     firstTimeTrade,
     t,
     refCode,
-    winRate
-}) => (
-    <div ref={content} className={`min-w-[342px] max-w-[342px] bg-dark border border-divider-dark relative ${className}`}>
-        <div
-            className="bg-center bg-cover h-[182px] "
-            style={{
-                backgroundImage:
-                    process.env.NODE_ENV === 'development'
-                        ? `url('/images/screen/portfolio/share_${negative ? 'loss' : 'profit'}.png')`
-                        : `url(${`https://nami.exchange/images/portfolio/share_${negative ? 'loss' : 'profit'}.png`})`
-            }}
-        ></div>
-        <div className="flex flex-col items-center text-gray-7 text-xs gap-y-2">
-            <div className="mt-2.5 text-gray-4 font-semibold text-lg">Thống kê PNL NAMI Futures</div>
-            <div>% PNL Tích luỹ</div>
-            <div className={`text-5xl ${negative ? 'text-red-2' : 'text-teal'} font-semibold`}>
-                {!negative && '+'}
-                {formatNanNumber((totalPnl * 100) / totalMargin, 2)}%
-            </div>
-            <div className={`h-11 w-full flex items-center justify-center transition-all duration-75`}>
-                <div className={`${!isShowTotalPnl && 'hidden'} flex justify-center items-center flex-col`}>
-                    <div>Tổng PNL({typeCurrency === ALLOWED_ASSET_ID.VNDC ? 'VND' : 'USD'})</div>
-                    <div className="text-gray-4 text-sm font-semibold">
-                        {!negative && '+'}
-                        {formatNanNumber(totalPnl, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
-                    </div>
-                </div>
-                {isShowRate && isShowTotalPnl && <div className={`border-divider-dark border-l-[1px] h-9 mx-6`}></div>}
-                <div className={`${!isShowRate && 'hidden'} flex justify-center items-center flex-col`}>
-                    <div>Tỷ lệ % thắng</div>
-                    <div className="text-gray-4 text-sm font-semibold">{formatNanNumber(winRate, 2)}%</div>
-                </div>
-            </div>
-
-            <div className="mt-8 mb-[92px]">{`${formatTime(timeFilter?.startDate ? timeFilter.startDate : firstTimeTrade, 'dd/MM/yyyy')} - ${formatTime(
-                timeFilter?.endDate ? timeFilter.endDate : new Date(),
-                'dd/MM/yyyy'
-            )}`}</div>
-
+    winRate,
+    typeProduct
+}) => {
+    return (
+        <div ref={content} className={`min-w-[342px] max-w-[342px] bg-dark border border-divider-dark relative ${className}`}>
             <div
-                className="absolute bottom-0 left-0 px-4 py-3 flex justify-between items-center w-full"
+                className="bg-center bg-cover h-[182px] "
                 style={{
-                    backgroundImage: 'linear-gradient(to bottom, #071713 28%, #091b16 75%, #132e27 100%)'
+                    backgroundImage:
+                        process.env.NODE_ENV === 'development'
+                            ? `url('/images/screen/portfolio/share_${negative ? 'loss' : 'profit'}.png')`
+                            : `url(${`https://nami.exchange/images/portfolio/share_${negative ? 'loss' : 'profit'}.png`})`
                 }}
-            >
-                <div className="bg-cover w-[114px] h-9 bg-no-repeat" style={{ backgroundImage: 'url(https://nami.exchange/images/nami-logo-v3.png)' }} />
-                <div className="flex items-center space-x-3">
-                    <div className="flex flex-col text-white">
-                        <span className="text-xs">{t('futures:share:ref_id')}</span>
-                        <span className="text-sm font-semibold">{refCode}</span>
-                    </div>
-                    <div className="p-1 bg-white rounded-[3px]">
-                        <QRCode value={`https://nami.exchange/ref/${refCode}`} size={47} />
+            ></div>
+            <div className="flex flex-col items-center text-gray-7 text-xs gap-y-2">
+                <div className="mt-2.5 text-gray-4 font-semibold text-lg">
+                    {t('portfolio:pnl_statistic_on_product', {
+                        product: Object.entries(FUTURES_PRODUCT).find(([key, value]) => value.id === typeProduct)?.[1]?.name
+                    })}
+                </div>
+                <div>{t('portfolio:cumulative_roe')}</div>
+                <div className={`text-5xl ${negative ? 'text-red-2' : 'text-teal'} font-semibold`}>
+                    {!negative && '+'}
+                    {formatNanNumber((totalPnl * 100) / totalMargin, 2)}%
+                </div>
+                <div className={`h-11 w-full flex items-center justify-center transition-all duration-75`}>
+                    {/* <div className={`${!isShowTotalPnl ? 'hidden' : isShowRate ? 'w-1/2 !items-end' : ' w-full '} flex justify-center items-center flex-col`}> */}
+                        <div className={`${!isShowTotalPnl && 'hidden'} flex flex-col items-center justify-center`}>
+                            <div>{t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? "VNDC" : "USDT" })}</div>
+                            <div className="text-gray-4 text-sm font-semibold">
+                                {!negative && '+'}
+                                {formatNanNumber(totalPnl, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
+                            </div>
+                        </div>
+                    {/* </div> */}
+                    {isShowRate && isShowTotalPnl && <div className={`border-divider-dark border-l-[1px] h-9 mx-6`}></div>}
+                    {/* <div className={`${!isShowRate ? 'hidden' : isShowTotalPnl ? 'w-1/2 !items-start' : ' w-full '} flex justify-center items-center flex-col`}> */}
+                        <div className={`${!isShowRate && 'hidden'} flex flex-col items-center justify-center`}>
+                            <div>{t('portfolio:win_rate')}</div>
+                            <div className="text-gray-4 text-sm font-semibold">{formatNanNumber(winRate, 2)}%</div>
+                        </div>
+                    {/* </div> */}
+                </div>
+
+                <div className="mt-8 mb-[92px]">{`${formatTime(timeFilter?.startDate ? timeFilter.startDate : firstTimeTrade, 'dd/MM/yyyy')} - ${formatTime(
+                    timeFilter?.endDate ? timeFilter.endDate : new Date(),
+                    'dd/MM/yyyy'
+                )}`}</div>
+
+                <div
+                    className="absolute bottom-0 left-0 px-4 py-3 flex justify-between items-center w-full"
+                    style={{
+                        backgroundImage: 'linear-gradient(to bottom, #071713 28%, #091b16 75%, #132e27 100%)'
+                    }}
+                >
+                    <div className="bg-cover w-[114px] h-9 bg-no-repeat" style={{ backgroundImage: 'url(https://nami.exchange/images/nami-logo-v3.png)' }} />
+                    <div className="flex items-center space-x-3">
+                        <div className="flex flex-col text-white">
+                            <span className="text-xs">{t('futures:share:ref_id')}</span>
+                            <span className="text-sm font-semibold">{refCode}</span>
+                        </div>
+                        <div className="p-1 bg-white rounded-[3px]">
+                            <QRCode value={`https://nami.exchange/ref/${refCode}`} size={47} />
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 export default FeaturedStats;

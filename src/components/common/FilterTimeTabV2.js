@@ -230,7 +230,7 @@ const FilterTimeTabV2 = ({
                                     </span>
                                 </div>
                             }
-                            customHeaderCalendar={maxMonths ? () => <div className="px-8 pb-3 txtSecond-3">*Chỉ hỗ trợ tra cứu lịch trong 3 tháng</div> : null}
+                            customHeaderCalendar={maxMonths ? () => <div className="px-8 pb-3 txtSecond-3">{t('portfolio:max_range_datepicker')}</div> : null}
                         />
                     )}
                 </div>

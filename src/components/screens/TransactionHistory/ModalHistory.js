@@ -136,7 +136,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
             ) : (
                 detailTx && (
                     <>
-                        <div className="flex pt-8  bg-center bg-cover bg-no-repeat px-8 pb-6 bg-tx-history-detail dark:bg-tx-history-detail-dark flex-col font-semibold text-2xl text-txtPrimary dark:text-txtPrimary-dark items-center">
+                        <div className="flex pt-8 bg-center bg-cover bg-no-repeat px-8 pb-6 bg-tx-history-detail dark:bg-tx-history-detail-dark flex-col font-semibold text-2xl text-txtPrimary dark:text-txtPrimary-dark items-center">
                             <div className="flex w-full mb-6 justify-end rounded-md hover:opacity-50 transition-opacity cursor-pointer" onClick={onClose}>
                                 <X size={24} />
                             </div>

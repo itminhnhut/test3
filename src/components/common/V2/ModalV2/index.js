@@ -62,7 +62,6 @@ const ModalV2 = ({
 
     if (!isVisible && !mount) return null;
 
-    console.log('____wrapperRef?.current?.clientHeight: ', wrapperRef?.current?.clientHeight);
     return (
         <Portal portalId={PORTAL_MODAL_ID}>
             <div

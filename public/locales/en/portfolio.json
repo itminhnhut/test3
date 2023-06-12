@@ -1,6 +1,6 @@
 {
     "key_metrics_tooltip": "Statistically based on closed positions, including successfully partial closing orders.",
-    "pnl_changing_tooltip": "Historical PnL is recorded since 01/01/2023 at 00:00 (UTC+7) every day.",
+    "pnl_changing_tooltip": "Data recorded from 2023/01/01, from 00:00 everyday (UTC+7).",
     "trading_pair_tooltip": "Statistically based on closed positions, including successfully partial closing orders by each asset.",
     "side_position_tooltip": "Statistically based on closed {{side}} positions, including successfully partial closing orders by each asset.",
     "top_position_tooltip": "Top 5 highest and lowest PnL positions, based on closed positions including successful partial close orders.",
@@ -36,6 +36,14 @@
     "position_details": "Position Details",
     "no_pnl_recorded": "No PnL recorded",
     "historical_pnl_statistic": "Historical PnL Statistic",
+    "max_range_datepicker": "*Select your time range within 3 months",
+    "total_deposit": "Total Deposit",
+    "total_withdraw": "Total Withdraw",
+    "win_rate": "Win rate",
+    "pnl_statistic_on_product": "PNL Statistics on {{product}}",
+    "cumulative_roe": "Cumulative ROE",
+    "cumulative_pnl": "Cumulative PNL {{asset}}",
+    "option_info_to_share": "Optional information to share",
     "error": {
         "max_months_filter": "Select your time range within {{maxMonths}} months"
     }

@@ -161,8 +161,6 @@ const Portfolio = () => {
                     {/* Chi so noi bat */}
                     <FeaturedStats
                         className="mt-6 md:mt-12"
-                        t={t}
-                        isDark={isDark}
                         isMobile={isMobile}
                         dataOverview={dataOverview?.overallStatistic}
                         loadingOverview={loadingOverview}
@@ -183,7 +181,7 @@ const Portfolio = () => {
                         loadingPnlChanging={loadingPnlChanging}
                         isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                     />
-
+                    <div className={`relative w-full border-b border-divider dark:border-divider-dark mt-12 ${!isMobile && 'hidden'}`}></div>
                     {/* Cap giao dich || Vi the mua - Vi the ban */}
                     <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-x-8">
                         <TradingPair
@@ -196,7 +194,8 @@ const Portfolio = () => {
                             isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
                             isMobile={isMobile}
                         />
-                        <div className={`${isMobile ? 'flex flex-col mt-12' : 'grid grid-rows-2'} gap-y-8`}>
+                        <div className={`relative w-full border-b border-divider dark:border-divider-dark my-12 ${!isMobile && 'hidden'}`}></div>
+                        <div className={`${isMobile ? 'flex flex-col' : 'grid grid-rows-2'} gap-y-8`}>
                             <PositionInfo
                                 type="buy"
                                 t={t}

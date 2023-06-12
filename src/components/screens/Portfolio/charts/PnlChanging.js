@@ -184,7 +184,7 @@ const PnlChanging = ({
         <div className={`mt-12 md:p-8 transition-all ${isMobile ? 'bg-transparent' : 'rounded-xl bg-gray-13 dark:bg-dark-4'}`}>
             {isMobile ? (
                 <>
-                    <CollapseV2
+                    {/* <CollapseV2
                         className="w-full"
                         divLabelClassname="w-full justify-between"
                         chrevronStyled={{ size: 24, color: isDark ? '#E2E8F0' : '#1E1E1E' }}
@@ -198,20 +198,26 @@ const PnlChanging = ({
                         }
                         labelClassname="text-base font-semibold"
                         isDividerBottom={true}
-                    >
-                        <div className="mt-6">
-                            <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
-                        </div>
-                        {/* Chu thich */}
-                        <div className="flex items-center gap-x-4 mt-9">
-                            <Note iconClassName="bg-green-6" title={t('portfolio:profit')} />
-                            <Note iconClassName="bg-red-2" title={t('portfolio:loss')} />
-                        </div>
-                        <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
-                            <BxsInfoCircle />
-                            <span>{t('portfolio:click_column_for_details')}</span>
-                        </div>
-                    </CollapseV2>
+                    > */}
+                    <HeaderTooltip
+                        isMobile
+                        title={t('portfolio:historical_pnl')}
+                        tooltipContent={t('portfolio:pnl_changing_tooltip')}
+                        tooltipId={'pnl_changing_tooltip'}
+                    />
+                    <div className="mt-6">
+                        <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
+                    </div>
+                    {/* Chu thich */}
+                    <div className="flex items-center gap-x-4 mt-9">
+                        <Note iconClassName="bg-green-6" title={t('portfolio:profit')} />
+                        <Note iconClassName="bg-red-2" title={t('portfolio:loss')} />
+                    </div>
+                    <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
+                        <BxsInfoCircle />
+                        <span>{t('portfolio:click_column_for_details')}</span>
+                    </div>
+                    {/* </CollapseV2> */}
                     <ModalV2
                         isVisible={isNumber(showDetails)}
                         onBackdropCb={() => setShowDetails(null)}
