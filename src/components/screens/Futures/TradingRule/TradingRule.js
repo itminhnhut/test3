@@ -1,7 +1,7 @@
 import AssetLogo from 'components/wallet/AssetLogo';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { formatNumber, formatPrice, getFilter, getS3Url } from 'redux/actions/utils';
 import TableV2 from 'components/common/V2/TableV2';
 import SearchInput from 'src/components/markets/SearchInput';
@@ -18,6 +18,8 @@ import router from 'next/router';
 import { IconHelperV2 } from 'components/common/Icons';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import styled from 'styled-components';
+import colors from 'styles/colors';
+import { HelpIcon } from 'components/svg/SvgIcon';
 
 export const CURRENCIES = [
     {
@@ -34,52 +36,52 @@ const initColumns = [
     {
         title: 'min_order_size',
         tooltip: 'min_order_size_tooltips',
-        width: 190
+        width: 164
     },
     {
         title: 'max_order_size_limit',
         tooltip: 'max_order_size_limit_tooltip',
-        width: 250
+        width: 200
     },
     {
         title: 'max_order_size_market',
         tooltip: 'max_order_size_market_tooltip',
-        width: 250
+        width: 220
     },
     {
         title: 'total_max_trading_volumn',
         tooltip: 'total_max_trading_volumn_tooltips',
-        width: 250
+        width: 220
     },
     {
         title: 'max_number_order',
         tooltip: 'max_number_order_tooltips',
-        width: 300
+        width: 260
     },
     {
         title: 'min_limit_order_price',
         tooltip: 'min_limit_order_price_tooltips',
-        width: 250
+        width: 200
     },
     {
         title: 'max_limit_order_price',
         tooltip: 'max_limit_order_price_tooltips',
-        width: 250
+        width: 200
     },
     {
         title: 'max_leverage',
         tooltip: 'max_leverage_tooltips',
-        width: 180
+        width: 140
     },
     {
         title: 'liq_fee_rate',
         tooltip: 'liq_fee_rate_tooltips',
-        width: 250
+        width: 180
     },
     {
         title: 'min_difference_ratio',
         tooltip: 'min_difference_ratio_tooltip',
-        width: 220
+        width: 190
     }
 ];
 const TradingRules = () => {
@@ -98,6 +100,16 @@ const TradingRules = () => {
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [currentTheme] = useDarkMode();
+
+    const containerRef = useRef(null);
+    const [noDataContainerWidth, setNoDataContainerWidth] = useState(0);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            const sourceWidth = containerRef.current.offsetWidth;
+            setNoDataContainerWidth(sourceWidth);
+        }
+    }, [width]);
 
     useEffect(() => {
         if (!publicSocket) return;
@@ -131,8 +143,8 @@ const TradingRules = () => {
                         </Tooltip>
                     )}
                     <div
-                        className={`text-sm flex items-center space-x-1 md:space-x-3 ${
-                            isMobile ? '' : 'border-b border-dashed border-divider dark:border-divider-dark'
+                        className={`text-sm flex items-center space-x-1 md:space-x-3 w-fit ${
+                            isMobile ? '' : 'border-b border-dashed border-divider dark:border-divider-dark justify-end ml-auto'
                         }`}
                         data-tip=""
                         data-for={title}
@@ -217,8 +229,8 @@ const TradingRules = () => {
                 title: <span className="text-sm">{t('futures:funding_history_tab:contract')}</span>,
                 align: 'left',
                 // width: 250,
-                width: 274,
-                sorter: false,
+                width: 290,
+                // sorter: false,
                 fixed: 'left',
                 render: (data, item) => renderLogo(item),
                 className: 'custom-style mr-6'
@@ -231,8 +243,8 @@ const TradingRules = () => {
                     title: renderHead(`futures:${c.title}`, `futures:${c.tooltip}`),
                     align: 'right',
                     width: c?.width ?? 180,
-                    sorter: false,
-                    render: (data, item) => <span className="text-sm">{renderContent(c.title, item)}</span>
+                    // sorter: false,
+                    render: (data, item) => <span className="text-base">{renderContent(c.title, item)}</span>
                 };
             })
         );
@@ -252,7 +264,7 @@ const TradingRules = () => {
                 </div>
             )}
             {isMobile && <GlossaryModal isVisible={showModal} onClose={() => setShowModal(false)} />}
-            <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20', { 'pt-12': isApp })}>
+            <div className={classNames('mt-10 sm:mt-20 mx-4 pb-[120px]', { 'pt-12': isApp })}>
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                     <div className="flex justify-between sm:justify-start sm:items-center sm:gap-2 mb-7 sm:mb-20">
                         <div className="text-xl sm:text-[2rem] sm:leading-[2.375rem] font-semibold ">{t('futures:trading_rules')}</div>
@@ -260,12 +272,8 @@ const TradingRules = () => {
                             <HelperIcon onClick={() => setShowModal(true)} />
                         ) : (
                             <div data-for={'trading_rules'} data-tip={t('futures:trading_rules_tooltip')}>
-                                <Tooltip id={'trading_rules'} place="bottom" effect="solid" isV3></Tooltip>
-                                <IconHelperV2
-                                    size={24}
-                                    color={currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e'}
-                                    symbolColor={currentTheme === THEME_MODE.DARK ? '#1e1e1e' : '#e2e8f0'}
-                                />
+                                <Tooltip className="!mt-5" id={'trading_rules'} place="bottom" effect="solid" isV3></Tooltip>
+                                <HelpIcon size={24} color="currentColor" />
                             </div>
                         )}
                     </div>
@@ -328,11 +336,10 @@ const TradingRules = () => {
                             <NoData />
                         )
                     ) : (
-                        <Wrapper>
+                        <Wrapper ref={containerRef} searchWidth={noDataContainerWidth} isDarkMode={currentTheme === THEME_MODE.DARK}>
                             <TableV2
                                 defaultSort={{ key: 'asset', direction: 'desc' }}
                                 useRowHover
-                                sort={!isMobile}
                                 data={dataSource}
                                 columns={columns}
                                 rowKey={(item) => `${item?.key}`}
@@ -342,9 +349,13 @@ const TradingRules = () => {
                                 onChangePage={setCurrentPage}
                                 page={currentPage}
                                 isSearch={strSearch}
-                                className="border border-divider dark:border-divider-dark rounded-xl"
+                                className="border border-divider dark:border-divider-dark rounded-xl pt-1"
                                 pagingClassName="border-none"
                                 shadowWithFixedCol={false}
+                                unsetLeft={true}
+                                rowClassName={'!h-[64px]'}
+                                showPaging={false}
+                                total={dataSource?.length ?? 0}
                             />
                         </Wrapper>
                     )}
@@ -361,7 +372,14 @@ const Wrapper = styled.div`
                 left: unset !important;
                 right: 0px !important;
                 visibility: visible !important;
+                box-shadow: none !important;
+                border-left: ${({ isDarkMode }) => ` 1px solid ${isDarkMode ? colors.divider.dark : colors.divider.DEFAULT} !important`};
             }
+        }
+
+        .rc-table-expanded-row-fixed {
+            width: ${({ searchWidth }) => searchWidth}}px !important;
+            height: 506px !important;
         }
     }
 `;
