@@ -206,8 +206,18 @@ export const modalDetailColumn = {
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
         { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
         { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
-        { keys: ['additionalData.fromNamiId.name', 'additionalData.fromNamiId.code'], localized: 'modal_detail.from', type: COLUMNS_TYPE.FIAT_USER },
-        { keys: ['additionalData.toNamiId.name', 'additionalData.toNamiId.code'], localized: 'modal_detail.to', type: COLUMNS_TYPE.FIAT_USER }
+        {
+            keys: ['additionalData.fromNamiId.name', 'additionalData.fromNamiId.code'],
+            backupKeys: ['result.metadata.fromNamiId.name', 'result.metadata.fromNamiId.code'],
+            localized: 'modal_detail.from',
+            type: COLUMNS_TYPE.FIAT_USER
+        },
+        {
+            keys: ['additionalData.toNamiId.name', 'additionalData.toNamiId.code'],
+            backupKeys: ['result.metadata.toNamiId.name', 'result.metadata.toNamiId.code'],
+            localized: 'modal_detail.to',
+            type: COLUMNS_TYPE.FIAT_USER
+        }
     ],
     common: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },

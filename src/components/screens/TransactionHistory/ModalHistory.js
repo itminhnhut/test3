@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import TagV2 from 'components/common/V2/TagV2';
-import { formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
+import { formatSwapRate, formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
 import { X } from 'react-feather';
 import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
 import axios from 'axios';
@@ -16,6 +16,7 @@ import { WalletType, EarnWalletType } from 'redux/actions/const';
 import { ArrowCompareIcon } from '../../svg/SvgIcon';
 import { customFormatBalance } from '.';
 
+const NULL_ASSET = '--';
 export const WalletTypeById = {
     0: WalletType.SPOT,
     1: WalletType.MARGIN,
@@ -28,7 +29,6 @@ export const WalletTypeById = {
     8: WalletType.BROKER,
     9: WalletType.NAO_FUTURES
 };
-
 const renderWallet = ({ t, key, language }) => {
     const wallet = {
         [WalletType.SPOT]: t('common:wallet', { wallet: 'Nami Spot' }),
@@ -40,8 +40,6 @@ const renderWallet = ({ t, key, language }) => {
     const walletType = WalletTypeById[key];
     return wallet[walletType] || walletType || NULL_ASSET;
 };
-
-const NULL_ASSET = '--';
 
 const parseObjToString = ({ keys, object }) => {
     return keys
@@ -227,13 +225,10 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             formatKeyData = '--';
                                             break;
                                         }
-                                        asset = assetConfig.find((asset) => asset.assetCode === additionalData?.toAsset);
                                         const price = additionalData?.price ?? additionalData?.toQty / additionalData?.fromQty;
-                                        formatKeyData = `1 ${additionalData?.fromAsset || NULL_ASSET} = ${customFormatBalance(
-                                            price,
-                                            asset?.assetDigit ?? 0,
-                                            true
-                                        )}  ${additionalData?.toAsset || NULL_ASSET}`;
+                                        formatKeyData = `1 ${additionalData?.fromAsset || NULL_ASSET} = ${formatSwapRate(price)} ${
+                                            additionalData?.toAsset || NULL_ASSET
+                                        }`;
                                         break;
                                     case COLUMNS_TYPE.SYMBOL:
                                         symbol = getSymbolObject(keyData);
@@ -283,10 +278,14 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         );
                                         break;
                                     case COLUMNS_TYPE.FIAT_USER:
+                                        const fiatUsername = get(detailTx, col.keys[0]) || get(detailTx, col.backupKeys[0]);
+                                        const fiatUserNamiCode = get(detailTx, col.keys[1]) || get(detailTx, col.backupKeys[1]);
                                         formatKeyData = (
                                             <>
-                                                <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">{get(detailTx, col.keys[0])}</div>
-                                                <div className="text-sm text-txtSecondary dark:text-txtSecodnary-dark">{get(detailTx, col.keys[1])}</div>
+                                                <div className="font-semibold capitalize text-txtPrimary dark:text-txtPrimary-dark">
+                                                    {fiatUsername?.toLowerCase() || NULL_ASSET}
+                                                </div>{' '}
+                                                <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{fiatUserNamiCode || NULL_ASSET}</div>{' '}
                                             </>
                                         );
                                         break;

@@ -307,24 +307,3 @@ const TransactionHistory = ({ id }) => {
 };
 
 export default TransactionHistory;
-
-const WalletTypes = [
-    {
-        id: 0,
-        code: WALLET_SCREENS.EXCHANGE,
-        title: 'Exchange',
-        localized: null
-    },
-    {
-        id: 2,
-        code: WALLET_SCREENS.FUTURES,
-        title: 'Futures',
-        localized: null
-    },
-    {
-        key: 3,
-        code: WALLET_SCREENS.PARTNERS,
-        title: 'Partners',
-        localized: 'common:partners'
-    }
-];
