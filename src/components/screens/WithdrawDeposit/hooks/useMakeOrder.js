@@ -26,6 +26,10 @@ const useMakeOrder = ({ setState, input }) => {
 
     const makeOrderErrorHandler = (orderResponse) => {
         const errorHandler = {
+            [ApiResultCreateOrder.INVALID_OTP]: () => {
+                toast({ text: t('common:otp_verify_expired'), type: 'warning' });
+                return true;
+            },
             [ApiResultCreateOrder.NOT_FOUND_PARTNER]: () => {
                 toast({ text: t('dw_partner:error.not_found_partner'), type: 'warning' });
                 return true;
@@ -93,14 +97,7 @@ const useMakeOrder = ({ setState, input }) => {
                         return;
                     }
                 }
-            } else {
-                if (orderResponse?.status === ApiResultCreateOrder.INVALID_OTP) {
-                    toast({ text: t('common:otp_verify_expired'), type: 'warning' });
-                    setState({ loadingConfirm: false });
-                    return orderResponse;
-                }
-                makeOrderErrorHandler(orderResponse);
-            }
+            } else makeOrderErrorHandler(orderResponse);
 
             setState({ loadingConfirm: false });
             return orderResponse;
