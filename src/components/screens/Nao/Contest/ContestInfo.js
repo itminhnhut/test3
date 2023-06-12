@@ -100,7 +100,8 @@ const ContestInfo = forwardRef(
             quoteAsset: q,
             hasTabCurrency,
             userID,
-            weekly_contest_time: { start, end }
+            weekly_contest_time: { start, end },
+            top_ranks_week
         },
         ref
     ) => {
@@ -138,9 +139,10 @@ const ContestInfo = forwardRef(
         const getData = async () => {
             try {
                 let week_id = null;
-                if (tabIndex && tabIndex !== 0) {
+                if (top_ranks_week && tabIndex && tabIndex !== 0) {
                     week_id = week;
                 }
+
                 const { data, status } = await fetchApi({
                     url: API_CONTEST_GET_USER_DETAIL,
                     options: { method: 'GET' },
@@ -224,17 +226,18 @@ const ContestInfo = forwardRef(
                             </ButtonNao>
                         )}
                     </div>
-
-                    <div className="mt-6 md:hidden">
-                        <FilterTypes
-                            type={tabIndex}
-                            setType={(index) => {
-                                setTabIndex(index);
-                            }}
-                            types={[...FILTER_STRUCTURE]}
-                            lang={language}
-                        />
-                    </div>
+                    {top_ranks_week && (
+                        <div className="mt-6 md:hidden">
+                            <FilterTypes
+                                type={tabIndex}
+                                setType={(index) => {
+                                    setTabIndex(index);
+                                }}
+                                types={[...FILTER_STRUCTURE]}
+                                lang={language}
+                            />
+                        </div>
+                    )}
 
                     {hasTabCurrency && (
                         <TabsNao className="text-sm sm:text-base">
