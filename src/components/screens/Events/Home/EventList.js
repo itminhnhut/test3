@@ -2,24 +2,27 @@ import classNames from 'classnames';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import Button from 'components/common/V2/ButtonV2/Button';
 import InputV2 from 'components/common/V2/InputV2';
+import NoData from 'components/common/V2/TableV2/NoData';
 import CalendarIcon from 'components/svg/CalendarIcon';
 import SvgFire from 'components/svg/Fire';
 import SvgFilter from 'components/svg/SvgFilter';
 import SvgTrophy from 'components/svg/Trophy';
-import { ONE_DAY } from 'constants/constants';
 import useIsomorphicLayoutEffect from 'hooks/useIsomorphicLayoutEffect';
+import useQuery from 'hooks/useQuery';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import { API_MARKETING_EVENTS } from 'redux/actions/apis';
 import { formatTime, getEventImg } from 'redux/actions/utils';
 import styled from 'styled-components';
+import FetchApi from 'utils/fetch-api';
 
 const STATUSES = {
-    all: 0,
-    upcoming: 1,
-    ongoing: 2,
-    ended: 3
+    all: -1,
+    upcoming: 0,
+    ongoing: 1,
+    ended: 2
 };
 
 const StatusFilter = styled.div`
@@ -46,7 +49,7 @@ const ImageWrapper = styled.div`
 const DateFilter = ({ timeFilter, onSetTime }) => {
     const start = timeFilter?.start || undefined;
     const end = timeFilter?.end || undefined;
-    const status = timeFilter?.status || 0;
+    const status = timeFilter?.status ?? STATUSES.all;
 
     return (
         <>
@@ -69,8 +72,8 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                                 {start ? formatTime(start, 'dd/MM/yyyy') : 'all'} <CalendarIcon color="currentColor" />
                             </div>
                         }
-                        minDate={status && status === STATUSES.upcoming ? Date.now() : undefined}
-                        maxDate={status && status >= STATUSES.ongoing && !end ? Date.now() : end}
+                        minDate={status > STATUSES.all && status === STATUSES.upcoming ? new Date() : undefined}
+                        maxDate={status > STATUSES.all && status >= STATUSES.ongoing && !end ? new Date() : end}
                     />
                 </div>
                 <div className="flex-1">
@@ -90,8 +93,8 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                                 {end ? formatTime(end, 'dd/MM/yyyy') : 'all'} <CalendarIcon color="currentColor" />
                             </div>
                         }
-                        minDate={status && status <= STATUSES.ongoing && !start ? Date.now() : start}
-                        maxDate={status && status === STATUSES.ended ? Date.now() : undefined}
+                        minDate={status > STATUSES.all && status <= STATUSES.ongoing && !start ? new Date() : start}
+                        maxDate={status > STATUSES.all && status === STATUSES.ended ? new Date() : undefined}
                     />
                 </div>
             </div>
@@ -102,11 +105,8 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
     );
 };
 
-/**
- *
- * @param {{ data: Array<{ _id: string, thumbnailImgEndpoint?: string, bannerImgEndpoint?: string, title: string, startTime: string , endTime: string, anticipate: bool, prize: string, postLink: string, isHot: bool, creatorName: string, priority: number, isHidden: bool }> }} props
- */
-const EventList = ({ data = [] }) => {
+
+const EventList = () => {
     const { t } = useTranslation();
     const router = useRouter();
     const [filter, setFilter] = useState({
@@ -117,18 +117,46 @@ const EventList = ({ data = [] }) => {
         search: ''
     });
 
+    const { isLoading, data } = useQuery(
+        ['Event list', filter],
+        async ({ queryKey: [, filterQuery], signal }) => {
+            const { status, start, end, page, search } = filterQuery;
+            const res = await FetchApi({
+                url: API_MARKETING_EVENTS,
+                options: {
+                    method: 'GET',
+                    signal
+                },
+                params: {
+                    status: status !== -1 ? status : undefined,
+                    pageSize: 10,
+                    'filters[startTime]': start,
+                    'filters[endTime]': end,
+                    currentPage: page,
+                    search
+                }
+
+            });
+            return res.data;
+        },
+        {
+            persist: false,
+            ttl: '2h'
+        }
+    );
+
     useIsomorphicLayoutEffect(() => {
         if (!router.isReady) {
             return;
         }
 
-        const statusFilter = +router.query.status || 0;
-        if (statusFilter < 4 && statusFilter >= 0) {
-            setFilter((old) => ({ ...old, status: statusFilter }));
+        const statusFilter = +router.query.status ?? STATUSES.all;
+        if (statusFilter <= STATUSES.ended && statusFilter >= STATUSES.all) {
+            setFilter((old) => ({ ...old, status: statusFilter, }));
         }
     }, [router.isReady, router.query]);
 
-    const onFilterStatus = (status = 0) => {
+    const onFilterStatus = (status = -1) => {
         router.replace(
             {
                 query: {
@@ -156,12 +184,12 @@ const EventList = ({ data = [] }) => {
                         type="BUTTON"
                         className={classNames(
                             'flex space-x-1 justify-center h-full py-2 px-3 mb:px-4 text-sm sm:text-base rounded-md cursor-pointer whitespace-nowrap bg-gray-13 dark:bg-dark-4 dark:text-txtSecondary-dark text-txtSecondary capitalize',
-                            { '!bg-teal/10 !text-teal font-semibold': filter.status === idx }
+                            { '!bg-teal/10 !text-teal font-semibold': filter.status === idx - 1 }
                         )}
                         key={status}
-                        onClick={() => onFilterStatus(idx)}
+                        onClick={() => onFilterStatus(idx - 1)}
                     >
-                        {idx === STATUSES.ongoing && <SvgFire />}
+                        {idx - 1 === STATUSES.ongoing && <SvgFire />}
                         <span>{t(`marketing_events:${status}`)}</span>
                     </button>
                 ))}
@@ -181,31 +209,41 @@ const EventList = ({ data = [] }) => {
                 </div>
             </div>
             <div className="py-4 mb:py-5">
-                {data.map((event) => (
-                    <div className="relative flex mt-4 mb:mt-7 rounded-xl overflow-hidden flex-wrap mb:flex-nowrap bg-white dark:bg-dark-4 border dark:border-none border-divider shadow-card_light">
-                        <div className="absolute bg-red text-white px-2 text-xs rounded-sm top-4 right-4 z-[1]">Ends in 12:00:00</div>
-                        <ImageWrapper>
-                            <Image src={getEventImg(event.thumbnailImgEndpoint)} width={503} height={265} className="object-cover bg-gray" />
-                        </ImageWrapper>
-                        <div className="p-4 mb:px-7 mb:py-12 mb:w-7/12">
-                            <div className="flex flex-wrap gap-2 mb:gap-3 items-center text-txtSecondary dark:text-txtSecondary-dark text-xs mb:text-sm">
-                                <div className="bg-yellow-2/10 text-yellow-2 px-4 py-1 rounded-full">Ongoing</div>
-                                <span className="w-full mb:w-auto">
-                                    {formatTime(event.startTime, 'HH:mm:ss dd/MM/yyyy')} - {formatTime(event.endTime, 'HH:mm:ss dd/MM/yyyy')}
-                                </span>
+                {data?.event?.length ? (
+                    <>
+                        {data?.events?.map((event) => (
+                            <div className="relative flex mt-4 mb:mt-7 rounded-xl overflow-hidden flex-wrap mb:flex-nowrap bg-white dark:bg-dark-4 border dark:border-none border-divider shadow-card_light">
+                                <div className="absolute bg-red text-white px-2 text-xs rounded-sm top-4 right-4 z-[1]">Ends in 12:00:00</div>
+                                <ImageWrapper>
+                                    <Image src={getEventImg(event.thumbnailImgEndpoint)} width={503} height={265} className="object-cover bg-gray" />
+                                </ImageWrapper>
+                                <div className="p-4 mb:px-7 mb:py-12 mb:w-7/12">
+                                    <div className="flex flex-wrap gap-2 mb:gap-3 items-center text-txtSecondary dark:text-txtSecondary-dark text-xs mb:text-sm">
+                                        <div className="bg-yellow-2/10 text-yellow-2 px-4 py-1 rounded-full">Ongoing</div>
+                                        <span className="w-full mb:w-auto">
+                                            {formatTime(event.startTime, 'HH:mm:ss dd/MM/yyyy')} - {formatTime(event.endTime, 'HH:mm:ss dd/MM/yyyy')}
+                                        </span>
+                                    </div>
+                                    <div className="mt-2 mb:mt-3 font-semibold text-base mb:text-xl line-clamp-2">{event.title}</div>
+                                    <div className="mt-4 mb:mt-5 flex items-center space-x-1 mb:space-x-2 font-semibold text-sm sm:text-base">
+                                        <SvgTrophy />
+                                        <span>Total prizes</span>
+                                    </div>
+                                    <div className="mt-2">
+                                        {/* <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs mb:text-sm line-through">{event.prize}</div> */}
+                                        <div className="font-semibold text-sm mb:text-base">{event.prize}</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="mt-2 mb:mt-3 font-semibold text-base mb:text-xl line-clamp-2">{event.title}</div>
-                            <div className="mt-4 mb:mt-5 flex items-center space-x-1 mb:space-x-2 font-semibold text-sm sm:text-base">
-                                <SvgTrophy />
-                                <span>Total prizes</span>
-                            </div>
-                            <div className="mt-2">
-                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs mb:text-sm line-through">{event.prize}</div>
-                                <div className="font-semibold text-sm mb:text-base">{event.prize}</div>
-                            </div>
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        <div className="mt-6 py-[72px] px-[53px] flex items-center flex-col justify-center">
+                            <NoData isAuth={true} isSearch />
                         </div>
-                    </div>
-                ))}
+                    </>
+                )}
             </div>
         </div>
     );

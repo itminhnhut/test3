@@ -187,12 +187,10 @@ const mock = [
 
 const Event = () => {
 
-     
-
     return (
         <div className="max-w-screen-v3 2xl:max-w-screen-xxl mx-auto mb:pb-[7.5rem] pb-20 pt-0 px-4 mb:px-0">
             <div className="py-4 mb:pt-12">
-                <EventCarousel data={mock} />
+                <EventCarousel />
             </div>
             <div className="pt-4 mb:pt-12">
                 <EventList data={mock} />

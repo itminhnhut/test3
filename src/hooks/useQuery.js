@@ -3,8 +3,9 @@ import ms from 'ms';
 import { useCallback, useEffect, useState } from 'react';
 import { isBrowser } from 'redux/actions/utils';
 
-const prefix = 'nami_query';
+const cacheMap = {};
 
+// todo: using store to make it global instead of cacheMap
 export class BaseStorage {
     async set(key = '', value = '') {}
     async get(key = '') {
@@ -37,30 +38,33 @@ export const asyncLocalStorage = new AsyncLocalStorage();
  *
  * @param {unknown[]} queryKey
  * @param {(context: {queryKey: unknown[], signal?: AbortSignal}) => T | Promise<T>} fetch
- * @param {?{cache: boolean, ttl: string, storage: BaseStorage}} options ttl is currently using ms see: https://github.com/vercel/ms
+ * @param {?{persist: boolean, ttl: string, storage: BaseStorage}} options ttl is currently using ms see: https://github.com/vercel/ms
  * @returns {{data: T | undefined, isLoading: boolean, reFetch: Function, stale}}
  */
-const useQuery = (queryKey = [''], fetch, options = { cache: false, ttl: '1d', storage: asyncLocalStorage }) => {
-    const { cache = false, ttl = '1d', storage = asyncLocalStorage } = options;
+const useQuery = (queryKey = [''], fetch, options = { persist: false, ttl: '1d', storage: asyncLocalStorage }) => {
+    const { persist = false, ttl = '1d', storage = asyncLocalStorage } = options;
     const key = JSON.stringify(queryKey);
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState();
 
-    const stale = () => storage.clear(key);
+    const stale = () => {
+        cacheMap[key] = undefined;
+        storage.clear(key);
+    };
     const reFetch = useCallback(
         async (signal) => {
             setIsLoading(true);
             try {
                 const data = await fetch({ queryKey, signal });
                 setData(data);
-                if (cache) {
-                    storage.set(
-                        key,
-                        JSON.stringify({
-                            expiry: Date.now() + ms(ttl),
-                            data
-                        })
-                    );
+                const toCache = {
+                    expiry: Date.now() + ms(ttl),
+                    data
+                };
+                cacheMap[key] = toCache;
+
+                if (persist) {
+                    storage.set(key, JSON.stringify(toCache));
                 }
             } catch (error) {
                 console.log({ error: error.message });
@@ -68,24 +72,27 @@ const useQuery = (queryKey = [''], fetch, options = { cache: false, ttl: '1d', s
                 setIsLoading(false);
             }
         },
-        [fetch, cache, storage]
+        [fetch, persist, storage]
     );
 
     const getData = async (abortSignal) => {
         setIsLoading(true);
-        if (cache) {
+        let cached = cacheMap[key];
+        if (persist) {
             try {
-                const stringCache = await storage.get(key);
-                const res = JSON.parse(stringCache);
-                setData(res.data);
-                if (Date.now() > res.expiry) {
-                    reFetch(abortSignal);
-                } else {
-                    setIsLoading(false);
+                if (!cached) {
+                    const stringCache = await storage.get(key);
+                    cached = JSON.parse(stringCache);
                 }
             } catch (error) {
-                return reFetch(abortSignal);
+                console.error("Load data from storage failed:", error.message);
             }
+        }
+        if (cached?.data) {
+            setData(cached.data);
+        }
+        if (Date.now() < cached?.expiry) {
+            setIsLoading(false);
         } else {
             reFetch(abortSignal);
         }

@@ -72,7 +72,6 @@ const Carousel = ({ data }) => {
         );
     };
 
-
     return (
         <Wrapper>
             <div className="keen-slider" ref={sliderRef}>
@@ -86,18 +85,23 @@ const Carousel = ({ data }) => {
 };
 
 const EventCarousel = () => {
-    const { isLoading, data } = useQuery(['event_carousel'], async () => {
-        const res = await FetchApi({
-            url: API_MARKETING_EVENTS,
-            options: {
-                method: 'GET'
-            }
-        });
-        return res.data.events;
-    }, {
-        cache: true,
-        ttl: '2h'
-    });
+    const { isLoading, data } = useQuery(
+        ['event_carousel'],
+        async ({ signal }) => {
+            const res = await FetchApi({
+                url: API_MARKETING_EVENTS,
+                options: {
+                    method: 'GET',
+                    signal
+                }
+            });
+            return res.data.events;
+        },
+        {
+            persist: true,
+            ttl: '2h'
+        }
+    );
 
     return (
         <>
