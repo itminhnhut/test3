@@ -225,13 +225,27 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             formatKeyData = '--';
                                             break;
                                         }
+                                        const displayingAsset = additionalData?.displayingPriceAsset;
 
-                                        asset = find(assetConfig, { assetCode: additionalData?.toAsset });
-                                        const assetDigit = asset?.assetCode === 'NAMI' ? 4 : asset?.assetDigit ?? 0;
-                                        const price = additionalData?.price ?? additionalData?.toQty / additionalData?.fromQty;
-                                        formatKeyData = `1 ${additionalData?.fromAsset || NULL_ASSET} = ${customFormatBalance(price, assetDigit, false)} ${
-                                            additionalData?.toAsset || NULL_ASSET
-                                        }`;
+                                        const SWAP_SIDE = {
+                                            to: 'from',
+                                            from: 'to'
+                                        };
+                                        const otherFieldSide = displayingAsset === additionalData?.fromAsset ? 'to' : 'from';
+
+                                        const fiatDigit = {
+                                            USDT: 4,
+                                            VNDC: 0
+                                        }[displayingAsset?.toUpperCase()];
+
+                                        const price =
+                                            additionalData?.displayingPrice ??
+                                            additionalData?.[`${otherFieldSide}Qty`] / additionalData?.[`${SWAP_SIDE[otherFieldSide]}Qty`];
+                                        formatKeyData = `1 ${additionalData?.[`${otherFieldSide}Asset`] || NULL_ASSET} = ${customFormatBalance(
+                                            price,
+                                            fiatDigit,
+                                            false
+                                        )} ${displayingAsset || NULL_ASSET}`;
                                         break;
                                     case COLUMNS_TYPE.SYMBOL:
                                         symbol = getSymbolObject(keyData);
