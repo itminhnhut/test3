@@ -24,6 +24,7 @@ import classNames from 'classnames';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import LanguageSetting from './LanguageSetting';
 import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
+import styled from 'styled-components';
 
 import TagV2 from '../V2/TagV2';
 import { ChevronRight } from 'react-feather';
@@ -256,7 +257,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     } else {
                         itemsLevel1withIcon.push(
                             <Link href={child.url} key={`${child.title}_${child.key}`} passHref>
-                                <div
+                                <a
                                     className={classNames(
                                         '!pt-0 !pr-0',
                                         useOneCol
@@ -268,9 +269,10 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                             hidden: child.hide
                                         }
                                     )}
+                                    target={child?.isTarget ? '_blank' : '_self'}
                                 >
-                                    <a className={'mal-navbar__link__group___item___childen__lv1___item2'}>
-                                        <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
+                                    <div className={'mal-navbar__link__group___item___childen__lv1___item2'}>
+                                        <WrapperItemChild className="mal-navbar__link__group___item___childen__lv1___item2__icon">
                                             {Icon ? (
                                                 <Icon size={24} />
                                             ) : (
@@ -282,7 +284,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                                     alt={child.title}
                                                 />
                                             )}
-                                        </div>
+                                        </WrapperItemChild>
                                         <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
                                             <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
                                                 {t(`navbar:submenu.${child.localized}`)}
@@ -299,8 +301,8 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                                 )}
                                             </div>
                                         </div>
-                                    </a>
-                                </div>
+                                    </div>
+                                </a>
                             </Link>
                         );
                     }
@@ -308,7 +310,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
                 return (
                     <div className="h-full flex items-center" key={`${title}_${key}__withchild`}>
-                        <div className="mal-navbar__link__group___item !mr-0 pr-10">
+                        <div className="mal-navbar__link__group___item !mr-0 pr-11">
                             <div className="flex items-center">
                                 {t(`navbar:menu.${localized}`)}
 
@@ -332,7 +334,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
             return (
                 <Link key={`${title}_${key}`} href={url}>
-                    <a className="mal-navbar__link__group___item">
+                    <a className="mal-navbar__link__group___item !mr-11">
                         {t(`navbar:menu.${localized}`)} {isNew ? <div className="mal-dot__newest" /> : null}
                     </a>
                 </Link>
@@ -674,6 +676,14 @@ export const NavBarBottomShadow = ({ style = {}, className = '' }) => {
         />
     );
 };
+
+const WrapperItemChild = styled.div`
+    span {
+        span {
+            width: 24px !important;
+        }
+    }
+`;
 
 const getNavIcon = {
     sport: 'ic_exchange.png',

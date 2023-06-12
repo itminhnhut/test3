@@ -107,7 +107,7 @@ export const NAV_DATA = [
                 title: 'Report Commission',
                 localized: 'report_commission',
                 isNew: false,
-                url: '/trade',
+                url: '/reference',
                 child_lv2: []
             },
             {
@@ -115,7 +115,7 @@ export const NAV_DATA = [
                 title: 'Race Top Referral',
                 localized: 'race_top_referral',
                 isNew: false,
-                url: '/futures',
+                url: '/contest/referral',
                 child_lv1: []
             }
         ]
@@ -133,7 +133,8 @@ export const NAV_DATA = [
                 title: 'Whitepaper',
                 localized: 'whitepaper',
                 isNew: false,
-                url: '/trade',
+                url: 'https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics',
+                isTarget: true,
                 child_lv2: []
             },
             {
@@ -141,7 +142,7 @@ export const NAV_DATA = [
                 title: 'Noti',
                 localized: 'noti',
                 isNew: false,
-                url: '/futures',
+                url: '/support/announcement/thong-bao',
                 child_lv1: []
             },
             {
@@ -149,7 +150,7 @@ export const NAV_DATA = [
                 title: 'Pool',
                 localized: 'pool',
                 isNew: false,
-                url: '/futures',
+                url: '/nao',
                 child_lv1: []
             },
             {
@@ -157,7 +158,7 @@ export const NAV_DATA = [
                 title: 'Stake Nao',
                 localized: 'stake_nao',
                 isNew: false,
-                url: '/futures',
+                url: '/nao/stake',
                 child_lv1: []
             },
             {
@@ -165,7 +166,7 @@ export const NAV_DATA = [
                 title: 'Race Top',
                 localized: 'race_top',
                 isNew: false,
-                url: '/futures',
+                url: '/contest?individual=volume&team=volume',
                 child_lv1: []
             }
         ]
@@ -400,7 +401,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Report Commission',
                 localized: 'report_commission',
                 isNew: false,
-                url: '/trade',
+                url: '/reference',
                 child_lv2: []
             },
             {
@@ -408,7 +409,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Race Top Referral',
                 localized: 'race_top_referral',
                 isNew: false,
-                url: '/futures',
+                url: '/contest/referral',
                 child_lv1: []
             }
         ]
@@ -426,7 +427,8 @@ export const MOBILE_NAV_DATA = [
                 title: 'Whitepaper',
                 localized: 'whitepaper',
                 isNew: false,
-                url: '/trade',
+                url: 'https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics',
+                notSameOrigin: '_blank',
                 child_lv2: []
             },
             {
@@ -434,7 +436,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Noti',
                 localized: 'noti',
                 isNew: false,
-                url: '/futures',
+                url: '/support/announcement/thong-bao',
                 child_lv1: []
             },
             {
@@ -442,7 +444,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Pool',
                 localized: 'pool',
                 isNew: false,
-                url: '/futures',
+                url: '/nao',
                 child_lv1: []
             },
             {
@@ -450,7 +452,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Stake Nao',
                 localized: 'stake_nao',
                 isNew: false,
-                url: '/futures',
+                url: '/nao/stake',
                 child_lv1: []
             },
             {
@@ -458,7 +460,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Race Top',
                 localized: 'race_top',
                 isNew: false,
-                url: '/futures',
+                url: '/contest?individual=volume&team=volume',
                 child_lv1: []
             }
         ]
