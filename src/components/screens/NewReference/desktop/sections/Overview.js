@@ -27,6 +27,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
 import toast from 'utils/toast';
 import { useSelector } from 'react-redux';
+import Tooltip from 'components/common/Tooltip';
 
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -152,6 +153,11 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
     const refLink = data?.defaultRefCode?.code ? 'https://nami.exchange/ref/' + data?.defaultRefCode?.code : '---';
     const policyLink = language === 'vi' ? policyLinkVI : policyLinkEN;
 
+    const isEligible =
+        ((data?.volume?.current?.futures / data?.volume?.target?.futures) >= 0.5)
+        ||
+        ((data?.volume?.current?.spot / data?.volume?.target?.spot) >= 0.5)
+
     return (
         <>
             {/* Card banner slogan */}
@@ -225,6 +231,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
             </div>
 
             {/* Card infor general */}
+            <Tooltip id={'description'} place="top" effect="solid" isV3 className="max-w-[300px]" />
 
             <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
                 {auth ? (
@@ -254,12 +261,19 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                     </div>
                                 </div>
                             </div>
-                            <div className="text-sm space-y-3">
+                            <div
+                                className='w-max font-semibold text-base text-txtPrimary dark:text-gray-4 mb-4 border-b border-darkBlue-5 border-dashed cursor-pointer'
+                                data-tip={`Something...`}
+                                data-for={'description'}
+                            >
+                                Điều kiện xét hạng
+                            </div>
+                            <div className="text-sm space-y-3 relative">
                                 <div className="w-full flex items-center justify-between text-gray-1">
                                     <div>{t('reference:referral.current_volume')}</div>
                                     <div>{data?.rank !== 5 ? t('reference:referral.next_level') : null}</div>
                                 </div>
-                                <div className="w-full bg-gray-12 rounded-full overflow-hidden flex">
+                                <div className="w-full bg-gray-12 dark:bg-dark-2 rounded-full overflow-hidden flex">
                                     <Progressbar
                                         background={colors.green[3]}
                                         percent={(data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100}
@@ -272,20 +286,69 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                         height={8}
                                         className="!rounded-r-lg"
                                     />
+
+                                    <div className="absolute left-1/2 top-6 z-10 rounded-full">
+                                        <Tooltip id={'remain_condition'} place="top" effect="solid"
+                                            className={`!px-6 !py-3 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg`}
+                                            arrowColor={currentTheme === 'dark' ? colors.dark[2] : colors.gray[15]}
+                                        >
+                                            <div>
+                                                <div className="text-teal">
+                                                    Spot: 800K USDT
+                                                </div>
+                                                <div className='text-blue-crayola'>
+                                                    Futures: 10,000 USDT
+                                                </div>
+                                            </div>
+                                        </Tooltip>
+                                        <CheckpointCircle isEligible={isEligible} data-tip={"1123123213"} data-for="remain_condition" tooltip />
+                                    </div>
                                 </div>
-                                <div className="w-full flex flex-col leading-5">
+                                <div className="w-full flex flex-col leading-5 gap-1">
+
                                     <div className="w-full flex justify-between text-teal">
-                                        <div>Exchange: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
-                                        <div>Exchange: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
+                                        <div className='flex items-center h-6 gap-1'>
+                                            <div
+                                                className='border-b border-darkBlue-5 border-dashed cursor-pointer'
+                                                data-tip={`Something exchange`}
+                                                data-for={'description'}
+                                            >
+                                                Exchange:
+                                            </div>
+                                            {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
+                                        <div className='flex items-center h-6 gap-1'>
+                                            <div
+                                                className='border-b border-darkBlue-5 border-dashed cursor-pointer'
+                                                data-tip={`Something exchange`}
+                                                data-for={'description'}
+                                            >
+                                                Exchange:
+                                            </div>
+                                            {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
                                         {/* {data?.rank !== 5 ? (
                                             <div>Spot: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
                                         ) : null} */}
                                     </div>
                                     <div className="w-full flex justify-between text-blue-crayola">
-                                        <div>
-                                            Futures: {isNaN(data?.volume?.current?.futures) ? '--' : formatter.format(data?.volume?.current?.futures)} USDT
+                                        <div className='flex items-center h-6 gap-1'>
+                                            <div
+                                                className='border-b border-darkBlue-5 border-dashed cursor-pointer'
+                                                data-tip={`Something futures`}
+                                                data-for={'description'}
+                                            >
+                                                Futures:
+                                            </div>
+                                            {isNaN(data?.volume?.current?.futures) ? '--' : formatter.format(data?.volume?.current?.futures)} USDT
                                         </div>
-                                        <div>Futures: {isNaN(data?.volume?.target?.futures) ? '--' : formatter.format(data?.volume?.target?.futures)} USDT</div>
+                                        <div className='flex items-center h-6 gap-1'>
+                                            <div
+                                                className='border-b border-darkBlue-5 border-dashed cursor-pointer'
+                                                data-tip={`Something futures`}
+                                                data-for={'description'}
+                                            >
+                                                Futures:
+                                            </div>
+                                            {isNaN(data?.volume?.target?.futures) ? '--' : formatter.format(data?.volume?.target?.futures)} USDT</div>
                                         {/* {data?.rank !== 5 ? (
                                             <div>
                                                 Futures: {isNaN(data?.volume?.target?.futures) ? '--' : formatter.format(data?.volume?.target?.futures)} USDT
@@ -665,3 +728,16 @@ const ModalShareRefCode = ({ code, open, onClose, t }) => {
         </ModalV2>
     );
 };
+
+const CheckpointCircle = ({ isEligible = false, ...props }) => {
+    return <div className="w-6 h-6 rounded-full bg-dark-13 dark:bg-dark-4 p-[2px] cursor-pointer" {...props} >
+        <div className={classNames("w-full h-full p-1 rounded-full", {
+            "bg-yellow-2": isEligible,
+            "bg-dark-2": !isEligible,
+        })}>
+            <div className='bg-dark-13 dark:bg-dark-4 w-full h-full rounded-full'>
+
+            </div>
+        </div>
+    </div>
+}
