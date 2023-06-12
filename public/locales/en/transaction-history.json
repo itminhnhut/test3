@@ -8,7 +8,7 @@
         "exchange": "Exchange",
         "futures": "Nami Futures",
         "nao": "NAO Futures",
-        "convert": "Convert",
+        "convert": "Swap",
         "transfer": "Transfer",
         "staking": "Staking Daily",
         "commission": "Commissions"

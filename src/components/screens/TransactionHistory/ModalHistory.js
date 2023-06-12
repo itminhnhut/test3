@@ -29,6 +29,18 @@ export const WalletTypeById = {
     9: WalletType.NAO_FUTURES
 };
 
+const renderWallet = ({ t, key, language }) => {
+    const wallet = {
+        [WalletType.SPOT]: t('common:wallet', { wallet: 'Nami Spot' }),
+        [WalletType.FUTURES]: t('common:wallet', { wallet: 'Nami Futures' }),
+        [WalletType.BROKER]: t('common:wallet', { wallet: language === 'vi' ? 'hoa hồng Nami' : 'Nami Commission' }),
+        [WalletType.NAO_FUTURES]: t('common:wallet', { wallet: 'NAO Futures' })
+    };
+
+    const walletType = WalletTypeById[key];
+    return wallet[walletType] || walletType || NULL_ASSET;
+};
+
 const NULL_ASSET = '--';
 
 const parseObjToString = ({ keys, object }) => {
@@ -77,21 +89,6 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
             source.cancel();
         };
     }, [id, assetConfig]);
-
-    const renderWallet = (key) => {
-        switch (key) {
-            case WalletType.SPOT:
-                return t('common:wallet', { wallet: 'Nami Spot' });
-            case WalletType.FUTURES:
-                return t('common:wallet', { wallet: 'Nami Futures' });
-            case WalletType.BROKER:
-                return t('common:wallet', { wallet: language === 'vi' ? 'hoa hồng Nami' : 'Nami Commission' });
-            case WalletType.NAO_FUTURES:
-                return t('common:wallet', { wallet: 'NAO Futures' });
-            default:
-                return key;
-        }
-    };
 
     const isMoneyUseOutofDigit = detailTx?.result?.money_use && Math.abs(+detailTx?.result?.money_use) < Math.pow(10, (assetData?.assetDigit || 0) * -1);
 
@@ -269,7 +266,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         formatKeyData = `${assetLength < 10 ? `0${assetLength}` : assetLength}`;
                                         break;
                                     case COLUMNS_TYPE.WALLET_TYPE:
-                                        formatKeyData = <div className="">{renderWallet(WalletTypeById?.[keyData])}</div>;
+                                        formatKeyData = <div className="">{renderWallet({ t, language, key: keyData })}</div>;
                                         break;
                                     case COLUMNS_TYPE.NAMI_SYSTEM:
                                         formatKeyData = t('transaction-history:nami_system');
