@@ -61,8 +61,8 @@ export default function FundingHistory(props) {
 
     const urlPost =
         language === 'en'
-            ? 'https://nami.exchange/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-nao-futures'
-            : 'https://nami.exchange/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures';
+            ? `${process.env.NEXT_PUBLIC_WEB_V1}/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-nao-futures`
+            : `${process.env.NEXT_PUBLIC_WEB_V1}/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures`;
 
     return (
         <MaldivesLayout>
