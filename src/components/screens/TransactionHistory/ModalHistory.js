@@ -252,8 +252,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             };
                                         }
 
-                                        const { assetDigit } = assetData;
-                                        formatKeyData = `${customFormatBalance(keyData, assetDigit)} ${symbol?.quoteAsset || NULL_ASSET}`;
+                                        formatKeyData = `${customFormatBalance(keyData, assetData?.assetDigit)} ${symbol?.quoteAsset || NULL_ASSET}`;
                                         break;
                                     case COLUMNS_TYPE.NUMBER_OF_ASSETS:
                                         additionalData = detailTx?.additionalData || detailTx?.result?.metadata;
