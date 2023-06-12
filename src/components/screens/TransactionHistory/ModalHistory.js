@@ -231,9 +231,9 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             break;
                                         }
                                         asset = assetConfig.find((asset) => asset.assetCode === additionalData?.toAsset);
-
+                                        const price = additionalData?.price ?? additionalData?.toQty / additionalData?.fromQty;
                                         formatKeyData = `1 ${additionalData?.fromAsset || NULL_ASSET} = ${customFormatBalance(
-                                            additionalData?.price,
+                                            price,
                                             asset?.assetDigit ?? 0,
                                             true
                                         )}  ${additionalData?.toAsset || NULL_ASSET}`;
