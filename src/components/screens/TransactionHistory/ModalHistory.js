@@ -9,7 +9,7 @@ import { ApiStatus } from 'redux/actions/const';
 import AssetLogo from '../../wallet/AssetLogo';
 import Skeletor from 'components/common/Skeletor';
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import { get, isNumber, isString } from 'lodash';
+import { find, get, isNumber, isString } from 'lodash';
 import classNames from 'classnames';
 import { TRANSACTION_TYPES, modalDetailColumn, COLUMNS_TYPE } from './constant';
 import { WalletType, EarnWalletType } from 'redux/actions/const';
@@ -225,8 +225,11 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             formatKeyData = '--';
                                             break;
                                         }
+
+                                        asset = find(assetConfig, { assetCode: additionalData?.toAsset });
+                                        const assetDigit = asset?.assetCode === 'NAMI' ? 4 : asset?.assetDigit ?? 0;
                                         const price = additionalData?.price ?? additionalData?.toQty / additionalData?.fromQty;
-                                        formatKeyData = `1 ${additionalData?.fromAsset || NULL_ASSET} = ${formatSwapRate(price)} ${
+                                        formatKeyData = `1 ${additionalData?.fromAsset || NULL_ASSET} = ${customFormatBalance(price, assetDigit, false)} ${
                                             additionalData?.toAsset || NULL_ASSET
                                         }`;
                                         break;

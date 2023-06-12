@@ -129,7 +129,7 @@ const TransactionHistory = ({ id }) => {
             };
             try {
                 setLoading(true);
-                hasNext.current = false;
+                // hasNext.current = false;
                 const { data, statusCode, status } = await FetchApi({
                     url: API_GET_WALLET_TRANSACTION_HISTORY,
                     params,
