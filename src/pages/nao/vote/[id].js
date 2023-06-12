@@ -80,7 +80,6 @@ export default function Vote() {
     }, [auth]);
 
     async function handleSubmitVote(votedYes) {
-        return setIsShowSuccessModal(true);
         if (loading) return;
         setLoading(true);
         setIsShowProposalModal(false);
