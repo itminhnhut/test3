@@ -64,8 +64,6 @@ const useGetPartner = ({ assetId, side, amount, rate, assetConfig }) => {
             source.cancel();
         };
     }, [input, assetId, side, minimumAllowed, maximumAllowed]);
-
-    return assetConfig;
 };
 
 export default useGetPartner;
