@@ -352,7 +352,7 @@ const TradingFee = () => {
                         <div className="flex flex-wrap justify-center space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
                             <span className="whitespace-pre-wrap text-center">
                                 <span
-                                    className="text-teal hover:underline cursor-pointer font-semibold"
+                                    className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 cursor-pointer"
                                     onClick={() => {
                                         window.location.href = getLoginUrl('sso');
                                     }}
@@ -361,7 +361,7 @@ const TradingFee = () => {
                                 </span>{' '}
                                 <span>{t('common:or')}</span>{' '}
                                 <span
-                                    className="text-teal hover:underline cursor-pointer font-semibold"
+                                    className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 cursor-pointer"
                                     onClick={() => {
                                         window.location.href = getLoginUrl('sso', 'register');
                                     }}
