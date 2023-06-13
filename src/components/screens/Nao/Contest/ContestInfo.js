@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useImperativeHandle, forwardRef, useMemo } from 'react';
+import React, { useEffect, useState, forwardRef, useMemo } from 'react';
 import { CardNao, TextLiner, ButtonNao, Tooltip, capitalize, TabsNao, TabItemNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import { getS3Url } from 'redux/actions/utils';
 import fetchApi from 'utils/fetch-api';
 import { formatNumber } from 'redux/actions/utils';
 import { API_CONTEST_GET_USER_DETAIL, API_CONTEST_GET_INVITES } from 'redux/actions/apis';
@@ -49,22 +48,16 @@ const FILTER_STRUCTURE = [
     {
         id: 0,
         name: 'TOP_RACE_MONTH',
-        content: {
-            vi: 'Tháng này',
-            en: 'This Month'
-        }
+        localized: 'nao:this_month'
     },
     {
         id: 1,
         name: 'TOP_RACE_WEEK',
-        content: {
-            vi: 'Tuần này',
-            en: 'This Week'
-        }
+        localized: 'nao:this_week'
     }
 ];
 
-const FilterTypes = ({ type, setType, types, lang, className }) => {
+const FilterTypes = ({ type, setType, types, t, className }) => {
     return (
         <div className={classnames('flex flex-wrap font-normal text-sm items-center gap-2', className)}>
             {types.map((e) => (
@@ -81,7 +74,8 @@ const FilterTypes = ({ type, setType, types, lang, className }) => {
                     )}
                     onClick={() => setType(e.id)}
                 >
-                    {e?.content[lang]}
+                    {/* {e?.content[lang]} */}
+                    {e.localized ? t(e.localized) : e.name}
                 </div>
             ))}
         </div>
@@ -100,7 +94,7 @@ const ContestInfo = forwardRef(
             quoteAsset: q,
             hasTabCurrency,
             userID,
-            weekly_contest_time: { start, end },
+            weekly_contest_time,
             top_ranks_week
         },
         ref
@@ -116,19 +110,23 @@ const ContestInfo = forwardRef(
         const [invitations, setInvitations] = useState(null);
         const [quoteAsset, setQuoteAsset] = useState(q);
         const [tabIndex, setTabIndex] = useState(0);
+        const [isLoading, setIsLoading] = useState(false);
 
         const week = useMemo(() => {
-            const weeks = getWeeksInRange(new Date(start), new Date(end));
-            const now = Date.now();
-            for (let i = 0; i < weeks.numWeeks; i++) {
-                const start = new Date(weeks.weeks[i].start).getTime();
-                const end = new Date(weeks.weeks[i].end).getTime();
-                if (now > start && now < end) {
-                    return i + 1;
+            if (top_ranks_week && weekly_contest_time && weekly_contest_time.start && weekly_contest_time.end) {
+                const { start, end } = weekly_contest_time;
+                const weeks = getWeeksInRange(new Date(start), new Date(end));
+                const now = Date.now();
+                for (let i = 0; i < weeks.numWeeks; i++) {
+                    const start = new Date(weeks.weeks[i].start).getTime();
+                    const end = new Date(weeks.weeks[i].end).getTime();
+                    if (now > start && now < end) {
+                        return i + 1;
+                    }
                 }
             }
             return null;
-        }, [start]);
+        }, [weekly_contest_time]);
 
         useEffect(() => {
             if (user) {
@@ -138,6 +136,7 @@ const ContestInfo = forwardRef(
 
         const getData = async () => {
             try {
+                setIsLoading(true);
                 let week_id = null;
                 if (top_ranks_week && tabIndex && tabIndex !== 0) {
                     week_id = week;
@@ -155,6 +154,7 @@ const ContestInfo = forwardRef(
             } catch (e) {
                 console.error('__ error', e);
             } finally {
+                setIsLoading(false);
             }
         };
 
@@ -218,8 +218,20 @@ const ContestInfo = forwardRef(
         return (
             <>
                 <section className="contest_info py-6 sm:pb-14">
+                    {top_ranks_week && (
+                        <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-contest-info-note">
+                            <div className="text-sm">{t('nao:contest:personal_achievements_note')}</div>
+                        </Tooltip>
+                    )}
                     <div className="flex items-center justify-between">
-                        <TextLiner>{t('nao:contest:personal')}</TextLiner>
+                        <div className="flex items-center space-x-2">
+                            <TextLiner>{t('nao:contest:personal')}</TextLiner>
+                            {top_ranks_week && (
+                                <div data-tip="" data-for="tooltip-contest-info-note" className="cursor-pointer md:hidden">
+                                    <QuestionMarkIcon isFilled size={16} />
+                                </div>
+                            )}
+                        </div>
                         {!userData?.group_name && isValidCreate && (
                             <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()}>
                                 {t('nao:contest:create_team')}
@@ -234,7 +246,7 @@ const ContestInfo = forwardRef(
                                     setTabIndex(index);
                                 }}
                                 types={[...FILTER_STRUCTURE]}
-                                lang={language}
+                                t={t}
                             />
                         </div>
                     )}
