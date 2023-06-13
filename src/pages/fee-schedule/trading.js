@@ -22,7 +22,7 @@ import NamiCircle from 'components/svg/NamiCircle';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Crown from 'components/svg/Crown';
 import classnames from 'classnames';
-import useDarkMode from 'hooks/useDarkMode';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import { MoneyIcon } from 'components/svg/SvgIcon';
@@ -203,7 +203,9 @@ const TradingFee = () => {
                     </span>
                 ),
                 align: 'right',
-                render: (ratio) => <span>{`${ratio} / ${ratio}`}</span>
+                render: (ratio) => {
+                    return <span>{`${formatNumber(+ratio.replace('%', ''), 5, 5)}% / ${formatNumber(+ratio.replace('%', ''), 5, 5)}%`}</span>;
+                }
             }
         ];
 
@@ -343,24 +345,31 @@ const TradingFee = () => {
             <>
                 <div className="font-semibold leading-normal pt-2">
                     <div className={`flex flex-col space-y-3 items-center justify-center`}>
-                        <img className="max-h-[124px]" src={getS3Url('/images/icon/ic_login.png')} />
-                        <div className="flex space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
-                            <span
-                                onClick={() => {
-                                    window.location.href = getLoginUrl('sso');
-                                }}
-                                className="text-teal hover:underline cursor-pointer font-semibold"
-                                dangerouslySetInnerHTML={{ __html: t('common:sign_in') }}
-                            />
-                            <div>{t('common:or')}</div>
-                            <span
-                                onClick={() => {
-                                    window.location.href = getLoginUrl('sso', 'register');
-                                }}
-                                className="text-teal hover:underline cursor-pointer font-semibold"
-                                dangerouslySetInnerHTML={{ __html: t('common:sign_up') }}
-                            />
-                            <div>{t('fee-structure:to_experience')}</div>
+                        <img
+                            className="max-h-[124px]"
+                            src={currentTheme === THEME_MODE.DARK ? getS3Url('/images/icon/ic_login.png') : '/images/nao/login.png'}
+                        />
+                        <div className="flex flex-wrap justify-center space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
+                            <span className="whitespace-pre-wrap text-center">
+                                <span
+                                    className="text-teal hover:underline cursor-pointer font-semibold"
+                                    onClick={() => {
+                                        window.location.href = getLoginUrl('sso');
+                                    }}
+                                >
+                                    {t('common:sign_in')}
+                                </span>{' '}
+                                <span>{t('common:or')}</span>{' '}
+                                <span
+                                    className="text-teal hover:underline cursor-pointer font-semibold"
+                                    onClick={() => {
+                                        window.location.href = getLoginUrl('sso', 'register');
+                                    }}
+                                >
+                                    {t('common:sign_up')}
+                                </span>{' '}
+                                {t('fee-structure:to_experience')}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -395,7 +404,7 @@ const TradingFee = () => {
                         <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
                             <ButtonV2 className="!w-auto !h-[36px] !bg-transparent">
                                 <Crown fill={'#47cc85'} />
-                                <span className="!ml-2 text-txtTextBtn-dark">{t('fee-structure:vip_upgrade')}</span>
+                                <span className="!ml-2 text-txtTextBtn-dark">{t('fee-structure:upgrade_level')}</span>
                             </ButtonV2>
                         </Link>
                     </div>
@@ -420,7 +429,7 @@ const TradingFee = () => {
                         <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
                             <ButtonV2 className="!px-6 !w-auto !bg-transparent">
                                 <Crown fill={'#47cc85'} />
-                                <span className="!ml-2 text-txtTextBtn-dark hover:!text-txtTextBtn-pressed">{t('fee-structure:vip_upgrade')}</span>
+                                <span className="!ml-2 text-txtTextBtn-dark hover:!text-txtTextBtn-pressed">{t('fee-structure:upgrade_level')}</span>
                             </ButtonV2>
                         </Link>
                         {/* thêm button fee setting */}
@@ -496,7 +505,7 @@ const TradingFee = () => {
                 <div className="flex items-center">
                     {t('fee-structure:maker_taker_description')}
                     <span className="ml-2">{t('fee-structure:maker_taker_description_2')}</span>
-                    <HrefButton variants="blank" className="!w-auto ml-3" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank">
+                    <HrefButton variants="blank" className="!w-auto ml-3 !py-0" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank">
                         {t('fee-structure:read_more')}
                     </HrefButton>
                 </div>
@@ -504,7 +513,7 @@ const TradingFee = () => {
                     {t('fee-structure:referral_description_value', { value: '20%' })}
                     <HrefButton
                         variants="blank"
-                        className="!w-auto ml-3"
+                        className="!w-auto ml-3 !py-0"
                         href={language === LANGUAGE_TAG.VI ? PATHS.ACCOUNT.REFERRAL_VI : PATHS.ACCOUNT.REFERRAL}
                         target="_blank"
                     >

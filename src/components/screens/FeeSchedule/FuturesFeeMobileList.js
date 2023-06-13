@@ -4,6 +4,7 @@ import { PATHS } from 'constants/paths';
 import { TRADING_MODE } from 'redux/actions/const';
 import { useState } from 'react';
 import AssetLogo from 'components/wallet/AssetLogo';
+import { formatNumber } from 'redux/actions/utils';
 
 export default function FuturesFeeMobileList({ t, data = [], currentQuote, loading = true }) {
     const [isShowMore, setIsShowMore] = useState(false);
@@ -122,7 +123,8 @@ export function FuturesFeeMobileListV2({ t, data = [], loading = true }) {
                                     </div>
                                 </div>
                                 <div>
-                                    <span className="font-semibold">{`${item.ratio} / ${item.ratio}`}</span>
+                                    {/* <span className="font-semibold">{`${item.ratio} / ${item.ratio}`}</span> */}
+                                    <span>{`${formatNumber(+item.ratio.replace('%', ''), 5, 5)}% / ${formatNumber(+item.ratio.replace('%', ''), 5, 5)}%`}</span>
                                 </div>
                             </div>
                         </div>

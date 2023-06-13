@@ -110,6 +110,7 @@ const TradingRules = () => {
             setNoDataContainerWidth(sourceWidth);
         }
     }, [width]);
+    console.log('🚀 ~ file: TradingRule.js:110 ~ useEffect ~ noDataContainerWidth:', noDataContainerWidth);
 
     useEffect(() => {
         if (!publicSocket) return;
@@ -378,7 +379,9 @@ const Wrapper = styled.div`
         }
 
         .rc-table-expanded-row-fixed {
-            width: ${({ searchWidth }) => searchWidth}}px !important;
+            width: ${({ searchWidth }) => {
+                return searchWidth;
+            }}px !important;
             height: 506px !important;
         }
     }

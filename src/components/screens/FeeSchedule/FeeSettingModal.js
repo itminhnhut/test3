@@ -560,8 +560,7 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
                     </div>
                     {item.KEY === 'NAMI_SPOT' && (
                         <span className="mt-2 text-txtSecondary dark:text-txtSecondary-dark text-xs md:!text-sm whitespace-nowrap">
-                            {t('fee-structure:available')} 100,000,000
-                            {/* {namiSpotAvailable} */}
+                            {t('fee-structure:available')} {formatNumber(namiSpotAvailable)}
                         </span>
                     )}
                 </div>
@@ -614,7 +613,7 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
                     </div>
                     {!_.isEmpty(avai_bal_data) && (
                         <span className="mt-2 text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm whitespace-nowrap">
-                            {t('fee-structure:available')} {avai_bal_data[item.ASSET_ID]}
+                            {t('fee-structure:available')} {formatNumber(avai_bal_data[item.ASSET_ID])}
                         </span>
                     )}
                 </div>
