@@ -13,6 +13,9 @@ import { createSelector } from 'reselect';
 import { useTranslation } from 'next-i18next';
 import { requestNao } from 'redux/actions/nao';
 import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import classNames from 'classnames';
+import Image from 'next/image';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const getBalance = createSelector([(state) => state.wallet?.NAO_FUTURES, (wallet, params) => params], (wallet, params) => {
     return wallet ? wallet[params]?.value - wallet[params]?.locked_value : 0;
@@ -23,6 +26,8 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
         t,
         i18n: { language }
     } = useTranslation();
+    const [theme] = useDarkMode();
+    const isDark = theme === THEME_MODE.DARK;
     const [hidden, setHidden] = useState(true);
     const [showLockModal, setShowLockModal] = useState(false);
     const isLock = useRef(false);
@@ -94,10 +99,10 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
         window.open(url, '_blank');
     };
 
-    const staked = dataSource?.totalStaked ?? 0;
+    const staked = dataSource?.availableStaked ?? 0;
 
     return (
-        <div className="flex flex-wrap gap-6">
+        <div className="flex flex-wrap gap-4">
             {showLockModal && (
                 <StateLockModal
                     isLock={isLock.current}
@@ -108,7 +113,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                     balance={isLock.current ? balance : dataSource?.availableStaked ?? 0}
                 />
             )}
-            <CardNao className="text-center mt-10" bgStake>
+            <CardNao className="text-center mt-10 mb:hidden" bgStake>
                 <BackgroundImage className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
                     <img src={getS3Url('/images/nao/ic_nao_large.png')} alt="" width="55" height="55" />
                 </BackgroundImage>
@@ -117,28 +122,45 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                 </TextLiner>
                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm px-[26px]">{t('nao:pool:revenue_share_from_trade')}</div>
             </CardNao>
-            <CardNao stroke="1.5" className="py-6 px-4 !bg-none border border-divider dark:border-none">
-                <div className="flex items-center justify-between pb-4">
-                    <div className="text-sm font-semibold text-txtSecondary dark:text-txtSecondary-dark uppercase">{t('nao:pool:est_apy')}</div>
+            <CardNao
+                stroke="1.5"
+                className="!py-6 !px-4 !bg-none border border-divider dark:border-none lg:!p-8 mb:w-[calc(50%-0.5rem)] lg:!w-[calc(58.3%-0.5rem)] mb:min-w-0 mb:flex-none"
+            >
+                <div className="flex items-center justify-between pb-4 mb:hidden">
+                    <div className="text-sm font-semibold text-txtSecondary dark:text-txtSecondary-dark uppercase mb:normal-case">{t('nao:pool:est_apy')}</div>
                     <div className="text-lg font-semibold">{dataSource?.apy > 0 ? formatNumber(dataSource?.apy ?? 0, 2) : '--'}%</div>
                 </div>
                 <div>
-                    <label className={`text-teal text-xs ${language !== 'vi' ? 'capitalize' : ''}`}>{t('nao:pool:staked_title')}</label>
+                    <div className="mb:flex justify-between">
+                        <label
+                            className={`text-teal text-xs mb:text-lg mb:text-txtSecondary mb:dark:text-txtSecondary-dark mb:font-semibold ${
+                                language !== 'vi' ? 'capitalize' : ''
+                            }`}
+                        >
+                            {t('nao:pool:staked_title')}
+                        </label>
+                        <div className="hidden mb:flex items-center justify-between space-x-1">
+                            <div className="text-lg font-semibold text-txtSecondary dark:text-txtSecondary-dark uppercase mb:normal-case">
+                                {t('nao:pool:est_apy')}:
+                            </div>
+                            <div className="text-lg font-semibold">{dataSource?.apy > 0 ? formatNumber(dataSource?.apy ?? 0, 2) : '--'}%</div>
+                        </div>
+                    </div>
                     <div className="mt-4 flex items-center justify-between space-x-4">
                         <div className="space-y-0.5">
                             <div className="font-semibold text-xl break-all">{formatNumber(dataSource?.availableStaked ?? 0, assetNao?.assetDigit ?? 8)}</div>
-                            <span className="text-sm">
+                            <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark">
                                 ${formatNumber((dataSource?.availableStakedVNDC ?? 0) * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}
                             </span>
                         </div>
                         <div className="flex space-x-[10px]">
                             <div
-                                onClick={() => onShowLockModal(false)}
+                                onClick={() => staked && onShowLockModal(false)}
                                 className={`cursor-pointer w-11 h-11 ${
-                                    staked ? 'border-teal' : 'border-teal'
+                                    staked ? 'border-teal text-teal' : 'border-gray-16 dark:border-dark-6 text-txtDisabled dark:text-txtDisabled-dark'
                                 } border-[1.5px] rounded-md flex justify-center items-center`}
                             >
-                                <Minus size={25} className={`cursor-pointer`} color={staked ? colors.teal : colors.teal} />
+                                <Minus size={25} className={`cursor-pointer`} color="currentColor" />
                             </div>
                             <div
                                 onClick={() => onShowLockModal(true)}
@@ -155,7 +177,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                         <span className="text-txtPrimary dark:text-txtPrimary-dark text-sm font-semibold">${formatNumber((dataSource?.availableStakedVNDC ?? 0) * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
                     </div> */}
                     {dataSource?.isNewUser && (
-                        <div className="mt-8">
+                        <div className="mt-8 mb:hidden">
                             <ButtonNao onClick={() => onShowLockModal(true)} className="h-12 font-semibold">
                                 Stake
                             </ButtonNao>
@@ -182,7 +204,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                 }}
                             />
                             <div
-                                className="mr-3 font-semibold border-b border-gray-1 dark:border-gray-7 border-dashed text-sm"
+                                className="mr-3 font-semibold border-b border-gray-1 dark:border-gray-7 border-dashed text-sm mb:text-base"
                                 data-tip={t('nao:pool:tooltip_auto')}
                                 data-for="tooltip-auto"
                             >
@@ -192,49 +214,75 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                 <QuestionMarkIcon size={20} />
                             </div> */}
                         </div>
-                        <div className="text-teal flex items-end space-x-1 text-sm" onClick={() => setHidden(!hidden)}>
+                        <div className="text-teal flex items-end space-x-1 text-sm mb:hidden" onClick={() => setHidden(!hidden)}>
                             <div className="font-semibold">{t(`nao:pool:${!hidden ? 'hide' : 'show'}`)}</div>
                             <ArrowDropDownIcon size={20} isFilled color="currentColor" className={`transition-all ${hidden ? '' : 'rotate-180'}`} />
                         </div>
                     </div>
-                    {!hidden && (
-                        <div className="mt-6">
-                            <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm leading-6">
-                                        {t('nao:pool:total_available_staked')}
-                                    </div>
-                                    <div className="font-semibold text-sm text-right">{formatNumber(staked, assetNao?.assetDigit ?? 8)} NAO</div>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm leading-6">{t('nao:pool:total_users')}</div>
-                                    <div className="font-semibold text-sm text-right">
-                                        {t('nao:pool:users', { value: formatNumber(dataSource?.totalUser, 0) })}
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm leading-6">{t('nao:pool:lock_duration')}</div>
-                                    <div className="font-semibold text-sm text-right">
-                                        {dataSource?.duration ?? 7} {t('nao:pool:days')}
-                                    </div>
-                                </div>
+                    <div className={classNames('mt-6 mb:mt-[10px] mb:!block', hidden && 'hidden')}>
+                        <div className="space-y-2 text-sm mb:text-base">
+                            <div className="flex items-center justify-between">
+                                <div className="text-txtSecondary dark:text-txtSecondary-dark leading-6">{t('nao:pool:total_available_staked')}</div>
+                                <div className="font-semibold text-right">{formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8)} NAO</div>
                             </div>
-                            <div className="mt-5 space-x-2 flex items-center font-semibold text-txtPrimary dark:text-txtSecondary-dark">
-                                <div
-                                    onClick={() => onRedirect('whitepaper')}
-                                    className="w-full py-3 px-5 bg-gray-12 dark:bg-dark-2 flex justify-center items-center text-sm font-semibold rounded-md"
-                                >
-                                    <div>Whitepaper</div>
-                                </div>
-                                <div
-                                    onClick={() => onRedirect('contract')}
-                                    className="w-full py-3 px-5 bg-gray-12 dark:bg-dark-2 flex justify-center items-center text-sm font-semibold rounded-md"
-                                >
-                                    <div>Smart contract</div>
+                            <div className="flex items-center justify-between">
+                                <div className="text-txtSecondary dark:text-txtSecondary-dark leading-6">{t('nao:pool:total_users')}</div>
+                                <div className="font-semibold text-right">{t('nao:pool:users', { value: formatNumber(dataSource?.totalUser, 0) })}</div>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <div className="text-txtSecondary dark:text-txtSecondary-dark leading-6">{t('nao:pool:lock_duration')}</div>
+                                <div className="font-semibold text-right">
+                                    {dataSource?.duration ?? 7} {t('nao:pool:days')}
                                 </div>
                             </div>
                         </div>
-                    )}
+                        <div className="mt-5 space-x-3 flex items-center font-semibold text-txtPrimary dark:text-txtSecondary-dark mb:hidden">
+                            <div
+                                onClick={() => onRedirect('whitepaper')}
+                                className="w-full py-3 px-5 bg-gray-12 dark:bg-dark-2 flex justify-center items-center text-sm font-semibold rounded-md"
+                            >
+                                <div>Whitepaper</div>
+                            </div>
+                            <div
+                                onClick={() => onRedirect('contract')}
+                                className="w-full py-3 px-5 bg-gray-12 dark:bg-dark-2 flex justify-center items-center text-sm font-semibold rounded-md"
+                            >
+                                <div>Smart contract</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </CardNao>
+            <CardNao
+                noBg
+                stroke={1.2}
+                strokeColor={isDark ? '%237686B1' : '%23768394'}
+                className="hidden mb:block lg:!p-8 !py-6 !px-4 mb:w-[calc(50%-0.5rem)] lg:!w-[calc(41.7%-0.5rem)] mb:min-w-0 mb:flex-none"
+            >
+                <div className="flex items-center space-x-6 py-12">
+                    <BackgroundImage className="flex-shrink-0 lg:!w-[7.5rem] lg:!h-[7.5rem] mb:w-[6rem] mb:h-[6rem] p-4">
+                        <img src={getS3Url('/images/nao/ic_nao_large.png')} alt="" width="120" height="120" />
+                    </BackgroundImage>
+                    <div className="flex flex-col space-y-4">
+                        <TextLiner className="mb:text-xl lg:!text-2xl leading-6 !w-full !p-0 !normal-case !text-txtPrimary dark:!text-txtPrimary-dark">
+                            {t('nao:pool:staking_token')}
+                        </TextLiner>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm lg:text-base">{t('nao:pool:revenue_share_from_trade')}</div>
+                    </div>
+                </div>
+                <div className="mt-5 space-x-3 flex items-center font-semibold text-txtPrimary dark:text-txtSecondary-dark">
+                    <div
+                        onClick={() => onRedirect('whitepaper')}
+                        className="w-full py-3 px-5 bg-gray-12 dark:bg-dark-2 flex justify-center items-center text-sm lg:text-base font-semibold rounded-md"
+                    >
+                        <div>Whitepaper</div>
+                    </div>
+                    <div
+                        onClick={() => onRedirect('contract')}
+                        className="w-full py-3 px-5 bg-gray-12 dark:bg-dark-2 flex justify-center items-center text-sm lg:text-base font-semibold rounded-md"
+                    >
+                        <div>Smart contract</div>
+                    </div>
                 </div>
             </CardNao>
         </div>

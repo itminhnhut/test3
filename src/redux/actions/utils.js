@@ -1014,6 +1014,12 @@ export const setBottomTab = (tab) => async (dispatch) => {
     });
 };
 
+export const encodeUrlFromApp = (url, isAuth = false) => {
+    
+    if (!isAuth) return encodeURI(process.env.NEXT_PUBLIC_WEB_V1 + url);
+    return encodeurl(`${process.env.NEXT_PUBLIC_WEB_V1}/api/v1/redirect_from_app?target=${process.env.NEXT_PUBLIC_WEB_V1}${url}`);
+};
+
 export const emitWebViewEvent = (event) => {
     if (typeof window !== undefined) {
         console.log('__ emitWebViewEvent', event);
@@ -1227,7 +1233,7 @@ export const CopyText = memo(({ text = '', setText, value, className = '', size 
 
     const renderCopyIcon = () => {
         if (CustomCopyIcon) {
-            return <CustomCopyIcon size={size} className={copyClass}  />;
+            return <CustomCopyIcon size={size} className={copyClass} />;
         }
         return <CopyIcon size={size} />;
     };
@@ -1418,10 +1424,10 @@ export const convertDateToMs = (date = 0, type = 'startOf') => {
     return moment.utc(moment(+date).endOf('day')).unix() * 1000;
 };
 
-export const formatPair = (pair = 'BTCVNDC', t) => {
-    return pair === 'other' ? t('common:others_2') : `${pair?.slice(0, -4)}/${pair?.slice(-4)}`
-}
 const md5 = require('md5')
 export const getSignature = (userId, timestamp)=> {
     return md5(userId.slice(0, 10)+timestamp)
+}
+export const formatPair = (pair = 'BTCVNDC', t) => {
+    return pair === 'other' ? t('common:others_2') : `${pair?.slice(0, -4)}/${pair?.slice(-4)}`
 }

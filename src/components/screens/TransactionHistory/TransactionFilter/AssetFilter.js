@@ -39,7 +39,7 @@ const AssetFilter = ({ asset, setAsset, t }) => {
                         onClick={() => {
                             if (isAssetChosen) return;
                             popoverRef?.current?.close();
-                            setSearch('');
+                            setTimeout(() => setSearch(''), 100);
                             setAsset(currentAsset);
                         }}
                         key={key}

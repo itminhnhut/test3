@@ -15,6 +15,7 @@ import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
 import dynamic from 'next/dynamic';
 import useWindowSize from 'hooks/useWindowSize';
+import AppHeader from 'components/screens/Support/AppHeader';
 
 const RePagination = dynamic(() => import('components/common/ReTable/RePagination'), { ssr: false });
 
@@ -110,22 +111,13 @@ const FaqTopics = (props) => {
             </div>
         );
     }, [page, articles, total, pagination, limit]);
+
     const renderAppHeader = () => {
         if (!isApp) return null
         const topic = props?.data?.tags?.find(
             (o) => o?.displaySlug === router?.query?.topic
         )?.name
-        return (
-            <div
-                onClick={router?.back}
-                className='active:text-dominant flex items-center px-4 pt-4 pb-2 text-sm font-medium'
-            >
-                <ChevronLeft size={16} className='mr-2.5' />
-                {topic}
-                {topic && ' | '}
-                Nami FAQ
-            </div>
-        )
+        return <AppHeader topic={topic} title="Nami FAQ" />
     }
 
     const renderGroupArticles = useMemo(() => {
