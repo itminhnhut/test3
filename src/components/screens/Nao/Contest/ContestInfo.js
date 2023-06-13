@@ -10,6 +10,7 @@ import { ApiStatus } from 'redux/actions/const';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import classnames from 'classnames';
 import { getWeeksInRange } from './ContestWeekRanks';
+import { useUpdateEffect } from 'react-use';
 
 // this code block is used for mocking data
 
@@ -132,9 +133,15 @@ const ContestInfo = forwardRef(
             if (user) {
                 getData();
             }
-        }, [user, contest_id, quoteAsset, tabIndex, week]);
+        }, [user, contest_id, quoteAsset]);
 
-        const getData = async () => {
+        useUpdateEffect(() => {
+            if (top_ranks_week && user) {
+                getData(false);
+            }
+        }, [tabIndex, week]);
+
+        const getData = async (isGetInvite = true) => {
             try {
                 setIsLoading(true);
                 let week_id = null;
@@ -149,7 +156,9 @@ const ContestInfo = forwardRef(
                 });
                 if (status === ApiStatus.SUCCESS) {
                     setUserData(data);
-                    getInvites(data);
+                    if (isGetInvite) {
+                        getInvites(data);
+                    }
                 }
             } catch (e) {
                 console.error('__ error', e);
@@ -191,7 +200,6 @@ const ContestInfo = forwardRef(
                 el.classList[userData?.group_name ? 'remove' : 'add']('sm:mb-0');
                 el.classList[userData?.group_name ? 'remove' : 'add']('mb-[88px]');
             }
-            console.log('🚀 ~ file: ContestInfo.js:178 ~ userData:', userData);
         }, [userData, previous]);
 
         const convertHours = (number) => {
