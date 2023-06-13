@@ -15,7 +15,7 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
     const { t } = useTranslation();
 
     return (
-        <div className="mb-12">
+        <div className="">
             <div className="flex mb-6">
                 {!side ? (
                     <Skeletor width="200px" />
@@ -69,18 +69,11 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                             </div>
                         </div>
 
-                        {/* <div className="flex justify-end text-right md:justify-start md:text-left p-2 w-1/2 md:w-1/4 ">
-                        <div className="">
-                            <div className="mb-2 capitalize txtPri-1">{orderDetail?.[`userMetadata`]?.name?.toLowerCase()}</div>
-                            <div className="txtSecond-2 ">{orderDetail?.[`userMetadata`]?.code}</div>
-                        </div>
-                    </div> */}
-
                         <div className="flex p-5">
                             <div className="">
                                 <div className="mb-2 txtPri-1">{t('dw_partner:rate')}</div>
                                 <div className="txtSecond-2 ">
-                                    1 {assetCode} ≈ {formatBalanceFiat(orderDetail?.price, 'VNDC')} VND
+                                    1 {assetCode} = {formatBalanceFiat(orderDetail?.price, 'VNDC')} VND
                                 </div>
                             </div>
                         </div>
