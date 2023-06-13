@@ -229,8 +229,8 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     alt="avatar_user"
                                 />
 
-                                <div className="ml-3">
-                                    <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2">
+                                <div className="ml-3 mr-8">
+                                    <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2 whitespace-pre-wrap break-words">
                                         {auth?.username || auth?.name || auth?.email}
                                     </div>
 
