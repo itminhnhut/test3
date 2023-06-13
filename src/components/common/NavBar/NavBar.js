@@ -329,7 +329,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                     'mal-navbar__link__group___item___childen__lv1__w__icon': useDropdownWithIcon,
                                     'mal-navbar__link__group___item___childen__lv1__w__icon flex-col !min-w-0': useOneCol && useDropdownWithIcon,
                                     'flex-col !min-w-[346px] gap-4': isVertical,
-                                    'gap-y-4 gap-x-6 !border-0': !isVertical
+                                    'gap-y-4 gap-x-6': !isVertical
                                 })}
                             >
                                 {useDropdownWithIcon ? itemsLevel1withIcon : itemsLevel1}
