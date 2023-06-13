@@ -133,15 +133,15 @@ const ContestInfo = forwardRef(
             if (user) {
                 getData();
             }
-        }, [user, contest_id, quoteAsset]);
+        }, [user, contest_id, quoteAsset, tabIndex, week]);
 
-        useUpdateEffect(() => {
-            if (top_ranks_week && user) {
-                getData(false);
-            }
-        }, [tabIndex, week]);
+        // useUpdateEffect(() => {
+        //     if (top_ranks_week && user) {
+        //         getData(false);
+        //     }
+        // }, [tabIndex, week]);
 
-        const getData = async (isGetInvite = true) => {
+        const getData = async () => {
             try {
                 setIsLoading(true);
                 let week_id = null;
@@ -155,10 +155,8 @@ const ContestInfo = forwardRef(
                     params: { contest_id: contest_id, quoteAsset, week_id }
                 });
                 if (status === ApiStatus.SUCCESS) {
-                    setUserData(data);
-                    if (isGetInvite) {
-                        getInvites(data);
-                    }
+                    if (data) setUserData(data);
+                    getInvites(data);
                 }
             } catch (e) {
                 console.error('__ error', e);
