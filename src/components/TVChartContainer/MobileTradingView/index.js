@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IconLoading } from 'components/common/Icons';
-import { getTradingViewTimezone, getS3Url, formatFundingRate } from 'redux/actions/utils';
+import { getTradingViewTimezone, getS3Url, formatFundingRate, emitWebViewEvent, encodeUrlFromApp } from 'redux/actions/utils';
 import Countdown from 'react-countdown-now';
 import colors from '../../../styles/colors';
 import { widget } from '../../TradingView/charting_library/charting_library.min';
@@ -502,7 +502,7 @@ export class MobileTradingView extends React.PureComponent {
                 'macd.signal.linewidth': 2,
                 'macd.macd.linewidth': 2,
 
-                'relative strength index.plot.linewidth': 2,
+                'relative strength index.plot.linewidth': 2
             },
             timezone: getTradingViewTimezone(),
             overrides: {
@@ -831,15 +831,18 @@ const ModalFundingRate = ({ onClose, t, symbol }) => {
     const [currentTheme] = useDarkMode();
 
     const onRedirect = () => {
-        router.push(`/${router.locale}/futures/funding-history?theme=${currentTheme}&source=app&symbol=${symbol}`);
+        const uri = `/futures/funding-history?theme=${currentTheme}&source=app&symbol=${symbol}&head=false&title=${t('futures:funding_history')}`;
+        emitWebViewEvent(encodeUrlFromApp(uri));
+        if (onClose) onClose();
     };
 
     const onDetail = () => {
-        const url =
+        const uri =
             router.locale === 'en'
-                ? '/support/faq/noti-en-announcement/apply-funding-rates-on-nami-futures-and-nao-futures?theme=dark&source=frame'
-                : '/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures?theme=dark&source=frame';
-        router.push(url);
+                ? `/support/faq/noti-en-announcement/apply-funding-rates-on-nami-futures-and-nao-futures`
+                : `/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures`;
+        emitWebViewEvent(encodeUrlFromApp(uri + `?theme=${currentTheme}&source=app&head=false&title=Nami FAQ`));
+        if (onClose) onClose();
     };
 
     return (
