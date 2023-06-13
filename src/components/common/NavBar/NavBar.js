@@ -284,8 +284,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                                 <Icon size={24} />
                                             ) : (
                                                 <Image
-                                                    // src={getS3Url(getIcon(child.localized))}
-                                                    src={getIcon(child.localized)}
+                                                    src={getS3Url(getIcon(child.localized))}
                                                     width={width >= 2560 ? '38' : '24'}
                                                     height={width >= 2560 ? '38' : '24'}
                                                     alt={child.title}
