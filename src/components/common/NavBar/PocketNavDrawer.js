@@ -56,6 +56,10 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
         onClose();
     };
 
+    const handleURLHref = (data) => {
+        return !data?.listUrl ? data.url : data.listUrl?.[language] || '#';
+    };
+
     const renderNavItem = useCallback(() => {
         return MOBILE_NAV_DATA.map((nav) => {
             const { key, title, spaceLine, localized, isNew, url, child_lv1, hide } = nav;
@@ -69,7 +73,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     const Icon = NavbarIcons?.[localized];
                     if (localized === 'partner' && !isPartner) return;
                     itemsLevel1.push(
-                        <Link href={item.url} key={`${item.key}_${item.title}`}>
+                        <Link href={handleURLHref(item)} key={`${item.key}_${item.title}`}>
                             <a
                                 className={classNames('mal-pocket-navbar__drawer__navlink__group___item__lv1__item mal-pocket-nabar__item___hover !px-12', {
                                     '!hidden': item.hide

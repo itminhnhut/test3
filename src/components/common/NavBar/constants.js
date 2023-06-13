@@ -142,7 +142,8 @@ export const NAV_DATA = [
                 title: 'Noti',
                 localized: 'noti',
                 isNew: false,
-                url: '/support/announcement/thong-bao',
+                // url: '/support/announcement/thong-bao',
+                listUrl: { vi: '/support/announcement/thong-bao', en: '/support/announcement/announcement' },
                 child_lv1: []
             },
             {
@@ -436,7 +437,8 @@ export const MOBILE_NAV_DATA = [
                 title: 'Noti',
                 localized: 'noti',
                 isNew: false,
-                url: '/support/announcement/thong-bao',
+                //   url: '/support/announcement/thong-bao',
+                listUrl: { vi: '/support/announcement/thong-bao', en: '/support/announcement/announcement' },
                 child_lv1: []
             },
             {

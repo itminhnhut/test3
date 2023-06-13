@@ -76,7 +76,10 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     const router = useRouter();
     const { user: auth } = useSelector((state) => state.auth) || null;
     const { width } = useWindowSize();
-    const { t } = useTranslation(['navbar', 'common', 'profile']);
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation(['navbar', 'common', 'profile']);
     const [isFromFrame, setIsFromFrame] = useState(false);
     const [showDailyLucky, setShowDailyLucky] = useState(false);
 
@@ -130,6 +133,10 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
         } finally {
             setState({ loadingVipLevel: false });
         }
+    };
+
+    const handleURLHref = (data) => {
+        return !data?.listUrl ? data.url : data.listUrl?.[language] || '#';
     };
 
     // * Render Handler
@@ -256,7 +263,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         );
                     } else {
                         itemsLevel1withIcon.push(
-                            <Link href={child.url} key={`${child.title}_${child.key}`} passHref>
+                            <Link href={handleURLHref(child)} key={`${child.title}_${child.key}`} passHref>
                                 <a
                                     className={classNames(
                                         '!pt-0 !pr-0',
