@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import { formatNumber, getLoginUrl, getS3Url } from 'redux/actions/utils';
+import { emitWebViewEvent, formatNumber, getLoginUrl, getS3Url } from 'redux/actions/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { API_GET_FUTURE_FEE_CONFIGS, API_GET_VIP, API_SET_ASSET_AS_FEE } from 'redux/actions/apis';
 import { BREAK_POINTS, FEE_TABLE, NAMI_FEE_FUTURE, ROOT_TOKEN } from 'constants/constants';
@@ -25,6 +25,7 @@ import classnames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import useApp from 'hooks/useApp';
 import { MoneyIcon } from 'components/svg/SvgIcon';
 import { fees } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import AssetLogo from 'components/wallet/AssetLogo';
@@ -73,6 +74,7 @@ const TradingFee = () => {
     // Init state
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
+    const isApp = useApp();
 
     // Rdx
     const namiWallets = useSelector((state) => state.wallet?.SPOT)?.['1'];
@@ -329,17 +331,25 @@ const TradingFee = () => {
         getVip();
     }, []);
 
-    const buyNami = namiWallets && (
-        <Link
-            href={PATHS.EXCHANGE.SWAP.getSwapPair({
-                fromAsset: 'VNDC',
-                toAsset: 'NAMI'
-            })}
-        >
-            <a className="text-teal hover:text-txtTextBtn-pressed font-semibold whitespace-nowrap ml-4 mt-0">{t('common:buy')} NAMI</a>
-        </Link>
-    );
+    const buyNami =
+        namiWallets &&
+        (isApp ? (
+            <span onClick={() => emitWebViewEvent('funding_swap')} className="text-teal font-semibold whitespace-nowrap hover:!underline ml-4 mt-0">
+                {t('common:buy')} NAMI
+            </span>
+        ) : (
+            <Link
+                href={PATHS.EXCHANGE.SWAP.getSwapPair({
+                    fromAsset: 'VNDC',
+                    toAsset: 'NAMI'
+                })}
+            >
+                <a className="text-teal hover:text-txtTextBtn-pressed font-semibold whitespace-nowrap ml-4 mt-0">{t('common:buy')} NAMI</a>
+            </Link>
+        ));
 
+    const upgradeUrl =
+        (language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN) + (isApp ? '?source=app' : '');
     const userVipLevel = () =>
         !auth ? (
             <>
@@ -401,7 +411,7 @@ const TradingFee = () => {
                             <span className="!ml-2">{t('fee-structure:fee_setting')}</span>
                         </ButtonV2>
                         {/* </Link> */}
-                        <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
+                        <Link href={upgradeUrl}>
                             <ButtonV2 className="!w-auto !h-[36px] !bg-transparent">
                                 <Crown fill={'#47cc85'} />
                                 <span className="!ml-2 text-txtTextBtn-dark">{t('fee-structure:upgrade_level')}</span>
@@ -426,7 +436,7 @@ const TradingFee = () => {
                     </div>
                     <div className="flex items-center justify-between gap-3">
                         {/* sửa màu button */}
-                        <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
+                        <Link href={upgradeUrl}>
                             <ButtonV2 className="!px-6 !w-auto !bg-transparent">
                                 <Crown fill={'#47cc85'} />
                                 <span className="!ml-2 text-txtTextBtn-dark hover:!text-txtTextBtn-pressed">{t('fee-structure:upgrade_level')}</span>
@@ -511,14 +521,23 @@ const TradingFee = () => {
                 </div>
                 <div className="flex items-center">
                     {t('fee-structure:referral_description_value', { value: '20%' })}
-                    <HrefButton
-                        variants="blank"
-                        className="!w-auto ml-3 !py-0"
-                        href={language === LANGUAGE_TAG.VI ? PATHS.ACCOUNT.REFERRAL_VI : PATHS.ACCOUNT.REFERRAL}
-                        target="_blank"
-                    >
-                        {t('fee-structure:read_more')}
-                    </HrefButton>
+                    {isApp ? (
+                        <span
+                            onClick={() => emitWebViewEvent('trading_referral')}
+                            className="ml-3 md font-semibold text-sm text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 whitespace-nowrap"
+                        >
+                            {t('common:read_more')}
+                        </span>
+                    ) : (
+                        <HrefButton
+                            variants="blank"
+                            className="!w-auto ml-3 !py-0"
+                            href={language === LANGUAGE_TAG.VI ? PATHS.ACCOUNT.REFERRAL_VI : PATHS.ACCOUNT.REFERRAL}
+                            target="_blank"
+                        >
+                            {t('fee-structure:read_more')}
+                        </HrefButton>
+                    )}
                 </div>
             </div>
             <FeeSettingModal

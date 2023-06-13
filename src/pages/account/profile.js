@@ -245,11 +245,6 @@ const UserInformation = ({ t, user }) => {
             </div>
 
             <div>
-                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('profile:username')}</span>
-                <span className="font-semibold text-right float-right">{user?.username ?? '_'}</span>
-            </div>
-
-            <div>
                 <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('profile:phone_number')}</span>
                 <span className="font-semibold text-right float-right">{user?.phone ?? '_'}</span>
             </div>

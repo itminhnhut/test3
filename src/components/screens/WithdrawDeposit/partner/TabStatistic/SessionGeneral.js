@@ -7,17 +7,10 @@ import { API_GET_COMMISSION_REPORT_PARTNER } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
 import FilterTimeTab from 'components/common/FilterTimeTab';
 import Tooltip from 'components/common/Tooltip';
+import FilterTimeTabV2 from 'components/common/FilterTimeTabV2';
 
-const SessionGeneral = () => {
+const SessionGeneral = ({ filter, setFilter }) => {
     const { t } = useTranslation();
-
-    const [filter, setFilter] = useState({
-        range: {
-            startDate: null,
-            endDate: null,
-            key: 'selection'
-        }
-    });
 
     const { data, loading, error } = useFetchApi(
         {
@@ -36,7 +29,9 @@ const SessionGeneral = () => {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
                 <div className="font-semibold text-[20px] leading-6">{t('dw_partner:report_commission')}</div>
-                <FilterTimeTab isTabAll filter={filter} setFilter={setFilter} />
+                {/* <FilterTimeTab isTabAll filter={filter} setFilter={setFilter} /> */}
+
+                <FilterTimeTabV2 filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll maxMonths={3} />
             </div>
 
             {/* Body */}
@@ -74,11 +69,11 @@ const SessionGeneral = () => {
                                 <span className="text-txtPrimary dark:text-txtPrimary-dark" />
                             </Trans>
                         </h1>
-                        <div className="pt-4 txtPri-6 flex">
+                        <div className="pt-4 txtPri-6 flex items-center">
                             <span className="text-green-3 dark:text-green-2">
                                 {loading ? <Skeletor width="50px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
                             </span>
-                            {loading ? <Skeletor width="50px" /> : <span>/{formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}</span>}
+                            /{loading ? <Skeletor width="40px" /> : <span>{formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}</span>}
                         </div>
                     </div>
                 </CardWrapper>
