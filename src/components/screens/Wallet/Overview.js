@@ -92,17 +92,23 @@ const OverviewWallet = (props) => {
                 <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary flex items-center gap-x-3">
                     {isHideAsset
                         ? SECRET_STRING
-                        : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + partnersEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}{' '}
+                        : formatWallet(
+                              exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + naoFuturesEstBtc?.totalValue + partnersEstBtc?.totalValue,
+                              exchangeEstBtc?.assetDigit
+                          )}{' '}
                     BTC
                 </div>
                 <div className="font-normal text-sm md:text-base mt-1">
                     {isHideAsset
                         ? SECRET_STRING
-                        : `$ ${formatWallet(exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue + partnersRefPrice?.totalValue, 2)}`}
+                        : `$ ${formatWallet(
+                              exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue + naoFuturesRefPrice?.totalValue + partnersRefPrice?.totalValue,
+                              2
+                          )}`}
                 </div>
             </>
         );
-    }, [exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice, isHideAsset]);
+    }, [exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice, naoFuturesEstBtc, naoFuturesRefPrice, isHideAsset]);
 
     const renderExchangeEstBalance = useCallback(() => {
         return (
