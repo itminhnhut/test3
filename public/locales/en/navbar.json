@@ -46,7 +46,7 @@
         "nami_insurance": "Nami Insurance",
         "convert_description": "Trade cryptocurrencies in one click",
         "spot": "Spot Trading",
-        "spot_description": "Choose your favourite with nearly {{pairsLength}} trading pairs listed with high liquidity",
+        "spot_description": "Choose your favourite assets with {{pairsLength}} trading pairs listed with high liquidity",
         "futures": "Nami Futures",
         "mobile_futures": "Nami Futures",
         "futures_description": "Trade perpetual futures with maximum leverage support up to x125, high liquidity and low trading fees",
