@@ -154,7 +154,7 @@ const ContestWeekRanks = ({
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
-        <section className="contest_individual_ranks pb-12 sm:pb-20">
+        <section className="contest_individual_ranks pb-12 sm:pb-20 mt-[26px] md:mt-0">
             <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-weekly-rank">
                 <div
                     className="text-sm"

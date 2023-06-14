@@ -11,6 +11,7 @@ import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import classnames from 'classnames';
 import { getWeeksInRange } from './ContestWeekRanks';
 import { useUpdateEffect } from 'react-use';
+import { CopyIcon } from 'components/screens/NewReference/PopupModal';
 
 // this code block is used for mocking data
 
@@ -96,7 +97,8 @@ const ContestInfo = forwardRef(
             hasTabCurrency,
             userID,
             weekly_contest_time,
-            top_ranks_week
+            top_ranks_week,
+            top_ranks_team
         },
         ref
     ) => {
@@ -135,12 +137,6 @@ const ContestInfo = forwardRef(
             }
         }, [user, contest_id, quoteAsset, tabIndex, week]);
 
-        // useUpdateEffect(() => {
-        //     if (top_ranks_week && user) {
-        //         getData(false);
-        //     }
-        // }, [tabIndex, week]);
-
         const getData = async () => {
             try {
                 setIsLoading(true);
@@ -155,7 +151,9 @@ const ContestInfo = forwardRef(
                     params: { contest_id: contest_id, quoteAsset, week_id }
                 });
                 if (status === ApiStatus.SUCCESS) {
-                    if (data) setUserData(data);
+                    if (data?.pnl_rate) data.pnl = data.pnl_rate;
+                    // if (data)
+                    setUserData(data);
                     getInvites(data);
                 }
             } catch (e) {
@@ -266,13 +264,18 @@ const ContestInfo = forwardRef(
                             ))}
                         </TabsNao>
                     )}
-                    <div className="flex flex-col lg:flex-row flex-wrap gap-5 md:mt-9 sm:mt-6 mt-6 text-sm sm:text-base">
-                        <CardNao className={`!p-6 lg:!max-w-[375px] ${previous && contest_id !== 10 ? '' : '!justify-center space-y-3'}`}>
+                    <div className="flex flex-col lg:flex-row flex-wrap gap-5 md:mt-9 sm:mt-6 mt-6 text-sm">
+                        <CardNao className={`px-4 py-6 md:!p-8 lg:!max-w-[375px] ${previous && contest_id !== 10 ? '' : '!justify-center space-y-3'}`}>
                             <label className="text-xl sm:text-2xl text-teal font-semibold leading-8 capitalize">{capitalize(userData?.name)}</label>
-                            <div className=" text-txtSecondary dark:text-txtSecondary-dark flex flex-col items-start">
+                            <div className="flex items-center w-full mb-2 !mt-6 gap-2">
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm">User ID: {userData?.[userID]}</span>
+                                <CopyIcon data={userData?.[userID]} className="cursor-pointer" size={16} />
+                            </div>
+
+                            <div className=" text-txtSecondary dark:text-txtSecondary-dark flex flex-col items-start text-sm">
                                 {previous && contest_id !== 10 && <div className="leading-6">ID: {userData?.[userID]}</div>}
                                 {/* <span className="text-gray-15 dark:text-gray-7 mx-2 sm:hidden">•</span> */}
-                                <div className="flex text-txtSecondary dark:text-txtSecondary-dark leading-6 mt-1">
+                                <div className="flex text-txtSecondary dark:text-txtSecondary-dark leading-6 mt-1 mb-2">
                                     {t('nao:contest:team_label')}:&nbsp;
                                     {userData?.group_name ? (
                                         <span
@@ -297,57 +300,45 @@ const ContestInfo = forwardRef(
                                 </div>
                             </div>
                         </CardNao>
-                        <CardNao className="!min-h-[136px] !py-3 sm:!py-5 w-full lg:w-max">
-                            {(!previous || contest_id === 10) && (
-                                <div className="flex items-center justify-between md:space-x-6 flex-wrap md:flex-nowrap">
-                                    <div className="flex items-center justify-between w-full md:w-1/2 my-1">
-                                        <label className="text-txtSecondary dark:text-txtSecondary-dark">ID</label>
-                                        <div className="font-semibold leading-8 text-right">{userData?.[userID]}</div>
-                                    </div>
-
-                                    <div className="flex items-center justify-between w-full md:w-1/2 my-1">
-                                        <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</label>
-                                        <div
-                                            className={`font-semibold leading-8 text-right`}
-                                            dangerouslySetInnerHTML={{
-                                                __html: t('nao:contest:date_2', {
-                                                    hours: timer?.hours,
-                                                    minutes: timer?.minutes
-                                                })
-                                            }}
-                                        ></div>
-                                    </div>
+                        <CardNao className="!min-h-[136px] !py-6 sm:!py-10 w-full lg:w-max md:!gap-2 px-4 md:!px-8 gap-3">
+                            {/* {(!previous || contest_id === 10) && ( */}
+                            <div className="flex items-center justify-between md:space-x-12 flex-wrap md:flex-nowrap gap-3 md:gap-0">
+                                {/* {top_ranks_team && (
+                                        <div className="flex items-center justify-between w-full md:w-1/2 my-1">
+                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">ID</label>
+                                            <div className="font-semibold leading-8 text-right">{userData?.[userID]}</div>
+                                        </div>
+                                    )} */}
+                                <div className="flex items-center justify-between w-full md:w-1/2 my-1">
+                                    <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</label>
+                                    <div
+                                        className={`font-semibold text-right`}
+                                        dangerouslySetInnerHTML={{
+                                            __html: t('nao:contest:date_2', {
+                                                hours: timer?.hours,
+                                                minutes: timer?.minutes
+                                            })
+                                        }}
+                                    ></div>
                                 </div>
-                            )}
-
-                            <div className="flex items-center justify-between md:space-x-6 flex-wrap md:flex-nowrap">
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:trades')}</label>
-                                    <div className="font-semibold leading-8 text-right">
-                                        {userData?.total_order ? formatNumber(userData?.total_order) : '-'}
-                                    </div>
+                                    <div className="font-semibold text-right">{userData?.total_order ? formatNumber(userData?.total_order) : '-'}</div>
                                 </div>
+                            </div>
+                            {/* )} */}
 
+                            <div className="flex items-center justify-between md:space-x-12 flex-wrap md:flex-nowrap gap-3 md:gap-0">
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_pnl')}</label>
                                     <div
-                                        className={`font-semibold leading-8 text-right ${
+                                        className={`font-semibold text-right ${
                                             !!userData?.total_pnl && (userData?.total_pnl < 0 ? 'text-red-2' : 'text-teal')
                                         }`}
                                     >
                                         {userData?.total_pnl ? formatNumber(userData?.total_pnl, 0, 0, true) + ` ${quoteAsset}` : '-'}
                                     </div>
                                 </div>
-                            </div>
-
-                            <div className="flex items-center justify-between md:space-x-6 flex-wrap md:flex-nowrap">
-                                <div className="flex items-center justify-between w-full md:w-1/2 my-1">
-                                    <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
-                                    <div className="font-semibold leading-8 text-right">
-                                        {userData?.total_volume ? formatNumber(userData?.total_volume, 0, 0, true) + ` ${quoteAsset}` : '-'}
-                                    </div>
-                                </div>
-
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="flex items-center text-txtSecondary dark:text-txtSecondary-dark">
                                         {t('nao:contest:per_pnl')}
@@ -361,26 +352,30 @@ const ContestInfo = forwardRef(
                                         </div>
                                     </Tooltip> */}
                                     </label>
-                                    <div
-                                        className={`font-semibold leading-8 text-right ${!!userData?.pnl && (userData?.pnl < 0 ? 'text-red-2' : 'text-teal')}`}
-                                    >
+                                    <div className={`font-semibold text-right ${!!userData?.pnl && (userData?.pnl < 0 ? 'text-red-2' : 'text-teal')}`}>
                                         {userData?.pnl ? formatNumber(userData?.pnl, 2, 0, true) + '%' : '-'}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between md:space-x-6 flex-wrap md:flex-nowrap">
-                                <div className="flex items-center justify-between w-full md:w-1/2 my-1">
-                                    <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume_rank')}</label>
-                                    <div className="font-semibold leading-8 text-right">
-                                        {userData?.individual_rank_volume ? '#' + userData?.individual_rank_volume : '-'}
-                                    </div>
-                                </div>
-
+                            <div className="flex items-center justify-between md:space-x-12 flex-wrap md:flex-nowrap gap-3 md:gap-0">
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:pnl_rank')}</label>
-                                    <div className="font-semibold leading-8 text-right">
-                                        {userData?.individual_rank_pnl ? '#' + userData?.individual_rank_pnl : '-'}
+                                    <div className="font-semibold text-right">{userData?.individual_rank_pnl ? '#' + userData?.individual_rank_pnl : '-'}</div>
+                                </div>
+                                <div className="flex items-center justify-between w-full md:w-1/2 my-1">
+                                    <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
+                                    <div className="font-semibold text-right">
+                                        {userData?.total_volume ? formatNumber(userData?.total_volume, 0, 0, true) + ` ${quoteAsset}` : '-'}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between md:space-x-12 flex-wrap md:flex-nowrap md:!mr-12 gap-3 md:gap-0">
+                                <div className="flex items-center justify-between w-full md:w-1/2 my-1">
+                                    <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume_rank')}</label>
+                                    <div className="font-semibold text-right">
+                                        {userData?.individual_rank_volume ? '#' + userData?.individual_rank_volume : '-'}
                                     </div>
                                 </div>
                             </div>
