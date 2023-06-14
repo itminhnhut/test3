@@ -11,7 +11,7 @@ import MediumFilled from '../../svg/MediumFilled';
 import CoingeckoFilled from '../../svg/CoingeckoFilled';
 import GlobeFilled from '../../svg/GlobeFilled';
 
-const getSocialImage = (socialType) => {
+export const getSocialImage = (socialType) => {
     let Icon = null;
     let imageURI;
     switch (socialType) {

@@ -4,5 +4,24 @@
     "ended": "Ended",
     "ongoing": "Ongoing",
     "upcoming": "Upcoming",
-    "postponed": "Postponed"
+    "postponed": "Postponed",
+    "starts_in": "Starts in",
+    "ends_in": "Ends in",
+    "add_to_calendar": "Add to your calendar",
+    "related_post": "Related posts",
+    "no_related": "No related post",
+    "community": {
+        "title": "Nami Community",
+        "telegram": "Telegram VN group",
+        "telegram_international": "Telegram international group",
+        "facebook": "Facebook",
+        "website": "Website",
+        "twitter": "Twitter"
+    },
+    "download": "Download app Nami Exchange at",
+    "filter": {
+        "starts_in": "Starts in",
+        "ends_in": "Ends in",
+        "search": "Search events"
+    }
 }

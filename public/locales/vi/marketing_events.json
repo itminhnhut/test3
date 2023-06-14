@@ -4,5 +4,24 @@
     "ended": "Đã kết thúc",
     "ongoing": "Đang diễn ra",
     "upcoming": "Sắp diễn ra",
-    "postponed": "Tạm hoãn"
+    "postponed": "Tạm hoãn",
+    "starts_in": "Bắt đầu sau",
+    "ends_in": "Kết thúc sau",
+    "add_to_calendar": "Thêm vào lịch của bạn",
+    "related_post": "Sự kiện HOT liên quan",
+    "no_related": "Không có sự kiện HOT liên quan",
+    "community": {
+        "title": "Cộng đồng Nami Exchange",
+        "telegram": "Telegram VN group",
+        "telegram_international": "Telegram international group",
+        "facebook": "Facebook",
+        "website": "Website",
+        "twitter": "Twitter"
+    },
+    "download": "Tải ứng dụng Nami Exchange tại",
+    "filter": {
+        "starts_in": "Bắt đầu",
+        "ends_in": "Kết thúc",
+        "search": "Tìm sự kiện"
+    }
 }

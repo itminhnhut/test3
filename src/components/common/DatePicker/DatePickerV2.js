@@ -16,7 +16,7 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import styled from 'styled-components';
 import { isFunction } from 'lodash';
 
-const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside, minDate, maxDate }) => {
+const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside, minDate, maxDate, ignoreAuth }) => {
     const [showPicker, setShowPicker] = useState(false);
     const wrapperRef = useRef(null);
 
@@ -25,7 +25,8 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
         i18n: { language }
     } = useTranslation();
 
-    const { user: auth } = useSelector((state) => state.auth) || null;
+    const { user } = useSelector((state) => state.auth);
+    const auth = user || ignoreAuth;
 
     const [theme] = useDarkMode();
 

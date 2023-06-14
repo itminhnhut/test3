@@ -9,6 +9,11 @@ import { getEventImg, getS3Url } from 'redux/actions/utils';
 import useQuery from 'hooks/useQuery';
 import FetchApi from 'utils/fetch-api';
 import { API_MARKETING_EVENTS } from 'redux/actions/apis';
+import EventItem, { SkeletonEventItem } from '../EventItem/EventItem';
+import { useRouter } from 'next/router';
+import NoData from 'components/common/V2/TableV2/NoData';
+import { useTranslation } from 'next-i18next';
+
 
 const MAX_SIZE = 5;
 
@@ -29,23 +34,10 @@ const Wrapper = styled.div`
     }
 `;
 
-const CarouselItem = ({ banner, link, title }) => {
-    return (
-        <div className="keen-slider__slide p-0" title={title}>
-            <Link href={link} passHref>
-                <a className="block bg-gray-4 dark:bg-dark-2 rounded-2xl overflow-hidden leading-[0]">
-                    <Image src={getEventImg(banner)} alt={title} width={1216} height={440} className="object-cover" />
-                </a>
-            </Link>
-        </div>
-    );
-};
-
 /**
  *
  * @param {{ data: Array<{ _id: string, thumbnailImgEndpoint?: string, bannerImgEndpoint?: string, title: string, startTime: string , endTime: string, anticipate: bool, prize: string, postLink: string, isHot: bool, creatorName: string, priority: number, isHidden: bool }> }} props
  */
-
 const Carousel = ({ data }) => {
     const [activeItem, setActiveItem] = useState(0);
     const [sliderRef, slider] = useKeenSlider({
@@ -78,7 +70,9 @@ const Carousel = ({ data }) => {
         <Wrapper>
             <div className="keen-slider" ref={sliderRef}>
                 {data.slice(0, MAX_SIZE).map((item, idx) => (
-                    <CarouselItem banner={item.bannerImgEndpoint} link={`/events/${item.slug || '#'}`} key={item._id || idx} title={item.title} />
+                    <div className="keen-slider__slide" key={item._id || idx}>
+                        <EventItem {...item} />
+                    </div>
                 ))}
             </div>
             <div className="keen-slider__dots__wrapper">{renderDots()}</div>
@@ -86,8 +80,8 @@ const Carousel = ({ data }) => {
     );
 };
 
-const EventCarousel = () => {
-    const { isLoading, data } = useQuery(
+const RelatedEvents = ({ id = '' }) => {
+    const { isLoading, data: posts } = useQuery(
         ['event_carousel'],
         async ({ signal }) => {
             const res = await FetchApi({
@@ -108,21 +102,30 @@ const EventCarousel = () => {
         }
     );
 
+    const data = posts?.filter?.(post => post["_id"] !== id)
+    const { t } = useTranslation();
+
     return (
         <>
-            {!isLoading &&
-                (data?.length ? (
-                    <Carousel data={data} />
-                ) : (
-                    <Image src="/images/featured/common-featured.png" alt="events" width={1216} height={440} className="object-cover" />
-                ))}
-            {isLoading && (
-                <div className="pt-[36%] w-full relative">
-                    <div className="absolute w-full h-full bg-gray-4 dark:bg-dark-2 animate-pulse top-0"></div>
-                </div>
+            {!isLoading && (
+                <>
+                    {data?.length ? (
+                        <div className="mt-12 mb:mt-20">
+                            <h3 className="text-xl mb:text-2xl font-semibold">{t('marketing_events:related_post')}</h3>
+                            <div className="mt-5 mb:mt-8">
+                                <Carousel data={data} id={id} />
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="mt-8 py-[72px] px-[53px] flex items-center flex-col justify-center">
+                            <NoData isAuth={true} isSearch text={t('marketing_events:no_related')} />
+                        </div>
+                    )}
+                </>
             )}
+            {isLoading && <SkeletonEventItem />}
         </>
     );
 };
 
-export default EventCarousel;
+export default RelatedEvents;

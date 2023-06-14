@@ -351,3 +351,4 @@ export const API_INTERNAL_TRANSFER_HISTORY = API_V3_PREFIX + 'spot/internal-tran
 
 // marketing events
 export const API_MARKETING_EVENTS = API_PREFIX + 'marketing/event-list';
+export const API_MARKETING_EVENT = API_PREFIX + 'marketing/event';

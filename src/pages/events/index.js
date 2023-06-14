@@ -6,7 +6,11 @@ import React from 'react';
 import { NAVBAR_USE_TYPE } from 'src/components/common/NavBar/NavBar';
 
 const Event = dynamic(() => import('components/screens/Events/Home/Event'), {
-    loading: () => <LoadingPage />
+    loading: () => (
+        <div className="m-auto">
+            <LoadingPage />
+        </div>
+    )
 });
 
 const EventPage = () => {
