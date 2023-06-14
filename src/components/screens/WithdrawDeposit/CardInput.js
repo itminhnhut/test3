@@ -186,27 +186,43 @@ const CardInput = () => {
 
     const [tipValidator, setTipValidator] = useState({ isValid: true, msg: '', isError: false });
 
+    const validateTip = (tipAmount) => {
+        let isValid = true;
+        let msg = '';
+
+        console.log("_____________tip: ", tipAmount);
+
+        if (tipAmount && (tipAmount + '').length > 21) {
+            isValid = false;
+            msg = t('dw_partner:error.invalid_amount');
+        }
+
+        if (tipAmount && tipAmount < 5000) {
+            isValid = false;
+            msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(5000), asset: 'VND' });
+        }
+
+        // const maxTip = state.amount * rate - 50000;
+        const maxTip = state.amount * rate;
+        if (side === 'SELL' && +tipAmount > maxTip) {
+            isValid = false;
+            msg = t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' });
+        }
+
+        setTipValidator({ isValid, msg, isError: !isValid });
+    };
+
     const handleChangeTip = (input = '') => {
         const numberValue = input.value;
         setState({ tip: numberValue });
-
-        if (numberValue && numberValue < 5000)
-            return setTipValidator({
-                isValid: false,
-                msg: t('dw_partner:error.min_amount', { amount: formatBalanceFiat(5000), asset: 'VND' }),
-                isError: true
-            });
-        const maxTip = state.amount * rate - 50000;
-        if (side === 'SELL' && +numberValue > maxTip)
-            return setTipValidator({
-                isValid: false,
-                msg: t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' }),
-                isError: true
-            });
-        return setTipValidator({ isValid: true, msg: '', isError: false });
+        validateTip(numberValue)
     };
 
-    const amountWillReceived = state.amount * rate + (side === SIDE.BUY ? +state.tip : -state.tip);
+    useEffect(() => {
+        validateTip(state.tip)
+    }, [state.amount, rate]);
+
+    const amountWillReceived = state.amount * rate //+ (side === SIDE.BUY ? +state.tip : -state.tip);
 
     return (
         <>
@@ -409,7 +425,8 @@ const CardInput = () => {
                     )}
 
                     <div className="flex items-center justify-between ">
-                        <div className="txtSecond-2">{t(`dw_partner:${side === SIDE.BUY ? 'will_transfer' : 'will_received'}`)}</div>
+                        {/* <div className="txtSecond-2">{t(`dw_partner:${side === SIDE.BUY ? 'will_transfer' : 'will_received'}`)}</div> */}
+                        <div className="txtSecond-2">{t(`dw_partner:vnd_amount`)}</div>
 
                         {/* <Tooltip place="top" effect="solid" isV3 id="will-transfer-receive">
                             <div className="max-w-[300px] ">{formatBalanceFiat(input * rate, 'VNDC')}</div>
