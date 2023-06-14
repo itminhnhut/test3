@@ -252,7 +252,8 @@
         "invalid_input": "Các thông số bạn nhập không hợp lệ, vui lòng thử lại.",
         "unknown_err": "Lỗi không rõ, vui lòng liên hệ hỗ trợ để biết thêm chi tiết.",
         "push_btn_description": "Nếu lệnh nạp của bạn chưa được cập nhật trên Nami, vui lòng click vào nút Đẩy lệnh để Nami cập nhật số dư tự động.",
-        "pushed_orders": "Yêu cầu Đẩy lệnh của bạn đã được ghi nhận, vui lòng đợi trong giây lát."
+        "pushed_orders": "Yêu cầu Đẩy lệnh của bạn đã được ghi nhận, vui lòng đợi trong giây lát.",
+        "max_months_filter": "Chọn khoảng thời gian trong vòng {{maxMonths}} tháng"
     },
     "global_label": {
         "notice": "Thông báo",

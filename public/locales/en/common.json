@@ -252,7 +252,8 @@
         "invalid_input": "The parameters you entered are not valid, please try again.",
         "unknown_err": "Unknown error, please contact to support for more information.",
         "push_btn_description": "If your Deposit Order has not been updated on Nami, use the Push Order button to have Nami update the balance automatically.",
-        "pushed_orders": "Your push request has been record, please wait a moment."
+        "pushed_orders": "Your push request has been record, please wait a moment.",
+        "max_months_filter": "Select your time range within {{maxMonths}} months"
     },
     "global_label": {
         "notice": "Notice",

@@ -3,7 +3,8 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 export const EPS = 0.00000001;
 
 export const LOCAL_STORAGE_KEY = {
-    THEME: 'theme'
+    THEME: 'theme',
+    HIDE_BALANCE:'hide_wallet_balance'
 };
 
 const TokenConfigNetwork = {
@@ -780,9 +781,9 @@ export const KYC_STATUS = {
     NO_KYC: 0,
     PENDING_APPROVAL: 1,
     APPROVED: 2,
-    ADVANCE_KYC: 3,
-    APPROVED_PENDING_APPROVAL_ADVANCE: 4, // cập nhật thêm số cmnd + ảnh mặt
-    PENDING_APPROVAL_ADVANCE: 5 // user kyc từ đầu cập nhật hết
+    REJECT: 3,
+    // APPROVED_PENDING_APPROVAL_ADVANCE: 4, // cập nhật thêm số cmnd + ảnh mặt
+    // PENDING_APPROVAL_ADVANCE: 5 // user kyc từ đầu cập nhật hết
 };
 
 export const SECURITY_VERIFICATION = {

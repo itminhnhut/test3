@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { formatPrice, formatTime } from 'src/redux/actions/utils';
 import colors from 'styles/colors';
 import Note from 'components/common/Note';
-import {  BxsInfoCircle } from 'components/svg/SvgIcon';
+import { BxsInfoCircle } from 'components/svg/SvgIcon';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 
 import ChartJS from './ChartJS';
@@ -17,7 +17,7 @@ import { formatNanNumber } from 'redux/actions/utils';
 import { isNumber } from 'lodash';
 import ModalV2 from 'components/common/V2/ModalV2';
 import MCard from 'components/common/MCard';
-const {  addMonths, addWeeks } = require('date-fns');
+const { addMonths, addWeeks } = require('date-fns');
 
 const INTERVAL = {
     DAY: 'day',
@@ -409,7 +409,6 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
     const tooltipWidth = tooltipEl.offsetWidth;
     const tooltipHeight = tooltipEl.offsetHeight;
 
-
     const datasetIndex = tooltip.dataPoints[0].datasetIndex; // Get the index of the hovered dataset
     const barEl = chart.getDatasetMeta(datasetIndex)?.data[dataIndex];
     /**
@@ -421,20 +420,20 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
     // Trường hợp những Bar cuối sẽ bị overflow
     let tooltipCaretClassName;
 
-    if(tooltip.caretX + tooltipWidth > chartWidth) {
+    if (tooltip.caretX + tooltipWidth > chartWidth) {
         tooltipEl.style.left = positionX + barEl.x - tooltipWidth / 2 - 12 - barEl.width / 2 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
         tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
         tooltipEl.style.font = tooltip.options.bodyFont.string;
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
         tooltipEl.style.opacity = 1;
-        tooltipCaretClassName = 'tooltip-caret-right'
+        tooltipCaretClassName = 'tooltip-caret-right';
     } else {
         tooltipEl.style.left = positionX + barEl.x + barEl.width / 2 + tooltipWidth / 2 + 12 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
         tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
         tooltipEl.style.font = tooltip.options.bodyFont.string;
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
         tooltipEl.style.opacity = 1;
-        tooltipCaretClassName = 'tooltip-caret-left'
+        tooltipCaretClassName = 'tooltip-caret-left';
     }
 
     // Create caret:
@@ -443,9 +442,15 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
 
     if (!tooltipCaretEl) {
         tooltipCaretEl = document.createElement('div');
-        // tooltipCaretEl.style.width = '20px'; // barEl.width;
-        // tooltipCaretEl.style.height = '20px'; //barEl.width;
-        // tooltipCaretEl.style.left = '-20px'; //barEl.width;
+
+        if (tooltip.caretX + tooltipWidth > chartWidth) {
+            tooltipCaretEl.style.right = - barEl.width - 6 - 3 + 'px'; //barEl.width;
+        } else {
+            tooltipCaretEl.style.left = -barEl.width - 6 - 3 + 'px'; //barEl.width;
+        }
+        tooltipCaretEl.style.backgroundColor = pnl > 0 ? '#2daf57' : '#d51d1d'; // colors.green['2'] : colors.red['2']
+        tooltipCaretEl.style.width = barEl.width + 2 * 3 + 'px'; // barEl.width;
+        tooltipCaretEl.style.height = barEl.width + 2 * 3 + 'px'; //barEl.width;
         tooltipCaretEl.classList.add(tooltipCaretClassName);
         tooltipEl.appendChild(tooltipCaretEl);
     }
@@ -467,11 +472,11 @@ const parseTitle = (stringDate, interval, isDetails = false) => {
             title = formatTime(curDate, isDetails ? 'dd/MM/yyyy' : 'dd/MM');
             break;
         case INTERVAL.WEEK:
-            if(!isDetails) title = formatTime(curDate, 'dd/MM')
-            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addWeeks(curDate, 1),  'dd/MM/yyyy');
+            if (!isDetails) title = formatTime(curDate, 'dd/MM');
+            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM/yyyy');
             break;
         case INTERVAL.MONTH:
-            if(!isDetails) title = formatTime(curDate, 'MM/yyyy')
+            if (!isDetails) title = formatTime(curDate, 'MM/yyyy');
             else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
             break;
         default:

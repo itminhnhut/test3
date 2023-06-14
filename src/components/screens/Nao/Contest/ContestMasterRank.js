@@ -115,7 +115,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                             height="24"
                             alt=""
                         />
-                        <span className='font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white'>{item?.rowIndex + 4}</span>
+                        <span className='font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white'>{_rank}</span>
                     </>
                 ) : (
                     <span>{_rank}</span>
@@ -237,7 +237,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                                                 <div className="text-txtSecondary dark:text-txtSecondary-dark">{capitalize(item?.leader_name)}</div>
                                             </div>
                                         </div>
-                                        <div className="min-w-[31px] text-txtSecondary dark:text-txtSecondary-dark">
+                                        <div className="min-w-[1.5rem] text-txtSecondary dark:text-txtSecondary-dark">
                                             {loading ? (
                                                 <Skeletor width={24} height={24} circle />
                                             ) : item?.[rank] && item?.[rank] <= top_ranks_master ? (
@@ -250,7 +250,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                                                         alt=""
                                                     />
                                                     <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
-                                                        {index + 4}
+                                                        {item?.[rank]}
                                                     </span>
                                                 </div>
                                             ) : (

@@ -19,6 +19,7 @@ import HideSmallBalance from 'components/common/HideSmallBalance';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -30,7 +31,7 @@ const INITIAL_STATE = {
 };
 
 const AVAILBLE_KEY = 'partners_available';
-const PARTNERS_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT'];
+const PARTNERS_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT', 'NAO'];
 
 const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, isHideAsset, setIsHideAsset }) => {
     // Init State
@@ -38,34 +39,17 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Rdx
-    const wallets = useSelector((state) => state.wallet.PARTNERS);
+    const wallets = useSelector((state) => state.wallet?.PARTNERS) || null;
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
 
     // Use Hooks
     const [currentTheme] = useDarkMode();
     const { width } = useWindowSize();
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const dispatch = useDispatch();
-
-    // Helper
-    const walletMapper = (allWallet, assetConfig) => {
-        if (!allWallet || !assetConfig) return;
-        const mapper = [];
-        if (Array.isArray(assetConfig) && assetConfig?.length) {
-            const partners = assetConfig.filter((o) => PARTNERS_ASSET.includes(o?.assetCode));
-            partners &&
-                partners.forEach(
-                    (item) =>
-                        allWallet?.[item.id] &&
-                        mapper.push({
-                            ...item,
-                            [AVAILBLE_KEY]: allWallet?.[item?.id]?.value - allWallet?.[item?.id]?.locked_value,
-                            wallet: allWallet?.[item?.id]
-                        })
-                );
-        }
-        setState({ allAssets: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
-    };
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
@@ -114,7 +98,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
             {
                 key: 'wallet.locked_value',
                 dataIndex: ['wallet', 'locked_value'],
-                title: t('common:in_order'),
+                title: t('wallet:locked'),
                 align: 'right',
                 width: 213,
                 render: (v, item) => {
@@ -231,7 +215,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                     </span>
                 </div>
                 <div className="pl-4 border-l border-divider dark:border-divider-dark md:flex md:border-none md:items-center">
-                    <div className="txtSecond-1">{t('common:in_order')}: &nbsp;</div>
+                    <div className="txtSecond-1">{t('wallet:locked')}: &nbsp;</div>
                     <div className="mt-2 md:mt-0">
                         {isHideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
                     </div>
@@ -241,6 +225,24 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
     }, [estBtc, isHideAsset, currentTheme]);
 
     useEffect(() => {
+        const walletMapper = (allWallet, assetConfig) => {
+            if (!allWallet || !assetConfig) return;
+            const mapper = [];
+            if (Array.isArray(assetConfig) && assetConfig?.length) {
+                const partners = assetConfig.filter((o) => PARTNERS_ASSET.includes(o?.assetCode));
+                partners &&
+                    partners.forEach(
+                        (item) =>
+                            allWallet?.[item.id] &&
+                            mapper.push({
+                                ...item,
+                                [AVAILBLE_KEY]: allWallet?.[item?.id]?.value - allWallet?.[item?.id]?.locked_value,
+                                wallet: allWallet?.[item?.id]
+                            })
+                    );
+            }
+            setState({ allAssets: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
+        };
         walletMapper(wallets, assetConfig);
     }, [wallets, assetConfig]);
 
@@ -297,7 +299,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
             </ButtonV2>
 
             <div className="mt-12 md:mt-16 flex items-center justify-between">
-                <div className="t-common-v2 hidden md:block">{t('common:partners')}</div>
+                <div className="t-common-v2 hidden md:block">{language === LANGUAGE_TAG.VI ? 'Ví hoa hồng' : t('wallet:commission')}</div>
                 {isSmallScreen ? (
                     <div className="w-full flex items-center justify-between">
                         <SearchBoxV2
@@ -390,7 +392,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-3">
-                                            <span className="txtSecond-2">{t('common:in_order')}</span>
+                                            <span className="txtSecond-2">{t('wallet:locked')}</span>
                                             <span className="txtPri-1">
                                                 {isHideAsset
                                                     ? SECRET_STRING

@@ -47,7 +47,7 @@ const TabItem = ({ title, href = '/', target = '_self', active, onClick, addClas
                 </div>
             )
         }
-    }, [target, title, active, component, onClick, addClass, indicatorStyle])
+    }, [target, title, active, component, onClick, addClass, indicatorStyle,href])
 
     return renderItem()
 }

@@ -28,6 +28,7 @@ import NoData from 'components/common/V2/TableV2/NoData';
 import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceToNami';
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -49,7 +50,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
 
     // Use Hooks
     const r = useRouter();
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const { width } = useWindowSize();
     const [currentTheme] = useDarkMode();
     const dispatch = useDispatch();
@@ -98,7 +102,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                     <span className="mt-2 md:mt-0">{isHideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit)} BTC</span>
                 </div>
                 <div className="pl-4 border-l border-divider dark:border-divider-dark md:flex md:border-none md:items-center">
-                    <div className="txtSecond-1">{t('common:in_order')}: &nbsp;</div>
+                    <div className="txtSecond-1">{t('wallet:locked')}: &nbsp;</div>
                     <div className="mt-2 md:mt-0">{isHideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit)} BTC</div>
                 </div>
             </div>
@@ -225,7 +229,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
             {
                 key: 'wallet.locked_value',
                 dataIndex: ['wallet', 'locked_value'],
-                title: t('common:in_order'),
+                title: t('wallet:locked'),
                 align: 'right',
                 width: 200,
                 render: (v, item) => {
@@ -322,6 +326,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
 
         return (
             <TableV2
+                onChangePage={(page) => {
+                    setState({ currentPage: page });
+                }}
+                page={state.currentPage}
                 sort
                 defaultSort={{ key: 'wallet.value', direction: 'desc' }}
                 useRowHover
@@ -358,7 +366,11 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                 >
                     {t('common:withdraw')}
                 </ButtonV2>
-                <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" variants="secondary">
+                <ButtonV2
+                    onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.NAO_FUTURES }))}
+                    className="px-6"
+                    variants="secondary"
+                >
                     {t('common:transfer')}
                 </ButtonV2>
             </div>
@@ -450,7 +462,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                     setTransferModal({
                                         isVisible: true,
                                         fromWallet: WalletType.SPOT,
-                                        toWallet: WalletType.FUTURES,
+                                        toWallet: WalletType.NAO_FUTURES,
                                         asset: curAssetCodeAction
                                     })
                                 )
@@ -534,7 +546,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
 
             {/* Khi nao co Function Chuyen so du nho thanh Nami thi enable code nay */}
             <div className="mt-12 md:mt-16 lg:items-center lg:justify-between">
-                <div className="t-common-v2 hidden md:block">Exchange</div>
+                <div className="t-common-v2 hidden md:block">
+                    {language === LANGUAGE_TAG.VI ? 'Ví' : ''} {t('wallet:spot_short')}
+                </div>
                 <div className="flex items-end justify-between md:pt-8">
                     <TransferSmallBalanceToNami className="hidden md:flex" width={width} allAssets={allAssets} />
 
@@ -543,7 +557,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             <SearchBoxV2
                                 value={state.search}
                                 onChange={(value) => {
-                                    setState({ search: value });
+                                    setState({ search: value, currentPage: 1 });
                                 }}
                                 onFocus={() => setState({ currentPage: 1 })}
                                 wrapperClassname="w-[180px]"
@@ -552,7 +566,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             <HideSmallBalance
                                 onClick={() =>
                                     setState({
-                                        hideSmallAsset: !state.hideSmallAsset
+                                        hideSmallAsset: !state.hideSmallAsset,
+                                        currentPage: 1
                                     })
                                 }
                                 isHide={state.hideSmallAsset}
@@ -565,7 +580,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             <HideSmallBalance
                                 onClick={() =>
                                     setState({
-                                        hideSmallAsset: !state.hideSmallAsset
+                                        hideSmallAsset: !state.hideSmallAsset,
+                                        currentPage: 1
                                     })
                                 }
                                 isHide={state.hideSmallAsset}
@@ -575,9 +591,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             <SearchBoxV2
                                 value={state.search}
                                 onChange={(value) => {
-                                    setState({ search: value });
+                                    setState({ search: value, currentPage: 1 });
                                 }}
-                                onFocus={() => setState({ currentPage: 1 })}
                                 width={width}
                             />
                         </div>
@@ -634,7 +649,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-3">
-                                            <span className="txtSecond-2">{t('common:in_order')}</span>
+                                            <span className="txtSecond-2">{t('wallet:locked')}</span>
                                             <span className="txtPri-1">
                                                 {isHideAsset
                                                     ? SECRET_STRING
@@ -696,7 +711,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                 <li>
                     <Link
                         href={PATHS.EXCHANGE?.TRADE?.getPair(undefined, {
-                            pair: `${assetName}-${pair?.quoteAsset}`
+                            pair: `${item.assetCode}-${pair?.quoteAsset}`
                         })}
                         prefetch={false}
                     >
@@ -735,34 +750,26 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                 text-gray-1 dark:text-txtPrimary-dark text-left text-base font-normal
                 ${isShow ? 'block' : 'hidden'} ${cssPopover()}`}
             >
-                <li className={cssLi}>
-                    <a
+                <li>
+                    <Link
                         href={PATHS.EXCHANGE?.SWAP?.getSwapPair({
                             fromAsset: 'USDT',
-                            toAsset: assetName
+                            toAsset: item.assetCode
                         })}
                     >
-                        {utils?.translator('common:buy')}
-                    </a>
+                        <a className={cssLi}>{utils?.translator('common:buy')}</a>
+                    </Link>
                 </li>
                 {!noMarket && tradeButton}
-                <li
-                    className={cssLi}
-                    onClick={() =>
-                        // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: item?.assetCode || assetName }))
-                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, item?.assetCode || assetName))
-                    }
-                >
-                    {utils?.translator('common:deposit')}
+                <li>
+                    <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, item?.assetCode || assetName)}>
+                        <a className={cssLi}>{utils?.translator('common:deposit')}</a>
+                    </Link>
                 </li>
-                <li
-                    className={cssLi}
-                    onClick={() =>
-                        // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: item?.assetCode || assetName }))
-                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL, item?.assetCode || assetName))
-                    }
-                >
-                    {utils?.translator('common:withdraw')}
+                <li>
+                    <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL, item?.assetCode || assetName)}>
+                        <a className={cssLi}>{utils?.translator('common:withdraw')}</a>
+                    </Link>
                 </li>
                 {ALLOWED_FUTURES_TRANSFER.includes(assetName) && (
                     <li
@@ -772,7 +779,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                                 setTransferModal({
                                     isVisible: true,
                                     fromWallet: WalletType.SPOT,
-                                    toWallet: WalletType.FUTURES,
+                                    toWallet: WalletType.NAO_FUTURES,
                                     asset: assetName
                                 })
                             )
