@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import Card from './components/common/Card';
 import { useSelector } from 'react-redux';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
-import { getAssetCode, formatBalanceFiat, getExactBalanceFiat, formatNanNumber } from 'redux/actions/utils';
+import {  formatBalanceFiat, getExactBalanceFiat, formatNanNumber } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Chip from 'components/common/V2/Chip';
 import Skeletor from 'components/common/Skeletor';
@@ -18,12 +18,11 @@ import useMakeOrder from './hooks/useMakeOrder';
 import useGetPartner from './hooks/useGetPartner';
 import FetchApi from 'utils/fetch-api';
 import { ModalConfirm } from './DetailOrder';
-import { MODE } from './constants';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID, MODE } from './constants';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Tooltip from 'components/common/Tooltip';
-import RecommendAmount from './components/RecommendAmount';
 import InputV2 from 'components/common/V2/InputV2';
-import { formatNumber } from 'utils/reference-utils';
+import { find } from 'lodash';
 
 const ModalOtp = dynamic(() => import('./components/ModalOtp'));
 const DWAddPhoneNumber = dynamic(() => import('components/common/DWAddPhoneNumber'));
@@ -47,6 +46,7 @@ const CardInput = () => {
 
     const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
     const router = useRouter();
+    const { side, assetId } = router.query;
 
     const [state, set] = useState({
         amount: '',
@@ -59,8 +59,12 @@ const CardInput = () => {
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
-    const { side, assetId } = router.query;
-    const assetCode = getAssetCode(+assetId);
+    const configs = useSelector((state) => state.utils.assetConfig);
+    const assetConfig = useMemo(() => {
+        return find(configs, { id: +assetId });
+    }, [configs, assetId]);
+    const { assetCode = '' } = assetConfig;
+
     const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
     // Setting DEFAULT amount
     useEffect(() => {
@@ -70,7 +74,7 @@ const CardInput = () => {
     }, [minimumAllowed]);
 
     const { data: limitWithdraw, loading: loadingLimitWithdraw } = useFetchApi(
-        { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: 72 } },
+        { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: ALLOWED_ASSET_ID['VNDC'] } },
         Boolean(side),
         [side]
     );
@@ -81,7 +85,8 @@ const CardInput = () => {
         error
     } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
-    useGetPartner({ assetId, side, amount: state.amount, rate });
+    useGetPartner({ assetId, side, amount: state.amount, rate, assetConfig });
+
     const { onMakeOrderHandler, setModalState } = useMakeOrder({ setState, input });
 
     const availableAsset = useMemo(
@@ -183,9 +188,11 @@ const CardInput = () => {
         // console.log("____tip: ", tip);
         const numberValue = value.replace(/\D/g, '');
         setState({ tip: numberValue });
-        if (value && value < 5000) setTipInputError('Phai lon hon 5k');
-        if (side === 'SELL' && +numberValue >= availableAsset) setTipInputError('Phai nho hon so tien sell');
+        if (value && value < 5000) setTipInputError(t('dw_partner:error.min_amount', {amount: formatBalanceFiat(5000), asset: "VND" }));
+        if (side === 'SELL' && +numberValue >= availableAsset) setTipInputError(t('dw_partner:error.max_amount', {amount: formatBalanceFiat(availableAsset * rate), asset: "VND" }));
     };
+
+    const amountWillReceived = state.amount * rate + (side === SIDE.BUY ? +state.tip : - state.tip)
 
     return (
         <>
@@ -338,7 +345,7 @@ const CardInput = () => {
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t('dw_partner:rate')}</div>
                         <div className="txtPri-1 flex items-center space-x-1">
-                            <span>1 {assetCode} =</span>
+                            <span>1 {assetCode} ≈</span>
                             <span>{loadingRate ? <Skeletor width="40px" height="15px" /> : formatBalanceFiat(rate, 'VNDC')}</span>
                             <span>VND</span>
                         </div>
@@ -400,7 +407,7 @@ const CardInput = () => {
                             {loadingRate ? (
                                 <Skeletor width="70px" />
                             ) : (
-                                <div className=" max-w-[150px] truncate">{formatBalanceFiat(state.amount * rate + (side === SIDE.BUY ? +state.tip : - state.tip), 'VNDC')}</div>
+                                <div className=" max-w-[150px] truncate">{formatNanNumber(amountWillReceived < 0 ? 0 : amountWillReceived, 'VNDC')}</div>
                             )}
 
                             <div className="">VND</div>

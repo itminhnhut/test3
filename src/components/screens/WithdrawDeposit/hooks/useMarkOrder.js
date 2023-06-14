@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { ALLOWED_ASSET, DisputedType, MODE, ORDER_TYPES, TranferreredType } from '../constants';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID, DisputedType, MODE, ORDER_TYPES, TranferreredType } from '../constants';
 import { ApiResultCreateOrder, ApiStatus, PartnerAcceptStatus, PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
 import { formatBalance } from 'redux/actions/utils';
 import { processPartnerOrder, approveOrder, markOrder, rejectOrder, setPartnerModal, resolveDispute } from 'redux/actions/withdrawDeposit';
@@ -72,7 +72,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                     : isApprove
                     ? await approveOrder({ displayingId: id, mode })
                     : await markOrder({ displayingId: id, userStatus, mode });
-                if (data && data.status === ApiStatus.SUCCESS) {
+                if (data?.status === ApiStatus.SUCCESS) {
                     // close confirm modal
 
                     setModalState(MODAL_TYPE.CONFIRM, {
@@ -157,8 +157,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                 additionalData: { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id },
                 onConfirm
             });
-        }
-        if (partnerProcessStatus === PartnerAcceptStatus.ACCEPTED) {
+        } else if (partnerProcessStatus === PartnerAcceptStatus.ACCEPTED) {
             onConfirm();
         }
     };
@@ -170,38 +169,61 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
         const side = orderDetail?.side;
         const baseQty = orderDetail?.baseQty;
         const assetCode = ALLOWED_ASSET[+assetId];
-        switch (userStatus) {
-            case PartnerPersonStatus.TRANSFERRED:
-                switch (statusType) {
-                    case TranferreredType[mode].TAKE:
-                        type = ORDER_TYPES.CONFIRM_TAKE_MONEY;
-                        break;
-                    case TranferreredType[mode].TRANSFERRED:
-                        type = ORDER_TYPES.CONFIRM_TRANSFERRED;
-                        break;
-                    default:
-                        break;
+
+        const mappingModalState = {
+            [PartnerPersonStatus.TRANSFERRED]: {
+                [TranferreredType[mode].TAKE]: () => (type = ORDER_TYPES.CONFIRM_TAKE_MONEY),
+                [TranferreredType[mode].TRANSFERRED]: () => (type = ORDER_TYPES.CONFIRM_TRANSFERRED)
+            },
+            [PartnerPersonStatus.DISPUTED]: {
+                [DisputedType.REPORT]: () => {
+                    type = ORDER_TYPES.REPORT;
+                    additionalData = { displayingId: id };
+                },
+                [DisputedType.REJECTED]: () => {
+                    type = ORDER_TYPES.CANCEL_ORDER;
+                    additionalData = { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id };
+                },
+                [DisputedType.RESOLVE_DISPUTE]: () => {
+                    type = ORDER_TYPES.RESOLVE_DISPUTE;
                 }
-                break;
-            case PartnerPersonStatus.DISPUTED:
-                switch (statusType) {
-                    case DisputedType.REPORT:
-                        type = ORDER_TYPES.REPORT;
-                        additionalData = { displayingId: id };
-                        break;
-                    case DisputedType.REJECTED:
-                        type = ORDER_TYPES.CANCEL_ORDER;
-                        additionalData = { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id };
-                        break;
-                    case DisputedType.RESOLVE_DISPUTE:
-                        type = ORDER_TYPES.RESOLVE_DISPUTE;
-                    default:
-                        break;
-                }
-                break;
-            default:
-                break;
-        }
+            }
+        };
+
+        mappingModalState[userStatus]?.[statusType]?.();
+
+        // switch (userStatus) {
+        //     case PartnerPersonStatus.TRANSFERRED:
+        //         switch (statusType) {
+        //             case TranferreredType[mode].TAKE:
+        //                 type = ORDER_TYPES.CONFIRM_TAKE_MONEY
+        //                 break;
+        //             case TranferreredType[mode].TRANSFERRED:
+        //                 type = ORDER_TYPES.CONFIRM_TRANSFERRED;
+        //                 break;
+        //             default:
+        //                 break;
+        //         }
+        //         break;
+        //     case PartnerPersonStatus.DISPUTED:
+        //         switch (statusType) {
+        //             case DisputedType.REPORT:
+        //                 type = ORDER_TYPES.REPORT;
+        //                 additionalData = { displayingId: id };
+        //                 break;
+        //             case DisputedType.REJECTED:
+        //                 type = ORDER_TYPES.CANCEL_ORDER;
+        //                 additionalData = { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id };
+        //                 break;
+        //             case DisputedType.RESOLVE_DISPUTE:
+        //                 type = ORDER_TYPES.RESOLVE_DISPUTE;
+        //             default:
+        //                 break;
+        //         }
+        //         break;
+        //     default:
+        //         break;
+        // }
         setModalState(MODAL_TYPE.CONFIRM, {
             visible: true,
             type,

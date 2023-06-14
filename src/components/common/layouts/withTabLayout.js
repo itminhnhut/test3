@@ -34,11 +34,11 @@ export default (props) => (WrappedComponent) => {
 
         // Helper
         const setCurrentLastestPath = (currentLastestPath) => setState({ currentLastestPath });
+        const sourceApp = isApp ? '?source=app' : '';
 
         // Render Handler
         const renderTabLink = useCallback(() => {
             if (!(routes || Object.keys(routes).length) || (hideInApp && isApp)) return null;
-
           
 
             return Object.values(routes).map((route) => {
@@ -48,7 +48,7 @@ export default (props) => (WrappedComponent) => {
                 return (
                     <TabItem
                         key={`tab_link__${path}`}
-                        href={route?.pathname}
+                        href={route?.pathname + sourceApp}
                         title={route?.localized ? t(route?.localized) : route?.alias}
                         active={isActive}
                         component={TabItemComponent.Link}

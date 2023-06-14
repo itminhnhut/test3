@@ -123,7 +123,7 @@ const FilterTimeTabV2 = ({
         const monthsDifference = differenceInMonths(e?.selection?.startDate, e?.selection?.endDate);
         if (Math.abs(monthsDifference) >= 3) {
             toast({
-                text: t('portfolio:error.max_months_filter', { maxMonths: maxMonths }),
+                text: t('common:global_notice.max_months_filter', { maxMonths: maxMonths }),
                 type: 'error',
                 className: '!max-w-[358px] !min-w-[358px] !mx-auto mt'
             });
