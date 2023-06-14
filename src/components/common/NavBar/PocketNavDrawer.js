@@ -32,7 +32,8 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
     const router = useRouter();
 
     const { user: auth } = useSelector((state) => state.auth) || null;
-    const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
+    // const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
+    const isNotVerified = [KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(auth?.kyc_status);
     const isLocking = auth?.kyc_status === KYC_STATUS.LOCKING;
     const isVerified = auth?.kyc_status >= KYC_STATUS.APPROVED;
     const isPartner = auth?.partner_type === 2;

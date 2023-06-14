@@ -83,6 +83,7 @@ export default function AccountLayout({ children }) {
                                     </div>
                                     {{
                                         [KYC_STATUS.NO_KYC]: <KYCUnVerifiedTag t={t} />,
+                                        [KYC_STATUS.REJECT]: <KYCUnVerifiedTag t={t} />,
                                         [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
                                         [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />,
                                         [KYC_STATUS.LOCKING]: <KYCTempLocking t={t} />
@@ -93,7 +94,7 @@ export default function AccountLayout({ children }) {
                                     className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark justify-center md:justify-start"
                                 />
                             </div>
-                            {auth?.user?.kyc_status === KYC_STATUS.NO_KYC && router.asPath === PATHS.ACCOUNT.PROFILE && (
+                            {[KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(auth?.user?.kyc_status) && router.asPath === PATHS.ACCOUNT.PROFILE && (
                                 <Button
                                     className="w-[90%] md:w-auto px-6 mt-4 md:mt-0"
                                     onClick={() => {
