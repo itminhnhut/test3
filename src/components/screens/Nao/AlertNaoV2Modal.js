@@ -92,13 +92,13 @@ const AlertNaoV2Modal = memo(forwardRef((props, ref) => {
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onCancel}
             modalClassName="z-[99999999999]"
-            onusClassName={`${isMobile ? 'pb-[3.75rem] !px-6' : '!p-8 max-w-[420px]'} min-h-[304px] rounded-t-[16px] `}
+            onusClassName={`${isMobile ? 'pb-[3.75rem] !px-6 !rounded-none' : '!p-8 max-w-[420px]'} min-h-[304px] rounded-t-[16px] `}
             containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
             center={!isMobile}
             isAlertModal
         >
             {!options.current?.hideCloseButton
-                && <SvgCross onClick={onCancel} className="ml-auto" size={24} color="currentColor" />
+                && <SvgCross onClick={onCancel} className="ml-auto stroke-2 cursor-pointer" size={24} color="currentColor" />
             }
             <div ref={wrapperRef} className="flex flex-col items-center justify-between h-[calc(100%-1.5rem)]">
                 <div className='mb-6'>

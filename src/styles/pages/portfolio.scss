@@ -11,25 +11,41 @@
 }
 
 .tooltip-caret-left {
+    @apply border-2 border-gray-13 dark:border-dark-2;
+    box-shadow: 0px 0px 1px 0px rgba(0, 200, 188, 0.25), 0px 3px 5px 0px rgba(0, 200, 188, 0.15);
     position: absolute;
-    width: 0;
-    height: 0;
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent;
-    border-right: 5px solid #1c232e; /* Màu của caret */
-    left: -5px; /* Đặt vị trí bên trái của caret */
+    border-radius: 50%;
     top: 50%; /* Đặt vị trí dọc của caret */
     transform: translateY(-50%); /* Điều chỉnh vị trí dọc của caret */
 }
 
 .tooltip-caret-right {
+    @apply border-2 border-gray-13 dark:border-dark-2;
+    box-shadow: 0px 0px 1px 0px rgba(0, 200, 188, 0.25), 0px 3px 5px 0px rgba(0, 200, 188, 0.15);
     position: absolute;
-    width: 0;
-    height: 0;
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent;
-    border-left: 5px solid #1c232e; /* Color of the caret */
-    right: -5px; /* Set the position on the right side */
-    top: 50%; /* Set the vertical position of the caret */
-    transform: translateY(-50%); /* Adjust the vertical position of the caret */
+    border-radius: 50%;
+    top: 50%; /* Đặt vị trí dọc của caret */
+    transform: translateY(-50%); /* Điều chỉnh vị trí dọc của caret */
 }
+
+.custom-caret {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #000; /* Set the background color for the circle */
+    bottom: -16px; /* Set the margin between the circle and the bottom edge of the tooltip */
+    left: 50%; /* Position the circle at the center horizontally */
+    transform: translateX(-50%); /* Center the circle horizontally */
+    border-radius: 50%; /* Make the circle shape */
+  }
+
+  .custom-tooltip {
+    /* Custom tooltip styles */
+  }
+
+  .custom-tooltip::after {
+    content: '';
+    position: absolute;
+    /* Custom caret styles */
+  }

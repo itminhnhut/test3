@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import Card from './components/common/Card';
 import { useSelector } from 'react-redux';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
-import { getAssetCode, formatBalanceFiat, getExactBalanceFiat } from 'redux/actions/utils';
+import { formatBalanceFiat, getExactBalanceFiat } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Skeletor from 'components/common/Skeletor';
 import { useRouter } from 'next/router';
@@ -17,15 +17,19 @@ import useMakeOrder from './hooks/useMakeOrder';
 import useGetPartner from './hooks/useGetPartner';
 import FetchApi from 'utils/fetch-api';
 import { ModalConfirm } from './DetailOrder';
-import { MODE } from './constants';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID, MODE } from './constants';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Tooltip from 'components/common/Tooltip';
+import { find } from 'lodash';
 
 const ModalOtp = dynamic(() => import('./components/ModalOtp'));
 const DWAddPhoneNumber = dynamic(() => import('components/common/DWAddPhoneNumber'));
 
 const CardInput = () => {
-    const { t, i18n: { language } } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const {
         input,
         partner,
@@ -40,6 +44,7 @@ const CardInput = () => {
 
     const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
     const router = useRouter();
+    const { side, assetId } = router.query;
 
     const [state, set] = useState({
         amount: '',
@@ -51,8 +56,12 @@ const CardInput = () => {
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
-    const { side, assetId } = router.query;
-    const assetCode = getAssetCode(+assetId);
+    const configs = useSelector((state) => state.utils.assetConfig);
+    const assetConfig = useMemo(() => {
+        return find(configs, { id: +assetId });
+    }, [configs, assetId]);
+    const { assetCode = '' } = assetConfig;
+
     const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
     // Setting DEFAULT amount
     useEffect(() => {
@@ -62,7 +71,7 @@ const CardInput = () => {
     }, [minimumAllowed]);
 
     const { data: limitWithdraw, loading: loadingLimitWithdraw } = useFetchApi(
-        { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: 72 } },
+        { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: ALLOWED_ASSET_ID['VNDC'] } },
         Boolean(side),
         [side]
     );
@@ -73,7 +82,8 @@ const CardInput = () => {
         error
     } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
-    useGetPartner({ assetId, side, amount: state.amount, rate });
+    useGetPartner({ assetId, side, amount: state.amount, rate, assetConfig });
+
     const { onMakeOrderHandler, setModalState } = useMakeOrder({ setState, input });
 
     const availableAsset = useMemo(
@@ -256,7 +266,7 @@ const CardInput = () => {
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t('dw_partner:rate')}</div>
                         <div className="txtPri-1 flex items-center space-x-1">
-                            <span>1 {assetCode} =</span>
+                            <span>1 {assetCode} ≈</span>
                             <span>{loadingRate ? <Skeletor width="40px" height="15px" /> : formatBalanceFiat(rate, 'VNDC')}</span>
                             <span>VND</span>
                         </div>
@@ -364,7 +374,7 @@ const CardInput = () => {
             />
             <AlertModalV2
                 isVisible={state.showAlertDisableSmartOtp}
-                onClose={() => setState({showAlertDisableSmartOtp: false, showOtp: false})}
+                onClose={() => setState({ showAlertDisableSmartOtp: false, showOtp: false })}
                 textButton={t('dw_partner:verify_by_email')}
                 onConfirm={() => {
                     setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false });

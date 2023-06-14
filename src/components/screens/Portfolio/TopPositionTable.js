@@ -73,7 +73,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                 dataIndex: 'displaying_id',
                 title: 'ID',
                 align: 'left',
-                width: 136,
+                width: 142,
                 render: (v) => <TextCopyable text={v} />
             },
             {

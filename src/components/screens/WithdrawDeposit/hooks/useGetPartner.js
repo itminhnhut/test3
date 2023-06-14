@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { find } from 'lodash';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DEFAULT_PARTNER_MAX, DEFAULT_PARTNER_MIN } from 'redux/actions/const';
@@ -7,12 +6,10 @@ import { roundByExactDigit } from 'redux/actions/utils';
 import { getPartner, setAllowedAmount, setInput, setLoadingPartner, setPartner } from 'redux/actions/withdrawDeposit';
 
 const DEBOUNCE_TIME = 300;
-const useGetPartner = ({ assetId, side, amount, rate }) => {
-    const { input, loadingPartner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
-    const configs = useSelector((state) => state.utils.assetConfig);
+const useGetPartner = ({ assetId, side, amount, rate, assetConfig }) => {
+    const { input, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
     const dispatch = useDispatch();
 
-    const assetConfig = find(configs, { id: +assetId });
     useEffect(() => {
         if (rate && assetConfig) {
             dispatch(
@@ -22,7 +19,7 @@ const useGetPartner = ({ assetId, side, amount, rate }) => {
                 })
             );
         }
-    }, [rate, side, assetConfig, assetConfig]);
+    }, [rate, side, assetConfig?.assetCode, assetConfig?.assetDigit]);
 
     useEffect(() => {
         let timeout = setTimeout(() => {

@@ -14,7 +14,7 @@ const useFetchApi = ({ url = '', params, successCallBack = () => {} }, condition
                 try {
                     setLoading(true);
                     const data = await FetchApi({ url, cancelToken: source.token, params });
-                    if (data && data?.status === ApiStatus.SUCCESS) {
+                    if (data && (data?.status === ApiStatus.SUCCESS || data?.message === ApiStatus.SUCCESS)) {
                         setData(data.data);
                     } else {
                         setData(null);

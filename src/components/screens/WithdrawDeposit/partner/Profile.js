@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'next-i18next';
-
-import useFetchApi from 'hooks/useFetchApi';
-import { API_DEFAULT_BANK_USER, API_GET_PARTNER_PROFILE, API_GET_USER_BANK_ACCOUNT } from 'redux/actions/apis';
+import { Trans, useTranslation } from 'next-i18next';
+import { API_GET_PARTNER_PROFILE, API_GET_USER_BANK_ACCOUNT } from 'redux/actions/apis';
 
 import ProfileHeader from '../components/ProfileHeader';
 import ProfileSetting from '../components/ProfileSetting';
-import { useBoolean } from 'react-use';
 import FetchApi from 'utils/fetch-api';
 import { ApiStatus } from 'redux/actions/const';
+import Card from '../components/common/Card';
+import DarkNote from 'components/common/DarkNote';
+import Link from 'next/link';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { BxsInfoCircle } from 'components/svg/SvgIcon';
 
 const Profile = () => {
     const {
@@ -64,7 +65,30 @@ const Profile = () => {
     return (
         <div>
             <ProfileHeader t={t} partner={state.partner} language={language} loading={state.loading} banks={state.banks} bankDefault={state.defaultBank} />
-            <ProfileSetting t={t} partner={state.partner} loading={state.loading} setPartner={(partner) => setState({ partner })} />
+            {!state.partner?.status ? (
+                <Card className="mt-6 dark:!bg-darkBlue-3 border-0 ">
+                    <div className="flex items-center mb-2">
+                        <BxsInfoCircle size={16} fill={'currentColor'} fillInside={'currentColor'} />
+                        <div className="font-semibold ml-2">{language === LANGUAGE_TAG.EN ? 'Note' : 'Lưu ý'}</div>
+                    </div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                        <Trans i18nKey="dw_partner:partner_inactive">
+                            <a
+                                href={
+                                    language === LANGUAGE_TAG.VI
+                                        ? 'https://nami.exchange/vi/support/announcement/thong-bao/nami-exchange-ra-mat-chuong-trinh-doi-tac-nap-rut'
+                                        : 'https://nami.exchange/support/announcement/crypto-deposit-withdrawal/officially-launch-nami-deposits-withdrawals-partnership-program'
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-teal font-semibold cursor-pointer hover:opacity-70 transition-opacity"
+                            />
+                        </Trans>
+                    </div>
+                </Card>
+            ) : (
+                <ProfileSetting t={t} partner={state.partner} loading={state.loading} setPartner={(partner) => setState({ partner })} />
+            )}
         </div>
     );
 };
