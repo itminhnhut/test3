@@ -338,16 +338,19 @@ const CardInput = () => {
                 <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 5,000 VND</div>
 
                 <div className="flex items-center gap-3 mb-8 flex-wrap">
-                    {[5000, 10000, 20000].map((suggestItem) => (
-                        <Chip
-                            key={'sugggest_amount_' + suggestItem}
-                            selected={+state.tip === suggestItem}
-                            variants={'suggestion'}
-                            onClick={() => handleChangeTip(suggestItem + '')}
-                        >
-                            {formatNanNumber(suggestItem, 0)}
-                        </Chip>
-                    ))}
+                    {[5000, 10000, 20000].map((suggestItem) => {
+                        console.log('_____');
+                        return (
+                            <Chip
+                                key={'sugggest_amount_' + suggestItem}
+                                selected={+state.tip === suggestItem}
+                                variants={'suggestion'}
+                                onClick={() => handleChangeTip({ value: suggestItem })}
+                            >
+                                {formatNanNumber(suggestItem, 0)}
+                            </Chip>
+                        );
+                    })}
                 </div>
 
                 <div className="space-y-2 mb-10">
@@ -422,6 +425,14 @@ const CardInput = () => {
                             <div className="">VND</div>
                         </div>
                     </div>
+                    {state.tip && (
+                        <div className="flex items-center justify-between ">
+                            <div className="txtSecond-2">{t(`dw_partner:partner_bonus`)}</div>
+                            <div data-tip="" className="inline-flex txtPri-1 space-x-1 !cursor-default">
+                                {formatNanNumber(state.tip)} VND
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <ButtonV2
                     loading={state.loadingConfirm || loadingPartner}

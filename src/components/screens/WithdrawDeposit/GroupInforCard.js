@@ -81,9 +81,6 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
         t,
         i18n: { language }
     } = useTranslation();
-    const amount = side === SIDE.SELL ?
-    (mode === MODE.USER ? orderDetail?.userQtyIn : orderDetail?.partnerOut) :
-    (mode === MODE.USER ? orderDetail?.userQtyOut : orderDetail?.partnerIn);
 
     return (
         <div className="">
@@ -162,7 +159,19 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                 ) : (
                                     <div className="flex flex-col gap-y-4">
                                         {DETAIL_PAYMENT_INFORMATION.map((detail) => {
-                                            const fullContent = get(orderDetail, detail.copyText);
+                                            let fullContent;
+                                            if (orderDetail?.tip && detail.copyText === 'quoteQty') {
+                                                fullContent =
+                                                    side === SIDE.SELL
+                                                        ? mode === MODE.USER
+                                                            ? orderDetail?.userQtyIn
+                                                            : orderDetail?.partnerOut
+                                                        : mode === MODE.USER
+                                                        ? orderDetail?.userQtyOut
+                                                        : orderDetail?.partnerIn;
+                                            } else {
+                                                fullContent = get(orderDetail, detail.copyText);
+                                            }
 
                                             return (
                                                 <div className="flex items-center justify-between">
