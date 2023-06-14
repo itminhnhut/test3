@@ -191,5 +191,7 @@
         "system_success": "Order is updated to the status: Success",
         "system_reject": "Order is updated to the status: Rejected",
         "system_dispute": "Order is updated to the status: Disputed"
-    }
+    },
+    "partner_bonus": "Partner Bonus",
+    "partner_bonus_tooltip": "The option to enter the bonus for the partner processing the order, you can skip it if you do not want to send this bonus."
 }

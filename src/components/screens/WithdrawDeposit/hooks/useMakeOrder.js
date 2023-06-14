@@ -9,7 +9,7 @@ import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
 import toast from 'utils/toast';
 import { ORDER_TYPES } from '../constants';
 
-const useMakeOrder = ({ setState, input }) => {
+const useMakeOrder = ({ setState, input}) => {
     const { partnerBank, accountBank, partner } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
     const { t } = useTranslation();
@@ -24,7 +24,7 @@ const useMakeOrder = ({ setState, input }) => {
         router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + order.displayingId);
     };
 
-    const onMakeOrderHandler = async (otp, locale) => {
+    const onMakeOrderHandler = async (otp, locale, tip) => {
         try {
             setState({ loadingConfirm: true });
 
@@ -35,10 +35,18 @@ const useMakeOrder = ({ setState, input }) => {
                 quantity: input,
                 side,
                 otp,
-                locale
+                locale,
+                tip: +tip
             });
 
-            console.log("____orderResponse: ", orderResponse);
+            console.log("____orderResponse: ", {assetId,
+            bankAccountId: side === SIDE.BUY ? partnerBank?._id : accountBank?._id,
+            partnerId: partner?.partnerId,
+            quantity: input,
+            side,
+            otp,
+            locale,
+            tip: +tip}, orderResponse);
 
             if (orderResponse && (orderResponse.status === ApiStatus.SUCCESS || orderResponse.status === ApiResultCreateOrder.TOO_MUCH_REQUEST)) {
                 // ____________here

@@ -191,5 +191,7 @@
         "system_success": "Lệnh được cập nhật trạng thái: Thành công",
         "system_reject": "Lệnh được cập nhật trạng thái: Từ chối",
         "system_dispute": "Lệnh được cập nhật trạng thái: Tranh chấp"
-    }
+    },
+    "partner_bonus": "Thưởng đối tác",
+    "partner_bonus_tooltip": "Tùy chọn nhập số thưởng dành cho đối tác xử lý lệnh Nạp Rút, bạn có thể bỏ qua nếu không muốn gửi đi phần thưởng này."
 }

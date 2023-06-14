@@ -84,6 +84,13 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                                 </div>
                             </div>
                         </div>
+
+                        <div className="flex p-5">
+                            <div className="">
+                                <div className="mb-2 txtPri-1">{t('dw_partner:partner_bonus')}</div>
+                                <div className="txtSecond-2">{formatBalanceFiat(orderDetail?.tip, 'VNDC')} VND</div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="flex p-2 text-right ">

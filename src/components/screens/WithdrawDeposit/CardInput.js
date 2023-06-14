@@ -4,8 +4,9 @@ import dynamic from 'next/dynamic';
 import Card from './components/common/Card';
 import { useSelector } from 'react-redux';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
-import { getAssetCode, formatBalanceFiat, getExactBalanceFiat } from 'redux/actions/utils';
+import { getAssetCode, formatBalanceFiat, getExactBalanceFiat, formatNanNumber } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import Chip from 'components/common/V2/Chip';
 import Skeletor from 'components/common/Skeletor';
 import { useRouter } from 'next/router';
 import useFetchApi from 'hooks/useFetchApi';
@@ -20,12 +21,18 @@ import { ModalConfirm } from './DetailOrder';
 import { MODE } from './constants';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Tooltip from 'components/common/Tooltip';
+import RecommendAmount from './components/RecommendAmount';
+import InputV2 from 'components/common/V2/InputV2';
+import { formatNumber } from 'utils/reference-utils';
 
 const ModalOtp = dynamic(() => import('./components/ModalOtp'));
 const DWAddPhoneNumber = dynamic(() => import('components/common/DWAddPhoneNumber'));
 
 const CardInput = () => {
-    const { t, i18n: { language } } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const {
         input,
         partner,
@@ -43,6 +50,7 @@ const CardInput = () => {
 
     const [state, set] = useState({
         amount: '',
+        tip: '',
         loadingConfirm: false,
         showOtp: false,
         otpExpireTime: null,
@@ -156,7 +164,7 @@ const CardInput = () => {
             })
                 .then(({ status, data }) => {
                     if (status === 'ok') {
-                        !data?.phone ? setIsOpenModalAddPhone(true) : onMakeOrderHandler();
+                        !data?.phone ? setIsOpenModalAddPhone(true) : onMakeOrderHandler(null, null, state.tip);
                     }
                 })
                 .finally(() => setState({ loadingConfirm: false }));
@@ -169,14 +177,42 @@ const CardInput = () => {
         }
     };
 
+    const [tipInputError, setTipInputError] = useState('');
+    const handleChangeTip = (value = '') => {
+        setTipInputError('');
+        // console.log("____tip: ", tip);
+        const numberValue = value.replace(/\D/g, '');
+        setState({ tip: numberValue });
+        if (value && value < 5000) setTipInputError('Phai lon hon 5k');
+        if (side === 'SELL' && +numberValue >= availableAsset) setTipInputError('Phai nho hon so tien sell');
+    };
+
     return (
         <>
-            <Tooltip place="top" effect="solid" isV3 id="min_amount_description">
-                <div className="max-w-[300px] py-2 text-sm z-50">{t('dw_partner:min_amount_description')}</div>
+            <Tooltip place="top" className={`max-w-[360px] !px-6 !py-3`} effect="solid" isV3 id="min_amount_description">
+                <div className="max-w-[300px] text-sm z-50">{t('dw_partner:min_amount_description')}</div>
             </Tooltip>
-            <Tooltip place="top" effect="solid" isV3 id="max_amount_description">
-                <div className="max-w-[300px] py-2 text-sm z-50">{t('dw_partner:max_amount_description')}</div>
+            <Tooltip place="top" className={`max-w-[360px] !px-6 !py-3`} effect="solid" isV3 id="max_amount_description">
+                <div className="max-w-[300px] text-sm z-50">{t('dw_partner:max_amount_description')}</div>
             </Tooltip>
+            <Tooltip
+                overridePosition={(e) => {
+                    if (e?.left < 0)
+                        return {
+                            left: e.left < 16 ? 16 : e.left,
+                            top: e.top
+                        };
+                    return e;
+                }}
+                place={'top'}
+                className={`max-w-[360px] !px-6 !py-3 mr-4 `}
+                effect="solid"
+                isV3
+                id="partner_bonus_tooltip"
+            />
+            {/* <div className="max-w-[300px] py-2 text-sm z-50">{t('dw_partner:partner_bonus_tooltip')}</div>
+            </Tooltip> */}
+
             <Card className="w-full">
                 <div className="mb-4">
                     <div className="w-full mb-2 flex justify-between ">
@@ -249,9 +285,55 @@ const CardInput = () => {
                         </div>
                     </div>
                 </div>
-                {/* <div>
-                    <RecommendAmount setAmount={(value) => setState({ amount: value })} assetCode={assetCode} amount={state.amount} loadingRate={loadingRate} />
-                </div> */}
+                <div className="flex items-center gap-3 mb-6 flex-wrap">
+                    {[100000, 1500000, 2000000, 2500000, 3000000].map((suggestItem) => (
+                        <Chip
+                            key={'sugggest_amount_' + suggestItem}
+                            selected={+state.amount === suggestItem}
+                            variants={'suggestion'}
+                            onClick={() => setState({ amount: suggestItem })}
+                        >
+                            {formatNanNumber(suggestItem, 0)}
+                        </Chip>
+                    ))}
+                </div>
+
+                <InputV2
+                    // onHitEnterButton={() => (!helperText && !isValidating ? onSubmitPhoneNumber(false) : null)}
+                    className="!pb-2"
+                    value={formatNanNumber(state.tip, 0)}
+                    onChange={handleChangeTip}
+                    label={
+                        <h1
+                            data-tip={t('dw_partner:partner_bonus_tooltip')}
+                            data-for="partner_bonus_tooltip"
+                            className="txtSecond-3 border-b border-dashed border-darkBlue-5 w-fit"
+                        >
+                            {t('dw_partner:partner_bonus')}
+                        </h1>
+                    }
+                    placeholder={t('dw_partner:enter_amount')}
+                    allowClear={true}
+                    error={tipInputError}
+                    suffix={<span className="txtSecond-4">VND</span>}
+                    type="text"
+                    showDividerSuffix={false}
+                />
+                <div className="txtSecond-5 !text-xs mb-4">{t('common:min')}: 5,000 VND</div>
+
+                <div className="flex items-center gap-3 mb-8 flex-wrap">
+                    {[5000, 10000, 20000].map((suggestItem) => (
+                        <Chip
+                            key={'sugggest_amount_' + suggestItem}
+                            selected={+state.tip === suggestItem}
+                            variants={'suggestion'}
+                            onClick={() => handleChangeTip(suggestItem + '')}
+                        >
+                            {formatNanNumber(suggestItem, 0)}
+                        </Chip>
+                    ))}
+                </div>
+
                 <div className="space-y-2 mb-10">
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t('dw_partner:rate')}</div>
@@ -318,7 +400,7 @@ const CardInput = () => {
                             {loadingRate ? (
                                 <Skeletor width="70px" />
                             ) : (
-                                <div className=" max-w-[150px] truncate">{formatBalanceFiat(state.amount * rate, 'VNDC')}</div>
+                                <div className=" max-w-[150px] truncate">{formatBalanceFiat(state.amount * rate + (side === SIDE.BUY ? +state.tip : - state.tip), 'VNDC')}</div>
                             )}
 
                             <div className="">VND</div>
@@ -344,7 +426,7 @@ const CardInput = () => {
             <DWAddPhoneNumber isVisible={isOpenModalAddPhone} onBackdropCb={() => setIsOpenModalAddPhone(false)} />
 
             <ModalOtp
-                onConfirm={(otp) => onMakeOrderHandler(otp, language)}
+                onConfirm={(otp) => onMakeOrderHandler(otp, language, state.tip)}
                 isVisible={state.showOtp}
                 otpExpireTime={state.otpExpireTime}
                 onClose={() => {
@@ -364,11 +446,11 @@ const CardInput = () => {
             />
             <AlertModalV2
                 isVisible={state.showAlertDisableSmartOtp}
-                onClose={() => setState({showAlertDisableSmartOtp: false, showOtp: false})}
+                onClose={() => setState({ showAlertDisableSmartOtp: false, showOtp: false })}
                 textButton={t('dw_partner:verify_by_email')}
                 onConfirm={() => {
                     setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false });
-                    onMakeOrderHandler();
+                    onMakeOrderHandler(null, null, state.tip);
                 }}
                 type="error"
                 title={t('dw_partner:disabled_smart_otp_title')}

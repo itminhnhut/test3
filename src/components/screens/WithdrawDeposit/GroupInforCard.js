@@ -55,6 +55,9 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, mode = MODE.USE
         t,
         i18n: { language }
     } = useTranslation();
+    const amount = side === SIDE.SELL ?
+    (mode === MODE.USER ? orderDetail?.userQtyIn : orderDetail?.partnerOut) :
+    (mode === MODE.USER ? orderDetail?.userQtyOut : orderDetail?.partnerIn);
 
     return (
         <div className="mb-12">
@@ -167,8 +170,8 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, mode = MODE.USE
                                             ) : (
                                                 <TextCopyable
                                                     className="gap-x-1 txtPri-1 text-right"
-                                                    showingText={`${formatBalance(orderDetail?.quoteQty, 0)} VND`}
-                                                    text={orderDetail?.quoteQty}
+                                                    showingText={`${formatBalance(amount, 0)} VND`}
+                                                    text={amount}
                                                 />
                                             )}
                                         </div>
