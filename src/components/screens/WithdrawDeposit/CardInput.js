@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import Card from './components/common/Card';
 import { useSelector } from 'react-redux';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
-import {  formatBalanceFiat, getExactBalanceFiat, formatNanNumber } from 'redux/actions/utils';
+import { formatBalanceFiat, getExactBalanceFiat, formatNanNumber } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Chip from 'components/common/V2/Chip';
 import Skeletor from 'components/common/Skeletor';
@@ -108,6 +108,7 @@ const CardInput = () => {
     };
 
     const [hasRendered, setHasRendered] = useState(false);
+
     const validator = useMemo(() => {
         if (!hasRendered) {
             return { isValid: true, msg: '', isError: false };
@@ -183,17 +184,29 @@ const CardInput = () => {
         }
     };
 
-    const [tipInputError, setTipInputError] = useState('');
-    const handleChangeTip = (value = '') => {
-        setTipInputError('');
-        const numberValue = value.replace(/\D/g, '');
+    const [tipValidator, setTipValidator] = useState({ isValid: true, msg: '', isError: false });
+
+    const handleChangeTip = (input = '') => {
+        const numberValue = input.value;
         setState({ tip: numberValue });
-        if (value && value < 5000) setTipInputError(t('dw_partner:error.min_amount', {amount: formatBalanceFiat(5000), asset: "VND" }));
+
+        if (numberValue && numberValue < 5000)
+            return setTipValidator({
+                isValid: false,
+                msg: t('dw_partner:error.min_amount', { amount: formatBalanceFiat(5000), asset: 'VND' }),
+                isError: true
+            });
         const maxTip = state.amount * rate - 50000;
-        if (side === 'SELL' && +numberValue > maxTip) setTipInputError(t('dw_partner:error.max_amount', {amount: formatBalanceFiat(maxTip), asset: "VND" }));
+        if (side === 'SELL' && +numberValue > maxTip)
+            return setTipValidator({
+                isValid: false,
+                msg: t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' }),
+                isError: true
+            });
+        return setTipValidator({ isValid: true, msg: '', isError: false });
     };
 
-    const amountWillReceived = state.amount * rate + (side === SIDE.BUY ? +state.tip : - state.tip)
+    const amountWillReceived = state.amount * rate + (side === SIDE.BUY ? +state.tip : -state.tip);
 
     return (
         <>
@@ -295,11 +308,8 @@ const CardInput = () => {
                 </div>
                 <RecommendAmount amount={state.amount} setAmount={(value) => setState({ amount: value })} loadingRate={loadingRate} />
 
-                <InputV2
-                    // onHitEnterButton={() => (!helperText && !isValidating ? onSubmitPhoneNumber(false) : null)}
-                    className="!pb-2"
-                    value={formatNanNumber(state.tip, 0)}
-                    onChange={handleChangeTip}
+                <TradingInputV2
+                    id="TradingInputV2"
                     label={
                         <h1
                             data-tip={t('dw_partner:partner_bonus_tooltip')}
@@ -309,14 +319,23 @@ const CardInput = () => {
                             {t('dw_partner:partner_bonus')}
                         </h1>
                     }
-                    placeholder={t('dw_partner:enter_amount')}
-                    allowClear={true}
-                    error={tipInputError}
-                    suffix={<span className="txtSecond-4">VND</span>}
-                    type="text"
-                    showDividerSuffix={false}
+                    value={state.tip}
+                    allowNegative={false}
+                    thousandSeparator={true}
+                    containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
+                    inputClassName="!text-left !ml-0"
+                    onValueChange={handleChangeTip}
+                    validator={tipValidator}
+                    errorTooltip={false}
+                    decimalScale={0}
+                    allowedDecimalSeparators={[',', '.']}
+                    clearAble
+                    placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
+                    errorEmpty={false}
+                    // onFocus={handleFocusInput}
+                    renderTail={<span className="txtSecond-4">VND</span>}
                 />
-                <div className="txtSecond-5 !text-xs mb-4">{t('common:min')}: 5,000 VND</div>
+                <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 5,000 VND</div>
 
                 <div className="flex items-center gap-3 mb-8 flex-wrap">
                     {[5000, 10000, 20000].map((suggestItem) => (
@@ -408,7 +427,7 @@ const CardInput = () => {
                     loading={state.loadingConfirm || loadingPartner}
                     onClick={handleSubmitOrder}
                     disabled={
-                        tipInputError ||
+                        tipValidator.isError ||
                         !partner ||
                         loadingPartner ||
                         validator?.isError ||
