@@ -23,6 +23,7 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Tooltip from 'components/common/Tooltip';
 import InputV2 from 'components/common/V2/InputV2';
 import { find } from 'lodash';
+import RecommendAmount from './components/RecommendAmount';
 
 const ModalOtp = dynamic(() => import('./components/ModalOtp'));
 const DWAddPhoneNumber = dynamic(() => import('components/common/DWAddPhoneNumber'));
@@ -185,11 +186,11 @@ const CardInput = () => {
     const [tipInputError, setTipInputError] = useState('');
     const handleChangeTip = (value = '') => {
         setTipInputError('');
-        // console.log("____tip: ", tip);
         const numberValue = value.replace(/\D/g, '');
         setState({ tip: numberValue });
         if (value && value < 5000) setTipInputError(t('dw_partner:error.min_amount', {amount: formatBalanceFiat(5000), asset: "VND" }));
-        if (side === 'SELL' && +numberValue >= availableAsset) setTipInputError(t('dw_partner:error.max_amount', {amount: formatBalanceFiat(availableAsset * rate), asset: "VND" }));
+        const maxTip = state.amount * rate - 50000;
+        if (side === 'SELL' && +numberValue > maxTip) setTipInputError(t('dw_partner:error.max_amount', {amount: formatBalanceFiat(maxTip), asset: "VND" }));
     };
 
     const amountWillReceived = state.amount * rate + (side === SIDE.BUY ? +state.tip : - state.tip)
@@ -292,18 +293,7 @@ const CardInput = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center gap-3 mb-6 flex-wrap">
-                    {[100000, 1500000, 2000000, 2500000, 3000000].map((suggestItem) => (
-                        <Chip
-                            key={'sugggest_amount_' + suggestItem}
-                            selected={+state.amount === suggestItem}
-                            variants={'suggestion'}
-                            onClick={() => setState({ amount: suggestItem })}
-                        >
-                            {formatNanNumber(suggestItem, 0)}
-                        </Chip>
-                    ))}
-                </div>
+                <RecommendAmount amount={state.amount} setAmount={(value) => setState({ amount: value })} loadingRate={loadingRate} />
 
                 <InputV2
                     // onHitEnterButton={() => (!helperText && !isValidating ? onSubmitPhoneNumber(false) : null)}
@@ -418,6 +408,7 @@ const CardInput = () => {
                     loading={state.loadingConfirm || loadingPartner}
                     onClick={handleSubmitOrder}
                     disabled={
+                        tipInputError ||
                         !partner ||
                         loadingPartner ||
                         validator?.isError ||

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 
-const index = ({ children, className = '', variants, selected = false, disabled = false, loading = false, onClick }) => {
+const Chip = ({ children, className = '', variants, selected = false, disabled = false, loading = false, onClick }) => {
     const extendClass = {
         suggestion: 'border border-divider dark:border-divider-dark'
     }[variants];
@@ -26,4 +26,4 @@ const index = ({ children, className = '', variants, selected = false, disabled 
     );
 };
 
-export default index;
+export default Chip;
