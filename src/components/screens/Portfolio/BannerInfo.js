@@ -27,7 +27,6 @@ const BannerInfo = ({ user, t, isMobile, typeProduct, setTypeProduct, firstTimeT
 
             setVipLevel(data?.level || 0);
         } catch (error) {
-            console.log(`Can't get user vip level: ${error}`);
             setVipLevel(0);
         }
     };
