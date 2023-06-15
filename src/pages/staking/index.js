@@ -10,7 +10,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import { useWindowSize } from 'react-use';
 
-import CalculateInterest from 'components/screens/Staking/CalculateInterest.js';
+const CalculateInterest = dynamic(() => import('./components/CalculateInterest.js'), { ssr: false });
 const HeaderStaking = dynamic(() => import('./components/Header.js'), { ssr: false });
 const StepStaking = dynamic(() => import('./components/Step.js'), { ssr: false });
 const WhyChooseNamiStaking = dynamic(() => import('./components/WhyChooseNami.js'), { ssr: false });
