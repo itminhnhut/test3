@@ -5,31 +5,35 @@ import { formatNumber } from 'redux/actions/utils';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+import { useTranslation } from 'next-i18next';
 
-const parseData = (string) => string.split('\n').map((data) => +data);
+function f(x) {
+    return x * x;
+}
+var xValues = Array.from({ length: 48 }, (_, i) => i + 1);
+var yValues = xValues.map(f);
 
 const series = [
     {
         name: 'Series 1',
-        data: [1, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, (1597 + 2584) / 2, 2584, 4181]
-        // parseData(`
-        // 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181`)
-        // data: [45, 52, 38, 45, 19, 23, 2]
+        data: yValues
     }
 ];
 
-const Wrapper = styled.div`
-    .apexcharts-tooltip {
-        display: none;
-    }
-    .apexcharts-xaxistooltip {
-        display: none;
-    }
-`;
+const TIMER = [
+    { vi: '1 tháng', en: '1 tháng', value: 1 },
+    { vi: '12 tháng', en: '12 tháng', value: 12 },
+    { vi: '24 tháng', en: '24 tháng', value: 24 },
+    { vi: '36 tháng', en: '36 tháng', value: 36 },
+    { vi: '48 tháng', en: '48 tháng', value: 48 }
+];
 
 const APYInterestChart = () => {
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
+    const {
+        i18n: { language }
+    } = useTranslation();
 
     const [hoverData, setHoverData] = useState({
         value: 0,
@@ -39,7 +43,7 @@ const APYInterestChart = () => {
     const options = useMemo(
         () => ({
             chart: {
-                height: 280,
+                height: 320,
                 type: 'area',
                 toolbar: {
                     show: false
@@ -51,7 +55,10 @@ const APYInterestChart = () => {
             dataLabels: {
                 enabled: false
             },
-
+            stroke: {
+                curve: 'straight',
+                lineCap: 'butt'
+            },
             fill: {
                 type: 'gradient',
                 gradient: {
@@ -136,25 +143,30 @@ const APYInterestChart = () => {
                 <Chart options={options} series={series} type="area" width="100%" />
 
                 <div className="ml-5 pr-2 flex justify-between">
-                    <div className="text-txtSecondary cursor-pointer dark:text-txtSecondary-dark text-sm rounded-md px-4 py-2 flex items-center border border-divider dark:border-divider-dark">
-                        1 Tháng
-                    </div>
-                    <div className="text-txtSecondary cursor-pointer dark:text-txtSecondary-dark text-sm rounded-md px-4 py-2 flex items-center border border-divider dark:border-divider-dark">
-                        12 Tháng
-                    </div>
-                    <div className="text-txtSecondary cursor-pointer dark:text-txtSecondary-dark text-sm rounded-md px-4 py-2 flex items-center border border-divider dark:border-divider-dark">
-                        24 Tháng
-                    </div>
-                    <div className="text-txtSecondary cursor-pointer dark:text-txtSecondary-dark text-sm rounded-md px-4 py-2 flex items-center border border-divider dark:border-divider-dark">
-                        36 Tháng
-                    </div>
-                    <div className="text-txtSecondary cursor-pointer dark:text-txtSecondary-dark text-sm rounded-md px-4 py-2 flex items-center border border-divider dark:border-divider-dark">
-                        48 Tháng
-                    </div>
+                    {TIMER.map((item, key) => {
+                        return (
+                            <div
+                                className="text-txtSecondary cursor-pointer dark:text-txtSecondary-dark
+                                text-sm rounded-md px-4 py-2 flex items-center border
+                            border-divider dark:border-divider-dark"
+                            >
+                                {item[language]}
+                            </div>
+                        );
+                    })}
                 </div>
             </Wrapper>
         )
     );
 };
+
+const Wrapper = styled.div`
+    .apexcharts-tooltip {
+        display: none;
+    }
+    .apexcharts-xaxistooltip {
+        display: none;
+    }
+`;
 
 export default React.memo(APYInterestChart);
