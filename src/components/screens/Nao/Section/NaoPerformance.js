@@ -4,11 +4,7 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 import { Popover, Transition } from '@headlessui/react';
 import fetchApi from 'utils/fetch-api';
-import {
-    API_GET_REFERENCE_CURRENCY,
-    API_NAO_DASHBOARD_STATISTIC,
-    API_NAO_DASHBOARD_STATISTIC_CHART
-} from 'redux/actions/apis';
+import { API_GET_REFERENCE_CURRENCY, API_NAO_DASHBOARD_STATISTIC, API_NAO_DASHBOARD_STATISTIC_CHART } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import { formatNanNumber, formatNumber, formatPrice, formatTime, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
@@ -32,6 +28,8 @@ import TableNoData from 'components/common/table.old/TableNoData';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { WIDTH_MD } from 'components/screens/Wallet';
+import RangePopover from '../Components/RangePopover';
+import { formatAbbreviateNumber } from 'redux/actions/utils';
 
 export const days = [
     {
@@ -116,6 +114,11 @@ const NaoPerformance = memo(({}) => {
         day: 'd',
         marginCurrency: WalletCurrency.VNDC
     });
+    const [range, setRange] = useState({
+        startDate: undefined,
+        endDate: undefined,
+        key: 'selection'
+    });
     const [fee, setFee] = useState(WalletCurrency.VNDC);
     const [referencePrice, setReferencePrice] = useState({});
     const [typeChart, setTypeChart] = useState('volume');
@@ -126,7 +129,7 @@ const NaoPerformance = memo(({}) => {
     const [dataChartFee, setDataChartFee] = useState(null);
     const [dataChartSource, setDataChartSource] = useState({
         labels: [],
-        datasets: [],
+        datasets: []
     });
 
     const assetConfig = useSelector((state) => state.utils.assetConfig);
@@ -151,11 +154,11 @@ const NaoPerformance = memo(({}) => {
             plugins: {
                 legend: {
                     display: true,
-                    position: 'bottom',
+                    position: 'bottom'
                 },
                 tooltip: {
                     enabled: true,
-                    position: 'nearest',
+                    position: 'nearest'
                     // external: (context) => {
                     //     if (!isMobile) {
                     //         const { dataIndex } = context?.chart?.tooltip?.dataPoints?.['0'] ?? 0;
@@ -184,16 +187,16 @@ const NaoPerformance = memo(({}) => {
                 },
                 y: {
                     beginAtZero: true,
-                    // ticks: {
-                    //     color: colors.darkBlue5,
-                    //     callback: function (value, index, ticks) {
-                    //         return formatPrice(value);
-                    //     },
-                    //     crossAlign: 'far',
-                    //     padding: 8,
-                    //     fontSize: isMobile ? 9 : 12,
-                    //     lineHeight: isMobile ? 20 : 16
-                    // },
+                    ticks: {
+                        // color: colors.darkBlue5,
+                        callback: function (value, index, ticks) {
+                            return formatAbbreviateNumber(value, 3);
+                        },
+                        // crossAlign: 'far',
+                        // padding: 8,
+                        // fontSize: isMobile ? 9 : 12,
+                        // lineHeight: isMobile ? 20 : 16
+                    },
                     grid: {
                         // drawTicks: false,
                         // borderDash: [2, 4],
@@ -213,19 +216,21 @@ const NaoPerformance = memo(({}) => {
             }
         };
 
-        return <div className=" w-full max-h-[450px] mt-8">
-            <NaoChartJS type="line" data={dataChartSource} options={options} height="450px" />
-        </div>
-    }, [dataChartSource])
+        return (
+            <div className=" w-full max-h-[450px] mt-8">
+                <NaoChartJS type="line" data={dataChartSource} options={options} height="450px" />
+            </div>
+        );
+    }, [dataChartSource]);
 
     // const [getQueryByName , updateQuery] = useAddQuery('date')
 
     useEffect(() => {
-        const { date } = router.query;
-        if (date) {
+        const { performance } = router.query;
+        if (performance && days.some(({ value }) => value === performance)) {
             setFilter({
                 ...filter,
-                day: date
+                day: performance
             });
         }
     }, [router.isReady]);
@@ -247,9 +252,9 @@ const NaoPerformance = memo(({}) => {
                 labels: chartLabels,
                 datasets: [
                     {
-                        label: "VNDC",
+                        label: 'VNDC',
                         hidden: filter.marginCurrency !== 72,
-                        data: dataChartFee["72"],
+                        data: dataChartFee['72'],
                         borderColor: colors.green[6],
                         fill: 'start',
                         backgroundColor: (context) => {
@@ -259,12 +264,12 @@ const NaoPerformance = memo(({}) => {
                             gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
                             return gradient;
                         },
-                        hoverBackgroundColor: colors.white,
+                        hoverBackgroundColor: colors.white
                     },
                     {
-                        label: "USDT",
+                        label: 'USDT',
                         hidden: filter.marginCurrency !== 22,
-                        data: dataChartFee["22"],
+                        data: dataChartFee['22'],
                         borderColor: colors.red[2],
                         fill: 'start',
                         backgroundColor: (context) => {
@@ -274,12 +279,12 @@ const NaoPerformance = memo(({}) => {
                             gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
                             return gradient;
                         },
-                        hoverBackgroundColor: colors.white,
+                        hoverBackgroundColor: colors.white
                     },
                     {
-                        label: "NAMI",
+                        label: 'NAMI',
                         hidden: true,
-                        data: dataChartFee["1"],
+                        data: dataChartFee['1'],
                         borderColor: colors.yellow[2],
                         fill: 'start',
                         backgroundColor: (context) => {
@@ -292,9 +297,9 @@ const NaoPerformance = memo(({}) => {
                         hoverBackgroundColor: colors.white
                     },
                     {
-                        label: "NAO",
+                        label: 'NAO',
                         hidden: true,
-                        data: dataChartFee["447"],
+                        data: dataChartFee['447'],
                         borderColor: colors.green[5],
                         fill: 'start',
                         backgroundColor: (context) => {
@@ -304,17 +309,17 @@ const NaoPerformance = memo(({}) => {
                             gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
                             return gradient;
                         },
-                        hoverBackgroundColor: colors.white,
+                        hoverBackgroundColor: colors.white
                     }
                 ]
-            })
+            });
         } else {
             setDataChartSource({
                 labels: chartLabels,
                 datasets: [
                     {
-                        label: typeChart === 'volume' ? "Volume" : (typeChart === 'order' ? "Trades" : "Users"),
-                        data: typeChart === 'volume' ? dataChartVolume : (typeChart === 'order' ? dataChartOrder : dataChartUser),
+                        label: typeChart === 'volume' ? 'Volume' : typeChart === 'order' ? 'Trades' : 'Users',
+                        data: typeChart === 'volume' ? dataChartVolume : typeChart === 'order' ? dataChartOrder : dataChartUser,
                         borderColor: colors.green[6],
                         fill: 'start',
                         backgroundColor: (context) => {
@@ -328,7 +333,7 @@ const NaoPerformance = memo(({}) => {
                         pointBackgroundColor: colors.green[6]
                     }
                 ]
-            })
+            });
         }
     }, [chartLabels, typeChart]);
 
@@ -370,7 +375,7 @@ const NaoPerformance = memo(({}) => {
                     72: [],
                     22: [],
                     1: [],
-                    447: [],
+                    447: []
                 };
                 const users = [];
                 const labels = [];
@@ -462,7 +467,7 @@ const NaoPerformance = memo(({}) => {
             {
                 pathname: router.pathname,
                 query: {
-                    date: dateValue
+                    performance: dateValue
                 }
             },
             undefined,
@@ -496,6 +501,7 @@ const NaoPerformance = memo(({}) => {
                         onChange={handleChangeDateRange}
                         className="flex order-last"
                         popoverClassName={'lg:mr-2 '}
+                        range={range}
                     />
                     <div className="order-first gap-2 flex gap-last">
                         <button
@@ -521,9 +527,9 @@ const NaoPerformance = memo(({}) => {
                     </div>
                 </div>
             </div>
-            <div className="pt-5 xl:flex sm:pt-6 gap-4 sm:gap-5">
-                <div className="w-1/3 flex flex-wrap gap-y-4 sm:gap-y-5">
-                    <CardNao className="rounded-lg !min-w-max">
+            <div className="pt-5 flex flex-col xl:flex-row sm:pt-6 gap-4 sm:gap-5">
+                <div className="w-full xl:w-1/3 flex flex-col gap-y-4 sm:gap-y-5">
+                    <CardNao className="rounded-lg !min-w-max w-full">
                         <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
                             {t('nao:onus_performance:total_volume')}
                         </label>
@@ -532,13 +538,13 @@ const NaoPerformance = memo(({}) => {
                                 {dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}
                             </div>
                             <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                            {dataSource
-                                ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3)
-                                : '-'}{' '}
-                        </span>
+                                {dataSource
+                                    ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3)
+                                    : '-'}{' '}
+                            </span>
                         </div>
                     </CardNao>
-                    <CardNao className="rounded-lg !min-w-max">
+                    <CardNao className="rounded-lg !min-w-max w-full">
                         <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
                             {t('nao:onus_performance:total_orders')}
                         </label>
@@ -547,11 +553,11 @@ const NaoPerformance = memo(({}) => {
                                 {dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}
                             </div>
                             <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                            {dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}
-                        </span>
+                                {dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}
+                            </span>
                         </div>
                     </CardNao>
-                    <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark !min-w-max !py-6 sm:!py-8">
+                    <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark !min-w-max !py-6 sm:!py-8 w-full">
                         <div className="flex items-center justify-between">
                             <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
                                 {t('nao:onus_performance:total_fee')}
@@ -585,9 +591,9 @@ const NaoPerformance = memo(({}) => {
                                                             key={index}
                                                             className={`px-4 py-3 cursor-pointer hover:bg-hover-1 dark:hover:bg-hover-dark flex items-center space-x-4`}
                                                         >
-                                                        <span>{item?.assetCode}</span>
+                                                            <span>{item?.assetCode}</span>
                                                             {item?.id === fee && <CheckCircle color="currentColor" size={16} />}
-                                                    </span>
+                                                        </span>
                                                     ))}
                                                 </div>
                                             </Popover.Panel>
@@ -602,47 +608,43 @@ const NaoPerformance = memo(({}) => {
                         </div>
                     </CardNao>
                 </div>
-                <div className="w-2/3 h-full">
-                    <CardNao className="rounded-lg whitespace-nowrap !min-w-max">
-                        <div className="order-first gap-2 flex gap-last">
-                            <TextLiner className="w-1/3">{t('nao:onus_performance:chart_title')}</TextLiner>
-                            <div className="flex gap-last justify-end w-2/3">
+                <div className="w-full xl:w-2/3 h-full">
+                    <CardNao className="rounded-lg whitespace-nowrap min-h-[350px]">
+                        <div className="order-first gap-6 md:gap-2 gap-last grid xl:grid-cols-3">
+                            <TextLiner className="w-full">{t('nao:onus_performance:chart_title')}</TextLiner>
+                            <div className="flex gap-last xl:justify-end w-full overflow-auto no-scrollbar space-x-4 col-span-2">
                                 <button
                                     type="BUTTON"
-                                    className={classNames(
-                                        'flex flex-col justify-center items-center h-full px-4 text-sm sm:text-base text-txtSecondary',
-                                        { '!text-teal font-semibold': typeChart === 'volume' }
-                                    )}
+                                    className={classNames('flex flex-col justify-center items-center text-sm sm:text-base text-txtSecondary', {
+                                        '!text-teal font-semibold': typeChart === 'volume'
+                                    })}
                                     onClick={() => setTypeChart('volume')}
                                 >
                                     {t('nao:onus_performance:chart_total_volume')}
                                 </button>
                                 <button
                                     type="BUTTON"
-                                    className={classNames(
-                                        'flex flex-col justify-center items-center h-full px-4 text-sm sm:text-base text-txtSecondary',
-                                        { '!text-teal font-semibold': typeChart === 'order' }
-                                    )}
+                                    className={classNames('flex flex-col justify-center items-center text-sm sm:text-base text-txtSecondary', {
+                                        '!text-teal font-semibold': typeChart === 'order'
+                                    })}
                                     onClick={() => setTypeChart('order')}
                                 >
                                     {t('nao:onus_performance:chart_total_orders')}
                                 </button>
                                 <button
                                     type="BUTTON"
-                                    className={classNames(
-                                        'flex flex-col justify-center items-center h-full px-4 text-sm sm:text-base text-txtSecondary',
-                                        { '!text-teal font-semibold': typeChart === 'user' }
-                                    )}
+                                    className={classNames('flex flex-col justify-center items-center text-sm sm:text-base text-txtSecondary', {
+                                        '!text-teal font-semibold': typeChart === 'user'
+                                    })}
                                     onClick={() => setTypeChart('user')}
                                 >
                                     {t('nao:onus_performance:chart_users')}
                                 </button>
                                 <button
                                     type="BUTTON"
-                                    className={classNames(
-                                        'flex flex-col justify-center items-center h-full px-4 text-sm sm:text-base text-txtSecondary',
-                                        { '!text-teal font-semibold': typeChart === 'fee' }
-                                    )}
+                                    className={classNames('flex flex-col justify-center items-center text-sm sm:text-base text-txtSecondary', {
+                                        '!text-teal font-semibold': typeChart === 'fee'
+                                    })}
                                     onClick={() => setTypeChart('fee')}
                                 >
                                     {t('nao:onus_performance:chart_total_fee')}
@@ -651,25 +653,15 @@ const NaoPerformance = memo(({}) => {
                         </div>
                         {isMobile ? (
                             <>
-                                <CollapseV2
-                                    className="w-full"
-                                    divLabelClassname="w-full justify-between"
-                                    chrevronStyled={{ size: 24, color: '#E2E8F0' }}
-                                    label={
-                                        <HeaderTooltip
-                                            isMobile
-                                            title={t('portfolio:historical_pnl')}
-                                            tooltipContent={t('portfolio:pnl_changing_tooltip')}
-                                            tooltipId={'pnl_changing_tooltip'}
-                                        />
-                                    }
-                                    labelClassname="text-base font-semibold"
-                                    isDividerBottom={true}
-                                >
-                                    <div className="mt-6">
-                                        {renderChart}
-                                    </div>
-                                </CollapseV2>
+                                {chartLoading ? (
+                                    <>
+                                        <div className="flex items-center justify-center w-full min-h-[300px] mt-6">
+                                            <Spiner isDark="true" />
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="mt-6">{renderChart}</div>
+                                )}
                             </>
                         ) : (
                             <>
@@ -680,9 +672,7 @@ const NaoPerformance = memo(({}) => {
                                         </div>
                                     </>
                                 ) : (
-                                    <div>
-                                        {renderChart}
-                                    </div>
+                                    <div>{renderChart}</div>
                                 )}
                             </>
                         )}
@@ -697,62 +687,6 @@ const NaoPerformance = memo(({}) => {
         </section>
     );
 });
-
-export const RangePopover = ({ language, active = {}, onChange, popoverClassName = '', btnClassName = '' }) => {
-    const popOverClasses = classNames('relative flex', popoverClassName);
-    return (
-        <Popover className={popOverClasses}>
-            {({ open, close }) => (
-                <>
-                    <Popover.Button>
-                        <div className={classNames('h-10 flex justify-center items-center', btnClassName)}>
-                            <div className="sm:hidden">
-                                <SvgFilter size={24} color="currentColor" className="text-txtPrimary dark:text-txtPrimary-dark" />
-                            </div>
-                            <div className="hidden sm:flex px-4 py-3 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtSecondary dark:text-txtSecondary-dark rounded-md !font-SF-Pro !text-base">
-                                {active[language]}
-                                <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
-                            </div>
-                        </div>
-                    </Popover.Button>
-                    <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-200"
-                        enterFrom="opacity-0 translate-y-1"
-                        enterTo="opacity-100 translate-y-0"
-                        leave="transition ease-in duration-150"
-                        leaveFrom="opacity-100 translate-y-0"
-                        leaveTo="opacity-0 translate-y-1"
-                    >
-                        <Popover.Panel className="absolute min-w-[8rem] sm:min-w-[10rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-bgPrimary dark:bg-dark-4 border border-divider dark:border-divider-dark rounded-md mt-3">
-                            <div className="text-sm sm:text-base flex flex-col text-txtPrimary dark:text-txtPrimary-dark sm:py-3">
-                                {days.map((day, index) => {
-                                    const isActive = active.value === day.value;
-                                    return (
-                                        <div
-                                            key={day.value}
-                                            onClick={() => {
-                                                onChange(day.value);
-                                                close();
-                                            }}
-                                            className={classNames(
-                                                'flex justify-between items-center py-3 my-1 px-4 cursor-pointer',
-                                                'first:rounded-t-md last:rounded-b-md hover:bg-hover-1 dark:hover:bg-hover-dark'
-                                            )}
-                                        >
-                                            <span>{day[language]}</span>
-                                            {isActive && <CheckCircle color="currentColor" size={16} />}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </Popover.Panel>
-                    </Transition>
-                </>
-            )}
-        </Popover>
-    );
-};
 
 const externalTooltipHandler = (context, isDark, t, isVndc, title, volume, dataIndex, typeChart) => {
     // Tooltip Element
@@ -785,7 +719,14 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, volume, dataI
         // ulElement.appendChild(liElement2);
 
         const liElement3 = document.createElement('li');
-        liElement3.textContent = typeChart === 'volume' ? `${t('nao:onus_performance:total_volume')}: ` : (typeChart === 'order' ? `${t('nao:onus_performance:total_orders')}: ` : (typeChart === 'user' ? `${t('nao:onus_performance:users')}: ` : `${t('nao:onus_performance:total_fee')}: `));
+        liElement3.textContent =
+            typeChart === 'volume'
+                ? `${t('nao:onus_performance:total_volume')}: `
+                : typeChart === 'order'
+                ? `${t('nao:onus_performance:total_orders')}: `
+                : typeChart === 'user'
+                ? `${t('nao:onus_performance:users')}: `
+                : `${t('nao:onus_performance:total_fee')}: `;
         const spanElement = document.createElement('span');
         spanElement.className = 'red-2 font-semibold';
         spanElement.style.color = colors.green[2];
@@ -823,7 +764,6 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, volume, dataI
     const tooltipWidth = tooltipEl.offsetWidth;
     const tooltipHeight = tooltipEl.offsetHeight;
 
-
     const datasetIndex = tooltip.dataPoints[0].datasetIndex; // Get the index of the hovered dataset
     const barEl = chart.getDatasetMeta(datasetIndex)?.data[dataIndex];
     /**
@@ -832,23 +772,23 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, volume, dataI
      * barEl.height: độ cao của current bar
      */
 
-        // Trường hợp những Bar cuối sẽ bị overflow
+    // Trường hợp những Bar cuối sẽ bị overflow
     let tooltipCaretClassName;
 
-    if(tooltip.caretX + tooltipWidth > chartWidth) {
+    if (tooltip.caretX + tooltipWidth > chartWidth) {
         tooltipEl.style.left = positionX + barEl.x - tooltipWidth / 2 - 12 - barEl.width / 2 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
         tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
         tooltipEl.style.font = tooltip.options.bodyFont.string;
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
         tooltipEl.style.opacity = 1;
-        tooltipCaretClassName = 'tooltip-caret-right'
+        tooltipCaretClassName = 'tooltip-caret-right';
     } else {
         tooltipEl.style.left = positionX + barEl.x + barEl.width / 2 + tooltipWidth / 2 + 12 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
         tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
         tooltipEl.style.font = tooltip.options.bodyFont.string;
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
         tooltipEl.style.opacity = 1;
-        tooltipCaretClassName = 'tooltip-caret-left'
+        tooltipCaretClassName = 'tooltip-caret-left';
     }
 
     // Create caret:

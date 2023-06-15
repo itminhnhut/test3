@@ -194,7 +194,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
         try {
             const { data } = await fetchApi({
                 url: API_GET_REFERENCE_CURRENCY,
-                params: { base: 'VNDC,USDT', quote: 'USD' }
+                params: { base: 'VNDC,USDT', quote: 'VND' }
             });
             if (data) {
                 setReferencePrice(
@@ -275,30 +275,48 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     Stake NAO
                 </ButtonNao> */}
             </div>
-            <div className="mt-6 grid md:grid-cols-2 gap-4 sm:gap-6">
-                <CardNao className="sm:!min-w-[50%] sm:!px-10 sm:!py-12 sm:!flex-row sm:items-start !min-h-[124px] flex">
-                    <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg">{t('nao:pool:nao_staked')}</label>
-                    <div className="sm:text-right flex flex-col gap-1 mt-4 sm:mt-0">
+            <div className="mt-6 grid grid-cols-12 gap-4 sm:gap-6">
+                <CardNao className="sm:!min-w-[50%] sm:!px-10 sm:!py-12 flex flex-col col-span-12 md:col-span-4">
+                    <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg font-semibold">{t('nao:pool:nao_staked')}</label>
+                    <div className="flex flex-col gap-1 mt-4">
                         <div className="text-xl sm:text-2xl font-semibold flex items-center space-x-2">
                             <span className="leading-8">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
-                            <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                         </div>
-                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6">
-                            ${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)}
+                        <span className="text-sm text-transparent mt-2">a</span>
+                    </div>
+
+                    <hr className="border-divider dark:border-divider-dark my-5 sm:my-8" />
+
+                    <Tooltip id="tooltip-pool-value" />
+                    <label
+                        className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg font-semibold border-b border-dashed border-gray-1 dark:border-gray-7 w-[fit-content]"
+                        data-tip={t('nao:pool:pool_value_tooltip')}
+                        data-for="tooltip-pool-value"
+                    >
+                        {t('nao:pool:pool_value')}
+                    </label>
+                    <div className="flex flex-col gap-1 mt-4">
+                        <div className="text-xl sm:text-2xl font-semibold flex items-center space-x-2">
+                            <span className="leading-8">{formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)} VNDC</span>
+                        </div>
+                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2">
+                            ${formatNumber(data.totalStakedVNDC * (referencePrice['USDT'] ?? 1), 3)}
                         </span>
                     </div>
-                </CardNao>
-                <CardNao className="sm:!min-w-[50%] sm:!px-10 sm:!py-12 sm:!flex-row sm:items-start !min-h-[124px]">
+
+                    <hr className="border-divider dark:border-divider-dark my-5 sm:my-8" />
+
                     <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg">{t('nao:pool:participants')}</label>
-                    <div className="sm:text-right flex flex-col gap-1 mt-4 sm:mt-0">
-                        <div className="text-xl sm:text-2xl font-semibold leading-8">{data.totalUsers}</div>
+                    <div className="flex flex-col gap-1 mt-4">
+                        <div className="text-xl sm:text-2xl font-semibold">{data.totalUsers}</div>
                         <div
-                            className="text-sm text-txtSecondary dark:text-txtSecondary-dark"
+                            className="text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2"
                             dangerouslySetInnerHTML={{ __html: t('nao:pool:participants_today', { value: dataSource?.totalUserToday ?? 0 }) }}
                         ></div>
                     </div>
                 </CardNao>
-                <CardNao className="sm:!min-w-[50%] sm:!p-10 sm:min-h-[344px] !justify-start !mt-2 sm:!mt-0">
+                <CardNao className="sm:!min-w-[50%] sm:!px-10 sm:!py-12 sm:!flex-row sm:items-start !min-h-[360px] col-span-12 md:col-span-8"></CardNao>
+                <CardNao className="sm:!min-w-[50%] sm:!p-10 sm:min-h-[344px] !justify-start !mt-2 sm:!mt-0 col-span-12 md:col-span-6">
                     <Tooltip id="tooltip-revenue-history" />
                     <div className="flex-col flex">
                         <div className="space-x-3 flex items-center ">
@@ -365,7 +383,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         </div>
                     </div>
                 </CardNao>
-                <CardNao className="sm:!min-w-[50%] sm:!p-10 sm:min-h-[344px] !justify-start">
+                <CardNao className="sm:!min-w-[50%] sm:!p-10 sm:min-h-[344px] !justify-start col-span-12 md:col-span-6">
                     <div className="flex items-center justify-between">
                         <label className="text-txtPrimary dark:text-txtPrimary-dark text-base sm:text-lg font-semibold">{t('nao:pool:revenue_history')}</label>
                         {listHitory.length > 0 && (

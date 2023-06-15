@@ -99,7 +99,9 @@
         "fail": "Fail",
         "no_transaction_history": "No transaction history",
         "unlock_status": "Unlock: {{value}}",
-        "week": "Week {{value}}:"
+        "week": "Week {{value}}:",
+        "pool_value": "Pool value",
+        "pool_value_tooltip": "The pool value is based on quotation of NAO at shown time"
     },
     "vote": {
         "title": "Proposals",
