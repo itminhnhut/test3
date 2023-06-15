@@ -172,7 +172,7 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
                     {loadingDataDW ? (
                         <Skeletor width={isMobile ? 100 : 150} height={16} />
                     ) : (
-                        <span className="txtPri-1">{formatNanNumber(dataDw.totalDeposit?.total?.value, isVnd ? 0 : 4)}</span>
+                        <span className="txtPri-1">{formatNanNumber(dataDw?.totalDeposit?.total?.value, isVnd ? 0 : 4)}</span>
                     )}
                 </div>
                 {/* Tổng giá trị rút */}
@@ -181,7 +181,7 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
                     {loadingDataDW ? (
                         <Skeletor width={isMobile ? 120 : 150} height={16} />
                     ) : (
-                        <span className="txtPri-1">{formatNanNumber(dataDw.totalWithdraw?.total?.value, isVnd ? 0 : 4)}</span>
+                        <span className="txtPri-1">{formatNanNumber(dataDw?.totalWithdraw?.total?.value, isVnd ? 0 : 4)}</span>
                     )}
                 </div>
                 {/* Tỷ lệ % thắng */}

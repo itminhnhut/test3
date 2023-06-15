@@ -174,7 +174,7 @@ const HistoryTable = () => {
         <div className="space-y-6">
             <div className="txtPri-3 ">{t('common:global_label.history')}</div>
             <TabV2
-            isDeepBackground={true}
+                isDeepBackground={true}
                 isOverflow={true}
                 activeTabKey={activeTab}
                 onChangeTab={(key) => {

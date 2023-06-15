@@ -11,7 +11,7 @@ const Chip = ({ children, className = '', variants, selected = false, disabled =
             onClick={onClick}
             className={classNames(
                 `rounded-md py-2 px-4 text-sm text-gray-1 dark:text-gray-7 hover:text-gray-15 dark:hover:text-gray-4 hover:cursor-pointer
-                 dark:bg-dark-4 dark:hover:bg-dark-5 transition-all duration-75 border border-transparent`,
+                 dark:bg-dark-4 dark:hover:bg-dark-5 transition-all duration-75 border border-transparent whitespace-nowrap`,
                 {
                     'bg-gray-13 hover:bg-gray-6': !isDeepBackground,
                     'bg-white hover:bg-gray-6': isDeepBackground,

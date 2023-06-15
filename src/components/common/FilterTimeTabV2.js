@@ -16,6 +16,7 @@ import { ChevronLeft, ChevronRight } from 'react-feather';
 import { differenceInMonths, subMonths } from 'date-fns';
 import toast from 'utils/toast';
 import { isNumber } from 'lodash';
+import Chip from './V2/Chip';
 
 const FilterTimeTabV2 = ({
     filter,
@@ -28,7 +29,9 @@ const FilterTimeTabV2 = ({
     isMobile = false,
     isDark,
     maxMonths,
-    customChip
+    customChip,
+    chipClassName = '',
+    isDeepBackground = false
 }) => {
     const [showPicker, setShowPicker] = useState(false);
     const [timeTab, setTimeTab] = useState(defaultFilter ? defaultFilter : isTabAll ? timeFilter[0].value : timeFilter[1].value);
@@ -159,25 +162,28 @@ const FilterTimeTabV2 = ({
                 <div className={`flex gap-2 md:gap-3 items-center ${isMobile && 'overflow-x-auto no-scrollbar'} h-full ${className}`}>
                     {timeFilter.map((item, i) => {
                         if (i === 0 && !isTabAll) return null;
+                        const isActive = timeTab === item.value;
+
                         return (
-                            <div
+                            <Chip
+                                selected={isActive}
                                 key={item.value}
                                 onClick={() => {
                                     setTimeTab(item.value);
                                     setIsCustomDay(false);
                                 }}
-                                className={classNames(' rounded-md cursor-pointer font-normal whitespace-nowrap text-sm px-4 py-2', {
-                                    'text-txtSecondary dark:text-txtSecondary-dark bg-gray-13 dark:bg-dark-4': timeTab !== item.value,
-                                    'text-teal bg-teal/[.1] !font-semibold': timeTab === item.value
-                                }, customChip)}
+                                className={`min-w-max ${chipClassName}`}
+                                isDeepBackground={isDeepBackground}
                             >
                                 {t(item.localized)}
-                            </div>
+                            </Chip>
                         );
                     })}
 
                     {isMobile ? (
-                        <div
+                        <Chip
+                            selected={timeTab === 'custom'}
+                            key={'custom'}
                             onClick={() => {
                                 setTimeTab((prev) => {
                                     setPrevFilter(prev);
@@ -185,18 +191,13 @@ const FilterTimeTabV2 = ({
                                     return 'custom';
                                 });
                             }}
-                            className={classNames('rounded-md cursor-pointer font-normal select-none flex items-center text-sm px-4 py-2', {
-                                'text-txtSecondary dark:text-txtSecondary-dark bg-gray-13 dark:bg-dark-4': timeTab !== 'custom',
-                                'text-teal bg-teal/[.1] !font-semibold': timeTab === 'custom'
-                            })}
+                            className={`min-w-max flex ${chipClassName}`}
+                            isDeepBackground={isDeepBackground}
                         >
-                            {!isMobile && <CalendarFillIcon className="mr-2" color={timeTab === 'custom' ? colors.teal : '#8694b2'} size={20} />}
-                            <span className="whitespace-nowrap">
-                                {isCustomDay
-                                    ? `${formatTime(filter?.range?.startDate, 'dd/MM/yyyy')} - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}`
-                                    : t('common:custom_2')}
-                            </span>
-                        </div>
+                            {isCustomDay
+                                ? `${formatTime(filter?.range?.startDate, 'dd/MM/yyyy')} - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}`
+                                : t('common:custom_2')}
+                        </Chip>
                     ) : (
                         <DatePickerV2
                             maxMonths={maxMonths}
@@ -211,17 +212,17 @@ const FilterTimeTabV2 = ({
                                 setIsCustomDay(false);
                             }}
                             text={
-                                <div
+                                <Chip
+                                    selected={timeTab === 'custom'}
+                                    key={'custom'}
                                     onClick={() =>
                                         setTimeTab((prev) => {
                                             setPrevFilter(prev);
                                             return 'custom';
                                         })
                                     }
-                                    className={classNames('rounded-md cursor-pointer font-normal select-none flex items-center text-sm px-4 py-2', {
-                                        'text-txtSecondary dark:text-txtSecondary-dark bg-gray-13 dark:bg-dark-4': timeTab !== 'custom',
-                                        'text-teal bg-teal/[.1] !font-semibold': timeTab === 'custom'
-                                    })}
+                                    className={`min-w-max flex ${chipClassName}`}
+                                    isDeepBackground={isDeepBackground}
                                 >
                                     {!isMobile && <CalendarFillIcon className="mr-2" color={timeTab === 'custom' ? colors.teal : '#8694b2'} size={20} />}
                                     <span className="whitespace-nowrap">
@@ -229,7 +230,7 @@ const FilterTimeTabV2 = ({
                                             ? `${formatTime(filter?.range?.startDate, 'dd/MM/yyyy')} - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}`
                                             : t('common:custom_2')}
                                     </span>
-                                </div>
+                                </Chip>
                             }
                             customHeaderCalendar={maxMonths ? () => <div className="px-8 pb-3 txtSecond-3">{t('portfolio:max_range_datepicker')}</div> : null}
                         />
@@ -238,6 +239,7 @@ const FilterTimeTabV2 = ({
             </div>
             <ModalV2 isVisible={showPicker} onBackdropCb={handleOutside} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
                 <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('common:time')}</h1>
+                {maxMonths ? <div className="flex pt-2 txtSecond-3 !text-xs">{t('portfolio:max_range_datepicker')}</div> : null}
                 <div className={classNames('date-range-picker flex flex-col justify-center mt-2 w-full !bg-transparent !border-none !shadow-none')}>
                     <DateRangePicker
                         className={classNames(`h-full px-[10px] w-full`)}
@@ -260,7 +262,11 @@ const FilterTimeTabV2 = ({
                         showSelectionPreview={true}
                     />
                 </div>
-                <ButtonV2 onClick={onConfirm} className="mt-2 mb-8">
+                <ButtonV2
+                    disabled={maxMonths && Math.abs(differenceInMonths(date?.startDate, date?.endDate)) >= maxMonths}
+                    onClick={onConfirm}
+                    className="mt-2 mb-8"
+                >
                     {t('common:global_btn.apply')}
                 </ButtonV2>
             </ModalV2>
