@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 
 import Head from 'next/head';
 import Image from 'next/image';
@@ -15,10 +15,10 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
 
 import { useWindowSize } from 'react-use';
-import classNames from 'classnames';
 import styled from 'styled-components';
 
 import { WHY_CHOOSE_NAMI, ASSET_DIGITAL, FAQ, STEP_STAKING } from './constant.js';
+import CalculateInterest from 'components/screens/Staking/CalculateInterest.js';
 
 const Reference = () => {
     const {
@@ -28,7 +28,6 @@ const Reference = () => {
     const [currentTheme, onThemeSwitch, setTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
-    console.log('isDark', isDark);
     const { width } = useWindowSize();
     const isMobile = width < 830;
 
@@ -41,9 +40,9 @@ const Reference = () => {
     }, [currentTheme, isMobile]);
 
     const renderWhyChooseNami = useMemo(() => {
-        return WHY_CHOOSE_NAMI.map((item) => {
+        return WHY_CHOOSE_NAMI.map((item, idx) => {
             return (
-                <article key={item.title} className="flex flex-col gap-3 w-full last:mb-[60px] mb-[60px] first:mt-[53px]">
+                <article key={idx} className="flex flex-col gap-3 w-full last:mb-[60px] mb-[60px] first:mt-[53px]">
                     <div className="text-gray-15 dark:text-gray-4 font-semibold text-2xl">{item.title[language]}</div>
                     <div className="text-gray-1 dark:text-gray-7">{item.context[language]}</div>
                 </article>
@@ -52,9 +51,10 @@ const Reference = () => {
     }, []);
 
     const renderAssetDigital = useMemo(() => {
-        return ASSET_DIGITAL.map((item) => {
+        return ASSET_DIGITAL.map((item, idx) => {
             return (
                 <section
+                    key={idx}
                     className="h-[589px] w-full
                     border-[1px] dark:border-[#222940] dark:bg-dark-4 bg-white border-[#dcdfe6] rounded-xl border-solid
                     px-[60px] py-[80px] flex flex-col justify-center items-center"
@@ -75,9 +75,10 @@ const Reference = () => {
     }, []);
 
     const renderFAQ = useMemo(() => {
-        return FAQ.map((item) => {
+        return FAQ.map((item, idx) => {
             return (
                 <CollapseV2
+                    key={idx}
                     className="w-full divider-bottom"
                     divLabelClassname="w-full justify-between pb-[21px]"
                     chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
@@ -96,15 +97,15 @@ const Reference = () => {
     }, [isDark]);
 
     const renderStep = useMemo(() => {
-        return STEP_STAKING.map((item) => {
+        return STEP_STAKING.map((item, idx) => {
             return !item?.isDivider ? (
-                <section className="w-full px-4">
+                <section key={idx} className="w-full px-4">
                     <Image width="54px" height="54px" src={item.imgSrc} />
                     <div className="font-semibold text-gray-15 dark:text-gray-4 mt-6">{item.title?.[language]}</div>
                     <div className="text-gray-1 dark:text-gray-7 mt-6">{item.subText?.[language]}</div>
                 </section>
             ) : (
-                <section className="w-[92px]">
+                <section key={idx} className="w-[92px]">
                     <div className="h-[1px] w-[92px] bg-gradient-to-l from-dominant dark:to-[rgba(0,0,0,.2)] to-[rgba(255,255,255,0.2)]"></div>
                 </section>
             );
@@ -148,9 +149,9 @@ const Reference = () => {
                             >
                                 <div className="h-[294px] flex flex-row gap-x-4 items-center justify-center text-center">{renderStep}</div>
                             </WrapperStep>
-                            <section className="dark:bg-divider-dark bg-divider">
-                                <div>Tính toán lợi nhuận</div>
-                            </section>
+
+                            <CalculateInterest />
+
                             <section className="mt-[120px]">
                                 <h2 className="text-gray-15 dark:text-gray-4 text-5xl font-semibold text-center">Tại sao nên chọn Nami Exchange?</h2>
                                 <div className="flex flex-row gap-x-[103px] justify-between mt-[60px]">

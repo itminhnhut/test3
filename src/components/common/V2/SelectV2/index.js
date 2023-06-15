@@ -2,7 +2,7 @@ import React, { useMemo, Fragment } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import ChevronDown from 'components/svg/ChevronDown';
 import classNames from 'classnames';
-const SelectV2 = ({ options = [], value, onChange, keyExpr = 'value', displayExpr = 'title', className = '', position = 'bottom' }) => {
+const SelectV2 = ({ options = [], value, onChange, keyExpr = 'value', displayExpr = 'title', className = '', popoverClassName = '', position = 'bottom' }) => {
     const title = useMemo(() => {
         return options.find((rs) => rs?.[keyExpr] === value)?.[displayExpr];
     }, [options, value, keyExpr, displayExpr]);
@@ -27,7 +27,11 @@ const SelectV2 = ({ options = [], value, onChange, keyExpr = 'value', displayExp
                         leaveTo="opacity-0 translate-y-1"
                     >
                         <Popover.Panel
-                            className={classNames('absolute right-0 z-[99] w-full', { 'top-0 mt-2': position === 'bottom', 'bottom-full mb-2': position === 'top' })}
+                            className={classNames('absolute right-0 z-[99] w-full', {
+                                'top-0 mt-2': position === 'bottom',
+                                'bottom-full mb-2': position === 'top',
+                                [popoverClassName]: popoverClassName
+                            })}
                         >
                             <div className="overflow-hidden rounded-md shadow-card_light border-[0.5px] border-divider dark:border-divider-dark bg-white dark:bg-darkBlue-3">
                                 <div className="relative py-2">
@@ -35,9 +39,12 @@ const SelectV2 = ({ options = [], value, onChange, keyExpr = 'value', displayExp
                                         return (
                                             <div
                                                 key={index}
-                                                className={classNames('px-4 py-2 hover:bg-hover dark:hover:bg-hover-dark text-txtSecondary dark:text-txtSecondary-dark cursor-pointer', {
-                                                    '!text-txtPrimary dark:!text-white font-semibold': value === item?.[keyExpr]
-                                                })}
+                                                className={classNames(
+                                                    'px-4 py-2 hover:bg-hover dark:hover:bg-hover-dark text-txtSecondary dark:text-txtSecondary-dark cursor-pointer',
+                                                    {
+                                                        '!text-txtPrimary dark:!text-white font-semibold': value === item?.[keyExpr]
+                                                    }
+                                                )}
                                                 onClick={() => {
                                                     onChange(item?.[keyExpr], item);
                                                     close();

@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 
 const SvgChevronDown = ({ color, size = 16, fill, style, className, onClick, ...props }) => {
-    console.log('SvgChevronDown', props);
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
