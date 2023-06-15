@@ -15,10 +15,12 @@ const index = ({
     labelClassname = '',
     chrevronStyled,
     setIsOpen,
-    isDividerBottom
+    isDividerBottom,
+    chevronDownClassName='',
+    dividerBottomClassName=''
 }) => {
     const [open, setOpen] = useState(false);
-    const wraper = useRef();
+    const wrapper = useRef();
     const list = useRef();
 
     const [flag, setFlag] = useState(false);
@@ -27,7 +29,7 @@ const index = ({
     useEffect(() => {
         if (isCustom) {
             clearTimeout(timer.current);
-            wraper?.current?.style?.height = active ? list.current.clientHeight + 'px' : 0;
+            wrapper?.current?.style?.height = active ? list.current.clientHeight + 'px' : 0;
             timer.current = setTimeout(
                 () => {
                     setFlag(active);
@@ -38,16 +40,16 @@ const index = ({
     }, [active, reload]);
 
     useEffect(() => {
-        if (!wraper.current) return;
+        if (!wrapper.current) return;
         setTimeout(() => {
-            wraper?.current?.style.height = active ? list.current.clientHeight + 'px' : 0;
+            wrapper?.current?.style.height = active ? list.current.clientHeight + 'px' : 0;
         }, 100);
     }, [reload]);
 
     const handleOpen = () => {
         if (isCustom) return;
         clearTimeout(timer.current);
-        wraper?.current?.style.height = !open ? list.current.clientHeight + 'px' : 0;
+        wrapper?.current?.style.height = !open ? list.current.clientHeight + 'px' : 0;
         timer.current = setTimeout(
             () => {
                 setFlag(!open);
@@ -59,7 +61,7 @@ const index = ({
     };
 
     return (
-        <div className={classNames('', className, { 'overflow-hidden': !flag })}>
+        <WrapperContainer className={classNames('', className, { 'overflow-hidden': !flag })}>
             <div
                 onClick={handleOpen}
                 className={classNames(
@@ -72,19 +74,29 @@ const index = ({
                 )}
             >
                 <label className={`cursor-pointer select-none ${labelClassname}`}>{label}</label>
-                {!isCustom && <ChevronDown size={16} {...chrevronStyled} className={`${open ? '!rotate-0' : ''} transition-all`} />}
+                {!isCustom && <ChevronDown size={16} {...chrevronStyled} className={`${open ? '!rotate-0' : ''} transition-all ${chevronDownClassName}`} />}
             </div>
-            <Wraper className={classNames({ 'overflow-hidden': !flag })} ref={wraper}>
+            <Wrapper className={classNames({ 'overflow-hidden': !flag })} ref={wrapper}>
                 <div ref={list}>{children}</div>
-            </Wraper>
-            {isDividerBottom && open && <div className={`w-full border-b border-divider dark:border-divider-dark mt-[47px]`}></div>}
-        </div>
+            </Wrapper>
+            {isDividerBottom && open && <div className={`w-full border-b border-divider dark:border-divider-dark mt-[47px] ${dividerBottomClassName}`}></div>}
+        </WrapperContainer>
     );
 };
 
 export default index;
 
-const Wraper = styled.div.attrs({
+const WrapperContainer =  styled.div`
+    &.divider-bottom {
+        &:last-child{
+           div:first-of-type{
+                border-bottom-width: 0px
+           }
+        }
+    }
+`;
+
+const Wrapper = styled.div.attrs({
     className: ''
 })`
     transition: height 0.2s;
