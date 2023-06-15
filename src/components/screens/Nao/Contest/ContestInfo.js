@@ -68,7 +68,7 @@ const FilterTypes = ({ type, setType, types, t, className }) => {
                     className={classnames(
                         ` ${
                             type !== e.id && 'text-txtTextBtn-tonal_dark'
-                        } flex w-fit items-center justify-center px-4 py-2 text-sm sm:text-base rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap`,
+                        } flex w-fit items-center justify-center px-4 py-2 text-sm rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap`,
                         {
                             'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
                             'border-divider dark:border-divider-dark': e.id !== type
@@ -97,8 +97,7 @@ const ContestInfo = forwardRef(
             hasTabCurrency,
             userID,
             weekly_contest_time,
-            top_ranks_week,
-            top_ranks_team
+            top_ranks_week
         },
         ref
     ) => {
@@ -152,7 +151,6 @@ const ContestInfo = forwardRef(
                 });
                 if (status === ApiStatus.SUCCESS) {
                     if (data?.pnl_rate) data.pnl = data.pnl_rate;
-                    // if (data)
                     setUserData(data);
                     getInvites(data);
                 }
@@ -227,34 +225,35 @@ const ContestInfo = forwardRef(
                             <div className="text-sm">{t('nao:contest:personal_achievements_note')}</div>
                         </Tooltip>
                     )}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                            <TextLiner>{t('nao:contest:personal')}</TextLiner>
-                            {top_ranks_week && (
-                                <div data-tip="" data-for="tooltip-contest-info-note" className="cursor-pointer md:hidden">
-                                    <QuestionMarkIcon isFilled size={16} />
-                                </div>
+                    <div className="md:flex md:justify-between">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                                <TextLiner>{t('nao:contest:personal')}</TextLiner>
+                                {top_ranks_week && (
+                                    <div data-tip="" data-for="tooltip-contest-info-note" className="cursor-pointer md:hidden">
+                                        <QuestionMarkIcon isFilled size={16} />
+                                    </div>
+                                )}
+                            </div>
+                            {!userData?.group_name && isValidCreate && (
+                                <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()}>
+                                    {t('nao:contest:create_team')}
+                                </ButtonNao>
                             )}
                         </div>
-                        {!userData?.group_name && isValidCreate && (
-                            <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()}>
-                                {t('nao:contest:create_team')}
-                            </ButtonNao>
+                        {top_ranks_week && (
+                            <div className="mt-6 md:mt-0">
+                                <FilterTypes
+                                    type={tabIndex}
+                                    setType={(index) => {
+                                        setTabIndex(index);
+                                    }}
+                                    types={[...FILTER_STRUCTURE]}
+                                    t={t}
+                                />
+                            </div>
                         )}
                     </div>
-                    {top_ranks_week && (
-                        <div className="mt-6 md:hidden">
-                            <FilterTypes
-                                type={tabIndex}
-                                setType={(index) => {
-                                    setTabIndex(index);
-                                }}
-                                types={[...FILTER_STRUCTURE]}
-                                t={t}
-                            />
-                        </div>
-                    )}
-
                     {hasTabCurrency && (
                         <TabsNao className="text-sm sm:text-base">
                             {currencies.map((rs) => (
@@ -303,12 +302,11 @@ const ContestInfo = forwardRef(
                         <CardNao className="!min-h-[136px] !py-6 sm:!py-10 w-full lg:w-max md:!gap-2 px-4 md:!px-8 gap-3">
                             {/* {(!previous || contest_id === 10) && ( */}
                             <div className="flex items-center justify-between md:space-x-12 flex-wrap md:flex-nowrap gap-3 md:gap-0">
-                                {/* {top_ranks_team && (
-                                        <div className="flex items-center justify-between w-full md:w-1/2 my-1">
-                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">ID</label>
-                                            <div className="font-semibold leading-8 text-right">{userData?.[userID]}</div>
-                                        </div>
-                                    )} */}
+                                {/* <div className="flex items-center justify-between w-full md:w-1/2 my-1">
+                                    <label className="text-txtSecondary dark:text-txtSecondary-dark">ID</label>
+                                    <div className="font-semibold leading-8 text-right">{userData?.[userID]}</div>
+                                </div> */}
+
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</label>
                                     <div
