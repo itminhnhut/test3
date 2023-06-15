@@ -14,6 +14,7 @@ import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
 import { useEffect } from "react";
 import { useDispatch } from 'react-redux';
 import { reloadData } from 'redux/actions/heath';
+import AppHeader from 'components/screens/Support/AppHeader';
 
 const AnnouncementArticle = (props) => {
     const article = props?.data.article
@@ -55,17 +56,7 @@ const AnnouncementArticle = (props) => {
         const topic = SupportCategories.announcements[language]?.find(
             (o) => o?.displaySlug === router?.query?.topic
         )?.name
-        return (
-            <div
-                onClick={router?.back}
-                className='active:text-dominant flex items-center px-4 pt-4 pb-2 text-sm font-medium'
-            >
-                <ChevronLeft size={16} className='mr-2.5'/>
-                {topic}
-                {topic && <span className='mx-2'>|</span>}
-                Nami Announcement
-            </div>
-        )
+        return <AppHeader topic={topic} title="Nami Announcement" />
     }
 
     return (

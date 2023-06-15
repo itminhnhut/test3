@@ -27,7 +27,8 @@ const FilterTimeTabV2 = ({
     defaultFilter = null,
     isMobile = false,
     isDark,
-    maxMonths
+    maxMonths,
+    customChip
 }) => {
     const [showPicker, setShowPicker] = useState(false);
     const [timeTab, setTimeTab] = useState(defaultFilter ? defaultFilter : isTabAll ? timeFilter[0].value : timeFilter[1].value);
@@ -168,7 +169,7 @@ const FilterTimeTabV2 = ({
                                 className={classNames(' rounded-md cursor-pointer font-normal whitespace-nowrap text-sm px-4 py-2', {
                                     'text-txtSecondary dark:text-txtSecondary-dark bg-gray-13 dark:bg-dark-4': timeTab !== item.value,
                                     'text-teal bg-teal/[.1] !font-semibold': timeTab === item.value
-                                })}
+                                }, customChip)}
                             >
                                 {t(item.localized)}
                             </div>

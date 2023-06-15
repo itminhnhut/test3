@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { Line } from '..';
 import CollapsibleRefCard from '../../CollapsibleRefCard';
 import Link from 'next/link'
+import useApp from 'hooks/useApp';
 
 const QnAData = [
     {
@@ -64,6 +65,8 @@ const QnA = () => {
         t,
         i18n: { language }
     } = useTranslation();
+    const isApp = useApp();
+    const params = isApp ? '?source=app' : '';
     const renderData = () => {
         return QnAData.map((data, index) => {
             const [doShow, setDoShow] = useState(false);
@@ -90,8 +93,8 @@ const QnA = () => {
 
     const policyLink =
         language === 'vi'
-            ? 'https://nami.exchange/vi/support/announcement/tin-tuc-ve-nami/ra-mat-chuong-trinh-doi-tac-phat-trien-cong-dong-nami'
-            : 'https://nami.exchange/support/announcement/nami-news/official-launching-of-nami-community-development-partnership-program';
+            ? 'https://nami.exchange/vi/support/announcement/tin-tuc-ve-nami/ra-mat-chuong-trinh-doi-tac-phat-trien-cong-dong-nami' + params
+            : 'https://nami.exchange/support/announcement/nami-news/official-launching-of-nami-community-development-partnership-program' + params;
     return (
         <div className="px-4 w-screen">
             <CollapsibleRefCard title={t('reference:referral.faq')} isBlack>

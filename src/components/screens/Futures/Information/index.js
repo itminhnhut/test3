@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import Tooltip from 'components/common/Tooltip';
-import { countDecimals, formatFundingRate, formatNumber, formatPrice, Countdown, getFilter, getS3Url } from 'redux/actions/utils';
+import { countDecimals, formatFundingRate, formatNumber, formatPrice, Countdown, getFilter, emitWebViewEvent, encodeUrlFromApp } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { ExchangeOrderEnum } from 'redux/actions/const';
 import styled from 'styled-components';
@@ -221,8 +221,9 @@ export default function OrderInformation({ pair }) {
     };
 
     const onViewAll = () => {
-        window.open(`/${router.locale}/futures/trading-rule?theme=dark&source=frame`)
-    }
+        const uri = `/${router.locale}/futures/trading-rule?theme=dark&source=app&head=false&title=${t('futures:trading_rules')}`;
+        emitWebViewEvent(encodeUrlFromApp(uri));
+    };
 
     return (
         <div className={'py-4 px-4 overflow-y-auto h-[calc(100%-70px)]'}>

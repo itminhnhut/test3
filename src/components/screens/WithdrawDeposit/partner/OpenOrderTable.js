@@ -27,6 +27,7 @@ import Skeletor from 'components/common/Skeletor';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import classNames from 'classnames';
+import { MonetizationOnIcon, MoneyIcon } from 'components/svg/SvgIcon';
 
 const LIMIT_ROW = 5;
 
@@ -36,7 +37,7 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
 
     return (
         <Card className={classNames('border-0 bg-white dark:bg-dark-4', {})}>
-            <div className="flex items-center flex-wrap">
+            <div className="flex items-center flex-wrap lg:flex-nowrap">
                 <div className="flex-grow border-b pb-5 lg:border-r border-divider dark:border-divider-dark lg:pb-0 lg:pr-10 lg:border-b-0 ">
                     <div className="flex items-center mb-8">
                         <div className="txtPri-3 pr-6">
@@ -72,16 +73,19 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
 
                         <div className="p-2 flex justify-end lg:justify-start w-1/2 lg:w-1/4">
                             <div className="space-y-2 text-right lg:text-left">
-                                <div className="capitalize txtPri-1">{orderDetail?.userMetadata?.name?.toLowerCase()}</div>
+                                <div className="capitalize txtPri-1 break-words">{orderDetail?.userMetadata?.name?.toLowerCase()}</div>
                                 <div className="txtSecond-3">{orderDetail?.userMetadata?.code}</div>
                             </div>
                         </div>
 
                         <div className="p-2 w-1/2 lg:w-1/4">
                             <div className="space-y-2">
-                                <div className="txtPri-1">{t('dw_partner:rate')}</div>
+                                <div className="txtPri-1 break-words">
+                                    {orderDetail?.transferMetadata?.bankName}
+                                    {/* {t('dw_partner:rate')} */}
+                                </div>
                                 <div className="txtSecond-3">
-                                    1 {assetCode} ≈ {formatBalanceFiat(orderDetail?.price, 'VNDC')} VND
+                                    1 {assetCode} = {formatBalanceFiat(orderDetail?.price, 'VNDC')} VND
                                 </div>
                             </div>
                         </div>
@@ -95,8 +99,15 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
                             </div>
                         </div>
                     </div>
+                    {orderDetail?.tip ? (
+                        <div className="mt-6 flex border-l-2 border-divider dark:border-divider-dark font-semibold">
+                            <MonetizationOnIcon className="mx-2" />
+                            <span>{t('dw_partner:partner_bonus')}:&nbsp;</span>
+                            <span className="text-green-3 dark:text-green-2">+{formatBalanceFiat(orderDetail.tip)} VND</span>
+                        </div>
+                    ) : null}
                 </div>
-                <div className="lg:ml-10 flex flex-col items-center lg:max-w-[164px] w-full gap-3">
+                <div className="lg:ml-10 flex flex-col items-center justify-center lg:max-w-[164px] w-full gap-3">
                     {orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.ACCEPTED ? (
                         <ButtonV2
                             onClick={() => router.push(`${PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS}/${orderDetail?.displayingId}`)}
