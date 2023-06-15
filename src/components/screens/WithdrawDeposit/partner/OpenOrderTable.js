@@ -270,6 +270,8 @@ const OpenOrderTable = () => {
             <div>
                 <div className="mb-6">
                     <TabV2
+                        isOverflow={true}
+                        isDeepBackground={true}
                         activeTabKey={state.params.side}
                         onChangeTab={(key) => {
                             setState({
