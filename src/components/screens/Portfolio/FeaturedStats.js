@@ -279,23 +279,23 @@ const CardFill = styled.div.attrs(({ key, className, onClick }) => ({
     onClick: onClick
 }))``;
 
-const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurrency, timeFilter, firstTimeTrade, t, isMobile, winRate, typeProduct }) => {
+const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurrency, timeFilter, t, isMobile, winRate, typeProduct, firstTimeTrade }) => {
     const content = useRef();
     const negative = totalPnl < 0;
     const refCode = useSelector((state) => state.auth?.user?.code_refer);
     const [isShowTotalPnl, setIsShowTotalPnl] = useState(true);
-    const [isShowRate, setIsShowRate] = useState(false);
+    const [isShowRate, setIsShowRate] = useState(true);
     const [loading, setLoading] = useState(false);
 
-    const list = [
-        { name: t('common:save'), icon: <SaveAltIcon size={28} />, event: 'save' },
-        { name: 'Facebook', icon: <FacebookIcon size={28} />, event: 'facebook' },
-        { name: 'Twitter', icon: <TwitterIcon size={28} />, event: 'twitter' },
-        { name: 'Telegram', icon: <TelegramIcon size={28} />, event: 'telegram' },
-        { name: 'Reddit', icon: <RedditIcon size={28} />, event: 'reddit' },
-        { name: 'LinkedIn', icon: <LinkedInIcon size={28} />, event: 'linkedIn' },
-        { name: 'Discord', icon: <DiscordIcon size={28} />, event: 'linkedIn' }
-    ];
+    // const list = [
+    //     { name: t('common:save'), icon: <SaveAltIcon size={28} />, event: 'save' },
+    //     { name: 'Facebook', icon: <FacebookIcon size={28} />, event: 'facebook' },
+    //     { name: 'Twitter', icon: <TwitterIcon size={28} />, event: 'twitter' },
+    //     { name: 'Telegram', icon: <TelegramIcon size={28} />, event: 'telegram' },
+    //     { name: 'Reddit', icon: <RedditIcon size={28} />, event: 'reddit' },
+    //     { name: 'LinkedIn', icon: <LinkedInIcon size={28} />, event: 'linkedIn' },
+    //     { name: 'Discord', icon: <DiscordIcon size={28} />, event: 'linkedIn' }
+    // ];
 
     const saveFile = (file, name) => {
         const a = document.createElement('a');
@@ -334,7 +334,7 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
 
     return (
         <>
-            <ModalLoading isVisible={loading} onBackdropCb={() => setLoading(false)} />
+            <ModalLoading colorCustom="#000" isVisible={loading} onBackdropCb={() => setLoading(false)} />
             <ModalV2
                 loading={loading}
                 isVisible={isVisible}
@@ -355,11 +355,11 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                             isShowTotalPnl={isShowTotalPnl}
                             isShowRate={isShowRate}
                             timeFilter={timeFilter}
-                            firstTimeTrade={firstTimeTrade}
                             t={t}
                             refCode={refCode}
                             winRate={winRate}
                             typeProduct={typeProduct}
+                            firstTimeTrade={firstTimeTrade}
                         />
                     )
                 }
@@ -372,7 +372,7 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                                 className="mr-12"
                                 boxContainerClassName="w-4 h-4"
                                 labelClassName="tracking-normal text-gray-15 dark:text-gray-4"
-                                label={t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? "VNDC" : "USDT" })}
+                                label={t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? 'VNDC' : 'USDT' })}
                                 onChange={() => setIsShowTotalPnl((prev) => !prev)}
                                 active={isShowTotalPnl}
                                 sizeCheckIcon={12}
@@ -402,27 +402,27 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                             isShowTotalPnl={isShowTotalPnl}
                             isShowRate={isShowRate}
                             timeFilter={timeFilter}
-                            firstTimeTrade={firstTimeTrade}
                             t={t}
                             refCode={refCode}
                             winRate={winRate}
                             typeProduct={typeProduct}
+                            firstTimeTrade={firstTimeTrade}
                         />
                         <div className="w-full text-gray-15 dark:text-gray-4 mt-6">
-                            <div className="text-2xl font-semibold">{t('portfolio:option_info_to_share')}</div>
+                            <div className="text-lg font-semibold">{t('portfolio:option_info_to_share')}</div>
                             <div className="flex items-center mt-4">
                                 <CheckBox
                                     className="mr-12"
                                     boxContainerClassName="w-5 h-5"
-                                    labelClassName="tracking-normal text-gray-15 dark:text-gray-4"
-                                    label={t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? "VNDC" : "USDT" })}
+                                    labelClassName="tracking-normal text-gray-15 dark:text-gray-4 !text-base"
+                                    label={t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? 'VNDC' : 'USDT' })}
                                     onChange={() => setIsShowTotalPnl((prev) => !prev)}
                                     active={isShowTotalPnl}
                                     sizeCheckIcon={20}
                                 />
                                 <CheckBox
                                     boxContainerClassName="w-5 h-5"
-                                    labelClassName="tracking-normal text-gray-15 dark:text-gray-4"
+                                    labelClassName="tracking-normal text-gray-15 dark:text-gray-4 !text-base"
                                     label={t('portfolio:win_rate')}
                                     onChange={() => setIsShowRate((prev) => !prev)}
                                     active={isShowRate}
@@ -494,27 +494,33 @@ const ImageShare = ({
                 </div>
                 <div className={`h-11 w-full flex items-center justify-center transition-all duration-75`}>
                     {/* <div className={`${!isShowTotalPnl ? 'hidden' : isShowRate ? 'w-1/2 !items-end' : ' w-full '} flex justify-center items-center flex-col`}> */}
-                        <div className={`${!isShowTotalPnl && 'hidden'} flex flex-col items-center justify-center`}>
-                            <div>{t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? "VNDC" : "USDT" })}</div>
-                            <div className="text-gray-4 text-sm font-semibold">
-                                {!negative && '+'}
-                                {formatNanNumber(totalPnl, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
-                            </div>
+                    <div className={`${!isShowTotalPnl && 'hidden'} flex flex-col items-center justify-center`}>
+                        <div>{t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? 'VNDC' : 'USDT' })}</div>
+                        <div className="text-gray-4 text-sm font-semibold">
+                            {!negative && '+'}
+                            {formatNanNumber(totalPnl, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
                         </div>
+                    </div>
                     {/* </div> */}
                     {isShowRate && isShowTotalPnl && <div className={`border-divider-dark border-l-[1px] h-9 mx-6`}></div>}
                     {/* <div className={`${!isShowRate ? 'hidden' : isShowTotalPnl ? 'w-1/2 !items-start' : ' w-full '} flex justify-center items-center flex-col`}> */}
-                        <div className={`${!isShowRate && 'hidden'} flex flex-col items-center justify-center`}>
-                            <div>{t('portfolio:win_rate')}</div>
-                            <div className="text-gray-4 text-sm font-semibold">{formatNanNumber(winRate, 2)}%</div>
-                        </div>
+                    <div className={`${!isShowRate && 'hidden'} flex flex-col items-center justify-center`}>
+                        <div>{t('portfolio:win_rate')}</div>
+                        <div className="text-gray-4 text-sm font-semibold">{formatNanNumber(winRate, 2)}%</div>
+                    </div>
                     {/* </div> */}
                 </div>
 
-                <div className="mt-8 mb-[92px]">{`${formatTime(timeFilter?.startDate ? timeFilter.startDate : firstTimeTrade, 'dd/MM/yyyy')} - ${formatTime(
-                    timeFilter?.endDate ? timeFilter.endDate : new Date(),
-                    'dd/MM/yyyy'
-                )}`}</div>
+                <div className="mt-8 mb-[92px]">
+                    {!firstTimeTrade ? (
+                        <div className="w-full h-4"></div>
+                    ) : (
+                        `${formatTime(timeFilter?.startDate ? timeFilter.startDate : firstTimeTrade, 'dd/MM/yyyy')} - ${formatTime(
+                            timeFilter?.endDate ? timeFilter.endDate : new Date(),
+                            'dd/MM/yyyy'
+                        )}`
+                    )}
+                </div>
 
                 <div
                     className="absolute bottom-0 left-0 px-4 py-3 flex justify-between items-center w-full"
