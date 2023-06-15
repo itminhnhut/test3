@@ -476,7 +476,7 @@ const ImageShare = ({
                 className="bg-center bg-cover h-[182px] "
                 style={{
                     backgroundImage:
-                        process.env.NODE_ENV === 'development'
+                        ['development', 'dev'].includes(process.env.NODE_ENV)
                             ? `url('/images/screen/portfolio/share_${negative ? 'loss' : 'profit'}.png')`
                             : `url(${`https://nami.exchange/images/portfolio/share_${negative ? 'loss' : 'profit'}.png`})`
                 }}

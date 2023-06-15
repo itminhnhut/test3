@@ -258,7 +258,6 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                         </Tabs>
                     </div>
                     <TableV2
-                        sort={['profit', 'margin', 'order_value']}
                         loading={loadingTopPosition}
                         useRowHover
                         data={dataTable || []}
