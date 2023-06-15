@@ -21,7 +21,12 @@
         "total_volume": "Total volume",
         "total_orders": "Total trades",
         "total_fee": "Total fee",
-        "users": "Users"
+        "users": "Users",
+        "chart_total_volume": "Volumes",
+        "chart_total_orders": "Trades",
+        "chart_users": "Users",
+        "chart_total_fee": "Fees",
+        "chart_title": "Statistical chart"
     },
     "pool": {
         "title": "Governance pool {{value}}",
