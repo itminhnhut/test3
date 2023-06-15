@@ -34,6 +34,7 @@ const InputV2 = ({
     disabled = false,
     classNameInput = '',
     classNameDivInner = '',
+    showDividerSuffix = true,
     ...restProps
 }) => {
     const { t } = useTranslation();
@@ -92,7 +93,11 @@ const InputV2 = ({
                     onKeyPress={onHitEnterButton ? handleHitEnterButton : null}
                     {...restProps}
                 />
-                <div className="flex items-center divide-x divide-divider dark:divide-divider-dark space-x-2">
+                <div
+                    className={classNames('flex items-center space-x-2', {
+                        'divide-x divide-divider dark:divide-divider-dark ': showDividerSuffix || (allowClear && !!value)
+                    })}
+                >
                     <X
                         className={classNames('transition', allowClear && !!value ? 'opacity-1 cursor-pointer' : 'opacity-0')}
                         size={16}

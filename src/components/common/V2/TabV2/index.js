@@ -1,10 +1,11 @@
+import classNames from 'classnames';
 import React from 'react';
 import styled, { css } from 'styled-components';
 import colors from 'styles/colors';
 
-const TabV2 = ({ activeTabKey, tabs, onChangeTab, isOverflow }) => {
+const TabV2 = ({ wrapperClassName, activeTabKey, tabs, onChangeTab, isOverflow }) => {
     return (
-        <TabWrapper isOverflow={isOverflow}>
+        <TabWrapper className={classNames('flex gap-4 items-center', wrapperClassName)} isOverflow={isOverflow}>
             {tabs.map((tab) => {
                 const isActive = tab.key === activeTabKey;
                 return (
@@ -24,7 +25,7 @@ const TabV2 = ({ activeTabKey, tabs, onChangeTab, isOverflow }) => {
     );
 };
 
-const TabWrapper = styled.div.attrs({ className: 'flex gap-4 items-center' })`
+const TabWrapper = styled.div`
     ${({ isOverflow }) =>
         !isOverflow
             ? css`
