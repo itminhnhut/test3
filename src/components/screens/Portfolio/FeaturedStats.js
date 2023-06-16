@@ -475,10 +475,7 @@ const ImageShare = ({
             <div
                 className="bg-center bg-cover h-[182px] "
                 style={{
-                    backgroundImage:
-                        ['development', 'dev'].includes(process.env.NODE_ENV)
-                            ? `url('/images/screen/portfolio/share_${negative ? 'loss' : 'profit'}.png')`
-                            : `url(${`https://nami.exchange/images/portfolio/share_${negative ? 'loss' : 'profit'}.png`})`
+                    backgroundImage: `url(${`https://nami.exchange/images/share_${negative ? 'loss' : 'profit'}.png`})`
                 }}
             ></div>
             <div className="flex flex-col items-center text-gray-7 text-xs gap-y-2">
