@@ -127,37 +127,6 @@ const ContestWeekRanks = ({
         );
     };
 
-    function getWeeksInRange(startDate, endDate) {
-        const day = 1000 * 60 * 60 * 24;
-
-        // Calculate the number of days between the start and end dates
-        const daysInRange = Math.ceil((endDate - startDate) / day);
-
-        // Calculate the number of weeks and the remaining days
-        const numWeeks = Math.floor(daysInRange / 7);
-        const remainingDays = daysInRange % 7;
-
-        // Initialize an array to hold the start and end dates of each week
-        const weeks = [];
-
-        // Loop through each week and calculate the start and end dates
-        for (let i = 0; i < numWeeks; i++) {
-            const _startOfWeek = addDays(new Date(startDate), i * 7);
-            const _endOfWeek = endOfWeek(_startOfWeek, { weekStartsOn: 1 });
-            weeks.push({ start: _startOfWeek, end: _endOfWeek });
-        }
-
-        // If there are remaining days, calculate the start and end dates for the final week
-        if (remainingDays > 0) {
-            const startOfFinalWeek = addDays(new Date(startDate), numWeeks * 7);
-            const endOfFinalWeek = endOfDay(addDays(startOfFinalWeek, remainingDays - 1));
-            weeks.push({ start: startOfFinalWeek, end: endOfFinalWeek });
-        }
-
-        // Return the number of weeks and the array of week start and end dates
-        return { numWeeks: weeks.length, weeks };
-    }
-
     const weeks = useMemo(() => {
         return getWeeksInRange(new Date(start), new Date(end));
     }, [start]);
@@ -185,7 +154,7 @@ const ContestWeekRanks = ({
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
-        <section className="contest_individual_ranks pb-12 sm:pb-20">
+        <section className="contest_individual_ranks pb-12 sm:pb-20 mt-[26px] md:mt-0">
             <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-weekly-rank">
                 <div
                     className="text-sm"
@@ -432,5 +401,36 @@ const ContestWeekRanks = ({
         </section>
     );
 };
+
+export function getWeeksInRange(startDate, endDate) {
+    const day = 1000 * 60 * 60 * 24;
+
+    // Calculate the number of days between the start and end dates
+    const daysInRange = Math.ceil((endDate - startDate) / day);
+
+    // Calculate the number of weeks and the remaining days
+    const numWeeks = Math.floor(daysInRange / 7);
+    const remainingDays = daysInRange % 7;
+
+    // Initialize an array to hold the start and end dates of each week
+    const weeks = [];
+
+    // Loop through each week and calculate the start and end dates
+    for (let i = 0; i < numWeeks; i++) {
+        const _startOfWeek = addDays(new Date(startDate), i * 7);
+        const _endOfWeek = endOfWeek(_startOfWeek, { weekStartsOn: 1 });
+        weeks.push({ start: _startOfWeek, end: _endOfWeek });
+    }
+
+    // If there are remaining days, calculate the start and end dates for the final week
+    if (remainingDays > 0) {
+        const startOfFinalWeek = addDays(new Date(startDate), numWeeks * 7);
+        const endOfFinalWeek = endOfDay(addDays(startOfFinalWeek, remainingDays - 1));
+        weeks.push({ start: startOfFinalWeek, end: endOfFinalWeek });
+    }
+
+    // Return the number of weeks and the array of week start and end dates
+    return { numWeeks: weeks.length, weeks };
+}
 
 export default ContestWeekRanks;
