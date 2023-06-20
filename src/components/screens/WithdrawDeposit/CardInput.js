@@ -24,6 +24,7 @@ import Tooltip from 'components/common/Tooltip';
 import InputV2 from 'components/common/V2/InputV2';
 import { find } from 'lodash';
 import RecommendAmount from './components/RecommendAmount';
+import TabV2 from 'components/common/V2/TabV2';
 
 const ModalOtp = dynamic(() => import('./components/ModalOtp'));
 const DWAddPhoneNumber = dynamic(() => import('components/common/DWAddPhoneNumber'));
@@ -190,8 +191,6 @@ const CardInput = () => {
         let isValid = true;
         let msg = '';
 
-        console.log("_____________tip: ", tipAmount);
-
         if (tipAmount && (tipAmount + '').length > 21) {
             isValid = false;
             msg = t('dw_partner:error.invalid_amount');
@@ -354,8 +353,17 @@ const CardInput = () => {
                 <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 5,000 VND</div>
 
                 <div className="flex items-center gap-3 mb-8 flex-wrap">
-                    {[5000, 10000, 20000].map((suggestItem) => {
-                        console.log('_____');
+                <TabV2
+                    //  chipClassName="!bg-white hover:!bg-gray-6"
+                    isOverflow={true}
+                    activeTabKey={+state.tip}
+                    onChangeTab={(key) => handleChangeTip({ value: key })}
+                    tabs={[5000, 10000, 20000].map((suggestItem) => ({
+                        key: suggestItem,
+                        children: formatNanNumber(suggestItem, 0)
+                    }))}
+                />
+                    {/* {[5000, 10000, 20000].map((suggestItem) => {
                         return (
                             <Chip
                                 key={'sugggest_amount_' + suggestItem}
@@ -366,7 +374,7 @@ const CardInput = () => {
                                 {formatNanNumber(suggestItem, 0)}
                             </Chip>
                         );
-                    })}
+                    })} */}
                 </div>
 
                 <div className="space-y-2 mb-10">

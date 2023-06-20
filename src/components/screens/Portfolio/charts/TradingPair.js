@@ -159,7 +159,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
     if (isMobile) {
         return (
             <>
-                <CollapseV2
+                {/* <CollapseV2
                     className="w-full"
                     divLabelClassname="w-full justify-between"
                     chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
@@ -173,36 +173,42 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                     }
                     labelClassname="text-base font-semibold"
                     isDividerBottom={true}
-                >
-                    <div className={` ${isMobile ? '' : 'p-8 rounded-xl bg-gray-13 dark:bg-dark-4'}`}>
-                        <GroupTextFilter curFilter={filterPnl} setCurFilter={setFilterPnl} GroupKey={'trading_pairs_filter'} t={t} listFilter={FILTER_PNL} />
-                        <div className="flex items-center justify-center w-full mt-8">
-                            <div className={`min-w-[200px] max-w-[312px] w-full`}>
-                                {loadingTradingPairs ? (
-                                    <div className="flex items-center justify-center w-full min-h-[312px]">
-                                        <Spiner isDark={isDark} />
-                                    </div>
-                                ) : (
-                                    <ChartJS type="doughnut" data={mockData} options={options} plugins={plugins} />
-                                )}
-                            </div>
-                        </div>
-                        {/* Chu thich */}
-                        <div className={`flex items-center gap-4 mt-9 py-1 justify-center flex-wrap ${labels.length === 0 && 'hidden'}`}>
-                            {labels.map((label, idx) => (
-                                <Note
-                                    key={'note_' + label}
-                                    style={{ backgroundColor: isDark ? listDoughnutColorsDark[idx] : listDoughnutColorsLight[idx] }}
-                                    title={label}
-                                />
-                            ))}
-                        </div>
-                        <div id="notice" className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
-                            <BxsInfoCircle />
-                            <span>{t('portfolio:click_array_for_details')}</span>
+                > */}
+                <HeaderTooltip
+                    isMobile
+                    title={t('portfolio:position_by_asset')}
+                    tooltipContent={t('portfolio:trading_pair_tooltip')}
+                    tooltipId={'trading_pair_tooltip'}
+                />
+                <div className={` ${isMobile ? 'mt-4' : 'p-8 rounded-xl bg-gray-13 dark:bg-dark-4'}`}>
+                    <GroupTextFilter curFilter={filterPnl} setCurFilter={setFilterPnl} GroupKey={'trading_pairs_filter'} t={t} listFilter={FILTER_PNL} />
+                    <div className="flex items-center justify-center w-full mt-8">
+                        <div className={`min-w-[200px] max-w-[312px] w-full`}>
+                            {loadingTradingPairs ? (
+                                <div className="flex items-center justify-center w-full min-h-[312px]">
+                                    <Spiner isDark={isDark} />
+                                </div>
+                            ) : (
+                                <ChartJS type="doughnut" data={mockData} options={options} plugins={plugins} />
+                            )}
                         </div>
                     </div>
-                </CollapseV2>
+                    {/* Chu thich */}
+                    <div className={`flex items-center gap-4 mt-9 py-1 justify-center flex-wrap ${labels.length === 0 && 'hidden'}`}>
+                        {labels.map((label, idx) => (
+                            <Note
+                                key={'note_' + label}
+                                style={{ backgroundColor: isDark ? listDoughnutColorsDark[idx] : listDoughnutColorsLight[idx] }}
+                                title={label}
+                            />
+                        ))}
+                    </div>
+                    <div id="notice" className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
+                        <BxsInfoCircle />
+                        <span>{t('portfolio:click_array_for_details')}</span>
+                    </div>
+                </div>
+                {/* </CollapseV2> */}
                 <ModalV2 isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
                     <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:position_statistic_by_asset')}</h1>
                     {showDetails && (

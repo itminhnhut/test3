@@ -27,7 +27,6 @@ const BannerInfo = ({ user, t, isMobile, typeProduct, setTypeProduct, firstTimeT
 
             setVipLevel(data?.level || 0);
         } catch (error) {
-            console.log(`Can't get user vip level: ${error}`);
             setVipLevel(0);
         }
     };
@@ -164,8 +163,8 @@ const GroupButtonProduct = ({ className, typeProduct, setTypeProduct }) => {
         <div className={`flex items-center justify-start gap-x-3 ${className}`}>
             <button
                 onClick={() => setTypeProduct(FUTURES_PRODUCT.NAMI.id)}
-                className={`border rounded-[800px] px-5 py-3 flex items-center justify-center gap-x-2 transition-all ease-in-out duration-75 ${
-                    typeProduct === FUTURES_PRODUCT.NAMI.id ? 'font-semibold bg-teal-blur border-teal text-teal' : 'border-divider-dark'
+                className={`rounded-md px-4 py-2 flex items-center justify-center gap-x-2 transition-all ease-in-out duration-75 text-sm  ${
+                    typeProduct === FUTURES_PRODUCT.NAMI.id ? 'font-semibold bg-teal-blur text-teal' : 'bg-dark-4 text-gray-7'
                 }`}
             >
                 <SvgWalletFutures size={20} />
@@ -173,8 +172,8 @@ const GroupButtonProduct = ({ className, typeProduct, setTypeProduct }) => {
             </button>
             <button
                 onClick={() => setTypeProduct(FUTURES_PRODUCT.NAO.id)}
-                className={`border rounded-[800px] px-5 py-3 flex items-center justify-center gap-x-2 transition-all ease-in-out duration-75 ${
-                    typeProduct === FUTURES_PRODUCT.NAO.id ? 'font-semibold bg-teal-blur border-teal text-teal' : 'border-divider-dark'
+                className={`rounded-md px-4 py-2 flex items-center justify-center gap-x-2 transition-all ease-in-out duration-75 text-sm ${
+                    typeProduct === FUTURES_PRODUCT.NAO.id ? 'font-semibold bg-teal-blur text-teal' : 'bg-dark-4 text-gray-7'
                 }`}
             >
                 <FutureNaoIcon />
