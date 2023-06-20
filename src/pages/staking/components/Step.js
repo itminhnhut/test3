@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import { STEP_STAKING } from '../config.js';
+import { STEP_STAKING } from 'constants/staking';
 
 const StepStaking = ({ isDark, isMobile }) => {
     const {

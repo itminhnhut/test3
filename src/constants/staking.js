@@ -1,4 +1,4 @@
-const STEP_STAKING = [
+export const STEP_STAKING = [
     {
         imgSrc: '/images/staking/ic_account.png',
         title: { vi: 'Tạo tài khoản', en: 'Tạo tài khoản' },
@@ -25,7 +25,7 @@ const STEP_STAKING = [
     }
 ];
 
-const WHY_CHOOSE_NAMI = [
+export const WHY_CHOOSE_NAMI = [
     {
         title: { vi: 'Thuận tiện, dễ dàng', en: 'Thuận tiện, dễ dàng' },
         context: { vi: 'Tiết kiệm mọi lúc mọi nơi với ứng dụng di động và website Nami Exchange cùng hệ thống hỗ trợ người dùng hoạt động 24/7' }
@@ -42,7 +42,7 @@ const WHY_CHOOSE_NAMI = [
     }
 ];
 
-const ASSET_DIGITAL = [
+export const ASSET_DIGITAL = [
     {
         imgSrc: '/images/staking/ic_VNDC.png',
         title: 'VNDC',
@@ -61,7 +61,7 @@ const ASSET_DIGITAL = [
     }
 ];
 
-const FAQ = [
+export const FAQ = [
     {
         title: {
             vi: 'Làm thế nào để tham gia chương trình Nhận lãi ngày (Daily Staking)?',
@@ -143,5 +143,3 @@ const FAQ = [
         }
     }
 ];
-
-export { WHY_CHOOSE_NAMI, ASSET_DIGITAL, FAQ, STEP_STAKING };
