@@ -6,6 +6,9 @@ import styled from 'styled-components';
 import colors from 'styles/colors';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import { useTranslation } from 'next-i18next';
+import classNames from 'classnames';
+import { useSelector } from 'react-redux';
+import { find } from 'lodash';
 
 function f(x) {
     return x * x;
@@ -20,6 +23,10 @@ const series = [
     }
 ];
 
+const getApyByMonth = ({ amount, percentPerMonth, numberOfMonth }) => {
+    return amount * Math.pow(1 + percentPerMonth / 100, numberOfMonth);
+};
+
 const TIMER = [
     { vi: '1 tháng', en: '1 tháng', value: 1 },
     { vi: '12 tháng', en: '12 tháng', value: 12 },
@@ -28,13 +35,21 @@ const TIMER = [
     { vi: '48 tháng', en: '48 tháng', value: 48 }
 ];
 
-const APYInterestChart = () => {
+const MONTHS_PER_YEAR = 12;
+
+const APYInterestChart = ({ amount, currency }) => {
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
     const {
         i18n: { language }
     } = useTranslation();
 
+    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || null;
+    const currencyConfig = useMemo(() => {
+        return find(assetConfigs, {
+            id: currency.value
+        });
+    }, [currency.value, assetConfigs]);
     const [hoverData, setHoverData] = useState({
         value: 0,
         index: 0
@@ -43,7 +58,7 @@ const APYInterestChart = () => {
     const options = useMemo(
         () => ({
             chart: {
-                height: 320,
+                // height: 320,
                 type: 'area',
                 toolbar: {
                     show: false
@@ -57,16 +72,18 @@ const APYInterestChart = () => {
             },
             stroke: {
                 curve: 'straight',
-                lineCap: 'butt'
+                lineCap: 'butt',
+                width: 1
             },
+            colors: [colors.teal],
             fill: {
                 type: 'gradient',
                 gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.7,
-                    opacityTo: 0.9,
-                    stops: [71, 204, 133],
-                    gradientToColors: 'green'
+                    shade: 'light',
+                    shadeIntensity: 0,
+                    opacityFrom: isDark ? 1 : 0.8,
+                    opacityTo: isDark ? 0.1 : 0.3,
+                    stops: isDark ? [0, 100] : []
                 }
             },
             yaxis: {
@@ -108,8 +125,7 @@ const APYInterestChart = () => {
                 x: {
                     formatter: (_, { series, seriesIndex, dataPointIndex }) => {
                         setHoverData({
-                            index: dataPointIndex,
-                            value: series?.[seriesIndex]?.[dataPointIndex]
+                            index: dataPointIndex
                         });
                     }
                 }
@@ -133,22 +149,42 @@ const APYInterestChart = () => {
                     <div className="font-semibold text-sm mb-4">Sau {hoverData.index + 1} tháng bạn sẽ nhận được</div>
                     <div className=" mb-4">
                         <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">Lãi suất</div>
-                        <div className="font-semibold text-xl">{formatNumber(hoverData.value, 0)} VNDC</div>
+                        <div className="font-semibold text-xl">
+                            {formatNumber(
+                                getApyByMonth({ amount, percentPerMonth: currency.apyPercent / MONTHS_PER_YEAR, numberOfMonth: hoverData.index + 1 }),
+                                currencyConfig?.assetDigit || 0
+                            )}{' '}
+                            {currencyConfig?.assetCode}
+                        </div>
                     </div>
                     <div className="mb-4">
                         <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">Số dư cuối kỳ</div>
-                        <div className="font-semibold text-xl">{formatNumber(hoverData.value, 0)} VNDC</div>
+                        <div className="font-semibold text-xl">
+                            {formatNumber(
+                                getApyByMonth({ amount, percentPerMonth: currency.apyPercent / MONTHS_PER_YEAR, numberOfMonth: hoverData.index + 1 }),
+                                currencyConfig?.assetDigit || 0
+                            )}{' '}
+                            {currencyConfig?.assetCode}
+                        </div>
                     </div>
                 </div>
                 <Chart options={options} series={series} type="area" width="100%" />
 
-                <div className="ml-5 pr-2 flex justify-between">
+                <div className="ml-5 -mt-4 pr-2 flex justify-between">
                     {TIMER.map((item, key) => {
                         return (
                             <div
-                                className="text-txtSecondary cursor-pointer dark:text-txtSecondary-dark
-                                text-sm rounded-md px-4 py-2 flex items-center border
-                            border-divider dark:border-divider-dark"
+                                key={item.value}
+                                onClick={() => {
+                                    setHoverData({ index: item.value - 1 });
+                                }}
+                                className={classNames(
+                                    `text-txtSecondary bg-hover-1 dark:bg-dark-2 cursor-pointer dark:text-txtSecondary-dark
+                                text-sm rounded-md px-4 py-2 flex items-center`,
+                                    {
+                                        '!bg-teal/10 !text-teal font-semibold': item.value === hoverData.index + 1
+                                    }
+                                )}
                             >
                                 {item[language]}
                             </div>

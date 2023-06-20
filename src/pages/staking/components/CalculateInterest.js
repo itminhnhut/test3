@@ -3,22 +3,39 @@ import React, { useState } from 'react';
 import SelectV2 from 'components/common/V2/SelectV2';
 import { useTranslation } from 'next-i18next';
 import APYInterestChart from './APYInterestChart';
-
-const INITIAL_STAKING_CURRENCY = {
-    value: 72,
-    title: 'VNDC'
-};
+import AssetLogo from 'components/wallet/AssetLogo';
 
 const STAKING_CURRENCIES = [
     {
         value: 72,
-        title: 'VNDC'
+        code: 'VNDC',
+        apyPercent: 12.79,
+        title: (
+            <div className="font-semibold flex items-center  space-x-2">
+                <AssetLogo size={24} assetId={72} />
+                <span className="">VNDC</span>
+
+                <span className=" text-teal">12.79%</span>
+            </div>
+        )
     },
     {
-        value: 4,
-        title: 'USDT'
+        value: 22,
+        code: 'USDT',
+        apyPercent: 6,
+        title: (
+            <div className="font-semibold flex items-center  space-x-2">
+                <AssetLogo size={24} assetId={22} />
+
+                <span className="">USDT</span>
+
+                <span className=" text-teal">6%</span>
+            </div>
+        )
     }
 ];
+
+const INITIAL_STAKING_CURRENCY = STAKING_CURRENCIES[0];
 
 const CalculateInterest = () => {
     const {
@@ -26,7 +43,7 @@ const CalculateInterest = () => {
         i18n: { language }
     } = useTranslation();
     const [stakingCurrency, setStakingCurrency] = useState(INITIAL_STAKING_CURRENCY);
-    const [amountStaking, setAmountStaking] = useState('');
+    const [amountStaking, setAmountStaking] = useState(100000);
     return (
         <section className="my-[88px] md:my-[120px] px-3 py-10 md:px-20 md:py-[60px] dark:bg-dark-4 bg-white border-divider dark:border-divider-dark border rounded-xl">
             <div className="text-center space-y-3 mb-10 md:mb-[60px]">
@@ -70,7 +87,7 @@ const CalculateInterest = () => {
                     <div className="p-3"></div>
                 </div>
                 <div className="p-5 flex-grow min-h-[400px]">
-                    <APYInterestChart />
+                    <APYInterestChart amount={amountStaking} currency={stakingCurrency} />
                 </div>
             </div>
         </section>
