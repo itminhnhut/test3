@@ -16,6 +16,8 @@ import { getLoginUrl, getS3Url } from 'redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useEffect } from 'react';
 import colors from 'styles/colors';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 
 const KYCUnVerifiedTag = ({ t }) => (
     <TagV2 className="ml-3" type="default">
@@ -41,10 +43,29 @@ const KYCTempLocking = ({ t }) => (
     </TagV2>
 );
 
-export default function AccountLayout({ children }) {
+const TABS = [
+    {
+        key: 'identify_tab',
+        localized: 'navbar:menu.user.profile',
+        href: PATHS.ACCOUNT.IDENTIFICATION
+    },
+    {
+        key: 'kyc_tab',
+        localized: 'identification:kyc_title',
+        href: PATHS.ACCOUNT.PROFILE
+    },
+    {
+        key: 'payment_tab',
+        localized: 'payment-method:payment_method',
+        href: PATHS.ACCOUNT.PAYMENT_METHOD
+    }
+];
+
+export default function AccountLayout({ children, type }) {
     const auth = useSelector((state) => state.auth);
 
     const router = useRouter();
+
     const isApp = useApp();
     const { t } = useTranslation();
     const [currentTheme] = useDarkMode();
@@ -71,7 +92,7 @@ export default function AccountLayout({ children }) {
                     backgroundPosition: 'center'
                 }}
             />
-            <div className="bg-white dark:bg-dark">
+            <div className="bg-gray-13 dark:bg-dark">
                 <Container className="mal-container px-4">
                     <div className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between">
                         <AccountAvatar currentAvatar={auth?.user?.avatar} />
@@ -106,48 +127,27 @@ export default function AccountLayout({ children }) {
                             )}
                         </div>
                     </div>
-
-                    <div className="flex justify-between items-center border-b border-divider dark:border-divider-dark mt-12">
-                        <div className="flex space-x-6">
-                            {[
-                                {
-                                    label: t('navbar:menu.user.profile'),
-                                    link: PATHS.ACCOUNT.PROFILE
-                                },
-                                {
-                                    label: t('identification:kyc_title'),
-                                    link: PATHS.ACCOUNT.IDENTIFICATION
-                                },
-                                {
-                                    label: t('payment-method:payment_method'),
-                                    link: PATHS.ACCOUNT.PAYMENT_METHOD
-                                }
-                                // {
-                                //     label: t('reward-center:title'),
-                                //     link: PATHS.ACCOUNT.REWARD_CENTER
-                                // }
-                            ].map((item, index) => {
-                                const isActive = item.link === router.asPath;
+                    <div className="relative flex tracking-normal mt-12">
+                        <Tabs tab={type} className="gap-6 border-b border-divider dark:border-divider-dark">
+                            {TABS.map((item, index) => {
                                 return (
-                                    <Link scroll={false} href={item.link} key={item.link}>
-                                        <div
-                                            className={classnames('py-4 border-b-2 mb-[-1px] cursor-pointer', {
-                                                'border-transparent text-txtSecondary dark:text-txtSecondary-dark': !isActive,
-                                                'border-teal text-txtPrimary font-semibold dark:text-teal': isActive
-                                            })}
-                                        >
-                                            {item.label}
-                                        </div>
-                                    </Link>
+                                    <TabItem
+                                        key={item?.key}
+                                        className={`text-left !px-0 !text-base !w-auto first:ml-4 md:first:ml-0`}
+                                        value={item?.key}
+                                        onClick={() => router.push(item.href)}
+                                    >
+                                        {t(item.localized)}
+                                    </TabItem>
                                 );
                             })}
+                        </Tabs>
+                        <div className="absolute right-0 hidden md:block">
+                            {/* <div /> */}
+                            <HrefButton variants="blank" className="w-auto !text-base" href={`/${PATHS.FEE_STRUCTURES.TRADING}`}>
+                                {t('fee-structure:see_fee_structures')}{' '}
+                            </HrefButton>
                         </div>
-                        <span
-                            onClick={() => router.push(PATHS.FEE_STRUCTURES.TRADING)}
-                            className="hidden md:inline text-teal cursor-pointer font-semibold hover:underline"
-                        >
-                            {t('fee-structure:see_fee_structures')}
-                        </span>
                     </div>
                     <div className="pb-28">{children}</div>
                 </Container>

@@ -209,7 +209,7 @@ const index = () => {
                 <h1 className="text-[32px] leading-[38px]">{t('payment-method:payment_method')}</h1>
                 <div className="flex gap-x-4">
                     <SearchBoxV2
-                        wrapperClassname="w-[360px]"
+                        wrapperClassname="w-[360px] !bg-white dark:!bg-dark-2"
                         value={search}
                         onChange={(value) => {
                             setSearch(value);
@@ -236,7 +236,7 @@ const index = () => {
                         return (
                             <div
                                 key={bankAccount?._id}
-                                className="dark:bg-dark-4 hover:bg-gray-13 dark:hover:bg-hover-dark rounded-xl border border-divider dark:border-none py-6 px-8 flex items-center justify-between"
+                                className="bg-white shadow-dropdown dark:bg-dark-4 dark:hover:bg-hover-dark rounded-xl py-6 px-8 flex items-center justify-between"
                             >
                                 <div className="flex items-center gap-x-4">
                                     <Image src={bankAccount.bankLogo} width={68} height={68} alt={bankAccount?.bankKey} className="rounded-full" />

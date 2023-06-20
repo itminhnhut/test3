@@ -7,7 +7,7 @@ const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
 function PaymentMethod() {
     return (
-        <AccountLayout>
+        <AccountLayout type='payment_tab'>
             <PaymentMethodComponent />
         </AccountLayout>
     );

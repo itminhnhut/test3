@@ -154,6 +154,293 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                     </div>
                 </>
             )}
+            <ModalShare
+                isMobile={isMobile}
+                isVisible={openModalShare}
+                onBackdropCb={() => setOpenModalShare(null)}
+                totalPnl={dataOverview?.totalPnl?.value}
+                totalMargin={dataOverview?.totalMargin?.value}
+                // totalPnl={123}
+                // totalMargin={100000}
+                typeCurrency={typeCurrency}
+                timeFilter={timeFilter}
+                firstTimeTrade={firstTimeTrade}
+                t={t}
+                winRate={dataOverview?.winRate?.value}
+                typeProduct={typeProduct}
+            />
+        </div>
+    );
+};
+
+const CardFill = styled.div.attrs(({ key, className, onClick }) => ({
+    className: `bg-gray-13 dark:bg-dark-4 rounded-xl p-6 ${className}`,
+    key: key,
+    onClick: onClick
+}))``;
+
+const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurrency, timeFilter, t, isMobile, winRate, typeProduct, firstTimeTrade }) => {
+    const content = useRef();
+    const negative = totalPnl < 0;
+    const refCode = useSelector((state) => state.auth?.user?.code_refer);
+    const [isShowTotalPnl, setIsShowTotalPnl] = useState(true);
+    const [isShowRate, setIsShowRate] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    // const list = [
+    //     { name: t('common:save'), icon: <SaveAltIcon size={28} />, event: 'save' },
+    //     { name: 'Facebook', icon: <FacebookIcon size={28} />, event: 'facebook' },
+    //     { name: 'Twitter', icon: <TwitterIcon size={28} />, event: 'twitter' },
+    //     { name: 'Telegram', icon: <TelegramIcon size={28} />, event: 'telegram' },
+    //     { name: 'Reddit', icon: <RedditIcon size={28} />, event: 'reddit' },
+    //     { name: 'LinkedIn', icon: <LinkedInIcon size={28} />, event: 'linkedIn' },
+    //     { name: 'Discord', icon: <DiscordIcon size={28} />, event: 'linkedIn' }
+    // ];
+
+    const saveFile = (file, name) => {
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    };
+
+    const onDownLoad = async () => {
+        try {
+            setLoading(true);
+            const scale = 2;
+            const option = {
+                height: content.current.offsetHeight * scale,
+                width: content.current.offsetWidth * scale,
+                style: {
+                    transform: 'scale(' + scale + ')',
+                    transformOrigin: 'top left',
+                    width: content.current.offsetWidth + 'px',
+                    height: content.current.offsetHeight + 'px'
+                }
+            };
+            await DomToImage.toBlob(content.current, option).then((blob) => {
+                return saveFile(new File([blob], `${refCode}.png`, { type: 'image/png' }), `${refCode}.png`);
+            });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <>
+            <ModalLoading colorCustom="#000" isVisible={loading} onBackdropCb={() => setLoading(false)} />
+            <ModalV2
+                loading={loading}
+                isVisible={isVisible}
+                // isVisible={true}
+                onBackdropCb={onBackdropCb}
+                className={`${!isMobile && '!max-w-[488px] !min-w-[488px] '} !dark:bg-dark-4`}
+                wrapClassName={!isMobile && 'dark:!bg-dark-4'}
+                isMobile={isMobile}
+                divOtherWorld={
+                    isMobile && (
+                        <ImageShare
+                            className="mx-auto mt-[60px] mb-[18px]"
+                            content={content}
+                            negative={negative}
+                            totalPnl={totalPnl}
+                            totalMargin={totalMargin}
+                            typeCurrency={typeCurrency}
+                            isShowTotalPnl={isShowTotalPnl}
+                            isShowRate={isShowRate}
+                            timeFilter={timeFilter}
+                            t={t}
+                            refCode={refCode}
+                            winRate={winRate}
+                            typeProduct={typeProduct}
+                            firstTimeTrade={firstTimeTrade}
+                        />
+                    )
+                }
+            >
+                {isMobile ? (
+                    <div className="w-full text-gray-15 dark:text-gray-4 text-base">
+                        <div className="text-xl font-semibold">{t('portfolio:option_info_to_share')}</div>
+                        <div className="flex items-center mt-6">
+                            <CheckBox
+                                className="mr-12"
+                                boxContainerClassName="w-4 h-4"
+                                labelClassName="tracking-normal text-gray-15 dark:text-gray-4"
+                                label={t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? 'VNDC' : 'USDT' })}
+                                onChange={() => setIsShowTotalPnl((prev) => !prev)}
+                                active={isShowTotalPnl}
+                                sizeCheckIcon={12}
+                            />
+                            <CheckBox
+                                boxContainerClassName="w-4 h-4"
+                                labelClassName="tracking-normal text-gray-15 dark:text-gray-4"
+                                label={t('portfolio:win_rate')}
+                                onChange={() => setIsShowRate((prev) => !prev)}
+                                active={isShowRate}
+                                sizeCheckIcon={12}
+                            />
+                        </div>
+                        <ButtonV2 className="mt-8" onClick={onDownLoad}>
+                            {t('common:save')}
+                        </ButtonV2>
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center">
+                        <div className='flex w-full items-center justify-center'>
+                            <ImageShare
+                                className="w-full"
+                                content={content}
+                                negative={negative}
+                                totalPnl={totalPnl}
+                                totalMargin={totalMargin}
+                                typeCurrency={typeCurrency}
+                                isShowTotalPnl={isShowTotalPnl}
+                                isShowRate={isShowRate}
+                                timeFilter={timeFilter}
+                                t={t}
+                                refCode={refCode}
+                                winRate={winRate}
+                                typeProduct={typeProduct}
+                                firstTimeTrade={firstTimeTrade}
+                            />
+                        </div>
+                        <div className="w-full text-gray-15 dark:text-gray-4 mt-6">
+                            <div className="text-lg font-semibold">{t('portfolio:option_info_to_share')}</div>
+                            <div className="flex items-center mt-4">
+                                <CheckBox
+                                    className="mr-12"
+                                    boxContainerClassName="w-5 h-5"
+                                    labelClassName="tracking-normal text-gray-15 dark:text-gray-4 !text-base"
+                                    label={t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? 'VNDC' : 'USDT' })}
+                                    onChange={() => setIsShowTotalPnl((prev) => !prev)}
+                                    active={isShowTotalPnl}
+                                    sizeCheckIcon={20}
+                                />
+                                <CheckBox
+                                    boxContainerClassName="w-5 h-5"
+                                    labelClassName="tracking-normal text-gray-15 dark:text-gray-4 !text-base"
+                                    label={t('portfolio:win_rate')}
+                                    onChange={() => setIsShowRate((prev) => !prev)}
+                                    active={isShowRate}
+                                    sizeCheckIcon={20}
+                                />
+                            </div>
+                            <ButtonV2 className="mt-10" onClick={onDownLoad}>
+                                {t('common:save')}
+                            </ButtonV2>
+
+                            {/* <div className="mt-10 text-2xl font-semibold">{t('common:luckydraw.share')}</div>
+                            <div className="flex items-center justify-start flex-wrap gap-4 mt-6">
+                                {list.map((item, key) => (
+                                    <div
+                                        onClick={() => handleShareAction(item.event)}
+                                        key={key}
+                                        className="first:cursor-pointer flex flex-col items-center min-w-[58px]"
+                                    >
+                                        <CardFill className="!p-2 !rounded-md">{item.icon}</CardFill>
+                                        <span className="mt-2 text-xs text-txtSecondary dark:text-txtSecondary-dark">{item.name}</span>
+                                    </div>
+                                ))}
+                            </div> */}
+                        </div>
+                    </div>
+                )}
+            </ModalV2>
+        </>
+    );
+};
+
+const ImageShare = ({
+    className,
+    content,
+    negative,
+    totalPnl,
+    totalMargin,
+    typeCurrency,
+    isShowTotalPnl,
+    isShowRate,
+    timeFilter,
+    firstTimeTrade,
+    t,
+    refCode,
+    winRate,
+    typeProduct
+}) => {
+    return (
+        <div ref={content} className={`min-w-[342px] max-w-[342px] bg-dark border border-divider-dark relative ${className}`}>
+            <div
+                className="bg-center bg-cover h-[182px] "
+                style={{
+                    backgroundImage: ['development', 'dev'].includes(process.env.NODE_ENV)
+                        ? `url('/images/screen/portfolio/share_${negative ? 'loss' : 'profit'}.png')`
+                        : `url(${`https://nami.exchange/images/portfolio/share_${negative ? 'loss' : 'profit'}.png`})`
+                }}
+            ></div>
+            <div className="flex flex-col items-center text-gray-7 text-xs gap-y-2">
+                <div className="mt-2.5 text-gray-4 font-semibold text-lg">
+                    {t('portfolio:pnl_statistic_on_product', {
+                        product: Object.entries(FUTURES_PRODUCT).find(([key, value]) => value.id === typeProduct)?.[1]?.name
+                    })}
+                </div>
+                <div>{t('portfolio:cumulative_roe')}</div>
+                <div className={`text-5xl ${negative ? 'text-red-2' : 'text-teal'} font-semibold`}>
+                    {!negative && '+'}
+                    {formatNanNumber((totalPnl * 100) / totalMargin, 2)}%
+                </div>
+                <div className={`h-11 w-full flex items-center justify-center transition-all duration-75`}>
+                    {/* <div className={`${!isShowTotalPnl ? 'hidden' : isShowRate ? 'w-1/2 !items-end' : ' w-full '} flex justify-center items-center flex-col`}> */}
+                    <div className={`${!isShowTotalPnl && 'hidden'} flex flex-col items-center justify-center`}>
+                        <div>{t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? 'VNDC' : 'USDT' })}</div>
+                        <div className="text-gray-4 text-sm font-semibold">
+                            {!negative && '+'}
+                            {formatNanNumber(totalPnl, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
+                        </div>
+                    </div>
+                    {/* </div> */}
+                    {isShowRate && isShowTotalPnl && <div className={`border-divider-dark border-l-[1px] h-9 mx-6`}></div>}
+                    {/* <div className={`${!isShowRate ? 'hidden' : isShowTotalPnl ? 'w-1/2 !items-start' : ' w-full '} flex justify-center items-center flex-col`}> */}
+                    <div className={`${!isShowRate && 'hidden'} flex flex-col items-center justify-center`}>
+                        <div>{t('portfolio:win_rate')}</div>
+                        <div className="text-gray-4 text-sm font-semibold">{formatNanNumber(winRate, 2)}%</div>
+                    </div>
+                    {/* </div> */}
+                </div>
+
+                <div className="mt-8 mb-[92px]">
+                    {!firstTimeTrade ? (
+                        <div className="w-full h-4"></div>
+                    ) : (
+                        `${formatTime(timeFilter?.startDate ? timeFilter.startDate : firstTimeTrade, 'dd/MM/yyyy')} - ${formatTime(
+                            timeFilter?.endDate ? timeFilter.endDate : new Date(),
+                            'dd/MM/yyyy'
+                        )}`
+                    )}
+                </div>
+
+                <div
+                    className="absolute bottom-0 left-0 px-4 py-3 flex justify-between items-center w-full"
+                    style={{
+                        backgroundImage: 'linear-gradient(to bottom, #071713 28%, #091b16 75%, #132e27 100%)'
+                    }}
+                >
+                    <div className="bg-cover w-[114px] h-9 bg-no-repeat" style={{ backgroundImage: 'url(https://nami.exchange/images/nami-logo-v3.png)' }} />
+                    <div className="flex items-center space-x-3">
+                        <div className="flex flex-col text-white">
+                            <span className="text-xs">{t('futures:share:ref_id')}</span>
+                            <span className="text-sm font-semibold">{refCode}</span>
+                        </div>
+                        <div className="p-1 bg-white rounded-[3px]">
+                            <QRCode value={`https://nami.exchange/ref/${refCode}`} size={47} />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
