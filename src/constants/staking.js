@@ -21,23 +21,33 @@ export const STEP_STAKING = [
     {
         imgSrc: '/images/staking/ic_staking.png',
         title: { vi: 'Nhận lãi hàng ngày', en: 'Nhận lãi hàng ngày' },
-        subText: { vi: 'Nhận lãi hàng ngày theo số lượng tài sản số lưu trữ trong ví vào lúc 00:00 mỗi ngày (giờ Việt Nam)' }
+        subText: {
+            vi: 'Nhận lãi hàng ngày theo số lượng tài sản số lưu trữ trong ví vào lúc 00:00 mỗi ngày (giờ Việt Nam)',
+            en: 'Nhận lãi hàng ngày theo số lượng tài sản số lưu trữ trong ví vào lúc 00:00 mỗi ngày (giờ Việt Nam)'
+        }
     }
 ];
 
 export const WHY_CHOOSE_NAMI = [
     {
         title: { vi: 'Thuận tiện, dễ dàng', en: 'Thuận tiện, dễ dàng' },
-        context: { vi: 'Tiết kiệm mọi lúc mọi nơi với ứng dụng di động và website Nami Exchange cùng hệ thống hỗ trợ người dùng hoạt động 24/7' }
+        context: {
+            vi: 'Tiết kiệm mọi lúc mọi nơi với ứng dụng di động và website Nami Exchange cùng hệ thống hỗ trợ người dùng hoạt động 24/7',
+            en: 'Tiết kiệm mọi lúc mọi nơi với ứng dụng di động và website Nami Exchange cùng hệ thống hỗ trợ người dùng hoạt động 24/7'
+        }
     },
     {
         title: { vi: 'Không kỳ hạn, không khoá', en: 'Không kỳ hạn, không khoá' },
-        context: { vi: 'Nhận lãi liên tục, hàng ngày, không yêu cầu khóa tài sản, được gửi trực tiếp vào ví người dùng' }
+        context: {
+            vi: 'Nhận lãi liên tục, hàng ngày, không yêu cầu khóa tài sản, được gửi trực tiếp vào ví người dùng',
+            en: 'Nhận lãi liên tục, hàng ngày, không yêu cầu khóa tài sản, được gửi trực tiếp vào ví người dùng'
+        }
     },
     {
         title: { vi: 'Lãi suất hấp dẫn', en: 'Lãi suất hấp dẫn' },
         context: {
-            vi: 'Lãi suất hấp dẫn và cạnh tranh trên thị trường, được tính kép trên số lượng tài sản thực tế, mức lãi suất năm căn bản với VNDC là 12.79% và USDT là 6%'
+            vi: 'Lãi suất hấp dẫn và cạnh tranh trên thị trường, được tính kép trên số lượng tài sản thực tế, mức lãi suất năm căn bản với VNDC là 12.79% và USDT là 6%',
+            en: 'Lãi suất hấp dẫn và cạnh tranh trên thị trường, được tính kép trên số lượng tài sản thực tế, mức lãi suất năm căn bản với VNDC là 12.79% và USDT là 6%'
         }
     }
 ];

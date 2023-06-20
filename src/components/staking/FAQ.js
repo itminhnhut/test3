@@ -14,7 +14,7 @@ const FAQStaking = ({ isDark }) => {
         return FAQ.map((item, key) => {
             return (
                 <CollapseV2
-                    key={`FAQ-${item.content[language]}`}
+                    key={`FAQ-${key}`}
                     className="w-full divider-bottom lg:last:pb-[120px] last:pb-[80px]"
                     divLabelClassname="w-full justify-between !pb-4 lg:!pb-[21px]"
                     chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
