@@ -24,7 +24,11 @@ const series = [
 ];
 
 const getApyByMonth = ({ amount, percentPerMonth, numberOfMonth }) => {
-    return amount * Math.pow(1 + percentPerMonth / 100, numberOfMonth);
+    const realAmount = amount * Math.pow(1 + percentPerMonth / 100, numberOfMonth);
+    return {
+        interestRate: realAmount - amount,
+        realAmount
+    };
 };
 
 const TIMER = [
@@ -58,7 +62,8 @@ const APYInterestChart = ({ amount, currency }) => {
     const options = useMemo(
         () => ({
             chart: {
-                // height: 320,
+                height: 320,
+                width: '100%',
                 type: 'area',
                 toolbar: {
                     show: false
@@ -142,51 +147,54 @@ const APYInterestChart = ({ amount, currency }) => {
         [isDark]
     );
 
+    const apyByMonth = useMemo(
+        () => getApyByMonth({ amount, percentPerMonth: currency.apyPercent / MONTHS_PER_YEAR, numberOfMonth: hoverData.index + 1 }),
+        [hoverData.index, currency.apyPercent, amount]
+    );
+
     return (
         typeof window !== 'undefined' && (
-            <Wrapper className="relative">
+            <Wrapper className="relative -ml-5 -mr-2 md:m-0">
                 <div className="absolute left-10 top-10">
                     <div className="font-semibold text-sm mb-4">Sau {hoverData.index + 1} tháng bạn sẽ nhận được</div>
-                    <div className=" mb-4">
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">Lãi suất</div>
-                        <div className="font-semibold text-xl">
-                            {formatNumber(
-                                getApyByMonth({ amount, percentPerMonth: currency.apyPercent / MONTHS_PER_YEAR, numberOfMonth: hoverData.index + 1 }),
-                                currencyConfig?.assetDigit || 0
-                            )}{' '}
-                            {currencyConfig?.assetCode}
+                    <div className="space-y-1 mb-4">
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Lãi cuối kỳ</div>
+                        <div className="font-semibold md:text-xl">
+                            {formatNumber(apyByMonth.interestRate, currencyConfig?.assetDigit || 0)} {currencyConfig?.assetCode}
                         </div>
                     </div>
-                    <div className="mb-4">
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">Số dư cuối kỳ</div>
-                        <div className="font-semibold text-xl">
-                            {formatNumber(
-                                getApyByMonth({ amount, percentPerMonth: currency.apyPercent / MONTHS_PER_YEAR, numberOfMonth: hoverData.index + 1 }),
-                                currencyConfig?.assetDigit || 0
-                            )}{' '}
-                            {currencyConfig?.assetCode}
+                    <div className="space-y-1">
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Số dư cuối kỳ</div>
+                        <div className="font-semibold md:text-xl">
+                            {formatNumber(apyByMonth.realAmount, currencyConfig?.assetDigit || 0)} {currencyConfig?.assetCode}
                         </div>
                     </div>
                 </div>
-                <Chart options={options} series={series} type="area" width="100%" />
+                <div className="">
+                    <Chart options={options} series={series} type="area" />
+                </div>
 
-                <div className="ml-5 -mt-4 pr-2 flex justify-between">
+                <div className="ml-5 z-[5] -mt-4 mr-2 flex md:justify-between relative">
                     {TIMER.map((item, key) => {
                         return (
                             <div
-                                key={item.value}
                                 onClick={() => {
                                     setHoverData({ index: item.value - 1 });
                                 }}
-                                className={classNames(
-                                    `text-txtSecondary bg-hover-1 dark:bg-dark-2 cursor-pointer dark:text-txtSecondary-dark
-                                text-sm rounded-md px-4 py-2 flex items-center`,
-                                    {
-                                        '!bg-teal/10 !text-teal font-semibold': item.value === hoverData.index + 1
-                                    }
-                                )}
+                                className="first:pl-0 pl-2 w-1/5 md:w-auto  md:pl-0 w"
+                                key={item.value}
                             >
-                                {item[language]}
+                                <div
+                                    className={classNames(
+                                        `text-txtSecondary bg-hover-1 dark:bg-dark-2 cursor-pointer dark:text-txtSecondary-dark
+                               text-xs md:text-sm rounded-md md:px-4 py-2 flex items-center justify-center`,
+                                        {
+                                            '!bg-teal/10 !text-teal font-semibold': item.value === hoverData.index + 1
+                                        }
+                                    )}
+                                >
+                                    {item[language]}
+                                </div>
                             </div>
                         );
                     })}

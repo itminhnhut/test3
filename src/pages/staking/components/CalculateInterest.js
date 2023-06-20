@@ -49,8 +49,8 @@ const CalculateInterest = () => {
                     Chọn loại tài sản số và nhập số lượng để tham khảo lợi nhuận nhận được qua thời gian từ chương trình Nhận lãi ngày của Nami Exchange
                 </div>
             </div>
-            <div className="flex flex-wrap -m-5">
-                <div className="p-5 md:max-w-[460px] w-full space-y-7">
+            <div className="flex flex-wrap -mx-5">
+                <div className="px-5 mb-10 md:mb-0 md:max-w-[460px] w-full space-y-7">
                     <div className="space-y-2">
                         <label className="txtSecond-5">Lựa chọn Token</label>
                         <SelectV2
@@ -59,8 +59,8 @@ const CalculateInterest = () => {
                             }}
                             options={STAKING_CURRENCIES}
                             value={stakingCurrency.value}
-                            popoverClassName="!top-full !z-10"
-                            className="txtPri-1"
+                            popoverClassName="!top-full !z-[11] "
+                            className="txtPri-1 !bg-gray-12 dark:!bg-dark-2"
                         />
                     </div>
                     <div className="space-y-2">
@@ -81,9 +81,8 @@ const CalculateInterest = () => {
                             placeHolder="Amount"
                         />
                     </div>
-                    <div className="p-3"></div>
                 </div>
-                <div className="p-5 flex-grow min-h-[400px]">
+                <div className="px-5 flex-grow min-h-[400px]">
                     <APYInterestChart amount={amountStaking} currency={stakingCurrency} />
                 </div>
             </div>
