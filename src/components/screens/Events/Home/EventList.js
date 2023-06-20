@@ -152,7 +152,7 @@ const EventList = () => {
     }, [isMobile]);
 
     const { isLoading, data } = useQuery(
-        ['Event list', filter],
+        ['Event list', filter, router.locale],
         async ({ queryKey: [, filterQuery], signal }) => {
             const { status, start, end, page, search, pageSize } = filterQuery;
             const res = await FetchApi({
@@ -163,6 +163,7 @@ const EventList = () => {
                 },
                 params: {
                     status: status !== -1 ? status : undefined,
+                    locale: router.locale.toUpperCase(),
                     pageSize,
                     'filters[fromTime]': start,
                     'filters[toTime]': end,
