@@ -13,8 +13,8 @@ import { find } from 'lodash';
 function f(x) {
     return x * x;
 }
-var xValues = Array.from({ length: 48 }, (_, i) => i + 1);
-var yValues = xValues.map(f);
+let xValues = Array.from({ length: 48 }, (_, i) => i + 1);
+let yValues = xValues.map(f);
 
 const series = [
     {
