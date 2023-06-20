@@ -17,11 +17,7 @@ import styled from 'styled-components';
 import { isFunction } from 'lodash';
 import { differenceInMonths } from 'date-fns';
 
-<<<<<<< HEAD
-const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside, minDate, maxDate, ignoreAuth }) => {
-=======
-const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside, customHeaderCalendar, maxMonths  }) => {
->>>>>>> 7129a71e3b3ee06968dd11e6dc735fe0ab6c6be2
+const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside, customHeaderCalendar, maxMonths, minDate, maxDate, ignoreAuth  }) => {
     const [showPicker, setShowPicker] = useState(false);
     const wrapperRef = useRef(null);
 
