@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 
-import { WHY_CHOOSE_NAMI } from '../constant.js';
+import { WHY_CHOOSE_NAMI } from '../config.js';
 
 const WhyChooseNamiStaking = () => {
     const {

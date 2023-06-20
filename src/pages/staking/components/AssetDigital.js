@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
-import { ASSET_DIGITAL } from '../constant.js';
+import { ASSET_DIGITAL } from '../config.js';
 
 const AssetDigitalStaking = ({ isMobile }) => {
     const {

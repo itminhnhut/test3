@@ -14,7 +14,6 @@ const STAKING_CURRENCIES = [
             <div className="font-semibold flex items-center  space-x-2">
                 <AssetLogo size={24} assetId={72} />
                 <span className="">VNDC</span>
-
                 <span className=" text-teal">12.79%</span>
             </div>
         )
@@ -26,9 +25,7 @@ const STAKING_CURRENCIES = [
         title: (
             <div className="font-semibold flex items-center  space-x-2">
                 <AssetLogo size={24} assetId={22} />
-
                 <span className="">USDT</span>
-
                 <span className=" text-teal">6%</span>
             </div>
         )
@@ -39,8 +36,10 @@ const INITIAL_STAKING_CURRENCY = STAKING_CURRENCIES[0];
 
 const CalculateInterest = () => {
     const { t } = useTranslation();
+
     const [stakingCurrency, setStakingCurrency] = useState(INITIAL_STAKING_CURRENCY);
     const [amountStaking, setAmountStaking] = useState(100000);
+
     return (
         <section className="mt-[88px] lg:mt-[118px] px-3 py-10 md:px-20 md:py-[60px] dark:bg-dark-4 bg-white border-divider dark:border-divider-dark border rounded-xl">
             <div className="text-center space-y-3 mb-10 md:mb-[60px]">

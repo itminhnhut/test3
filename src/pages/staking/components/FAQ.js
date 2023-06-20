@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import colors from 'styles/colors';
 
-import { FAQ } from '../constant.js';
+import { FAQ } from '../config.js';
 
 const FAQStaking = ({ isDark }) => {
     const {
