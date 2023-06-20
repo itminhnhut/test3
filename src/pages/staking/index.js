@@ -10,17 +10,17 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useWindowSize } from 'react-use';
 import styled from 'styled-components';
 
-import Skeleton from './components/skeleton';
+import Skeleton from 'components/staking/skeleton';
 
-const CalculateInterest = dynamic(() => import('./components/CalculateInterest.js'), { ssr: false });
-const HeaderStaking = dynamic(() => import('./components/Header.js'), {
+const CalculateInterest = dynamic(() => import('components/staking/CalculateInterest.js'), { ssr: false });
+const HeaderStaking = dynamic(() => import('components/staking/Header.js'), {
     ssr: false,
     loading: () => <Skeleton variant="image" />
 });
-const StepStaking = dynamic(() => import('./components/Step.js'), { ssr: false, loading: () => <Skeleton variant="image" /> });
-const WhyChooseNamiStaking = dynamic(() => import('./components/WhyChooseNami.js'), { ssr: false, loading: () => <Skeleton variant="list" /> });
-const AssetDigitalStaking = dynamic(() => import('./components/AssetDigital.js'), { ssr: false, loading: () => <Skeleton variant="list" /> });
-const FAQStaking = dynamic(() => import('./components/FAQ.js'), { ssr: false, loading: () => <Skeleton variant="list" /> });
+const StepStaking = dynamic(() => import('components/staking/Step.js'), { ssr: false, loading: () => <Skeleton variant="image" /> });
+const WhyChooseNamiStaking = dynamic(() => import('components/staking/WhyChooseNami.js'), { ssr: false, loading: () => <Skeleton variant="list" /> });
+const AssetDigitalStaking = dynamic(() => import('components/staking/AssetDigital.js'), { ssr: false, loading: () => <Skeleton variant="list" /> });
+const FAQStaking = dynamic(() => import('components/staking/FAQ.js'), { ssr: false, loading: () => <Skeleton variant="list" /> });
 
 const Reference = () => {
     const [currentTheme] = useDarkMode();

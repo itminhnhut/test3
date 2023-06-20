@@ -2,8 +2,10 @@ import TradingInputV2 from 'components/trade/TradingInputV2';
 import React, { useState } from 'react';
 import SelectV2 from 'components/common/V2/SelectV2';
 import { useTranslation } from 'next-i18next';
-import APYInterestChart from './APYInterestChart';
 import AssetLogo from 'components/wallet/AssetLogo';
+import dynamic from 'next/dynamic';
+
+const APYInterestChart = dynamic(() => import('./APYInterestChart'), { ssr: false });
 
 const STAKING_CURRENCIES = [
     {
