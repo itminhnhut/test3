@@ -13,6 +13,7 @@ export const AlertContext = createContext(null);
 import vi from 'date-fns/locale/vi'
 import en from 'date-fns/locale/en-US'
 import useApp from 'hooks/useApp';
+import useDarkMode from 'hooks/useDarkMode';
 vi.localize = {
     day: (n) => days[n]['vi'],
     month: (n) => months[n]['vi'],
@@ -118,6 +119,7 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
     const alertV2 = useRef(null);
     const { width } = useWindowSize();
     const isApp = useApp();
+    const [,, setTheme] = useDarkMode();
 
     useEffect(() => {
         document.body.classList.add('disabled-zoom');
@@ -127,6 +129,7 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
         if (vw <= 360) {
             document.documentElement.style.setProperty('font-size', '14px');
         }
+        setTheme('dark');
     }, [])
 
     return (

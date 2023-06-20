@@ -21,7 +21,7 @@ import HeaderTooltip from 'components/screens/Portfolio/HeaderTooltip';
 import NaoChartJS from 'components/screens/Portfolio/charts/NaoChartJS';
 import Note from 'components/common/Note';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { indexOf, isNumber } from 'lodash';
+import { indexOf, isNumber, set } from 'lodash';
 import MCard from 'components/common/MCard';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import TableNoData from 'components/common/table.old/TableNoData';
@@ -30,6 +30,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { WIDTH_MD } from 'components/screens/Wallet';
 import RangePopover from '../Components/RangePopover';
 import { formatAbbreviateNumber } from 'redux/actions/utils';
+import { useIsomorphicLayoutEffect } from 'react-use';
 
 export const days = [
     {
@@ -97,6 +98,13 @@ const filterFeeAsset = [
     }
 ];
 
+const CHART_TYPES = {
+    order: 'order',
+    volume: 'volume',
+    user: 'user',
+    fee: 'fee'
+};
+
 const NaoPerformance = memo(({}) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -121,7 +129,7 @@ const NaoPerformance = memo(({}) => {
     });
     const [fee, setFee] = useState(WalletCurrency.VNDC);
     const [referencePrice, setReferencePrice] = useState({});
-    const [typeChart, setTypeChart] = useState('volume');
+    const [typeChart, setTypeChart] = useState(CHART_TYPES.volume);
     const [chartLabels, setChartLabels] = useState(null);
     const [dataChartVolume, setDataChartVolume] = useState(null);
     const [dataChartOrder, setDataChartOrder] = useState(null);
@@ -133,6 +141,7 @@ const NaoPerformance = memo(({}) => {
     });
 
     const assetConfig = useSelector((state) => state.utils.assetConfig);
+    const isValidCustomDay = filter.day !== 'custom' || !!(range.startDate && range.endDate)
 
     const renderChart = useMemo(() => {
         const options = {
@@ -191,7 +200,7 @@ const NaoPerformance = memo(({}) => {
                         // color: colors.darkBlue5,
                         callback: function (value, index, ticks) {
                             return formatAbbreviateNumber(value, 3);
-                        },
+                        }
                         // crossAlign: 'far',
                         // padding: 8,
                         // fontSize: isMobile ? 9 : 12,
@@ -225,13 +234,11 @@ const NaoPerformance = memo(({}) => {
 
     // const [getQueryByName , updateQuery] = useAddQuery('date')
 
-    useEffect(() => {
-        const { performance } = router.query;
-        if (performance && days.some(({ value }) => value === performance)) {
-            setFilter({
-                ...filter,
-                day: performance
-            });
+    /////////
+    useIsomorphicLayoutEffect(() => {
+        const { performanceRange } = router.query;
+        if (performanceRange && days.some(({ value }) => value === performanceRange)) {
+            setFilter((old) => ({ ...old, day: performanceRange }));
         }
     }, [router.isReady]);
 
@@ -241,13 +248,13 @@ const NaoPerformance = memo(({}) => {
 
     useEffect(() => {
         getData();
-        if (filter.day !== 'd' && filter.day !== '-d') {
+        if (filter.day !== 'd' && filter.day !== '-d' && isValidCustomDay) {
             getDataChart();
         }
     }, [filter]);
 
     useEffect(() => {
-        if (typeChart === 'fee') {
+        if (typeChart === CHART_TYPES.fee) {
             setDataChartSource({
                 labels: chartLabels,
                 datasets: [
@@ -318,8 +325,8 @@ const NaoPerformance = memo(({}) => {
                 labels: chartLabels,
                 datasets: [
                     {
-                        label: typeChart === 'volume' ? 'Volume' : typeChart === 'order' ? 'Trades' : 'Users',
-                        data: typeChart === 'volume' ? dataChartVolume : typeChart === 'order' ? dataChartOrder : dataChartUser,
+                        label: typeChart === CHART_TYPES.volume ? 'Volume' : typeChart === CHART_TYPES.order ? 'Trades' : 'Users',
+                        data: typeChart === CHART_TYPES.volume ? dataChartVolume : typeChart === CHART_TYPES.order ? dataChartOrder : dataChartUser,
                         borderColor: colors.green[6],
                         fill: 'start',
                         backgroundColor: (context) => {
@@ -365,7 +372,8 @@ const NaoPerformance = memo(({}) => {
                 params: {
                     range: filter.day,
                     marginCurrency: filter.marginCurrency,
-                    userCategory: 2
+                    userCategory: 2,
+                    
                 }
             });
             if (!(data?.error || data?.status)) {
@@ -455,10 +463,7 @@ const NaoPerformance = memo(({}) => {
     }, [fee, assets]);
 
     const handleChangeMarginCurrency = (currency) => {
-        setFilter({
-            ...filter,
-            marginCurrency: currency
-        });
+        setFilter((old) => ({ ...old, marginCurrency: currency }));
         setFee(currency);
     };
 
@@ -467,7 +472,7 @@ const NaoPerformance = memo(({}) => {
             {
                 pathname: router.pathname,
                 query: {
-                    performance: dateValue
+                    performanceRange: dateValue
                 }
             },
             undefined,
@@ -479,10 +484,7 @@ const NaoPerformance = memo(({}) => {
 
     const handleChangeDateRange = (day) => {
         if (day !== filter.day) {
-            setFilter({
-                ...filter,
-                day
-            });
+            setFilter((old) => ({ ...old, day }));
             updateDateRangeUrl(day);
         }
     };
@@ -502,6 +504,7 @@ const NaoPerformance = memo(({}) => {
                         className="flex order-last"
                         popoverClassName={'lg:mr-2 '}
                         range={range}
+                        setRange={setRange}
                     />
                     <div className="order-first gap-2 flex gap-last">
                         <button

@@ -86,9 +86,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
         </div>
     );
 
-    const CardHistoryPrice = ({ children, index }) => {
+    const CardHistoryPrice = ({ children }) => {
         return (
-            <div key={index} className={'w-full'}>
+            <div className={'w-full'}>
                 {children}
             </div>
         );
@@ -108,7 +108,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             const sumUSDT = Object.values(item.interestUSD).reduce((a, b) => a + b, 0);
                             weekNumber--;
                             return (
-                                <CardHistoryPrice index={index}>
+                                <CardHistoryPrice key={index}>
                                     <div className="w-full">
                                         <div className="flex flex-col sm:flex-row w-full sm:space-x-8 lg:w-auto">
                                             <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6">
