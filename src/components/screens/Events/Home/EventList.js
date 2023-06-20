@@ -164,8 +164,8 @@ const EventList = () => {
                 params: {
                     status: status !== -1 ? status : undefined,
                     pageSize,
-                    'filters[startTime]': start,
-                    'filters[endTime]': end,
+                    'filters[fromTime]': start,
+                    'filters[toTime]': end,
                     currentPage: page,
                     search
                 }
