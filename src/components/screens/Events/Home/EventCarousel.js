@@ -9,6 +9,7 @@ import { getEventImg, getS3Url } from 'redux/actions/utils';
 import useQuery from 'hooks/useQuery';
 import FetchApi from 'utils/fetch-api';
 import { API_MARKETING_EVENTS } from 'redux/actions/apis';
+import { useRouter } from 'next/router';
 
 const MAX_SIZE = 5;
 
@@ -87,8 +88,10 @@ const Carousel = ({ data }) => {
 };
 
 const EventCarousel = () => {
+
+    const router = useRouter();
     const { isLoading, data } = useQuery(
-        ['event_carousel'],
+        ['event_carousel', router.locale],
         async ({ signal }) => {
             const res = await FetchApi({
                 url: API_MARKETING_EVENTS,
@@ -97,7 +100,8 @@ const EventCarousel = () => {
                     signal
                 },
                 params: {
-                    pageSize: 6
+                    pageSize: 6,
+                    locale: router.locale.toUpperCase()
                 }
             });
             return res.data.events;

@@ -81,8 +81,9 @@ const Carousel = ({ data }) => {
 };
 
 const RelatedEvents = ({ id = '' }) => {
+    const router = useRouter();
     const { isLoading, data: posts } = useQuery(
-        ['event_carousel'],
+        ['event_carousel', router.locale],
         async ({ signal }) => {
             const res = await FetchApi({
                 url: API_MARKETING_EVENTS,
@@ -91,7 +92,8 @@ const RelatedEvents = ({ id = '' }) => {
                     signal
                 },
                 params: {
-                    pageSize: 6
+                    pageSize: 6,
+                    locale: router.locale.toUpperCase()
                 }
             });
             return res.data.events;
@@ -117,9 +119,10 @@ const RelatedEvents = ({ id = '' }) => {
                             </div>
                         </div>
                     ) : (
-                        <div className="mt-8 py-[72px] px-[53px] flex items-center flex-col justify-center">
-                            <NoData isAuth={true} isSearch text={t('marketing_events:no_related')} />
-                        </div>
+                        // <div className="mt-8 py-[72px] px-[53px] flex items-center flex-col justify-center">
+                        //     <NoData isAuth={true} isSearch text={t('marketing_events:no_related')} />
+                        // </div>
+                        null
                     )}
                 </>
             )}

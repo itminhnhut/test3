@@ -58,7 +58,7 @@ const ShareComponent = ({ name, title, url, children, ...rest }) => {
             );
         case 'twitter':
             return (
-                <TwitterShareButton title={title} url={url} hashtags="#NamiExchange" {...rest}>
+                <TwitterShareButton title={title} url={url} hashtags={['NamiExchange']} {...rest}>
                     {children}
                 </TwitterShareButton>
             );
@@ -79,7 +79,7 @@ const ShareComponent = ({ name, title, url, children, ...rest }) => {
 
 /**
  *
- * @param {{ params: {slug: string}, event:{data { _id: string, thumbnailImgEndpoint?: string, bannerImgEndpoint?: string, title: string, startTime: string , endTime: string, anticipate: bool, prize: string, postLink: string, isHot: bool, creatorName: string, priority: number, isHidden: bool }, article: any} }} props
+ * @param {{ params: {slug: string}, event:{data { _id: string, thumbnailImgEndpoint?: string, bannerImgEndpoint?: string, title: string, startTime: string , endTime: string, anticipate: bool, prize: string, postLink: string, isHot: bool, creatorName: string, priority: number, isHidden: bool, calendarLink?: string }, article: any} }} props
  */
 const EventDetailPage = ({ event, params }) => {
     const { data, article } = event;
@@ -117,6 +117,7 @@ const EventDetailPage = ({ event, params }) => {
                                         className="dark:!bg-dark-2 !bg-gray-12 !rounded-full !p-2 !cursor-pointer"
                                         url={`${process.env.NEXT_PUBLIC_WEB_V1}/events/${params.slug}`}
                                         title={data.title}
+                                        name={name}
                                     >
                                         {SocialIcon}
                                     </ShareComponent>
@@ -141,10 +142,16 @@ const EventDetailPage = ({ event, params }) => {
                     </div> */}
 
                     <GhostContent content={article?.html} />
-
-                    <Button variants="primary" className="py-3 px-6 w-fit mt-8">
-                        {t('marketing_events:add_to_calendar')}
-                    </Button>
+                    {data.calendarLink && (
+                        <Link href={data.calendarLink}>
+                            <a
+                                className="py-3 px-6 mt-8 w-fit rounded-md font-semibold bg-green-2 hover:bg-green-4 dark:hover:bg-green-4 text-white block"
+                                target="_blank"
+                            >
+                                {t('marketing_events:add_to_calendar')}
+                            </a>
+                        </Link>
+                    )}
 
                     <div className="mt-8">
                         <div className="font-semibold text-base mb:text-lg">{t('marketing_events:download')}</div>
@@ -184,7 +191,7 @@ const EventDetailPage = ({ event, params }) => {
                         ))}
                     </div>
 
-                    <RelatedEvents id={data["_id"]} />
+                    <RelatedEvents id={data['_id']} />
                 </div>
             </MaldivesLayout>
         </>
@@ -204,6 +211,15 @@ export const getServerSideProps = async ({ locale, params, query }) => {
             }),
             getArticle(fallbackSlug)
         ]);
+
+        if (!data) {
+            return {
+                redirect: {
+                    permanent: false,
+                    destination: '/404'
+                }
+            };
+        }
 
         return {
             props: {
