@@ -1,3 +1,5 @@
+import Chip from 'components/common/V2/Chip';
+import TabV2 from 'components/common/V2/TabV2';
 import useFetchApi from 'hooks/useFetchApi';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -9,8 +11,17 @@ import { formatPrice } from 'redux/actions/utils';
 const MAXIMUM_RECOMMEND_LENGTH = 3;
 
 const MULTIPLIES_AMOUNT = {
-    72: [10e3,10e4, 10e5, 10e6],
+    72: [10e3, 10e4, 10e5, 10e6],
     22: [10, 10e1, 10e2, 10e3]
+};
+
+const getArraySuggestion = (amount, min, max) => {
+    const x = [];
+    for (let i = -10; i < 10; i++) {
+        const value = amount * 10 ** i;
+        if (value >= min && value <= max) x.push(value);
+    }
+    return x;
 };
 
 const RecommendAmount = ({ amount, setAmount, loadingRate }) => {
@@ -47,35 +58,48 @@ const RecommendAmount = ({ amount, setAmount, loadingRate }) => {
                     );
                 }
             } else if (amount) {
-                setRcmdAmount(
-                    MULTIPLIES_AMOUNT[assetId]
-                        .map((times) => +amount * times)
-                        .filter((amountRecommend) => amountRecommend >= minimumAllowed && amountRecommend <= maximumAllowed)
-                );
+                const suggestArr = getArraySuggestion(amount, minimumAllowed, maximumAllowed);
+                setRcmdAmount(suggestArr);
+                // setRcmdAmount(
+                //     MULTIPLIES_AMOUNT[assetId]
+                //         .map((times) => +amount * times)
+                //         .filter((amountRecommend) => amountRecommend >= minimumAllowed && amountRecommend <= maximumAllowed)
+                // );
             }
         }
     }, [lastOrders, amount, maximumAllowed, minimumAllowed]);
 
     return (
-        <div className="flex items-center overflow-x-auto space-x-3 pb-3 mb-3">
+        <div className={`flex items-center gap-3 flex-wrap ${!loadingOrders && !loadingRate && rcmdAmount.length && 'mb-6'}`}>
             {!loadingOrders && !loadingRate && rcmdAmount.length ? (
-                rcmdAmount.map((amountRcmd, index) => (
-                    <div
-                        onClick={() => {
-                            setAmount(amountRcmd);
-                            setRcmdAmount((prev) => prev.filter((item) => item !== amountRcmd));
-                        }}
-                        key={index}
-                        className="cursor-pointer border min-w-[80px] text-center dark:border-divider-dark border-divider rounded-full py-3 px-5 txtSecond-2"
-                    >
-                        {formatPrice(amountRcmd, 0)}
-                    </div>
-                ))
+                <TabV2
+                    //  chipClassName="!bg-white hover:!bg-gray-6"
+                    isOverflow={true}
+                    activeTabKey={amount}
+                    onChangeTab={(key) => setAmount(key)}
+                    tabs={rcmdAmount.map((amountRcmd) => ({
+                        key: amountRcmd + '',
+                        children: formatPrice(amountRcmd, 0)
+                    }))}
+                />
             ) : (
+                // rcmdAmount.map((amountRcmd, index) => (
+                //     <Chip
+                //         selected={+amount === amountRcmd}
+                //         variants={'suggestion'}
+                //         onClick={() => {
+                //             setAmount(amountRcmd);
+                //             // setRcmdAmount((prev) => prev.filter((item) => item !== amountRcmd));
+                //         }}
+                //         key={index}
+                //     >
+                //         {formatPrice(amountRcmd, 0)}
+                //     </Chip>
+                // ))
                 <></>
             )}
         </div>
     );
 };
 
-export default React.memo(RecommendAmount);
+export default RecommendAmount;

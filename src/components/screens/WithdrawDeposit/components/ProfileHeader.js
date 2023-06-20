@@ -108,7 +108,7 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                             <div>{t('dw_partner:avg_process_time')}</div>
                         </div>
 
-                        <div className="txtPri-3">{!partner?.status ? '-' : `~${formatTimePartner(t, partner?.analyticMetadata?.avgTime)}`}</div>
+                        <div className="txtPri-3">~{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</div>
                     </Card>
                 </div>
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
@@ -124,9 +124,7 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                                 </Trans>
                             </div>
                         </div>
-                        <div className="txtPri-3 uppercase">
-                            {!partner?.status ? '-' : `${numeral(partner?.analyticMetadata?.totalValue).format('0a')} VND`}
-                        </div>
+                        <div className="txtPri-3 uppercase">{numeral(partner?.analyticMetadata?.totalValue).format('0a')} VND</div>
                     </Card>
                 </div>
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
@@ -138,11 +136,8 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                             <div>{t('dw_partner:total_completed_order')}</div>
                         </div>
                         <div className="txtPri-3">
-                            {!partner?.status
-                                ? '-'
-                                : `${formatNumber(partner?.analyticMetadata?.count || 0)}${t('dw_partner:order')}${
-                                      partner?.analyticMetadata?.count > 1 && language === LANGUAGE_TAG.EN ? 's' : ''
-                                  }`}
+                            {formatNumber(partner?.analyticMetadata?.count || 0)}{' '}
+                            {`${t('dw_partner:order')}${partner?.analyticMetadata?.count > 1 && language === LANGUAGE_TAG.EN ? 's' : ''}`}
                         </div>
                     </Card>
                 </div>

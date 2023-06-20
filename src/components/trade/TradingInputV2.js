@@ -60,9 +60,21 @@ const TradingInputV2 = ({
 
     const invalid = validator && Object.keys(validator)?.length && !validator?.isValid;
     const isError = errorEmpty ? !value || invalid : value > 0 && invalid;
-
     return (
         <div className="flex flex-col w-full relative">
+            {/* Label */}
+            {label && (
+                <div
+                    onClick={focusInput}
+                    className={classNames(
+                        'text-txtSecondary dark:text-txtSecondary-dark text-sm cursor-default whitespace-nowrap mb-2',
+                        { 'font-medium !text-xs': onusMode },
+                        labelClassName
+                    )}
+                >
+                    {label || 'Label?'}
+                </div>
+            )}
             <div
                 className={classNames(
                     `relative flex items-center px-[12px] py-2.5 rounded-md border border-transparent w-full ${
@@ -76,19 +88,6 @@ const TradingInputV2 = ({
                     containerClassName
                 )}
             >
-                {/* Label */}
-                {label && (
-                    <div
-                        onClick={focusInput}
-                        className={classNames(
-                            'text-txtSecondary dark:text-txtSecondary-dark text-sm cursor-default whitespace-nowrap',
-                            { 'font-medium !text-xs': onusMode },
-                            labelClassName
-                        )}
-                    >
-                        {label || 'Label?'}
-                    </div>
-                )}
                 {isError && isFocus && errorTooltip ? (
                     <div
                         className={classNames('absolute right-0 -top-1 -translate-y-full z-50 flex flex-col items-center', {
@@ -154,7 +153,6 @@ const TradingInputV2 = ({
                         })}
                     >
                         <X onClick={onClear} size={16} className="cursor-pointer" color={isDark ? colors.darkBlue5 : colors.gray[1]} />
-                        
                     </div>
                 )}
                 <div className={classNames('', tailContainerClassName)}>{renderTail && isFunction(renderTail) ? renderTail() : renderTail}</div>
