@@ -56,7 +56,7 @@ const EventItem = (props) => {
         }
         return `${format.hours}:${format.minutes}:${format.seconds}`;
     };
-    const getNearEventBadge = (start, end) => {
+    const getUnfinishedBagde = (start, end) => {
         const status = getStatus(start, end);
 
         if (status === STATUSES.upcoming) {
@@ -79,7 +79,7 @@ const EventItem = (props) => {
     return (
         <Link href={`/events/${props.slug || '#'}`}>
             <a className="relative flex mt-4 mb:mt-7 rounded-xl overflow-hidden flex-wrap mb:flex-nowrap bg-white dark:bg-dark-4 border dark:border-none border-divider shadow-card_light">
-                {getNearEventBadge(props.startTime, props.endTime)}
+                {getUnfinishedBagde(props.startTime, props.endTime)}
                 <ImageWrapper>
                     <Image src={getEventImg(props.thumbnailImgEndpoint)} width={503} height={265} className="object-cover bg-gray" />
                 </ImageWrapper>

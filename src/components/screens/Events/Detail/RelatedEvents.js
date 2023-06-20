@@ -13,6 +13,7 @@ import EventItem, { SkeletonEventItem } from '../EventItem/EventItem';
 import { useRouter } from 'next/router';
 import NoData from 'components/common/V2/TableV2/NoData';
 import { useTranslation } from 'next-i18next';
+import useCurrentPosts from '../hooks/useCurrentPosts';
 
 
 const MAX_SIZE = 5;
@@ -81,28 +82,7 @@ const Carousel = ({ data }) => {
 };
 
 const RelatedEvents = ({ id = '' }) => {
-    const router = useRouter();
-    const { isLoading, data: posts } = useQuery(
-        ['event_carousel', router.locale],
-        async ({ signal }) => {
-            const res = await FetchApi({
-                url: API_MARKETING_EVENTS,
-                options: {
-                    method: 'GET',
-                    signal
-                },
-                params: {
-                    pageSize: 6,
-                    locale: router.locale.toUpperCase()
-                }
-            });
-            return res.data.events;
-        },
-        {
-            persist: true,
-            ttl: '2h'
-        }
-    );
+    const { isLoading, data: posts } = useCurrentPosts();
 
     const data = posts?.filter?.(post => post["_id"] !== id)
     const { t } = useTranslation();

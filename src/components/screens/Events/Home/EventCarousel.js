@@ -10,6 +10,7 @@ import useQuery from 'hooks/useQuery';
 import FetchApi from 'utils/fetch-api';
 import { API_MARKETING_EVENTS } from 'redux/actions/apis';
 import { useRouter } from 'next/router';
+import useCurrentPosts from '../hooks/useCurrentPosts';
 
 const MAX_SIZE = 5;
 
@@ -89,28 +90,7 @@ const Carousel = ({ data }) => {
 
 const EventCarousel = () => {
 
-    const router = useRouter();
-    const { isLoading, data } = useQuery(
-        ['event_carousel', router.locale],
-        async ({ signal }) => {
-            const res = await FetchApi({
-                url: API_MARKETING_EVENTS,
-                options: {
-                    method: 'GET',
-                    signal
-                },
-                params: {
-                    pageSize: 6,
-                    locale: router.locale.toUpperCase()
-                }
-            });
-            return res.data.events;
-        },
-        {
-            persist: true,
-            ttl: '2h'
-        }
-    );
+    const { isLoading, data } = useCurrentPosts();
 
     return (
         <>
