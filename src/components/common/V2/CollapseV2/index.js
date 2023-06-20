@@ -47,7 +47,6 @@ const index = ({
     }, [reload]);
 
     const handleOpen = () => {
-        console.log('handleOpen')
         if (isCustom) return;
         clearTimeout(timer.current);
         wrapper?.current?.style.height = !open ? list.current.clientHeight + 'px' : 0;

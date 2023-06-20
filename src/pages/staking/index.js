@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import dynamic from 'next/dynamic';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -9,6 +8,7 @@ import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import { useWindowSize } from 'react-use';
+import styled from 'styled-components';
 
 const CalculateInterest = dynamic(() => import('./components/CalculateInterest.js'), { ssr: false });
 const HeaderStaking = dynamic(() => import('./components/Header.js'), { ssr: false });
@@ -33,21 +33,14 @@ const Reference = () => {
                 <main className="bg-white dark:bg-shadow">
                     <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
                         <HeaderStaking />
+                        <WhyChooseNamiStaking />
                         <StepStaking isDark={isDark} isMobile={isMobile} />
                         <CalculateInterest />
-                        <WhyChooseNamiStaking />
                     </div>
-                    <section className="relative mt-0 lg:mt-[120px]">
-                        <div className="absolute w-full h-full cursor-pointer">
-                            {isMobile ? (
-                                <Image src="/images/staking/bg_digital_faq_mb.png" layout="fill" objectFit="cover" quality={100} />
-                            ) : (
-                                <Image src="/images/staking/bg_digital_faq.png" layout="fill" objectFit="cover" quality={100} />
-                            )}
-                        </div>
+                    <WrapperAssetFAQ mobile={isMobile} className="relative pt-0  lg:pt-[120px]">
                         <AssetDigitalStaking isMobile={isMobile} />
                         <FAQStaking isDark={isDark} />
-                    </section>
+                    </WrapperAssetFAQ>
                 </main>
             </MaldivesLayout>
         </>
@@ -59,5 +52,12 @@ export const getStaticProps = async ({ locale }) => ({
         ...(await serverSideTranslations(locale, ['common', 'navbar', 'reference', 'broker', 'futures']))
     }
 });
+
+const WrapperAssetFAQ = styled.section`
+    background-image: url(${(props) => (props.mobile ? '/images/staking/bg_digital_faq_mb.png' : '/images/staking/bg_digital_faq.png')});
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+`;
 
 export default Reference;

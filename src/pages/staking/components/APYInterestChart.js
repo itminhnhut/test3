@@ -143,9 +143,10 @@ const APYInterestChart = () => {
                 <Chart options={options} series={series} type="area" width="100%" />
 
                 <div className="ml-5 pr-2 flex justify-between">
-                    {TIMER.map((item, key) => {
+                    {TIMER.map((item) => {
                         return (
                             <div
+                                key={`time_${item[language]}`}
                                 className="text-txtSecondary cursor-pointer dark:text-txtSecondary-dark
                                 text-sm rounded-md px-4 py-2 flex items-center border
                             border-divider dark:border-divider-dark"
