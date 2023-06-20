@@ -38,14 +38,11 @@ const STAKING_CURRENCIES = [
 const INITIAL_STAKING_CURRENCY = STAKING_CURRENCIES[0];
 
 const CalculateInterest = () => {
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation();
+    const { t } = useTranslation();
     const [stakingCurrency, setStakingCurrency] = useState(INITIAL_STAKING_CURRENCY);
     const [amountStaking, setAmountStaking] = useState(100000);
     return (
-        <section className="my-[88px] md:my-[120px] px-3 py-10 md:px-20 md:py-[60px] dark:bg-dark-4 bg-white border-divider dark:border-divider-dark border rounded-xl">
+        <section className="mt-[88px] lg:mt-[118px] px-3 py-10 md:px-20 md:py-[60px] dark:bg-dark-4 bg-white border-divider dark:border-divider-dark border rounded-xl">
             <div className="text-center space-y-3 mb-10 md:mb-[60px]">
                 <div className="text-2xl md:text-5xl font-semibold">Tính toán lợi nhuận</div>
                 <div className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">

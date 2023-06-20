@@ -20,7 +20,9 @@ const ModalV2 = ({
     closeButton = true,
     btnCloseclassName = '',
     loading = false,
-    animateModal = true
+    animateModal = true,
+    divOtherWorld = null,
+    setHeighModal
 }) => {
     const wrapperRef = useRef(null);
     const container = useRef(null);
@@ -38,6 +40,15 @@ const ModalV2 = ({
         useOnClickOutside(wrapperRef, handleOutside, loading, container);
     }
 
+    // useEffect(() => {
+    //     const divElement = divRef.current;
+
+    //     if (divElement) {
+    //       const divHeight = divElement.clientHeight;
+    //       console.log('Height of the div:', divHeight);
+    //     }
+    //   }, []);
+
     useEffect(() => {
         clearTimeout(timer.current);
         timer.current = setTimeout(
@@ -50,6 +61,7 @@ const ModalV2 = ({
     }, [isVisible]);
 
     if (!isVisible && !mount) return null;
+
     return (
         <Portal portalId={PORTAL_MODAL_ID}>
             <div
@@ -70,6 +82,11 @@ const ModalV2 = ({
                         'flex-col justify-end': isMobile && width && width < 820
                     })}
                 >
+                    {divOtherWorld && (
+                        <div className="fixed top-0 w-full overflow-y-auto" style={{ height: `calc(100% - ${wrapperRef?.current?.clientHeight}px)` }}>
+                            {divOtherWorld}
+                        </div>
+                    )}
                     <div
                         ref={wrapperRef}
                         className={classnames(

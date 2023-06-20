@@ -17,7 +17,7 @@ import { formatNanNumber } from 'redux/actions/utils';
 import { isNumber } from 'lodash';
 import ModalV2 from 'components/common/V2/ModalV2';
 import MCard from 'components/common/MCard';
-const { addMonths, addWeeks } = require('date-fns');
+const { addMonths, addWeeks, subDays, getDay, addDays } = require('date-fns');
 
 const INTERVAL = {
     DAY: 'day',
@@ -43,9 +43,14 @@ const PnlChanging = ({
     });
 
     useEffect(() => {
+        console.log('___________', dataPnl.values);
         if (dataPnl?.labels?.length > 0) {
-            let labels = dataPnl.labels.map((obj) => parseTitle(obj.date, dataPnl?.interval));
+            let labels = dataPnl.labels.map((obj) => parseTitle(obj.date, dataPnl?.interval, false, filter.startDate));
             let values = dataPnl.values.map((obj) => obj.pnl);
+
+            // const min = -100000;
+            // const max = 100000;
+            // let values = dataPnl.values.map((obj) => Math.floor(Math.random() * (max - min + 1)) + min);
 
             setPnlChartData({
                 labels: labels || [],
@@ -82,7 +87,7 @@ const PnlChanging = ({
                     if (!isMobile) {
                         const { dataIndex } = context?.chart?.tooltip?.dataPoints?.['0'];
 
-                        const title = parseTitle(dataPnl.labels[dataIndex]?.date, dataPnl?.interval, true);
+                        const title = parseTitle(dataPnl.labels[dataIndex]?.date, dataPnl?.interval, true, filter.startDate);
 
                         let margin = dataPnl.values[dataIndex].margin ?? 1;
                         let pnl = dataPnl.values[dataIndex].pnl;
@@ -184,7 +189,7 @@ const PnlChanging = ({
         <div className={`mt-12 md:p-8 transition-all ${isMobile ? 'bg-transparent' : 'rounded-xl bg-gray-13 dark:bg-dark-4'}`}>
             {isMobile ? (
                 <>
-                    <CollapseV2
+                    {/* <CollapseV2
                         className="w-full"
                         divLabelClassname="w-full justify-between"
                         chrevronStyled={{ size: 24, color: isDark ? '#E2E8F0' : '#1E1E1E' }}
@@ -198,20 +203,26 @@ const PnlChanging = ({
                         }
                         labelClassname="text-base font-semibold"
                         isDividerBottom={true}
-                    >
-                        <div className="mt-6">
-                            <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
-                        </div>
-                        {/* Chu thich */}
-                        <div className="flex items-center gap-x-4 mt-9">
-                            <Note iconClassName="bg-green-6" title={t('portfolio:profit')} />
-                            <Note iconClassName="bg-red-2" title={t('portfolio:loss')} />
-                        </div>
-                        <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
-                            <BxsInfoCircle />
-                            <span>{t('portfolio:click_column_for_details')}</span>
-                        </div>
-                    </CollapseV2>
+                    > */}
+                    <HeaderTooltip
+                        isMobile
+                        title={t('portfolio:historical_pnl')}
+                        tooltipContent={t('portfolio:pnl_changing_tooltip')}
+                        tooltipId={'pnl_changing_tooltip'}
+                    />
+                    <div className="mt-6 !relative">
+                        <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
+                    </div>
+                    {/* Chu thich */}
+                    <div className="flex items-center gap-x-4 mt-9">
+                        <Note iconClassName="bg-green-6" title={t('portfolio:profit')} />
+                        <Note iconClassName="bg-red-2" title={t('portfolio:loss')} />
+                    </div>
+                    <div className="flex mt-6 items-center gap-x-2 p-3 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4">
+                        <BxsInfoCircle />
+                        <span>{t('portfolio:click_column_for_details')}</span>
+                    </div>
+                    {/* </CollapseV2> */}
                     <ModalV2
                         isVisible={isNumber(showDetails)}
                         onBackdropCb={() => setShowDetails(null)}
@@ -225,7 +236,7 @@ const PnlChanging = ({
                                 <div className="flex items-center justify-between">
                                     <span className="txtSecond-3">{t('common:global_label.date')}</span>
                                     <div className="whitespace-nowrap font-semibold flex items-center">
-                                        {parseTitle(dataPnl.labels[showDetails]?.date, dataPnl?.interval)}
+                                        {parseTitle(dataPnl.labels[showDetails]?.date, dataPnl?.interval, false, filter.startDate)}
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between mt-2.5">
@@ -265,7 +276,7 @@ const PnlChanging = ({
                         </div>
                     ) : (
                         <div>
-                            <div className=" w-full max-h-[450px] mt-8">
+                            <div className="!relative w-full max-h-[450px] mt-8">
                                 <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
                             </div>
                             {/* Chu thich */}
@@ -332,6 +343,7 @@ const generateThead = (isDark, label) => {
     th.style.fontSize = '14px';
     th.style.fontWeight = 'normal';
     th.style.paddingBottom = '12px';
+    th.style.whiteSpace = 'nowrap'
     const text = document.createTextNode(label);
 
     th.appendChild(text);
@@ -376,6 +388,7 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
         spanElement.className = 'red-2 font-semibold';
         spanElement.style.color = pnl > 0 ? colors.green['2'] : colors.red['2'];
         spanElement.textContent = `${pnl > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`;
+        liElement3.style.whiteSpace = 'nowrap';
         liElement3.appendChild(spanElement);
         ulElement.appendChild(liElement3);
 
@@ -411,6 +424,7 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
 
     const datasetIndex = tooltip.dataPoints[0].datasetIndex; // Get the index of the hovered dataset
     const barEl = chart.getDatasetMeta(datasetIndex)?.data[dataIndex];
+
     /**
      * tooltip.caretX: tọa độ x của current bar
      * barEl.width: độ rộng của current bar
@@ -420,21 +434,30 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
     // Trường hợp những Bar cuối sẽ bị overflow
     let tooltipCaretClassName;
 
-    if (tooltip.caretX + tooltipWidth > chartWidth) {
-        tooltipEl.style.left = positionX + barEl.x - tooltipWidth / 2 - 12 - barEl.width / 2 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
-        tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
+    // console.log(barEl.x, tooltipWidth, chartWidth);
+    if (barEl.x + tooltipWidth > chartWidth) {
+        tooltipEl.style.left = barEl.x - tooltipWidth / 2 - barEl.width - 6 -1 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
         tooltipEl.style.font = tooltip.options.bodyFont.string;
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
         tooltipEl.style.opacity = 1;
         tooltipCaretClassName = 'tooltip-caret-right';
     } else {
         tooltipEl.style.left = positionX + barEl.x + barEl.width / 2 + tooltipWidth / 2 + 12 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
-        tooltipEl.style.top = positionY - tooltipHeight / 3 + barEl.height / 2 + 'px'; // positionY + tooltip.caretY / 2 + 'px';
         tooltipEl.style.font = tooltip.options.bodyFont.string;
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
         tooltipEl.style.opacity = 1;
         tooltipCaretClassName = 'tooltip-caret-left';
     }
+
+    const baseY = barEl.base;
+    let calcY;
+    if (barEl.y > baseY) {
+        // Trường bar hợp nằm dưới đường Zero
+        calcY = baseY + barEl.height / 2 - tooltipHeight / 2;
+    } else {
+        calcY = baseY - barEl.height / 2 - tooltipHeight / 2;
+    }
+    tooltipEl.style.top = calcY + 'px'; // positionY + tooltip.caretY / 2 + 'px';
 
     // Create caret:
     let tooltipCaretEl = tooltipEl.querySelector(`.${tooltipCaretClassName}`);
@@ -444,7 +467,7 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
         tooltipCaretEl = document.createElement('div');
 
         if (tooltip.caretX + tooltipWidth > chartWidth) {
-            tooltipCaretEl.style.right = - barEl.width - 6 - 3 + 'px'; //barEl.width;
+            tooltipCaretEl.style.right = -barEl.width - 6 - 3 + 'px'; //barEl.width;
         } else {
             tooltipCaretEl.style.left = -barEl.width - 6 - 3 + 'px'; //barEl.width;
         }
@@ -464,20 +487,25 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
     tooltipEl.appendChild(tooltipCaretEl);
 };
 
-const parseTitle = (stringDate, interval, isDetails = false) => {
+const parseTitle = (stringDate, interval, isDetails = false, startDate) => {
+    const dayOfWeek = getDay(new Date(startDate));
+
+    // Calculate the delta from Monday (assuming Monday is the start of the week)
+    const delta = (dayOfWeek + 6) % 7;
+
     let title = '';
-    const curDate = new Date(stringDate);
+    const curDate = addDays(new Date(stringDate), delta);
     switch (interval) {
         case INTERVAL.DAY:
             title = formatTime(curDate, isDetails ? 'dd/MM/yyyy' : 'dd/MM');
             break;
         case INTERVAL.WEEK:
             if (!isDetails) title = formatTime(curDate, 'dd/MM');
-            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addWeeks(curDate, 1), 'dd/MM/yyyy');
+            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(subDays(addWeeks(curDate, 1), 1), 'dd/MM/yyyy');
             break;
         case INTERVAL.MONTH:
             if (!isDetails) title = formatTime(curDate, 'MM/yyyy');
-            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(addMonths(curDate, 1), 'dd/MM/yyyy');
+            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(subDays(addMonths(curDate, 1), 1), 'dd/MM/yyyy');
             break;
         default:
             break;

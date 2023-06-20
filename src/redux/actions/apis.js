@@ -277,6 +277,7 @@ export const API_FUTURES_STATISTIC_OVERVIEW = API_V3_PREFIX + 'wallet/history/fu
 export const API_FUTURES_STATISTIC_PAIRS = API_V3_PREFIX + 'wallet/history/futures-statistic/ah-my-favorite-pairs'
 export const API_FUTURES_STATISTIC_TOP_POSITIONS = API_V3_PREFIX + 'wallet/history/futures-statistic/top-positions'
 export const API_FUTURES_STATISTIC_PNL = API_V3_PREFIX + 'wallet/history/futures-statistic/pnl-fluctuation'
+export const API_FUTURES_STATISTIC_DW = API_V3_PREFIX + 'wallet/history/futures-statistic/deposit-withdraw'
 
 export const API_PORTFOLIO_OVERVIEW = API_V3_PREFIX + 'portfolio/futures/overview';
 export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + 'portfolio/futures/account';

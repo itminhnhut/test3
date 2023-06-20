@@ -15,6 +15,7 @@ const AssetDigitalStaking = ({ isMobile }) => {
         return ASSET_DIGITAL.map((item) => {
             return (
                 <section
+                    key={`asset-digital-${item.title}`}
                     className="h-full lg:h-[589px] w-full
                     border-[1px] dark:border-[#222940] dark:bg-dark-4 bg-white border-[#dcdfe6] rounded-xl border-solid
                     px-[60px] py-10 lg:py-[80px] flex flex-col justify-center items-center
