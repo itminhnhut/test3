@@ -8,7 +8,7 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
-import { find } from 'lodash';
+import { STAKING_RANGE } from './CalculateInterest';
 
 function f(x) {
     return x * x;
@@ -41,23 +41,22 @@ const TIMER = [
 
 const MONTHS_PER_YEAR = 12;
 
-const APYInterestChart = ({ amount, currency }) => {
+const APYInterestChart = ({ amount, currencyId, currencyApy }) => {
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
     const {
         i18n: { language }
     } = useTranslation();
 
-    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || null;
-    const currencyConfig = useMemo(() => {
-        return find(assetConfigs, {
-            id: currency.value
-        });
-    }, [currency.value, assetConfigs]);
     const [hoverData, setHoverData] = useState({
         value: 0,
         index: 0
     });
+
+    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
+    const currencyConfig = useMemo(() => {
+        return assetConfigs.find((asset) => asset?.id === currencyId);
+    }, [currencyId, assetConfigs]);
 
     const options = useMemo(
         () => ({
@@ -148,9 +147,11 @@ const APYInterestChart = ({ amount, currency }) => {
     );
 
     const apyByMonth = useMemo(
-        () => getApyByMonth({ amount, percentPerMonth: currency.apyPercent / MONTHS_PER_YEAR, numberOfMonth: hoverData.index + 1 }),
-        [hoverData.index, currency.apyPercent, amount]
+        () => getApyByMonth({ amount, percentPerMonth: currencyApy / MONTHS_PER_YEAR, numberOfMonth: hoverData.index + 1 }),
+        [hoverData.index, currencyApy, amount]
     );
+
+    const isAmountOutOfRange = amount < STAKING_RANGE[currencyId].min || amount > STAKING_RANGE[currencyId].max;
 
     return (
         typeof window !== 'undefined' && (
@@ -160,13 +161,15 @@ const APYInterestChart = ({ amount, currency }) => {
                     <div className="space-y-1 mb-4">
                         <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Lãi cuối kỳ</div>
                         <div className="font-semibold md:text-xl">
-                            {formatNumber(apyByMonth.interestRate, currencyConfig?.assetDigit || 0)} {currencyConfig?.assetCode}
+                            {isAmountOutOfRange
+                                ? '--'
+                                : `${formatNumber(apyByMonth.interestRate, currencyConfig?.assetDigit || 0)} ${currencyConfig?.assetCode}`}
                         </div>
                     </div>
                     <div className="space-y-1">
                         <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Số dư cuối kỳ</div>
                         <div className="font-semibold md:text-xl">
-                            {formatNumber(apyByMonth.realAmount, currencyConfig?.assetDigit || 0)} {currencyConfig?.assetCode}
+                            {isAmountOutOfRange ? '--' : `${formatNumber(apyByMonth.realAmount, currencyConfig?.assetDigit || 0)} ${currencyConfig?.assetCode}`}
                         </div>
                     </div>
                 </div>
