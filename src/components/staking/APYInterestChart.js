@@ -49,11 +49,11 @@ const getApyByMonth = ({ allowAmount, amount, percentPerDay, numberOfMonth }) =>
 };
 
 const TIMER = [
-    { vi: '1 tháng', en: '1 tháng', key: 1 },
-    { vi: '12 tháng', en: '12 tháng', key: 12 },
-    { vi: '24 tháng', en: '24 tháng', key: 24 },
-    { vi: '36 tháng', en: '36 tháng', key: 36 },
-    { vi: '48 tháng', en: '48 tháng', key: 48 }
+    { vi: '1 tháng', en: '1 Month', key: 1 },
+    { vi: '12 tháng', en: '12 Month', key: 12 },
+    { vi: '24 tháng', en: '24 Month', key: 24 },
+    { vi: '36 tháng', en: '36 Month', key: 36 },
+    { vi: '48 tháng', en: '48 Month', key: 48 }
 ];
 
 const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {

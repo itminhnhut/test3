@@ -7,8 +7,19 @@ import { FAQ } from 'constants/staking';
 
 const FAQStaking = ({ isDark }) => {
     const {
+        t,
         i18n: { language }
     } = useTranslation();
+
+    const renderContent = (value) => {
+        if (!value.content?.isHTMl)
+            return (
+                <ul className="list-disc pl-5">
+                    <li className="text-gray-1 dark:text-gray-7">{value.content[language]}</li>
+                </ul>
+            );
+        return <div dangerouslySetInnerHTML={{ __html: value.content[language] }} />;
+    };
 
     const renderFAQ = useMemo(() => {
         return FAQ.map((item, index) => {
@@ -24,9 +35,7 @@ const FAQStaking = ({ isDark }) => {
                     isDividerBottom={index !== FAQ.length - 1}
                     dividerBottomClassName="!mt-5"
                 >
-                    <ul className="list-disc pl-5">
-                        <li className="text-gray-1 dark:text-gray-7">{item.content[language]}</li>
-                    </ul>
+                    {renderContent(item)}
                 </CollapseV2>
             );
         });
@@ -34,7 +43,7 @@ const FAQStaking = ({ isDark }) => {
 
     return (
         <section className="max-w-screen-v3  2xl:max-w-screen-xxl m-auto px-4 mt-[88px]">
-            <h2 className="text-2xl lg:text-5xl font-semibold text-gray-15 dark:text-gray-4">Các câu hỏi thường gặp (FAQ)</h2>
+            <h2 className="text-2xl lg:text-5xl font-semibold text-gray-15 dark:text-gray-4">{t('staking:faq.title')}</h2>
             <div className="mt-8 lg:mt-[60px]">{renderFAQ}</div>
         </section>
     );

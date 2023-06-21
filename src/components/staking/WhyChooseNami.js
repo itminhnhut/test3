@@ -6,6 +6,7 @@ import { WHY_CHOOSE_NAMI } from 'constants/staking';
 
 const WhyChooseNamiStaking = () => {
     const {
+        t,
         i18n: { language }
     } = useTranslation();
 
@@ -25,7 +26,7 @@ const WhyChooseNamiStaking = () => {
 
     return (
         <section className="mt-[88px] lg:mt-[120px]">
-            <h2 className="text-gray-15 dark:text-gray-4 text-2xl lg:text-5xl font-semibold text-center">Tại sao nên chọn Nami Exchange?</h2>
+            <h2 className="text-gray-15 dark:text-gray-4 text-2xl lg:text-5xl font-semibold text-center">{t('staking:why_nami.title')}</h2>
             <div className="flex flex-col lg:flex-row gap-x-[103px] justify-between mt-[60px]">
                 <div className="w-full text-center">
                     <Image width="596px" height="520px" src="/images/staking/bg_why_choose_nami.png" />

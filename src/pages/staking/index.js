@@ -40,7 +40,7 @@ const Reference = () => {
             <MaldivesLayout>
                 <main className="bg-white dark:bg-shadow">
                     <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
-                        <HeaderStaking isMobile={isMobile} />
+                        <HeaderStaking />
                         <StepStaking isDark={isDark} isMobile={isMobile} />
                         <WhyChooseNamiStaking />
                         <CalculateInterest />
@@ -57,7 +57,7 @@ const Reference = () => {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'navbar', 'reference', 'broker', 'futures']))
+        ...(await serverSideTranslations(locale, ['common', 'navbar', 'staking']))
     }
 });
 

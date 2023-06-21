@@ -15,15 +15,23 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
         i18n: { language }
     } = useTranslation();
 
-    const handleDirectHref = (href, assetId) => {
-        if (!auth) {
-            const redirectLogin = getLoginUrl('sso', 'login', {
-                redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${assetId}`
-            });
-            router.push(redirectLogin);
-        } else {
-            router.push(href);
-        }
+    const renderBtnAssetDigital = (data) => {
+        if (!auth)
+            return (
+                <a
+                    className="w-full"
+                    href={getLoginUrl('sso', 'login', {
+                        redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${data.title}}`
+                    })}
+                >
+                    <ButtonV2>{data.btn[language]}</ButtonV2>
+                </a>
+            );
+        return (
+            <a className="w-full" href={data.href}>
+                <ButtonV2>{data.btn[language]}</ButtonV2>
+            </a>
+        );
     };
 
     const renderAssetDigital = useMemo(() => {
@@ -44,10 +52,9 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
                         className="border-t border-divider dark:border-divider-dark
                             divide-y divide-divider dark:divide-divider-dark space-y-3 w-full my-5 lg:my-7"
                     />
-                    <div className="text-gray-15 dark:text-gray-4 text-sm lg:text-base">{item.content}</div>
+                    <div className="text-gray-15 dark:text-gray-4 text-sm lg:text-base">{item.content[language]}</div>
                     <div className="text-[20px] lg:text-3xl font-semibold text-green-2 mg-1 lg:mt-2 mb-6 lg:mb-10">{item.percent}%</div>
-
-                    <ButtonV2 onClick={() => handleDirectHref(item.href, item.title)}>{item.btn[language]}</ButtonV2>
+                    {renderBtnAssetDigital(item)}
                 </section>
             );
         });
@@ -57,14 +64,6 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
         <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
             <section className="flex flex-col gap-y-4 lg:gap-y-0 lg:flex-row lg:gap-[80px] justify-between px-0 lg:px-[108px] relative z-20">
                 {renderAssetDigital}
-                <a
-                    href={getLoginUrl('sso', 'login', {
-                        redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=VNDC}`
-                    })}
-                    className="hidden md:block btn btn-primary"
-                >
-                    2
-                </a>
             </section>
         </section>
     );
