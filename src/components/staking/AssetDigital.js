@@ -59,7 +59,7 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
                 {renderAssetDigital}
                 <a
                     href={getLoginUrl('sso', 'login', {
-                        redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${assetId}`
+                        redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=VNDC}`
                     })}
                     className="hidden md:block btn btn-primary"
                 >
