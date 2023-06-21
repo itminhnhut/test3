@@ -1,31 +1,45 @@
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import dynamic from 'next/dynamic';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, memo } from 'react';
 import { formatNumber } from 'redux/actions/utils';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
-import { find } from 'lodash';
+import { STAKING_RANGE } from './CalculateInterest';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-function f(x) {
-    return x * x;
-}
-let xValues = Array.from({ length: 48 }, (_, i) => i + 1);
-let yValues = xValues.map(f);
+/* Công thức tính series Data.
+    function f(x) {
+        return x * x;
+    }
+    let xValues = Array.from({ length: 48 }, (_, i) => i + 1);
+    let yValues = xValues.map(f);
+*/
 
 const series = [
     {
         name: 'Series 1',
-        data: yValues
+        data: [
+            1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 289, 324, 361, 400, 441, 484, 529, 576, 625, 676, 729, 784, 841, 900, 961, 1024,
+            1089, 1156, 1225, 1296, 1369, 1444, 1521, 1600, 1681, 1764, 1849, 1936, 2025, 2116, 2209, 2304
+        ] // data = yValues
     }
 ];
 
-const getApyByMonth = ({ amount, percentPerMonth, numberOfMonth }) => {
-    const realAmount = amount * Math.pow(1 + percentPerMonth / 100, numberOfMonth);
+const getApyByMonth = ({ amount, percentPerDay, numberOfMonth }) => {
+    const monthsToDays = {
+        1: 30,
+        12: 365,
+        24: 730,
+        36: 1095,
+        48: 1460
+    };
+
+    // công thức tính lãi kép theo tháng
+    const realAmount = amount * Math.pow(1 + percentPerDay / 100, monthsToDays[+numberOfMonth] || numberOfMonth * 30);
     return {
         interestRate: realAmount - amount,
         realAmount
@@ -40,25 +54,22 @@ const TIMER = [
     { vi: '48 tháng', en: '48 tháng', value: 48 }
 ];
 
-const MONTHS_PER_YEAR = 12;
-
-const APYInterestChart = ({ amount, currency }) => {
+const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
     const {
         i18n: { language }
     } = useTranslation();
 
-    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || null;
-    const currencyConfig = useMemo(() => {
-        return find(assetConfigs, {
-            id: currency.value
-        });
-    }, [currency.value, assetConfigs]);
     const [hoverData, setHoverData] = useState({
         value: 0,
         index: 0
     });
+
+    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
+    const currencyConfig = useMemo(() => {
+        return assetConfigs.find((asset) => asset?.id === currencyId);
+    }, [currencyId, assetConfigs]);
 
     const options = useMemo(
         () => ({
@@ -149,57 +160,64 @@ const APYInterestChart = ({ amount, currency }) => {
     );
 
     const apyByMonth = useMemo(
-        () => getApyByMonth({ amount, percentPerMonth: currency.apyPercent / MONTHS_PER_YEAR, numberOfMonth: hoverData.index + 1 }),
-        [hoverData.index, currency.apyPercent, amount]
+        () => getApyByMonth({ amount, percentPerDay: currencyDayInterest, numberOfMonth: hoverData.index + 1 }),
+        [hoverData.index, currencyDayInterest, amount]
     );
 
-    return (
-        <Wrapper className="relative -ml-5 -mr-2 md:m-0">
-            <div className="absolute left-10 top-10">
-                <div className="font-semibold text-sm mb-4">Sau {hoverData.index + 1} tháng bạn sẽ nhận được</div>
-                <div className="space-y-1 mb-4">
-                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Lãi cuối kỳ</div>
-                    <div className="font-semibold md:text-xl">
-                        {formatNumber(apyByMonth.interestRate, currencyConfig?.assetDigit || 0)} {currencyConfig?.assetCode}
-                    </div>
-                </div>
-                <div className="space-y-1">
-                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Số dư cuối kỳ</div>
-                    <div className="font-semibold md:text-xl">
-                        {formatNumber(apyByMonth.realAmount, currencyConfig?.assetDigit || 0)} {currencyConfig?.assetCode}
-                    </div>
-                </div>
-            </div>
-            <div className="">
-                <Chart options={options} series={series} type="area" />
-            </div>
+    const isAmountOutOfRange = amount < STAKING_RANGE[currencyId].min || amount > STAKING_RANGE[currencyId].max;
 
-            <div className="ml-5 z-[5] -mt-4 mr-2 flex md:justify-between relative">
-                {TIMER.map((item, key) => {
-                    return (
-                        <div
-                            onClick={() => {
-                                setHoverData({ index: item.value - 1 });
-                            }}
-                            className="first:pl-0 pl-2 w-1/5 md:w-auto  md:pl-0 w"
-                            key={item.value}
-                        >
-                            <div
-                                className={classNames(
-                                    `text-txtSecondary bg-hover-1 dark:bg-dark-2 cursor-pointer dark:text-txtSecondary-dark
-                               text-xs md:text-sm rounded-md md:px-4 py-2 flex items-center justify-center`,
-                                    {
-                                        '!bg-teal/10 !text-teal font-semibold': item.value === hoverData.index + 1
-                                    }
-                                )}
-                            >
-                                {item[language]}
-                            </div>
+    return (
+        typeof window !== 'undefined' && (
+            <Wrapper className="relative -ml-5 -mr-2 md:m-0">
+                <div className="absolute left-10 top-10">
+                    <div className="font-semibold text-sm mb-4">Sau {hoverData.index + 1} tháng bạn sẽ nhận được</div>
+                    <div className="space-y-1 mb-4">
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Lãi cuối kỳ</div>
+                        <div className="font-semibold md:text-xl">
+                            {isAmountOutOfRange
+                                ? '--'
+                                : `${formatNumber(apyByMonth.interestRate, currencyConfig?.assetDigit || 0)} ${currencyConfig?.assetCode}`}
                         </div>
-                    );
-                })}
-            </div>
-        </Wrapper>
+                    </div>
+                    <div className="space-y-1">
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Số dư cuối kỳ</div>
+                        <div className="font-semibold md:text-xl">
+                            {isAmountOutOfRange ? '--' : `${formatNumber(apyByMonth.realAmount, currencyConfig?.assetDigit || 0)} ${currencyConfig?.assetCode}`}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="">
+                    <Chart options={options} series={series} type="area" />
+                </div>
+
+                <div className="ml-5 z-[5] -mt-4 mr-2 flex md:justify-between relative">
+                    {TIMER.map((item, key) => {
+                        return (
+                            <div
+                                onClick={() => {
+                                    setHoverData({ index: item.value - 1 });
+                                }}
+                                className="first:pl-0 pl-2 w-1/5 md:w-auto  md:pl-0 w"
+                                key={item.value}
+                            >
+                                <div
+                                    className={classNames(
+                                        `text-txtSecondary bg-hover-1 dark:bg-dark-2 cursor-pointer dark:text-txtSecondary-dark
+                               text-xs md:text-sm rounded-md md:px-4 py-2 flex items-center justify-center`,
+                                        {
+                                            '!bg-teal/10 !text-teal font-semibold': item.value === hoverData.index + 1
+                                        }
+                                    )}
+                                >
+                                    {item[language]}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </Wrapper>
+        )
     );
 };
 
@@ -212,4 +230,4 @@ const Wrapper = styled.div`
     }
 `;
 
-export default APYInterestChart;
+export default memo(APYInterestChart);
