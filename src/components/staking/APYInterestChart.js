@@ -24,8 +24,16 @@ const series = [
     }
 ];
 
-const getApyByMonth = ({ amount, percentPerMonth, numberOfMonth }) => {
-    const realAmount = amount * Math.pow(1 + percentPerMonth / 100, numberOfMonth);
+const getApyByMonth = ({ amount, percentPerDay, numberOfMonth }) => {
+    const monthsToDays = {
+        1: 30,
+        12: 365,
+        24: 730,
+        36: 1095,
+        48: 1460
+    };
+
+    const realAmount = amount * Math.pow(1 + percentPerDay / 100, monthsToDays[+numberOfMonth] || numberOfMonth * 30);
     return {
         interestRate: realAmount - amount,
         realAmount
@@ -40,9 +48,7 @@ const TIMER = [
     { vi: '48 tháng', en: '48 tháng', value: 48 }
 ];
 
-const MONTHS_PER_YEAR = 12;
-
-const APYInterestChart = ({ amount, currencyId, currencyApy }) => {
+const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
     const {
@@ -148,8 +154,8 @@ const APYInterestChart = ({ amount, currencyId, currencyApy }) => {
     );
 
     const apyByMonth = useMemo(
-        () => getApyByMonth({ amount, percentPerMonth: currencyApy / MONTHS_PER_YEAR, numberOfMonth: hoverData.index + 1 }),
-        [hoverData.index, currencyApy, amount]
+        () => getApyByMonth({ amount, percentPerDay: currencyDayInterest, numberOfMonth: hoverData.index + 1 }),
+        [hoverData.index, currencyDayInterest, amount]
     );
 
     const isAmountOutOfRange = amount < STAKING_RANGE[currencyId].min || amount > STAKING_RANGE[currencyId].max;

@@ -13,6 +13,7 @@ const STAKING_CURRENCIES = [
         value: 72,
         code: 'VNDC',
         apyPercent: 12.79,
+        dayInterestPercent: 0.035,
         title: (
             <div className="font-semibold flex items-center  space-x-2">
                 <AssetLogo size={24} assetId={72} />
@@ -25,6 +26,7 @@ const STAKING_CURRENCIES = [
         value: 22,
         code: 'USDT',
         apyPercent: 6,
+        dayInterestPercent: 0.016,
         title: (
             <div className="font-semibold flex items-center  space-x-2">
                 <AssetLogo size={24} assetId={22} />
@@ -37,7 +39,7 @@ const STAKING_CURRENCIES = [
 
 export const STAKING_RANGE = {
     72: {
-        min: 1e5, // 10k
+        min: 10e3, // 10k
         max: 2e9, // 2 tỷ,
         DEFAULT: 100e6
     },
@@ -131,7 +133,7 @@ const CalculateInterest = () => {
                     </div>
                 </div>
                 <div className="px-5 flex-grow min-h-[400px]">
-                    <APYInterestChart amount={state.amountStaking} currencyApy={state.stakingCurrency.apyPercent} currencyId={state.stakingCurrency.value} />
+                    <APYInterestChart amount={state.amountStaking} currencyDayInterest={state.stakingCurrency.dayInterestPercent} currencyApy={state.stakingCurrency.apyPercent} currencyId={state.stakingCurrency.value} />
                 </div>
             </div>
         </section>
