@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react';
 import SelectV2 from 'components/common/V2/SelectV2';
 import { useTranslation } from 'next-i18next';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { formatNumber } from 'redux/actions/utils';
+import { formatNumber, getExactBalanceFiat } from 'redux/actions/utils';
 import dynamic from 'next/dynamic';
 
 const APYInterestChart = dynamic(() => import('./APYInterestChart'), { ssr: false });
@@ -13,7 +13,7 @@ const STAKING_CURRENCIES = [
         value: 72,
         code: 'VNDC',
         apyPercent: 12.79,
-        dayInterestPercent: 0.035,
+        dayInterestPercent: 0.035, // apyPercent / 365
         title: (
             <div className="font-semibold flex items-center  space-x-2">
                 <AssetLogo size={24} assetId={72} />
@@ -26,7 +26,7 @@ const STAKING_CURRENCIES = [
         value: 22,
         code: 'USDT',
         apyPercent: 6,
-        dayInterestPercent: 0.016,
+        dayInterestPercent: 0.016, // apyPercent / 365
         title: (
             <div className="font-semibold flex items-center  space-x-2">
                 <AssetLogo size={24} assetId={22} />
@@ -133,7 +133,12 @@ const CalculateInterest = () => {
                     </div>
                 </div>
                 <div className="px-5 flex-grow min-h-[400px]">
-                    <APYInterestChart amount={state.amountStaking} currencyDayInterest={state.stakingCurrency.dayInterestPercent} currencyApy={state.stakingCurrency.apyPercent} currencyId={state.stakingCurrency.value} />
+                    <APYInterestChart
+                        amount={state.amountStaking}
+                        currencyDayInterest={state.stakingCurrency.dayInterestPercent}
+                        currencyApy={state.stakingCurrency.apyPercent}
+                        currencyId={state.stakingCurrency.value}
+                    />
                 </div>
             </div>
         </section>
