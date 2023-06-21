@@ -38,6 +38,7 @@ const getApyByMonth = ({ amount, percentPerDay, numberOfMonth }) => {
         48: 1460
     };
 
+    // công thức tính lãi kép theo tháng
     const realAmount = amount * Math.pow(1 + percentPerDay / 100, monthsToDays[+numberOfMonth] || numberOfMonth * 30);
     return {
         interestRate: realAmount - amount,
