@@ -30,7 +30,7 @@ export const NAV_DATA = [
         localized: 'product',
         // hide: true,
         isNew: true,
-        isVertical: true,
+        // isVertical: true,
         url: '/',
         child_lv1: [
             {
@@ -55,6 +55,14 @@ export const NAV_DATA = [
                 localized: 'futures',
                 isNew: false,
                 url: '/futures',
+                child_lv1: []
+            },
+            {
+                key: 4,
+                title: 'Staking',
+                localized: 'staking',
+                isNew: false,
+                url: '/staking',
                 child_lv1: []
             },
             // {
@@ -376,6 +384,14 @@ export const MOBILE_NAV_DATA = [
                 hide: true,
                 url: '/reference',
                 child_lv2: []
+            },
+            {
+                key: 4,
+                title: 'Staking',
+                localized: 'staking',
+                isNew: false,
+                url: '/staking',
+                child_lv1: []
             }
             // {
             //     key: 7,

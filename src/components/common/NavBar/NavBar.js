@@ -708,7 +708,8 @@ const getNavIcon = {
     noti: 'nav/ic_noti.png',
     pool: 'nav/ic_pool.png',
     stake_nao: 'nav/ic_stake_nao.png',
-    race_top: 'nav/ic_race_top.png'
+    race_top: 'nav/ic_race_top.png',
+    staking: 'nav/ic_staking.png'
 };
 
 const getIcon = (localized) => {

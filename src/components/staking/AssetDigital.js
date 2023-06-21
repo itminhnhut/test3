@@ -19,7 +19,7 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
     const handleDirectHref = (href, assetId) => {
         if (!auth) {
             const redirectLogin = getLoginUrl('sso', 'login', {
-                redirect: `${process.env.NEXT_PUBLIC_API_URL}/${route.locale}/withdraw-deposit/crypto?side=BUY&assetId=${assetId}`
+                redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${assetId}`
             });
             router.push(redirectLogin);
         } else {

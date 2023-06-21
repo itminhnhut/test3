@@ -348,7 +348,8 @@ const getNavIcon = {
     noti: <Image src={'/images/icon/nav/ic_noti.png'} width="24" height="24" />,
     pool: <Image src={'/images/icon/nav/ic_pool.png'} width="24" height="24" />,
     stake_nao: <Image src={'/images/icon/nav/ic_stake_nao.png'} width="24" height="24" />,
-    race_top: <Image src={'/images/icon/nav/ic_race_top.png'} width="24" height="24" />
+    race_top: <Image src={'/images/icon/nav/ic_race_top.png'} width="24" height="24" />,
+    staking: <Image src={'/images/icon/nav/ic_staking.png'} width="24" height="24" />
 };
 
 const getIcon = (localized) => {
