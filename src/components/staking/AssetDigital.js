@@ -8,7 +8,6 @@ import { useTranslation } from 'next-i18next';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 import { ASSET_DIGITAL } from 'constants/staking';
-import { route } from 'next/dist/server/router';
 
 const AssetDigitalStaking = ({ isMobile, auth }) => {
     const router = useRouter();
@@ -58,6 +57,14 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
         <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
             <section className="flex flex-col gap-y-4 lg:gap-y-0 lg:flex-row lg:gap-[80px] justify-between px-0 lg:px-[108px] relative z-20">
                 {renderAssetDigital}
+                <a
+                    href={getLoginUrl('sso', 'login', {
+                        redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${assetId}`
+                    })}
+                    className="hidden md:block btn btn-primary"
+                >
+                    2
+                </a>
             </section>
         </section>
     );
