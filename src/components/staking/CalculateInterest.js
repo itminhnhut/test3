@@ -18,7 +18,7 @@ const STAKING_CURRENCIES = [
             <div className="font-semibold flex items-center  space-x-2">
                 <AssetLogo size={24} assetId={72} />
                 <span className="">VNDC</span>
-                <span className=" text-teal">12.79%</span>
+                <span className=" text-teal">12.79%/năm</span>
             </div>
         )
     },
@@ -31,7 +31,7 @@ const STAKING_CURRENCIES = [
             <div className="font-semibold flex items-center  space-x-2">
                 <AssetLogo size={24} assetId={22} />
                 <span className="">USDT</span>
-                <span className=" text-teal">6%</span>
+                <span className=" text-teal">6%/năm</span>
             </div>
         )
     }
@@ -71,14 +71,14 @@ const CalculateInterest = () => {
             return {
                 isValid: false,
                 isError: true,
-                msg: 'Số lượng Stake phải lớn hơn ' + formatNumber(STAKING_RANGE[value].min, value === 72 ? 0 : 4)
+                msg: 'Số lượng Stake phải >= ' + formatNumber(STAKING_RANGE[value].min, value === 72 ? 0 : 4)
             };
         }
         if (state.amountStaking > STAKING_RANGE[value].max) {
             return {
                 isValid: false,
                 isError: true,
-                msg: 'Số lượng Stake phải bé hơn ' + formatNumber(STAKING_RANGE[value].max, value === 72 ? 0 : 4)
+                msg: 'Số lượng Stake phải <= ' + formatNumber(STAKING_RANGE[value].max, value === 72 ? 0 : 4)
             };
         }
 
@@ -132,7 +132,7 @@ const CalculateInterest = () => {
                         />
                     </div>
                 </div>
-                <div className="px-5 flex-grow min-h-[400px]">
+                <div className="px-5 w-full md:w-auto md:flex-grow">
                     <APYInterestChart
                         amount={state.amountStaking}
                         currencyDayInterest={state.stakingCurrency.dayInterestPercent}

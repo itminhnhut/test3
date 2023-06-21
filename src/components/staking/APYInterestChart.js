@@ -1,13 +1,15 @@
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import dynamic from 'next/dynamic';
-import React, { useMemo, useState, memo } from 'react';
-import { formatNumber } from 'redux/actions/utils';
+import React, { useMemo, useState, memo, useRef } from 'react';
+import { formatNumber, scrollHorizontal } from 'redux/actions/utils';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { STAKING_RANGE } from './CalculateInterest';
+import TabV2 from 'components/common/V2/TabV2';
+import Chip from 'components/common/V2/Chip';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -46,16 +48,17 @@ const getApyByMonth = ({ amount, percentPerDay, numberOfMonth }) => {
 };
 
 const TIMER = [
-    { vi: '1 tháng', en: '1 tháng', value: 1 },
-    { vi: '12 tháng', en: '12 tháng', value: 12 },
-    { vi: '24 tháng', en: '24 tháng', value: 24 },
-    { vi: '36 tháng', en: '36 tháng', value: 36 },
-    { vi: '48 tháng', en: '48 tháng', value: 48 }
+    { vi: '1 tháng', en: '1 tháng', key: 1 },
+    { vi: '12 tháng', en: '12 tháng', key: 12 },
+    { vi: '24 tháng', en: '24 tháng', key: 24 },
+    { vi: '36 tháng', en: '36 tháng', key: 36 },
+    { vi: '48 tháng', en: '48 tháng', key: 48 }
 ];
 
 const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
+    const timerListRef = useRef(null);
     const {
         i18n: { language }
     } = useTranslation();
@@ -73,7 +76,6 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     const options = useMemo(
         () => ({
             chart: {
-                height: 320,
                 width: '100%',
                 type: 'area',
                 toolbar: {
@@ -187,30 +189,31 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                 </div>
 
                 <div className="">
-                    <Chart options={options} series={series} type="area" />
+                    <Chart options={options} series={series} type="area" height={300} />
                 </div>
 
-                <div className="ml-5 z-[5] -mt-4 mr-2 flex md:justify-between relative">
-                    {TIMER.map((item, key) => {
+                <div ref={timerListRef} className="ml-5 z-[5] -mt-4 pr-2 flex justify-between relative overflow-x-auto no-scrollbar">
+                    {TIMER.map((item) => {
+                        const selected = item.key === hoverData.index + 1;
                         return (
                             <div
+                                id={'chip' + item.key}
+                                key={item.key}
+                                className="first:ml-0 ml-2 md:ml-4 "
                                 onClick={() => {
-                                    setHoverData({ index: item.value - 1 });
+                                    setHoverData({ index: item.key - 1 });
+                                    const thisElement = document.getElementById('chip' + item.key);
+                                    scrollHorizontal(thisElement, timerListRef.current);
                                 }}
-                                className="first:pl-0 pl-2 w-1/5 md:w-auto  md:pl-0 w"
-                                key={item.value}
                             >
-                                <div
-                                    className={classNames(
-                                        `text-txtSecondary bg-hover-1 dark:bg-dark-2 cursor-pointer dark:text-txtSecondary-dark
-                               text-xs md:text-sm rounded-md md:px-4 py-2 flex items-center justify-center`,
-                                        {
-                                            '!bg-teal/10 !text-teal font-semibold': item.value === hoverData.index + 1
-                                        }
-                                    )}
+                                <Chip
+                                    selected={selected}
+                                    className={classNames('min-w-[80px]', {
+                                        'dark:!bg-dark-2': !selected
+                                    })}
                                 >
                                     {item[language]}
-                                </div>
+                                </Chip>
                             </div>
                         );
                     })}
