@@ -39,8 +39,8 @@ const Reference = () => {
                 <main className="bg-white dark:bg-shadow">
                     <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
                         <HeaderStaking />
-                        <WhyChooseNamiStaking />
                         <StepStaking isDark={isDark} isMobile={isMobile} />
+                        <WhyChooseNamiStaking />
                         <CalculateInterest />
                     </div>
                     <WrapperAssetFAQ mobile={isMobile} className="relative pt-0  lg:pt-[120px]">
