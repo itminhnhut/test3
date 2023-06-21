@@ -1,20 +1,21 @@
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import dynamic from 'next/dynamic';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState, memo } from 'react';
 import { formatNumber } from 'redux/actions/utils';
 import styled from 'styled-components';
 import colors from 'styles/colors';
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { STAKING_RANGE } from './CalculateInterest';
 
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+
 function f(x) {
     return x * x;
 }
-var xValues = Array.from({ length: 48 }, (_, i) => i + 1);
-var yValues = xValues.map(f);
+let xValues = Array.from({ length: 48 }, (_, i) => i + 1);
+let yValues = xValues.map(f);
 
 const series = [
     {
@@ -173,6 +174,7 @@ const APYInterestChart = ({ amount, currencyId, currencyApy }) => {
                         </div>
                     </div>
                 </div>
+
                 <div className="">
                     <Chart options={options} series={series} type="area" />
                 </div>
@@ -216,4 +218,4 @@ const Wrapper = styled.div`
     }
 `;
 
-export default React.memo(APYInterestChart);
+export default memo(APYInterestChart);

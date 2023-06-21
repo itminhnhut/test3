@@ -2,9 +2,11 @@ import TradingInputV2 from 'components/trade/TradingInputV2';
 import React, { useMemo, useState } from 'react';
 import SelectV2 from 'components/common/V2/SelectV2';
 import { useTranslation } from 'next-i18next';
-import APYInterestChart from './APYInterestChart';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { formatNumber } from 'redux/actions/utils';
+import dynamic from 'next/dynamic';
+
+const APYInterestChart = dynamic(() => import('./APYInterestChart'), { ssr: false });
 
 const STAKING_CURRENCIES = [
     {
@@ -15,7 +17,6 @@ const STAKING_CURRENCIES = [
             <div className="font-semibold flex items-center  space-x-2">
                 <AssetLogo size={24} assetId={72} />
                 <span className="">VNDC</span>
-
                 <span className=" text-teal">12.79%</span>
             </div>
         )
@@ -27,9 +28,7 @@ const STAKING_CURRENCIES = [
         title: (
             <div className="font-semibold flex items-center  space-x-2">
                 <AssetLogo size={24} assetId={22} />
-
                 <span className="">USDT</span>
-
                 <span className=" text-teal">6%</span>
             </div>
         )

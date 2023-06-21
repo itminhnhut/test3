@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 
-import { WHY_CHOOSE_NAMI } from '../constant.js';
+import { WHY_CHOOSE_NAMI } from 'constants/staking';
 
 const WhyChooseNamiStaking = () => {
     const {
@@ -12,7 +12,10 @@ const WhyChooseNamiStaking = () => {
     const renderWhyChooseNami = useMemo(() => {
         return WHY_CHOOSE_NAMI.map((item) => {
             return (
-                <article key={item.title} className="flex flex-col gap-2 lg:gap-3 w-full last:mb-0 lg:last:mb-[60px] mb-[60px] first:mt-7 lg:first:mt-[53px]">
+                <article
+                    key={item.title[language]}
+                    className="flex flex-col gap-2 lg:gap-3 w-full last:mb-0 lg:last:mb-[60px] mb-[60px] first:mt-7 lg:first:mt-[53px]"
+                >
                     <div className="text-gray-15 dark:text-gray-4 font-semibold text-base lg:text-2xl">{item.title[language]}</div>
                     <div className="text-gray-1 dark:text-gray-7 text-sm lg:text-base">{item.context[language]}</div>
                 </article>

@@ -10,12 +10,17 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useWindowSize } from 'react-use';
 import styled from 'styled-components';
 
-const CalculateInterest = dynamic(() => import('./components/CalculateInterest.js'), { ssr: false });
-const HeaderStaking = dynamic(() => import('./components/Header.js'), { ssr: false });
-const StepStaking = dynamic(() => import('./components/Step.js'), { ssr: false });
-const WhyChooseNamiStaking = dynamic(() => import('./components/WhyChooseNami.js'), { ssr: false });
-const AssetDigitalStaking = dynamic(() => import('./components/AssetDigital.js'), { ssr: false });
-const FAQStaking = dynamic(() => import('./components/FAQ.js'), { ssr: false });
+import Skeleton from 'components/staking/skeleton';
+
+const CalculateInterest = dynamic(() => import('components/staking/CalculateInterest.js'), { ssr: false });
+const HeaderStaking = dynamic(() => import('components/staking/Header.js'), {
+    ssr: false,
+    loading: () => <Skeleton variant="image" />
+});
+const StepStaking = dynamic(() => import('components/staking/Step.js'), { ssr: false, loading: () => <Skeleton variant="image" /> });
+const WhyChooseNamiStaking = dynamic(() => import('components/staking/WhyChooseNami.js'), { ssr: false, loading: () => <Skeleton variant="list" /> });
+const AssetDigitalStaking = dynamic(() => import('components/staking/AssetDigital.js'), { ssr: false, loading: () => <Skeleton variant="list" /> });
+const FAQStaking = dynamic(() => import('components/staking/FAQ.js'), { ssr: false, loading: () => <Skeleton variant="list" /> });
 
 const Reference = () => {
     const [currentTheme] = useDarkMode();
@@ -29,6 +34,7 @@ const Reference = () => {
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
             </Head>
+
             <MaldivesLayout>
                 <main className="bg-white dark:bg-shadow">
                     <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
