@@ -78,6 +78,7 @@ const moduleExports = withPlugins([[withBundleAnalyzer], [withFonts]], {
     sassOptions: {
         includePaths: [path.join(__dirname, 'styles')],
     },
+    styledComponents: true,
     images: {
         domains: [
             'wallet.vndc.io',

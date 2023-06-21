@@ -6,26 +6,16 @@ import { Popover, Transition } from '@headlessui/react';
 import fetchApi from 'utils/fetch-api';
 import { API_GET_REFERENCE_CURRENCY, API_NAO_DASHBOARD_STATISTIC, API_NAO_DASHBOARD_STATISTIC_CHART } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
-import { formatNanNumber, formatNumber, formatPrice, formatTime, getS3Url } from 'redux/actions/utils';
+import { formatNanNumber, formatNumber, formatPrice, formatTime } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import colors from 'styles/colors';
-import { Check } from 'react-feather';
 import { assetCodeFromId, WalletCurrency } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
 import useWindowSize from 'hooks/useWindowSize';
-import { ArrowDropDownIcon, BxsInfoCircle } from 'components/svg/SvgIcon';
-import SvgFilter from 'components/svg/SvgFilter';
+import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
 import CheckCircle from 'components/svg/CheckCircle';
-import CollapseV2 from 'components/common/V2/CollapseV2';
-import HeaderTooltip from 'components/screens/Portfolio/HeaderTooltip';
-import NaoChartJS from 'components/screens/Portfolio/charts/NaoChartJS';
-import Note from 'components/common/Note';
-import ModalV2 from 'components/common/V2/ModalV2';
-import { indexOf, isNumber, set } from 'lodash';
-import MCard from 'components/common/MCard';
-import Spiner from 'components/common/V2/LoaderV2/Spiner';
-import TableNoData from 'components/common/table.old/TableNoData';
-import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import NaoChartJS from '../Components/Charts/NaoChartJS';
+import { Spinner } from 'components/common/Icons';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { WIDTH_MD } from 'components/screens/Wallet';
 import RangePopover from '../Components/RangePopover';
@@ -232,9 +222,6 @@ const NaoPerformance = memo(({}) => {
         );
     }, [dataChartSource]);
 
-    // const [getQueryByName , updateQuery] = useAddQuery('date')
-
-    /////////
     useIsomorphicLayoutEffect(() => {
         const { performanceRange } = router.query;
         if (performanceRange && days.some(({ value }) => value === performanceRange)) {
@@ -352,6 +339,8 @@ const NaoPerformance = memo(({}) => {
                 options: { method: 'GET' },
                 params: {
                     range: filter.day,
+                    from: range.startDate,
+                    to: range.endDate,
                     marginCurrency: filter.marginCurrency,
                     userCategory: 2
                 }
@@ -371,9 +360,10 @@ const NaoPerformance = memo(({}) => {
                 options: { method: 'GET' },
                 params: {
                     range: filter.day,
+                    from: range.startDate,
+                    to: range.endDate,
                     marginCurrency: filter.marginCurrency,
-                    userCategory: 2,
-                    
+                    userCategory: 2
                 }
             });
             if (!(data?.error || data?.status)) {
@@ -502,9 +492,10 @@ const NaoPerformance = memo(({}) => {
                         active={days.find((d) => d.value === filter.day)}
                         onChange={handleChangeDateRange}
                         className="flex order-last"
-                        popoverClassName={'lg:mr-2 '}
+                        popoverClassName={'lg:mr-2 ml-auto'}
                         range={range}
                         setRange={setRange}
+                        days={days}
                     />
                     <div className="order-first gap-2 flex gap-last">
                         <button
@@ -530,7 +521,7 @@ const NaoPerformance = memo(({}) => {
                     </div>
                 </div>
             </div>
-            <div className="pt-5 flex flex-col xl:flex-row sm:pt-6 gap-4 sm:gap-5">
+            <div className="pt-5 flex flex-col xl:flex-row sm:pt-6 gap-4 sm:gap-5 ">
                 <div className="w-full xl:w-1/3 flex flex-col gap-y-4 sm:gap-y-5">
                     <CardNao className="rounded-lg !min-w-max w-full">
                         <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
@@ -659,7 +650,7 @@ const NaoPerformance = memo(({}) => {
                                 {chartLoading ? (
                                     <>
                                         <div className="flex items-center justify-center w-full min-h-[300px] mt-6">
-                                            <Spiner isDark="true" />
+                                            <Spinner color="currentColor" size={60} className="text-teal" />
                                         </div>
                                     </>
                                 ) : (
@@ -671,7 +662,7 @@ const NaoPerformance = memo(({}) => {
                                 {chartLoading ? (
                                     <>
                                         <div className="flex items-center justify-center w-full min-h-[504px]">
-                                            <Spiner isDark="true" />
+                                            <Spinner color="currentColor" size={60} className="text-teal" />
                                         </div>
                                     </>
                                 ) : (

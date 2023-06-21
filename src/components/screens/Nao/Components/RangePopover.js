@@ -6,7 +6,6 @@ import vi from 'date-fns/locale/vi';
 import en from 'date-fns/locale/en-US';
 import { Fragment, useRef, useState } from 'react';
 import CheckCircle from 'components/svg/CheckCircle';
-import { days } from '../Section/NaoPerformance';
 import { addDays, format } from 'date-fns';
 import styled from 'styled-components';
 import colors from 'styles/colors';
@@ -38,13 +37,10 @@ const DatePickerWrapper = styled.div`
     }
 `;
 
-const RangePopover = ({ language, active = {}, onChange, popoverClassName = '', range = { startDate: undefined, endDate: undefined }, setRange }) => {
+const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange, popoverClassName = '', range = { startDate: undefined, endDate: undefined }, setRange }) => {
     const popOverClasses = classNames('relative flex', popoverClassName);
     const { t } = useTranslation();
-    const [internalRange, setInternalRange] = useState({
-        ...range,
-        endDate: range?.endDate || new Date()
-    });
+    const [internalRange, setInternalRange] = useState(range);
     const [showPicker, setShowPicker] = useState(false);
     const shouldShowPicker = showPicker || (active.value === 'custom' && (!range.startDate || !range.endDate));
     const [theme] = useDarkMode();
@@ -52,12 +48,13 @@ const RangePopover = ({ language, active = {}, onChange, popoverClassName = '', 
     const wrapperRef = useRef(null);
     const { width } = useWindowSize();
     const isMobile = width < 820;
+    const isCustom = active.value === 'custom';
     const handleOutside = () => {
-        setShowPicker(false);
-        if (!range.startDate || !range.endDate) {
-            onChange('d');
+        if (shouldShowPicker && (!range.startDate || !range.endDate)) {
+            setShowPicker(false);
+            onChange(fallbackDay);
             // uncomment this code block to clear previous input
-            
+
             // setInternalRange({
             //     ...range,
             //     endDate: range?.endDate || new Date()
@@ -137,7 +134,6 @@ const RangePopover = ({ language, active = {}, onChange, popoverClassName = '', 
                             <div className="text-sm sm:text-base flex flex-col text-txtPrimary dark:text-txtPrimary-dark sm:py-3">
                                 {days.map((day, index) => {
                                     const isActive = active.value === day.value;
-                                    const isCustom = day.value === 'custom';
                                     return (
                                         <div
                                             key={day.value}
@@ -145,6 +141,8 @@ const RangePopover = ({ language, active = {}, onChange, popoverClassName = '', 
                                                 onChange(day.value);
                                                 if (day.value === 'custom') {
                                                     setShowPicker(true);
+                                                } else {
+                                                    setRange?.({ startDate: undefined, endDate: undefined, key: 'selection' });
                                                 }
                                                 close();
                                             }}
@@ -153,7 +151,7 @@ const RangePopover = ({ language, active = {}, onChange, popoverClassName = '', 
                                                 'first:rounded-t-md last:rounded-b-md hover:bg-hover-1 dark:hover:bg-hover-dark'
                                             )}
                                         >
-                                            <span>{isCustom && isActive ? showActive() : day[language]}</span>
+                                            <span className='whitespace-nowrap'>{isCustom && isActive ? showActive() : day[language]}</span>
                                             {isActive && <CheckCircle color="currentColor" size={16} />}
                                         </div>
                                     );
@@ -210,7 +208,7 @@ const RangePopover = ({ language, active = {}, onChange, popoverClassName = '', 
                                         </div>
                                     </Transition>
                                 </div>
-                                <div className="block mb:hidden">
+                                {isMobile && (
                                     <ModalV2
                                         isVisible
                                         onBackdropCb={handleOutside}
@@ -253,7 +251,7 @@ const RangePopover = ({ language, active = {}, onChange, popoverClassName = '', 
                                             </ButtonV2>
                                         </div>
                                     </ModalV2>
-                                </div>
+                                )}
                             </>
                         )}
                     </div>

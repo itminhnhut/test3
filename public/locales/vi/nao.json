@@ -101,7 +101,11 @@
         "unlock_status": "Mở khóa: {{value}}",
         "week": "Tuần {{value}}:",
         "pool_value": "Giá trị pool",
-        "pool_value_tooltip": "Giá trị Pool được tính dựa trên Giá NAO tại thời điểm hiển thị"
+        "pool_value_tooltip": "Giá trị Pool được tính dựa trên Giá NAO tại thời điểm hiển thị",
+        "chart": {
+            "pool_info": "Giá trị pool",
+            "fee_revenue": "Doanh thu pool"
+        }
     },
     "vote": {
         "title": "Biểu quyết",

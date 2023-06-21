@@ -1829,24 +1829,33 @@ export const IconRefresh = ({ size = 5, color = '', className = '' }) => (
     </svg>
 );
 
-export const Spinner = ({ className, color = '#0068FF', height = '14px', width = '14px' }) => (
-    <svg width={width} height={height} className={className} viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-        <g>
-            <animateTransform attributeName="transform" type="rotate" values="0 33 33;270 33 33" begin="0s" dur="1.4s" fill="freeze" repeatCount="indefinite" />
-            <circle fill="none" strokeWidth="6" strokeLinecap="round" cx="33" cy="33" r="30" stroke-dasharray="187" stroke-dashoffset="610">
-                <animate attributeName="stroke" values={color} begin="0s" dur="5.6s" fill="freeze" repeatCount="indefinite" />
-                <animateTransform
-                    attributeName="transform"
-                    type="rotate"
-                    values="0 33 33;135 33 33;450 33 33"
-                    begin="0s"
-                    dur="1.4s"
-                    fill="freeze"
-                    repeatCount="indefinite"
-                />
-                <animate attributeName="stroke-dashoffset" values="187;46.75;187" begin="0s" dur="1.4s" fill="freeze" repeatCount="indefinite" />
-            </circle>
-        </g>
+export const Spinner = ({ className, color = 'currentColor', size = 14 }) => (
+    <svg
+        version="1.1"
+        id="L9"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        x="0px"
+        y="0px"
+        viewBox="0 0 100 100"
+        enableBackground="new 0 0 0 0"
+        xmlSpace="preserve"
+        className={className}
+        width={size}
+        height={size}
+    >
+        <path fill={color} d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
+            <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="1s" from="0 50 50" to="360 50 50" repeatCount="indefinite" />
+            <animate
+                attributeName="stroke-dashoffset"
+                dur="1s"
+                calcMode="spline"
+                values="0; 10;"
+                keyTimes="0;0.475;0.95;1"
+                keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1"
+                repeatCount="indefinite"
+            />
+        </path>
     </svg>
 );
 

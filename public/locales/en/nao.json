@@ -101,7 +101,11 @@
         "unlock_status": "Unlock: {{value}}",
         "week": "Week {{value}}:",
         "pool_value": "Pool value",
-        "pool_value_tooltip": "The pool value is based on quotation of NAO at shown time"
+        "pool_value_tooltip": "The pool value is based on quotation of NAO at shown time",
+        "chart": {
+            "pool_info": "Pool value",
+            "fee_revenue": "Pool revenue"
+        }
     },
     "vote": {
         "title": "Proposals",

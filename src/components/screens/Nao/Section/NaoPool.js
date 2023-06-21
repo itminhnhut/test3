@@ -1,12 +1,18 @@
-import React, { useRef, useState, useEffect, useMemo, memo } from 'react';
+import React, { useRef, useState, useEffect, useMemo, memo, useReducer } from 'react';
 import { TextLiner, CardNao, Tooltip } from 'components/screens/Nao/NaoStyle';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.min.css';
 import { useWindowSize } from 'utils/customHooks';
-import { getS3Url, formatNumber, formatTime } from 'redux/actions/utils';
+import { getS3Url, formatNumber, formatTime, formatAbbreviateNumber } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
-import { API_POOL_INFO, API_GET_REFERENCE_CURRENCY, API_POOL_SHARE_HISTORIES } from 'redux/actions/apis';
+import {
+    API_POOL_INFO,
+    API_GET_REFERENCE_CURRENCY,
+    API_POOL_SHARE_HISTORIES,
+    API_NAO_DASHBOARD_POOL_STATISTIC,
+    API_NAO_DASHBOARD_FEE_REVENUE
+} from 'redux/actions/apis';
 import { ApiStatus, ThemeMode } from 'redux/actions/const';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
@@ -15,8 +21,14 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import classNames from 'classnames';
-
-// this code for mocking assets
+import RangePopover from '../Components/RangePopover';
+import { useIsomorphicLayoutEffect } from 'react-use';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { Spinner } from 'components/common/Icons';
+import NaoChartJS from '../Components/Charts/NaoChartJS';
+import { isFunction } from 'lodash';
+import colors from 'styles/colors';
+// this code block for mocking assets
 
 // const mockAssets = [447, 72, 1, 86, 22];
 // const mock = new Array(5).fill({
@@ -25,6 +37,34 @@ import classNames from 'classnames';
 //     fromTime: Date.now(),
 //     toTime: Date.now() + 86400000 * 7,
 // });
+
+const days = [
+    {
+        en: 'Last week',
+        vi: 'Tuần trước',
+        value: '-w'
+    },
+    {
+        en: 'This week',
+        vi: 'Tuần này',
+        value: 'w'
+    },
+    {
+        en: 'This month',
+        vi: 'Tháng này',
+        value: 'm'
+    },
+    {
+        en: 'All',
+        vi: 'Tất cả',
+        value: 'all'
+    },
+    {
+        en: 'Custom',
+        vi: 'Tuỳ chỉnh',
+        value: 'custom'
+    }
+];
 
 const getAssets = createSelector([(state) => state.utils, (utils, params) => params], (utils, params) => {
     const assets = {};
@@ -49,8 +89,49 @@ const SubPrice = ({ price, digitsPrice = 3, isShowLabel = true }) => (
     </span>
 );
 
+const CHART_TYPES = {
+    pool_info: 'pool_info',
+    fee_revenue: 'fee_revenue'
+};
+
+const chartReducer = (state, action = { type: '', payload: {} }) => {
+    const { type, payload } = action;
+
+    switch (type) {
+        case CHART_TYPES.pool_info: {
+            return { ...state, [CHART_TYPES.pool_info]: payload };
+        }
+        case CHART_TYPES.fee_revenue: {
+            return { ...state, [CHART_TYPES.fee_revenue]: payload };
+        }
+        default:
+            return state;
+    }
+};
+
+const defaultChartData = {
+    label: '',
+    data: [],
+    borderColor: colors.teal,
+    fill: 'start',
+    backgroundColor: (context) => {
+        const ctx = context.chart.ctx;
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(71, 204, 133, 0.15)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        return gradient;
+    },
+    hoverBackgroundColor: colors.white,
+    pointBackgroundColor: colors.teal
+};
+
 const NaoPool = ({ dataSource, assetNao }) => {
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
     const sliderRef = useRef(null);
     const { width } = useWindowSize();
     const [referencePrice, setReferencePrice] = useState({});
@@ -59,6 +140,130 @@ const NaoPool = ({ dataSource, assetNao }) => {
     const assetConfig = useSelector((state) => getAssets(state));
     const [actIdx, setActIdx] = useState(0);
     const isMobile = width < 820;
+    const [filter, setFilter] = useState({
+        day: 'w'
+    });
+    const [range, setRange] = useState({
+        startDate: undefined,
+        endDate: undefined,
+        key: 'selection'
+    });
+    const [loading, setLoading] = useState(true);
+    const [chartLoading, setChartLoading] = useState(false);
+    const [data, setData] = useState({
+        availableStakedVNDC: dataSource?.availableStakedVNDC ?? 0,
+        availableStaked: dataSource?.availableStaked ?? 0,
+        totalStaked: dataSource?.totalStaked ?? 0,
+        totalStakedVNDC: dataSource?.totalStakedVNDC ?? 0,
+        totalUsers: formatNumber(dataSource?.totalUser, 0),
+        estimate: dataSource?.poolRevenueThisWeek,
+        estimateUsd: dataSource?.poolRevenueThisWeekUSD
+    });
+    const [chartType, setChartType] = useState(CHART_TYPES.pool_info);
+    const [chartData, dispatch] = useReducer(chartReducer, {
+        [CHART_TYPES.pool_info]: {
+            labels: [],
+            datasets: [defaultChartData]
+        },
+        [CHART_TYPES.fee_revenue]: {
+            labels: [],
+            datasets: [defaultChartData]
+        }
+    });
+
+    const chartOptions = useMemo(
+        () => ({
+            responsive: true,
+            maintainAspectRatio: false,
+            elements: {
+                line: {
+                    tension: 0.6
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                    position: 'bottom'
+                },
+                tooltip: {
+                    enabled: true,
+                    position: 'nearest',
+                    backgroundColor: isDark ? colors.dark[2] : colors.gray[12],
+                    padding: isMobile ? 8 : 12,
+                    caretSize: 0,
+                    titleMarginBottom: isMobile ? 8 : 12,
+                    titleFont: {
+                        size: isMobile ? 10 : 14,
+                        weight: 400
+                    },
+                    displayColors: false,
+                    bodyFont: {
+                        size: isMobile ? 12 : 16,
+                        weight: 600
+                    },
+                    footerAlign: 'right',
+                    footerFont: {
+                        size: isMobile ? 10 : 14,
+                        weight: 400
+                    },
+                    callbacks: {
+                        label: (item) => {
+                            return `${formatNumber(item.raw / (referencePrice['VNDC'] ?? 1), 0)} VNDC`;
+                        },
+                        footer: (tooltipItems) => {
+                            const [item] = tooltipItems;
+                            return '$ ' + item.raw;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    // ticks: {
+                    //     color: colors.darkBlue5,
+                    //     showLabelBackdrop: false,
+                    //     padding: 8,
+                    //     fontSize: isMobile ? 9 : 12,
+                    //     lineHeight: isMobile ? 20 : 16
+                    // },
+                    grid: {
+                        // display: true,
+                        // drawBorder: true,
+                        // borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        // color: colors.darkBlue5,
+                        callback: function (value, index, ticks) {
+                            return formatAbbreviateNumber(value, 3);
+                        }
+                        // crossAlign: 'far',
+                        // padding: 8,
+                        // fontSize: isMobile ? 9 : 12,
+                        // lineHeight: isMobile ? 20 : 16
+                    },
+                    grid: {
+                        // drawTicks: false,
+                        // borderDash: [2, 4],
+                        // borderDashOffset: 2,
+                        // // color: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT,
+                        // // borderDash: [1, 4],
+                        // // // color: colors.divider.DEFAULT,
+                        // color: function (context) {
+                        //     if (context.tick.value === 0) {
+                        //         return 'rgba(0, 0, 0, 0)';
+                        //     }
+                        //     return isDark ? colors.divider.dark : colors.divider.DEFAULT;
+                        // },
+                        // drawBorder: !!isMobile
+                    }
+                }
+            }
+        }),
+        [referencePrice, isDark, isMobile]
+    );
 
     const onNavigate = (isNext) => {
         if (sliderRef.current) {
@@ -87,11 +292,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
     );
 
     const CardHistoryPrice = ({ children }) => {
-        return (
-            <div className={'w-full'}>
-                {children}
-            </div>
-        );
+        return <div className={'w-full'}>{children}</div>;
     };
 
     const renderSlide = () => {
@@ -185,6 +386,15 @@ const NaoPool = ({ dataSource, assetNao }) => {
         return result;
     };
 
+    const isValidCustomDay = filter.day !== 'custom' || !!(range.startDate && range.endDate);
+
+    useIsomorphicLayoutEffect(() => {
+        const { poolRange } = router.query;
+        if (poolRange && days.some(({ value }) => value === poolRange)) {
+            setFilter((old) => ({ ...old, day: poolRange }));
+        }
+    }, [router.isReady]);
+
     useEffect(() => {
         getRef();
         getListHistory();
@@ -194,7 +404,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
         try {
             const { data } = await fetchApi({
                 url: API_GET_REFERENCE_CURRENCY,
-                params: { base: 'VNDC,USDT', quote: 'VND' }
+                params: { base: 'VNDC,USDT', quote: 'USD' }
             });
             if (data) {
                 setReferencePrice(
@@ -226,23 +436,154 @@ const NaoPool = ({ dataSource, assetNao }) => {
         }
     };
 
-    const data = useMemo(() => {
-        const availableStakedVNDC = dataSource?.availableStakedVNDC ?? 0;
-        const totalStakedVNDC = dataSource?.totalStakedVNDC ?? 0;
-        const availableStaked = dataSource?.availableStaked ?? 0;
-        const totalStaked = dataSource?.totalStaked ?? 0;
-        const pool = availableStaked / totalStaked;
-        const percent = (availableStaked / totalStaked) * 100;
-        return {
-            availableStakedVNDC: availableStakedVNDC,
-            availableStaked: availableStaked,
-            totalStaked: totalStaked,
-            totalStakedVNDC: totalStakedVNDC,
-            totalUsers: formatNumber(dataSource?.totalUser, 0),
-            estimate: dataSource?.poolRevenueThisWeek,
-            estimateUsd: dataSource?.poolRevenueThisWeekUSD
-        };
-    }, [dataSource, assetNao]);
+    const getPoolData = async () => {
+        if (!isValidCustomDay) {
+            return;
+        }
+        setLoading(true);
+        try {
+            const { data: _data } = await fetchApi({
+                url: API_NAO_DASHBOARD_POOL_STATISTIC,
+                options: { method: 'GET' },
+                params: {
+                    range: filter.day,
+                    from: range.startDate,
+                    to: range.endDate
+                }
+            });
+
+            if (!_data.length) {
+                setData((old) => ({
+                    ...old,
+                    totalStaked: 0,
+                    totalStakedVNDC: 0,
+                    totalUsers: 0
+                }));
+                dispatch({
+                    type: CHART_TYPES.pool_info,
+                    payload: {
+                        labels: [],
+                        datasets: [defaultChartData]
+                    }
+                });
+            } else {
+                const last = _data[_data.length - 1];
+                setData((old) => ({
+                    ...old,
+                    totalStakedVNDC: last?.document?.totalStakedVndc || 0,
+                    totalStakedUSDT: last?.document?.totalStakedUsdt || 0,
+                    totalStaked: last?.document?.totalStaked || 0,
+                    totalUsers: last?.document?.totalUser || 0
+                }));
+                const labels = [];
+                const data = [];
+                _data.map((item) => {
+                    labels.push(item['_id']);
+                    data.push(item.document?.totalStakedUsdt || 0);
+                });
+                dispatch({
+                    type: CHART_TYPES.pool_info,
+                    payload: {
+                        labels,
+                        datasets: [{ ...defaultChartData, data }]
+                    }
+                });
+            }
+        } catch (e) {
+            console.log({ ee: e.message });
+        } finally {
+            setLoading(false);
+            if (chartType === CHART_TYPES.pool_info) {
+                setChartLoading(false);
+            }
+        }
+    };
+
+    const getFeeRevenue = async () => {
+        if (!isValidCustomDay) {
+            return;
+        }
+        setLoading(true);
+        try {
+            const { data: _data } = await fetchApi({
+                url: API_NAO_DASHBOARD_FEE_REVENUE,
+                options: { method: 'GET' },
+                params: {
+                    range: filter.day,
+                    from: range.startDate,
+                    to: range.endDate
+                }
+            });
+            console.log({_data})
+            if (!_data.length) {
+                dispatch({
+                    type: CHART_TYPES.fee_revenue,
+                    payload: {
+                        labels: [],
+                        datasets: [defaultChartData]
+                    }
+                });
+            } else {
+                const labels = [];
+                const data = [];
+                _data.map((item) => {
+                    labels.push(item['_id']);
+                    data.push(item.feeRevenueUsdt || 0);
+                });
+                console.log({labels, data})
+                dispatch({
+                    type: CHART_TYPES.fee_revenue,
+                    payload: {
+                        labels,
+                        datasets: [{ ...defaultChartData, data }]
+                    }
+                });
+            }
+        } catch (e) {
+            console.log({ ee: e.message });
+        } finally {
+            setLoading(false);
+            if (chartType === CHART_TYPES.fee_revenue) {
+                setChartLoading(false);
+            }
+        }
+    };
+
+    useIsomorphicLayoutEffect(() => {
+        const { performanceRange } = router.query;
+        if (performanceRange && days.some(({ value }) => value === performanceRange)) {
+            setFilter((old) => ({ ...old, day: performanceRange }));
+        }
+    }, [router.isReady]);
+
+    useEffect(() => {
+        const controller = new AbortController();
+        setChartLoading(true);
+        getPoolData(controller.signal);
+        getFeeRevenue(controller.signal);
+    }, [filter.day, range]);
+
+    const updateDateRangeUrl = (dateValue) => {
+        router.push(
+            {
+                pathname: router.pathname,
+                query: {
+                    poolRange: dateValue
+                }
+            },
+            undefined,
+            {
+                shallow: true
+            }
+        );
+    };
+
+    const handleChangeDateRange = (day) => {
+        if (day !== filter.day) {
+            setFilter((old) => ({ ...old, day }));
+            updateDateRangeUrl(day);
+        }
+    };
 
     const PoolPriceItem = ({ s3Url, price, usdPrice, digitsPrice, digitsUsdPrice = 3, isUSDT = false, assetName, assetSymbol }) => (
         <div className="flex items-center w-full">
@@ -266,21 +607,35 @@ const NaoPool = ({ dataSource, assetNao }) => {
 
     return (
         <section id="nao_pool" className="pt-12 sm:pt-20 text-sm sm:text-base">
-            <div className="flex items-center flex-wrap justify-between gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="space-y-2 flex flex-col">
                     <TextLiner className="normal-case">{t('nao:pool:title')}</TextLiner>
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:pool:description')}</span>
                 </div>
-                {/* <ButtonNao className="py-2 px-7 !rounded-md text-sm font-semibold leading-6" onClick={() => router.push('/nao/stake')}>
-                    Stake NAO
-                </ButtonNao> */}
+                <div className="w-auto ml-auto">
+                    <RangePopover
+                        language={language}
+                        active={days.find((d) => d.value === filter.day)}
+                        onChange={handleChangeDateRange}
+                        className="flex order-last"
+                        popoverClassName="mb:mr-2"
+                        range={range}
+                        setRange={setRange}
+                        days={days}
+                        fallbackDay="w"
+                    />
+                </div>
             </div>
             <div className="mt-6 grid grid-cols-12 gap-4 sm:gap-6">
                 <CardNao className="sm:!min-w-[50%] sm:!px-10 sm:!py-12 flex flex-col col-span-12 md:col-span-4">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg font-semibold">{t('nao:pool:nao_staked')}</label>
                     <div className="flex flex-col gap-1 mt-4">
                         <div className="text-xl sm:text-2xl font-semibold flex items-center space-x-2">
-                            <span className="leading-8">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
+                            {loading ? (
+                                <Spinner color="currentColor" size={24} className="text-teal" />
+                            ) : (
+                                <span className="leading-8">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
+                            )}
                         </div>
                         <span className="text-sm text-transparent mt-2">a</span>
                     </div>
@@ -296,26 +651,71 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         {t('nao:pool:pool_value')}
                     </label>
                     <div className="flex flex-col gap-1 mt-4">
-                        <div className="text-xl sm:text-2xl font-semibold flex items-center space-x-2">
-                            <span className="leading-8">{formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)} VNDC</span>
-                        </div>
-                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2">
-                            ${formatNumber(data.totalStakedVNDC * (referencePrice['USDT'] ?? 1), 3)}
-                        </span>
+                        {loading ? (
+                            <>
+                                <Spinner color="currentColor" size={24} className="text-teal" />
+                                <Spinner color="currentColor" size={14} className="text-teal mt-2" />
+                            </>
+                        ) : (
+                            <>
+                                <div className="text-xl sm:text-2xl font-semibold flex items-center space-x-2">
+                                    <span className="leading-8">{formatNumber(data.totalStakedVNDC, 3)} VNDC</span>
+                                </div>
+                                <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2">
+                                    ${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)}
+                                </span>
+                            </>
+                        )}
                     </div>
 
                     <hr className="border-divider dark:border-divider-dark my-5 sm:my-8" />
 
                     <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg">{t('nao:pool:participants')}</label>
                     <div className="flex flex-col gap-1 mt-4">
-                        <div className="text-xl sm:text-2xl font-semibold">{data.totalUsers}</div>
-                        <div
-                            className="text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2"
-                            dangerouslySetInnerHTML={{ __html: t('nao:pool:participants_today', { value: dataSource?.totalUserToday ?? 0 }) }}
-                        ></div>
+                        {loading ? (
+                            <>
+                                <Spinner color="currentColor" size={24} className="text-teal" />
+                                <Spinner color="currentColor" size={14} className="text-teal mt-2" />
+                            </>
+                        ) : (
+                            <>
+                                <div className="text-xl sm:text-2xl font-semibold">{data.totalUsers}</div>
+                                <div
+                                    className="text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2"
+                                    dangerouslySetInnerHTML={{ __html: t('nao:pool:participants_today', { value: dataSource?.totalUserToday ?? 0 }) }}
+                                ></div>
+                            </>
+                        )}
                     </div>
                 </CardNao>
-                <CardNao className="sm:!min-w-[50%] sm:!px-10 sm:!py-12 sm:!flex-row sm:items-start !min-h-[360px] col-span-12 md:col-span-8"></CardNao>
+                <CardNao className="sm:!min-w-[50%] sm:!px-10 sm:!py-12 flex-col sm:items-start !min-h-[360px] col-span-12 md:col-span-8">
+                    <div className="order-first gap-6 md:gap-2 gap-last grid xl:grid-cols-3 w-full">
+                        <TextLiner className="w-full">{t('nao:onus_performance:chart_title')}</TextLiner>
+                        <div className="flex gap-last xl:justify-end w-auto overflow-auto no-scrollbar space-x-4 col-span-2">
+                            {Object.values(CHART_TYPES).map((type) => (
+                                <button
+                                    type="BUTTON"
+                                    className={classNames('flex flex-col justify-center items-center text-sm sm:text-base text-txtSecondary', {
+                                        '!text-teal font-semibold': chartType === type
+                                    })}
+                                    onClick={() => setChartType(type)}
+                                    key={type}
+                                >
+                                    {t(`nao:pool:chart:${type}`)}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    {chartLoading ? (
+                        <div className="flex items-center justify-center w-full min-h-[360px]">
+                            <Spinner size={60} className="text-teal" />
+                        </div>
+                    ) : (
+                        <div className="max-h-[450px] sm:max-h-full w-full h-full mt-8">
+                            <NaoChartJS type="line" data={chartData[chartType]} options={chartOptions} />
+                        </div>
+                    )}
+                </CardNao>
                 <CardNao className="sm:!min-w-[50%] sm:!p-10 sm:min-h-[344px] !justify-start !mt-2 sm:!mt-0 col-span-12 md:col-span-6">
                     <Tooltip id="tooltip-revenue-history" />
                     <div className="flex-col flex">
