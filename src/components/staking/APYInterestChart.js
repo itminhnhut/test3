@@ -39,7 +39,7 @@ const getApyByMonth = ({ allowAmount, amount, percentPerDay, numberOfMonth }) =>
         36: 1095,
         48: 1460
     };
-    // tổng lợi nhuận gộp =
+    // công thức tính lãi kép theo tháng
     const compoundInterestAmount = +allowAmount * Math.pow(1 + percentPerDay / 100, monthsToDays[+numberOfMonth] || numberOfMonth * 30);
     const interestAmount = +compoundInterestAmount - +allowAmount;
     return {

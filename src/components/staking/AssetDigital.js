@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+
 import { useTranslation } from 'next-i18next';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -31,7 +33,9 @@ const AssetDigitalStaking = ({ isMobile }) => {
                     />
                     <div className="text-gray-15 dark:text-gray-4 text-sm lg:text-base">{item.content}</div>
                     <div className="text-[20px] lg:text-3xl font-semibold text-green-2 mg-1 lg:mt-2 mb-6 lg:mb-10">{item.percent}%</div>
-                    <ButtonV2>{item.btn[language]}</ButtonV2>
+                    <Link href={item?.href}>
+                        <ButtonV2>{item.btn[language]}</ButtonV2>
+                    </Link>
                 </section>
             );
         });

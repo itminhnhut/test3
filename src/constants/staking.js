@@ -59,7 +59,8 @@ export const ASSET_DIGITAL = [
         subText: 'VNDC',
         content: 'Lãi suất mỗi năm',
         percent: 12.79,
-        btn: { vi: 'Nạp VNDC', en: 'Nạp VNDC' }
+        btn: { vi: 'Nạp VNDC', en: 'Nạp VNDC' },
+        href: 'withdraw-deposit/crypto?side=BUY&assetId=VNDC'
     },
     {
         imgSrc: '/images/staking/ic_USDT.png',
@@ -67,7 +68,8 @@ export const ASSET_DIGITAL = [
         subText: 'USDT',
         content: 'Lãi suất mỗi năm',
         percent: 6,
-        btn: { vi: 'Nạp USDT', en: 'Nạp USDT' }
+        btn: { vi: 'Nạp USDT', en: 'Nạp USDT' },
+        href: 'withdraw-deposit/crypto?side=BUY&assetId=USDT'
     }
 ];
 
