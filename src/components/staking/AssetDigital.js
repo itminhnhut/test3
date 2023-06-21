@@ -1,17 +1,31 @@
 import React, { useMemo } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { getLoginUrl } from 'src/redux/actions/utils';
 
 import { useTranslation } from 'next-i18next';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 import { ASSET_DIGITAL } from 'constants/staking';
+import { route } from 'next/dist/server/router';
 
-const AssetDigitalStaking = ({ isMobile }) => {
+const AssetDigitalStaking = ({ isMobile, auth }) => {
+    const router = useRouter();
     const {
         i18n: { language }
     } = useTranslation();
+
+    const handleDirectHref = (href, assetId) => {
+        if (!auth) {
+            const redirectLogin = getLoginUrl('sso', 'login', {
+                redirect: `${process.env.NEXT_PUBLIC_API_URL}/${route.locale}/withdraw-deposit/crypto?side=BUY&assetId=${assetId}`
+            });
+            router.push(redirectLogin);
+        } else {
+            router.push(href);
+        }
+    };
 
     const renderAssetDigital = useMemo(() => {
         return ASSET_DIGITAL.map((item) => {
@@ -20,7 +34,7 @@ const AssetDigitalStaking = ({ isMobile }) => {
                     key={`asset-digital-${item.title}`}
                     className="h-full lg:h-[589px] w-full
                     border-[1px] dark:border-[#222940] dark:bg-dark-4 bg-white border-[#dcdfe6] rounded-xl border-solid
-                    px-[60px] py-10 lg:py-[80px] flex flex-col justify-center items-center
+                    px-5 lg:px-[60px] py-10 lg:py-[80px] flex flex-col justify-center items-center
                     first:mt-[88px] lg:first:mt-0
                     "
                 >
@@ -33,9 +47,8 @@ const AssetDigitalStaking = ({ isMobile }) => {
                     />
                     <div className="text-gray-15 dark:text-gray-4 text-sm lg:text-base">{item.content}</div>
                     <div className="text-[20px] lg:text-3xl font-semibold text-green-2 mg-1 lg:mt-2 mb-6 lg:mb-10">{item.percent}%</div>
-                    <Link href={item?.href}>
-                        <ButtonV2>{item.btn[language]}</ButtonV2>
-                    </Link>
+
+                    <ButtonV2 onClick={() => handleDirectHref(item.href, item.title)}>{item.btn[language]}</ButtonV2>
                 </section>
             );
         });
