@@ -31,7 +31,7 @@ const series = [
     }
 ];
 
-const getApyByMonth = ({ amount, percentPerDay, numberOfMonth }) => {
+const getApyByMonth = ({ allowAmount, amount, percentPerDay, numberOfMonth }) => {
     const monthsToDays = {
         1: 30,
         12: 365,
@@ -39,11 +39,12 @@ const getApyByMonth = ({ amount, percentPerDay, numberOfMonth }) => {
         36: 1095,
         48: 1460
     };
-
-    const realAmount = amount * Math.pow(1 + percentPerDay / 100, monthsToDays[+numberOfMonth] || numberOfMonth * 30);
+    // tổng lợi nhuận gộp =
+    const compoundInterestAmount = +allowAmount * Math.pow(1 + percentPerDay / 100, monthsToDays[+numberOfMonth] || numberOfMonth * 30);
+    const interestAmount = +compoundInterestAmount - +allowAmount;
     return {
-        interestRate: realAmount - amount,
-        realAmount
+        interestAmount,
+        compoundAmount: +amount + interestAmount
     };
 };
 
@@ -160,12 +161,12 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
         [isDark]
     );
 
-    const apyByMonth = useMemo(
-        () => getApyByMonth({ amount, percentPerDay: currencyDayInterest, numberOfMonth: hoverData.index + 1 }),
-        [hoverData.index, currencyDayInterest, amount]
-    );
+    const apyByMonth = useMemo(() => {
+        const allowAmount = amount > STAKING_RANGE[currencyId].max ? STAKING_RANGE[currencyId].max : amount;
+        return getApyByMonth({ allowAmount, amount, percentPerDay: currencyDayInterest, numberOfMonth: hoverData.index + 1 });
+    }, [hoverData.index, currencyDayInterest, currencyId, amount]);
 
-    const isAmountOutOfRange = amount < STAKING_RANGE[currencyId].min || amount > STAKING_RANGE[currencyId].max;
+    const isAmountSmallerThanMin = amount < STAKING_RANGE[currencyId].min;
 
     return (
         typeof window !== 'undefined' && (
@@ -175,24 +176,26 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                     <div className="space-y-1 mb-4">
                         <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Lãi cuối kỳ</div>
                         <div className="font-semibold md:text-xl">
-                            {isAmountOutOfRange
+                            {isAmountSmallerThanMin
                                 ? '--'
-                                : `${formatNumber(apyByMonth.interestRate, currencyConfig?.assetDigit || 0)} ${currencyConfig?.assetCode}`}
+                                : `${formatNumber(apyByMonth.interestAmount, currencyConfig?.assetDigit || 0)} ${currencyConfig?.assetCode}`}
                         </div>
                     </div>
                     <div className="space-y-1">
                         <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Số dư cuối kỳ</div>
                         <div className="font-semibold md:text-xl">
-                            {isAmountOutOfRange ? '--' : `${formatNumber(apyByMonth.realAmount, currencyConfig?.assetDigit || 0)} ${currencyConfig?.assetCode}`}
+                            {isAmountSmallerThanMin
+                                ? '--'
+                                : `${formatNumber(apyByMonth.compoundAmount, currencyConfig?.assetDigit || 0)} ${currencyConfig?.assetCode}`}
                         </div>
                     </div>
                 </div>
 
                 <div className="">
-                    <Chart options={options} series={series} type="area" height={300} />
+                    <Chart options={options} series={series} type="area" height={320} />
                 </div>
 
-                <div ref={timerListRef} className="ml-5 z-[5] -mt-4 pr-2 flex justify-between relative overflow-x-auto no-scrollbar">
+                <div ref={timerListRef} className="ml-5 z-[5] -mt-5 pr-2 flex justify-between relative overflow-x-auto no-scrollbar">
                     {TIMER.map((item) => {
                         const selected = item.key === hoverData.index + 1;
                         return (
