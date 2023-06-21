@@ -366,13 +366,13 @@ module.exports = {
         status: 400,
         code: 9200,
         message: 'FILTER_MIN_AMOUNT',
-        description: 'The amount of ATS is not enough to be staked.',
+        description: 'The amount is not enough to be staked.',
     },
     FILTER_MAX_AMOUNT: {
         status: 400,
         code: 9201,
         message: 'FILTER_MAX_AMOUNT',
-        description: 'The amount of ATS is too much to be staked.',
+        description: 'The amount is too much to be staked.',
     },
     BALANCE_INSUFFICIENT: {
         status: 400,
