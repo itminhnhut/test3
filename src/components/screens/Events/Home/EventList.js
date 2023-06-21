@@ -243,7 +243,7 @@ const EventList = () => {
                         </label>
                         <InputV2 classNameInput="w-full" className="pb-0 w-full" placeholder="search" ref={searchRef} onHitEnterButton={onSearch} />
                     </div>
-                    <Button onClick={() => searchRef.current && onSearch(searchRef.current.value)} className="hidden mb:block w-fit px-3">
+                    <Button onClick={() => searchRef.current && onSearch(searchRef.current.value)} className="hidden mb:block w-fit px-3 whitespace-nowrap">
                         {t('common:search')}
                     </Button>
                 </Flex>

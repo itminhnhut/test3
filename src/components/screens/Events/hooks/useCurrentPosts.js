@@ -1,5 +1,6 @@
 import useQuery from "hooks/useQuery";
 import { useRouter } from "next/router";
+import { API_MARKETING_EVENTS } from "redux/actions/apis";
 import FetchApi from "utils/fetch-api";
 
 function useCurrentPosts() {
