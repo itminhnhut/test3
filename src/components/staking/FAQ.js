@@ -16,10 +16,10 @@ const FAQStaking = ({ isDark }) => {
                 <CollapseV2
                     key={`FAQ-${key}`}
                     className="w-full divider-bottom lg:last:pb-[120px] last:pb-[80px]"
-                    divLabelClassname="w-full justify-between !pb-4 lg:!pb-[21px]"
+                    divLabelClassname="w-full justify-between !pb-5 !mb-0"
                     chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
                     label={item.title?.[language]}
-                    labelClassname="text-base font-semibold mt-5 text-gray-15 dark:text-white w-10/12"
+                    labelClassname="text-base lg:text-[18px] font-semibold mt-5 text-gray-15 dark:text-white w-10/12"
                     chevronDownClassName="mt-5"
                     isDividerBottom={true}
                     dividerBottomClassName="!mt-5"
