@@ -7,5 +7,13 @@
     "why_nami": {
         "title": "Tại sao nên chọn Nami Exchange?"
     },
+    "calculate_interest": {
+        "head_title": "Tính toán lợi nhuận",
+        "sub_title": "Chọn loại tài sản số và nhập số lượng để tham khảo lợi nhuận nhận được qua thời gian từ chương trình Nhận lãi ngày của Nami Exchange",
+        "select_asset": "Loại tài sản",
+        "after_xx_month": "Sau {{month}} tháng bạn sẽ nhận được:",
+        "total_interest": "Tổng lãi cuối kỳ",
+        "total_balance": "Tổng số dư cuối kỳ"
+    },
     "faq": { "title": "Câu hỏi thường gặp về chương trình Nhận lãi ngày" }
 }

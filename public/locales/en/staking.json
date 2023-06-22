@@ -7,5 +7,13 @@
     "why_nami": {
         "title": "Why Nami Exchange?"
     },
+    "calculate_interest": {
+        "head_title":"Interest Calculation",
+        "sub_title": "Select digital asset and enter the quantity to refer to the profit received over time from Nami Exchange's Daily Staking program",
+        "select_asset": "Asset",
+        "after_xx_month": "After {{month}} months, you will receive:",
+        "total_interest": "Total interest",
+        "total_balance": "Total balance"
+    },
     "faq": { "title": "FAQ on Daily Staking program" }
 }

@@ -3,35 +3,48 @@ import React, { useMemo, useState } from 'react';
 import SelectV2 from 'components/common/V2/SelectV2';
 import { useTranslation } from 'next-i18next';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { formatNumber, getExactBalanceFiat } from 'redux/actions/utils';
+import { formatNumber, getExactBalanceFiat, roundByExactDigit } from 'redux/actions/utils';
 import dynamic from 'next/dynamic';
 
 const APYInterestChart = dynamic(() => import('./APYInterestChart'), { ssr: false });
+
+const APY_PERCENT = {
+    VNDC: 12.79,
+    USDT: 6
+};
+const DAYS_IN_YEAR = 365;
+
+const getDayInterestPercent = (apy) => roundByExactDigit(apy / DAYS_IN_YEAR, 4);
 
 const STAKING_CURRENCIES = [
     {
         value: 72,
         code: 'VNDC',
-        apyPercent: 12.79,
-        dayInterestPercent: 0.035, // apyPercent / 365
-        title: (
-            <div className="font-semibold flex items-center  space-x-2">
-                <AssetLogo size={24} assetId={72} />
-                <span className="">VNDC</span>
-                <span className=" text-teal">12.79%/năm</span>
-            </div>
-        )
+        dayInterestPercent: getDayInterestPercent(APY_PERCENT['VNDC']),
+        title: ({ t }) => {
+            return (
+                <div className="font-semibold flex items-center  space-x-2">
+                    <AssetLogo size={24} assetId={72} />
+                    <span className="">VNDC</span>
+                    <span className=" text-teal">
+                        {APY_PERCENT['VNDC']}%/{t('common:year')}
+                    </span>
+                </div>
+            );
+        }
     },
     {
         value: 22,
         code: 'USDT',
         apyPercent: 6,
-        dayInterestPercent: 0.016, // apyPercent / 365
-        title: (
+        dayInterestPercent: getDayInterestPercent(APY_PERCENT['USDT']),
+        title: ({ t }) => (
             <div className="font-semibold flex items-center  space-x-2">
                 <AssetLogo size={24} assetId={22} />
                 <span className="">USDT</span>
-                <span className=" text-teal">6%/năm</span>
+                <span className=" text-teal">
+                    {APY_PERCENT['USDT']}%/{t('common:year')}
+                </span>
             </div>
         )
     }
@@ -92,16 +105,15 @@ const CalculateInterest = () => {
     return (
         <section className="mt-[88px] lg:mt-[118px] px-3 py-10 md:px-20 md:py-[60px] dark:bg-dark-4 bg-white border-divider dark:border-divider-dark border rounded-xl">
             <div className="text-center space-y-3 mb-10 md:mb-[60px]">
-                <div className="text-2xl md:text-5xl font-semibold">Tính toán lợi nhuận</div>
-                <div className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">
-                    Chọn loại tài sản số và nhập số lượng để tham khảo lợi nhuận nhận được qua thời gian từ chương trình Nhận lãi ngày của Nami Exchange
-                </div>
+                <div className="text-2xl md:text-5xl font-semibold">{t('staking:calculate_interest.head_title')}</div>
+                <div className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('staking:calculate_interest.sub_title')} </div>
             </div>
             <div className="flex flex-wrap -mx-5">
                 <div className="px-5 mb-10 md:mb-0 md:max-w-[460px] w-full space-y-7">
                     <div className="space-y-2">
-                        <label className="txtSecond-5">Lựa chọn Token</label>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">{t('staking:calculate_interest.select_asset')}</span>
                         <SelectV2
+                            titleParams={{ t }}
                             onChange={(_, currency) => {
                                 setState({ stakingCurrency: currency, amountStaking: STAKING_RANGE[currency.value].DEFAULT });
                             }}
@@ -112,9 +124,7 @@ const CalculateInterest = () => {
                         />
                     </div>
                     <div className="space-y-2">
-                        <label htmlFor="staking_amount_input" className="txtSecond-5">
-                            {t('common:amount')}
-                        </label>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">{t('common:quantity')}</span>
                         <TradingInputV2
                             id="staking_amount_input"
                             value={state.amountStaking}
@@ -127,7 +137,7 @@ const CalculateInterest = () => {
                             allowedDecimalSeparators={[',', '.']}
                             clearAble
                             placeHolder="0"
-                            validator={validator}
+                            // validator={validator}
                             errorTooltip={false}
                         />
                     </div>
@@ -136,7 +146,6 @@ const CalculateInterest = () => {
                     <APYInterestChart
                         amount={state.amountStaking}
                         currencyDayInterest={state.stakingCurrency.dayInterestPercent}
-                        currencyApy={state.stakingCurrency.apyPercent}
                         currencyId={state.stakingCurrency.value}
                     />
                 </div>

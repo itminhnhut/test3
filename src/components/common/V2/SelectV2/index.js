@@ -2,9 +2,19 @@ import React, { useMemo, Fragment } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import ChevronDown from 'components/svg/ChevronDown';
 import classNames from 'classnames';
-const SelectV2 = ({ options = [], value, onChange, keyExpr = 'value', displayExpr = 'title', className = '', popoverClassName = '', position = 'bottom' }) => {
+const SelectV2 = ({
+    options = [],
+    value,
+    onChange,
+    keyExpr = 'value',
+    displayExpr = 'title',
+    titleParams = {},
+    className = '',
+    popoverClassName = '',
+    position = 'bottom'
+}) => {
     const title = useMemo(() => {
-        return options.find((rs) => rs?.[keyExpr] === value)?.[displayExpr];
+        return options.find((rs) => rs?.[keyExpr] === value)?.[displayExpr]?.(titleParams);
     }, [options, value, keyExpr, displayExpr]);
 
     return (
@@ -50,7 +60,7 @@ const SelectV2 = ({ options = [], value, onChange, keyExpr = 'value', displayExp
                                                     close();
                                                 }}
                                             >
-                                                {item?.[displayExpr]}
+                                                {item?.[displayExpr]?.(titleParams)}
                                             </div>
                                         );
                                     })}

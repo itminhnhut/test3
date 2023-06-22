@@ -44,16 +44,16 @@ const getApyByMonth = ({ allowAmount, amount, percentPerDay, numberOfMonth }) =>
     const interestAmount = +compoundInterestAmount - +allowAmount;
     return {
         interestAmount,
-        compoundAmount: +amount + interestAmount
+        realBalanceAmount: +amount + interestAmount
     };
 };
 
 const TIMER = [
-    { vi: '1 tháng', en: '1 Month', key: 1 },
-    { vi: '12 tháng', en: '12 Month', key: 12 },
-    { vi: '24 tháng', en: '24 Month', key: 24 },
-    { vi: '36 tháng', en: '36 Month', key: 36 },
-    { vi: '48 tháng', en: '48 Month', key: 48 }
+    { vi: '1 tháng', en: '1 month', key: 1 },
+    { vi: '12 tháng', en: '12 months', key: 12 },
+    { vi: '24 tháng', en: '24 months', key: 24 },
+    { vi: '36 tháng', en: '36 months', key: 36 },
+    { vi: '48 tháng', en: '48 months', key: 48 }
 ];
 
 const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
@@ -61,6 +61,7 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     const isDark = theme === THEME_MODE.DARK;
     const timerListRef = useRef(null);
     const {
+        t,
         i18n: { language }
     } = useTranslation();
 
@@ -77,7 +78,6 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     const options = useMemo(
         () => ({
             chart: {
-                width: '100%',
                 type: 'area',
                 toolbar: {
                     show: false
@@ -170,11 +170,13 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
 
     return (
         typeof window !== 'undefined' && (
-            <Wrapper className="relative -ml-5 -mr-2 md:m-0">
+            <Wrapper className="relative -ml-5 -mr-2 md:m-0 w-full">
                 <div className="absolute left-10 top-10">
-                    <div className="font-semibold text-sm mb-4">Sau {hoverData.index + 1} tháng bạn sẽ nhận được</div>
+                    <div className="font-semibold text-sm mb-4">{t('staking:calculate_interest.after_xx_month', { month: hoverData.index + 1 })}</div>
                     <div className="space-y-1 mb-4">
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Lãi cuối kỳ</div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">
+                            {t('staking:calculate_interest.total_interest')}:
+                        </div>
                         <div className="font-semibold md:text-xl">
                             {isAmountSmallerThanMin
                                 ? '--'
@@ -182,27 +184,30 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                         </div>
                     </div>
                     <div className="space-y-1">
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">Số dư cuối kỳ</div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">
+                            {' '}
+                            {t('staking:calculate_interest.total_balance')}:
+                        </div>
                         <div className="font-semibold md:text-xl">
                             {isAmountSmallerThanMin
                                 ? '--'
-                                : `${formatNumber(apyByMonth.compoundAmount, currencyConfig?.assetDigit || 0)} ${currencyConfig?.assetCode}`}
+                                : `${formatNumber(apyByMonth.realBalanceAmount, currencyConfig?.assetDigit || 0)} ${currencyConfig?.assetCode}`}
                         </div>
                     </div>
                 </div>
 
-                <div className="">
-                    <Chart options={options} series={series} type="area" height={320} />
+                <div className="w-full">
+                    <Chart options={options} series={series} type="area" height={320} width="100%" />
                 </div>
 
-                <div ref={timerListRef} className="ml-5 z-[5] -mt-5 pr-2 flex justify-between relative overflow-x-auto no-scrollbar">
+                <div ref={timerListRef} className="pl-5 pr-2 z-[5] -mt-5 flex justify-between relative overflow-x-auto no-scrollbar">
                     {TIMER.map((item) => {
                         const selected = item.key === hoverData.index + 1;
                         return (
                             <div
                                 id={'chip' + item.key}
                                 key={item.key}
-                                className="first:ml-0 ml-2 md:ml-4 "
+                                className="first:ml-0 ml-2 md:ml-0"
                                 onClick={() => {
                                     setHoverData({ index: item.key - 1 });
                                     const thisElement = document.getElementById('chip' + item.key);
