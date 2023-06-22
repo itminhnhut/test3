@@ -1,19 +1,36 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import PriceChangePercent from 'components/common/PriceChangePercent';
 import colors from 'styles/colors';
 import Tooltip from 'components/common/Tooltip';
-import { formatNanNumber } from 'redux/actions/utils';
+import { formatNanNumber, formatTime } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
 import classNames from 'classnames';
 import HeaderTooltip from './HeaderTooltip';
-import CollapseV2 from 'components/common/V2/CollapseV2';
-import { API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
+import { API_FUTURES_STATISTIC_DW, API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
+import { ShareIcon, SaveAltIcon, FacebookIcon, TwitterIcon, TelegramIcon, RedditIcon, LinkedInIcon, DiscordIcon } from 'components/svg/SvgIcon';
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
+import styled from 'styled-components';
+import ModalV2 from 'components/common/V2/ModalV2';
+import QRCode from 'qrcode.react';
+import { useSelector } from 'react-redux';
+import CheckBox from 'components/common/CheckBox';
+import DomToImage from 'dom-to-image';
+import ModalLoading from 'components/common/ModalLoading';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { FUTURES_PRODUCT } from 'constants/constants';
+import { useTranslation } from 'next-i18next';
 
-const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loadingOverview, typeCurrency }) => {
+const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typeProduct, typeCurrency, timeFilter, firstTimeTrade }) => {
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+
     const [usdRate, setUsdRate] = useState();
+    const [openModalShare, setOpenModalShare] = useState(null);
     useEffect(() => {
         FetchApi({
             url: API_GET_REFERENCE_CURRENCY,
@@ -28,16 +45,49 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
 
     const isVnd = typeCurrency === ALLOWED_ASSET_ID.VNDC;
 
+    const [dataDw, setDataDw] = useState({ totalWithdraw: null, totalDeposit: null });
+    const [loadingDataDW, setLoadingDataDW] = useState(false);
+    const fetchDataDW = async () => {
+        try {
+            setLoadingDataDW(true);
+
+            const { data } = await FetchApi({
+                url: API_FUTURES_STATISTIC_DW,
+                params: {
+                    currency: typeCurrency,
+                    product: typeProduct,
+                    from: timeFilter?.startDate,
+                    to: timeFilter?.endDate
+                }
+            });
+
+            setDataDw(data);
+        } catch (error) {
+        } finally {
+            setLoadingDataDW(false);
+        }
+    };
+
+    useEffect(() => {
+        if (!timeFilter?.endDate) return;
+
+        fetchDataDW();
+    }, [typeProduct, typeCurrency, timeFilter]);
+
     const renderSumVolumns = useCallback(() => {
         const totalVolume = dataOverview?.totalVolume?.value;
         const swapValue = '$' + formatNanNumber(totalVolume * usdRate, 4);
         return (
-            <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4' : 'flex-auto px-6 py-4'}>
+            <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4' : 'pt-4'}>
                 <span>{t('transaction-history:modal_detail.volume')}</span>
                 <div className="text-base md:text-2xl font-semibold text-gray-15 dark:text-gray-4 mt-2 md:mt-4">
-                    {loadingOverview ? <Skeletor width={150} /> : formatNanNumber(totalVolume, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
+                    {loadingOverview ? (
+                        <Skeletor width={isMobile ? 80 : 150} height={20} />
+                    ) : (
+                        formatNanNumber(totalVolume, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)
+                    )}
                 </div>
-                <div className="mt-1 md:mt-2">{loadingOverview ? <Skeletor width={150} /> : swapValue}</div>
+                <div className="mt-1 md:mt-2">{loadingOverview ? <Skeletor width={isMobile ? 60 : 150} height={12} /> : swapValue}</div>
             </div>
         );
     }, [isMobile, loadingOverview, dataOverview, usdRate]);
@@ -47,7 +97,13 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
         const sign = totalPnl > 0 ? '+ ' : '';
 
         return (
-            <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4' : 'flex-auto px-6 py-4'}>
+            <div
+                className={
+                    isMobile
+                        ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4'
+                        : 'pb-[15px] border-b border-divider dark:border-divider-dark'
+                }
+            >
                 <span>{t('portfolio:pnl')}</span>
                 <div
                     className={classNames('text-base md:text-2xl font-semibold mt-2 md:mt-4 text-gray-15 dark:text-gray-4', {
@@ -55,10 +111,10 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                         '!text-red-2 !dark:text-red': totalPnl < 0
                     })}
                 >
-                    {loadingOverview ? <Skeletor width={150} /> : `${sign}${formatNanNumber(totalPnl, isVnd ? 0 : 4)}`}
+                    {loadingOverview ? <Skeletor width={isMobile ? 80 : 150} height={20} /> : `${sign}${formatNanNumber(totalPnl, isVnd ? 0 : 4)}`}
                 </div>
                 {loadingOverview ? (
-                    <Skeletor width={50} />
+                    <Skeletor width={isMobile ? 60 : 150} height={12} />
                 ) : totalPnl === 0 ? (
                     <div className="mt-1 md:mt-2">0%</div>
                 ) : (
@@ -77,11 +133,11 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
         const avgLeverage = formatNanNumber(dataOverview?.avgLeverage?.value, 0);
 
         return (
-            <div className={isMobile ? 'mt-4 p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4' : 'flex-auto md:px-6 py-4'}>
+            <div className={isMobile ? 'mt-4 p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4' : 'flex flex-col gap-y-4'}>
                 <div className="flex items-center justify-between">
                     <span>{t('futures:margin')}</span>
                     {loadingOverview ? (
-                        <Skeletor width={200} />
+                        <Skeletor className="!my-0.5" width={isMobile ? 150 : 200} height={16} />
                     ) : (
                         <div className="text-right">
                             <span className="txtPri-1">{formatNanNumber(totalMargin, isVnd ? 0 : 4)}</span>
@@ -89,20 +145,53 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                         </div>
                     )}
                 </div>
-                <div className="flex items-center justify-between mt-3">
+                <div className="flex items-center justify-between">
                     <span>{t('portfolio:position')}</span>
                     {loadingOverview ? (
-                        <Skeletor width={200} />
+                        <Skeletor width={isMobile ? 150 : 200} height={16} className="!my-0.5" />
                     ) : (
                         <div className="text-right">
                             <span className="txtPri-1">{dataOverview?.totalPositions?.value}</span>
-                            <span className="txtSecond-2">{` (${dataOverview?.countLongPositions?.doc_count || 0} ${t('common:buy')} - ${dataOverview?.countShortPositions?.doc_count || 0} ${t('common:sell')})`}</span>
+                            <span className="txtSecond-2">{` (${dataOverview?.countLongPositions?.doc_count || 0} ${t('common:buy')} - ${
+                                dataOverview?.countShortPositions?.doc_count || 0
+                            } ${t('common:sell')})`}</span>
                         </div>
                     )}
                 </div>
-                <div className="flex items-center justify-between mt-3">
+                <div className="flex items-center justify-between">
                     <span>{t('portfolio:avg_leverage')}</span>
-                    {loadingOverview ? <Skeletor width={50} /> : <span className="txtPri-1">{avgLeverage ? `${avgLeverage}X` : '-'}</span>}
+                    {loadingOverview ? (
+                        <Skeletor width={isMobile ? 30 : 50} height={16} className="!my-0.5" />
+                    ) : (
+                        <span className="txtPri-1">{avgLeverage ? `${avgLeverage}X` : '-'}</span>
+                    )}
+                </div>
+                {/* Tổng giá trị nạp */}
+                <div className="flex items-center justify-between">
+                    <span>{t('portfolio:total_deposit')}</span>
+                    {loadingDataDW ? (
+                        <Skeletor width={isMobile ? 100 : 150} height={16} />
+                    ) : (
+                        <span className="txtPri-1">{formatNanNumber(dataDw?.totalDeposit?.total?.value, isVnd ? 0 : 4)}</span>
+                    )}
+                </div>
+                {/* Tổng giá trị rút */}
+                <div className="flex items-center justify-between">
+                    <span>{t('portfolio:total_withdraw')}</span>
+                    {loadingDataDW ? (
+                        <Skeletor width={isMobile ? 120 : 150} height={16} />
+                    ) : (
+                        <span className="txtPri-1">{formatNanNumber(dataDw?.totalWithdraw?.total?.value, isVnd ? 0 : 4)}</span>
+                    )}
+                </div>
+                {/* Tỷ lệ % thắng */}
+                <div className="flex items-center justify-between">
+                    <span className={language === 'vi' ? '' : 'capitalize'}>{t('portfolio:win_rate')}</span>
+                    {loadingOverview ? (
+                        <Skeletor width={isMobile ? 70 : 100} height={16} />
+                    ) : (
+                        <span className="txtPri-1">{formatNanNumber(dataOverview?.winRate?.value, 2)}%</span>
+                    )}
                 </div>
             </div>
         );
@@ -112,21 +201,19 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
         <div className={className}>
             <Tooltip id={'key_statistic'} place="top" className="max-w-[520px]" />
             {isMobile ? (
-                <CollapseV2
-                    className="w-full"
-                    divLabelClassname="w-full justify-between"
-                    chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
-                    label={
+                <div>
+                    <div className="flex items-center justify-between">
                         <HeaderTooltip
                             isMobile={isMobile}
                             title={t('portfolio:key_metrics')}
                             tooltipContent={t('portfolio:key_metrics_tooltip')}
                             tooltipId={'key_metrics_tooltip'}
                         />
-                    }
-                    labelClassname="text-base font-semibold"
-                    isDividerBottom={true}
-                >
+                        <TextButton onClick={() => setOpenModalShare(true)} className="w-auto !py-[3px] text-sm">
+                            <ShareIcon size={16} className="cursor-pointer" color={'currentColor'} />
+                            <span className="ml-2">{t('common:share')}</span>
+                        </TextButton>
+                    </div>
                     <div className="mt-6">
                         <div className="mt-6 text-gray-1 dark:text-gray-7">
                             <div className="grid grid-cols-2 gap-x-3">
@@ -136,22 +223,35 @@ const FeaturedStats = ({ className, user, t, isMobile, isDark, dataOverview, loa
                             {renderOtherSummary()}
                         </div>
                     </div>
-                </CollapseV2>
+                </div>
             ) : (
                 <>
-                    <HeaderTooltip
-                        isMobile={isMobile}
-                        title={t('portfolio:key_metrics')}
-                        tooltipContent={t('portfolio:key_metrics_tooltip')}
-                        tooltipId={'key_metrics_tooltip'}
-                    />
-                    <div className=" text-gray-1 dark:text-gray-7 mt-8 rounded-xl flex px-6 py-3 bg-gray-13 dark:bg-dark-4">
+                    <div className="flex items-center justify-between">
+                        <HeaderTooltip
+                            isMobile={isMobile}
+                            title={t('portfolio:key_metrics')}
+                            tooltipContent={t('portfolio:key_metrics_tooltip')}
+                            tooltipId={'key_metrics_tooltip'}
+                        />
+                        <TextButton onClick={() => setOpenModalShare(true)} className="w-auto !py-[3px]">
+                            <ShareIcon size={16} className="cursor-pointer" color={'currentColor'} />
+                            <span className="ml-2">{t('common:share')}</span>
+                        </TextButton>
+                    </div>
+                    <div className="flex items-stretch w-full gap-x-8 text-gray-1 dark:text-gray-7 mt-8">
+                        <CardFill className={'flex-auto'}>
+                            {renderSumPnl()}
+                            {renderSumVolumns()}
+                        </CardFill>
+                        <CardFill className={'flex-auto'}>{renderOtherSummary()}</CardFill>
+                    </div>
+                    {/* <div className=" text-gray-1 dark:text-gray-7 mt-8 rounded-xl flex px-6 py-3 bg-gray-13 dark:bg-dark-4">
                         {renderSumVolumns()}
                         <div className="vertical-divider"></div>
                         {renderSumPnl()}
                         <div className="vertical-divider"></div>
                         {renderOtherSummary()}
-                    </div>
+                    </div> */}
                 </>
             )}
             <ModalShare
@@ -377,9 +477,7 @@ const ImageShare = ({
             <div
                 className="bg-center bg-cover h-[182px] "
                 style={{
-                    backgroundImage: ['development', 'dev'].includes(process.env.NODE_ENV)
-                        ? `url('/images/screen/portfolio/share_${negative ? 'loss' : 'profit'}.png')`
-                        : `url(${`https://nami.exchange/images/portfolio/share_${negative ? 'loss' : 'profit'}.png`})`
+                    backgroundImage: `url(${`https://nami.exchange/images/share_${negative ? 'loss' : 'profit'}.png`})`
                 }}
             ></div>
             <div className="flex flex-col items-center text-gray-7 text-xs gap-y-2">

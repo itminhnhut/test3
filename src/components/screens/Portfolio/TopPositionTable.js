@@ -147,24 +147,17 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
         [dataTable]
     );
 
-    if (isMobile)
-        return (
-            <>
-                <CollapseV2
-                    className="w-full mt-12"
-                    divLabelClassname="w-full justify-between"
-                    chrevronStyled={{ size: 24, style: { marginRight: 16 }, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
-                    label={
-                        <HeaderTooltip
-                            isMobile
-                            className="ml-4"
-                            title={`Top ${LIMIT_ROW} vị thế`}
-                            tooltipContent={'This is tooltip content'}
-                            tooltipId="top_position_tooltip"
-                        />
-                    }
-                    labelClassname="text-base font-semibold"
-                >
+    return (
+        <div className={`mt-12  ${isMobile ? '' : 'border border-divider dark:border-divider-dark rounded-xl'}  ${className}`}>
+            <HeaderTooltip
+                isMobile
+                className={isMobile ? 'px-4' : 'px-6 py-8'}
+                title={t('portfolio:top_position', { maxPosition: LIMIT_ROW })}
+                tooltipContent={t('portfolio:top_position_tooltip')}
+                tooltipId="top_position_tooltip"
+            />
+            {isMobile ? (
+                <>
                     <div className={`${className}`}>
                         <div className="relative flex tracking-normal">
                             <Tabs isMobile tab={curTab} className="mt-6 md:mt-0 md:px-6 gap-x-6 border-b border-divider dark:border-divider-dark">
@@ -239,59 +232,50 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                             )}
                         </div>
                     </div>
-                </CollapseV2>
-                <ModalV2 isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
-                    <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:position_details')}</h1>
-                    {showDetails && <ModalDetailsPosition value={showDetails} isVndc={isVndc} t={t} />}
-                </ModalV2>
-                {/* <ModalDetailsPosition isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)}  /> */}
-            </>
-        );
-
-    return (
-        <div className={`mt-12  ${isMobile ? '' : 'border border-divider dark:border-divider-dark rounded-xl'}  ${className}`}>
-            <HeaderTooltip
-                isMobile
-                className={isMobile ? 'px-4' : 'px-6 py-8'}
-                title={t('portfolio:top_position', { maxPosition: LIMIT_ROW })}
-                tooltipContent={t('portfolio:top_position_tooltip')}
-                tooltipId="top_position_tooltip"
-            />
-            <div className="relative flex tracking-normal">
-                <Tabs isMobile tab={curTab} className="mt-6 md:mt-0 md:px-6 gap-x-6 border-b border-divider dark:border-divider-dark">
-                    {LIST_TABS.map((e) => {
-                        return (
-                            <TabItem
-                                isActive={e?.id === curTab}
-                                key={'top_position_tabs_' + e?.id}
-                                className={'text-left !px-0 !text-base !w-auto'}
-                                value={e.id}
-                                onClick={() => setCurTab(e.id)}
-                            >
-                                {t(`${e.title ?? e.localized}`)}
-                            </TabItem>
-                        );
-                    })}
-                </Tabs>
-            </div>
-            <TableV2
-                sort={['profit', 'margin', 'order_value']}
-                loading={loadingTopPosition}
-                useRowHover
-                data={dataTable || []}
-                columns={columns}
-                rowKey={(item) => `${item?.key}`}
-                scroll={{ x: true }}
-                limit={LIMIT_ROW}
-                skip={0}
-                noBorder={true}
-                // pagingClassName="border-none"
-                height={350}
-                tableStyle={{ fontSize: '16px', padding: '16px', rcTableContent: { 'padding-bottom': '46px' } }}
-                textEmptyCustom={t('portfolio:no_position_recorded')}
-                className="pb-1 rounded-b-xl border-t border-divider dark:border-divider-dark"
-                // className="bg-white dark:bg-transparent pt-8 border border-divider dark:border-divider-dark rounded-xl"
-            />
+                    {/* </CollapseV2> */}
+                    <ModalV2 isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
+                        <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:position_details')}</h1>
+                        {showDetails && <ModalDetailsPosition value={showDetails} isVndc={isVndc} t={t} />}
+                    </ModalV2>
+                </>
+            ) : (
+                <>
+                    <div className="relative flex tracking-normal">
+                        <Tabs isMobile tab={curTab} className="mt-6 md:mt-0 md:px-6 gap-x-6 border-b border-divider dark:border-divider-dark">
+                            {LIST_TABS.map((e) => {
+                                return (
+                                    <TabItem
+                                        isActive={e?.id === curTab}
+                                        key={'top_position_tabs_' + e?.id}
+                                        className={'text-left !px-0 !text-base !w-auto'}
+                                        value={e.id}
+                                        onClick={() => setCurTab(e.id)}
+                                    >
+                                        {t(`${e.title ?? e.localized}`)}
+                                    </TabItem>
+                                );
+                            })}
+                        </Tabs>
+                    </div>
+                    <TableV2
+                        loading={loadingTopPosition}
+                        useRowHover
+                        data={dataTable || []}
+                        columns={columns}
+                        rowKey={(item) => `${item?.key}`}
+                        scroll={{ x: true }}
+                        limit={LIMIT_ROW}
+                        skip={0}
+                        noBorder={true}
+                        // pagingClassName="border-none"
+                        height={350}
+                        tableStyle={{ fontSize: '16px', padding: '16px', rcTableContent: { 'padding-bottom': '46px' } }}
+                        textEmptyCustom={t('portfolio:no_position_recorded')}
+                        className="pb-1 rounded-b-xl border-t border-divider dark:border-divider-dark"
+                        // className="bg-white dark:bg-transparent pt-8 border border-divider dark:border-divider-dark rounded-xl"
+                    />
+                </>
+            )}
         </div>
     );
 };
@@ -332,7 +316,7 @@ const ModalDetailsPosition = ({ value, isVndc, t }) => {
                 </div>
                 <div className="flex justify-between items-center mt-2.5">
                     <div className="txtSecond-3">ID</div>
-                    <TextCopyable text={displaying_id}/>
+                    <TextCopyable text={displaying_id} />
                 </div>
             </MCard>
         </div>
