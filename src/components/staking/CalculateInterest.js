@@ -111,7 +111,7 @@ const CalculateInterest = () => {
             <div className="flex flex-wrap lg:flex-nowrap -mx-5">
                 <div className="px-5 mb-10 lg:mb-0 lg:max-w-[440px] w-full space-y-7">
                     <div className="space-y-2">
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">{t('staking:calculate_interest.select_asset')}</span>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">{t('staking:calculate_interest.select_asset')}</div>
                         <SelectV2
                             titleParams={{ t }}
                             onChange={(_, currency) => {
@@ -124,7 +124,7 @@ const CalculateInterest = () => {
                         />
                     </div>
                     <div className="space-y-2">
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">{t('common:quantity')}</span>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">{t('common:quantity')}</div>
                         <TradingInputV2
                             id="staking_amount_input"
                             value={state.amountStaking}

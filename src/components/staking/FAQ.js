@@ -46,7 +46,7 @@ const FAQStaking = ({ isDark }) => {
             <h2 className="text-2xl lg:text-5xl font-semibold text-gray-15 dark:text-gray-4">
                 {t('staking:faq.title')}
             </h2>
-            <div className="mt-8 lg:mt-[60px]">{renderFAQ}</div>
+            <div className="mt-8 lg:mt-[40px]">{renderFAQ}</div>
         </section>
     );
 };
