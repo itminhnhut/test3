@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getLoginUrl } from 'src/redux/actions/utils';
+import { useSelector } from 'react-redux';
 
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
@@ -10,7 +11,8 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 import { ASSET_DIGITAL } from 'constants/staking';
 
-const AssetDigitalStaking = ({ isMobile, auth }) => {
+const AssetDigitalStaking = ({ isMobile }) => {
+    const auth = useSelector((state) => state.auth?.user);
     const router = useRouter();
     const {
         i18n: { language }
@@ -18,7 +20,7 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
 
     const renderBtnAssetDigital = useCallback(
         (data) => {
-            return !auth ? (
+            return !auth?.code ? (
                 <a
                     className="w-full"
                     href={getLoginUrl('sso', 'login', {
@@ -33,7 +35,7 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
                 </a>
             );
         },
-        [auth?.code]
+        [auth]
     );
 
     const renderAssetDigital = useMemo(() => {

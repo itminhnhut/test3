@@ -5,7 +5,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import { useSelector } from 'react-redux';
 
 import { useWindowSize } from 'react-use';
 import styled from 'styled-components';
@@ -29,7 +28,6 @@ const Reference = () => {
 
     const { width } = useWindowSize();
     const isMobile = width < 830;
-    const auth = useSelector((state) => state.auth?.user);
 
     return (
         <>
@@ -43,7 +41,7 @@ const Reference = () => {
                         <CalculateInterest />
                     </div>
                     <WrapperAssetFAQ mobile={isMobile} className="relative pt-0  lg:pt-[120px]" id="asset_digital">
-                        <AssetDigitalStaking isMobile={isMobile} auth={auth} />
+                        <AssetDigitalStaking isMobile={isMobile} />
                         <FAQStaking isDark={isDark} />
                     </WrapperAssetFAQ>
                 </main>
