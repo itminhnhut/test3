@@ -108,8 +108,8 @@ const CalculateInterest = () => {
                 <div className="text-2xl md:text-5xl font-semibold">{t('staking:calculate_interest.head_title')}</div>
                 <div className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('staking:calculate_interest.sub_title')} </div>
             </div>
-            <div className="flex flex-wrap -mx-5">
-                <div className="px-5 mb-10 md:mb-0 md:max-w-[460px] w-full space-y-7">
+            <div className="flex flex-wrap lg:flex-nowrap -mx-5">
+                <div className="px-5 mb-10 lg:mb-0 lg:max-w-[440px] w-full space-y-7">
                     <div className="space-y-2">
                         <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">{t('staking:calculate_interest.select_asset')}</span>
                         <SelectV2
@@ -142,7 +142,7 @@ const CalculateInterest = () => {
                         />
                     </div>
                 </div>
-                <div className="px-5 w-full md:w-auto md:flex-grow">
+                <div className="px-5 w-full lg:w-auto lg:flex-grow">
                     <APYInterestChart
                         amount={state.amountStaking}
                         currencyDayInterest={state.stakingCurrency.dayInterestPercent}

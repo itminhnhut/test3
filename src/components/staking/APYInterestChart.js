@@ -78,6 +78,7 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     const options = useMemo(
         () => ({
             chart: {
+                width: '100%',
                 type: 'area',
                 toolbar: {
                     show: false
@@ -170,7 +171,7 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
 
     return (
         typeof window !== 'undefined' && (
-            <Wrapper className="relative -ml-5 -mr-2 md:m-0 w-full">
+            <Wrapper className="relative -ml-5 -mr-2 lg:m-0">
                 <div className="absolute left-10 top-10">
                     <div className="font-semibold text-sm mb-4">{t('staking:calculate_interest.after_xx_month', { month: hoverData.index + 1 })}</div>
                     <div className="space-y-1 mb-4">
@@ -195,19 +196,17 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                         </div>
                     </div>
                 </div>
-
-                <div className="w-full">
-                    <Chart options={options} series={series} type="area" height={320} width="100%" />
+                <div >
+                    <Chart options={options} series={series} type="area" height={320} />
                 </div>
 
-                <div ref={timerListRef} className="ml-5 mr-2 z-[5] -mt-5 flex justify-between relative overflow-x-auto no-scrollbar">
+                <div ref={timerListRef} className="ml-5 gap-2 mr-2 z-[5] -mt-5 flex justify-between relative overflow-x-auto no-scrollbar">
                     {TIMER.map((item) => {
                         const selected = item.key === hoverData.index + 1;
                         return (
                             <div
                                 id={'chip' + item.key}
                                 key={item.key}
-                                className="first:ml-0 ml-2 md:ml-0"
                                 onClick={() => {
                                     setHoverData({ index: item.key - 1 });
                                     const thisElement = document.getElementById('chip' + item.key);
