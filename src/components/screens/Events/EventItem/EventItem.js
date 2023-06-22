@@ -42,7 +42,7 @@ const EventItem = (props) => {
                 className={classNames('px-4 py-1 rounded-full', {
                     'bg-green-2/10 text-green-2': status === STATUSES.upcoming,
                     'bg-yellow-2/10 text-yellow-2': status === STATUSES.ongoing,
-                    'bg-red-2/10 text-red-2': status === STATUSES.ended
+                    'bg-divider dark:bg-divider-dark text-txtSecondary dark:text-txtSecondary-dark': status === STATUSES.ended
                 })}
             >
                 {t(`marketing_events:${Object.keys(STATUSES)[status + 1]}`)}

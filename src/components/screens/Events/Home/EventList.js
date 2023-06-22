@@ -137,10 +137,10 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                 </div>
             </div>
             <div
-                className="mb:hidden bg-gray-12 dark:bg-dark-2 p-4 rounded-md text-txtSecondary dark:text-txtSecondary-dark"
+                className="mb:hidden bg-gray-12 dark:bg-dark-2 p-3.5 rounded-md text-txtSecondary dark:text-txtSecondary-dark"
                 onClick={() => setShowDateFilterModal(true)}
             >
-                <SvgFilter size={16} color="currentColor" className="w-3 h-3 sm:w-4 sm:h-4" />
+                <SvgFilter size={16} color="currentColor" className="w-4 h-4" />
             </div>
         </>
     );
@@ -153,7 +153,7 @@ const EventList = () => {
     const { width } = useWindowSize();
 
     const query = new URLSearchParams(router.asPath.replace(router.route, '').replace('?', ''));
-    const queryStatus = query.get('status') ?? STATUSES.all;
+    const queryStatus = isNaN(+query.get('status')) ? STATUSES.all : +query.get('status');
     const initialStatus = queryStatus >= STATUSES.all && queryStatus <= STATUSES.ended ? queryStatus : STATUSES.all;
     const [filter, setFilter] = useState({
         status: initialStatus,

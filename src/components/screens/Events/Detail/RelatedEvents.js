@@ -2,7 +2,7 @@ import { useKeenSlider } from 'keen-slider/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'keen-slider/keen-slider.min.css';
 import styled from 'styled-components';
 import { getEventImg, getS3Url } from 'redux/actions/utils';
@@ -50,10 +50,16 @@ const Carousel = ({ data }) => {
         slideChanged: (slide) => setActiveItem(slide.details().relativeSlide)
     });
 
+    const timer = useRef();
+    useEffect(() => {
+        timer.current = setInterval(slider?.next, 6000);
+        return () => clearInterval(timer.current);
+    }, [slider]);
+
     const renderDots = () => {
         if (!slider) return null;
         return (
-            <div className="dots">
+            <div className="dots !py-0">
                 {[...Array(slider.details().size).keys()].map((idx) => {
                     return (
                         <button
@@ -94,7 +100,7 @@ const RelatedEvents = ({ id = '' }) => {
                     {data?.length ? (
                         <div className="mt-12 mb:mt-20">
                             <h3 className="text-xl mb:text-2xl font-semibold">{t('marketing_events:related_post')}</h3>
-                            <div className="mt-5 mb:mt-8">
+                            <div className="mt-1">
                                 <Carousel data={data} id={id} />
                             </div>
                         </div>

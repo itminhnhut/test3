@@ -21,13 +21,13 @@ const EventPage = () => {
     );
 };
 
-export const getStaticProps = async (ctx) => {
+export const getServerSideProps = async (ctx) => {
     const { locale, query } = ctx;
     return {
         props: {
             ...(await serverSideTranslations(locale, ['common', 'navbar', 'marketing_events'])),
             theme: query?.theme || 'dark',
-            language: query?.language || 'en',
+            language: query?.language || 'en'
         }
     };
 };

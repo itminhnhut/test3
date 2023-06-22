@@ -1850,6 +1850,19 @@ export const Spinner = ({ className, color = '#0068FF', height = '14px', width =
     </svg>
 );
 
+export const AlarmIcon = ({ size = 16, color = 'currentColor', ...rest }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none" {...rest}>
+        <path
+            d="M8 2.666c-3.253 0-6 2.747-6 6s2.747 6 6 6 6-2.747 6-6-2.747-6-6-6zm0 10.667c-2.53 0-4.667-2.138-4.667-4.667 0-2.53 2.138-4.667 4.667-4.667 2.53 0 4.667 2.138 4.667 4.667 0 2.53-2.138 4.667-4.667 4.667z"
+            fill={color}
+        />
+        <path
+            d="M8.667 8V5.335H7.334v4h4V8.001H8.667zM11.523 2.47l.942-.943 2.006 2-.941.944-2.007-2zM4.465 2.47l-1.994 2-.944-.941 1.994-2 .944.942z"
+            fill={color}
+        />
+    </svg>
+);
+
 export const DangerIcon = ({ height = '14', width = '14' }) => {
     return (
         <svg width={width} height={height} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
