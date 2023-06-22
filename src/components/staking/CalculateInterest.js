@@ -23,7 +23,7 @@ const STAKING_CURRENCIES = [
         dayInterestPercent: getDayInterestPercent(APY_PERCENT['VNDC']),
         title: ({ t }) => {
             return (
-                <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark flex items-center gap-2">
+                <div className="font-semibold text-sm lg:text-base text-txtPrimary dark:text-txtPrimary-dark flex items-center gap-2">
                     <div className="w-6 h-6">
                         <AssetLogo size={24} assetId={72} />
                     </div>
@@ -42,7 +42,7 @@ const STAKING_CURRENCIES = [
         code: 'USDT',
         dayInterestPercent: getDayInterestPercent(APY_PERCENT['USDT']),
         title: ({ t }) => (
-            <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark flex items-center gap-2">
+            <div className="font-semibold text-sm lg:text-base text-txtPrimary dark:text-txtPrimary-dark flex items-center gap-2">
                 <div className="w-6">
                     <AssetLogo size={24} assetId={22} />
                 </div>
