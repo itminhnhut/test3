@@ -63,7 +63,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                 {/* <Calendar direction="horizontal" months={2} className="single-select" /> */}
                 <div className="flex-1">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark hidden mb:block mb-2 text-sm" htmlFor="">
-                        {t('marketing_events:filter:starts_in')}
+                        {t('marketing_events:filter:from')}
                     </label>
                     <DatePickerV2
                         initDate={start ? new Date(start) : undefined}
@@ -76,7 +76,11 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                         onChange={(time) => onSetTime?.({ start: new Date(time).getTime() })}
                         text={
                             <div className="relative py-3 px-3 flex items-center justify-between bg-gray-12 dark:bg-dark-2 rounded-md w-auto cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">
-                                {start ? <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(start, 'dd/MM/yyyy')}</span> : 'all'}
+                                {start ? (
+                                    <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(start, 'dd/MM/yyyy')}</span>
+                                ) : (
+                                    t('marketing_events:filter:select_a_date')
+                                )}
                                 {start ? (
                                     <div
                                         className=""
@@ -93,13 +97,13 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                             </div>
                         }
                         minDate={status > STATUSES.all && status === STATUSES.upcoming ? new Date() : undefined}
-                        maxDate={status > STATUSES.all && (status >= STATUSES.ongoing) && !end ? new Date() : end && addDays(end, -1)}
+                        maxDate={status > STATUSES.all && status >= STATUSES.ongoing && !end ? new Date() : end && addDays(end, -1)}
                         ignoreAuth
                     />
                 </div>
                 <div className="flex-1">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark hidden mb:block mb-2 text-sm" htmlFor="">
-                        {t('marketing_events:filter:ends_in')}
+                        {t('marketing_events:filter:to')}
                     </label>
                     <DatePickerV2
                         isCalendar
@@ -114,7 +118,11 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                             <div className="relative py-3 px-3 flex items-center justify-between bg-gray-12 dark:bg-dark-2 rounded-md w-auto cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">
                                 {/* end date must be later than user's selected one for filtering */}
                                 {/* eg: user select 20/06/2023 => using 12:00 AM 21/06/2023 */}
-                                {end ? <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(addDays(end, -1), 'dd/MM/yyyy')}</span> : 'all'}
+                                {end ? (
+                                    <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(addDays(end, -1), 'dd/MM/yyyy')}</span>
+                                ) : (
+                                    t('marketing_events:filter:select_a_date')
+                                )}
                                 {end ? (
                                     <div
                                         className=""
@@ -272,13 +280,13 @@ const EventList = () => {
                 <Flex className="items-end mb:order-2 order-1 flex-1 px-1 mb:px-3 space-x-4 mb:space-x-6">
                     <div className="w-full">
                         <label className="text-txtSecondary dark:text-txtSecondary-dark hidden mb:block mb-2 text-sm" htmlFor="search_events">
-                            {t('marketing_events:filter:search')}
+                            {t('marketing_events:filter:search_label')}
                         </label>
                         <InputV2
                             id="search_events"
                             classNameInput="w-full"
                             className="pb-0 w-full"
-                            placeholder="search"
+                            placeholder={t('marketing_events:filter:search_placeholder')}
                             onChange={setSearch}
                             value={search}
                             onHitEnterButton={onSearch}
@@ -337,7 +345,7 @@ const EventList = () => {
                         ) : (
                             <>
                                 <div className="mt-6 py-[72px] px-[53px] flex items-center flex-col justify-center">
-                                    <NoData isAuth={true} isSearch />
+                                    <NoData isAuth={true} isSearch text={t('marketing_events:no_result')} />
                                 </div>
                             </>
                         )}
@@ -378,11 +386,11 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
             onBackdropCb={onClose}
             className="!min-w-0 !translate-x-0 !translate-y-0 !max-w-none !top-auto !left-0 !bottom-0 !rounded-none"
         >
-            <h3 className="mb-4 text-xl font-semibold">{t('common:optional')}</h3>
+            <h3 className="mb-4 text-xl font-semibold">{t('marketing_events:filter:customize')}</h3>
 
             <div className="my-2">
                 <label className="text-txtSecondary dark:text-txtSecondary-dark mb-2 text-xs" htmlFor="">
-                    {t('marketing_events:filter:starts_in')}
+                    {t('marketing_events:filter:from')}
                 </label>
                 <MobileDatePicker
                     months={1}
@@ -394,7 +402,11 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                     onChange={(time) => onSetTime?.({ start: time })}
                     text={
                         <div className="relative py-3 px-3 flex items-center justify-between bg-gray-12 dark:bg-dark-2 rounded-md w-auto cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">
-                            {start ? <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(start, 'dd/MM/yyyy')}</span> : 'all'}
+                            {start ? (
+                                <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(start, 'dd/MM/yyyy')}</span>
+                            ) : (
+                                t('marketing_events:filter:select_a_date')
+                            )}
                             {start ? (
                                 <div
                                     className=""
@@ -416,7 +428,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
             </div>
             <div className="mt-2">
                 <label className="text-txtSecondary dark:text-txtSecondary-dark mb-2 text-xs" htmlFor="">
-                    {t('marketing_events:filter:ends_in')}
+                    {t('marketing_events:filter:to')}
                 </label>
                 <MobileDatePicker
                     months={1}
@@ -430,7 +442,11 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                         <div className="relative py-3 px-3 flex items-center justify-between bg-gray-12 dark:bg-dark-2 rounded-md w-auto cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">
                             {/* end date must be later than user's selected one for filtering */}
                             {/* eg: user select 20/06/2023 => using 12:00 AM 21/06/2023 */}
-                            {end ? <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(addDays(end, -1), 'dd/MM/yyyy')}</span> : 'all'}
+                            {end ? (
+                                <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(addDays(end, -1), 'dd/MM/yyyy')}</span>
+                            ) : (
+                                t('marketing_events:filter:select_a_date')
+                            )}
                             {end ? (
                                 <div
                                     className=""
@@ -451,7 +467,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                 />
             </div>
             <Button onClick={onClose} variants="primary" className="mt-8">
-                {t('common:search')}
+                {t('common:confirm')}
             </Button>
         </ModalV2>
     );

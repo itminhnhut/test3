@@ -93,6 +93,7 @@ const MobileDatePicker = ({ initDate, onChange, months, wrapperClassname, text, 
                 onBackdropCb={() => setShowPicker(false)}
                 className="!min-w-0 !translate-x-0 !translate-y-0 !max-w-none !top-auto !left-0 !bottom-0 !rounded-none"
             >
+                <h3 className="mb-4 text-xl font-semibold">{t('common:time')}</h3>
                 <div className="date-range-picker flex flex-col justify-center mt-2 w-full !shadow-none !p-0 !rounded-none !border-none !bg-transparent">
                     <DatePickerWrapper noDatePicked={date?.startDate === date?.endDate} isDark={theme === THEME_MODE.DARK}>
                         <Calendar

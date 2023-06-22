@@ -96,7 +96,7 @@ const EventItem = (props) => {
                     <div className="mt-2 mb:mt-3 font-semibold text-base mb:text-xl line-clamp-2">{props.title}</div>
                     <div className="mt-4 mb:mt-5 flex items-center space-x-1 mb:space-x-2 font-semibold text-sm sm:text-base">
                         <SvgTrophy />
-                        <span>Total prizes</span>
+                        <span>{t('marketing_events:total_prizes')}</span>
                     </div>
                     <div className="mt-2">
                         {/* <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs mb:text-sm line-through">{props.prize}</div> */}

@@ -1,5 +1,5 @@
 {
-    "title": "Tham gia sự kiện, rinh quà cùng Nami Exchange",
+    "title": "Sự kiện",
     "all": "tất cả",
     "ended": "Đã kết thúc",
     "ongoing": "Đang diễn ra",
@@ -10,18 +10,24 @@
     "add_to_calendar": "Thêm vào lịch của bạn",
     "related_post": "Sự kiện HOT liên quan",
     "no_related": "Không có sự kiện HOT liên quan",
+    "total_prizes": "Tổng giải thưởng",
+    "no_result": "Không có kết quả phù hợp",
     "community": {
-        "title": "Cộng đồng Nami Exchange",
+        "title": "Cộng đồng của Nami",
         "telegram": "Telegram VN group",
         "telegram_international": "Telegram international group",
         "facebook": "Facebook",
         "website": "Website",
         "twitter": "Twitter"
     },
-    "download": "Tải ứng dụng Nami Exchange tại",
+    "download": "Cài đặt ứng dụng Nami Exchange tại",
     "filter": {
-        "starts_in": "Bắt đầu",
-        "ends_in": "Kết thúc",
-        "search": "Tìm sự kiện"
+        "from": "Từ ngày",
+        "to": "Đến ngày",
+        "search_placeholder": "Tìm kiếm sự kiện",
+        "search_label": "Tên sự kiện",
+        "date": "Tùy chỉnh",
+        "customize": "Tuỳ chọn",
+        "select_a_date": "Chọn ngày"
     }
 }

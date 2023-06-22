@@ -1,15 +1,17 @@
 {
-    "title": "Tham gia sự kiện, rinh quà cùng Nami Exchange",
+    "title": "Events",
     "all": "All",
-    "ended": "Ended",
-    "ongoing": "Ongoing",
+    "ended": "Finished",
+    "ongoing": "In progress",
     "upcoming": "Upcoming",
     "postponed": "Postponed",
-    "starts_in": "Starts in",
-    "ends_in": "Ends in",
+    "starts_in": "Starting after",
+    "ends_in": "Ending after",
     "add_to_calendar": "Add to your calendar",
-    "related_post": "Related posts",
+    "related_post": "Other events",
     "no_related": "No related post",
+    "total_prizes": "Total prizes",
+    "no_result": "No matching results",
     "community": {
         "title": "Nami Community",
         "telegram": "Telegram VN group",
@@ -18,10 +20,14 @@
         "website": "Website",
         "twitter": "Twitter"
     },
-    "download": "Download app Nami Exchange at",
+    "download": "Install Nami Exchange now",
     "filter": {
-        "starts_in": "Starts in",
-        "ends_in": "Ends in",
-        "search": "Search events"
+        "from": "From",
+        "to": "To",
+        "search_placeholder": "Enter event name",
+        "search_label": "Event",
+        "date": "Date",
+        "customize": "Customize",
+        "select_a_date": "Date"
     }
 }
