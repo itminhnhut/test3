@@ -200,7 +200,7 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                     <Chart options={options} series={series} type="area" height={320} width="100%" />
                 </div>
 
-                <div ref={timerListRef} className="pl-5 pr-2 z-[5] -mt-5 flex justify-between relative overflow-x-auto no-scrollbar">
+                <div ref={timerListRef} className="ml-5 mr-2 z-[5] -mt-5 flex justify-between relative overflow-x-auto no-scrollbar">
                     {TIMER.map((item) => {
                         const selected = item.key === hoverData.index + 1;
                         return (

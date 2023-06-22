@@ -18,7 +18,7 @@ const FAQStaking = ({ isDark }) => {
                     <li className="text-gray-1 dark:text-gray-7">{value.content[language]}</li>
                 </ul>
             );
-        return <div dangerouslySetInnerHTML={{ __html: value.content[language] }} />;
+        return <div className=" text-txtSecondary dark:text-txtSecondary-dark" dangerouslySetInnerHTML={{ __html: value.content[language] }} />;
     };
 
     const renderFAQ = useMemo(() => {
