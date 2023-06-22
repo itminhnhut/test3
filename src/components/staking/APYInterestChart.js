@@ -66,9 +66,10 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     } = useTranslation();
 
     const [hoverData, setHoverData] = useState({
-        value: 0,
         index: 0
     });
+
+    const [points, setPoints] = useState([]);
 
     const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
     const currencyConfig = useMemo(() => {
@@ -86,6 +87,9 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                 zoom: {
                     enabled: false
                 }
+            },
+            annotations: {
+                points
             },
             dataLabels: {
                 enabled: false
@@ -147,6 +151,8 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                         setHoverData({
                             index: dataPointIndex
                         });
+                        if (!points.length) return;
+                        setPoints([]);
                     }
                 }
             },
@@ -159,7 +165,7 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                 strokeWidth: 0
             }
         }),
-        [isDark]
+        [isDark, points]
     );
 
     const apyByMonth = useMemo(() => {
@@ -212,6 +218,19 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                                 key={item.key}
                                 onClick={() => {
                                     setHoverData({ index: item.key - 1 });
+                                    setPoints([
+                                        {
+                                            x: item.key,
+                                            y: Math.pow(item.key, 2),
+
+                                            marker: {
+                                                size: 5,
+                                                colors: colors.teal,
+                                                fillColor: colors.teal,
+                                                strokeWidth: 0
+                                            }
+                                        }
+                                    ]);
                                     const thisElement = document.getElementById('chip' + item.key);
                                     scrollHorizontal(thisElement, timerListRef.current);
                                 }}
