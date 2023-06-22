@@ -23,12 +23,16 @@ const STAKING_CURRENCIES = [
         dayInterestPercent: getDayInterestPercent(APY_PERCENT['VNDC']),
         title: ({ t }) => {
             return (
-                <div className="font-semibold flex items-center  space-x-2">
-                    <AssetLogo size={24} assetId={72} />
-                    <span className="">VNDC</span>
-                    <span className=" text-teal">
-                        {APY_PERCENT['VNDC']}%/{t('common:year')}
-                    </span>
+                <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark flex items-center gap-2">
+                    <div className="w-6 h-6">
+                        <AssetLogo size={24} assetId={72} />
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className="">VNDC</div>
+                        <div className="text-teal">
+                            {APY_PERCENT['VNDC']}%/{t('common:year')}
+                        </div>
+                    </div>
                 </div>
             );
         }
@@ -36,15 +40,16 @@ const STAKING_CURRENCIES = [
     {
         value: 22,
         code: 'USDT',
-        apyPercent: 6,
         dayInterestPercent: getDayInterestPercent(APY_PERCENT['USDT']),
         title: ({ t }) => (
-            <div className="font-semibold flex items-center  space-x-2">
-                <AssetLogo size={24} assetId={22} />
-                <span className="">USDT</span>
-                <span className=" text-teal">
+            <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark flex items-center gap-2">
+                <div className="w-6">
+                    <AssetLogo size={24} assetId={22} />
+                </div>
+                <div className="">USDT</div>
+                <div className="text-teal">
                     {APY_PERCENT['USDT']}%/{t('common:year')}
-                </span>
+                </div>
             </div>
         )
     }
@@ -119,8 +124,10 @@ const CalculateInterest = () => {
                             }}
                             options={STAKING_CURRENCIES}
                             value={state.stakingCurrency.value}
-                            popoverClassName="!top-full !z-[11] "
+                            popoverPanelClassName="!top-full !z-[11] "
+                            popoverClassName="dark:!bg-dark-2"
                             className="txtPri-1 !bg-gray-12 dark:!bg-dark-2"
+                            optionClassName="!px-3"
                         />
                     </div>
                     <div className="space-y-2">
