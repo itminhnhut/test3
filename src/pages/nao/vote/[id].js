@@ -18,7 +18,6 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import AlertModal from 'components/screens/Nao_futures/AlertModal';
 // import Tooltip from 'components/common/Tooltip';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
 const getAssetNao = createSelector([(state) => state.utils.assetConfig, (utils, params) => params], (assets, params) => {
     return assets.find((rs) => rs.assetCode === params);
@@ -174,90 +173,86 @@ export default function Vote() {
     const statusText = t(`nao:vote:status:${status?.toLowerCase()}`);
 
     return (
-        <MaldivesLayout>
-            <LayoutNaoToken isHeader={false}>
-                <div className="flex flex-col sm:flex-row sm:space-x-12 justify-between pt-10 sm:pt-20 sm:pb-[7.5rem] w-full m-auto max-w-[77.75rem] px-4">
-                    <div className="w-full">
-                        <h3 className="text-xl sm:text-5xl font-semibold mb-8 sm:mb-12 text-center sm:text-left">{voteName && voteName[language]}</h3>
-                        <div className="hidden lg:block">{description()}</div>
-                    </div>
-                    <div className="w-full sm:max-w-[470px]">
-                        <CardNao className="!min-h-0 space-y-4 sm:space-y-6 lg:w-full !min-w-[280px] !px-4 !py-6 sm:!p-8 text-sm sm:text-base shadow-card_light">
-                            <div>
-                                <div className="flex flex-row justify-between">
-                                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:vote:voted_for')}</span>
-                                    <div className="flex flex-row">
-                                        <span className="mr-2 font-semibold">{totalVoteYes && formatNumber(totalVoteYes, assetNao?.assetDigit ?? 0)}</span>
-                                        <img src={getS3Url('/images/nao/ic_nao.png')} alt="" className="w-[20px] h-[20px]" />
-                                    </div>
-                                </div>
-                                <div className="bg-gray-11 dark:bg-dark-1 mt-3 rounded-lg mb-3">
-                                    <Progressbar percent={(totalVoteYes / totalPool) * 100} height={6} />
-                                </div>
-                                <div className="flex flex-row justify-between">
-                                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:vote:vote_rating')}</span>
-                                    <span className="text-teal font-semibold">{`${formatNumber((totalVoteYes / totalPool) * 100, 2)}%`}</span>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="flex flex-row justify-between">
-                                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:vote:rejected')}</span>
-                                    <div className="flex flex-row">
-                                        <span className="mr-2 font-semibold">{data?.totalVoteNo && formatNumber(totalVoteNo, assetNao?.assetDigit ?? 0)}</span>
-                                        <img src={getS3Url('/images/nao/ic_nao.png')} alt="" className="w-[20px] h-[20px]" />
-                                    </div>
-                                </div>
-                                <div className="bg-gray-11 dark:bg-dark-1 mt-3 rounded-lg mb-3 ">
-                                    <Progressbar percent={(totalVoteNo / totalPool) * 100} height={6} background={colors.red[2]} />
-                                </div>
-                                <div className="flex flex-row justify-between">
-                                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:vote:vote_rating')}</span>
-                                    <span className="text-red-2 font-semibold">{`${formatNumber((totalVoteNo / totalPool) * 100, 2)}%`}</span>
-                                </div>
-                            </div>
+        <LayoutNaoToken>
+            <div className="flex flex-col sm:flex-row sm:space-x-12 justify-between pt-12 sm:pt-20">
+                <div className="w-full">
+                    <h3 className="text-5xl font-semibold mb-8 sm:mb-12">{voteName && voteName[language]}</h3>
+                    <div className="hidden lg:block">{description()}</div>
+                </div>
+                <div className="w-full sm:max-w-[470px]">
+                    <CardNao className="!min-h-0 space-y-4 sm:space-y-6 lg:w-full !min-w-[280px] !px-4 !py-6 sm:!p-8 text-sm sm:text-base shadow-card_light">
+                        <div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:status')}</span>
-                                <div className="flex flex-row items-center">
-                                    <VoteStatus status={status} statusText={statusText} />
-                                </div>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark"> {t('nao:vote:your_vote')}</span>
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:vote:voted_for')}</span>
                                 <div className="flex flex-row">
-                                    <span className="mr-2 font-semibold">
-                                        {auth && dataUserVote.amount
-                                            ? formatNumber(dataUserVote.amount - dataUserVote.lockAmount, assetNao?.assetDigit ?? 0)
-                                            : '-'}
-                                    </span>
+                                    <span className="mr-2 font-semibold">{totalVoteYes && formatNumber(totalVoteYes, assetNao?.assetDigit ?? 0)}</span>
                                     <img src={getS3Url('/images/nao/ic_nao.png')} alt="" className="w-[20px] h-[20px]" />
                                 </div>
                             </div>
-                            <div className="!mt-6 sm:!mt-10">{_renderButtonVote()}</div>
-                        </CardNao>
-                    </div>
-                    <div className="block sm:hidden mt-8 mb-20">{description()}</div>
-                    {isShowProposalModal && (
-                        <VoteProposalModal
-                            onClose={() => setIsShowProposalModal(false)}
-                            numberOfNao={dataUserVote.amount - dataUserVote.lockAmount}
-                            handleSubmitVote={handleSubmitVote}
-                            summary={voteSummary?.[language] ?? ''}
-                            type={typeModal}
-                            isMobile={isMobile}
-                        />
-                    )}
-                    {isShowSuccessModal && (
-                        <VoteSuccessModal
-                            onClose={() => {
-                                setIsShowSuccessModal(false);
-                            }}
-                            type={typeModal}
-                            summary={voteSummary?.[language] ?? ''}
-                        />
-                    )}
+                            <div className="bg-gray-11 dark:bg-dark-1 mt-3 rounded-lg mb-3">
+                                <Progressbar percent={(totalVoteYes / totalPool) * 100} height={6} />
+                            </div>
+                            <div className="flex flex-row justify-between">
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:vote:vote_rating')}</span>
+                                <span className="text-teal font-semibold">{`${formatNumber((totalVoteYes / totalPool) * 100, 2)}%`}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="flex flex-row justify-between">
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:vote:rejected')}</span>
+                                <div className="flex flex-row">
+                                    <span className="mr-2 font-semibold">{data?.totalVoteNo && formatNumber(totalVoteNo, assetNao?.assetDigit ?? 0)}</span>
+                                    <img src={getS3Url('/images/nao/ic_nao.png')} alt="" className="w-[20px] h-[20px]" />
+                                </div>
+                            </div>
+                            <div className="bg-gray-11 dark:bg-dark-1 mt-3 rounded-lg mb-3 ">
+                                <Progressbar percent={(totalVoteNo / totalPool) * 100} height={6} background={colors.red[2]} />
+                            </div>
+                            <div className="flex flex-row justify-between">
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:vote:vote_rating')}</span>
+                                <span className="text-red-2 font-semibold">{`${formatNumber((totalVoteNo / totalPool) * 100, 2)}%`}</span>
+                            </div>
+                        </div>
+                        <div className="flex flex-row justify-between">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:status')}</span>
+                            <div className="flex flex-row items-center">
+                                <VoteStatus status={status} statusText={statusText} />
+                            </div>
+                        </div>
+                        <div className="flex flex-row justify-between">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark"> {t('nao:vote:your_vote')}</span>
+                            <div className="flex flex-row">
+                                <span className="mr-2 font-semibold">
+                                    {auth && dataUserVote.amount ? formatNumber(dataUserVote.amount - dataUserVote.lockAmount, assetNao?.assetDigit ?? 0) : '-'}
+                                </span>
+                                <img src={getS3Url('/images/nao/ic_nao.png')} alt="" className="w-[20px] h-[20px]" />
+                            </div>
+                        </div>
+                        <div className="!mt-6 sm:!mt-10">{_renderButtonVote()}</div>
+                    </CardNao>
                 </div>
-            </LayoutNaoToken>
-        </MaldivesLayout>
+                <div className="block sm:hidden mt-8 mb-11">{description()}</div>
+                {isShowProposalModal && (
+                    <VoteProposalModal
+                        onClose={() => setIsShowProposalModal(false)}
+                        numberOfNao={dataUserVote.amount - dataUserVote.lockAmount}
+                        handleSubmitVote={handleSubmitVote}
+                        summary={voteSummary?.[language] ?? ''}
+                        type={typeModal}
+                        isMobile={isMobile}
+                    />
+                )}
+                {isShowSuccessModal && (
+                    <VoteSuccessModal
+                        onClose={() => {
+                            setIsShowSuccessModal(false);
+                        }}
+                        type={typeModal}
+                        summary={voteSummary?.[language] ?? ''}
+                    />
+                )}
+            </div>
+        </LayoutNaoToken>
     );
 }
 const VoteProposalModal = ({ onClose, numberOfNao, handleSubmitVote, summary, isMobile }) => {
@@ -330,7 +325,14 @@ const VoteSuccessModal = ({ onClose, summary, type }) => {
     const context = useContext(AlertContext);
 
     useEffect(() => {
-        context.alertV2.show('success', type ? t('nao:vote:voted_successfully') : t('nao:vote:rejected_successfully'), summary, null, null, onClose);
+        context.alertV2.show(
+            'success',
+            type ? t('nao:vote:voted_successfully') : t('nao:vote:rejected_successfully'),
+            summary,
+            null,
+            null,
+            onClose
+        );
     }, []);
 
     return (
@@ -349,7 +351,7 @@ const VoteSuccessModal = ({ onClose, summary, type }) => {
 export const getServerSideProps = async (context) => {
     return {
         props: {
-            ...(await serverSideTranslations(context.locale, ['common', 'nao', 'error', 'navbar']))
+            ...(await serverSideTranslations(context.locale, ['common', 'nao', 'error']))
         }
     };
 };
