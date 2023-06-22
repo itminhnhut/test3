@@ -20,7 +20,6 @@ import classNames from 'classnames';
 import NaoHeader from '../NaoHeader';
 import NaoFooter from '../NaoFooter';
 import ContestWeekRanks from 'components/screens/Nao/Contest/ContestWeekRanks';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
 const ListRankings = dynamic(() => import('./ListRankings'));
 const currencies = [
@@ -458,54 +457,50 @@ const Contest = (props) => {
         );
     };
     return (
-        <MaldivesLayout>
-            <div className="mt-2">
-                <LayoutNaoToken isHeader={false}>
-                    {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} userID={userID} />}
-                    {showInvitations && (
-                        <InvitationsDetail
-                            {...props}
-                            onShowDetail={onShowDetail}
-                            getInfo={getInfo}
-                            data={invitationsData.current}
-                            onClose={() => showShowInvitationst(false)}
-                        />
-                    )}
-                    <div className="min-h-screen">
-                        {/* <div className="px-4 nao:px-0 max-w-[72.5rem] w-full m-auto !mt-0">
+        <LayoutNaoToken isHeader={false}>
+            {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} userID={userID} />}
+            {showInvitations && (
+                <InvitationsDetail
+                    {...props}
+                    onShowDetail={onShowDetail}
+                    getInfo={getInfo}
+                    data={invitationsData.current}
+                    onClose={() => showShowInvitationst(false)}
+                />
+            )}
+            <div className="min-h-screen">
+                <div className="px-4 nao:px-0 max-w-[72.5rem] w-full m-auto !mt-0">
                     <NaoHeader />
-                </div> */}
-                        <div className="nao_section">
-                            <div className="px-4 nao:px-0 sm_only:pt-6 max-w-[72.5rem] w-full m-auto">
-                                <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
-                            </div>
-                            <div className="bg-gray-13 dark:bg-dark rounded-t-3xl">
-                                <div className="px-4 pb-14 sm:pb-[120px] max-w-[72.5rem] nao:px-0 w-full m-auto">
-                                    <ContestInfo
-                                        {...props}
-                                        ref={refInfo}
-                                        onShowDetail={onShowDetail}
-                                        onShowInvitations={onShowInvitations}
-                                        currencies={currencies}
-                                        userID={userID}
-                                    />
-                                    {props?.season == SEASON_SPECIAL ? (
-                                        <div>
-                                            {renderTab()}
-                                            {renderContentTab1()}
-                                            {renderContentTab2()}
-                                        </div>
-                                    ) : (
-                                        renderContestRank()
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                        {/* <NaoFooter noSpacingTop /> */}
+                </div>
+                <div className="nao_section">
+                    <div className="px-4 nao:px-0 sm_only:pt-6 max-w-[72.5rem] w-full m-auto">
+                        <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
                     </div>
-                </LayoutNaoToken>
+                    <div className="bg-gray-13 dark:bg-dark rounded-t-3xl">
+                        <div className="px-4 pb-14 sm:pb-[120px] max-w-[72.5rem] nao:px-0 w-full m-auto">
+                            <ContestInfo
+                                {...props}
+                                ref={refInfo}
+                                onShowDetail={onShowDetail}
+                                onShowInvitations={onShowInvitations}
+                                currencies={currencies}
+                                userID={userID}
+                            />
+                            {props?.season == SEASON_SPECIAL ? (
+                                <div>
+                                    {renderTab()}
+                                    {renderContentTab1()}
+                                    {renderContentTab2()}
+                                </div>
+                            ) : (
+                                renderContestRank()
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <NaoFooter noSpacingTop />
             </div>
-        </MaldivesLayout>
+        </LayoutNaoToken>
     );
 };
 
