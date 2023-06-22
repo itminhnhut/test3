@@ -376,7 +376,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
         <ModalV2
             isVisible={isVisible}
             onBackdropCb={onClose}
-            className="w-full !translate-x-0 !translate-y-0 !max-w-none !top-auto !left-0 !bottom-0 !rounded-none"
+            className="!min-w-0 !translate-x-0 !translate-y-0 !max-w-none !top-auto !left-0 !bottom-0 !rounded-none"
         >
             <h3 className="mb-4 text-xl font-semibold">{t('common:optional')}</h3>
 
@@ -410,8 +410,8 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                             )}
                         </div>
                     }
+                    minDate={status > STATUSES.all && status === STATUSES.upcoming ? new Date() : undefined}
                     maxDate={status > STATUSES.all && status >= STATUSES.ongoing && !end ? new Date() : end && addDays(end, -1)}
-                    maxDate={status > STATUSES.all && status >= STATUSES.ongoing && !end ? new Date() : addDays(end, -1)}
                 />
             </div>
             <div className="mt-2">

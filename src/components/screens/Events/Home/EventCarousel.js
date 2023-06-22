@@ -60,10 +60,10 @@ const Carousel = ({ data }) => {
     });
 
     const timer = useRef();
-    // useEffect(() => {
-    //     timer.current = setInterval(slider?.next, 6000);
-    //     return () => clearInterval(timer.current);
-    // }, [slider]);
+    useEffect(() => {
+        timer.current = setInterval(slider?.next, 6000);
+        return () => clearInterval(timer.current);
+    }, [slider]);
 
     const renderDots = () => {
         if (!slider) return null;

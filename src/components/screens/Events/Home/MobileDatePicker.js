@@ -8,7 +8,6 @@ import { formatTime, isFunction } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
-import useOutsideClick from 'hooks/useOutsideClick';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -18,7 +17,6 @@ const MobileDatePicker = ({ initDate, onChange, months, wrapperClassname, text, 
     const [showPicker, setShowPicker] = useState(false);
     const [date, setDate] = useState();
     const [theme] = useDarkMode();
-    const wrapperRef = useRef(null);
     const {
         t,
         i18n: { language }
@@ -31,22 +29,21 @@ const MobileDatePicker = ({ initDate, onChange, months, wrapperClassname, text, 
         }
     };
 
-    useOutsideClick(wrapperRef, handleOutside);
-
     const onDatesChange = (e) => {
         setDate(e);
-        onChange?.(e);
         // handleOutside();
     };
 
     const onConfirm = () => {
-        if (initDate !== date) onChange({ selection: date });
+        if (!initDate || new Date(initDate).getDate() !== date.getDate()) {
+            onChange(date);
+        }
         setShowPicker(false);
     };
 
     const navigatorRenderer = (focusedDate, changeShownDate, props) => {
         return (
-            <div className="flex items-center justify-between px-4 w-full absolute top-4 text-txtSecondary dark:text-txtSecondary-dark">
+            <div className="flex items-center justify-between w-full max-w-[24em] absolute top-4 left-0 right-0 m-auto px-2 text-txtSecondary dark:text-txtSecondary-dark">
                 <div className="flex items-center space-x-2">
                     <div className="cursor-pointer" onClick={() => changeShownDate(-1, 'monthOffset')}>
                         <ChevronLeft color="currentColor" size={20} />
@@ -62,7 +59,7 @@ const MobileDatePicker = ({ initDate, onChange, months, wrapperClassname, text, 
     };
 
     return (
-        <div className={classNames('relative', wrapperClassname)} ref={wrapperRef}>
+        <div className={classNames('relative', wrapperClassname)}>
             {text ? (
                 <div onClick={() => setShowPicker(true)}>{text}</div>
             ) : (
@@ -94,9 +91,9 @@ const MobileDatePicker = ({ initDate, onChange, months, wrapperClassname, text, 
             <ModalV2
                 isVisible={showPicker}
                 onBackdropCb={() => setShowPicker(false)}
-                className="w-full !translate-x-0 !translate-y-0 !max-w-none !top-auto !left-0 !bottom-0 !rounded-none"
+                className="!min-w-0 !translate-x-0 !translate-y-0 !max-w-none !top-auto !left-0 !bottom-0 !rounded-none"
             >
-                <div className="date-range-picker flex flex-col justify-center mt-2 w-full !shadow-none !p-0 !rounded-none !border-none">
+                <div className="date-range-picker flex flex-col justify-center mt-2 w-full !shadow-none !p-0 !rounded-none !border-none !bg-transparent">
                     <DatePickerWrapper noDatePicked={date?.startDate === date?.endDate} isDark={theme === THEME_MODE.DARK}>
                         <Calendar
                             className="h-full p-0 single-select w-full"
@@ -121,9 +118,9 @@ const MobileDatePicker = ({ initDate, onChange, months, wrapperClassname, text, 
                             maxDate={maxDate}
                         />
                     </DatePickerWrapper>
-                    {/* <ButtonV2 onClick={onConfirm} className="mt-2 w-auto">
+                    <ButtonV2 onClick={onConfirm} className="mt-2 w-auto">
                         {t('common:global_btn.apply')}
-                    </ButtonV2> */}
+                    </ButtonV2>
                 </div>
             </ModalV2>
         </div>
