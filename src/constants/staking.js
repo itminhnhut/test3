@@ -23,7 +23,7 @@ export const STEP_STAKING = [
     },
     {
         imgSrc: '/images/staking/ic_staking.png',
-        title: { vi: 'Nhận lãi hàng ngày', en: 'staking' },
+        title: { vi: 'Nhận lãi hàng ngày', en: 'Daily Staking' },
         subText: {
             vi: 'Nhận lãi hàng ngày theo số lượng tài sản số lưu trữ trong ví vào lúc 00:00 mỗi ngày (giờ Việt Nam)',
             en: 'Get daily interest according to the quantity of digital assets stored in the wallet at 17:00 every day (UTC)'
@@ -121,7 +121,7 @@ export const FAQ = [
     {
         title: {
             vi: 'Lãi suất Daily Staking là lãi đơn hay lãi kép?',
-            en: 'Lãi suất Daily Staking là lãi đơn hay lãi kép?'
+            en: 'Daily Staking interest is simple interest or compound interest?'
         },
         content: {
             isHTMl: true,
