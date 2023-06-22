@@ -32,7 +32,9 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
     const router = useRouter();
 
     const { user: auth } = useSelector((state) => state.auth) || null;
-    const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
+    // const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
+    const isNotVerified = [KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(auth?.kyc_status);
+    const isLocking = auth?.kyc_status === KYC_STATUS.LOCKING;
     const isVerified = auth?.kyc_status >= KYC_STATUS.APPROVED;
     const isPartner = auth?.partner_type === 2;
 
@@ -252,10 +254,11 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     </div>
                                 </div>
                                 {!isNotVerified ? (
-                                    <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
-                                        <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}>
-                                            {isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
-                                        </div>
+                                    <TagV2 type={isLocking ? 'failed' : isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
+                                        {/* <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}> */}
+                                        {/* {isVerified ? t('navbar:verified') : t('navbar:pending_approval')} */}
+                                        {isLocking ? t('navbar:temp_locking') : isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
+                                        {/* </div> */}
                                     </TagV2>
                                 ) : (
                                     <ButtonV2 onClick={() => window.open(PATHS.ACCOUNT.IDENTIFICATION)} className="max-w-[150px] !text-sm">
