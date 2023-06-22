@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
+import { getS3Url } from 'redux/actions/utils';
 
 import { WHY_CHOOSE_NAMI } from 'constants/staking';
 
@@ -29,7 +30,7 @@ const WhyChooseNamiStaking = () => {
             <h2 className="text-gray-15 dark:text-gray-4 text-2xl lg:text-5xl font-semibold text-center">{t('staking:why_nami.title')}</h2>
             <div className="flex flex-col lg:flex-row gap-x-[103px] justify-between mt-[60px]">
                 <div className="w-full text-center">
-                    <Image width="596px" height="520px" src="/images/staking/bg_why_choose_nami.png" />
+                    <Image width="596px" height="520px" src={getS3Url('/images/staking/bg_why_choose_nami.png')} />
                 </div>
                 <article className="w-full">{renderWhyChooseNami}</article>
             </div>

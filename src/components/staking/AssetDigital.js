@@ -21,7 +21,7 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
                 <a
                     className="w-full"
                     href={getLoginUrl('sso', 'login', {
-                        redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${data.title}}`
+                        redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${data.title}`
                     })}
                 >
                     <ButtonV2>{data.btn[language]}</ButtonV2>
