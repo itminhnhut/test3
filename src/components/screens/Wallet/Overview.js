@@ -383,7 +383,7 @@ const OverviewWallet = (props) => {
                 <CardWallet onClick={() => onHandleClick('details_nao_futures')} isSmallScreen={isSmallScreen}>
                     <AssetBalance
                         title="NAO Futures"
-                        icon={<Image width={20} height={20} src={getS3Url('/images/nao/ic_nao.png')} />}
+                        icon={<Image width={32} height={32} src={getS3Url('/images/nao/ic_nao.png')} />}
                         renderEstBalance={renderNAOFuturesEstBalance}
                         isSmallScreen={isSmallScreen}
                         onHandleClick={onHandleClick}
@@ -392,7 +392,7 @@ const OverviewWallet = (props) => {
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
                         {!isSmallScreen && (
                             <div className="flex items-center text-base font-normal text-gray-15 dark:text-gray-4 mr-3">
-                                <Trans>{t('wallet:futures_overview')}</Trans>
+                                <Trans>{t('wallet:nao_overview')}</Trans>
                             </div>
                         )}
                         <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>

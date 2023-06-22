@@ -27,7 +27,7 @@ const AlertModalV2 = ({
             case 'warning':
                 return <WarningIcon />;
             case 'error':
-                return <ErroIcon />;
+                return <ErrorIcon />;
             default:
                 <SuccessIcon />;
         }
@@ -75,7 +75,7 @@ const WarningIcon = () => (
     </svg>
 );
 
-const SuccessIcon = () => (
+export const SuccessIcon = () => (
     <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             d="M40 6.667C21.6 6.667 6.666 21.6 6.666 40S21.6 73.333 40 73.333C58.4 73.333 73.333 58.4 73.333 40S58.4 6.667 40 6.667zm-6.667 50L16.667 40l4.7-4.7 11.966 11.933 25.3-25.3 4.7 4.734-30 30z"
@@ -84,7 +84,7 @@ const SuccessIcon = () => (
     </svg>
 );
 
-const ErroIcon = () => (
+export const ErrorIcon = () => (
     <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             d="M40 6.667C21.567 6.667 6.666 21.567 6.666 40S21.566 73.333 40 73.333c18.433 0 33.333-14.9 33.333-33.333S58.433 6.666 40 6.666zm16.666 45.3-4.7 4.7L40 44.7 28.033 56.666l-4.7-4.7L35.3 40 23.333 28.033l4.7-4.7L40 35.3l11.967-11.967 4.7 4.7L44.7 40l11.966 11.967z"

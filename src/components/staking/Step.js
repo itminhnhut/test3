@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
+import { getS3Url } from 'redux/actions/utils';
 
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -16,7 +17,7 @@ const StepStaking = ({ isDark, isMobile }) => {
         return STEP_STAKING.map((item, key) => {
             return !item?.isDivider ? (
                 <section className="w-full px-[43.5px] lg:px-4 mx-[19.5px] lg:mx-0" key={item.title?.[language]}>
-                    <Image width={isMobile ? 48 : 54} height={isMobile ? 48 : 54} src={item.imgSrc} />
+                    <Image width={isMobile ? 48 : 54} height={isMobile ? 48 : 54} src={getS3Url(item.imgSrc)} />
                     <div className="font-semibold text-gray-15 dark:text-gray-4 mt-6 text-sm lg:text-base">{item.title?.[language]}</div>
                     <div className="text-gray-1 dark:text-gray-7 mt-3 lg:mt-6">{item.subText?.[language]}</div>
                 </section>

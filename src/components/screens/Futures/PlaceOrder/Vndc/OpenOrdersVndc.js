@@ -223,7 +223,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 dataIndex: 'symbol',
                 title: t('common:pair'),
                 align: 'left',
-                width: 170,
+                width: 205,
                 render: (row, item) => {
                     let specialOrder;
                     if (item?.metadata?.dca_order_metadata) {
