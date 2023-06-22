@@ -1,7 +1,7 @@
 @import 'react-date-range/dist/styles.css'; // main css file
 
 .date-range-picker {
-    @apply border dark:border-none pt-6 bg-white dark:bg-darkBlue-3 rounded-xl shadow overflow-hidden;
+    @apply border border-divider dark:border-divider-dark pt-6 bg-white dark:bg-darkBlue-3 rounded-xl shadow overflow-hidden;
 }
 
 .rdrDateRangePickerWrapper {
@@ -255,22 +255,22 @@
 }
 
 .rdrDayStartPreview{
-    border-top-width: 1px;
-    border-left-width: 1px;
-    border-bottom-width: 1px;
+    // border-top-width: 1px;
+    // border-left-width: 1px;
+    // border-bottom-width: 1px;
     @apply rounded-l;
     left: 0px;
 }
 
 .rdrDayInPreview{
-    border-top-width: 1px;
-    border-bottom-width: 1px;
+    // border-top-width: 1px;
+    // border-bottom-width: 1px;
 }
 
 .rdrDayEndPreview{
-    border-top-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
+    // border-top-width: 1px;
+    // border-right-width: 1px;
+    // border-bottom-width: 1px;
     @apply rounded-r;
     right: 2px;
     right: 0px;

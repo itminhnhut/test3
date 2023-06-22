@@ -34,6 +34,7 @@ const MobileDatePicker = ({ initDate, onChange, months, wrapperClassname, text, 
     useOutsideClick(wrapperRef, handleOutside);
 
     const onDatesChange = (e) => {
+        setDate(e);
         onChange?.(e);
         // handleOutside();
     };

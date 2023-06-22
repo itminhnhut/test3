@@ -8,7 +8,7 @@ import CalendarIcon from 'components/svg/CalendarIcon';
 import SvgFire from 'components/svg/Fire';
 import SvgFilter from 'components/svg/SvgFilter';
 import SvgTrophy from 'components/svg/Trophy';
-import { BREAK_POINTS } from 'constants/constants';
+import { BREAK_POINTS, ONE_DAY } from 'constants/constants';
 import useIsomorphicLayoutEffect from 'hooks/useIsomorphicLayoutEffect';
 import useQuery from 'hooks/useQuery';
 import useWindowSize from 'hooks/useWindowSize';
@@ -21,9 +21,10 @@ import styled from 'styled-components';
 import FetchApi from 'utils/fetch-api';
 import ModalV2 from 'components/common/V2/ModalV2';
 import MobileDatePicker from './MobileDatePicker';
-import { X } from 'react-feather';
+import { Search, X } from 'react-feather';
 import { addDays } from 'date-fns';
 import EventItem, { SkeletonEventItem } from '../EventItem/EventItem';
+import Chip from 'components/common/V2/Chip';
 
 const PAGE_SIZE = 10;
 export const STATUSES = {
@@ -45,7 +46,7 @@ const Flex = styled.div`
 `;
 
 /**
- * @param {{timeFilter: {start: Date | null, end: Date | null, status: number}, onSetTime: () => any}} props
+ * @param {{timeFilter: {start: Date | number | string | null, end: Date | number | string | null, status: number}, onSetTime: () => any}} props
  */
 const DateFilter = ({ timeFilter, onSetTime }) => {
     const start = timeFilter?.start || undefined;
@@ -58,7 +59,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
     return (
         <>
             <DateFilterModal timeFilter={timeFilter} onSetTime={onSetTime} isVisible={showDateFilterModal} onClose={() => setShowDateFilterModal(false)} />
-            <div className="space-x-4 hidden mb:flex">
+            <div className="space-x-4 mb:space-x-6 hidden mb:flex">
                 {/* <Calendar direction="horizontal" months={2} className="single-select" /> */}
                 <div className="flex-1">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark hidden mb:block mb-2 text-sm" htmlFor="">
@@ -71,12 +72,18 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                         wrapperClassname="!w-full !h-12"
                         colorX="#8694b2"
                         position="left"
-                        onChange={(time) => onSetTime?.({ start: time })}
+                        onChange={(time) => onSetTime?.({ start: new Date(time).getTime() })}
                         text={
                             <div className="relative py-3 px-3 flex items-center justify-between bg-gray-12 dark:bg-dark-2 rounded-md w-auto cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">
                                 {start ? <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(start, 'dd/MM/yyyy')}</span> : 'all'}
                                 {start ? (
-                                    <div className="" onClick={() => onSetTime?.({ start: undefined })}>
+                                    <div
+                                        className=""
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onSetTime?.({ start: undefined });
+                                        }}
+                                    >
                                         <X size={16} color="#8694b2" />
                                     </div>
                                 ) : (
@@ -85,7 +92,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                             </div>
                         }
                         minDate={status > STATUSES.all && status === STATUSES.upcoming ? new Date() : undefined}
-                        maxDate={status > STATUSES.all && status >= STATUSES.ongoing && !end ? new Date() : end}
+                        maxDate={status > STATUSES.all && status >= STATUSES.ongoing && !end ? new Date() : addDays(end, -1)}
                         ignoreAuth
                     />
                 </div>
@@ -100,14 +107,20 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                         wrapperClassname="!w-full !h-12"
                         colorX="#8694b2"
                         position="left"
-                        onChange={(time) => onSetTime?.({ end: addDays(time, 1) })}
+                        onChange={(time) => onSetTime?.({ end: addDays(time, 1).getTime() })}
                         text={
                             <div className="relative py-3 px-3 flex items-center justify-between bg-gray-12 dark:bg-dark-2 rounded-md w-auto cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">
                                 {/* end date must be later than user's selected one for filtering */}
                                 {/* eg: user select 20/06/2023 => using 12:00 AM 21/06/2023 */}
                                 {end ? <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(addDays(end, -1), 'dd/MM/yyyy')}</span> : 'all'}
                                 {end ? (
-                                    <div className="" onClick={() => onSetTime?.({ end: undefined })}>
+                                    <div
+                                        className=""
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onSetTime?.({ end: undefined });
+                                        }}
+                                    >
                                         <X size={16} color="#8694b2" />
                                     </div>
                                 ) : (
@@ -115,7 +128,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                                 )}
                             </div>
                         }
-                        minDate={status > STATUSES.all && status <= STATUSES.ongoing && !start ? new Date() : start}
+                        minDate={status > STATUSES.all && status <= STATUSES.ongoing && !start ? new Date() : new Date(start)}
                         maxDate={status > STATUSES.all && status === STATUSES.ended ? new Date() : undefined}
                         ignoreAuth
                     />
@@ -134,10 +147,14 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
 const EventList = () => {
     const { t } = useTranslation();
     const router = useRouter();
-    const searchRef = useRef(null);
+    const [search, setSearch] = useState('');
     const { width } = useWindowSize();
+
+    const query = new URLSearchParams(router.asPath.replace(router.route, '').replace('?', ''));
+    const queryStatus = query.get('status');
+    const initialStatus = queryStatus >= STATUSES.all && queryStatus <= STATUSES.ended ? queryStatus : STATUSES.all;
     const [filter, setFilter] = useState({
-        status: STATUSES.all,
+        status: initialStatus,
         start: undefined,
         end: undefined,
         page: 1,
@@ -162,7 +179,7 @@ const EventList = () => {
                     signal
                 },
                 params: {
-                    status: status !== -1 ? status : undefined,
+                    'filters[status]': status !== -1 ? status : undefined,
                     locale: router.locale.toUpperCase(),
                     pageSize,
                     'filters[fromTime]': start,
@@ -187,8 +204,23 @@ const EventList = () => {
         }
 
         const statusFilter = +router.query.status ?? STATUSES.all;
+        const now = Date.now();
         if (statusFilter <= STATUSES.ended && statusFilter >= STATUSES.all) {
-            setFilter((old) => ({ ...old, status: statusFilter }));
+            // reset time filter on change status
+            const { start, end } = filter;
+            let newStart = start,
+                newEnd = end;
+            if (statusFilter === STATUSES.ended) {
+                newStart = start > now ? undefined : start;
+                newEnd = end > now ? now + ONE_DAY : end;
+            } else if (statusFilter === STATUSES.ongoing) {
+                newStart = start > now ? undefined : start;
+                newEnd = end < now ? undefined : end;
+            } else if (statusFilter === STATUSES.upcoming) {
+                newStart = start < now ? now : start;
+                newEnd = end < now ? undefined : end;
+            }
+            setFilter((old) => ({ ...old, status: statusFilter, start: newStart, end: newEnd }));
         }
     }, [router.isReady, router.query]);
 
@@ -212,7 +244,7 @@ const EventList = () => {
     };
 
     const onSearch = (search) => {
-        setFilter((old) => ({ ...old, search }));
+        setFilter((old) => ({ ...old, search, page: 1 }));
     };
 
     return (
@@ -220,30 +252,43 @@ const EventList = () => {
             <h1 className="font-semibold text-xl mb:text-4xl">{t('marketing_events:title')}</h1>
             <StatusFilter className="py-3 mb:py-6 space-x-2 mb:space-x-3 no-scrollbar">
                 {Object.keys(STATUSES).map((status) => (
-                    <button
-                        type="BUTTON"
+                    <Chip
                         className={classNames(
-                            'flex space-x-1 justify-center h-full py-2 px-3 mb:px-4 text-sm sm:text-base rounded-md cursor-pointer whitespace-nowrap bg-gray-13 dark:bg-dark-4 dark:text-txtSecondary-dark text-txtSecondary capitalize',
-                            { '!bg-teal/10 !text-teal font-semibold': filter.status === STATUSES[status] },
+                            'whitespace-nowrap flex space-x-1 justify-center',
                             STATUSES[status] === STATUSES.all ? 'order-1' : STATUSES[status] === STATUSES.ongoing ? 'order-2' : 'order-3'
                         )}
+                        selected={filter.status === STATUSES[status]}
                         key={status}
                         onClick={() => onFilterStatus(STATUSES[status])}
                     >
                         {STATUSES[status] === STATUSES.ongoing && <SvgFire />}
                         <span>{t(`marketing_events:${status}`)}</span>
-                    </button>
+                    </Chip>
                 ))}
             </StatusFilter>
-            <Flex className="-mx-1 mb:-mx-3">
-                <Flex className="items-end mb:order-2 order-1 flex-1 px-1 mb:px-3 space-x-4">
+            <Flex className="-mx-1 mb:-mx-3 pt-5 mb:pt-6">
+                <Flex className="items-end mb:order-2 order-1 flex-1 px-1 mb:px-3 space-x-4 mb:space-x-6">
                     <div className="w-full">
-                        <label className="text-txtSecondary dark:text-txtSecondary-dark hidden mb:block mb-2 text-sm" htmlFor="">
+                        <label className="text-txtSecondary dark:text-txtSecondary-dark hidden mb:block mb-2 text-sm" htmlFor="search_events">
                             {t('marketing_events:filter:search')}
                         </label>
-                        <InputV2 classNameInput="w-full" className="pb-0 w-full" placeholder="search" ref={searchRef} onHitEnterButton={onSearch} />
+                        <InputV2
+                            id="search_events"
+                            classNameInput="w-full"
+                            className="pb-0 w-full"
+                            placeholder="search"
+                            onChange={setSearch}
+                            value={search}
+                            onHitEnterButton={onSearch}
+                            prefix={
+                                <label htmlFor="search_events">
+                                    <Search className="text-txtSecondary dark:text-txtSecondary-dark cursor-text" color="currentColor" size={16} />
+                                </label>
+                            }
+                            allowClear
+                        />
                     </div>
-                    <Button onClick={() => searchRef.current && onSearch(searchRef.current.value)} className="hidden mb:block w-fit px-3 whitespace-nowrap">
+                    <Button onClick={() => onSearch(search)} className="hidden mb:block w-fit px-3 whitespace-nowrap">
                         {t('common:search')}
                     </Button>
                 </Flex>
@@ -348,7 +393,13 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                         <div className="relative py-3 px-3 flex items-center justify-between bg-gray-12 dark:bg-dark-2 rounded-md w-auto cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">
                             {start ? <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(start, 'dd/MM/yyyy')}</span> : 'all'}
                             {start ? (
-                                <div className="" onClick={() => onSetTime?.({ start: undefined })}>
+                                <div
+                                    className=""
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onSetTime?.({ start: undefined });
+                                    }}
+                                >
                                     <X size={16} color="#8694b2" />
                                 </div>
                             ) : (
@@ -357,7 +408,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                         </div>
                     }
                     minDate={status > STATUSES.all && status === STATUSES.upcoming ? new Date() : undefined}
-                    maxDate={status > STATUSES.all && status >= STATUSES.ongoing && !end ? new Date() : end}
+                    maxDate={status > STATUSES.all && status >= STATUSES.ongoing && !end ? new Date() : addDays(end, -1)}
                 />
             </div>
             <div className="mt-2">
@@ -377,7 +428,13 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                             {/* eg: user select 20/06/2023 => using 12:00 AM 21/06/2023 */}
                             {end ? <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(addDays(end, -1), 'dd/MM/yyyy')}</span> : 'all'}
                             {end ? (
-                                <div className="" onClick={() => onSetTime?.({ end: undefined })}>
+                                <div
+                                    className=""
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onSetTime?.({ end: undefined });
+                                    }}
+                                >
                                     <X size={16} color="#8694b2" />
                                 </div>
                             ) : (
@@ -385,7 +442,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                             )}
                         </div>
                     }
-                    minDate={status > STATUSES.all && status <= STATUSES.ongoing && !start ? new Date() : start}
+                    minDate={status > STATUSES.all && status <= STATUSES.ongoing && !start ? new Date() : new Date(start)}
                     maxDate={status > STATUSES.all && status === STATUSES.ended ? new Date() : undefined}
                 />
             </div>

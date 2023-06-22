@@ -27,7 +27,7 @@ export const getStaticProps = async (ctx) => {
         props: {
             ...(await serverSideTranslations(locale, ['common', 'navbar', 'marketing_events'])),
             theme: query?.theme || 'dark',
-            language: query?.language || 'en'
+            language: query?.language || 'en',
         }
     };
 };

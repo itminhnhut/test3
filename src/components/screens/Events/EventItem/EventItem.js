@@ -52,6 +52,9 @@ const EventItem = (props) => {
 
     const timeRenderer = (format) => {
         if (format.days) {
+            if (format.days === 1) {
+                return `${format.days} ${t('common:day')}`;
+            }
             return `${format.days} ${t('common:days')}`;
         }
         return `${format.hours}:${format.minutes}:${format.seconds}`;

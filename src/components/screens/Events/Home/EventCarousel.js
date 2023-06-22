@@ -2,7 +2,7 @@ import { useKeenSlider } from 'keen-slider/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'keen-slider/keen-slider.min.css';
 import styled from 'styled-components';
 import { getEventImg, getS3Url } from 'redux/actions/utils';
@@ -56,13 +56,19 @@ const Carousel = ({ data }) => {
         centered: true,
         loop: true,
         dot: true,
-        slideChanged: (slide) => setActiveItem(slide.details().relativeSlide)
+        slideChanged: (slide) => setActiveItem(slide.details().relativeSlide),
     });
+
+    const timer = useRef();
+    useEffect(() => {
+        timer.current = setInterval(slider?.next, 6000);
+        return () => clearInterval(timer.current);
+    }, [slider]);
 
     const renderDots = () => {
         if (!slider) return null;
         return (
-            <div className="dots">
+            <div className="dots !py-0">
                 {[...Array(slider.details().size).keys()].map((idx) => {
                     return (
                         <button
@@ -83,7 +89,7 @@ const Carousel = ({ data }) => {
                     <CarouselItem banner={item.bannerImgEndpoint} link={`/events/${item.slug || '#'}`} key={item._id || idx} title={item.title} />
                 ))}
             </div>
-            <div className="keen-slider__dots__wrapper">{renderDots()}</div>
+            <div className="keen-slider__dots__wrapper !mt-4">{renderDots()}</div>
         </Wrapper>
     );
 };
