@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getLoginUrl } from 'src/redux/actions/utils';
@@ -16,24 +16,25 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
         i18n: { language }
     } = useTranslation();
 
-    const renderBtnAssetDigital = (data) => {
-        if (!auth)
-            return (
+    const renderBtnAssetDigital = useCallback(
+        (data) => {
+            return !auth ? (
                 <a
                     className="w-full"
                     href={getLoginUrl('sso', 'login', {
-                        redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${data.title}`
+                        redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${data?.title}`
                     })}
                 >
-                    <ButtonV2>{data.btn[language]}</ButtonV2>
+                    <ButtonV2>{data?.btn[language]}</ButtonV2>
+                </a>
+            ) : (
+                <a className="w-full" href={data?.href}>
+                    <ButtonV2>{data?.btn[language]}</ButtonV2>
                 </a>
             );
-        return (
-            <a className="w-full" href={data.href}>
-                <ButtonV2>{data.btn[language]}</ButtonV2>
-            </a>
-        );
-    };
+        },
+        [auth?.code]
+    );
 
     const renderAssetDigital = useMemo(() => {
         return ASSET_DIGITAL.map((item) => {
