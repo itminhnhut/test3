@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { getLoginUrl } from 'src/redux/actions/utils';
 
 import { useTranslation } from 'next-i18next';
+import { getS3Url } from 'redux/actions/utils';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
@@ -45,7 +46,7 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
                     first:mt-[88px] lg:first:mt-0
                     "
                 >
-                    <Image width={isMobile ? 80 : 120} height={isMobile ? 80 : 120} src={item.imgSrc} />
+                    <Image width={isMobile ? 80 : 120} height={isMobile ? 80 : 120} src={getS3Url(item.imgSrc)} />
                     <div className="uppercase text-[20px] lg:text-3xl font-semibold text-green-2 mt-6 lg:mt-7">{item.title}</div>
                     <div className="uppercase text-gray-15 dark:text-gray-4 mt-1 lg:mt-2 text-sm lg:text-base">{item.subText}</div>
                     <div
