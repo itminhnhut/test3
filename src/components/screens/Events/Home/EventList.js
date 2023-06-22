@@ -66,6 +66,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                         {t('marketing_events:filter:starts_in')}
                     </label>
                     <DatePickerV2
+                        initDate={start ? new Date(start) : undefined}
                         isCalendar
                         month={2}
                         hasShadow
@@ -92,7 +93,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                             </div>
                         }
                         minDate={status > STATUSES.all && status === STATUSES.upcoming ? new Date() : undefined}
-                        maxDate={status > STATUSES.all && status >= STATUSES.ongoing && !end ? new Date() : addDays(end, -1)}
+                        maxDate={status > STATUSES.all && (status >= STATUSES.ongoing) && !end ? new Date() : end && addDays(end, -1)}
                         ignoreAuth
                     />
                 </div>
@@ -102,6 +103,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                     </label>
                     <DatePickerV2
                         isCalendar
+                        initDate={end ? addDays(end, -1) : undefined}
                         month={2}
                         hasShadow
                         wrapperClassname="!w-full !h-12"
@@ -128,7 +130,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                                 )}
                             </div>
                         }
-                        minDate={status > STATUSES.all && status <= STATUSES.ongoing && !start ? new Date() : new Date(start)}
+                        minDate={status > STATUSES.all && status <= STATUSES.ongoing && !start ? new Date() : start && new Date(start)}
                         maxDate={status > STATUSES.all && status === STATUSES.ended ? new Date() : undefined}
                         ignoreAuth
                     />
@@ -151,7 +153,7 @@ const EventList = () => {
     const { width } = useWindowSize();
 
     const query = new URLSearchParams(router.asPath.replace(router.route, '').replace('?', ''));
-    const queryStatus = query.get('status');
+    const queryStatus = query.get('status') ?? STATUSES.all;
     const initialStatus = queryStatus >= STATUSES.all && queryStatus <= STATUSES.ended ? queryStatus : STATUSES.all;
     const [filter, setFilter] = useState({
         status: initialStatus,
@@ -203,7 +205,7 @@ const EventList = () => {
             return;
         }
 
-        const statusFilter = +router.query.status ?? STATUSES.all;
+        const statusFilter = isNaN(+router.query.status) ? STATUSES.all : +router.query.status;
         const now = Date.now();
         if (statusFilter <= STATUSES.ended && statusFilter >= STATUSES.all) {
             // reset time filter on change status
@@ -384,6 +386,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                 </label>
                 <MobileDatePicker
                     months={1}
+                    initDate={start ? new Date(start) : undefined}
                     hasShadow
                     wrapperClassname="!w-full !h-12"
                     colorX="#8694b2"
@@ -407,7 +410,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                             )}
                         </div>
                     }
-                    minDate={status > STATUSES.all && status === STATUSES.upcoming ? new Date() : undefined}
+                    maxDate={status > STATUSES.all && status >= STATUSES.ongoing && !end ? new Date() : end && addDays(end, -1)}
                     maxDate={status > STATUSES.all && status >= STATUSES.ongoing && !end ? new Date() : addDays(end, -1)}
                 />
             </div>
@@ -417,6 +420,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                 </label>
                 <MobileDatePicker
                     months={1}
+                    initDate={end ? addDays(end, -1) : undefined}
                     hasShadow
                     wrapperClassname="!w-full !h-12"
                     colorX="#8694b2"
@@ -442,7 +446,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                             )}
                         </div>
                     }
-                    minDate={status > STATUSES.all && status <= STATUSES.ongoing && !start ? new Date() : new Date(start)}
+                    minDate={status > STATUSES.all && status <= STATUSES.ongoing && !start ? new Date() : start && new Date(start)}
                     maxDate={status > STATUSES.all && status === STATUSES.ended ? new Date() : undefined}
                 />
             </div>

@@ -50,6 +50,8 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
     useEffect(() => {
         if (!initDate?.startDate && !initDate?.endDate && !isCalendar) {
             setDate({ ...initDate, ...(!initDate?.key && { key: 'selection' }) });
+        } else if (isCalendar) {
+            setDate(initDate);
         }
     }, [initDate]);
 

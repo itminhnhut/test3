@@ -36,7 +36,7 @@ const CarouselItem = ({ banner, link, title }) => {
         <div className="keen-slider__slide p-0" title={title}>
             <Link href={link} passHref>
                 <a className="block bg-gray-4 dark:bg-dark-2 rounded-2xl overflow-hidden leading-[0]">
-                    <Image src={getEventImg(banner)} alt={title} width={1216} height={440} className="object-cover" />
+                    <Image src={getEventImg(banner)} alt={title} width={1440} height={522} className="object-cover w-full h-auto" />
                 </a>
             </Link>
         </div>
@@ -60,10 +60,10 @@ const Carousel = ({ data }) => {
     });
 
     const timer = useRef();
-    useEffect(() => {
-        timer.current = setInterval(slider?.next, 6000);
-        return () => clearInterval(timer.current);
-    }, [slider]);
+    // useEffect(() => {
+    //     timer.current = setInterval(slider?.next, 6000);
+    //     return () => clearInterval(timer.current);
+    // }, [slider]);
 
     const renderDots = () => {
         if (!slider) return null;
@@ -104,7 +104,7 @@ const EventCarousel = () => {
                 (data?.length ? (
                     <Carousel data={data} />
                 ) : (
-                    <Image src="/images/featured/common-featured.png" alt="events" width={1216} height={440} className="object-cover" />
+                    null
                 ))}
             {isLoading && (
                 <div className="pt-[36%] w-full relative">
