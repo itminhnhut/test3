@@ -168,6 +168,7 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     }, [hoverData.index, currencyDayInterest, currencyId, amount]);
 
     const isAmountSmallerThanMin = amount < STAKING_RANGE[currencyId].min;
+    console.log('apyByMonth.realBalanceAmount:', apyByMonth.realBalanceAmount);
 
     return (
         typeof window !== 'undefined' && (
@@ -191,12 +192,15 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                         </div>
                         <div className="font-semibold md:text-xl">
                             {isAmountSmallerThanMin
-                                ? '--'
-                                : `${formatNumber(apyByMonth.realBalanceAmount, currencyConfig?.assetDigit || 0)} ${currencyConfig?.assetCode}`}
+                                ? amount || 0
+                                : apyByMonth.realBalanceAmount >= 1e20
+                                ? apyByMonth.realBalanceAmount
+                                : formatNumber(apyByMonth.realBalanceAmount, currencyConfig?.assetDigit || 0)}{' '}
+                            {currencyConfig?.assetCode}
                         </div>
                     </div>
                 </div>
-                <div >
+                <div>
                     <Chart options={options} series={series} type="area" height={320} />
                 </div>
 
