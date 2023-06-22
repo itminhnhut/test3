@@ -168,7 +168,6 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     }, [hoverData.index, currencyDayInterest, currencyId, amount]);
 
     const isAmountSmallerThanMin = amount < STAKING_RANGE[currencyId].min;
-    console.log('apyByMonth.realBalanceAmount:', apyByMonth.realBalanceAmount);
 
     return (
         typeof window !== 'undefined' && (
