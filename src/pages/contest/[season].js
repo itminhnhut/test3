@@ -1,23 +1,23 @@
 import React from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { seasons } from 'components/screens/Nao/Contest/Contest';
-import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic';
 const Contest = dynamic(() => import('components/screens/Nao/Contest/Contest'), {
-    ssr: false,
-})
+    ssr: false
+});
 const Season = ({ season }) => {
-    const current = seasons.find(season => season.active)
-    return <Contest previous={!season?.active} {...season} />
+    const current = seasons.find((season) => season.active);
+    return <Contest previous={!season?.active} {...season} />;
 };
 
 export const getServerSideProps = async (context) => {
-    const season = seasons?.find(e => e.season === Number(context?.params?.season))
-    if (!season) return { notFound: true }
+    const season = seasons?.find((e) => e.season === Number(context?.params?.season));
+    if (!season) return { notFound: true };
     return {
         props: {
             season: season,
-            ...(await serverSideTranslations(context.locale, ['common', 'nao', 'error'])),
-        },
+            ...(await serverSideTranslations(context.locale, ['common', 'nao', 'error', 'navbar']))
+        }
     };
 };
 
