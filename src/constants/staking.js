@@ -2,7 +2,10 @@ export const STEP_STAKING = [
     {
         imgSrc: '/images/staking/ic_account.png',
         title: { vi: 'Tạo tài khoản', en: 'Create an account' },
-        subText: { vi: 'Tạo tài khoản Nami Exchange và hoàn tất KYC', en: 'Register a Nami Exchange account and complete KYC' }
+        subText: {
+            vi: 'Tạo tài khoản Nami Exchange và hoàn tất KYC',
+            en: 'Register a Nami Exchange account and complete KYC'
+        }
     },
     {
         isDivider: true
@@ -154,7 +157,7 @@ export const FAQ = [
         content: {
             isHTMl: true,
             vi: '<ul class="list-disc pl-5"><li class="text-gray-1 dark:text-gray-7">Đối với VNDC: Hoa hồng giới thiệu là 20% trên lãi thực nhận của người được giới thiệu. Lãi suất được trả bằng VNDC.</li></ul><p>Ví dụ: Anh Nam giới thiệu chị Nhi thông qua tính năng “giới thiệu người dùng” của Nami. Khi chị Nhi gửi vào 100,000,000 VNDC và nhận được lãi suất 35,000 VNDC, anh Nam sẽ nhận được hoa hồng giới thiệu ở mức 20% của 35,000 VNDC tương đương 7,000 VNDC.</p><ul class="list-disc pl-5"><li class="text-gray-1 dark:text-gray-7">Đối với USDT: Hoa hồng giới thiệu là 20% trên lãi thực nhận của người được giới thiệu. Lãi suất được trả bằng USDT.</li></ul><p>Ví dụ: Anh Nam giới thiệu chị Nhi thông qua tính năng “giới thiệu người dùng” của Nami. Khi chị Nhi gửi vào 20,000 USDT và nhận được lãi suất 3.2876 USDT, anh Nam sẽ nhận được hoa hồng là 20% của 4.38 USDT tương đương 0.6575 USDT.</p>',
-            en: '<ul><li>For VNDC: Referral commission is 20% on the actual profit received by the referrer. Interest is paid in VNDC.</li></ul><p>Example: Mr. Nam introduced Ms. Nhi through referral code or link. When Ms. Nhi deposits 100,000,000 VNDC and receives an interest of 27,397 VNDC, Mr. Nam will receive a referral commission at 20% of 27,397 VNDC, equivalent to 5,479 VNDC.</p><ul><li>For USDT: Referral commission is 20% on the actual profit received by the referrer. Interest is paid in USDT.</li></ul><p>Example: David introduced Sam through referral code or link. When Sam deposits 20,000 USDT and receives interest of 3.2876 USDT, David will receive a commission of 20% of 4.38 USDT equivalent to 0.6575 USDT.</p>'
+            en: '<ul class="list-disc pl-5"><li class="text-gray-1 dark:text-gray-7">For VNDC: Referral commission is 20% on the actual profit received by the referrer. Interest is paid in VNDC.</li></ul><p>Example: Mr. Nam introduced Ms. Nhi through referral code or link. When Ms. Nhi deposits 100,000,000 VNDC and receives an interest of 27,397 VNDC, Mr. Nam will receive a referral commission at 20% of 27,397 VNDC, equivalent to 5,479 VNDC.</p><ul class="list-disc pl-5"><li class="text-gray-1 dark:text-gray-7">For USDT: Referral commission is 20% on the actual profit received by the referrer. Interest is paid in USDT.</li></ul><p>Example: David introduced Sam through referral code or link. When Sam deposits 20,000 USDT and receives interest of 3.2876 USDT, David will receive a commission of 20% of 4.38 USDT equivalent to 0.6575 USDT.</p>'
         }
     },
     {

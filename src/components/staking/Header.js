@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
+import { getS3Url } from 'redux/actions/utils';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
@@ -24,7 +25,7 @@ const HeaderStaking = () => {
                 </div>
             </div>
             <div className="w-full text-center lg:mt-0 mt-12">
-                <Image width="596px" height="582px" src="/images/staking/bg_header.png" />
+                <Image width="596px" height="582px" src={getS3Url('/images/staking/bg_header.png')} />
             </div>
         </div>
     );

@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import dynamic from 'next/dynamic';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -12,6 +11,7 @@ import { useWindowSize } from 'react-use';
 import styled from 'styled-components';
 
 import Skeleton from 'components/staking/skeleton';
+import StakingSEO from 'components/staking/SEO';
 
 const CalculateInterest = dynamic(() => import('components/staking/CalculateInterest.js'), { ssr: false });
 const HeaderStaking = dynamic(() => import('components/staking/Header.js'), {
@@ -33,10 +33,7 @@ const Reference = () => {
 
     return (
         <>
-            <Head>
-                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
-            </Head>
-
+            <StakingSEO />
             <MaldivesLayout>
                 <main className="bg-white dark:bg-shadow">
                     <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
