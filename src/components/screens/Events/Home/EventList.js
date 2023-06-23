@@ -206,7 +206,7 @@ const EventList = () => {
         }
     );
 
-    const hasNext = data?.total > filter.page * PAGE_SIZE;
+    const hasNext = data?.total > filter.page * filter.pageSize;
 
     useIsomorphicLayoutEffect(() => {
         if (!router.isReady) {
@@ -318,7 +318,7 @@ const EventList = () => {
                                     <>
                                         {hasNext && (
                                             <div
-                                                className="mt-6 text-teal font-semibold text-sm text-center"
+                                                className={classNames('mt-6 text-teal font-semibold text-sm text-center')}
                                                 onClick={() =>
                                                     setFilter((old) => ({
                                                         ...old,
