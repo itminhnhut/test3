@@ -64,7 +64,7 @@ const ContesRules = ({
                     <Countdown
                         date={CONTEST_TIME.START} // countdown 60s
                         renderer={({ formatted }) => renderTimer(formatted)}
-                        // onComplete={() => setIsLoadingEmail(false)}
+                    // onComplete={() => setIsLoadingEmail(false)}
                     />
                 </>
             );
@@ -77,7 +77,7 @@ const ContesRules = ({
                     <Countdown
                         date={CONTEST_TIME.END} // countdown 60s
                         renderer={({ formatted }) => renderTimer(formatted)}
-                        // onComplete={() => setIsLoadingEmail(false)}
+                    // onComplete={() => setIsLoadingEmail(false)}
                     />
                 </>
             );
@@ -217,7 +217,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
                             <ArrowDropDownIcon
                                 size={16}
                                 color="currentColor"
-                                className={`transition-all text-txtSecondary dark:text-txtSecondary-dark  ${open ? 'rotate-180' : ''}`}
+                                className={`transition-all dark:text-txtSecondary-dark  ${open ? 'rotate-180' : ''}`}
                             />
                         </ButtonNao>
                     </Popover.Button>
@@ -237,9 +237,8 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
                             className={`absolute top-14 min-w-[90vw] overflow-hidden sm:min-w-max sm:!translate-x-0 left-1/2 sm:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full`}
                         >
                             <div
-                                className={`${
-                                    inHome ? 'sm:max-h-[250px]' : 'sm:max-h-[300px]'
-                                } py-1 shadow-onlyLight text-sm flex flex-col rounded-xl border border-divider dark:border-divider-dark text-left max-h-[400px] overflow-y-auto`}
+                                className={`${inHome ? 'sm:max-h-[250px]' : 'sm:max-h-[300px]'
+                                    } py-1 shadow-onlyLight text-sm flex flex-col rounded-xl border border-divider dark:border-divider-dark text-left max-h-[400px] overflow-y-auto`}
                             >
                                 {seasonsFilter.map((item, index) => (
                                     <div

@@ -66,8 +66,7 @@ const FilterTypes = ({ type, setType, types, t, className }) => {
                 <div
                     key={e.id}
                     className={classnames(
-                        ` ${
-                            type !== e.id && 'text-txtTextBtn-tonal_dark'
+                        ` ${type !== e.id && 'text-txtTextBtn-tonal_dark'
                         } flex w-fit items-center justify-center px-4 py-2 text-sm rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap`,
                         {
                             'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
@@ -264,16 +263,15 @@ const ContestInfo = forwardRef(
                         </TabsNao>
                     )}
                     <div className="flex flex-col lg:flex-row flex-wrap gap-5 md:mt-9 sm:mt-6 mt-6 text-sm md:text-base">
-                        <CardNao className={`px-4 py-6 md:!p-8 lg:!max-w-[375px] ${previous && contest_id !== 10 ? '' : '!justify-center space-y-3'}`}>
+                        <CardNao className={`px-4 py-6 md:!p-8 lg:!max-w-[375px] !justify-center space-y-3`}>
                             <label className="text-xl sm:text-2xl text-teal font-semibold leading-8 capitalize">{capitalize(userData?.name)}</label>
                             <div className="flex items-center w-full mb-2 !mt-6 gap-2">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm md:text-base">User ID: {userData?.[userID]}</span>
                                 <CopyIcon data={userData?.[userID]} className="cursor-pointer" size={16} />
                             </div>
                             <div
-                                className={`${
-                                    invitations?.invites.length > 0 ? '' : 'hidden'
-                                } text-txtSecondary dark:text-txtSecondary-dark flex flex-col items-start text-sm md:text-base`}
+                                className={`${invitations?.invites.length > 0 ? '' : 'hidden'
+                                    } text-txtSecondary dark:text-txtSecondary-dark flex flex-col items-start text-sm md:text-base`}
                             >
                                 {previous && contest_id !== 10 && <div className="leading-6">ID: {userData?.[userID]}</div>}
                                 {/* <span className="text-gray-15 dark:text-gray-7 mx-2 sm:hidden">•</span> */}
@@ -333,9 +331,8 @@ const ContestInfo = forwardRef(
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_pnl')}</label>
                                     <div
-                                        className={`font-semibold text-right ${
-                                            !!userData?.total_pnl && (userData?.total_pnl < 0 ? 'text-red-2' : 'text-teal')
-                                        }`}
+                                        className={`font-semibold text-right ${!!userData?.total_pnl && (userData?.total_pnl < 0 ? 'text-red-2' : 'text-teal')
+                                            }`}
                                     >
                                         {userData?.total_pnl ? formatNumber(userData?.total_pnl, 0, 0, true) + ` ${quoteAsset}` : '-'}
                                     </div>
