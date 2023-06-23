@@ -51,13 +51,21 @@ const TIME_FILTER = [
         interval: '1d'
     }
 ];
-const HistoryStaking = ({ dataSource, loading = false, page = 1, onPage }) => {
+const HistoryStaking = () => {
     const {
         t,
         i18n: { language }
     } = useTranslation();
 
+    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
     const [range, setRange] = useState(initState.range);
+    const [dataSource, setDataSource] = useState({
+        results: [],
+        hasNext: false,
+        total: 0,
+        go_next: true
+    });
 
     const [filter, setFilter] = useState({
         range: {
@@ -144,7 +152,7 @@ const HistoryStaking = ({ dataSource, loading = false, page = 1, onPage }) => {
                     page: page - 1,
                     hasNext: dataSource?.hasNext,
                     onChangeNextPrev: (delta) => {
-                        onPage(page + delta);
+                        setPage(page + delta);
                     },
                     language: language
                 }}
