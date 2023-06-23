@@ -29,13 +29,13 @@
             "annual_interest": "Estimated annual interest"
         },
         "history": {
-            "title": "Lịch sử nhận lãi",
-            "profit_received": "Lợi nhuận đã nhận",
+            "title": "Interest History",
+            "profit_received": "Total Profit Received",
             "columns": {
-                "type": "Loại StableCoin",
-                "amount": "Số lượng",
-                "time": "Thời gian",
-                "status": "Trạng thái"
+                "type": "Stablecoins",
+                "amount": "Quantity",
+                "time": "Time",
+                "status": "Status"
             }
         }
     }

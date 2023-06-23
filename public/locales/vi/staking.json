@@ -30,9 +30,9 @@
         },
         "history": {
             "title": "Lịch sử nhận lãi",
-            "profit_received": "Lợi nhuận đã nhận",
+            "profit_received": "Tổng lợi nhuận đã nhận",
             "columns": {
-                "type": "Loại StableCoin",
+                "type": "Loại tài sản",
                 "amount": "Số lượng",
                 "time": "Thời gian",
                 "status": "Trạng thái"

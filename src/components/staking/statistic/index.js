@@ -17,7 +17,7 @@ const StaticsStaking = ({ assetId, onToggle }) => {
         <div className="mb-[60px]">
             <section className="mb-8">
                 <div className="flex items-center justify-between mb-[30px]">
-                    <div className="text-4xl font-semibold">{t('staking:statics.profit_stats')}</div>
+                    <h1 className="text-4xl font-semibold">{t('staking:statics.profit_stats')}</h1>
                     <Link href={'/staking'} passHref>
                         <a className="block">
                             <ButtonV2 className="w-auto" variants="text">
