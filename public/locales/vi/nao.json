@@ -23,9 +23,9 @@
         "total_fee": "Tổng phí giao dịch",
         "users": "Người dùng",
         "chart_total_volume": "KLGD",
-        "chart_total_orders": "Số lệnh",
+        "chart_total_orders": "Số lệnh giao dịch",
         "chart_users": "Người dùng",
-        "chart_total_fee": "Phí giao dịch",
+        "chart_total_fee": "Tổng phí",
         "chart_title": "Biểu đồ thống kê"
     },
     "pool": {

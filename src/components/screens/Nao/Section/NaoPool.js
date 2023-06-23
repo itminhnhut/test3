@@ -156,9 +156,20 @@ const NaoPool = ({ dataSource, assetNao }) => {
         totalStaked: dataSource?.totalStaked ?? 0,
         totalStakedVNDC: dataSource?.totalStakedVNDC ?? 0,
         totalUsers: formatNumber(dataSource?.totalUser, 0),
-        estimate: dataSource?.poolRevenueThisWeek,
-        estimateUsd: dataSource?.poolRevenueThisWeekUSD
+        estimate: dataSource?.poolRevenueThisWeek ?? {},
+        estimateUsd: dataSource?.poolRevenueThisWeekUSD ?? {}
     });
+    useEffect(() => {
+        setData({
+            availableStakedVNDC: dataSource?.availableStakedVNDC ?? 0,
+            availableStaked: dataSource?.availableStaked ?? 0,
+            totalStaked: dataSource?.totalStaked ?? 0,
+            totalStakedVNDC: dataSource?.totalStakedVNDC ?? 0,
+            totalUsers: formatNumber(dataSource?.totalUser, 0),
+            estimate: dataSource?.poolRevenueThisWeek ?? {},
+            estimateUsd: dataSource?.poolRevenueThisWeekUSD ?? {}
+        })
+    }, [dataSource])
     const [chartType, setChartType] = useState(CHART_TYPES.pool_info);
     const [chartData, dispatch] = useReducer(chartReducer, {
         [CHART_TYPES.pool_info]: {
@@ -729,7 +740,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     </div>
                     <div className="flex items-center w-full flex-wrap space-y-4 sm:space-y-6 mt-6 sm:mt-8">
                         <div className="w-full sm:p-0.5">
-                            <PoolPriceItem
+                            < PoolPriceItem
                                 digitsPrice={assetConfig[447]?.assetDigit ?? 2}
                                 s3Url={'/images/nao/ic_nao.png'}
                                 price={data.estimate?.[447]}
