@@ -30,16 +30,17 @@ const series = [
     }
 ];
 
-const getApyByMonth = ({ allowAmount, amount, percentPerDay, numberOfMonth }) => {
-    const monthsToDays = {
-        1: 30,
-        12: 365,
-        24: 730,
-        36: 1095,
-        48: 1460
-    };
-    // công thức tính lãi kép theo tháng
-    const compoundInterestAmount = +allowAmount * Math.pow(1 + percentPerDay / 100, monthsToDays[+numberOfMonth] || numberOfMonth * 30);
+const MONTHS_TO_DAYS = {
+    1: 30,
+    12: 365,
+    24: 730,
+    36: 1095,
+    48: 1460
+};
+
+export const getApyByDay = ({ allowAmount, amount, percentPerDay, numberOfDays }) => {
+    // công thức tính lãi kép theo từng ngày
+    const compoundInterestAmount = +allowAmount * Math.pow(1 + percentPerDay / 100, numberOfDays);
     const interestAmount = +compoundInterestAmount - +allowAmount;
     return {
         interestAmount,
@@ -181,7 +182,8 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
 
     const apyByMonth = useMemo(() => {
         const allowAmount = amount > STAKING_RANGE[currencyId].max ? STAKING_RANGE[currencyId].max : amount;
-        return getApyByMonth({ allowAmount, amount, percentPerDay: currencyDayInterest, numberOfMonth: hoverData.index + 1 });
+        const month = hoverData.index + 1;
+        return getApyByDay({ allowAmount, amount, percentPerDay: currencyDayInterest, numberOfDays: MONTHS_TO_DAYS[month] || month * 30 });
     }, [hoverData.index, currencyDayInterest, currencyId, amount]);
 
     const isAmountSmallerThanMin = amount < STAKING_RANGE[currencyId].min;
