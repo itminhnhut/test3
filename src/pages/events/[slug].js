@@ -100,6 +100,7 @@ const EventDetailPage = ({ event, params }) => {
         copy(process.env.NEXT_PUBLIC_WEB_V1 + `/events/${params.slug}`);
         toast({ text: `${t('common:copied')} link`, type: 'success', duration: 1000 });
     };
+    console.log({ article });
 
     return (
         <>
@@ -136,9 +137,9 @@ const EventDetailPage = ({ event, params }) => {
                                 </div>
                             </div>
                             <div className="flex order-2 mb:order-1 space-x-4 text-txtSecondary dark:text-txtSecondary-dark w-full mb:w-[fit-content]">
-                                {data.creatorName && (
+                                {article?.primary_author?.name && (
                                     <span>
-                                        {t('common:by')} {data.creatorName}
+                                        {t('marketing_events:by')} {article.primary_author.name}
                                     </span>
                                 )}
                                 <span className="flex items-center space-x-1.5">
