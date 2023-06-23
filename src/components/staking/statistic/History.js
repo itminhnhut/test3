@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 
 import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
@@ -7,38 +7,46 @@ import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import FetchApi from 'utils/fetch-api';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { API_HISTORY_STAKING_DAILY } from 'redux/actions/apis';
+import { useSelector } from 'react-redux';
+import { endOfDay, startOfDay, subDays, getTime } from 'date-fns';
 
 import classNames from 'classnames';
+const newDate = new Date();
 
 const DATE_OPTIONS = [
     {
         title: { vi: 'Tất cả', en: 'All' },
-        value: 'all'
+        value: 'all',
+        range: { startDate: null, endDate: null }
     },
     {
         title: { vi: '7 ngày', en: '7 days' },
-        value: 7
+        value: 7,
+        range: { startDate: startOfDay(subDays(newDate, 6)), endDate: endOfDay(newDate) }
     },
     {
         title: { vi: '30 ngày', en: '30 days' },
-        value: 30
+        value: 30,
+        range: { startDate: startOfDay(subDays(newDate, 29)), endDate: endOfDay(newDate) }
     },
     {
         title: { vi: '365 ngày', en: '365 days' },
-        value: 365
+        value: 365,
+        range: { startDate: startOfDay(subDays(newDate, 364)), endDate: endOfDay(newDate) }
     }
 ];
 
-const MILLISECOND = 1;
 const LIMIT = 10;
+const RANGE_CUSTOM = 'custom';
 
 const initState = {
+    defaultAsset: 'VNDC',
     range: 'all',
     loading: false,
     page: 1,
     dataSource: {
         results: [],
-        totalProfit: 0,
+        totalProfit: { value: 0 },
         hasNext: false,
         total: 0,
         go_next: true
@@ -58,16 +66,34 @@ const HistoryStaking = ({ assetId }) => {
         i18n: { language }
     } = useTranslation();
 
+    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
+    const asset = useMemo(() => {
+        return assetConfigs.find((asset) => asset.id === assetId);
+    }, [assetConfigs, assetId]);
+
     const [loading, setLoading] = useState(initState.loading);
     const [page, setPage] = useState(initState.page);
     const [range, setRange] = useState(initState.range);
     const [dataSource, setDataSource] = useState(initState.dataSource);
     const [filter, setFilter] = useState(initState.filter);
 
+    const refAsset = useRef(initState.defaultAsset);
+
     useEffect(() => {
+        // reset data change assetId (VNDC, USDT)
+        if (refAsset.current !== assetId) {
+            handleResetByAssetId();
+        }
         handleHistoryAPI();
-        console.log('handleHistory');
-    }, [assetId]);
+    }, [assetId, range]);
+
+    // handle reset data
+    const handleResetByAssetId = () => {
+        setFilter(initState.filter);
+        setRange(initState.range);
+        setPage(initState.page);
+        refAsset.current = assetId;
+    };
 
     const handleHistoryAPI = async () => {
         try {
@@ -79,8 +105,8 @@ const HistoryStaking = ({ assetId }) => {
                 },
                 params: {
                     assetId,
-                    ...(filter.range.startDate && { from: filter.range.startDate }),
-                    ...(filter.range.endDate && { to: filter.range.endDate })
+                    ...(filter.range.startDate && { from: getTime(new Date(filter.range.startDate)) }),
+                    ...(filter.range.endDate && { to: getTime(new Date(filter.range.endDate)) })
                 }
             });
             if (data) {
@@ -95,25 +121,19 @@ const HistoryStaking = ({ assetId }) => {
         }
     };
 
-    const handleChangeRanger = (value) => {
-        setRange(value);
-    };
+    const totalProfit = useMemo(() => {
+        return `${formatNumber(dataSource.totalProfit?.value, asset?.assetDigit)} ${asset?.assetCode}`;
+    }, [assetId, dataSource.totalProfit?.value]);
 
-    const renderDateOptions = useMemo(() => {
-        return DATE_OPTIONS.map((item) => {
-            const isActive = item.value === range;
-            return (
-                <Chip onClick={() => handleChangeRanger(item.value)} selected={isActive}>
-                    {item.title?.[language]}
-                </Chip>
-            );
-        });
-    }, [range]);
+    const handleChangeRanger = (item) => {
+        setRange(item.value);
+        setFilter((prev) => ({ ...prev, range: item.range }));
+    };
 
     const handleChangeDate = (e) => {
         const value = e?.selection || {};
-        const startDate = value?.startDate ? new Date(value?.startDate).getTime() : null;
-        const endDate = value?.endDate ? new Date(value?.endDate).getTime() + 86400000 - MILLISECOND : null;
+        const startDate = value?.startDate ? getTime(new Date(value?.startDate)) : null;
+        const endDate = value?.endDate ? getTime(new Date(value?.endDate)) : null;
         setFilter((prev) => ({
             ...prev,
             range: {
@@ -121,7 +141,21 @@ const HistoryStaking = ({ assetId }) => {
                 endDate
             }
         }));
+        if (startDate && endDate) {
+            setRange(RANGE_CUSTOM);
+        }
     };
+
+    const renderDateOptions = useMemo(() => {
+        return DATE_OPTIONS.map((item) => {
+            const isActive = item.value === range;
+            return (
+                <Chip onClick={() => handleChangeRanger(item)} selected={isActive} key={item.value}>
+                    {item.title?.[language]}
+                </Chip>
+            );
+        });
+    }, [range]);
 
     const renderTable = useCallback(() => {
         const columns = [
@@ -187,7 +221,7 @@ const HistoryStaking = ({ assetId }) => {
                 <section className="flex flex-row my-8 ml-6 mr-[21px] h-[62px] items-center">
                     <section className="w-2/5">
                         <div className="text-gray-15 dark:text-gray-7">{t('staking:statics:history.profit_received')}</div>
-                        <div className="text-txtPrimary dark:text-gray-4 font-semibold mt-2">1,670,000 VNDC</div>
+                        <div className="text-txtPrimary dark:text-gray-4 font-semibold mt-2">{totalProfit}</div>
                     </section>
                     <section className="w-3/5 flex flex-row items-center gap-x-2 justify-end">
                         {renderDateOptions}
@@ -199,9 +233,9 @@ const HistoryStaking = ({ assetId }) => {
                             onChange={handleChangeDate}
                             text={
                                 <Chip
-                                    onClick={() => handleChangeRanger('all')}
+                                    selected={range === RANGE_CUSTOM}
                                     className={classNames({
-                                        'text-teal border-teal bg-teal/[.1] !font-semibold': range === 'all'
+                                        'text-teal border-teal bg-teal/[.1] !font-semibold': range === RANGE_CUSTOM
                                     })}
                                 >
                                     {t('reference:referral.custom')}
