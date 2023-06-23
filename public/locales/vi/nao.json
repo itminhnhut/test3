@@ -22,11 +22,11 @@
         "total_orders": "Số lệnh giao dịch",
         "total_fee": "Tổng phí giao dịch",
         "users": "Người dùng",
-        "chart_total_volume": "KLGD",
-        "chart_total_orders": "Số lệnh giao dịch",
+        "chart_total_volume": "Khối lượng",
+        "chart_total_orders": "Số lệnh",
         "chart_users": "Người dùng",
-        "chart_total_fee": "Tổng phí",
-        "chart_title": "Biểu đồ thống kê"
+        "chart_total_fee": "Phí",
+        "chart_title": ""
     },
     "pool": {
         "title": "Pool quản trị {{value}}",
@@ -101,10 +101,10 @@
         "unlock_status": "Mở khóa: {{value}}",
         "week": "Tuần {{value}}:",
         "pool_value": "Giá trị pool",
-        "pool_value_tooltip": "Giá trị Pool được tính dựa trên Giá NAO tại thời điểm hiển thị",
+        "pool_value_tooltip": "Giá trị pool được tính dựa trên giá NAO tại thời điểm hiển thị",
         "chart": {
-            "pool_info": "Giá trị pool",
-            "fee_revenue": "Doanh thu pool"
+            "pool_info": "Giá trị Pool",
+            "fee_revenue": "Doanh thu Pool"
         }
     },
     "vote": {

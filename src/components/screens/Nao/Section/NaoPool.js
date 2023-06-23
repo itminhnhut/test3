@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useMemo, memo, useReducer } from 'react';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { TextLiner, CardNao, Tooltip } from 'components/screens/Nao/NaoStyle';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.min.css';
@@ -23,7 +24,6 @@ import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/No
 import classNames from 'classnames';
 import RangePopover from '../Components/RangePopover';
 import { useIsomorphicLayoutEffect } from 'react-use';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { Spinner } from 'components/common/Icons';
 import NaoChartJS from '../Components/Charts/NaoChartJS';
 import { isFunction } from 'lodash';
@@ -109,22 +109,6 @@ const chartReducer = (state, action = { type: '', payload: {} }) => {
     }
 };
 
-const defaultChartData = {
-    label: '',
-    data: [],
-    borderColor: colors.teal,
-    fill: 'start',
-    backgroundColor: (context) => {
-        const ctx = context.chart.ctx;
-        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, 'rgba(71, 204, 133, 0.15)');
-        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        return gradient;
-    },
-    hoverBackgroundColor: colors.white,
-    pointBackgroundColor: colors.teal
-};
-
 const NaoPool = ({ dataSource, assetNao }) => {
     const {
         t,
@@ -148,6 +132,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
         endDate: undefined,
         key: 'selection'
     });
+    const [chartInterval, setChartInterval] = useState('day');
     const [loading, setLoading] = useState(true);
     const [chartLoading, setChartLoading] = useState(false);
     const [data, setData] = useState({
@@ -171,6 +156,23 @@ const NaoPool = ({ dataSource, assetNao }) => {
         })
     }, [dataSource])
     const [chartType, setChartType] = useState(CHART_TYPES.pool_info);
+    const defaultChartData = {
+        label: '',
+        data: [],
+        borderColor: colors.teal,
+        fill: 'start',
+        backgroundColor: (context) => {
+            const ctx = context.chart.ctx;
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(71, 204, 133, 0.15)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            return gradient;
+        },
+        hoverBackgroundColor: colors.teal,
+        pointBackgroundColor: colors.teal,
+        pointBorderWidth: 2,
+        pointRadius: 5,
+    };
     const [chartData, dispatch] = useReducer(chartReducer, {
         [CHART_TYPES.pool_info]: {
             labels: [],
@@ -230,50 +232,41 @@ const NaoPool = ({ dataSource, assetNao }) => {
             },
             scales: {
                 x: {
-                    // ticks: {
-                    //     color: colors.darkBlue5,
-                    //     showLabelBackdrop: false,
-                    //     padding: 8,
-                    //     fontSize: isMobile ? 9 : 12,
-                    //     lineHeight: isMobile ? 20 : 16
-                    // },
+                    // stacked: true,
+                    ticks: {
+                        color: colors.darkBlue5,
+                        callback: function (value, index, ticks) {
+                            return chartInterval === 'month' ? chartData?.[chartType]?.labels?.[index]?.slice(3, 10) : chartData?.[chartType]?.labels?.[index]?.slice(0, 5);
+                        },
+                        showLabelBackdrop: false,
+                        padding: 8,
+                    },
                     grid: {
-                        // display: true,
-                        // drawBorder: true,
+                        display: false,
+                        drawBorder: false
                         // borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT
                     }
                 },
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        // color: colors.darkBlue5,
+                        color: colors.darkBlue5,
                         callback: function (value, index, ticks) {
                             return formatAbbreviateNumber(value, 3);
-                        }
-                        // crossAlign: 'far',
-                        // padding: 8,
-                        // fontSize: isMobile ? 9 : 12,
-                        // lineHeight: isMobile ? 20 : 16
+                        },
+                        crossAlign: 'far',
+                        padding: 8,
                     },
                     grid: {
-                        // drawTicks: false,
-                        // borderDash: [2, 4],
-                        // borderDashOffset: 2,
-                        // // color: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT,
-                        // // borderDash: [1, 4],
-                        // // // color: colors.divider.DEFAULT,
-                        // color: function (context) {
-                        //     if (context.tick.value === 0) {
-                        //         return 'rgba(0, 0, 0, 0)';
-                        //     }
-                        //     return isDark ? colors.divider.dark : colors.divider.DEFAULT;
-                        // },
-                        // drawBorder: !!isMobile
+                        drawTicks: false,
+                        borderDash: [2, 4],
+                        borderDashOffset: 2,
+                        drawBorder: !!isMobile
                     }
                 }
             }
         }),
-        [referencePrice, isDark, isMobile]
+        [referencePrice, isDark, isMobile, chartInterval, chartData?.[chartType]]
     );
 
     const onNavigate = (isNext) => {
@@ -310,7 +303,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
         const size = 1;
         const page = Array.isArray(listHitory) && Math.ceil(listHitory.length / size);
         const result = [];
-        const weekNumber = listHitory.length + 1;
+        let weekNumber = listHitory.length + 1;
         for (let i = 0; i < page; i++) {
             const dataFilter = listHitory.slice(i * size, (i + 1) * size);
             result.push(
@@ -463,7 +456,8 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 }
             });
 
-            if (!_data.length) {
+            setChartInterval(_data?.interval);
+            if (!_data?.result.length) {
                 setData((old) => ({
                     ...old,
                     totalStaked: 0,
@@ -478,7 +472,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     }
                 });
             } else {
-                const last = _data[_data.length - 1];
+                const last = _data?.result[_data?.result.length - 1];
                 setData((old) => ({
                     ...old,
                     totalStakedVNDC: last?.document?.totalStakedVndc || 0,
@@ -488,7 +482,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 }));
                 const labels = [];
                 const data = [];
-                _data.map((item) => {
+                _data?.result.map((item) => {
                     labels.push(item['_id']);
                     data.push(item.document?.totalStakedUsdt || 0);
                 });
@@ -496,7 +490,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     type: CHART_TYPES.pool_info,
                     payload: {
                         labels,
-                        datasets: [{ ...defaultChartData, data }]
+                        datasets: [{ ...defaultChartData, data, pointBorderColor: isDark ? colors.dark.dark : colors.white }]
                     }
                 });
             }
@@ -525,8 +519,8 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     to: range.endDate
                 }
             });
-            console.log({_data})
-            if (!_data.length) {
+            setChartInterval(_data?.interval);
+            if (!_data?.result.length) {
                 dispatch({
                     type: CHART_TYPES.fee_revenue,
                     payload: {
@@ -537,7 +531,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
             } else {
                 const labels = [];
                 const data = [];
-                _data.map((item) => {
+                _data?.result.map((item) => {
                     labels.push(item['_id']);
                     data.push(item.feeRevenueUsdt || 0);
                 });
@@ -546,7 +540,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     type: CHART_TYPES.fee_revenue,
                     payload: {
                         labels,
-                        datasets: [{ ...defaultChartData, data }]
+                        datasets: [{ ...defaultChartData, data, pointBorderColor: isDark ? colors.dark.dark : colors.white }]
                     }
                 });
             }
@@ -572,7 +566,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
         setChartLoading(true);
         getPoolData(controller.signal);
         getFeeRevenue(controller.signal);
-    }, [filter.day, range]);
+    }, [filter.day, range, isDark]);
 
     const updateDateRangeUrl = (dateValue) => {
         router.push(
@@ -638,7 +632,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 </div>
             </div>
             <div className="mt-6 grid grid-cols-12 gap-4 sm:gap-6">
-                <CardNao className="sm:!min-w-[50%] sm:!px-10 sm:!py-12 flex flex-col col-span-12 md:col-span-4">
+                <CardNao className="sm:!min-w-[50%] sm:!px-8 sm:!py-8 flex flex-col col-span-12 md:col-span-4" customHeight="sm:max-h-[514px]">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg font-semibold">{t('nao:pool:nao_staked')}</label>
                     <div className="flex flex-col gap-1 mt-4">
                         <div className="text-xl sm:text-2xl font-semibold flex items-center space-x-2">
@@ -699,7 +693,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         )}
                     </div>
                 </CardNao>
-                <CardNao className="sm:!min-w-[50%] sm:!px-10 sm:!py-12 flex-col sm:items-start !min-h-[360px] col-span-12 md:col-span-8">
+                <CardNao className="sm:!min-w-[50%] sm:!px-8 sm:!py-8 flex-col sm:items-start whitespace-nowrap min-h-[350px] col-span-12 md:col-span-8 !flex-none" customHeight="sm:max-h-[514px]">
                     <div className="order-first gap-6 md:gap-2 gap-last grid xl:grid-cols-3 w-full">
                         <TextLiner className="w-full">{t('nao:onus_performance:chart_title')}</TextLiner>
                         <div className="flex gap-last xl:justify-end w-auto overflow-auto no-scrollbar space-x-4 col-span-2">
@@ -718,11 +712,11 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         </div>
                     </div>
                     {chartLoading ? (
-                        <div className="flex items-center justify-center w-full min-h-[360px]">
+                        <div className="flex items-center justify-center w-full min-h-[300px] mt-6">
                             <Spinner size={60} className="text-teal" />
                         </div>
                     ) : (
-                        <div className="max-h-[450px] sm:max-h-full w-full h-full mt-8">
+                        <div className="!max-h-[396px] w-full h-full mt-6">
                             <NaoChartJS type="line" data={chartData[chartType]} options={chartOptions} />
                         </div>
                     )}
@@ -736,7 +730,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 <QuestionMarkIcon isFilled size={20} color={'currentColor'} />
                             </div>
                         </div>
-                        <SubPrice price={Object.values(data?.estimateUsd || {}).reduce((a, b) => a + b, 0)} digitsPrice={assetConfig[22]?.assetDigit ?? 3} />
+                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6">
+                            {t('nao:pool:equivalent')}: <SubPrice price={Object.values(data?.estimateUsd || {}).reduce((a, b) => a + b, 0)} digitsPrice={assetConfig[22]?.assetDigit ?? 3} />
+                        </span>
                     </div>
                     <div className="flex items-center w-full flex-wrap space-y-4 sm:space-y-6 mt-6 sm:mt-8">
                         <div className="w-full sm:p-0.5">

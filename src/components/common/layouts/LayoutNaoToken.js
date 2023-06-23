@@ -13,7 +13,6 @@ export const AlertContext = createContext(null);
 import vi from 'date-fns/locale/vi'
 import en from 'date-fns/locale/en-US'
 import useApp from 'hooks/useApp';
-import useDarkMode from 'hooks/useDarkMode';
 vi.localize = {
     day: (n) => days[n]['vi'],
     month: (n) => months[n]['vi'],
@@ -119,7 +118,6 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
     const alertV2 = useRef(null);
     const { width } = useWindowSize();
     const isApp = useApp();
-    const [,, setTheme] = useDarkMode();
 
     useEffect(() => {
         document.body.classList.add('disabled-zoom');
@@ -129,7 +127,6 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
         if (vw <= 360) {
             document.documentElement.style.setProperty('font-size', '14px');
         }
-        setTheme('dark');
     }, [])
 
     return (
@@ -138,30 +135,28 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
             </Head>
             {/* remove force dark mode by remove the wrapper */}
-            <div className="dark">
-                <div className="bg-bgPrimary dark:bg-bgPrimary-dark text-txtPrimary dark:text-txtPrimary-dark min-h-full font-SF-Pro relative">
-                    <AlertContext.Provider
-                        value={{
-                            alert: alert.current,
-                            alertV2: alertV2.current
-                        }}
-                    >
-                        {isHeader ? (
-                            <Background width={width}>
-                                <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
-                                    <NaoHeader />
-                                    {children}
-                                </div>
-                                <NaoFooter />
-                            </Background>
-                        ) : (
-                            children
-                        )}
-                    </AlertContext.Provider>
-                    <div id={`${PORTAL_MODAL_ID}`} />
-                    <AlertNaoModal ref={alert} />
-                    <AlertNaoV2Modal ref={alertV2} />
-                </div>
+            <div className="bg-bgPrimary dark:bg-bgPrimary-dark text-txtPrimary dark:text-txtPrimary-dark min-h-full font-SF-Pro relative">
+                <AlertContext.Provider
+                    value={{
+                        alert: alert.current,
+                        alertV2: alertV2.current
+                    }}
+                >
+                    {isHeader ? (
+                        <Background width={width}>
+                            <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
+                                <NaoHeader />
+                                {children}
+                            </div>
+                            <NaoFooter />
+                        </Background>
+                    ) : (
+                        children
+                    )}
+                </AlertContext.Provider>
+                <div id={`${PORTAL_MODAL_ID}`} />
+                <AlertNaoModal ref={alert} />
+                <AlertNaoV2Modal ref={alertV2} />
             </div>
         </>
     );

@@ -108,6 +108,7 @@ const NaoPerformance = memo(({}) => {
     const [dataSource, setDataSource] = useState(null);
     const [loading, setLoading] = useState(false);
     const [chartLoading, setChartLoading] = useState(false);
+    const [chartInterval, setChartInterval] = useState('day');
     const [filter, setFilter] = useState({
         day: 'd',
         marginCurrency: WalletCurrency.VNDC
@@ -149,17 +150,83 @@ const NaoPerformance = memo(({}) => {
                 },
                 tooltip: {
                     enabled: true,
-                    position: 'nearest'
-                }
+                    position: 'nearest',
+                    backgroundColor: isDark ? colors.dark[2] : colors.gray[12],
+                    padding: isMobile ? 8 : 12,
+                    caretSize: 0,
+                    titleMarginBottom: isMobile ? 8 : 12,
+                    titleFont: {
+                        size: isMobile ? 10 : 14,
+                        weight: 400
+                    },
+                    displayColors: false,
+                    bodyFont: {
+                        size: isMobile ? 12 : 16,
+                        weight: 600
+                    },
+                    footerAlign: 'right',
+                    footerFont: {
+                        size: isMobile ? 10 : 14,
+                        weight: 400
+                    },
+                    callbacks: {
+                        label: (item) => {
+                            let titleText = titleText = t('nao:onus_performance:chart_total_volume');
+                            let currencyText = " VNDC";
+                            if (filter.marginCurrency === 22) currencyText = " USDT";
+                            if (typeChart === CHART_TYPES.order) {
+                                titleText = t('nao:onus_performance:chart_total_orders');
+                                currencyText = "";
+                            }
+                            if (typeChart === CHART_TYPES.user) {
+                                titleText = t('nao:onus_performance:chart_users');
+                                currencyText = "";
+                            }
+                            if (typeChart === CHART_TYPES.fee) titleText = t('nao:onus_performance:chart_total_fee');
+                            return `${titleText}: ${formatNumber(item.raw / (referencePrice['VNDC'] ?? 1), 0)}${currencyText}`;
+                        },
+                        footer: (tooltipItems) => {
+                            if (typeChart === CHART_TYPES.user || typeChart === CHART_TYPES.order) return;
+                            const [item] = tooltipItems;
+                            return '$ ' + item.raw;
+                        }
+                    }
+                },
             },
             scales: {
+                x: {
+                    stacked: true,
+                    ticks: {
+                        color: colors.darkBlue5,
+                        callback: function (value, index, ticks) {
+                            return chartInterval === 'month' ? dataChartSource?.labels?.[index]?.slice(3, 10) : dataChartSource?.labels?.[index]?.slice(0, 5);
+                        },
+                        showLabelBackdrop: false,
+                        padding: 8,
+                    },
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                        // borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT
+                    }
+                },
                 y: {
                     beginAtZero: true,
+                    stacked: true,
                     ticks: {
+                        color: colors.darkBlue5,
                         callback: function (value, index, ticks) {
                             return formatAbbreviateNumber(value, 3);
-                        }
+                        },
+                        crossAlign: 'far',
+                        padding: 8,
                     },
+                    grid: {
+                        drawTicks: false,
+                        borderDash: [2, 4],
+                        borderDashOffset: 2,
+                        drawBorder: !!isMobile
+                    }
                 }
             }
         };
@@ -184,10 +251,8 @@ const NaoPerformance = memo(({}) => {
 
     useEffect(() => {
         getData();
-        if (filter.day !== 'd' && filter.day !== '-d' && isValidCustomDay) {
-            getDataChart();
-        }
-    }, [filter]);
+        getDataChart();
+    }, [filter, range]);
 
     useEffect(() => {
         if (typeChart === CHART_TYPES.fee) {
@@ -196,7 +261,7 @@ const NaoPerformance = memo(({}) => {
                 datasets: [
                     {
                         data: dataChartFee[filter.marginCurrency],
-                        borderColor: colors.green[6],
+                        borderColor: colors.teal,
                         fill: 'start',
                         backgroundColor: (context) => {
                             const ctx = context.chart.ctx;
@@ -205,8 +270,8 @@ const NaoPerformance = memo(({}) => {
                             gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
                             return gradient;
                         },
-                        hoverBackgroundColor: colors.green[6],
-                        pointBackgroundColor: colors.green[6],
+                        hoverBackgroundColor: colors.teal,
+                        pointBackgroundColor: colors.teal,
                         pointBorderColor: isDark ? colors.dark.dark : colors.white,
                         pointBorderWidth: 2,
                         pointRadius: 5,
@@ -219,7 +284,7 @@ const NaoPerformance = memo(({}) => {
                 datasets: [
                     {
                         data: typeChart === CHART_TYPES.volume ? dataChartVolume : typeChart === CHART_TYPES.order ? dataChartOrder : dataChartUser,
-                        borderColor: colors.green[6],
+                        borderColor: colors.teal,
                         fill: 'start',
                         backgroundColor: (context) => {
                             const ctx = context.chart.ctx;
@@ -228,8 +293,8 @@ const NaoPerformance = memo(({}) => {
                             gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
                             return gradient;
                         },
-                        hoverBackgroundColor: colors.green[6],
-                        pointBackgroundColor: colors.green[6],
+                        hoverBackgroundColor: colors.teal,
+                        pointBackgroundColor: colors.teal,
                         pointBorderColor: isDark ? colors.dark.dark : colors.white,
                         pointBorderWidth: 2,
                         pointRadius: 5,
@@ -247,8 +312,8 @@ const NaoPerformance = memo(({}) => {
                 options: { method: 'GET' },
                 params: {
                     range: filter.day,
-                    from: range.startDate,
-                    to: range.endDate,
+                    from: range?.startDate?.getTime(),
+                    to: range?.endDate?.getTime(),
                     marginCurrency: filter.marginCurrency,
                     userCategory: 2
                 }
@@ -261,20 +326,27 @@ const NaoPerformance = memo(({}) => {
     };
 
     const getDataChart = async () => {
+        if (!isValidCustomDay) return;
+        let filterDay = filter.day
+        if (filter.day === 'd' || filter.day === '-d') {
+            filterDay = 'w'
+            if (dataChartSource?.labels?.length) return;
+        }
         setChartLoading(true);
         try {
             const data = await fetchApi({
                 url: API_NAO_DASHBOARD_STATISTIC_CHART,
                 options: { method: 'GET' },
                 params: {
-                    range: filter.day,
-                    from: range.startDate,
-                    to: range.endDate,
+                    range: filterDay,
+                    from: range?.startDate?.getTime(),
+                    to: range?.endDate?.getTime(),
                     marginCurrency: filter.marginCurrency,
                     userCategory: 2
                 }
             });
             if (!(data?.error || data?.status)) {
+                setChartInterval(data.interval);
                 const volumes = [];
                 const trades = [];
                 const fees = {
@@ -285,8 +357,8 @@ const NaoPerformance = memo(({}) => {
                 };
                 const users = [];
                 const labels = [];
-                for (let i = 0; i < data.length; i++) {
-                    const e = data[i];
+                for (let i = 0; i < data.result.length; i++) {
+                    const e = data.result[i];
                     volumes.push(e.notionalValue);
                     trades.push(e.count);
                     users.push(e.userCount);
@@ -458,19 +530,6 @@ const NaoPerformance = memo(({}) => {
                             </span>
                         </div>
                     </CardNao>
-                    {/*<CardNao className="rounded-lg !min-w-max w-full">*/}
-                    {/*    <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">*/}
-                    {/*        {t('nao:onus_performance:total_orders')}*/}
-                    {/*    </label>*/}
-                    {/*    <div className="pt-4">*/}
-                    {/*        <div className="text-txtPrimary dark:text-txtPrimary-dark text-xl sm:text-2xl font-semibold pb-2">*/}
-                    {/*            {dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}*/}
-                    {/*        </div>*/}
-                    {/*        <span className="text-txtSecondary dark:text-txtSecondary-dark">*/}
-                    {/*            {dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}*/}
-                    {/*        </span>*/}
-                    {/*    </div>*/}
-                    {/*</CardNao>*/}
                     <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark !min-w-max !py-6 !px-8 w-full !flex-none" customHeight="sm:min-h-[162px]">
                         <div className="flex items-center justify-between">
                             <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
