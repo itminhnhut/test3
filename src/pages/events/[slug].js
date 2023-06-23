@@ -149,7 +149,7 @@ const EventDetailPage = ({ event, params }) => {
                         </div>
                     </div>
                     <div className="mt-8 mb:mt-10">
-                        <Image src={getEventImg(data.bannerImgEndpoint)} width={1216} height={638} className="h-auto object-cover rounded-xl" />
+                        <Image src={getEventImg(data.bannerImgEndpoint)} width={1440} height={756} className="h-auto object-cover rounded-xl" />
                     </div>
 
                     <div className="max-w-[51.5rem] m-auto mt-4">
