@@ -1,3 +1,21 @@
+export const APY_PERCENT = {
+    VNDC: 12.79,
+    USDT: 6
+};
+
+export const STAKING_RANGE = {
+    72: {
+        min: 10e3, // 10k
+        max: 2e9, // 2 tỷ,
+        DEFAULT: 100e6
+    },
+    22: {
+        DEFAULT: 5e3,
+        min: 5,
+        max: 20e3 // 20k
+    }
+};
+
 export const STEP_STAKING = [
     {
         imgSrc: '/images/staking/ic_account.png',

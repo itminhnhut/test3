@@ -8,7 +8,6 @@ const SelectV2 = ({
     onChange,
     keyExpr = 'value',
     displayExpr = 'title',
-    titleParams = {},
     className = '',
     popoverPanelClassName = '',
     popoverClassName = '',
@@ -16,7 +15,7 @@ const SelectV2 = ({
     optionClassName
 }) => {
     const title = useMemo(() => {
-        return options.find((rs) => rs?.[keyExpr] === value)?.[displayExpr]?.(titleParams);
+        return options.find((rs) => rs?.[keyExpr] === value)?.[displayExpr] ?? '';
     }, [options, value, keyExpr, displayExpr]);
 
     return (
@@ -75,7 +74,7 @@ const SelectV2 = ({
                                                     close();
                                                 }}
                                             >
-                                                {item?.[displayExpr]?.(titleParams)}
+                                                {item?.[displayExpr] ?? ''}
                                             </div>
                                         );
                                     })}
