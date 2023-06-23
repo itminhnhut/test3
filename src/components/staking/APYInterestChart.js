@@ -7,9 +7,8 @@ import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
-import { STAKING_RANGE } from './CalculateInterest';
-import TabV2 from 'components/common/V2/TabV2';
 import Chip from 'components/common/V2/Chip';
+import { STAKING_RANGE } from 'constants/staking';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 

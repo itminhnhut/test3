@@ -22,7 +22,7 @@ const HeaderStaking = () => {
                     </ButtonV2>
                     <Link href="/staking/statistic">
                         <ButtonV2 className="w-[151px] " variants="secondary">
-                            Thống kê
+                            {t('staking:header.statistics')}
                         </ButtonV2>
                     </Link>
                 </div>

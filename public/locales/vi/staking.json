@@ -16,5 +16,17 @@
         "total_interest": "Tổng lãi cuối kỳ",
         "total_balance": "Tổng số dư cuối kỳ"
     },
-    "faq": { "title": "Câu hỏi thường gặp" }
+    "faq": { "title": "Câu hỏi thường gặp" },
+    "statics": {
+        "history": {
+            "title": "Lịch sử nhận lãi",
+            "profit_received": "Lợi nhuận đã nhận",
+            "columns": {
+                "type": "Loại StableCoin",
+                "amount": "Số lượng",
+                "time": "Thời gian",
+                "status": "Trạng thái"
+            }
+        }
+    }
 }

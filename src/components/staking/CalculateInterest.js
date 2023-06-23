@@ -2,71 +2,27 @@ import TradingInputV2 from 'components/trade/TradingInputV2';
 import React, { useMemo, useState } from 'react';
 import SelectV2 from 'components/common/V2/SelectV2';
 import { useTranslation } from 'next-i18next';
-import AssetLogo from 'components/wallet/AssetLogo';
-import { formatNumber, getExactBalanceFiat, roundByExactDigit } from 'redux/actions/utils';
+import { getDayInterestPercent } from 'redux/actions/utils';
 import dynamic from 'next/dynamic';
+import { APY_PERCENT, STAKING_RANGE } from 'constants/staking';
+import AssetItem from './AssetItem';
 
 const APYInterestChart = dynamic(() => import('./APYInterestChart'), { ssr: false });
-
-const APY_PERCENT = {
-    VNDC: 12.79,
-    USDT: 6
-};
-const DAYS_IN_YEAR = 365;
-
-const getDayInterestPercent = (apy) => roundByExactDigit(apy / DAYS_IN_YEAR, 4);
 
 const STAKING_CURRENCIES = [
     {
         value: 72,
         code: 'VNDC',
         dayInterestPercent: getDayInterestPercent(APY_PERCENT['VNDC']),
-        title: ({ t }) => {
-            return (
-                <div className="font-semibold text-sm lg:text-base text-txtPrimary dark:text-txtPrimary-dark flex items-center gap-2">
-                    <div className="w-6 h-6">
-                        <AssetLogo size={24} assetId={72} />
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="">VNDC</div>
-                        <div className="text-teal">
-                            {APY_PERCENT['VNDC']}%/{t('common:year')}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
+        title: <AssetItem assetCode="VNDC" assetId={72} />
     },
     {
         value: 22,
         code: 'USDT',
         dayInterestPercent: getDayInterestPercent(APY_PERCENT['USDT']),
-        title: ({ t }) => (
-            <div className="font-semibold text-sm lg:text-base text-txtPrimary dark:text-txtPrimary-dark flex items-center gap-2">
-                <div className="w-6">
-                    <AssetLogo size={24} assetId={22} />
-                </div>
-                <div className="">USDT</div>
-                <div className="text-teal">
-                    {APY_PERCENT['USDT']}%/{t('common:year')}
-                </div>
-            </div>
-        )
+        title: <AssetItem assetCode="USDT" assetId={22} />
     }
 ];
-
-export const STAKING_RANGE = {
-    72: {
-        min: 10e3, // 10k
-        max: 2e9, // 2 tỷ,
-        DEFAULT: 100e6
-    },
-    22: {
-        DEFAULT: 5e3,
-        min: 5,
-        max: 20e3 // 20k
-    }
-};
 
 const initState = {
     stakingCurrency: STAKING_CURRENCIES[0],
@@ -79,34 +35,6 @@ const CalculateInterest = () => {
     const [state, set] = useState(initState);
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
-    const validator = useMemo(() => {
-        const { value } = state.stakingCurrency;
-        let isValid = true,
-            msg = '',
-            isError = false;
-
-        if (state.amountStaking < STAKING_RANGE[value].min) {
-            return {
-                isValid: false,
-                isError: true,
-                msg: 'Số lượng Stake phải >= ' + formatNumber(STAKING_RANGE[value].min, value === 72 ? 0 : 4)
-            };
-        }
-        if (state.amountStaking > STAKING_RANGE[value].max) {
-            return {
-                isValid: false,
-                isError: true,
-                msg: 'Số lượng Stake phải <= ' + formatNumber(STAKING_RANGE[value].max, value === 72 ? 0 : 4)
-            };
-        }
-
-        return {
-            isValid,
-            msg,
-            isError
-        };
-    }, [state.stakingCurrency.value, state.amountStaking]);
-
     return (
         <section className="mt-[88px] lg:mt-[118px] px-3 py-10 md:px-20 md:py-[60px] dark:bg-dark-4 bg-white border-divider dark:border-divider-dark border rounded-xl">
             <div className="text-center space-y-3 mb-10 md:mb-[60px]">
@@ -118,7 +46,6 @@ const CalculateInterest = () => {
                     <div className="space-y-2">
                         <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">{t('staking:calculate_interest.select_asset')}</div>
                         <SelectV2
-                            titleParams={{ t }}
                             onChange={(_, currency) => {
                                 setState({ stakingCurrency: currency, amountStaking: STAKING_RANGE[currency.value].DEFAULT });
                             }}
