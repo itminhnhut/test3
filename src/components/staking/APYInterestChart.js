@@ -169,6 +169,16 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
 
     const isAmountSmallerThanMin = amount < STAKING_RANGE[currencyId].min;
 
+    const getFinalBalance = () => {
+        if (isAmountSmallerThanMin) {
+            return amount || 0;
+        }
+        if (apyByMonth.realBalanceAmount >= 1e20) {
+            return apyByMonth.realBalanceAmount;
+        }
+        return formatNumber(apyByMonth.realBalanceAmount, currencyConfig?.assetDigit || 0);
+    };
+
     return (
         typeof window !== 'undefined' && (
             <Wrapper className="relative -ml-5 -mr-2 lg:m-0">
@@ -185,18 +195,8 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                         </div>
                     </div>
                     <div className="space-y-1">
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">
-                            {' '}
-                            {t('staking:calculate_interest.total_balance')}:
-                        </div>
-                        <div className="font-semibold md:text-xl">
-                            {isAmountSmallerThanMin
-                                ? amount || 0
-                                : apyByMonth.realBalanceAmount >= 1e20
-                                ? apyByMonth.realBalanceAmount
-                                : formatNumber(apyByMonth.realBalanceAmount, currencyConfig?.assetDigit || 0)}{' '}
-                            {currencyConfig?.assetCode}
-                        </div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm">{t('staking:calculate_interest.total_balance')}:</div>
+                        <div className="font-semibold md:text-xl">{`${getFinalBalance()} ${currencyConfig?.assetCode}`}</div>
                     </div>
                 </div>
                 <div>
