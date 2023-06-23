@@ -1,22 +1,31 @@
-import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import MadivesLayout from 'components/common/layouts/MaldivesLayout';
+import { useCallback, useState } from 'react';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React from 'react';
+import dynamic from 'next/dist/shared/lib/dynamic';
+
+const initState = {
+    VNDC: 72,
+    USDT: 22
+};
+
+const StaticsStaking = dynamic(() => import('components/staking/statistical', { ssr: false }));
+const HistoryStaking = dynamic(() => import('components/staking/statistical/History', { ssr: false }));
 
 const index = () => {
+    const [assetID, setAssetID] = useState(initState.VNDC);
+
+    const toggleAsset = useCallback((value) => setAssetID(value), []);
+
     return (
-        <MadivesLayout>
+        <MaldivesLayout>
             <main className="bg-white dark:bg-shadow">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl mt-[85px] mb-[120px] mx-auto px-4">
-                    <div className="flex items-center justify-between">
-                        <div className="text-4xl font-semibold">Thống kê lãi qua đêm</div>
-                        <ButtonV2 className="w-auto" variants="text">
-                            Thống kê lãi qua đêm
-                        </ButtonV2>
-                    </div>
+                    <StaticsStaking assetID={assetID} onToggle={toggleAsset} />
+                    <HistoryStaking />
                 </div>
             </main>
-        </MadivesLayout>
+        </MaldivesLayout>
     );
 };
 export const getStaticProps = async ({ locale }) => ({

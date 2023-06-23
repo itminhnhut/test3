@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
+import Link from 'next/link';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
@@ -19,9 +20,11 @@ const HeaderStaking = () => {
                     <ButtonV2 className="w-[151px]" onClick={handleScroller}>
                         {t('staking:header.deposit_now')}
                     </ButtonV2>
-                    <ButtonV2 className="w-[151px] hidden" variants="secondary">
-                        Thống kê
-                    </ButtonV2>
+                    <Link href="/staking/statistic">
+                        <ButtonV2 className="w-[151px] " variants="secondary">
+                            Thống kê
+                        </ButtonV2>
+                    </Link>
                 </div>
             </div>
             <div className="w-full text-center lg:mt-0 mt-12">
