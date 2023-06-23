@@ -25,7 +25,7 @@
             "balance_description": "Total available balance of VNDC or USDT on your Spot and Futures wallets",
             "apy_interest": "APY (compound):",
             "deposit_now": "Deposit Now",
-            "daily_interest": "Daily interest xx%",
+            "daily_interest": "Daily interest",
             "annual_interest": "Estimated annual interest"
         },
         "history": {
