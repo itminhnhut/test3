@@ -232,7 +232,7 @@ const NaoPerformance = memo(({}) => {
         };
 
         return (
-            <div className=" w-full max-h-[396px] mt-6">
+            <div className="w-full !max-h-[396px] mt-6">
                 <NaoChartJS type="line" data={dataChartSource} options={options} height="450px" />
             </div>
         );
@@ -530,7 +530,7 @@ const NaoPerformance = memo(({}) => {
                             </span>
                         </div>
                     </CardNao>
-                    <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark !min-w-max !py-6 !px-8 w-full !flex-none" customHeight="sm:min-h-[162px]">
+                    <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark !min-w-max !py-6 !px-8 w-full !flex-none" customHeight="sm:max-h-[162px]">
                         <div className="flex items-center justify-between">
                             <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
                                 {t('nao:onus_performance:total_fee')}
