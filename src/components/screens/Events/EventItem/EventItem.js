@@ -9,11 +9,6 @@ import { formatTime, getEventImg } from 'redux/actions/utils';
 import classNames from 'classnames';
 import Image from 'next/image';
 
-/**
- *
- * @param {{ _id: string, thumbnailImgEndpoint?: string, bannerImgEndpoint?: string, title: string, startTime: string , endTime: string, anticipate: bool, prize: string, postLink: string, isHot: bool, creatorName: string, priority: number, isHidden: bool }} props
- */
-
 const ImageWrapper = styled.div`
     width: 100%;
     @media screen and (min-width: 820px) {
@@ -32,6 +27,10 @@ const getStatus = (start, end) => {
     return start > now ? STATUSES.upcoming : end < now ? STATUSES.ended : STATUSES.ongoing;
 };
 
+/**
+ *
+ * @param {{ _id: string, thumbnailImgEndpoint?: string, bannerImgEndpoint?: string, title: string, startTime: string , endTime: string, anticipate: bool, prize: string, postLink: string, isHot: bool, creatorName: string, priority: number, isHidden: bool }} props
+ */
 const EventItem = (props) => {
     const { t } = useTranslation();
     const getStatusBadge = (start, end) => {
@@ -80,7 +79,7 @@ const EventItem = (props) => {
     };
 
     return (
-        <Link href={`/events/${props.slug || '#'}`}>
+        <Link href={props.postLink || '#'}>
             <a className="relative flex mt-4 mb:mt-7 rounded-xl overflow-hidden flex-wrap mb:flex-nowrap bg-white dark:bg-dark-4 border dark:border-none border-divider shadow-card_light">
                 {getUnfinishedBagde(props.startTime, props.endTime)}
                 <ImageWrapper>

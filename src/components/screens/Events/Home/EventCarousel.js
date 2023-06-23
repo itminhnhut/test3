@@ -1,15 +1,10 @@
 import { useKeenSlider } from 'keen-slider/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import 'keen-slider/keen-slider.min.css';
 import styled from 'styled-components';
 import { getEventImg, getS3Url } from 'redux/actions/utils';
-import useQuery from 'hooks/useQuery';
-import FetchApi from 'utils/fetch-api';
-import { API_MARKETING_EVENTS } from 'redux/actions/apis';
-import { useRouter } from 'next/router';
 import useCurrentPosts from '../hooks/useCurrentPosts';
 
 const MAX_SIZE = 5;
@@ -91,7 +86,7 @@ const Carousel = ({ data }) => {
         <Wrapper>
             <div className="keen-slider" ref={sliderRef}>
                 {data.slice(0, MAX_SIZE).map((item, idx) => (
-                    <CarouselItem banner={item.bannerImgEndpoint} link={`/events/${item.slug || '#'}`} key={item._id || idx} title={item.title} />
+                    <CarouselItem banner={item.bannerImgEndpoint} link={item.postLink || '#'} key={item._id || idx} title={item.title} />
                 ))}
             </div>
             <div className="keen-slider__dots__wrapper !mt-4">{renderDots()}</div>

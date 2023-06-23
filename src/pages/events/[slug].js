@@ -100,7 +100,6 @@ const EventDetailPage = ({ event, params }) => {
         copy(process.env.NEXT_PUBLIC_WEB_V1 + `/events/${params.slug}`);
         toast({ text: `${t('common:copied')} link`, type: 'success', duration: 1000 });
     };
-    console.log({ article });
 
     return (
         <>
@@ -153,7 +152,7 @@ const EventDetailPage = ({ event, params }) => {
                         <Image src={getEventImg(data.bannerImgEndpoint)} width={1216} height={638} className="h-auto object-cover rounded-xl" />
                     </div>
 
-                    <div className="max-w-[51.5rem] m-auto">
+                    <div className="max-w-[51.5rem] m-auto mt-4">
                         <GhostContent content={article?.html} />
                         {data.calendarLink && (
                             <Link href={data.calendarLink}>
@@ -210,8 +209,6 @@ const EventDetailPage = ({ event, params }) => {
     );
 };
 
-const fallbackSlug = 'the-ranking-of-nao-futures-vndc-nami-championship-season-7-week-1'; // dev only
-
 export const getServerSideProps = async ({ locale, params, query }) => {
     try {
         const [{ data }, article] = await Promise.all([
@@ -221,10 +218,10 @@ export const getServerSideProps = async ({ locale, params, query }) => {
                     method: 'GET'
                 }
             }),
-            getArticle(fallbackSlug)
+            getArticle(params.slug)
         ]);
 
-        if (!data) {
+        if (!data || !article) {
             return {
                 redirect: {
                     permanent: false,
