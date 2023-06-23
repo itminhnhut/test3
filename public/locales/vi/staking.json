@@ -18,6 +18,16 @@
     },
     "faq": { "title": "Câu hỏi thường gặp" },
     "statics": {
+        "profit_stats": "Thống kê lợi nhuận",
+        "program_infor": "Thông tin về chương trình",
+        "interest": {
+            "balance": "Tổng số dư",
+            "balance_description": "Tổng số dư VNDC hoặc USDT khả dụng trong ví Spot và ví Futures",
+            "apy_interest": "Lãi suất năm (kép):",
+            "deposit_now": "Nạp ngay",
+            "daily_interest": "Lợi nhuận ngày",
+            "annual_interest": "Lợi nhuận dự kiến năm"
+        },
         "history": {
             "title": "Lịch sử nhận lãi",
             "profit_received": "Lợi nhuận đã nhận",

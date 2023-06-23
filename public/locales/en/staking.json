@@ -18,6 +18,16 @@
     },
     "faq": { "title": "FAQ" },
     "statics": {
+        "profit_stats": "Profit Statistics",
+        "program_infor": "Program information",
+        "interest": {
+            "balance": "Total balance",
+            "balance_description": "Total available balance of VNDC or USDT on your Spot and Futures wallets",
+            "apy_interest": "APY (compound):",
+            "deposit_now": "Deposit Now",
+            "daily_interest": "Daily interest xx%",
+            "annual_interest": "Estimated annual interest"
+        },
         "history": {
             "title": "Lịch sử nhận lãi",
             "profit_received": "Lợi nhuận đã nhận",
