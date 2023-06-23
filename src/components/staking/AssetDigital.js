@@ -1,7 +1,8 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getLoginUrl } from 'src/redux/actions/utils';
+import { useSelector } from 'react-redux';
 
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
@@ -10,31 +11,29 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 import { ASSET_DIGITAL } from 'constants/staking';
 
-const AssetDigitalStaking = ({ isMobile, auth }) => {
+const AssetDigitalStaking = ({ isMobile }) => {
+    const auth = useSelector((state) => state.auth?.user);
     const router = useRouter();
     const {
         i18n: { language }
     } = useTranslation();
 
-    const renderBtnAssetDigital = useCallback(
-        (data) => {
-            return !auth ? (
-                <a
-                    className="w-full"
-                    href={getLoginUrl('sso', 'login', {
-                        redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${data?.title}`
-                    })}
-                >
-                    <ButtonV2>{data?.btn[language]}</ButtonV2>
-                </a>
-            ) : (
-                <a className="w-full" href={data?.href}>
-                    <ButtonV2>{data?.btn[language]}</ButtonV2>
-                </a>
-            );
-        },
-        [auth?.code]
-    );
+    const renderBtnAssetDigital = (data) => {
+        return !auth ? (
+            <a
+                className="w-full"
+                href={getLoginUrl('sso', 'login', {
+                    redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${data?.title}`
+                })}
+            >
+                <ButtonV2>{data?.btn[language]}</ButtonV2>
+            </a>
+        ) : (
+            <a className="w-full" href={data?.href}>
+                <ButtonV2>{data?.btn[language]}</ButtonV2>
+            </a>
+        );
+    };
 
     const renderAssetDigital = useMemo(() => {
         return ASSET_DIGITAL.map((item) => {
@@ -60,7 +59,7 @@ const AssetDigitalStaking = ({ isMobile, auth }) => {
                 </section>
             );
         });
-    }, []);
+    }, [auth]);
 
     return (
         <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
