@@ -225,7 +225,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         },
                         footer: (tooltipItems) => {
                             const [item] = tooltipItems;
-                            return '$ ' + item.raw;
+                            return '$ ' + formatNumber(item.raw);
                         }
                     }
                 }

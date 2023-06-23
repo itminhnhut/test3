@@ -131,112 +131,12 @@ const NaoPerformance = memo(({}) => {
         datasets: []
     });
 
+    useEffect(() => {
+        getRef();
+    }, []);
+
     const assetConfig = useSelector((state) => state.utils.assetConfig);
     const isValidCustomDay = filter.day !== 'custom' || !!(range.startDate && range.endDate)
-
-    const renderChart = useMemo(() => {
-        const options = {
-            responsive: true,
-            maintainAspectRatio: false,
-            elements: {
-                line: {
-                    tension: 0.6
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false,
-                    position: 'bottom'
-                },
-                tooltip: {
-                    enabled: true,
-                    position: 'nearest',
-                    backgroundColor: isDark ? colors.dark[2] : colors.gray[12],
-                    padding: isMobile ? 8 : 12,
-                    caretSize: 0,
-                    titleMarginBottom: isMobile ? 8 : 12,
-                    titleFont: {
-                        size: isMobile ? 10 : 14,
-                        weight: 400
-                    },
-                    displayColors: false,
-                    bodyFont: {
-                        size: isMobile ? 12 : 16,
-                        weight: 600
-                    },
-                    footerAlign: 'right',
-                    footerFont: {
-                        size: isMobile ? 10 : 14,
-                        weight: 400
-                    },
-                    callbacks: {
-                        label: (item) => {
-                            let titleText = titleText = t('nao:onus_performance:chart_total_volume');
-                            let currencyText = " VNDC";
-                            if (filter.marginCurrency === 22) currencyText = " USDT";
-                            if (typeChart === CHART_TYPES.order) {
-                                titleText = t('nao:onus_performance:chart_total_orders');
-                                currencyText = "";
-                            }
-                            if (typeChart === CHART_TYPES.user) {
-                                titleText = t('nao:onus_performance:chart_users');
-                                currencyText = "";
-                            }
-                            if (typeChart === CHART_TYPES.fee) titleText = t('nao:onus_performance:chart_total_fee');
-                            return `${titleText}: ${formatNumber(item.raw / (referencePrice['VNDC'] ?? 1), 0)}${currencyText}`;
-                        },
-                        footer: (tooltipItems) => {
-                            if (typeChart === CHART_TYPES.user || typeChart === CHART_TYPES.order) return;
-                            const [item] = tooltipItems;
-                            return '$ ' + item.raw;
-                        }
-                    }
-                },
-            },
-            scales: {
-                x: {
-                    stacked: true,
-                    ticks: {
-                        color: colors.darkBlue5,
-                        callback: function (value, index, ticks) {
-                            return chartInterval === 'month' ? dataChartSource?.labels?.[index]?.slice(3, 10) : dataChartSource?.labels?.[index]?.slice(0, 5);
-                        },
-                        showLabelBackdrop: false,
-                        padding: 8,
-                    },
-                    grid: {
-                        display: false,
-                        drawBorder: false
-                        // borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    stacked: true,
-                    ticks: {
-                        color: colors.darkBlue5,
-                        callback: function (value, index, ticks) {
-                            return formatAbbreviateNumber(value, 3);
-                        },
-                        crossAlign: 'far',
-                        padding: 8,
-                    },
-                    grid: {
-                        drawTicks: false,
-                        borderDash: [2, 4],
-                        borderDashOffset: 2,
-                        drawBorder: !!isMobile
-                    }
-                }
-            }
-        };
-
-        return (
-            <div className="w-full !max-h-[396px] mt-6">
-                <NaoChartJS type="line" data={dataChartSource} options={options} height="450px" />
-            </div>
-        );
-    }, [dataChartSource]);
 
     useIsomorphicLayoutEffect(() => {
         const { performanceRange } = router.query;
@@ -244,10 +144,6 @@ const NaoPerformance = memo(({}) => {
             setFilter((old) => ({ ...old, day: performanceRange }));
         }
     }, [router.isReady]);
-
-    useEffect(() => {
-        getRef();
-    }, []);
 
     useEffect(() => {
         getData();
@@ -456,6 +352,110 @@ const NaoPerformance = memo(({}) => {
             updateDateRangeUrl(day);
         }
     };
+
+    const renderChart = useMemo(() => {
+        const options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            elements: {
+                line: {
+                    tension: 0.6
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                    position: 'bottom'
+                },
+                tooltip: {
+                    enabled: true,
+                    position: 'nearest',
+                    backgroundColor: isDark ? colors.dark[2] : colors.gray[12],
+                    padding: isMobile ? 8 : 12,
+                    caretSize: 0,
+                    titleMarginBottom: isMobile ? 8 : 12,
+                    titleFont: {
+                        size: isMobile ? 10 : 14,
+                        weight: 400
+                    },
+                    displayColors: false,
+                    bodyFont: {
+                        size: isMobile ? 12 : 16,
+                        weight: 600
+                    },
+                    footerAlign: 'right',
+                    footerFont: {
+                        size: isMobile ? 10 : 14,
+                        weight: 400
+                    },
+                    callbacks: {
+                        label: (item) => {
+                            let titleText = titleText = t('nao:onus_performance:chart_total_volume');
+                            let currencyText = " VNDC";
+                            if (filter.marginCurrency === 22) currencyText = " USDT";
+                            if (typeChart === CHART_TYPES.order) {
+                                titleText = t('nao:onus_performance:chart_total_orders');
+                                currencyText = "";
+                            }
+                            if (typeChart === CHART_TYPES.user) {
+                                titleText = t('nao:onus_performance:chart_users');
+                                currencyText = "";
+                            }
+                            if (typeChart === CHART_TYPES.fee) titleText = t('nao:onus_performance:chart_total_fee');
+                            return `${titleText}: ${formatNumber(item.raw)}${currencyText}`;
+                        },
+                        footer: (tooltipItems) => {
+                            if (typeChart === CHART_TYPES.user || typeChart === CHART_TYPES.order) return;
+                            const [item] = tooltipItems;
+                            return '$ ' + formatNumber(item.raw * (referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] || 1/23400));
+                        }
+                    }
+                },
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: {
+                        color: colors.darkBlue5,
+                        callback: function (value, index, ticks) {
+                            return chartInterval === 'month' ? dataChartSource?.labels?.[index]?.slice(3, 10) : dataChartSource?.labels?.[index]?.slice(0, 5);
+                        },
+                        showLabelBackdrop: false,
+                        padding: 8,
+                    },
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                        // borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    stacked: true,
+                    ticks: {
+                        color: colors.darkBlue5,
+                        callback: function (value, index, ticks) {
+                            return formatAbbreviateNumber(value, 3);
+                        },
+                        crossAlign: 'far',
+                        padding: 8,
+                    },
+                    grid: {
+                        drawTicks: false,
+                        borderDash: [2, 4],
+                        borderDashOffset: 2,
+                        drawBorder: !!isMobile
+                    }
+                }
+            }
+        };
+
+        return (
+            <div className="w-full !max-h-[396px] mt-6">
+                <NaoChartJS type="line" data={dataChartSource} options={options} height="450px" />
+            </div>
+        );
+    }, [dataChartSource]);
 
     return (
         <section id="nao_performance" className="pt-6 sm:pt-20 text-sm sm:text-base">
