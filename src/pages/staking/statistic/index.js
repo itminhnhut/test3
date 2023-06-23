@@ -9,8 +9,8 @@ const initState = {
     USDT: 22
 };
 
-const StaticsStaking = dynamic(() => import('components/staking/statistical', { ssr: false }));
-const HistoryStaking = dynamic(() => import('components/staking/statistical/History', { ssr: false }));
+const StaticsStaking = dynamic(() => import('components/staking/statistic', { ssr: false }));
+const HistoryStaking = dynamic(() => import('components/staking/statistic/History', { ssr: false }));
 
 const index = () => {
     const [assetID, setAssetID] = useState(initState.VNDC);
