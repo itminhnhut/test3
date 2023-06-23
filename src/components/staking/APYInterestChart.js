@@ -56,6 +56,18 @@ const TIMER = [
     { vi: '48 tháng', en: '48 months', key: 48 }
 ];
 
+const generateAnnotationPoint = (x) => ({
+    x,
+    y: Math.pow(x, 2),
+
+    marker: {
+        size: 5,
+        colors: colors.teal,
+        fillColor: colors.teal,
+        strokeWidth: 0
+    }
+});
+
 const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
@@ -218,19 +230,7 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                                 key={item.key}
                                 onClick={() => {
                                     setHoverData({ index: item.key - 1 });
-                                    setPoints([
-                                        {
-                                            x: item.key,
-                                            y: Math.pow(item.key, 2),
-
-                                            marker: {
-                                                size: 5,
-                                                colors: colors.teal,
-                                                fillColor: colors.teal,
-                                                strokeWidth: 0
-                                            }
-                                        }
-                                    ]);
+                                    setPoints([generateAnnotationPoint(item.key)]);
                                     const thisElement = document.getElementById('chip' + item.key);
                                     scrollHorizontal(thisElement, timerListRef.current);
                                 }}
