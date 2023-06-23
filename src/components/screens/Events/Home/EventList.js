@@ -63,7 +63,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                 {/* <Calendar direction="horizontal" months={2} className="single-select" /> */}
                 <div className="flex-1">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark hidden mb:block mb-2 text-sm" htmlFor="">
-                        {t('marketing_events:filter:from')}
+                        {t('marketing_events:filter:start_time')}
                     </label>
                     <DatePickerV2
                         initDate={start ? new Date(start) : undefined}
@@ -79,7 +79,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                                 {start ? (
                                     <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(start, 'dd/MM/yyyy')}</span>
                                 ) : (
-                                    t('marketing_events:filter:select_a_date')
+                                    t('marketing_events:filter:time_placeholder_desk')
                                 )}
                                 {start ? (
                                     <div
@@ -103,7 +103,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                 </div>
                 <div className="flex-1">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark hidden mb:block mb-2 text-sm" htmlFor="">
-                        {t('marketing_events:filter:to')}
+                        {t('marketing_events:filter:end_time')}
                     </label>
                     <DatePickerV2
                         isCalendar
@@ -121,7 +121,7 @@ const DateFilter = ({ timeFilter, onSetTime }) => {
                                 {end ? (
                                     <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(addDays(end, -1), 'dd/MM/yyyy')}</span>
                                 ) : (
-                                    t('marketing_events:filter:select_a_date')
+                                    t('marketing_events:filter:time_placeholder_desk')
                                 )}
                                 {end ? (
                                     <div
@@ -405,7 +405,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                             {start ? (
                                 <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(start, 'dd/MM/yyyy')}</span>
                             ) : (
-                                t('marketing_events:filter:select_a_date')
+                                t('marketing_events:filter:time_placeholder')
                             )}
                             {start ? (
                                 <div
@@ -445,7 +445,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                             {end ? (
                                 <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatTime(addDays(end, -1), 'dd/MM/yyyy')}</span>
                             ) : (
-                                t('marketing_events:filter:select_a_date')
+                                t('marketing_events:filter:time_placeholder')
                             )}
                             {end ? (
                                 <div
@@ -467,7 +467,7 @@ const DateFilterModal = ({ timeFilter, onSetTime, isVisible, onClose }) => {
                 />
             </div>
             <Button onClick={onClose} variants="primary" className="mt-8">
-                {t('common:confirm')}
+                {t('common:search')}
             </Button>
         </ModalV2>
     );

@@ -24,11 +24,14 @@
     "filter": {
         "from": "Từ ngày",
         "to": "Đến ngày",
+        "start_time": "Thời gian bắt đầu",
+        "end_time": "Thơi gian kết thúc",
         "search_placeholder": "Tìm kiếm sự kiện",
         "search_label": "Tên sự kiện",
         "date": "Tùy chỉnh",
         "customize": "Tuỳ chọn",
-        "select_a_date": "Chọn ngày"
+        "time_placeholder": "Chọn ngày",
+        "time_placeholder_desk": "Tuỳ chỉnh"
     },
     "by": "Bởi"
 }

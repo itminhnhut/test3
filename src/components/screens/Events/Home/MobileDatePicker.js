@@ -120,7 +120,7 @@ const MobileDatePicker = ({ initDate, onChange, months, wrapperClassname, text, 
                         />
                     </DatePickerWrapper>
                     <ButtonV2 onClick={onConfirm} className="mt-2 w-auto">
-                        {t('common:global_btn.apply')}
+                        {t('common:confirm')}
                     </ButtonV2>
                 </div>
             </ModalV2>
