@@ -16,5 +16,17 @@
         "total_interest": "Total interest",
         "total_balance": "Total balance"
     },
-    "faq": { "title": "FAQ" }
+    "faq": { "title": "FAQ" },
+    "statics": {
+        "history": {
+            "title": "Lịch sử nhận lãi",
+            "profit_received": "Lợi nhuận đã nhận",
+            "columns": {
+                "type": "Loại StableCoin",
+                "amount": "Số lượng",
+                "time": "Thời gian",
+                "status": "Trạng thái"
+            }
+        }
+    }
 }
