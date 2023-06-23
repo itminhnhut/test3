@@ -1,9 +1,12 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 
 import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
 import Chip from 'components/common/V2/Chip';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
+import FetchApi from 'utils/fetch-api';
+import { formatNumber, formatTime } from 'redux/actions/utils';
+import { API_HISTORY_STAKING_DAILY } from 'redux/actions/apis';
 
 import classNames from 'classnames';
 
@@ -30,50 +33,67 @@ const MILLISECOND = 1;
 const LIMIT = 10;
 
 const initState = {
-    range: 'all'
-};
-
-const TIME_FILTER = [
-    {
-        localized: 'common:all',
-        value: 'all'
-    },
-    {
-        localized: 'dw_partner:filter.a_week',
-        value: 'w',
-        format: 'dd/MM',
-        interval: '1d'
-    },
-    {
-        localized: 'dw_partner:filter.a_month',
-        value: 'm',
-        format: 'dd/MM',
-        interval: '1d'
-    }
-];
-const HistoryStaking = () => {
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation();
-
-    const [loading, setLoading] = useState(false);
-    const [page, setPage] = useState(1);
-    const [range, setRange] = useState(initState.range);
-    const [dataSource, setDataSource] = useState({
+    range: 'all',
+    loading: false,
+    page: 1,
+    dataSource: {
         results: [],
+        totalProfit: 0,
         hasNext: false,
         total: 0,
         go_next: true
-    });
-
-    const [filter, setFilter] = useState({
+    },
+    filter: {
         range: {
             startDate: null,
             endDate: null,
             key: 'selection'
         }
-    });
+    }
+};
+
+const HistoryStaking = ({ assetId }) => {
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+
+    const [loading, setLoading] = useState(initState.loading);
+    const [page, setPage] = useState(initState.page);
+    const [range, setRange] = useState(initState.range);
+    const [dataSource, setDataSource] = useState(initState.dataSource);
+    const [filter, setFilter] = useState(initState.filter);
+
+    useEffect(() => {
+        handleHistoryAPI();
+        console.log('handleHistory');
+    }, [assetId]);
+
+    const handleHistoryAPI = async () => {
+        try {
+            setLoading(true);
+            const { data, message } = await FetchApi({
+                url: API_HISTORY_STAKING_DAILY,
+                options: {
+                    method: 'GET'
+                },
+                params: {
+                    assetId,
+                    ...(filter.range.startDate && { from: filter.range.startDate }),
+                    ...(filter.range.endDate && { to: filter.range.endDate })
+                }
+            });
+            if (data) {
+                setDataSource({ ...data });
+            } else {
+                console.error(message, { cause: 'Error API Staking History' });
+            }
+        } catch (error) {
+            console.error(error, { cause: 'Error API Staking History' });
+        } finally {
+            setLoading(initState.loading);
+        }
+    };
 
     const handleChangeRanger = (value) => {
         setRange(value);
@@ -172,11 +192,11 @@ const HistoryStaking = () => {
                     <section className="w-3/5 flex flex-row items-center gap-x-2 justify-end">
                         {renderDateOptions}
                         <DatePickerV2
-                            initDate={filter.range}
-                            onChange={handleChangeDate}
                             month={2}
                             hasShadow
                             position="right"
+                            initDate={filter.range}
+                            onChange={handleChangeDate}
                             text={
                                 <Chip
                                     onClick={() => handleChangeRanger('all')}

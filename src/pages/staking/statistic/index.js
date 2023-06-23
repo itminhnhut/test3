@@ -22,7 +22,7 @@ const index = () => {
             <main className="bg-white dark:bg-shadow">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl mt-[85px] mb-[120px] mx-auto px-4">
                     <StaticsStaking assetId={assetId} onToggle={toggleAsset} />
-                    <HistoryStaking />
+                    <HistoryStaking assetId={assetId} />
                 </div>
             </main>
         </MaldivesLayout>
