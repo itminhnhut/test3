@@ -8,7 +8,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 
 import FetchApi from 'utils/fetch-api';
-import { API_HISTORY_STAKING_DAILY, API_GET_COMMISSION_HISTORY_PARTNER } from 'redux/actions/apis';
+import { API_HISTORY_STAKING_DAILY_OVERVIEW, API_GET_COMMISSION_HISTORY_PARTNER } from 'redux/actions/apis';
 
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
@@ -52,9 +52,11 @@ const initState = {
     range: 'all',
     loading: false,
     page: 1,
-    dataSource: {
+    dataOverview: {
+        totalProfit: { value: 0 }
+    },
+    dataHistory: {
         result: [],
-        totalProfit: { value: 0 },
         hasNext: false,
         go_next: true
     },
@@ -84,8 +86,8 @@ const HistoryStaking = ({ assetId }) => {
     const [loading, setLoading] = useState(initState.loading);
     const [page, setPage] = useState(initState.page);
     const [range, setRange] = useState(initState.range);
-    const [dataSource, setDataSource] = useState(initState.dataSource);
-    const [dataSource2, setDataSource2] = useState(initState.dataSource);
+    const [dataOverview, setDataOverview] = useState(initState.dataOverview);
+    const [dataHistory, setDataHistory] = useState(initState.dataHistory);
 
     const [filter, setFilter] = useState(initState.filter);
 
@@ -97,15 +99,12 @@ const HistoryStaking = ({ assetId }) => {
             handleResetByAssetId();
         }
         handleOverviewAPI();
+        handleHistoryAPI();
     }, [assetId, range, filter?.range?.startDate, filter?.range?.endDate]);
 
     useEffect(() => {
-        // reset data change assetId (VNDC, USDT)
-        if (refAsset.current !== assetId) {
-            handleResetByAssetId();
-        }
         handleHistoryAPI();
-    }, [assetId, range, page, filter?.range?.startDate, filter?.range?.endDate]);
+    }, [page]);
 
     // handle reset data
     const handleResetByAssetId = () => {
@@ -118,7 +117,7 @@ const HistoryStaking = ({ assetId }) => {
     const handleOverviewAPI = async () => {
         try {
             const { data, message } = await FetchApi({
-                url: API_HISTORY_STAKING_DAILY,
+                url: API_HISTORY_STAKING_DAILY_OVERVIEW,
                 options: {
                     method: 'GET'
                 },
@@ -129,12 +128,12 @@ const HistoryStaking = ({ assetId }) => {
                 }
             });
             if (data) {
-                setDataSource({ ...data });
+                setDataOverview({ ...data });
             } else {
-                console.error(message, { cause: 'Error API Staking History' });
+                console.error(message, { cause: 'Error API Staking History Overview' });
             }
         } catch (error) {
-            console.error(error, { cause: 'Error API Staking History' });
+            console.error(error, { cause: 'Error API Staking History Overview' });
         }
     };
 
@@ -156,20 +155,20 @@ const HistoryStaking = ({ assetId }) => {
                 }
             });
             if (data) {
-                setDataSource2({ ...data });
+                setDataHistory({ ...data });
             } else {
-                console.error(message, { cause: 'Error API Staking History' });
+                console.error(message, { cause: 'Error API Staking History Transaction' });
             }
         } catch (error) {
-            console.error(error, { cause: 'Error API Staking History' });
+            console.error(error, { cause: 'Error API Staking History Transaction' });
         } finally {
             setLoading(initState.loading);
         }
     };
 
     const totalProfit = useMemo(() => {
-        return `${formatNumber(dataSource.totalProfit?.value, asset?.assetDigit)} ${asset?.assetCode}`;
-    }, [assetId, dataSource.totalProfit?.value]);
+        return `${formatNumber(dataOverview.totalProfit?.value, asset?.assetDigit)} ${asset?.assetCode}`;
+    }, [assetId, dataOverview.totalProfit?.value]);
 
     const handleChangeRanger = (item) => {
         setRange(item.value);
@@ -253,11 +252,11 @@ const HistoryStaking = ({ assetId }) => {
                 columns={columns}
                 scroll={{ x: true }}
                 className="border-t border-divider dark:border-divider-dark"
-                data={dataSource2?.result || []}
+                data={dataHistory?.result || []}
                 rowKey={(item) => `${item?.key}`}
                 pagingPrevNext={{
                     page: page - 1,
-                    hasNext: dataSource2?.hasNext,
+                    hasNext: dataHistory?.hasNext,
                     onChangeNextPrev: (delta) => {
                         setPage(page + delta);
                     },
@@ -265,7 +264,7 @@ const HistoryStaking = ({ assetId }) => {
                 }}
             />
         );
-    }, [dataSource2?.result, loading]);
+    }, [dataHistory?.result, loading]);
 
     return (
         <section>

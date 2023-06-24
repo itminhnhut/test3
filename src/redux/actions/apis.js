@@ -350,4 +350,4 @@ export const API_INTERNAL_TRANSFER = API_V3_PREFIX + 'spot/internal-transfer';
 export const API_INTERNAL_TRANSFER_HISTORY = API_V3_PREFIX + 'spot/internal-transfer-history';
 
 // Staking statics
-export const API_HISTORY_STAKING_DAILY = API_V3_PREFIX + 'wallet/history/staking-daily/overview';
+export const API_HISTORY_STAKING_DAILY_OVERVIEW = API_V3_PREFIX + 'wallet/history/staking-daily/overview';
