@@ -664,10 +664,10 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         ) : (
                             <>
                                 <div className="text-xl sm:text-2xl font-semibold flex items-center space-x-2">
-                                    <span className="leading-8">{formatNumber(data.totalStakedVNDC, 3)} VNDC</span>
+                                    <span className="leading-8">{formatNumber(data.totalStakedVNDC, 0)} VNDC</span>
                                 </div>
                                 <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2">
-                                    ${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)}
+                                    ${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 4)}
                                 </span>
                             </>
                         )}
