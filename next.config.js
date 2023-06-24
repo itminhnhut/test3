@@ -92,6 +92,7 @@ const moduleExports = withPlugins([[withBundleAnalyzer], [withFonts]], {
             's3-ap-southeast-1.amazonaws.com',
             'thao68.com',
             'lh3.googleusercontent.com',
+            'blog.nami.exchange',
         ],
     },
     distDir: process.env.BUILD_DIR || 'build',
