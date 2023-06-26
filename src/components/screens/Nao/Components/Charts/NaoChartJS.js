@@ -10,13 +10,16 @@ import {
     Tooltip,
     Filler,
     // @ts-ignore
-    Legend
+    Legend,
+    TimeScale
 } from 'chart.js';
 import { Line, Bar, Doughnut, Bubble } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
+import zoomPlugin from 'chartjs-plugin-zoom';
 
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Filler, Legend);
+Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Filler, Legend, zoomPlugin, TimeScale);
 
-import React, { memo } from 'react';
+import React, { forwardRef, memo } from 'react';
 
 // @ts-ignore
 const NaoChartJS = memo(
@@ -29,21 +32,22 @@ const NaoChartJS = memo(
         options = {
             responsive: true,
             maintainAspectRatio: true
-        }
+        },
+        chartRef
     }) => {
-        let chart = <Line options={options} data={data} width={width} height={height} />;
+        let chart = <Line options={options} data={data} width={width} height={height} ref={(current) => chartRef && (chartRef.current = current)} />;
         switch (type) {
             case 'area':
-                chart = <Line options={options} data={data} width={width} height={height} />;
+                chart = <Line options={options} data={data} width={width} height={height} ref={(current) => chartRef && (chartRef.current = current)} />;
                 break;
             case 'bar':
-                chart = <Bar options={options} data={data} width={width} height={height} plugins={plugins} redraw={true} />;
+                chart = <Bar options={options} data={data} width={width} height={height} plugins={plugins} redraw={true} ref={(current) => chartRef && (chartRef.current = current)} />;
                 break;
             case 'doughnut':
-                chart = <Doughnut options={options} data={data} width={width} height={height} plugins={plugins} redraw={true} />;
+                chart = <Doughnut options={options} data={data} width={width} height={height} plugins={plugins} redraw={true} ref={(current) => chartRef && (chartRef.current = current)} />;
                 break;
             case 'bubble':
-                chart = <Bubble options={options} data={data} width={width} height={height} />;
+                chart = <Bubble options={options} data={data} width={width} height={height} ref={(current) => chartRef && (chartRef.current = current)} />;
                 break;
         }
 

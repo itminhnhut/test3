@@ -14,13 +14,23 @@ import { useRouter } from 'next/router';
 import useWindowSize from 'hooks/useWindowSize';
 import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
 import CheckCircle from 'components/svg/CheckCircle';
-import NaoChartJS from '../Components/Charts/NaoChartJS';
+// import NaoChartJS from '../Components/Charts/NaoChartJS';
 import { Spinner } from 'components/common/Icons';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { WIDTH_MD } from 'components/screens/Wallet';
 import RangePopover from '../Components/RangePopover';
 import { formatAbbreviateNumber } from 'redux/actions/utils';
 import { useIsomorphicLayoutEffect } from 'react-use';
+import dynamic from 'next/dynamic';
+
+const NaoChartJS = dynamic(() => import('../Components/Charts/NaoChartJS'), {
+    ssr: false,
+    loading: () => (
+        <div className="flex items-center justify-center w-full min-h-[300px] mt-6">
+            <Spinner size={60} className="text-teal" />
+        </div>
+    )
+});
 
 export const days = [
     {
@@ -95,6 +105,7 @@ const CHART_TYPES = {
     fee: 'fee'
 };
 
+const isValidRange = (range) => range && days.some(({ value }) => value === range);
 const NaoPerformance = memo(({}) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -109,8 +120,10 @@ const NaoPerformance = memo(({}) => {
     const [loading, setLoading] = useState(false);
     const [chartLoading, setChartLoading] = useState(false);
     const [chartInterval, setChartInterval] = useState('day');
+    const { performanceRange } = router.query;
+    const initRange = isValidRange(performanceRange) ? performanceRange : 'd';
     const [filter, setFilter] = useState({
-        day: 'd',
+        day: initRange,
         marginCurrency: WalletCurrency.VNDC
     });
     const [range, setRange] = useState({
@@ -332,11 +345,12 @@ const NaoPerformance = memo(({}) => {
     };
 
     const updateDateRangeUrl = (dateValue) => {
-        router.push(
+        router.replace(
             {
                 pathname: router.pathname,
                 query: {
-                    performanceRange: dateValue
+                    ...router.query,
+                    performanceRange: dateValue,
                 }
             },
             undefined,
@@ -367,6 +381,22 @@ const NaoPerformance = memo(({}) => {
                     display: false,
                     position: 'bottom'
                 },
+                // zoom: {
+                //     pan: {
+                //         enabled: true,
+                //         mode: 'xy',
+                //         speed: 0.5
+                //     },
+                //     zoom: {
+                //         wheel: {
+                //             enabled: true
+                //         },
+                //         pinch: {
+                //             enabled: true
+                //         },
+                //         mode: 'y'
+                //     }
+                // },
                 tooltip: {
                     enabled: true,
                     position: 'nearest',
@@ -390,16 +420,16 @@ const NaoPerformance = memo(({}) => {
                     },
                     callbacks: {
                         label: (item) => {
-                            let titleText = titleText = t('nao:onus_performance:chart_total_volume');
-                            let currencyText = " VNDC";
-                            if (filter.marginCurrency === 22) currencyText = " USDT";
+                            let titleText = (titleText = t('nao:onus_performance:chart_total_volume'));
+                            let currencyText = ' VNDC';
+                            if (filter.marginCurrency === 22) currencyText = ' USDT';
                             if (typeChart === CHART_TYPES.order) {
                                 titleText = t('nao:onus_performance:chart_total_orders');
-                                currencyText = "";
+                                currencyText = '';
                             }
                             if (typeChart === CHART_TYPES.user) {
                                 titleText = t('nao:onus_performance:chart_users');
-                                currencyText = "";
+                                currencyText = '';
                             }
                             if (typeChart === CHART_TYPES.fee) titleText = t('nao:onus_performance:chart_total_fee');
                             return `${titleText}: ${formatNumber(item.raw)}${currencyText}`;
@@ -407,10 +437,10 @@ const NaoPerformance = memo(({}) => {
                         footer: (tooltipItems) => {
                             if (typeChart === CHART_TYPES.user || typeChart === CHART_TYPES.order) return;
                             const [item] = tooltipItems;
-                            return '$ ' + formatNumber(item.raw * (referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] || 1/23400));
+                            return '$ ' + formatNumber(item.raw * (referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] || 1 / 23400));
                         }
                     }
-                },
+                }
             },
             scales: {
                 x: {
@@ -421,7 +451,7 @@ const NaoPerformance = memo(({}) => {
                             return chartInterval === 'month' ? dataChartSource?.labels?.[index]?.slice(3, 10) : dataChartSource?.labels?.[index]?.slice(0, 5);
                         },
                         showLabelBackdrop: false,
-                        padding: 8,
+                        padding: 8
                     },
                     grid: {
                         display: false,
@@ -438,7 +468,7 @@ const NaoPerformance = memo(({}) => {
                             return formatAbbreviateNumber(value, 3);
                         },
                         crossAlign: 'far',
-                        padding: 8,
+                        padding: 8
                     },
                     grid: {
                         drawTicks: false,
@@ -479,7 +509,7 @@ const NaoPerformance = memo(({}) => {
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-2',
+                                'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
                                 { '!border-teal !bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
@@ -489,8 +519,8 @@ const NaoPerformance = memo(({}) => {
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-2',
-                                { '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.USDT }
+                                'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
+                                { '!border-teal !bg-teal/10 bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.USDT }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
                         >
