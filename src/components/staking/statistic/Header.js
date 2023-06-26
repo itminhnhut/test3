@@ -6,7 +6,7 @@ import React from 'react';
 const Header = () => {
     const { t } = useTranslation();
     return (
-        <section className="flex items-center justify-between mb-[30px]">
+        <section className="flex items-center justify-between mb-6">
             <h1 className="text-4xl font-semibold">{t('staking:statics.profit_stats')}</h1>
             <Link href={'/staking'} passHref>
                 <a className="block">
