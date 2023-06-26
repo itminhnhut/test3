@@ -183,6 +183,7 @@ const HistoryStaking = ({ assetId }) => {
     const handleChangeRanger = (item) => {
         setRange(item.value);
         setFilter((prev) => ({ ...prev, range: item.range }));
+        setPage(initState.page);
     };
 
     const handleChangeDate = (e) => {
@@ -198,6 +199,7 @@ const HistoryStaking = ({ assetId }) => {
         }));
         if (startDate && endDate) {
             setRange(RANGE_CUSTOM);
+            setPage(initState.page);
         }
     };
 
