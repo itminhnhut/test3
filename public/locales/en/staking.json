@@ -20,6 +20,7 @@
     "statics": {
         "profit_stats": "Profit Statistics",
         "program_infor": "Program information",
+        "not_auth":"<0>Register</0> now to start receive Daily Staking interest or <1>login</1> to check your statistics",
         "interest": {
             "balance": "Total balance",
             "balance_description": "Total available balance of VNDC or USDT on your Spot and Futures wallets",
