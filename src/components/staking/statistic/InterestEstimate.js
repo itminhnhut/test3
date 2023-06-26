@@ -16,7 +16,6 @@ import Card from './Card';
 
 const InterestEstimate = ({ assetId }) => {
     const { t } = useTranslation();
-    const router = useRouter();
 
     const [isHideBalance, setIsHideBalance] = useState(false);
 
@@ -29,8 +28,6 @@ const InterestEstimate = ({ assetId }) => {
     const asset = useMemo(() => {
         return assetConfigs.find((asset) => asset.id === assetId);
     }, [assetConfigs, assetId]);
-
-    const auth = useSelector((state) => state.auth?.user);
 
     const userTotalBalance =
         spotBalance?.[asset?.id]?.value -
@@ -67,26 +64,14 @@ const InterestEstimate = ({ assetId }) => {
                         </div>
                     </div>
                     <div className="w-full md:w-auto">
-                        {!auth ? (
-                            <a
-                                href={getLoginUrl('sso', 'login', {
-                                    redirect: `${process.env.NEXT_PUBLIC_API_URL}${router.locale === 'en' ? '' : `/${router.locale}`}${
-                                        PATHS.WITHDRAW_DEPOSIT.PARTNER
-                                    }?side=BUY&assetId=${assetId}`
-                                })}
-                            >
-                                <ButtonV2 className="md:w-[120px]">{t('staking:statics.interest.deposit_now')}</ButtonV2>
-                            </a>
-                        ) : (
-                            <Link className="w-full" href={`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=BUY&assetId=${assetId}`}>
-                                <ButtonV2 className="md:w-[120px]">{t('staking:statics.interest.deposit_now')}</ButtonV2>
-                            </Link>
-                        )}
+                        <Link className="w-full" href={`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=BUY&assetId=${assetId}`}>
+                            <ButtonV2 className="md:w-[120px]">{t('staking:statics.interest.deposit_now')}</ButtonV2>
+                        </Link>
                     </div>
                 </div>
             </Card>
         ),
-        [auth, isHideBalance, asset, userTotalBalance]
+        [isHideBalance, asset, userTotalBalance]
     );
 
     const renderInterestCard = useCallback(
