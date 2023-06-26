@@ -59,12 +59,12 @@ const InterestEstimate = ({ assetId }) => {
                                 {isHideBalance ? SECRET_STRING : formatNumber(userTotalBalance, asset?.assetDigit)} {asset?.assetCode}
                             </div>
                             <div>
-                                {t('staking:statics.interest.apy_interest')} <span className="text-teal font-semibold">{APY_PERCENT[asset?.assetCode]}%</span>
+                                {t('staking:statics.interest.apy_interest')} <span className="text-green-3 dark:text-green-2 font-semibold">{APY_PERCENT[asset?.assetCode]}%</span>
                             </div>
                         </div>
                     </div>
                     <div className="w-full md:w-auto">
-                        <Link className="w-full" href={`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=BUY&assetId=${assetId}`}>
+                        <Link className="w-full" href={`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=BUY&assetId=${asset?.assetCode || 'VNDC'}`}>
                             <ButtonV2 className="md:w-[120px]">{t('staking:statics.interest.deposit_now')}</ButtonV2>
                         </Link>
                     </div>
@@ -79,10 +79,10 @@ const InterestEstimate = ({ assetId }) => {
             const allowAmount = userTotalBalance > STAKING_RANGE[asset?.id]?.max ? STAKING_RANGE[asset?.id]?.max : userTotalBalance;
             const dayInterestPercent = getDayInterestPercent(APY_PERCENT[asset?.assetCode]);
             return (
-                <Card>
+                <Card className="md:!px-8 !py-6">
                     <div className="mb-4 text-txtSecondary dark:text-txtSecondary-dark">
                         {title}
-                        <span className="text-teal font-semibold ml-2">
+                        <span className="text-green-3 dark:text-green-2 font-semibold ml-2">
                             {type === 'dayInterestPercent' ? dayInterestPercent : type === 'yearInterestPercent' ? APY_PERCENT[asset?.assetCode] : ''}%
                         </span>
                     </div>
