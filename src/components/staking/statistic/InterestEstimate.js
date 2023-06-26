@@ -22,6 +22,8 @@ const InterestEstimate = ({ assetId }) => {
 
     const spotBalance = useSelector((state) => state.wallet?.SPOT) || null;
     const futuresBalance = useSelector((state) => state.wallet?.FUTURES) || null;
+    const naoFuturesBalance = useSelector((state) => state.wallet?.NAO_FUTURES) || null;
+
     const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
 
     const asset = useMemo(() => {
@@ -33,8 +35,8 @@ const InterestEstimate = ({ assetId }) => {
     const userTotalBalance =
         spotBalance?.[asset?.id]?.value -
         spotBalance?.[asset?.id]?.locked_value +
-        (futuresBalance?.[asset?.id]?.value - futuresBalance?.[asset?.id]?.locked_value);
-
+        (futuresBalance?.[asset?.id]?.value - futuresBalance?.[asset?.id]?.locked_value) +
+        (naoFuturesBalance?.[asset?.id]?.value - naoFuturesBalance?.[asset?.id]?.locked_value);
     const renderAvailableBalance = useCallback(
         () => (
             <Card>

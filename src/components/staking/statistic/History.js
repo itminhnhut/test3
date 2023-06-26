@@ -99,12 +99,15 @@ const HistoryStaking = ({ assetId }) => {
             handleResetByAssetId();
         }
         handleOverviewAPI();
-        handleHistoryAPI();
     }, [assetId, range, filter?.range?.startDate, filter?.range?.endDate]);
 
     useEffect(() => {
+        // reset data change assetId (VNDC, USDT)
+        if (refAsset.current !== assetId) {
+            handleResetByAssetId();
+        }
         handleHistoryAPI();
-    }, [page]);
+    }, [assetId, page, range, filter?.range?.startDate, filter?.range?.endDate]);
 
     // handle reset data
     const handleResetByAssetId = () => {
