@@ -446,8 +446,9 @@ const FriendList = ({ language, t, id }) => {
                         <TableFilter config={filters} filter={filter} setFilter={setFilter} resetParentCode={handleResetParentCode} />
                     </div>
                     <ButtonV2
-                        className="hidden w-[122px] whitespace-nowrap hover:bg-gray-12 bg-dark-12 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7
-                        px-4 rounded-md px-auto py-auto font-semibold h-12"
+                        className="hidden w-[122px] whitespace-nowrap rounded-md px-auto py-auto font-semibold h-12"
+
+                        variants='secondary'
                     >
                         <ExportIcon />
                         <span className="ml-2">{t('reference:friend_list.filter.export')}</span>

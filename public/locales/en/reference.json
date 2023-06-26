@@ -131,7 +131,7 @@
         "readmore": "Read more",
         "referral_policy": "Referral Policy",
         "referral_code": "Referral Code",
-        "rate": "You get: {{value1}}% - Friends get: {{value2}}%",
+        "rate": "You get: {{value1}}% <br/> Friends get: {{value2}}%",
         "ref_link": "Referral Link",
         "invite_friends": "Invite Friends",
         "ranking": "RANKING",

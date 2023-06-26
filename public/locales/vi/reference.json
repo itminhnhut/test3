@@ -126,7 +126,7 @@
         "readmore": "Xem thêm tại",
         "referral_policy": "Cơ chế giới thiệu",
         "referral_code": "Mã giới thiệu",
-        "rate": "Bạn nhận: {{value1}}% - Bạn bè nhận: {{value2}}%",
+        "rate": "Bạn nhận: {{value1}}% <br/> Bạn bè nhận: {{value2}}%",
         "ref_link": "Liên kết giới thiệu",
         "invite_friends": "Mời bạn bè",
         "ranking": "Cấp",
