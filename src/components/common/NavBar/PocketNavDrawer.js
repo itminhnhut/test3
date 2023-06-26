@@ -32,7 +32,9 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
     const router = useRouter();
 
     const { user: auth } = useSelector((state) => state.auth) || null;
-    const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
+    // const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
+    const isNotVerified = [KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(auth?.kyc_status);
+    const isLocking = auth?.kyc_status === KYC_STATUS.LOCKING;
     const isVerified = auth?.kyc_status >= KYC_STATUS.APPROVED;
     const isPartner = auth?.partner_type === 2;
 
@@ -229,8 +231,8 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     alt="avatar_user"
                                 />
 
-                                <div className="ml-3">
-                                    <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2">
+                                <div className="ml-3 mr-8">
+                                    <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2 whitespace-pre-wrap break-words">
                                         {auth?.username || auth?.name || auth?.email}
                                     </div>
 
@@ -252,10 +254,11 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     </div>
                                 </div>
                                 {!isNotVerified ? (
-                                    <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
-                                        <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}>
-                                            {isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
-                                        </div>
+                                    <TagV2 type={isLocking ? 'failed' : isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
+                                        {/* <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}> */}
+                                        {/* {isVerified ? t('navbar:verified') : t('navbar:pending_approval')} */}
+                                        {isLocking ? t('navbar:temp_locking') : isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
+                                        {/* </div> */}
                                     </TagV2>
                                 ) : (
                                     <ButtonV2 onClick={() => window.open(PATHS.ACCOUNT.IDENTIFICATION)} className="max-w-[150px] !text-sm">
@@ -348,7 +351,8 @@ const getNavIcon = {
     noti: <Image src={'/images/icon/nav/ic_noti.png'} width="24" height="24" />,
     pool: <Image src={'/images/icon/nav/ic_pool.png'} width="24" height="24" />,
     stake_nao: <Image src={'/images/icon/nav/ic_stake_nao.png'} width="24" height="24" />,
-    race_top: <Image src={'/images/icon/nav/ic_race_top.png'} width="24" height="24" />
+    race_top: <Image src={'/images/icon/nav/ic_race_top.png'} width="24" height="24" />,
+    staking: <Image src={'/images/icon/nav/ic_staking.png'} width="24" height="24" />
 };
 
 const getIcon = (localized) => {

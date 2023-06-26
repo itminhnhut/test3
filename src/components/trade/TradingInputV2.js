@@ -59,9 +59,7 @@ const TradingInputV2 = ({
     };
 
     const invalid = validator && Object.keys(validator)?.length && !validator?.isValid;
-    console.log('___________invalid', invalid);
     const isError = errorEmpty ? !value || invalid : value > 0 && invalid;
-    console.log('_______________-isError', isError, errorEmpty, value);
     return (
         <div className="flex flex-col w-full relative">
             {/* Label */}

@@ -89,7 +89,8 @@ export const getServerSideProps = async (context) => {
                 'transaction-history',
                 'futures',
                 'table',
-                '404'
+                '404',
+                'portfolio'
             ])),
             id
         }

@@ -259,24 +259,22 @@
             "ranking": "Bảng xếp hạng",
             "number_of_friends": "Số bạn bè",
             "tooltip_friends": "Bạn bè cần hoàn tất KYC trong thời gian diễn ra chương trình, đọc thêm tại “Thể lệ chi tiết”"
-        }
+        },
+        "personal_achievements_note": "Lưu ý: Thành tích tháng được tính từ khi giải đấu bắt đầu, thành tích tuần được tính từ 00:00 thứ 2 hàng tuần (UTC+7)"
     },
     "year_summary": {
         "title": "Tổng kết NAO Futures {{version}}",
         "content": "Dự án Nami Frame Futures xin công bố số liệu tổng hợp cho phiên bản NAO Futures {{version}}, cùng với đó là danh sách những nhà giao dịch ấn tượng.",
         "see_detailed_rules": "Xem thông tin chi tiết",
-
         "nao_futures_performance": "Thống kê về NAO Futures {{version}}",
         "year": "Năm {{year}}",
         "month": "Tháng {{month}} {{year}}",
         "volume_trades": "Khối lượng giao dịch",
         "order_number": "Số lệnh giao dịch",
         "user_count": "Số người giao dịch",
-
         "pnl_ranking": "BXH lợi nhuận",
         "volume_ranking": "BXH khối lượng",
         "total_trade_ranking": "BXH số lượng vị thế ",
-
         "volume": "Khối lượng",
         "total_trades": "Số vị thế",
         "orders": "lệnh",
@@ -294,5 +292,7 @@
     },
     "ended": "Đã kết thúc",
     "going_on": "Đang diễn ra",
-    "coming_soon_2": "Sắp diễn ra"
+    "coming_soon_2": "Sắp diễn ra",
+    "this_week": "Tuần này",
+    "this_month": "Tháng này"
 }

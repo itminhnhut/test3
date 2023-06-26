@@ -17,7 +17,7 @@
       "prize_2": "GIẢI NHÌ: 10.000.000 VNDC",
       "prize_3": "GIẢI BA: 5.000.000 VNDC",
       "prize_4": "GIẢI PHỤ: 10.000.000 VNDC",
-      "prize_4_desc": "Dành cho TOP 01 người chơi có ATS trading volume lớn nhất"
+      "prize_4_desc": "Dành cho TOP 01 người chơi có NAMI trading volume lớn nhất"
     },
     "section_3": {
       "title": "Hướng dẫn tham gia cuộc thi",
@@ -33,7 +33,7 @@
       "rank": "Xếp hạng",
       "username": "Tên người dùng",
       "volume": "Tổng khối lượng giao dịch",
-      "volume_ats": "Khối lượng giao dịch ATS",
+      "volume_NAMI": "Khối lượng giao dịch NAMI",
       "change_rank": "Thay đổi thứ hạng"
     },
     "section_5": {
