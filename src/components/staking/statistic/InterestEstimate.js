@@ -6,12 +6,11 @@ import { useSelector } from 'react-redux';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { PARTNER_WD_TABS, PATHS } from 'constants/paths';
+import { PATHS } from 'constants/paths';
 import { SECRET_STRING } from 'utils';
 import styled from 'styled-components';
 import { APY_PERCENT, STAKING_RANGE } from 'constants/staking';
 import { getApyByDay } from '../APYInterestChart';
-import { useTranslation } from 'next-i18next';
 import Tooltip from 'components/common/Tooltip';
 
 const InterestEstimate = ({ assetId, t }) => {
@@ -89,8 +88,8 @@ const InterestEstimate = ({ assetId, t }) => {
             return (
                 <Card>
                     <div className="mb-4 text-txtSecondary dark:text-txtSecondary-dark">
-                        {title}{' '}
-                        <span className="text-teal font-semibold">
+                        {title}
+                        <span className="text-teal font-semibold ml-2">
                             {type === 'dayInterestPercent' ? dayInterestPercent : type === 'yearInterestPercent' ? APY_PERCENT[asset?.assetCode] : ''}%
                         </span>
                     </div>
@@ -105,8 +104,8 @@ const InterestEstimate = ({ assetId, t }) => {
                                       percentPerDay: dayInterestPercent
                                   })?.interestAmount,
                                   asset?.assetDigit
-                              )}{' '}
-                        {asset?.assetCode}
+                              )}
+                        <span className="ml-1">{asset?.assetCode}</span>
                     </div>
                 </Card>
             );
