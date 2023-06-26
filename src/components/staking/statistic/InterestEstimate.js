@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, memo, useMemo, useState } from 'react';
 import { HideIcon, SeeIcon } from 'components/svg/SvgIcon';
 import Image from 'next/image';
 import { formatNumber, getDayInterestPercent, getLoginUrl, getS3Url } from 'redux/actions/utils';
@@ -12,8 +12,10 @@ import styled from 'styled-components';
 import { APY_PERCENT, STAKING_RANGE } from 'constants/staking';
 import { getApyByDay } from '../APYInterestChart';
 import Tooltip from 'components/common/Tooltip';
+import Card from './Card';
 
-const InterestEstimate = ({ assetId, t }) => {
+const InterestEstimate = ({ assetId }) => {
+    const { t } = useTranslation();
     const router = useRouter();
     const [isHideBalance, setIsHideBalance] = useState(false);
     const spotBalance = useSelector((state) => state.wallet?.SPOT) || null;
@@ -133,8 +135,4 @@ const InterestEstimate = ({ assetId, t }) => {
     );
 };
 
-export default InterestEstimate;
-
-export const Card = styled.div.attrs({
-    className: 'rounded-xl p-6 md:p-8 bg-gray-12 dark:bg-bgContainer-dark'
-})``;
+export default memo(InterestEstimate);
