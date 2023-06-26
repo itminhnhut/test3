@@ -7,8 +7,8 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
+import { useTranslation } from 'next-i18next';
 import { SECRET_STRING } from 'utils';
-import styled from 'styled-components';
 import { APY_PERCENT, STAKING_RANGE } from 'constants/staking';
 import { getApyByDay } from '../APYInterestChart';
 import Tooltip from 'components/common/Tooltip';
@@ -17,13 +17,17 @@ import Card from './Card';
 const InterestEstimate = ({ assetId }) => {
     const { t } = useTranslation();
     const router = useRouter();
+
     const [isHideBalance, setIsHideBalance] = useState(false);
+
     const spotBalance = useSelector((state) => state.wallet?.SPOT) || null;
     const futuresBalance = useSelector((state) => state.wallet?.FUTURES) || null;
     const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
+
     const asset = useMemo(() => {
         return assetConfigs.find((asset) => asset.id === assetId);
     }, [assetConfigs, assetId]);
+
     const auth = useSelector((state) => state.auth?.user);
 
     const userTotalBalance =
