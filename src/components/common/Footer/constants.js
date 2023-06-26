@@ -7,7 +7,7 @@ export const SOCIALS_HREF = [
     {
         key: 1,
         name: 'telegram',
-        href: 'https://t.me/namitrade'
+        href: 'https://t.me/NamiGlobal'
     },
     {
         key: 2,
@@ -17,12 +17,12 @@ export const SOCIALS_HREF = [
     {
         key: 3,
         name: 'twitter',
-        href: 'https://twitter.com/NamiTrade'
+        href: 'https://twitter.com/NamiExchange'
     },
     {
         key: 5,
         name: 'coingecko',
-        href: 'https://www.coingecko.com'
+        href: 'https://www.coingecko.com/en/exchanges/nami_exchange'
     },
     
     {
@@ -35,8 +35,8 @@ export const SOCIALS_HREF = [
     //     name: 'medium',
     //     href: '#'
     // },
-   
-    
+
+
 ];
 
 
