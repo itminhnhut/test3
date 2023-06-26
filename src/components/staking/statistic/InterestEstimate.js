@@ -13,8 +13,10 @@ import { APY_PERCENT, STAKING_RANGE } from 'constants/staking';
 import { getApyByDay } from '../APYInterestChart';
 import { useTranslation } from 'next-i18next';
 import Tooltip from 'components/common/Tooltip';
+import Card from './Card';
 
-const InterestEstimate = ({ assetId, t }) => {
+const InterestEstimate = ({ assetId }) => {
+    const { t } = useTranslation();
     const router = useRouter();
     const [isHideBalance, setIsHideBalance] = useState(false);
     const spotBalance = useSelector((state) => state.wallet?.SPOT) || null;
@@ -135,7 +137,3 @@ const InterestEstimate = ({ assetId, t }) => {
 };
 
 export default InterestEstimate;
-
-export const Card = styled.div.attrs({
-    className: 'rounded-xl p-6 md:p-8 bg-gray-12 dark:bg-bgContainer-dark'
-})``;
