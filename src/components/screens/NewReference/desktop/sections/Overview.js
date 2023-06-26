@@ -174,7 +174,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
 
         const isEligible = (currentVolumeFutures >= maintainVolumeFutures) || (currentVolumeSpot >= maintainVolumeSpot)
 
-        const maintainRate = (targetVolumeSpot / maintainVolumeSpot) * 100
+        const maintainRate = (maintainVolumeSpot / targetVolumeSpot) * 100
 
         return {
             currentVolumeSpot,
@@ -323,14 +323,14 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                             </div>
                             <div
                                 className='w-max font-semibold text-base text-txtPrimary dark:text-gray-4 mb-4 border-b border-darkBlue-5 border-dashed cursor-pointer'
-                                data-tip={`Để duy trì Hạng hiện tại, Đối tác cộng đồng cần đạt KLGD Spot ${renderNumber(profileVolume?.currentVolumeSpot)}/${renderNumber(profileVolume?.maintainVolumeSpot) ?? 1} hoặc KLGD Futures ${renderNumber(profileVolume?.currentVolumeFutures)}/${renderNumber(profileVolume?.maintainVolumeFutures) ?? 1} và Bạn bè mới ${data?.volume?.current?.ref}/${data?.volume?.maintain?.ref}, Hoa hồng ${data?.volume?.current?.commission}/${data?.volume?.maintain?.commission}`}
+                                data-tip={`Để duy trì Hạng hiện tại, Đối tác cộng đồng cần đạt KLGD Spot ${renderNumber(profileVolume?.currentVolumeSpot)}/${renderNumber(profileVolume?.maintainVolumeSpot) ?? 1} hoặc KLGD Futures ${renderNumber(profileVolume?.currentVolumeFutures)}/${renderNumber(profileVolume?.maintainVolumeFutures) ?? 1} và Bạn bè mới ${data?.volume?.current?.ref}/${data?.volume?.maintain?.ref}, Hoa hồng ${renderNumber(data?.volume?.current?.commission, true)}/${renderNumber(data?.volume?.maintain?.commission, true)}`}
                                 data-for={'description'}
                             >
                                 Điều kiện xét hạng
                             </div>
                             <div className="text-sm space-y-3 relative">
                                 <div className="w-full flex items-center justify-between text-gray-1">
-                                    <div className='flex-grow w-full'>{t('reference:referral.current_volume')}</div>
+                                    <div className=''>{t('reference:referral.current_volume')}</div>
                                     {/* <div className='flex-grow w-max text-center absolute'
                                         style={{
                                             right: `calc(${100 - (profileVolume?.maintainRate ?? 50)}% - 8px)`
@@ -338,7 +338,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                     >
                                         Điểm duy trì cấp bậc
                                     </div> */}
-                                    <div className='flex-grow w-full'>
+                                    <div className=''>
                                         &nbsp;{data?.rank !== 5 ? t('reference:referral.next_level') : null}
                                     </div>
                                 </div>
