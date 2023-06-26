@@ -219,7 +219,7 @@ const HistoryStaking = ({ assetId }) => {
                 dataIndex: 'currency',
                 title: t('staking:statics:history:columns.type'),
                 align: 'left',
-
+                width: 304,
                 render: (value) => (
                     <section className="flex flex-row items-center">
                         <AssetLogo assetId={value} />
@@ -232,7 +232,7 @@ const HistoryStaking = ({ assetId }) => {
                 dataIndex: 'money_use',
                 title: t('staking:statics:history:columns.amount'),
                 align: 'left',
-
+                width: 304,
                 render: (value) => <div>{formatNumber(value, asset?.assetDigit)}</div>
             },
             {
@@ -240,7 +240,7 @@ const HistoryStaking = ({ assetId }) => {
                 dataIndex: 'created_at',
                 title: t('staking:statics:history:columns.time'),
                 align: 'left',
-
+                width: 304,
                 render: (value) => (
                     <div className="font-normal">{value && isValid(new Date(value)) ? formatTime(new Date(value), 'HH:mm:ss dd/MM/yyyy') : null}</div>
                 )
@@ -267,7 +267,7 @@ const HistoryStaking = ({ assetId }) => {
                 className="border-t border-divider dark:border-divider-dark"
                 data={dataHistory?.result || []}
                 rowKey={(item) => `${item?.key}`}
-                pagingClassName="!border-0"
+                pagingClassName="!border-0 !py-8"
                 pagingPrevNext={{
                     page: page - 1,
                     hasNext: dataHistory?.hasNext,
@@ -286,8 +286,8 @@ const HistoryStaking = ({ assetId }) => {
             <section className="rounded-xl border border-divider dark:border-divider-dark bg-white dark:bg-transparent mt-8">
                 <section className="flex flex-col lg:flex-row my-8 ml-6 mr-[21px] h-full lg:h-[62px] items-center">
                     <section className="w-full lg:w-2/5">
-                        <div className=" text-txtSecondary dark:text-txtSecondary-dark">{t('staking:statics:history.profit_received')}</div>
-                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold mt-2">{totalProfit}</div>
+                        <div className=" text-txtSecondary dark:text-txtSecondary-dark ">{t('staking:statics:history.profit_received')}</div>
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold mt-2 text-2xl">{totalProfit}</div>
                     </section>
                     <section className="w-full mt-2 lg:mt-0 lg:w-3/5 flex  lg:flex-nowrap flex-wrap flex-row items-center gap-2 lg:gap-x-2 justify-start lg:justify-end">
                         {renderDateOptions}
