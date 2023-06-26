@@ -362,7 +362,7 @@ const Profile = () => {
     const currentPercent = state.namiBalance ? (state.namiBalance * 100) / nextLevel?.nami_holding : '--';
 
     return (
-        <AccountLayout>
+        <AccountLayout type='kyc_tab'>
             <div className="rounded-xl md:p-6 md:bg-white md:dark:bg-darkBlue-3 mt-12">
                 <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:divide-x md:divide-divider md:dark:divide-divider-dark">
                     <div className="flex-1 p-6 md:p-0 md:pr-10 rounded-md md:rounded-none space-y-6 md:space-y-4 bg-white dark:bg-darkBlue-3 md:bg-transparent">

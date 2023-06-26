@@ -67,13 +67,13 @@ const FuturesPosition = ({
                             />
                         </div>
                     ),
-                minWidth: '150px',
+                minWidth: '200px',
                 sortable: true,
             },
             {
                 key: 'pnl',
                 title: 'PNL (ROE%)',
-                align: 'right', 
+                align: 'right',
                 selector: (row) => row?.pnl?.value,
                 render: (row) => {
                     const isVndc = row?.symbol.indexOf('VNDC') !== -1

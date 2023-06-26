@@ -392,22 +392,24 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center">
-                        <ImageShare
-                            className="w-full"
-                            content={content}
-                            negative={negative}
-                            totalPnl={totalPnl}
-                            totalMargin={totalMargin}
-                            typeCurrency={typeCurrency}
-                            isShowTotalPnl={isShowTotalPnl}
-                            isShowRate={isShowRate}
-                            timeFilter={timeFilter}
-                            t={t}
-                            refCode={refCode}
-                            winRate={winRate}
-                            typeProduct={typeProduct}
-                            firstTimeTrade={firstTimeTrade}
-                        />
+                        <div className='flex w-full items-center justify-center'>
+                            <ImageShare
+                                className="w-full"
+                                content={content}
+                                negative={negative}
+                                totalPnl={totalPnl}
+                                totalMargin={totalMargin}
+                                typeCurrency={typeCurrency}
+                                isShowTotalPnl={isShowTotalPnl}
+                                isShowRate={isShowRate}
+                                timeFilter={timeFilter}
+                                t={t}
+                                refCode={refCode}
+                                winRate={winRate}
+                                typeProduct={typeProduct}
+                                firstTimeTrade={firstTimeTrade}
+                            />
+                        </div>
                         <div className="w-full text-gray-15 dark:text-gray-4 mt-6">
                             <div className="text-lg font-semibold">{t('portfolio:option_info_to_share')}</div>
                             <div className="flex items-center mt-4">

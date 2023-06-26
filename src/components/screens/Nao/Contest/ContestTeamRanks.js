@@ -27,6 +27,7 @@ import TickFbIcon from 'components/svg/TickFbIcon';
 import RePagination from 'components/common/ReTable/RePagination';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
+import useUpdateEffect from 'hooks/useUpdateEffect';
 
 const ContestTeamRanks = ({
     onShowDetail,
@@ -74,15 +75,15 @@ const ContestTeamRanks = ({
         if (mount.current) getRanks(tab);
     }, [quoteAsset]);
 
-    useEffect(() => {
+    useUpdateEffect(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const individual = urlParams.get('individual') !== 'pnl' ? 'volume' : 'pnl';
         urlParams.set('individual', individual);
         urlParams.set('team', tab === 'pnl' ? 'pnl' : 'volume');
         const url = `/${router.locale}/contest${router.query.season ? '/' + router.query.season : ''}?${urlParams.toString()}`;
-        window.history.pushState(null, null, url);
-    }, [tab, router]);
+        window.history.replaceState(null, null, url);
+    }, [tab]);
 
     const rank = tab === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
     const getRanks = async (tab) => {
