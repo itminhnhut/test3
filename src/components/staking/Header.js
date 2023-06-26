@@ -1,9 +1,10 @@
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
-import { getS3Url } from 'redux/actions/utils';
+import { encodeUrlFromApp, getS3Url } from 'redux/actions/utils';
 import Link from 'next/link';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { useRouter } from 'next/router';
 
 const HeaderStaking = () => {
     const { t } = useTranslation();
@@ -11,6 +12,11 @@ const HeaderStaking = () => {
     const handleScroller = () => {
         document.getElementById('asset_digital').scrollIntoView({ behavior: 'smooth' });
     };
+
+    const router = useRouter();
+    const { source } = router.query;
+    const isNotFromApp = source !== 'app';
+
     return (
         <div className="flex flex-col lg:flex-row justify-between gap-x-[99px]">
             <div className="w-full mt-[42px] lg:mt-[120px]">
@@ -20,11 +26,16 @@ const HeaderStaking = () => {
                     <ButtonV2 className="w-[151px]" onClick={handleScroller}>
                         {t('staking:header.deposit_now')}
                     </ButtonV2>
-                    <Link href="/staking/statistic">
-                        <ButtonV2 className="w-[151px] " variants="secondary">
-                            {t('staking:header.statistics')}
-                        </ButtonV2>
-                    </Link>
+
+                    {/* not showing if page is view from nami app */}
+                    {isNotFromApp && (
+                        <Link href="/staking/statistic">
+                            <ButtonV2 className="w-[151px] " variants="secondary">
+                                {t('staking:header.statistics')}
+                            </ButtonV2>
+                        </Link>
+                    )}
+                    {/* */}
                 </div>
             </div>
             <div className="w-full text-center lg:mt-0 mt-12">
