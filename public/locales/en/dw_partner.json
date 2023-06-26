@@ -151,6 +151,7 @@
     "disabled_smart_otp_des": "Smart OTP feature has been deactivated due to incorrect Smart OTP input 5 times. Please verify transactions with another OTP methods or reactivate Smart OTP to continue using.",
     "verify_by_email": "Email Authentification",
     "verify_now": "Verify Now",
+    "partner_inactive":"You need to qualify as a Community Development Partner from the Official level to participate in the Deposit and Withdrawal Partner program, <0>read more</0>.",
     "not_have_payment_content": "You can optionally perform payment method verification to use directly Buy Sell via Partner of Nami.",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
