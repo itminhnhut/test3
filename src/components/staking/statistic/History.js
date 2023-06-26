@@ -98,7 +98,10 @@ const HistoryStaking = ({ assetId }) => {
         if (refAsset.current !== assetId) {
             handleResetByAssetId();
         }
-        handleOverviewAPI();
+        const id = setTimeout(() => {
+            handleOverviewAPI();
+        }, 300);
+        return () => clearTimeout(id);
     }, [assetId, range, filter?.range?.startDate, filter?.range?.endDate]);
 
     useEffect(() => {
@@ -106,7 +109,11 @@ const HistoryStaking = ({ assetId }) => {
         if (refAsset.current !== assetId) {
             handleResetByAssetId();
         }
-        handleHistoryAPI();
+        const id = setTimeout(() => {
+            handleHistoryAPI();
+        }, 300);
+
+        return () => clearTimeout(id);
     }, [assetId, page, range, filter?.range?.startDate, filter?.range?.endDate]);
 
     // handle reset data
