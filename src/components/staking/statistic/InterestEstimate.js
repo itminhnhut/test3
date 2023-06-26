@@ -49,7 +49,7 @@ const InterestEstimate = ({ assetId }) => {
                 </div>
                 <div className="flex flex-wrap items-end justify-between">
                     <div className="flex md:mb-0 mb-6 items-center space-x-6">
-                        <div className="p-[14px] flex-1 flex items-center justify-center rounded-full bg-gray-12 dark:bg-dark-2">
+                        <div className="p-[14px] flex-1 flex items-center justify-center rounded-full bg-gray-13 dark:bg-dark-2">
                             <Image src={getS3Url('/images/staking/ic_staking.png')} width={36} height={36} />
                         </div>
                         <div className="space-y-1 ">

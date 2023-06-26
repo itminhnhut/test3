@@ -33,7 +33,7 @@ const index = () => {
         if (!isAuth) return <NotAuth />;
         return (
             <section>
-                <TabV2 wrapperClassName="!gap-3" activeTabKey={assetId} onChangeTab={toggleAsset} tabs={ASSET_TABS} />
+                <TabV2 wrapperClassName="!gap-3" chipClassName="bg-gray-12" activeTabKey={assetId} onChangeTab={toggleAsset} tabs={ASSET_TABS} />
 
                 <div className="h-8" />
 
@@ -46,8 +46,8 @@ const index = () => {
 
     return (
         <MaldivesLayout>
-            <main className="bg-white dark:bg-shadow">
-                <div className="max-w-screen-v3 2xl:max-w-screen-xxl mt-[85px] mb-[120px] mx-auto px-4">
+            <main className="bg-gray-13 dark:bg-shadow">
+                <div className="max-w-screen-v3 2xl:max-w-screen-xxl pt-[85px] pb-[120px] mx-auto px-4">
                     <Header />
                     {renderPage()}
                 </div>

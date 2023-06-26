@@ -209,6 +209,7 @@ const HistoryStaking = ({ assetId }) => {
                 dataIndex: 'currency',
                 title: t('staking:statics:history:columns.type'),
                 align: 'left',
+
                 render: (value) => (
                     <section className="flex flex-row items-center">
                         <AssetLogo assetId={value} />
@@ -221,6 +222,7 @@ const HistoryStaking = ({ assetId }) => {
                 dataIndex: 'money_use',
                 title: t('staking:statics:history:columns.amount'),
                 align: 'left',
+
                 render: (value) => <div>{formatNumber(value, asset?.assetDigit)}</div>
             },
             {
@@ -228,15 +230,16 @@ const HistoryStaking = ({ assetId }) => {
                 dataIndex: 'created_at',
                 title: t('staking:statics:history:columns.time'),
                 align: 'left',
+
                 render: (value) => (
                     <div className="font-normal">{value && isValid(new Date(value)) ? formatTime(new Date(value), 'HH:mm:ss dd/MM/yyyy') : null}</div>
                 )
             },
             {
-                key: 'code',
-                dataIndex: 'code',
+                key: 'status',
+                dataIndex: 'status',
                 title: t('staking:statics:history:columns.status'),
-                align: 'left',
+                align: 'right',
                 render: (value) => <div className="dark:text-green-2 text-green-3">{t('common:success')}</div>
             }
         ];
@@ -254,6 +257,7 @@ const HistoryStaking = ({ assetId }) => {
                 className="border-t border-divider dark:border-divider-dark"
                 data={dataHistory?.result || []}
                 rowKey={(item) => `${item?.key}`}
+                pagingClassName="!border-0"
                 pagingPrevNext={{
                     page: page - 1,
                     hasNext: dataHistory?.hasNext,
@@ -269,11 +273,11 @@ const HistoryStaking = ({ assetId }) => {
     return (
         <section>
             <h2 className="font-semibold text-2xl mt-[60px]">{t('staking:statics:history.title')}</h2>
-            <section className="rounded-xl border-[1px] border-[#30BF73] dark:border-[#222940] mt-8">
+            <section className="rounded-xl border border-divider dark:border-divider-dark bg-white dark:bg-transparent mt-8">
                 <section className="flex flex-col lg:flex-row my-8 ml-6 mr-[21px] h-full lg:h-[62px] items-center">
                     <section className="w-full lg:w-2/5">
-                        <div className="text-gray-15 dark:text-gray-7">{t('staking:statics:history.profit_received')}</div>
-                        <div className="text-txtPrimary dark:text-gray-4 font-semibold mt-2">{totalProfit}</div>
+                        <div className=" text-txtSecondary dark:text-txtSecondary-dark">{t('staking:statics:history.profit_received')}</div>
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold mt-2">{totalProfit}</div>
                     </section>
                     <section className="w-full mt-2 lg:mt-0 lg:w-3/5 flex  lg:flex-nowrap flex-wrap flex-row items-center gap-2 lg:gap-x-2 justify-start lg:justify-end">
                         {renderDateOptions}
