@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, memo, useMemo, useState } from 'react';
 import { HideIcon, SeeIcon } from 'components/svg/SvgIcon';
 import Image from 'next/image';
 import { formatNumber, getDayInterestPercent, getLoginUrl, getS3Url } from 'redux/actions/utils';
@@ -136,4 +136,4 @@ const InterestEstimate = ({ assetId }) => {
     );
 };
 
-export default InterestEstimate;
+export default memo(InterestEstimate);

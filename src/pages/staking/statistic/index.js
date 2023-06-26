@@ -1,16 +1,14 @@
 import { useCallback, useState } from 'react';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import dynamic from 'next/dist/shared/lib/dynamic';
+import dynamic from 'next/dynamic';
 import { useSelector } from 'react-redux';
-import NotAuth from 'components/staking/statistic/NotAuth';
 import Header from 'components/staking/statistic/Header';
 import TabV2 from 'components/common/V2/TabV2';
-import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import Spinner from 'components/svg/Spinner';
 
 const InterestEstimate = dynamic(() => import('components/staking/statistic/InterestEstimate', { ssr: false }));
+const NotAuth = dynamic(() => import('components/staking/statistic/NotAuth', { ssr: false }));
 const HistoryStaking = dynamic(() => import('components/staking/statistic/History', { ssr: false }));
 
 export const ASSET = {
