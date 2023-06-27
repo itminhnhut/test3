@@ -33,12 +33,14 @@ const FuturesSetting = memo(
         const [mount, setMount] = useState(false);
         const [showFee, setShowFee] = useState(null);
         const [settingFee, setSettingFee] = useState({ VNDC: {}, USDT: {} });
+        const auth = useSelector((state) => state.auth?.user);
 
         useEffect(() => {
-            getFuturesFees(['VNDC', 'USDT']).then((data) => {
-                setSettingFee(data);
-            });
-        }, []);
+            if (auth)
+                getFuturesFees(['VNDC', 'USDT']).then((data) => {
+                    setSettingFee(data);
+                });
+        }, [auth]);
 
         const userSetting = [
             { key: FuturesSettings.order_confirm, tooltip: t('spot:setting:order_confirmation_tooltip') },
@@ -235,77 +237,78 @@ const FuturesSetting = memo(
                                                     );
                                                 })}
                                             </div>
-                                            {Object.keys(settingFutures).map((setting) => {
-                                                if (settingFutures[setting] && Array.isArray(settingFutures[setting])) {
-                                                    return (
-                                                        <div key={setting} className="space-y-4 pt-6">
-                                                            {settingFutures[setting].map((item, indx) => {
-                                                                const { label, key, className = '', tooltip } = item;
-                                                                return (
-                                                                    <Fragment key={indx}>
-                                                                        <div className="h-6 flex items-start justify-between space-x-2">
-                                                                            <span
-                                                                                className={classNames(
-                                                                                    `text-sm text-txtPrimary dark:text-txtPrimary-dark flex items-center`,
-                                                                                    {
-                                                                                        'underline leading-6': !!tooltip
-                                                                                    },
-                                                                                    className
+                                            {auth &&
+                                                Object.keys(settingFutures).map((setting) => {
+                                                    if (settingFutures[setting] && Array.isArray(settingFutures[setting])) {
+                                                        return (
+                                                            <div key={setting} className="space-y-4 pt-6">
+                                                                {settingFutures[setting].map((item, indx) => {
+                                                                    const { label, key, className = '', tooltip } = item;
+                                                                    return (
+                                                                        <Fragment key={indx}>
+                                                                            <div className="h-6 flex items-start justify-between space-x-2">
+                                                                                <span
+                                                                                    className={classNames(
+                                                                                        `text-sm text-txtPrimary dark:text-txtPrimary-dark flex items-center`,
+                                                                                        {
+                                                                                            'underline leading-6': !!tooltip
+                                                                                        },
+                                                                                        className
+                                                                                    )}
+                                                                                    style={{
+                                                                                        textDecorationStyle: !!tooltip ? 'dashed' : 'unset',
+                                                                                        textUnderlineOffset: 2,
+                                                                                        textUnderlinePosition: 'under',
+                                                                                        textDecorationColor:
+                                                                                            currentTheme === 'light' ? colors.gray[1] : colors.gray[7]
+                                                                                    }}
+                                                                                    data-tip={tooltip}
+                                                                                    data-for={key}
+                                                                                >
+                                                                                    {label}
+                                                                                </span>
+                                                                                {isUndefined(item?.isCheckBox) || item?.isCheckBox ? (
+                                                                                    <Switch
+                                                                                        checked={spotState?.[key]}
+                                                                                        onChange={(value) => !loading && onChangeFuturesComponent(key, value)}
+                                                                                    />
+                                                                                ) : (
+                                                                                    item?.value && (
+                                                                                        <div
+                                                                                            onClick={() => {
+                                                                                                setShowFee(item?.key);
+                                                                                                close();
+                                                                                            }}
+                                                                                            className="flex items-center space-x-2 cursor-pointer"
+                                                                                        >
+                                                                                            <span className="text-teal font-semibold capitalize">
+                                                                                                {String(item?.value).toUpperCase()}
+                                                                                            </span>
+                                                                                            <BxChevronDown />
+                                                                                        </div>
+                                                                                    )
                                                                                 )}
-                                                                                style={{
-                                                                                    textDecorationStyle: !!tooltip ? 'dashed' : 'unset',
-                                                                                    textUnderlineOffset: 2,
-                                                                                    textUnderlinePosition: 'under',
-                                                                                    textDecorationColor:
-                                                                                        currentTheme === 'light' ? colors.gray[1] : colors.gray[7]
-                                                                                }}
-                                                                                data-tip={tooltip}
-                                                                                data-for={key}
-                                                                            >
-                                                                                {label}
-                                                                            </span>
-                                                                            {isUndefined(item?.isCheckBox) || item?.isCheckBox ? (
-                                                                                <Switch
-                                                                                    checked={spotState?.[key]}
-                                                                                    onChange={(value) => !loading && onChangeFuturesComponent(key, value)}
+                                                                            </div>
+                                                                            {!!tooltip && (
+                                                                                <Tooltip
+                                                                                    overridePosition={(e) => ({
+                                                                                        left: isDrawer ? 0 : e.left,
+                                                                                        top: e.top
+                                                                                    })}
+                                                                                    id={key}
+                                                                                    place="top"
+                                                                                    effect="solid"
+                                                                                    isV3
+                                                                                    className="max-w-[300px]"
                                                                                 />
-                                                                            ) : (
-                                                                                item?.value && (
-                                                                                    <div
-                                                                                        onClick={() => {
-                                                                                            setShowFee(item?.key);
-                                                                                            close();
-                                                                                        }}
-                                                                                        className="flex items-center space-x-2 cursor-pointer"
-                                                                                    >
-                                                                                        <span className="text-teal font-semibold capitalize">
-                                                                                            {String(item?.value).toUpperCase()}
-                                                                                        </span>
-                                                                                        <BxChevronDown />
-                                                                                    </div>
-                                                                                )
                                                                             )}
-                                                                        </div>
-                                                                        {!!tooltip && (
-                                                                            <Tooltip
-                                                                                overridePosition={(e) => ({
-                                                                                    left: isDrawer ? 0 : e.left,
-                                                                                    top: e.top
-                                                                                })}
-                                                                                id={key}
-                                                                                place="top"
-                                                                                effect="solid"
-                                                                                isV3
-                                                                                className="max-w-[300px]"
-                                                                            />
-                                                                        )}
-                                                                    </Fragment>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    );
-                                                }
-                                            })}
+                                                                        </Fragment>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        );
+                                                    }
+                                                })}
                                         </div>
                                         <TextButton className="pt-6 text-center" onClick={onSetDefault}>
                                             {t('spot:setting.reset_default_layout')}

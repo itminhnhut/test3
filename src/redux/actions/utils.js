@@ -1439,22 +1439,26 @@ export const getDayInterestPercent = (apy) =>
     );
 
 export const getFuturesFees = async (quotes) => {
-    return await Promise.all(
-        quotes.reduce((acc, pre) => {
-            const api = axios.get(API_GET_FEE_ASSET, { params: { marginAsset: pre } });
-            acc ? acc.push(api) : (acc = [api]);
-            return acc;
-        }, [])
-    ).then((data) => {
-        data = data
-            .map((rs) => rs.data.data)
-            .reduce((acc, pre) => {
-                const quote = quotes.find((q) => pre.accepted_assets.find((rs) => rs.asset === String(q).toLowerCase()));
-                if (quote) {
-                    acc[quote] = pre;
-                }
-                return acc;
-            }, {});
-        return data;
+    const { data } = await axios.get(API_GET_FEE_ASSET, { params: { marginAsset: quotes } }).then((data) => {
+        return data.data;
     });
+    return data;
+    // return await Promise.all(
+    //     quotes.reduce((acc, pre) => {
+    //         const api = axios.get(API_GET_FEE_ASSET, { params: { marginAsset: pre } });
+    //         acc ? acc.push(api) : (acc = [api]);
+    //         return acc;
+    //     }, [])
+    // ).then((data) => {
+    //     data = data
+    //         .map((rs) => rs.data.data)
+    //         .reduce((acc, pre) => {
+    //             const quote = quotes.find((q) => pre.accepted_assets.find((rs) => rs.asset === String(q).toLowerCase()));
+    //             if (quote) {
+    //                 acc[quote] = pre;
+    //             }
+    //             return acc;
+    //         }, {});
+    //     return data;
+    // });
 };
