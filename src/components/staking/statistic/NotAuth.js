@@ -13,8 +13,14 @@ const NotAuth = () => {
                 </div>
                 <div className=" text-txtSecondary dark:text-txtSecondary-dark text-center">
                     <Trans i18nKey="staking:statics.not_auth">
-                        <a className="text-green-3 dark:text-green-2 hover:underline cursor-pointer font-semibold" href={getLoginUrl('sso', 'register')} />
-                        <a className="text-green-3 dark:text-green-2 hover:underline cursor-pointer font-semibold" href={getLoginUrl('sso')} />
+                        <a
+                            className="text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 cursor-pointer font-semibold"
+                            href={getLoginUrl('sso', 'register')}
+                        />
+                        <a
+                            className="text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 cursor-pointer font-semibold"
+                            href={getLoginUrl('sso')}
+                        />
                     </Trans>
                 </div>
             </div>

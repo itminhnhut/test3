@@ -221,7 +221,7 @@ const HistoryStaking = ({ assetId }) => {
                 dataIndex: 'currency',
                 title: t('staking:statics:history:columns.type'),
                 align: 'left',
-                width: 304,
+                width: 302,
                 render: (value) => (
                     <section className="flex flex-row items-center">
                         <AssetLogo assetId={value} />
@@ -234,7 +234,7 @@ const HistoryStaking = ({ assetId }) => {
                 dataIndex: 'money_use',
                 title: t('staking:statics:history:columns.amount'),
                 align: 'left',
-                width: 304,
+                width: 302,
                 render: (value) => <div>{formatNumber(value, asset?.assetDigit)}</div>
             },
             {
@@ -242,7 +242,7 @@ const HistoryStaking = ({ assetId }) => {
                 dataIndex: 'created_at',
                 title: t('staking:statics:history:columns.time'),
                 align: 'left',
-                width: 304,
+                width: 302,
                 render: (value) => (
                     <div className="font-normal">{value && isValid(new Date(value)) ? formatTime(new Date(value), 'HH:mm:ss dd/MM/yyyy') : null}</div>
                 )
@@ -252,7 +252,7 @@ const HistoryStaking = ({ assetId }) => {
                 dataIndex: 'status',
                 title: t('staking:statics:history:columns.status'),
                 align: 'right',
-                width: 304,
+                width: 302,
                 render: (value) => <div className="dark:text-green-2 text-green-3">{t('common:success')}</div>
             }
         ];
