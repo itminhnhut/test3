@@ -19,7 +19,7 @@ import {
     rateCurrency
 } from './const';
 import { SET_BOTTOM_NAVIGATION, SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types';
-import { API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
+import { API_GET_REFERENCE_CURRENCY, API_GET_FEE_ASSET } from 'redux/actions/apis';
 import fetchAPI from 'utils/fetch-api';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
@@ -44,6 +44,7 @@ import { SIDE as SIDE_DW } from 'redux/reducers/withdrawDeposit';
 import moment from 'moment-timezone';
 import usePrevious from 'hooks/usePrevious';
 import classNames from 'classnames';
+import axios from 'axios';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -1436,3 +1437,24 @@ export const getDayInterestPercent = (apy) =>
         apy / 365, // DAYS_IN_YEAR = 365
         4
     );
+
+export const getFuturesFees = async (quotes) => {
+    return await Promise.all(
+        quotes.reduce((acc, pre) => {
+            const api = axios.get(API_GET_FEE_ASSET, { params: { marginAsset: pre } });
+            acc ? acc.push(api) : (acc = [api]);
+            return acc;
+        }, [])
+    ).then((data) => {
+        data = data
+            .map((rs) => rs.data.data)
+            .reduce((acc, pre) => {
+                const quote = quotes.find((q) => pre.accepted_assets.find((rs) => rs.asset === String(q).toLowerCase()));
+                if (quote) {
+                    acc[quote] = pre;
+                }
+                return acc;
+            }, {});
+        return data;
+    });
+};
