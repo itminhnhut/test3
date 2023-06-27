@@ -10,6 +10,7 @@ import { FooterRedditFileld } from '../../svg/RedditFilled';
 import MediumFilled from '../../svg/MediumFilled';
 import CoingeckoFilled from '../../svg/CoingeckoFilled';
 import GlobeFilled from '../../svg/GlobeFilled';
+import TiktokFilled from 'components/svg/TiktokFilled';
 
 const getSocialImage = (socialType) => {
     let Icon = null;
@@ -17,35 +18,27 @@ const getSocialImage = (socialType) => {
     switch (socialType) {
         case 'facebook':
             Icon = () => <FacebookFilled color="currentColor" size={16} />;
-            // imageURI = '/images/icon/ic_footer_fb.png';
             break;
         case 'telegram':
             Icon = () => <TelegramFilled color="currentColor" size={16} />;
-            // imageURI = '/images/icon/ic_footer_telegram.png';
             break;
         case 'blog':
             Icon = () => <GlobeFilled color="currentColor" size={16} />;
-            // imageURI = '/images/icon/ic_footer_globe.png';
             break;
         case 'reddit':
             Icon = () => <FooterRedditFileld color="currentColor" size={16} />;
-            // imageURI = '/images/icon/ic_footer_reddit.png';
             break;
         case 'coingecko':
             Icon = () => <CoingeckoFilled color="currentColor" size={16} />;
-            // imageURI = '/images/icon/ic_footer_coingecko.png';
             break;
         case 'twitter':
             Icon = () => <TwitterFilled color="currentColor" size={16} />;
-
-            // imageURI = '/images/icon/ic_footer_twitter.png';
             break;
         case 'medium':
             Icon = () => <MediumFilled color="currentColor" size={16} />;
-
-            // imageURI = '/images/icon/ic_footer_twitter.png';
             break;
-
+        case 'tiktok':
+            Icon = () => <TiktokFilled color="currentColor" size={16} />;
         default:
             break;
     }
@@ -57,7 +50,7 @@ const SocialsLink = ({ language }) => {
         <div className="flex flex-wrap gap-4 socials_link">
             {/* <div className="border p-2 rounded-full border-divider">{/* <CoingeckoFilled size={16} /> </div> */}
 
-            {SOCIALS_HREF.map((social) => {
+            {SOCIALS_HREF[language].map((social) => {
                 const ImageIcon = getSocialImage(social.name);
                 return (
                     <Link
