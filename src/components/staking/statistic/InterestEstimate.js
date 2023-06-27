@@ -62,7 +62,7 @@ const InterestEstimate = ({ assetId }) => {
                         </div>
                     </div>
                     <div className="w-full md:w-auto">
-                        <Link className="w-full" href={`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=BUY&assetId=${asset?.assetCode || 'VNDC'}`}>
+                        <Link className="w-full" href={`${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=BUY&assetId=${asset?.assetCode || 'VNDC'}`}>
                             <ButtonV2 className="md:w-[120px]">{t('staking:statics.interest.deposit_now')}</ButtonV2>
                         </Link>
                     </div>
