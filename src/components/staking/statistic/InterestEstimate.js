@@ -1,11 +1,10 @@
 import React, { useCallback, memo, useMemo, useState } from 'react';
 import { HideIcon, SeeIcon } from 'components/svg/SvgIcon';
 import Image from 'next/image';
-import { formatNumber, getDayInterestPercent, getLoginUrl, getS3Url } from 'redux/actions/utils';
+import { formatBalance, getDayInterestPercent, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import { useTranslation } from 'next-i18next';
 import { SECRET_STRING } from 'utils';
@@ -14,14 +13,14 @@ import { getApyByDay } from '../APYInterestChart';
 import Tooltip from 'components/common/Tooltip';
 import Card from './Card';
 
+const ALLOW_WALLETS = ['SPOT', 'FUTURES', 'NAO_FUTURES', 'PARTNERS'];
+
 const InterestEstimate = ({ assetId }) => {
     const { t } = useTranslation();
 
     const [isHideBalance, setIsHideBalance] = useState(false);
 
-    const spotBalance = useSelector((state) => state.wallet?.SPOT) || null;
-    const futuresBalance = useSelector((state) => state.wallet?.FUTURES) || null;
-    const naoFuturesBalance = useSelector((state) => state.wallet?.NAO_FUTURES) || null;
+    const allWallet = useSelector((state) => state.wallet) || null;
 
     const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
 
@@ -29,11 +28,9 @@ const InterestEstimate = ({ assetId }) => {
         return assetConfigs.find((asset) => asset.id === assetId);
     }, [assetConfigs, assetId]);
 
-    const userTotalBalance =
-        spotBalance?.[asset?.id]?.value -
-        spotBalance?.[asset?.id]?.locked_value +
-        (futuresBalance?.[asset?.id]?.value - futuresBalance?.[asset?.id]?.locked_value) +
-        (naoFuturesBalance?.[asset?.id]?.value - naoFuturesBalance?.[asset?.id]?.locked_value);
+    const userTotalBalance = ALLOW_WALLETS.reduce((totalBalance, walletType) => (totalBalance += allWallet?.[walletType]?.[asset?.id]?.value ?? 0), 0);
+    console.log(' asset?.assetDigit:', asset?.assetDigit);
+
     const renderAvailableBalance = useCallback(
         () => (
             <Card>
@@ -56,10 +53,11 @@ const InterestEstimate = ({ assetId }) => {
                         </div>
                         <div className="space-y-1 ">
                             <div className="text-4xl font-semibold">
-                                {isHideBalance ? SECRET_STRING : formatNumber(userTotalBalance, asset?.assetDigit)} {asset?.assetCode}
+                                {isHideBalance ? SECRET_STRING : formatBalance(userTotalBalance, asset?.assetDigit)} {asset?.assetCode}
                             </div>
                             <div>
-                                {t('staking:statics.interest.apy_interest')} <span className="text-green-3 dark:text-green-2 font-semibold">{APY_PERCENT[asset?.assetCode]}%</span>
+                                {t('staking:statics.interest.apy_interest')}{' '}
+                                <span className="text-green-3 dark:text-green-2 font-semibold">{APY_PERCENT[asset?.assetCode]}%</span>
                             </div>
                         </div>
                     </div>
@@ -89,7 +87,7 @@ const InterestEstimate = ({ assetId }) => {
                     <div className="text-2xl font-semibold">
                         {isHideBalance
                             ? SECRET_STRING
-                            : formatNumber(
+                            : formatBalance(
                                   getApyByDay({
                                       allowAmount,
                                       amount: userTotalBalance,
