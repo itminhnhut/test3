@@ -40,7 +40,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                             <div className="homepage-community___channel__group___item__label">Facebook Group</div>
                         </a>
                     </Link>
-                    <Link href="https://t.me/namitrade">
+                    <Link href="https://t.me/NamiGlobal">
                         <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon ">
                                 <Image alt="telegram_global_icon" width={90} height={52} src={getS3Url('/images/icon/ic_telegram_v3_plus.png')} />
@@ -58,7 +58,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                             <div className="homepage-community___channel__group___item__label">Telegram</div>
                         </a>
                     </Link>
-                    <Link href="https://twitter.com/NamiTrade">
+                    <Link href="https://twitter.com/NamiExchange">
                         <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
                                 <Image alt="twitter_icon" width={52} height={52} src={getS3Url('/images/icon/ic_twitter_v3.png')} />
@@ -85,7 +85,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                             <div className="homepage-community___channel__group___item__label">Blog</div>
                         </a>
                     </Link>
-                    <Link href={`https://www.coingecko.com/${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token`}>
+                    <Link href={`https://www.coingecko.com/${language}/${language === LANGUAGE_TAG.VI ? 'san_giao_dich' : 'exchanges'}/nami_exchange`}>
                         <a className="group homepage-community___channel__group___item">
                             <div className="homepage-community___channel__group___item__icon">
                                 <Image
