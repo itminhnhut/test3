@@ -121,7 +121,7 @@ const NaoPerformance = memo(({}) => {
     const [chartLoading, setChartLoading] = useState(false);
     const [chartInterval, setChartInterval] = useState('day');
     const { performanceRange } = router.query;
-    const initRange = isValidRange(performanceRange) ? performanceRange : 'd';
+    const initRange = isValidRange(performanceRange) ? performanceRange : 'w';
     const [filter, setFilter] = useState({
         day: initRange,
         marginCurrency: WalletCurrency.VNDC
