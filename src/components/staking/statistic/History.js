@@ -252,6 +252,7 @@ const HistoryStaking = ({ assetId }) => {
                 dataIndex: 'status',
                 title: t('staking:statics:history:columns.status'),
                 align: 'right',
+                width: 304,
                 render: (value) => <div className="dark:text-green-2 text-green-3">{t('common:success')}</div>
             }
         ];
@@ -277,6 +278,9 @@ const HistoryStaking = ({ assetId }) => {
                         setPage(page + delta);
                     },
                     language: language
+                }}
+                tableStyle={{
+                    rowHeight: '64px'
                 }}
             />
         );
