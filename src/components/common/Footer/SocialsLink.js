@@ -14,7 +14,6 @@ import TiktokFilled from 'components/svg/TiktokFilled';
 
 const getSocialImage = (socialType) => {
     let Icon = null;
-    let imageURI;
     switch (socialType) {
         case 'facebook':
             Icon = () => <FacebookFilled color="currentColor" size={16} />;
@@ -42,14 +41,12 @@ const getSocialImage = (socialType) => {
         default:
             break;
     }
-    return <Icon />; //imageURI; ;
+    return <Icon />;
 };
 
 const SocialsLink = ({ language }) => {
     return (
         <div className="flex flex-wrap gap-4 socials_link">
-            {/* <div className="border p-2 rounded-full border-divider">{/* <CoingeckoFilled size={16} /> </div> */}
-
             {SOCIALS_HREF[language].map((social) => {
                 const ImageIcon = getSocialImage(social.name);
                 return (
@@ -62,10 +59,7 @@ const SocialsLink = ({ language }) => {
                         }
                     >
                         <a target="_blank" className="!flex items-center w-[32px] h-[32px] text-txtPrimary dark:text-txtPrimary-dark ">
-                            <div className="border p-2 rounded-full border-[#1e1e1e] dark:border-divider">
-                                {ImageIcon}
-                                {/* <img src={getS3Url(imageURI)} alt="" width="16" height="16" /> */}
-                            </div>
+                            <div className="border p-2 rounded-full border-[#1e1e1e] dark:border-divider">{ImageIcon}</div>
                         </a>
                     </Link>
                 );
