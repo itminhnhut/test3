@@ -20,6 +20,7 @@
     "statics": {
         "profit_stats": "Thống kê lợi nhuận",
         "program_infor": "Thông tin về chương trình",
+        "not_auth":"<0>Đăng ký</0> ngay để tham gia nhận lãi hàng ngày từ Nami hoặc <1>đăng nhập</1> để xem thống kê của bạn",
         "interest": {
             "balance": "Tổng số dư",
             "balance_description": "Tổng số dư VNDC hoặc USDT khả dụng trong ví Spot và ví Futures",
