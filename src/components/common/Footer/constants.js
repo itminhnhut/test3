@@ -7,7 +7,7 @@ export const SOCIALS_HREF = {
         },
         {
             key: 1,
-            name: 'facebook',
+            name: 'facebook_group',
             href: 'https://www.facebook.com/groups/namiglobal'
         },
         {
@@ -46,9 +46,10 @@ export const SOCIALS_HREF = {
         },
         {
             key: 1,
-            name: 'facebook',
+            name: 'facebook_group',
             href: 'https://www.facebook.com/groups/nami.exchange'
         },
+
         {
             key: 2,
             name: 'telegram',
@@ -69,6 +70,11 @@ export const SOCIALS_HREF = {
             key: 5,
             name: 'tiktok',
             href: 'https://www.tiktok.com/@nami.officialchannel'
+        },
+        {
+            key: 6,
+            name: 'youtube',
+            href: 'https://www.youtube.com/channel/UCYAqEagemhtu0MOtnE7rNJQ'
         }
     ]
 };
