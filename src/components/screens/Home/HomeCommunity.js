@@ -4,6 +4,7 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import { getS3Url, isFunction } from 'redux/actions/utils';
 import Image from 'next/image';
+import classNames from 'classnames';
 
 export const SOCIALS_HREF = {
     en: [
@@ -70,6 +71,18 @@ export const SOCIALS_HREF = {
             image: (currentTheme) => ({ src: `/images/icon/ic_coingecko_${currentTheme === THEME_MODE.DARK ? 'v4' : 'v3'}.png`, width: 52, height: 52 }),
             title: 'CoinGecko',
             href: 'https://www.coingecko.com/en/exchanges/nami_exchange'
+        },
+        {
+            key: 5,
+            image: { src: `/images/icon/ic_tiktok_v3.png`, width: 52, height: 52 },
+            title: 'Tiktok',
+            href: 'https://www.tiktok.com/@nami.officialchannel'
+        },
+        {
+            key: 6,
+            image: { src: `/images/icon/ic_youtube_v3.png`, width: 52, height: 52 },
+            title: 'Youtube',
+            href: 'https://www.youtube.com/channel/UCYAqEagemhtu0MOtnE7rNJQ'
         }
     ]
 };
@@ -95,7 +108,15 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                         const img = isFunction(social.image) ? social.image(currentTheme) : social.image;
                         return (
                             <Link href={social.href}>
-                                <a className="group homepage-community___channel__group___item" target="_blank">
+                                <a
+                                    className={classNames(
+                                        'group homepage-community___channel__group___item',
+                                        {
+                                            'md:!w-1/3': language === LANGUAGE_TAG.EN
+                                        }
+                                    )}
+                                    target="_blank"
+                                >
                                     <div className="homepage-community___channel__group___item__icon">
                                         <Image alt={`${social.title}_icon`} width={img.width} height={img.height} src={getS3Url(img.src)} />
                                     </div>
