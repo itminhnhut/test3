@@ -30,16 +30,17 @@ const series = [
     }
 ];
 
-const getApyByMonth = ({ allowAmount, amount, percentPerDay, numberOfMonth }) => {
-    const monthsToDays = {
-        1: 30,
-        12: 365,
-        24: 730,
-        36: 1095,
-        48: 1460
-    };
-    // công thức tính lãi kép theo tháng
-    const compoundInterestAmount = +allowAmount * Math.pow(1 + percentPerDay / 100, monthsToDays[+numberOfMonth] || numberOfMonth * 30);
+const MONTHS_TO_DAYS = {
+    1: 30,
+    12: 365,
+    24: 730,
+    36: 1095,
+    48: 1460
+};
+
+export const getApyByDay = ({ allowAmount, amount, percentPerDay, numberOfDays }) => {
+    // công thức tính lãi kép theo từng ngày
+    const compoundInterestAmount = +allowAmount * Math.pow(1 + percentPerDay / 100, numberOfDays);
     const interestAmount = +compoundInterestAmount - +allowAmount;
     return {
         interestAmount,
@@ -55,6 +56,18 @@ const TIMER = [
     { vi: '48 tháng', en: '48 months', key: 48 }
 ];
 
+const generateAnnotationPoint = (x) => ({
+    x,
+    y: Math.pow(x, 2),
+
+    marker: {
+        size: 5,
+        colors: colors.teal,
+        fillColor: colors.teal,
+        strokeWidth: 0
+    }
+});
+
 const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
@@ -65,9 +78,10 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     } = useTranslation();
 
     const [hoverData, setHoverData] = useState({
-        value: 0,
         index: 0
     });
+
+    const [points, setPoints] = useState([]);
 
     const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
     const currencyConfig = useMemo(() => {
@@ -85,6 +99,9 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                 zoom: {
                     enabled: false
                 }
+            },
+            annotations: {
+                points
             },
             dataLabels: {
                 enabled: false
@@ -146,6 +163,8 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                         setHoverData({
                             index: dataPointIndex
                         });
+                        if (!points.length) return;
+                        setPoints([]);
                     }
                 }
             },
@@ -158,12 +177,13 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                 strokeWidth: 0
             }
         }),
-        [isDark]
+        [isDark, points]
     );
 
     const apyByMonth = useMemo(() => {
         const allowAmount = amount > STAKING_RANGE[currencyId].max ? STAKING_RANGE[currencyId].max : amount;
-        return getApyByMonth({ allowAmount, amount, percentPerDay: currencyDayInterest, numberOfMonth: hoverData.index + 1 });
+        const month = hoverData.index + 1;
+        return getApyByDay({ allowAmount, amount, percentPerDay: currencyDayInterest, numberOfDays: MONTHS_TO_DAYS[month] || month * 30 });
     }, [hoverData.index, currencyDayInterest, currencyId, amount]);
 
     const isAmountSmallerThanMin = amount < STAKING_RANGE[currencyId].min;
@@ -211,6 +231,7 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
                                 key={item.key}
                                 onClick={() => {
                                     setHoverData({ index: item.key - 1 });
+                                    setPoints([generateAnnotationPoint(item.key)]);
                                     const thisElement = document.getElementById('chip' + item.key);
                                     scrollHorizontal(thisElement, timerListRef.current);
                                 }}
