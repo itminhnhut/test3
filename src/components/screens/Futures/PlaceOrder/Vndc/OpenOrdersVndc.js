@@ -424,14 +424,6 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 sortable: true
             },
             {
-                key: 'last_price',
-                title: t('common:fee'),
-                align: 'right',
-                width: 138,
-                render: renderFee,
-                visible: isPosition
-            },
-            {
                 key: 'liq_price',
                 visible: isPosition,
                 title: t('futures:calulator:liq_price'),
@@ -448,6 +440,13 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 width: 120,
                 render: (row) => <span className="text-sm">{formatNumber(row?.margin, row?.decimalScalePrice, 0, true)}</span>,
                 sortable: true
+            },
+            {
+                key: 'fee',
+                title: t('common:fee'),
+                align: 'right',
+                width: 138,
+                render: renderFee,
             },
             {
                 key: 'status',

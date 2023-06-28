@@ -150,7 +150,7 @@ const FuturesFeeModal = memo(
                 <div className="text-xl sm:text-2xl font-semibold pb-4">
                     {t('common:transaction_fee')} {quoteAsset} Futures
                 </div>
-                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:select_currency')}.</span>
+                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:fee_modal:select_currency')}.</span>
                 <div className="mt-8 flex flex-col space-y-4">
                     {loading
                         ? loader
@@ -202,7 +202,7 @@ const FuturesFeeModal = memo(
                           })}
                 </div>
                 <Button onClick={onSave} disabled={disabled} className="mt-10">
-                    {t('common:save')}
+                    {t('futures:fee_modal:save')}
                 </Button>
             </ModalV2>
         );

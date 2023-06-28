@@ -528,5 +528,8 @@
         "service": "I Accept Nami's Term Of Services.",
         "futures": "I Accept Nami's Term Of Futures Trading."
     },
-    "select_currency": "Select the currency to use for transaction fees"
+    "fee_modal": {
+        "select_currency": "Select the currency to use for transaction fees",
+        "save": "Save"
+    }
 }
