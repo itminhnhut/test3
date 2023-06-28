@@ -11,13 +11,28 @@ import {
     Filler,
     // @ts-ignore
     Legend,
-    TimeScale
+    TimeScale,
+    LogarithmicScale
 } from 'chart.js';
 import { Line, Bar, Doughnut, Bubble } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import zoomPlugin from 'chartjs-plugin-zoom';
 
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Filler, Legend, zoomPlugin, TimeScale);
+Chart.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Filler,
+    Legend,
+    zoomPlugin,
+    LogarithmicScale,
+    TimeScale,
+);
 
 import React, { forwardRef, memo } from 'react';
 

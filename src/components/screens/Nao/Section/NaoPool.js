@@ -28,7 +28,9 @@ import { Spinner } from 'components/common/Icons';
 import { isFunction } from 'lodash';
 import colors from 'styles/colors';
 import dynamic from 'next/dynamic';
-import { parse } from 'date-fns';
+import { format, parse } from 'date-fns';
+import styled from 'styled-components';
+const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 // this code block for mocking assets
 
 // const mockAssets = [447, 72, 1, 86, 22];
@@ -39,14 +41,13 @@ import { parse } from 'date-fns';
 //     toTime: Date.now() + 86400000 * 7,
 // });
 
-const NaoChartJS = dynamic(() => import('../Components/Charts/NaoChartJS'), {
-    ssr: false,
-    loading: () => (
-        <div className="flex items-center justify-center w-full min-h-[300px] mt-6">
-            <Spinner size={60} className="text-teal" />
-        </div>
-    )
-});
+const ApexChartWrapper = styled.div`
+    .apexcharts-tooltip {
+        border: none !important;
+        background: none !important;
+        box-shadow: none !important;
+    }
+`;
 
 const days = [
     {
@@ -121,6 +122,13 @@ const chartReducer = (state, action = { type: '', payload: {} }) => {
 
 const isValidRange = (range) => range && days.some(({ value }) => value === range);
 
+function reorderSvg() {
+    const inner = document.querySelector('.apexcharts-inner'),
+        yaxis = document.querySelector('.apexcharts-yaxis');
+
+    inner.before(yaxis);
+}
+
 const NaoPool = ({ dataSource, assetNao }) => {
     const {
         t,
@@ -172,156 +180,143 @@ const NaoPool = ({ dataSource, assetNao }) => {
     }, [dataSource]);
     const [chartType, setChartType] = useState(CHART_TYPES.pool_info);
     const defaultChartData = {
-        label: '',
-        data: [],
-        borderColor: colors.teal,
-        fill: 'start',
-        backgroundColor: (context) => {
-            const ctx = context.chart.ctx;
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(71, 204, 133, 0.15)');
-            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-            return gradient;
-        },
-        hoverBackgroundColor: colors.teal,
-        pointBackgroundColor: colors.teal,
-        pointBorderWidth: 2,
-        pointRadius: 5
+        name: 'day',
+        data: []
     };
     const [chartData, dispatch] = useReducer(chartReducer, {
-        [CHART_TYPES.pool_info]: {
-            labels: [],
-            datasets: [defaultChartData]
-        },
-        [CHART_TYPES.fee_revenue]: {
-            labels: [],
-            datasets: [defaultChartData]
-        }
+        [CHART_TYPES.pool_info]: [defaultChartData],
+        [CHART_TYPES.fee_revenue]: [defaultChartData]
     });
 
-    const chartOptions = useMemo(
-        () => {
-            const numOfCols = chartData[chartType].labels.length;
-            const xMin = chartData[chartType].labels[0]?.getTime();
-            const xMax = numOfCols && chartData[chartType].labels[numOfCols - 1]?.getTime();
-            return {
-                responsive: true,
-                maintainAspectRatio: false,
-                elements: {
-                    line: {
-                        tension: 0.6
+    const apexOptions = useMemo(() => {
+        return {
+            chart: {
+                zoom: {
+                    enabled: false
+                },
+                toolbar: {
+                    show: false
+                },
+                height: '100%',
+                width: '100%',
+                events: {
+                    mounted: reorderSvg
+                    // updated: reorderSvg
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            colors: [colors.teal],
+            markers: {
+                size: 4,
+                colors: colors.teal,
+                strokeColors: isDark ? colors.dark.dark : colors.white,
+                strokeWidth: 2,
+                strokeOpacity: 1,
+                strokeDashArray: 0,
+                fillOpacity: 1,
+                shape: 'circle',
+                radius: 2,
+                showNullDataPoints: true,
+                hover: {
+                    size: 4
+                }
+            },
+            grid: {
+                show: true,
+                borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT,
+                strokeDashArray: 2,
+                position: 'back',
+                xaxis: {
+                    lines: {
+                        show: false
                     }
                 },
-                plugins: {
-                    legend: {
-                        display: false,
-                        position: 'bottom'
-                    },
-                    zoom: {
-                        limits: {
-                            x: {
-                                min: xMin,
-                                max: xMax
-                            }
-                        },
-                        pan: {
-                            enabled: true,
-                            mode: 'x'
-                        }
-                        // zoom: {
-                        //     wheel: {
-                        //         enabled: true
-                        //     },
-                        //     pinch: {
-                        //         enabled: true
-                        //     },
-                        //     mode: 'y'
-                        // }
-                    },
-                    tooltip: {
-                        enabled: true,
-                        position: 'nearest',
-                        backgroundColor: isDark ? colors.dark[2] : colors.gray[12],
-                        padding: isMobile ? 8 : 12,
-                        caretSize: 0,
-                        titleMarginBottom: isMobile ? 8 : 12,
-                        titleFont: {
-                            size: isMobile ? 10 : 14,
-                            weight: 400
-                        },
-                        displayColors: false,
-                        bodyFont: {
-                            size: isMobile ? 12 : 16,
-                            weight: 600
-                        },
-                        footerAlign: 'right',
-                        footerFont: {
-                            size: isMobile ? 10 : 14,
-                            weight: 400
-                        },
-                        callbacks: {
-                            label: (item) => {
-                                return `${formatNumber(item.raw / (referencePrice['VNDC'] ?? 1), 0)} VNDC`;
-                            },
-                            footer: (tooltipItems) => {
-                                const [item] = tooltipItems;
-                                return '$ ' + formatNumber(item.raw);
-                            }
-                        }
+                yaxis: {
+                    lines: {
+                        show: !isMobile
                     }
                 },
-                scales: {
-                    x: {
-                        // stacked: true,
-                        type: 'time',
-                        time: {
-                            unit: chartInterval,
-                            displayFormats: {
-                                day: 'dd/MM',
-                                week: 'dd/MM',
-                                month: 'MM/yyyy'
-                            }
-                        },
-                        ticks: {
-                            color: colors.darkBlue5,
-                            // callback: function (value, index, ticks) {
-                            //     return chartInterval === 'month'
-                            //         ? chartData?.[chartType]?.labels?.[index]?.slice(3, 10)
-                            //         : chartData?.[chartType]?.labels?.[index]?.slice(0, 5);
-                            // },
-                            showLabelBackdrop: false,
-                            padding: 8
-                        },
-                        grid: {
-                            display: false,
-                            drawBorder: false
-                            // borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT
-                        },
-                        min: xMin,
-                        max: xMax
+                padding: {
+                    // right: 30
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                labels: {
+                    formatter: (value) => {
+                        if (chartInterval === 'month') {
+                            return format(value, 'MM/yyyy');
+                        } 
+                        return format(value, 'dd/MM')
                     },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: colors.darkBlue5,
-                            callback: function (value, index, ticks) {
-                                return formatAbbreviateNumber(value, 3);
-                            },
-                            crossAlign: 'far',
-                            padding: 8
-                        },
-                        grid: {
-                            drawTicks: false,
-                            borderDash: [2, 4],
-                            borderDashOffset: 2,
-                            drawBorder: !!isMobile
-                        }
+                    style: {
+                        colors: isDark ? colors.gray[7] : colors.gray[1]
+                    },
+                },
+                tickAmount: 'dataPoints',
+                axisTicks: {
+                    show: false
+                },
+                axisBorder: {
+                    show: true,
+                    color: isDark ? colors.divider.dark : colors.divider.DEFAULT
+                },
+                tooltip: {
+                    enabled: false
+                },
+                crosshairs: {
+                    show: false
+                }
+            },
+            yaxis: {
+                show: true,
+                axisBorder: {
+                    show: true,
+                    color: isDark ? colors.divider.dark : colors.divider.DEFAULT
+                },
+                labels: {
+                    style: {
+                        colors: isDark ? colors.gray[7] : colors.gray[1]
+                    },
+                    formatter: (value) => {
+                        return formatAbbreviateNumber(value, 3);
                     }
                 }
-            };
-        },
-        [referencePrice, isDark, isMobile, chartInterval, chartData[chartType]]
-    );
+            },
+            fill: {
+                gradient: {
+                    type: 'vertical',
+                    opacityFrom: 0.5,
+                    opacityTo: 0,
+                    stops: [0, 100],
+                    gradientToColors: ['#47cc8526', '#47cc8500']
+                    // shade: 'dark'
+                }
+            },
+            tooltip: {
+                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                    const y = series[seriesIndex][dataPointIndex];
+                    const x = w.globals.seriesX[0][dataPointIndex];
+                    return `
+                        <div class="bg-gray-12 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? format(x, 'dd/MM/yyyy') : '' }</div>
+                            <div class="text-txtPrimary dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${formatNumber(
+                                y / (referencePrice['VNDC'] ?? 1),
+                                0
+                            )}VNDC</div>
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">$${formatNumber(y, 3)}</div>
+                        </div>
+                    `;
+                }
+            }
+        };
+    }, [isDark, isMobile, referencePrice, chartInterval]);
 
     const onNavigate = (isNext) => {
         if (sliderRef.current) {
@@ -521,10 +516,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 }));
                 dispatch({
                     type: CHART_TYPES.pool_info,
-                    payload: {
-                        labels: [],
-                        datasets: [defaultChartData]
-                    }
+                    payload: [defaultChartData]
                 });
             } else {
                 const last = _data?.result[length - 1];
@@ -535,18 +527,14 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     totalStaked: last?.document?.totalStaked || 0,
                     totalUsers: last?.document?.totalUser || 0
                 }));
-                const labels = [];
-                const data = [];
-                _data?.result.map((item) => {
-                    labels.push(parse(item['_id'], 'dd/MM/yyyy', new Date()));
-                    data.push(item.document?.totalStakedUsdt || 0);
-                });
+
+                const _chartData =
+                    _data?.result.map((item) => {
+                        return [parse(item['_id'], 'dd/MM/yyyy', new Date()), item.document?.totalStakedUsdt || 0];
+                    });
                 dispatch({
                     type: CHART_TYPES.pool_info,
-                    payload: {
-                        labels,
-                        datasets: [{ ...defaultChartData, data, pointBorderColor: isDark ? colors.dark.dark : colors.white }]
-                    }
+                    payload: [{ name: 'pool info', data: _chartData }]
                 });
             }
         } catch (e) {
@@ -579,24 +567,15 @@ const NaoPool = ({ dataSource, assetNao }) => {
             if (!length) {
                 dispatch({
                     type: CHART_TYPES.fee_revenue,
-                    payload: {
-                        labels: [],
-                        datasets: [defaultChartData]
-                    }
+                    payload: [defaultChartData]
                 });
             } else {
-                const labels = [];
-                const data = [];
-                _data?.result.map((item) => {
-                    labels.push(parse(item['_id'], 'dd/MM/yyyy', new Date()));
-                    data.push(item.feeRevenueUsdt || 0);
+                const _chartData = _data?.result.map((item) => {
+                    return [parse(item['_id'], 'dd/MM/yyyy', new Date()), item.feeRevenueUsdt || 0];
                 });
                 dispatch({
                     type: CHART_TYPES.fee_revenue,
-                    payload: {
-                        labels,
-                        datasets: [{ ...defaultChartData, data, pointBorderColor: isDark ? colors.dark.dark : colors.white }]
-                    }
+                    payload: [{ name: 'Fee revenue', data: _chartData }]
                 });
             }
         } catch (e) {
@@ -781,11 +760,17 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     {chartLoading ? (
                         <div className="flex items-center justify-center w-full min-h-[300px] mt-6">
                             <Spinner size={60} className="text-teal" />
+                            {/* don't delete this block, it's hidden but force tailwind to build this class for chart tooltip */}
+                            <div className="bg-gray-12 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none hidden">
+                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">12/12/2022</div>
+                                <div className="text-txtPrimary dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">100,000,000 VNDC</div>
+                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">$20.000</div>
+                            </div>
                         </div>
                     ) : (
-                        <div className="!max-h-[396px] w-full h-full mt-6">
-                            <NaoChartJS type="line" data={chartData[chartType]} options={chartOptions} chartRef={chartRef} />
-                        </div>
+                        <ApexChartWrapper className="min-h-[300px] !max-h-[396px] w-full h-full mt-6">
+                            <ApexChart type="area" height="100%" series={chartData[chartType]} options={apexOptions} ref={chartRef} />
+                        </ApexChartWrapper>
                     )}
                 </CardNao>
                 <CardNao className="sm:!min-w-[50%] sm:!p-10 sm:min-h-[344px] !justify-start !mt-2 sm:!mt-0 col-span-12 md:col-span-6">

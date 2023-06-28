@@ -17,20 +17,20 @@ import CheckCircle from 'components/svg/CheckCircle';
 // import NaoChartJS from '../Components/Charts/NaoChartJS';
 import { Spinner } from 'components/common/Icons';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import { WIDTH_MD } from 'components/screens/Wallet';
 import RangePopover from '../Components/RangePopover';
 import { formatAbbreviateNumber } from 'redux/actions/utils';
 import { useIsomorphicLayoutEffect } from 'react-use';
 import dynamic from 'next/dynamic';
+import { format, parse } from 'date-fns';
+const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-const NaoChartJS = dynamic(() => import('../Components/Charts/NaoChartJS'), {
-    ssr: false,
-    loading: () => (
-        <div className="flex items-center justify-center w-full min-h-[300px] mt-6">
-            <Spinner size={60} className="text-teal" />
-        </div>
-    )
-});
+const ApexChartWrapper = styled.div`
+    .apexcharts-tooltip {
+        border: none !important;
+        background: none !important;
+        box-shadow: none !important;
+    }
+`;
 
 export const days = [
     {
@@ -106,6 +106,17 @@ const CHART_TYPES = {
 };
 
 const isValidRange = (range) => range && days.some(({ value }) => value === range);
+function reorderSvg() {
+    const inner = document.querySelector('.apexcharts-inner'),
+        yaxis = document.querySelector('.apexcharts-yaxis');
+
+    inner.before(yaxis);
+}
+const defaultChartData = {
+    name: 'day',
+    data: []
+};
+
 const NaoPerformance = memo(({}) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -114,7 +125,7 @@ const NaoPerformance = memo(({}) => {
         i18n: { language }
     } = useTranslation();
     const { width } = useWindowSize();
-    const isMobile = width < WIDTH_MD;
+    const isMobile = width < 820;
     const router = useRouter();
     const [dataSource, setDataSource] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -135,14 +146,11 @@ const NaoPerformance = memo(({}) => {
     const [referencePrice, setReferencePrice] = useState({});
     const [typeChart, setTypeChart] = useState(CHART_TYPES.volume);
     const [chartLabels, setChartLabels] = useState(null);
-    const [dataChartVolume, setDataChartVolume] = useState(null);
-    const [dataChartOrder, setDataChartOrder] = useState(null);
-    const [dataChartUser, setDataChartUser] = useState(null);
-    const [dataChartFee, setDataChartFee] = useState(null);
-    const [dataChartSource, setDataChartSource] = useState({
-        labels: [],
-        datasets: []
-    });
+    const [dataChartVolume, setDataChartVolume] = useState([]);
+    const [dataChartOrder, setDataChartOrder] = useState([]);
+    const [dataChartUser, setDataChartUser] = useState([]);
+    const [dataChartFee, setDataChartFee] = useState([]);
+    const [dataChartSource, setDataChartSource] = useState([defaultChartData]);
 
     useEffect(() => {
         getRef();
@@ -164,54 +172,41 @@ const NaoPerformance = memo(({}) => {
     }, [filter, range]);
 
     useEffect(() => {
-        if (typeChart === CHART_TYPES.fee) {
-            setDataChartSource({
-                labels: chartLabels,
-                datasets: [
+        switch (typeChart) {
+            case CHART_TYPES.fee: {
+                return setDataChartSource([
                     {
                         data: dataChartFee[filter.marginCurrency],
-                        borderColor: colors.teal,
-                        fill: 'start',
-                        backgroundColor: (context) => {
-                            const ctx = context.chart.ctx;
-                            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                            gradient.addColorStop(0, 'rgba(71, 204, 133, 0.15)');
-                            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                            return gradient;
-                        },
-                        hoverBackgroundColor: colors.teal,
-                        pointBackgroundColor: colors.teal,
-                        pointBorderColor: isDark ? colors.dark.dark : colors.white,
-                        pointBorderWidth: 2,
-                        pointRadius: 5,
+                        name: 'fee'
                     }
-                ]
-            });
-        } else {
-            setDataChartSource({
-                labels: chartLabels,
-                datasets: [
+                ]);
+            }
+            case CHART_TYPES.user: {
+                return setDataChartSource([
                     {
-                        data: typeChart === CHART_TYPES.volume ? dataChartVolume : typeChart === CHART_TYPES.order ? dataChartOrder : dataChartUser,
-                        borderColor: colors.teal,
-                        fill: 'start',
-                        backgroundColor: (context) => {
-                            const ctx = context.chart.ctx;
-                            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                            gradient.addColorStop(0, 'rgba(71, 204, 133, 0.15)');
-                            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                            return gradient;
-                        },
-                        hoverBackgroundColor: colors.teal,
-                        pointBackgroundColor: colors.teal,
-                        pointBorderColor: isDark ? colors.dark.dark : colors.white,
-                        pointBorderWidth: 2,
-                        pointRadius: 5,
+                        data: dataChartUser,
+                        name: 'user'
                     }
-                ]
-            });
+                ]);
+            }
+            case CHART_TYPES.order: {
+                return setDataChartSource([
+                    {
+                        data: dataChartOrder,
+                        name: 'order'
+                    }
+                ]);
+            }
+            default: {
+                return setDataChartSource([
+                    {
+                        data: dataChartVolume,
+                        name: 'volume'
+                    }
+                ]);
+            }
         }
-    }, [chartLabels, typeChart]);
+    }, [chartLabels, typeChart, filter.marginCurrency, dataChartFee, dataChartVolume, dataChartUser, dataChartOrder]);
 
     const getData = async () => {
         setLoading(true);
@@ -241,6 +236,7 @@ const NaoPerformance = memo(({}) => {
             filterDay = 'w'
             if (dataChartSource?.labels?.length) return;
         }
+        
         setChartLoading(true);
         try {
             const data = await fetchApi({
@@ -268,12 +264,12 @@ const NaoPerformance = memo(({}) => {
                 const labels = [];
                 for (let i = 0; i < data.result.length; i++) {
                     const e = data.result[i];
-                    volumes.push(e.notionalValue);
-                    trades.push(e.count);
-                    users.push(e.userCount);
-                    labels.push(e._id);
-                    fees['72'].push(e.feeRevenueVndc);
-                    fees['22'].push(e.feeRevenueUsdt);
+                    const date = parse(e._id, 'dd/MM/yyyy', new Date());
+                    volumes.push([date, e.notionalValue]);
+                    trades.push([date, e.count]);
+                    users.push([date, e.userCount]);
+                    fees['72'].push([date, e.feeRevenueVndc]);
+                    fees['22'].push([date, e.feeRevenueUsdt]);
                 }
                 setDataChartVolume(volumes);
                 setDataChartOrder(trades);
@@ -282,6 +278,7 @@ const NaoPerformance = memo(({}) => {
                 setChartLabels(labels);
             }
         } catch (e) {
+            console.log({err: e.message})
         } finally {
             setChartLoading(false);
         }
@@ -367,8 +364,8 @@ const NaoPerformance = memo(({}) => {
         }
     };
 
-    const renderChart = useMemo(() => {
-        const options = {
+    const options = useMemo(() => {
+        const chartOptions = {
             responsive: true,
             maintainAspectRatio: false,
             elements: {
@@ -444,12 +441,22 @@ const NaoPerformance = memo(({}) => {
             },
             scales: {
                 x: {
-                    stacked: true,
+                    type: 'time',
+                    alignToPixels: true,
+                    // stacked: true,
+                    time: {
+                        unit: chartInterval,
+                        displayFormats: {
+                            day: 'dd/MM',
+                            week: 'dd/MM',
+                            month: 'MM/yyyy'
+                        }
+                    },
                     ticks: {
                         color: colors.darkBlue5,
-                        callback: function (value, index, ticks) {
-                            return chartInterval === 'month' ? dataChartSource?.labels?.[index]?.slice(3, 10) : dataChartSource?.labels?.[index]?.slice(0, 5);
-                        },
+                        // callback: function (value, index, ticks) {
+                        //     return chartInterval === 'month' ? dataChartSource?.labels?.[index]?.slice(3, 10) : dataChartSource?.labels?.[index]?.slice(0, 5);
+                        // },
                         showLabelBackdrop: false,
                         padding: 8
                     },
@@ -480,12 +487,139 @@ const NaoPerformance = memo(({}) => {
             }
         };
 
-        return (
-            <div className="w-full !max-h-[396px] mt-6">
-                <NaoChartJS type="line" data={dataChartSource} options={options} height="450px" />
-            </div>
-        );
-    }, [dataChartSource]);
+        return chartOptions;
+    }, [dataChartSource, isMobile, chartInterval, typeChart, isDark]);
+
+    const apexOptions = useMemo(() => {
+        return {
+            chart: {
+                zoom: {
+                    enabled: false
+                },
+                toolbar: {
+                    show: false
+                },
+                height: '100%',
+                width: '100%',
+                events: {
+                    mounted: reorderSvg
+                    // updated: reorderSvg
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            colors: [colors.teal],
+            markers: {
+                size: 4,
+                colors: colors.teal,
+                strokeColors: isDark ? colors.dark.dark : colors.white,
+                strokeWidth: 2,
+                strokeOpacity: 1,
+                strokeDashArray: 0,
+                fillOpacity: 1,
+                shape: 'circle',
+                radius: 2,
+                showNullDataPoints: true,
+                hover: {
+                    size: 4
+                }
+            },
+            grid: {
+                show: true,
+                borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT,
+                strokeDashArray: 2,
+                position: 'back',
+                xaxis: {
+                    lines: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    lines: {
+                        show: !isMobile
+                    }
+                },
+                padding: {
+                    // right: 30
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                labels: {
+                    formatter: (value) => {
+                        if (!value) return '';
+                        if (chartInterval === 'month') {
+                            return format(value, 'MM/yyyy');
+                        }
+                        return format(value, 'dd/MM');
+                    },
+                    style: {
+                        colors: isDark ? colors.gray[7] : colors.gray[1]
+                    }
+                },
+                tickAmount: 'dataPoints',
+                axisTicks: {
+                    show: false
+                },
+                axisBorder: {
+                    show: true,
+                    color: isDark ? colors.divider.dark : colors.divider.DEFAULT
+                },
+                tooltip: {
+                    enabled: false
+                },
+                crosshairs: {
+                    show: false
+                }
+            },
+            yaxis: {
+                show: true,
+                axisBorder: {
+                    show: true,
+                    color: isDark ? colors.divider.dark : colors.divider.DEFAULT
+                },
+                labels: {
+                    style: {
+                        colors: isDark ? colors.gray[7] : colors.gray[1]
+                    },
+                    formatter: (value) => {
+                        return formatAbbreviateNumber(value, 3);
+                    }
+                }
+            },
+            fill: {
+                gradient: {
+                    type: 'vertical',
+                    opacityFrom: 0.5,
+                    opacityTo: 0,
+                    stops: [0, 100],
+                    gradientToColors: ['#47cc8526', '#47cc8500']
+                    // shade: 'dark'
+                }
+            },
+            tooltip: {
+                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                    const y = series[seriesIndex][dataPointIndex];
+                    const x = w.globals.seriesX[0][dataPointIndex];
+                    return `
+                        <div class="bg-gray-12 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? format(x, 'dd/MM/yyyy') : ''}</div>
+                            <div class="text-txtPrimary dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${formatNumber(
+                                y / (referencePrice['VNDC'] ?? 1),
+                                0
+                            )}VNDC</div>
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">$${formatNumber(y, 3)}</div>
+                        </div>
+                    `;
+                }
+            }
+        };
+    }, [isDark, isMobile, referencePrice, chartInterval]);
 
     return (
         <section id="nao_performance" className="pt-6 sm:pt-20 text-sm sm:text-base">
@@ -494,13 +628,13 @@ const NaoPerformance = memo(({}) => {
                     <TextLiner className="">{t('nao:onus_performance:title')}</TextLiner>
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:onus_performance:description')}</span>
                 </div>
-                <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
+                <div className="flex flex-wrap gap-2 w-full mb:w-auto justify-between mb:justify-end">
                     <RangePopover
                         language={language}
                         active={days.find((d) => d.value === filter.day)}
                         onChange={handleChangeDateRange}
                         className="flex order-last"
-                        popoverClassName={'lg:mr-2 ml-auto'}
+                        popoverClassName={'mb:mr-2 ml-auto'}
                         range={range}
                         setRange={setRange}
                         days={days}
@@ -529,7 +663,7 @@ const NaoPerformance = memo(({}) => {
                     </div>
                 </div>
             </div>
-            <div className="pt-5 flex flex-col xl:flex-row sm:pt-8 gap-4 sm:gap-6 ">
+            <div className="pt-5 flex flex-col xl:flex-row sm:pt-8 gap-4 sm:gap-6">
                 <div className="w-full xl:w-1/3 flex flex-col gap-y-4 sm:gap-y-6">
                     <CardNao className="rounded-lg !min-w-max w-full !px-8 !pt-6 !pb-7" customHeight="sm:min-h-[328px]">
                         <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
@@ -612,7 +746,7 @@ const NaoPerformance = memo(({}) => {
                     </CardNao>
                 </div>
                 <div className="w-full xl:w-2/3 h-full">
-                    <CardNao className="rounded-lg whitespace-nowrap min-h-[350px] !p-8">
+                    <CardNao className="rounded-lg whitespace-nowrap min-h-[350px] !p-8" customHeight="sm:max-h-[514px]">
                         <div className="order-first gap-6 md:gap-2 gap-last grid xl:grid-cols-3">
                             <TextLiner className="w-full">{t('nao:onus_performance:chart_title')}</TextLiner>
                             <div className="flex gap-last xl:justify-end w-full overflow-auto no-scrollbar space-x-4 col-span-2">
@@ -654,7 +788,21 @@ const NaoPerformance = memo(({}) => {
                                 </button>
                             </div>
                         </div>
-                        {isMobile ? (
+                        {chartLoading ? (
+                            <>
+                                <div className="flex items-center justify-center w-full min-h-[504px]">
+                                    <Spinner color="currentColor" size={60} className="text-teal" />
+                                </div>
+                            </>
+                        ) : (
+                            // <div className="w-full !max-h-[396px] mt-6">
+                            //     <NaoChartJS type="line" data={dataChartSource} options={options} height="450px" />
+                            // </div>
+                            <ApexChartWrapper className="!min-h-[300px] sm:!min-h-[396px] w-full h-full mt-6">
+                                <ApexChart type="area" height="100%" series={dataChartSource} options={apexOptions} />
+                            </ApexChartWrapper>
+                        )}
+                        {/* {isMobile ? (
                             <>
                                 {chartLoading ? (
                                     <>
@@ -663,22 +811,14 @@ const NaoPerformance = memo(({}) => {
                                         </div>
                                     </>
                                 ) : (
-                                    <div className="mt-6">{renderChart}</div>
+                                    <ApexChartWrapper className="!max-h-[396px] w-full h-full mt-6">
+                                        <ApexChart type="area" height="100%" series={dataChartSource} options={apexOptions} />
+                                    </ApexChartWrapper>
                                 )}
                             </>
                         ) : (
-                            <>
-                                {chartLoading ? (
-                                    <>
-                                        <div className="flex items-center justify-center w-full min-h-[504px]">
-                                            <Spinner color="currentColor" size={60} className="text-teal" />
-                                        </div>
-                                    </>
-                                ) : (
-                                    <div>{renderChart}</div>
-                                )}
-                            </>
-                        )}
+                            <></>
+                        )} */}
                     </CardNao>
                 </div>
             </div>
