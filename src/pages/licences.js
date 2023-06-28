@@ -93,7 +93,7 @@ const Licences = () => {
                                 Giấy phép và Các vấn đề pháp lý khác
                             </div>
                             <Title1>GIẤY PHÉP</Title1>
-                            <Paragraph>Nami Exchange luôn nỗ lực đáp ứng các tiêu chuẩn cao về pháp lý trên pham vi toàn cầu,
+                            <Paragraph>Nami Exchange luôn nỗ lực đáp ứng các tiêu chuẩn cao về pháp lý trên phạm vi toàn cầu,
                                 dưới đây là danh sách các giấy phép hoạt động của chúng tôi, danh sách này sẽ được cập
                                 nhật liên tục theo thời gian.</Paragraph>
                             <Title1>Châu Âu</Title1>

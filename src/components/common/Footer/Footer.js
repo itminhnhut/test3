@@ -44,7 +44,7 @@ const Footer = memo(() => {
                     </div>
                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
-                <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">Copyright © 2020 Nami Foundation. All rights reserved.</div>
+                <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">Copyright © 2023 Nami Foundation. All rights reserved.</div>
             </div>
         ),
         [t, language, currentTheme]
@@ -68,7 +68,7 @@ const Footer = memo(() => {
                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
                 <hr className="border-divider dark:border-divider-dark my-6" />
-                <div className="text-txtSecondary dark:text-txtSecondary-dark text-center text-sm">Copyright © 2020 Nami Foundation. All rights reserved.</div>
+                <div className="text-txtSecondary dark:text-txtSecondary-dark text-center text-sm">Copyright © 2023 Nami Foundation. All rights reserved.</div>
             </>
         ),
         [t, language, currentTheme]
@@ -92,7 +92,7 @@ const Footer = memo(() => {
                             <>
                                 <div className="flex justify-between items-center">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark text-center text-sm">
-                                        Copyright © 2020 Nami Foundation. All rights reserved.
+                                        Copyright © 2023 Nami Foundation. All rights reserved.
                                     </div>
                                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                                 </div>{' '}
@@ -106,7 +106,7 @@ const Footer = memo(() => {
                 )}
                 {/* {width < 1200 && (
                     <div style={{ fontSize: 12 }} className="font-medium text-gray-2 mt-6">
-                        Copyright © 2020 Nami Foundation. All rights reserved.
+                        Copyright © 2023 Nami Foundation. All rights reserved.
                     </div>
                 )} */}
             </div>
