@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { Check } from 'react-feather';
 
-const CheckBox = ({ active, boxContainerClassName, label, labelClassName, onChange, className, onusMode = false, isV3 = false, isDisable = false }) => {
+const CheckBox = ({ active, boxContainerClassName, label, labelClassName, onChange, className, onusMode = false, isV3 = false, isDisable = false, sizeCheckIcon = 16 }) => {
     const onCheck = () => onChange && onChange();
     return (
         <div onClick={onCheck} className={classNames('flex items-center select-none cursor-pointer space-x-3 w-max', className)}>
@@ -21,7 +21,7 @@ const CheckBox = ({ active, boxContainerClassName, label, labelClassName, onChan
                     boxContainerClassName
                 )}
             >
-                {isDisable ? <Check size={16} className="text-txtDisabled dark:text-txtDisabled-dark" /> : active && <Check size={16} className="text-white" />}
+                {isDisable ? <Check size={sizeCheckIcon} className="text-txtDisabled dark:text-txtDisabled-dark" /> : active && <Check size={sizeCheckIcon} className="text-white" />}
             </div>
             {label && <div className={classNames('text-sm text-txtSecondary dark:text-txtSecondary-dark', labelClassName)}>{label}</div>}
         </div>

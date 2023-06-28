@@ -238,9 +238,8 @@ const Tabs = styled.div.attrs({
 `;
 
 const TabItem = styled.div.attrs(({ active }) => ({
-    className: `pb-3 w-full flex items-center justify-center text-sm mb:text-base leading-6 hover:cursor-pointer ${
-        active ? 'text-txtPrimary dark:text-txtPrimary-dark font-semibold' : 'text-txtSecondary dark:text-txtSecondary-dark'
-    }`
+    className: `pb-3 w-full flex items-center justify-center text-sm mb:text-base leading-6 hover:cursor-pointer ${active ? 'text-txtPrimary dark:text-txtPrimary-dark font-semibold' : 'text-txtSecondary dark:text-txtSecondary-dark'
+        }`
 }))``;
 
 export const getStaticProps = async ({ locale }) => ({

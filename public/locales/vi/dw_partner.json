@@ -62,7 +62,7 @@
     "bank": "Ngân hàng",
     "no_bank": "Không tìm thấy ngân hàng",
     "transfer_description": "Nội dung chuyển khoản",
-    "only_show_when_confirm":"Chỉ hiển thị khi đối tác xác nhận lệnh",
+    "only_show_when_confirm": "Chỉ hiển thị khi đối tác xác nhận lệnh",
     "rating_modal": {
         "title": "Đánh giá đối tác",
         "description": "Bạn có hài lòng khi giao dịch với đối tác này không?",
@@ -150,6 +150,9 @@
     "disabled_smart_otp_title": "Vô hiệu hoá",
     "disabled_smart_otp_des": "Tính năng Smart OTP đã bị vô hiệu hoá do nhập mã Smart OTP sai 5 lần. Vui lòng sử dụng các hình thức xác thực OTP khác hoặc thiết lập lại Smart OTP để tiếp tục sử dụng.",
     "verify_by_email": "Xác thực bằng Email",
+    "verify_now": "Xác thực ngay",
+    "partner_inactive": "Bạn cần đủ điều kiện trở thành đối tác cộng đồng từ cấp chính thức để tham gia chương trình Đối tác Nạp Rút, <0>xem thêm</0>.",
+    "not_have_payment_content": "Bạn có thể tùy chọn thực hiện xác thực hình thức thanh toán để sử dụng tính năng Nạp Rút qua đối tác của Nami.",
     "error": {
         "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
         "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",
@@ -165,7 +168,8 @@
         "not_found_order": "Không tìm thấy lệnh #{{displayingId}} hoặc đang được xử lý, vui lòng tải lại hoặc liên hệ hỗ trợ",
         "invalid_otp": "Mã OTP không hợp lệ. Vui lòng thử lại.",
         "invalid_secret": "Mã xác thực không chính xác {{timesErr}}/5, vui lòng lấy OTP từ ứng dụng Nami Exchange.",
-        "invalid_smart_otp": "Mã xác thực không chính xác {{timesErr}}/5, vui lòng nhập lại."
+        "invalid_smart_otp": "Mã xác thực không chính xác {{timesErr}}/5, vui lòng nhập lại.",
+        "invalid_amount": "Giá trị không hợp lệ"
     },
     "filter": {
         "a_day": "1 ngày",
@@ -192,5 +196,8 @@
         "system_success": "Lệnh được cập nhật trạng thái: Thành công",
         "system_reject": "Lệnh được cập nhật trạng thái: Từ chối",
         "system_dispute": "Lệnh được cập nhật trạng thái: Tranh chấp"
-    }
+    },
+    "partner_bonus": "Thưởng đối tác",
+    "partner_bonus_tooltip": "Tùy chọn nhập số thưởng dành cho đối tác xử lý lệnh Nạp Rút, bạn có thể bỏ qua nếu không muốn gửi đi phần thưởng này.",
+    "vnd_amount": "Số VND"
 }

@@ -31,7 +31,7 @@ const SessionGeneral = ({ filter, setFilter }) => {
                 <div className="font-semibold text-[20px] leading-6">{t('dw_partner:report_commission')}</div>
                 {/* <FilterTimeTab isTabAll filter={filter} setFilter={setFilter} /> */}
 
-                <FilterTimeTabV2 filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll maxMonths={3} />
+                <FilterTimeTabV2 filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll maxMonths={3} isDeepBackground={true}/>
             </div>
 
             {/* Body */}

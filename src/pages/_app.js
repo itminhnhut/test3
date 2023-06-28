@@ -136,11 +136,11 @@ const App = ({ Component, pageProps }) => {
         }
     }, []);
 
-    useEffect(() => {
-        if (!router.pathname.includes('mobile')) {
-            indexingArticles(language);
-        }
-    }, [language]);
+    // useEffect(() => {
+    //     if (!router.pathname.includes('mobile')) {
+    //         indexingArticles(language);
+    //     }
+    // }, [language]);
 
     useEffect(() => {
         if (

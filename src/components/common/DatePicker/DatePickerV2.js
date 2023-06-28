@@ -15,8 +15,9 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import styled from 'styled-components';
 import { isFunction } from 'lodash';
+import { differenceInMonths } from 'date-fns';
 
-const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside  }) => {
+const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside, customHeaderCalendar, maxMonths  }) => {
     const [showPicker, setShowPicker] = useState(false);
     const wrapperRef = useRef(null);
 
@@ -173,6 +174,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                         'absolute left-1/2 z-20 !w-auto -translate-x-1/2': position === 'center'
                     })}
                 >
+                    {customHeaderCalendar && customHeaderCalendar()}
                     <DatePickerWrapper noDatePicked={date?.startDate === date?.endDate} isDark={theme === THEME_MODE.DARK}>
                         <Component
                             className={classNames(`h-full px-[10px] ${isCalendar ? 'single-select' : ''} w-full`)}
@@ -196,7 +198,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                             showSelectionPreview={true}
                         />
                     </DatePickerWrapper>
-                    <ButtonV2 onClick={onConfirm} className="mx-6 mt-2 mb-8 w-auto">
+                    <ButtonV2 disabled={maxMonths && Math.abs(differenceInMonths(date?.startDate, date?.endDate)) >= maxMonths} onClick={onConfirm} className="mx-6 mt-2 mb-8 w-auto">
                         {t('common:global_btn.apply')}
                     </ButtonV2>
                 </div>

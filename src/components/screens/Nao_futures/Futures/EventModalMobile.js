@@ -20,7 +20,7 @@ const EventModalMobile = ({ visible, onClose, campaign }) => {
     const context = useContext(AlertContext);
     const [loading, setLoading] = useState(false);
     const [dataSource, setDataSource] = useState(campaign);
-    const mode = useRef(campaign[0].promotion_name);
+    const mode = useRef(campaign?.[0]?.promotion_name);
     const { width } = useWindowSize();
     const xs = width < 390;
 
@@ -91,7 +91,7 @@ const EventModalMobile = ({ visible, onClose, campaign }) => {
 const Background = styled.div.attrs({
     className: 'h-full w-full !rounded-[20px] select-none p-6 flex items-end'
 })`
-    background-image: ${({ language, xs }) => `url(${getS3Url(`/images/screen/futures/onboarding/bg_event_100k${xs ? '_xs' : ''}_${language}.png`)})`};
+    background-image: ${({ language, xs }) => `url(${getS3Url(`/images/screen/futures/onboarding/bg_event_100k${xs ? '_xs' : ''}_${language}_v2.png`)})`};
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

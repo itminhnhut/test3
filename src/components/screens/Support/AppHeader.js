@@ -13,8 +13,7 @@ const AppHeader = ({ topic, title }) => {
     //     setHistory(router.asPath);
     // }, [router?.query]);
 
-    if (!isApp || history === router.asPath) return null;
-
+    if ((!isApp || history === router.asPath) && !router.query?.alb) return null;
     return (
         <div onClick={router?.back} className="active:text-dominant flex items-center px-4 pt-4 pb-2 text-sm font-medium">
             <ChevronLeft size={16} className="mr-2.5" />

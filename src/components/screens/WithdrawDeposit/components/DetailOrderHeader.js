@@ -53,7 +53,7 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                 </div>
             </div>
 
-            <Card className="border !border-divider dark:border-0 bg-white dark:bg-dark-4">
+            <Card className="border !border-divider dark:border-0 bg-white !dark:bg-dark-4">
                 <div className="flex flex-grow items-center justify-between">
                     <div className="flex items-center -m-5">
                         <div className="flex p-5">
@@ -77,6 +77,14 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                                 </div>
                             </div>
                         </div>
+                        {orderDetail?.tip ? (
+                            <div className="flex p-5">
+                                <div className="">
+                                    <div className="mb-2 txtPri-1">{t('dw_partner:partner_bonus')}</div>
+                                    <div className="txtSecond-2">{formatBalanceFiat(orderDetail?.tip, 'VNDC')} VND</div>
+                                </div>
+                            </div>
+                        ) : null}
                     </div>
 
                     <div className="flex p-2 text-right ">
