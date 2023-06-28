@@ -107,13 +107,13 @@ const CHART_TYPES = {
 
 const isValidRange = (range) => range && days.some(({ value }) => value === range);
 function reorderSvg() {
-    const inner = document.querySelector('.apexcharts-inner'),
-        yaxis = document.querySelector('.apexcharts-yaxis');
+    const inner = document.querySelector('#nao_performance .apexcharts-inner'),
+        yaxis = document.querySelector('#nao_performance .apexcharts-yaxis');
 
-    inner.before(yaxis);
+    inner?.before(yaxis);
 }
 const defaultChartData = {
-    name: 'day',
+    name: 'chart_total_volume',
     data: []
 };
 
@@ -157,7 +157,7 @@ const NaoPerformance = memo(({}) => {
     }, []);
 
     const assetConfig = useSelector((state) => state.utils.assetConfig);
-    const isValidCustomDay = filter.day !== 'custom' || !!(range.startDate && range.endDate)
+    const isValidCustomDay = filter.day !== 'custom' || !!(range.startDate && range.endDate);
 
     useIsomorphicLayoutEffect(() => {
         const { performanceRange } = router.query;
@@ -177,7 +177,7 @@ const NaoPerformance = memo(({}) => {
                 return setDataChartSource([
                     {
                         data: dataChartFee[filter.marginCurrency],
-                        name: 'fee'
+                        name: 'chart_total_fee'
                     }
                 ]);
             }
@@ -185,7 +185,7 @@ const NaoPerformance = memo(({}) => {
                 return setDataChartSource([
                     {
                         data: dataChartUser,
-                        name: 'user'
+                        name: 'chart_users'
                     }
                 ]);
             }
@@ -193,7 +193,7 @@ const NaoPerformance = memo(({}) => {
                 return setDataChartSource([
                     {
                         data: dataChartOrder,
-                        name: 'order'
+                        name: 'chart_total_orders'
                     }
                 ]);
             }
@@ -201,7 +201,7 @@ const NaoPerformance = memo(({}) => {
                 return setDataChartSource([
                     {
                         data: dataChartVolume,
-                        name: 'volume'
+                        name: 'chart_total_volume'
                     }
                 ]);
             }
@@ -231,12 +231,12 @@ const NaoPerformance = memo(({}) => {
 
     const getDataChart = async () => {
         if (!isValidCustomDay) return;
-        let filterDay = filter.day
+        let filterDay = filter.day;
         if (filter.day === 'd' || filter.day === '-d') {
-            filterDay = 'w'
+            filterDay = 'w';
             if (dataChartSource?.labels?.length) return;
         }
-        
+
         setChartLoading(true);
         try {
             const data = await fetchApi({
@@ -278,7 +278,7 @@ const NaoPerformance = memo(({}) => {
                 setChartLabels(labels);
             }
         } catch (e) {
-            console.log({err: e.message})
+            console.log({ err: e.message });
         } finally {
             setChartLoading(false);
         }
@@ -347,7 +347,7 @@ const NaoPerformance = memo(({}) => {
                 pathname: router.pathname,
                 query: {
                     ...router.query,
-                    performanceRange: dateValue,
+                    performanceRange: dateValue
                 }
             },
             undefined,
@@ -363,132 +363,6 @@ const NaoPerformance = memo(({}) => {
             updateDateRangeUrl(day);
         }
     };
-
-    const options = useMemo(() => {
-        const chartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            elements: {
-                line: {
-                    tension: 0.6
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false,
-                    position: 'bottom'
-                },
-                // zoom: {
-                //     pan: {
-                //         enabled: true,
-                //         mode: 'xy',
-                //         speed: 0.5
-                //     },
-                //     zoom: {
-                //         wheel: {
-                //             enabled: true
-                //         },
-                //         pinch: {
-                //             enabled: true
-                //         },
-                //         mode: 'y'
-                //     }
-                // },
-                tooltip: {
-                    enabled: true,
-                    position: 'nearest',
-                    backgroundColor: isDark ? colors.dark[2] : colors.gray[12],
-                    padding: isMobile ? 8 : 12,
-                    caretSize: 0,
-                    titleMarginBottom: isMobile ? 8 : 12,
-                    titleFont: {
-                        size: isMobile ? 10 : 14,
-                        weight: 400
-                    },
-                    displayColors: false,
-                    bodyFont: {
-                        size: isMobile ? 12 : 16,
-                        weight: 600
-                    },
-                    footerAlign: 'right',
-                    footerFont: {
-                        size: isMobile ? 10 : 14,
-                        weight: 400
-                    },
-                    callbacks: {
-                        label: (item) => {
-                            let titleText = (titleText = t('nao:onus_performance:chart_total_volume'));
-                            let currencyText = ' VNDC';
-                            if (filter.marginCurrency === 22) currencyText = ' USDT';
-                            if (typeChart === CHART_TYPES.order) {
-                                titleText = t('nao:onus_performance:chart_total_orders');
-                                currencyText = '';
-                            }
-                            if (typeChart === CHART_TYPES.user) {
-                                titleText = t('nao:onus_performance:chart_users');
-                                currencyText = '';
-                            }
-                            if (typeChart === CHART_TYPES.fee) titleText = t('nao:onus_performance:chart_total_fee');
-                            return `${titleText}: ${formatNumber(item.raw)}${currencyText}`;
-                        },
-                        footer: (tooltipItems) => {
-                            if (typeChart === CHART_TYPES.user || typeChart === CHART_TYPES.order) return;
-                            const [item] = tooltipItems;
-                            return '$ ' + formatNumber(item.raw * (referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] || 1 / 23400));
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    type: 'time',
-                    alignToPixels: true,
-                    // stacked: true,
-                    time: {
-                        unit: chartInterval,
-                        displayFormats: {
-                            day: 'dd/MM',
-                            week: 'dd/MM',
-                            month: 'MM/yyyy'
-                        }
-                    },
-                    ticks: {
-                        color: colors.darkBlue5,
-                        // callback: function (value, index, ticks) {
-                        //     return chartInterval === 'month' ? dataChartSource?.labels?.[index]?.slice(3, 10) : dataChartSource?.labels?.[index]?.slice(0, 5);
-                        // },
-                        showLabelBackdrop: false,
-                        padding: 8
-                    },
-                    grid: {
-                        display: false,
-                        drawBorder: false
-                        // borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    stacked: true,
-                    ticks: {
-                        color: colors.darkBlue5,
-                        callback: function (value, index, ticks) {
-                            return formatAbbreviateNumber(value, 3);
-                        },
-                        crossAlign: 'far',
-                        padding: 8
-                    },
-                    grid: {
-                        drawTicks: false,
-                        borderDash: [2, 4],
-                        borderDashOffset: 2,
-                        drawBorder: !!isMobile
-                    }
-                }
-            }
-        };
-
-        return chartOptions;
-    }, [dataChartSource, isMobile, chartInterval, typeChart, isDark]);
 
     const apexOptions = useMemo(() => {
         return {
@@ -603,23 +477,27 @@ const NaoPerformance = memo(({}) => {
                 }
             },
             tooltip: {
-                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                custom: ({ series, seriesIndex, dataPointIndex, w }) => {
                     const y = series[seriesIndex][dataPointIndex];
                     const x = w.globals.seriesX[0][dataPointIndex];
+                    const type = w.globals.seriesNames[0];
+                    const isMonetary = type !== 'chart_users' && type !== 'chart_total_orders';
+                    const titleText = t(`nao:onus_performance:${type}`);
+                    let currencyText = isMonetary ? (filter.marginCurrency === 22 ? ' USDT' : ' VNDC') : '';
+
+                    const body = `${titleText}: ${formatNumber(y)}${currencyText}`;
+                    const fiatUSD = isMonetary ? `$ ${formatNumber(y * (referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] || 1 / 23400))}` : '';
                     return `
                         <div class="bg-gray-12 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
                             <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? format(x, 'dd/MM/yyyy') : ''}</div>
-                            <div class="text-txtPrimary dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${formatNumber(
-                                y / (referencePrice['VNDC'] ?? 1),
-                                0
-                            )}VNDC</div>
-                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">$${formatNumber(y, 3)}</div>
+                            <div class="text-txtPrimary dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${body}</div>
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">${fiatUSD}</div>
                         </div>
                     `;
                 }
             }
         };
-    }, [isDark, isMobile, referencePrice, chartInterval]);
+    }, [isDark, isMobile, referencePrice, chartInterval, typeChart, filter.marginCurrency]);
 
     return (
         <section id="nao_performance" className="pt-6 sm:pt-20 text-sm sm:text-base">
@@ -795,30 +673,10 @@ const NaoPerformance = memo(({}) => {
                                 </div>
                             </>
                         ) : (
-                            // <div className="w-full !max-h-[396px] mt-6">
-                            //     <NaoChartJS type="line" data={dataChartSource} options={options} height="450px" />
-                            // </div>
                             <ApexChartWrapper className="!min-h-[300px] sm:!min-h-[396px] w-full h-full mt-6">
                                 <ApexChart type="area" height="100%" series={dataChartSource} options={apexOptions} />
                             </ApexChartWrapper>
                         )}
-                        {/* {isMobile ? (
-                            <>
-                                {chartLoading ? (
-                                    <>
-                                        <div className="flex items-center justify-center w-full min-h-[300px] mt-6">
-                                            <Spinner color="currentColor" size={60} className="text-teal" />
-                                        </div>
-                                    </>
-                                ) : (
-                                    <ApexChartWrapper className="!max-h-[396px] w-full h-full mt-6">
-                                        <ApexChart type="area" height="100%" series={dataChartSource} options={apexOptions} />
-                                    </ApexChartWrapper>
-                                )}
-                            </>
-                        ) : (
-                            <></>
-                        )} */}
                     </CardNao>
                 </div>
             </div>

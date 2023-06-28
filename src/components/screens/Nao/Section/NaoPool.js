@@ -123,10 +123,10 @@ const chartReducer = (state, action = { type: '', payload: {} }) => {
 const isValidRange = (range) => range && days.some(({ value }) => value === range);
 
 function reorderSvg() {
-    const inner = document.querySelector('.apexcharts-inner'),
-        yaxis = document.querySelector('.apexcharts-yaxis');
+    const inner = document.querySelector('#nao_pool .apexcharts-inner'),
+        yaxis = document.querySelector('#nao_pool .apexcharts-yaxis');
 
-    inner.before(yaxis);
+    inner?.before(yaxis);
 }
 
 const NaoPool = ({ dataSource, assetNao }) => {
@@ -250,9 +250,10 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 type: 'datetime',
                 labels: {
                     formatter: (value) => {
+                        if (!value) return '';
                         if (chartInterval === 'month') {
                             return format(value, 'MM/yyyy');
-                        } 
+                        }
                         return format(value, 'dd/MM')
                     },
                     style: {
@@ -309,8 +310,8 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             <div class="text-txtPrimary dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${formatNumber(
                                 y / (referencePrice['VNDC'] ?? 1),
                                 0
-                            )}VNDC</div>
-                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">$${formatNumber(y, 3)}</div>
+                            )} VNDC</div>
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">$ ${formatNumber(y, 3)}</div>
                         </div>
                     `;
                 }
