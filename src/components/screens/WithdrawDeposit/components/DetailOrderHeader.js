@@ -53,7 +53,7 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                 </div>
             </div>
 
-            <Card className="border !border-divider dark:border-0 bg-white dark:bg-dark-4">
+            <Card className="border !border-divider dark:border-0 bg-white !dark:bg-dark-4">
                 <div className="flex flex-grow items-center justify-between">
                     <div className="flex items-center -m-5">
                         <div className="flex p-5">
