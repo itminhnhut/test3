@@ -37,7 +37,8 @@
             "partner": "Đối tác",
             "payment_method": "Phương thức thanh toán",
             "daily_reward": "Thưởng giao dịch hàng ngày",
-            "futures_portfolio": "Thống kê Futures"
+            "futures_portfolio": "Thống kê Futures",
+            "profit_stats": "Thống kê lợi nhuận"
         },
         "top_referral": "Đua TOP giới thiệu"
     },
