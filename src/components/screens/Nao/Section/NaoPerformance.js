@@ -12,7 +12,7 @@ import colors from 'styles/colors';
 import { assetCodeFromId, WalletCurrency } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
 import useWindowSize from 'hooks/useWindowSize';
-import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import { ArrowDropDownIcon, BxsInfoCircle } from 'components/svg/SvgIcon';
 import CheckCircle from 'components/svg/CheckCircle';
 // import NaoChartJS from '../Components/Charts/NaoChartJS';
 import { Spinner } from 'components/common/Icons';
@@ -234,7 +234,7 @@ const NaoPerformance = memo(({}) => {
         let filterDay = filter.day;
         if (filter.day === 'd' || filter.day === '-d') {
             filterDay = 'w';
-            if (dataChartSource?.labels?.length) return;
+            if (dataChartSource[0]?.data?.length) return;
         }
 
         setChartLoading(true);
@@ -367,6 +367,9 @@ const NaoPerformance = memo(({}) => {
     const apexOptions = useMemo(() => {
         return {
             chart: {
+                offsetX: 0,
+                offsetY: 0,
+                parentHeightOffset: 0,
                 zoom: {
                     enabled: false
                 },
@@ -419,7 +422,7 @@ const NaoPerformance = memo(({}) => {
                     }
                 },
                 padding: {
-                    // right: 30
+                    left: -2
                 }
             },
             xaxis: {
@@ -463,7 +466,9 @@ const NaoPerformance = memo(({}) => {
                     },
                     formatter: (value) => {
                         return formatAbbreviateNumber(value, 3);
-                    }
+                    },
+                    offsetX: -15,
+                    align: 'left',
                 }
             },
             fill: {
@@ -481,16 +486,18 @@ const NaoPerformance = memo(({}) => {
                     const y = series[seriesIndex][dataPointIndex];
                     const x = w.globals.seriesX[0][dataPointIndex];
                     const type = w.globals.seriesNames[0];
+                    const currency = filter.marginCurrency;
+                    const isUSD = currency === 22;
                     const isMonetary = type !== 'chart_users' && type !== 'chart_total_orders';
                     const titleText = t(`nao:onus_performance:${type}`);
-                    let currencyText = isMonetary ? (filter.marginCurrency === 22 ? ' USDT' : ' VNDC') : '';
+                    let currencyText = isMonetary ? (isUSD ? 'USDT' : 'VNDC') : '';
 
-                    const body = `${titleText}: ${formatNumber(y)}${currencyText}`;
-                    const fiatUSD = isMonetary ? `$ ${formatNumber(y * (referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] || 1 / 23400))}` : '';
+                    const body = `${titleText}: ${formatNumber(y, isUSD ? 4 : 0)} ${currencyText}`;
+                    const fiatUSD = isMonetary ? `$ ${formatNumber(y * (referencePrice[`${assetCodeFromId(currency)}/USD`] || 1 / 23400), 2)}` : '';
                     return `
-                        <div class="bg-gray-12 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
+                        <div class="bg-gray-15 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
                             <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? format(x, 'dd/MM/yyyy') : ''}</div>
-                            <div class="text-txtPrimary dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${body}</div>
+                            <div class="text-white dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${body}</div>
                             <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">${fiatUSD}</div>
                         </div>
                     `;
@@ -542,8 +549,8 @@ const NaoPerformance = memo(({}) => {
                 </div>
             </div>
             <div className="pt-5 flex flex-col xl:flex-row sm:pt-8 gap-4 sm:gap-6">
-                <div className="w-full xl:w-1/3 flex flex-col gap-y-4 sm:gap-y-6">
-                    <CardNao className="rounded-lg !min-w-max w-full !px-8 !pt-6 !pb-7" customHeight="sm:min-h-[328px]">
+                <div className="w-full xl:w-1/3 flex flex-col gap-y-4 sm:gap-y-6 z-[1]">
+                    <CardNao className="rounded-lg !min-w-max w-full !px-8 !pt-6 !pb-7 relative" customHeight="sm:min-h-[328px]">
                         <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
                             {t('nao:onus_performance:total_volume')}
                         </label>
@@ -572,7 +579,7 @@ const NaoPerformance = memo(({}) => {
                             </span>
                         </div>
                     </CardNao>
-                    <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark !min-w-max !py-6 !px-8 w-full !flex-none" customHeight="sm:max-h-[162px]">
+                    <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark !min-w-max !py-6 !px-8 w-full !flex-none z-0 relative" customHeight="sm:max-h-[162px]">
                         <div className="flex items-center justify-between">
                             <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
                                 {t('nao:onus_performance:total_fee')}
@@ -581,7 +588,7 @@ const NaoPerformance = memo(({}) => {
                                 {({ open, close }) => (
                                     <>
                                         <Popover.Button>
-                                            <div className="px-2 py-[6px] bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between text-gray-15 dark:text-white min-w-[72px] space-x-1">
+                                            <div className="px-2 py-[6px] bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between text-gray-15 dark:text-white min-w-[72px] space-x-1 font-semibold">
                                                 {filterFeeAsset.find((a) => a.id === fee)?.label || '--'}
                                                 <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
                                             </div>
@@ -595,7 +602,7 @@ const NaoPerformance = memo(({}) => {
                                             leaveFrom="opacity-100 translate-y-0"
                                             leaveTo="opacity-0 translate-y-1"
                                         >
-                                            <Popover.Panel className="absolute top-8 mt-3 right-0 z-5 bg-white dark:bg-dark-4 rounded-md border border-divider dark:border-divider-dark">
+                                            <Popover.Panel className="absolute top-8 mt-3 right-0 z-15 bg-white dark:bg-dark-4 rounded-md border border-divider dark:border-divider-dark">
                                                 <div className="py-[2] min-w-[72px] shadow-onlyLight text-sm flex flex-col">
                                                     {assets.map((item, index) => (
                                                         <span
@@ -623,11 +630,11 @@ const NaoPerformance = memo(({}) => {
                         </div>
                     </CardNao>
                 </div>
-                <div className="w-full xl:w-2/3 h-full">
-                    <CardNao className="rounded-lg whitespace-nowrap min-h-[350px] !p-8" customHeight="sm:max-h-[514px]">
-                        <div className="order-first gap-6 md:gap-2 gap-last grid xl:grid-cols-3">
-                            <TextLiner className="w-full">{t('nao:onus_performance:chart_title')}</TextLiner>
-                            <div className="flex gap-last xl:justify-end w-full overflow-auto no-scrollbar space-x-4 col-span-2">
+                <div className="w-full xl:w-2/3 h-full z-0">
+                    <CardNao className="rounded-lg whitespace-nowrap min-h-[360px] !p-4 sm:!p-8" customHeight="sm:max-h-[514px]">
+                        <div className="order-first">
+                            {/* <TextLiner className="w-full">{t('nao:onus_performance:chart_title')}</TextLiner> */}
+                            <div className="flex gap-last xl:justify-end w-full overflow-auto no-scrollbar space-x-4">
                                 <button
                                     type="BUTTON"
                                     className={classNames('flex flex-col justify-center items-center text-sm sm:text-base text-txtSecondary', {
@@ -668,16 +675,22 @@ const NaoPerformance = memo(({}) => {
                         </div>
                         {chartLoading ? (
                             <>
-                                <div className="flex items-center justify-center w-full min-h-[504px]">
+                                <div className="flex items-center justify-center w-full h-[304px] mb:h-[396px] mt-1 sm:mt-3">
                                     <Spinner color="currentColor" size={60} className="text-teal" />
                                 </div>
                             </>
                         ) : (
-                            <ApexChartWrapper className="!min-h-[300px] sm:!min-h-[396px] w-full h-full mt-6">
+                            <ApexChartWrapper className="!min-h-[304px] mb:!min-h-[396px] mt-1 sm:mt-3 w-full h-full">
                                 <ApexChart type="area" height="100%" series={dataChartSource} options={apexOptions} />
                             </ApexChartWrapper>
                         )}
                     </CardNao>
+                    <div className="col-span-12 mt-3 bg-white dark:bg-darkBlue-3 text-txtSecondary dark:text-txtSecondary-dark text-xs mb:hidden py-3 px-4 rounded-md">
+                        <div className="flex items-center space-x-2">
+                            <BxsInfoCircle size={16} color="currentColor" />
+                            <span>{t('nao:pool:mobile_chart_note')}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             {dataSource?.lastTimeUpdate && (

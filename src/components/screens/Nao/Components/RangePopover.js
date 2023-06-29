@@ -114,7 +114,7 @@ const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange
                             <div className="sm:hidden ml-auto">
                                 <SvgFilter size={24} color="currentColor" className="text-txtPrimary dark:text-txtPrimary-dark" />
                             </div>
-                            <div className="hidden sm:flex px-4 py-2 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtSecondary dark:text-txtSecondary-dark rounded-md !font-SF-Pro !text-base">
+                            <div className="hidden sm:flex px-4 py-2 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtSecondary dark:text-txtSecondary-dark rounded-md !font-SF-Pro !text-base whitespace-nowrap">
                                 {showActive()}
                                 <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
                             </div>

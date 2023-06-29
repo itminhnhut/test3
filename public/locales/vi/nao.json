@@ -102,6 +102,7 @@
         "week": "Tuần {{value}}:",
         "pool_value": "Giá trị pool",
         "pool_value_tooltip": "Giá trị pool được tính dựa trên giá NAO tại thời điểm hiển thị",
+        "mobile_chart_note": "Nhấn vào từng mốc để xem thống kê chi tiết",
         "chart": {
             "pool_info": "Giá trị Pool",
             "fee_revenue": "Doanh thu Pool"

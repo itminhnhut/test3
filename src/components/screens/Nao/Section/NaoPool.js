@@ -30,6 +30,7 @@ import colors from 'styles/colors';
 import dynamic from 'next/dynamic';
 import { format, parse } from 'date-fns';
 import styled from 'styled-components';
+import { BxsInfoCircle } from 'components/svg/SvgIcon';
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 // this code block for mocking assets
 
@@ -191,6 +192,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
     const apexOptions = useMemo(() => {
         return {
             chart: {
+                offsetX: 0,
+                offsetY: 0,
+                // parentHeightOffset: 0,
                 zoom: {
                     enabled: false
                 },
@@ -243,7 +247,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     }
                 },
                 padding: {
-                    // right: 30
+                    left: -2
                 }
             },
             xaxis: {
@@ -254,11 +258,11 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         if (chartInterval === 'month') {
                             return format(value, 'MM/yyyy');
                         }
-                        return format(value, 'dd/MM')
+                        return format(value, 'dd/MM');
                     },
                     style: {
                         colors: isDark ? colors.gray[7] : colors.gray[1]
-                    },
+                    }
                 },
                 tickAmount: 'dataPoints',
                 axisTicks: {
@@ -281,13 +285,18 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     show: true,
                     color: isDark ? colors.divider.dark : colors.divider.DEFAULT
                 },
+                axisTicks: {
+                    show: false
+                },
                 labels: {
                     style: {
                         colors: isDark ? colors.gray[7] : colors.gray[1]
                     },
                     formatter: (value) => {
                         return formatAbbreviateNumber(value, 3);
-                    }
+                    },
+                    offsetX: -15,
+                    align: 'left',
                 }
             },
             fill: {
@@ -305,13 +314,13 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     const y = series[seriesIndex][dataPointIndex];
                     const x = w.globals.seriesX[0][dataPointIndex];
                     return `
-                        <div class="bg-gray-12 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
-                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? format(x, 'dd/MM/yyyy') : '' }</div>
-                            <div class="text-txtPrimary dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${formatNumber(
-                                y / (referencePrice['VNDC'] ?? 1),
+                        <div class="bg-gray-15 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? format(x, 'dd/MM/yyyy') : ''}</div>
+                            <div class="text-white dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${formatNumber(
+                                y / (referencePrice['VNDC'] ?? 0),
                                 0
                             )} VNDC</div>
-                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">$ ${formatNumber(y, 3)}</div>
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">$ ${formatNumber(y, 2)}</div>
                         </div>
                     `;
                 }
@@ -656,12 +665,12 @@ const NaoPool = ({ dataSource, assetNao }) => {
 
     return (
         <section id="nao_pool" className="pt-12 sm:pt-20 text-sm sm:text-base">
-            <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex sm:items-center justify-between gap-4">
                 <div className="space-y-2 flex flex-col">
                     <TextLiner className="normal-case">{t('nao:pool:title')}</TextLiner>
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:pool:description')}</span>
                 </div>
-                <div className="w-auto ml-auto">
+                <div className="ml-auto">
                     <RangePopover
                         language={language}
                         active={days.find((d) => d.value === filter.day)}
@@ -676,9 +685,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 </div>
             </div>
             <div className="mt-6 grid grid-cols-12 gap-4 sm:gap-6">
-                <CardNao className="sm:!min-w-[50%] sm:!px-8 sm:!py-8 flex flex-col col-span-12 md:col-span-4" customHeight="sm:max-h-[514px]">
+                <CardNao className="sm:!min-w-[50%] sm:!px-8 sm:!py-8 flex flex-col col-span-12 xl:col-span-4" customHeight="sm:max-h-[514px]">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg font-semibold">{t('nao:pool:nao_staked')}</label>
-                    <div className="flex flex-col gap-1 mt-4">
+                    <div className="flex flex-col mt-4">
                         <div className="text-xl sm:text-2xl font-semibold flex items-center space-x-2">
                             {loading ? (
                                 <Spinner color="currentColor" size={24} className="text-teal" />
@@ -699,7 +708,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     >
                         {t('nao:pool:pool_value')}
                     </label>
-                    <div className="flex flex-col gap-1 mt-4">
+                    <div className="flex flex-col mt-4">
                         {loading ? (
                             <>
                                 <Spinner color="currentColor" size={24} className="text-teal" />
@@ -719,8 +728,8 @@ const NaoPool = ({ dataSource, assetNao }) => {
 
                     <hr className="border-divider dark:border-divider-dark my-5 sm:my-8" />
 
-                    <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg">{t('nao:pool:participants')}</label>
-                    <div className="flex flex-col gap-1 mt-4">
+                    <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg font-semibold">{t('nao:pool:participants')}</label>
+                    <div className="flex flex-col mt-4">
                         {loading ? (
                             <>
                                 <Spinner color="currentColor" size={24} className="text-teal" />
@@ -738,12 +747,12 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     </div>
                 </CardNao>
                 <CardNao
-                    className="sm:!min-w-[50%] sm:!px-8 sm:!py-8 flex-col sm:items-start whitespace-nowrap min-h-[350px] col-span-12 md:col-span-8 !flex-none"
+                    className="sm:!min-w-[50%] sm:!p-8 !p-4 flex-col sm:items-start whitespace-nowrap min-h-[360px] col-span-12 xl:col-span-8 !flex-none"
                     customHeight="sm:max-h-[514px]"
                 >
-                    <div className="order-first gap-6 md:gap-2 gap-last grid xl:grid-cols-3 w-full">
-                        <TextLiner className="w-full">{t('nao:onus_performance:chart_title')}</TextLiner>
-                        <div className="flex gap-last xl:justify-end w-auto overflow-auto no-scrollbar space-x-4 col-span-2">
+                    <div className="order-first w-full">
+                        {/* <TextLiner className="w-full">{t('nao:onus_performance:chart_title')}</TextLiner> */}
+                        <div className="flex gap-last xl:justify-end w-auto overflow-auto no-scrollbar space-x-4">
                             {Object.values(CHART_TYPES).map((type) => (
                                 <button
                                     type="BUTTON"
@@ -759,7 +768,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         </div>
                     </div>
                     {chartLoading ? (
-                        <div className="flex items-center justify-center w-full min-h-[300px] mt-6">
+                        <div className="flex items-center justify-center w-full h-[304px] sm:h-[396px] mt-1 sm:mt-3">
                             <Spinner size={60} className="text-teal" />
                             {/* don't delete this block, it's hidden but force tailwind to build this class for chart tooltip */}
                             <div className="bg-gray-12 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none hidden">
@@ -769,11 +778,17 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             </div>
                         </div>
                     ) : (
-                        <ApexChartWrapper className="min-h-[300px] !max-h-[396px] w-full h-full mt-6">
+                        <ApexChartWrapper className="min-h-[304px] sm:!min-h-[396px] w-full h-full mt-1 sm:mt-3">
                             <ApexChart type="area" height="100%" series={chartData[chartType]} options={apexOptions} ref={chartRef} />
                         </ApexChartWrapper>
                     )}
                 </CardNao>
+                <div className="col-span-12 -mt-1 sm:-mt-3 bg-white dark:bg-darkBlue-3 text-txtSecondary dark:text-txtSecondary-dark text-xs mb:hidden py-3 px-4 rounded-md">
+                    <div className="flex items-center space-x-2">
+                        <BxsInfoCircle size={16} color="currentColor" />
+                        <span>{t('nao:pool:mobile_chart_note')}</span>
+                    </div>
+                </div>
                 <CardNao className="sm:!min-w-[50%] sm:!p-10 sm:min-h-[344px] !justify-start !mt-2 sm:!mt-0 col-span-12 md:col-span-6">
                     <Tooltip id="tooltip-revenue-history" />
                     <div className="flex-col flex">
