@@ -331,7 +331,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                 </div>
                             </div>
                             <Tooltip id={'description'} place="top" effect="solid" className="max-w-[340px]">
-                                <div dangerouslySetInnerHTML={{__html: t('reference:ranking_conditions_tooltip')}}></div>
+                                <div dangerouslySetInnerHTML={{ __html: t('reference:ranking_conditions_tooltip') }}></div>
                             </Tooltip>
                             <div
                                 className='w-max font-semibold text-base text-txtPrimary dark:text-gray-4 mb-4 border-b border-darkBlue-5 border-dashed cursor-pointer'
@@ -857,7 +857,7 @@ const ShareRankModal = ({ isVisible, onClose, data, t }) => {
                 image = 'official'
                 break;
         }
-        return <img src={`/images/reference/bg_share_rank_${image}.png`} width='100%' />
+        return <Image width={320} height={320} src={getS3Url(`/images/reference/bg_share_rank_${image}.png`)} />
     }, [])
 
     const onDownLoad = async () => {
