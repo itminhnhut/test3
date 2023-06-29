@@ -24,7 +24,8 @@ const getStatus = (start, end) => {
     const now = Date.now();
     start = new Date(start).getTime();
     end = new Date(end).getTime();
-    return start > now ? STATUSES.upcoming : end < now ? STATUSES.ended : STATUSES.ongoing;
+
+    return start > now ? STATUSES.upcoming : end && end < now ? STATUSES.ended : STATUSES.ongoing;
 };
 
 /**
@@ -67,7 +68,7 @@ const EventItem = (props) => {
                     {t('marketing_events:starts_in')} <Countdown date={start} renderer={timeRenderer} />
                 </div>
             );
-        } else if (status === STATUSES.ongoing) {
+        } else if (end && status === STATUSES.ongoing) {
             return (
                 <div className="absolute bg-red-2 text-white px-2 text-xs rounded-sm top-4 right-4 z-[1]">
                     {t('marketing_events:ends_in')} <Countdown date={end} renderer={timeRenderer} />
@@ -89,7 +90,7 @@ const EventItem = (props) => {
                     <div className="flex flex-wrap gap-2 mb:gap-3 items-center text-txtSecondary dark:text-txtSecondary-dark text-xs mb:text-sm">
                         {getStatusBadge(props.startTime, props.endTime)}
                         <span className="w-full mb:w-auto">
-                            {formatTime(props.startTime, 'HH:mm dd/MM/yyyy')} - {formatTime(props.endTime, 'HH:mm dd/MM/yyyy')}
+                            {formatTime(props.startTime, 'HH:mm dd/MM/yyyy')} {props.endTime && `- ${formatTime(props.endTime, 'HH:mm dd/MM/yyyy')}`}
                         </span>
                     </div>
                     <div className="mt-2 mb:mt-3 font-semibold text-base mb:text-xl line-clamp-2">{props.title}</div>
