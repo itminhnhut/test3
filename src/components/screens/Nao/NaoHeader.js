@@ -20,23 +20,6 @@ import SvgCross from "components/svg/Cross";
 import { AppleIcon, GooglePlayIcon } from 'components/svg/SvgIcon';
 import Image from "next/image";
 import useApp from "hooks/useApp";
-const category = [
-    {
-        label: "Whitepaper",
-        link: "https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics",
-        options: "_blank",
-    },
-    { label: 'announcement', link: 'https://nami.exchange/vi/support/announcement/thong-bao', options: '_blank' },
-    // { label: "performance", el: "nao_performance", url: "/nao" },
-    { label: "governance_pool", el: "nao_pool", url: "/nao" },
-    // { label: 'buy_token', el: 'nao_token' },
-    { label: "Stake NAO", link: "/nao/stake", options: "_self" },
-    // { label: "voting", el: "nao_proposal", url: "/nao" },
-    { label: "contest_futures", link: "/contest", options: "_self" },
-    // { label: "voting", el: "nao_proposal", url: "/nao" },
-    // { label: "contest_futures", link: "/contest", options: "_self" },
-    // { label: 'NAO Futures v1', link: '/nao/summary', options: '_self' }
-];
 
 const onDownload = (key) => {
     let url = '';
@@ -64,6 +47,33 @@ const NaoHeader = memo(() => {
     const [visible, setVisible] = useState(false);
     const router = useRouter();
     const el = useRef(null);
+
+    const getAnnouncementLink = () => {
+        const endPoints = {
+            en: '/support/announcement/announcement',
+            vi: '/vi/support/announcement/thong-bao'
+        };
+
+        return process.env.NEXT_PUBLIC_WEB_V1 + endPoints[language]
+    }
+
+    const category = [
+        {
+            label: 'Whitepaper',
+            link: 'https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics',
+            options: '_blank'
+        },
+        { label: 'announcement', link: getAnnouncementLink(), options: '_blank' },
+        // { label: "performance", el: "nao_performance", url: "/nao" },
+        { label: 'governance_pool', el: 'nao_pool', url: '/nao' },
+        // { label: 'buy_token', el: 'nao_token' },
+        { label: 'Stake NAO', link: '/nao/stake', options: '_self' },
+        // { label: "voting", el: "nao_proposal", url: "/nao" },
+        { label: 'contest_futures', link: '/contest', options: '_self' }
+        // { label: "voting", el: "nao_proposal", url: "/nao" },
+        // { label: "contest_futures", link: "/contest", options: "_self" },
+        // { label: 'NAO Futures v1', link: '/nao/summary', options: '_self' }
+    ];
 
     const scrollToView = (item) => {
         if (!item?.el) {
@@ -102,49 +112,42 @@ const NaoHeader = memo(() => {
                 t={t}
                 scrollToView={scrollToView}
                 onDownload={onDownload}
+                category={category}
             />
             <img
-                onClick={() => router.push("/nao")}
-                src={getS3Url("/images/nao/ic_nao.png")}
+                onClick={() => router.push('/nao')}
+                src={getS3Url('/images/nao/ic_nao.png')}
                 width="40"
                 height="40"
-                className="min-w-[2.5rem]"
+                className="min-w-[2.5rem] cursor-pointer"
             />
-            <div
-                className={`flex items-center text-txtPrimary dark:text-txtPrimary-dark font-medium ${width > 820 ? "space-x-10" : "space-x-4"
-                }`}
-            >
+            <div className={`flex items-center text-txtPrimary dark:text-txtPrimary-dark font-medium ${width > 820 ? 'space-x-10' : 'space-x-4'}`}>
                 {width > 820 && (
                     <>
                         {category.map((item) => (
-                            <div
-                                key={item.label}
-                                onClick={() => scrollToView(item)}
-                                className="cursor-pointer"
-                            >
-                                {t(`nao:${item.label}`)}
-                            </div>
+                            <>
+                                {item.label === 'Stake NAO' ? null : (
+                                    <div key={item.label} onClick={() => scrollToView(item)} className="cursor-pointer">
+                                        {t(`nao:${item.label}`)}
+                                    </div>
+                                )}
+                            </>
                         ))}
                         <LanguageSetting />
+                        <ButtonNao onClick={() => router.push('/nao/stake')} className="!rounded-md h-10 !px-6 !py-2">
+                            {t(`nao:Stake NAO`)}
+                        </ButtonNao>
                     </>
                 )}
                 {width <= 820 && (
                     <>
-                        {isApp && <ButtonNao
-                            onClick={() => router.push("/nao/stake")}
-                            className="!rounded-md h-10 px-6"
-                        >
-                            Stake NAO
-                        </ButtonNao>}
-                        <div
-                            className="relative"
-                            onClick={() => setVisible(true)}
-                        >
-                            <SvgMenu
-                                size={24}
-                                className={"cursor-pointer select-none"}
-                                color="currentColor"
-                            />
+                        {isApp && (
+                            <ButtonNao onClick={() => router.push('/nao/stake')} className="!rounded-md h-10 px-6">
+                                Stake NAO
+                            </ButtonNao>
+                        )}
+                        <div className="relative" onClick={() => setVisible(true)}>
+                            <SvgMenu size={24} className={'cursor-pointer select-none'} color="currentColor" />
                         </div>
                     </>
                 )}
@@ -161,6 +164,7 @@ const Drawer = ({
     t,
     scrollToView,
     onDownload,
+    category
 }) => {
     const wrapperRef = useRef(null);
     const timer = useRef(null);

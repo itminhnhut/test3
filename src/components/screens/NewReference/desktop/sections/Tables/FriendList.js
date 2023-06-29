@@ -189,11 +189,11 @@ const FriendList = ({ language, t, id }) => {
         }
         return levelFriend > 0
             ? BREADCRUMB?.map((value, key) => {
-                  if (path?.[key] && key > 0) {
-                      value['parentCode'] = path[key];
-                  }
-                  return value;
-              })
+                if (path?.[key] && key > 0) {
+                    value['parentCode'] = path[key];
+                }
+                return value;
+            })
             : [];
     }, [dataSource, levelFriend]);
 
@@ -430,6 +430,13 @@ const FriendList = ({ language, t, id }) => {
                 detailFriend={detailFriend}
                 defaultOption={DEFAULT_TOKENS}
                 onChangeOption={handleChangeOption}
+                range={
+                    {
+                        from: filter?.total_commissions?.value?.startDate,
+                        to: filter?.total_commissions?.value?.endDate
+                    }
+                }
+                invitedBy={dataSource?.path?.at(-1)}
             />
             <div className="w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8">
                 {/* <div className="font-semibold text-[22px] leading-7 mx-6 mb-8">{t('reference:referral.friend_list')}</div> */}

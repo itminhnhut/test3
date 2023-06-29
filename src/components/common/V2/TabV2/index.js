@@ -1,30 +1,35 @@
+import classNames from 'classnames';
 import React from 'react';
 import styled, { css } from 'styled-components';
 import colors from 'styles/colors';
+import Chip from '../Chip';
 
-const TabV2 = ({ activeTabKey, tabs, onChangeTab, isOverflow }) => {
+const TabV2 = ({ wrapperClassName, activeTabKey, tabs, onChangeTab, isOverflow, chipClassName, isDeepBackground }) => {
     return (
-        <TabWrapper isOverflow={isOverflow}>
+        <TabWrapper className={classNames('flex gap-4 items-center', wrapperClassName)} isOverflow={isOverflow}>
             {tabs.map((tab) => {
                 const isActive = tab.key === activeTabKey;
                 return (
-                    <Tab
-                        className={`border flex ${isActive ? 'border-teal ' : 'border-divider dark:border-divider-dark '}`}
-                        onClick={() => onChangeTab(tab.key)}
-                        key={tab.key}
-                        active={isActive}
-                        disabled={isActive}
-                        id={tab.key}
-                    >
+                    <Chip selected={isActive} key={tab.key} onClick={() => onChangeTab(tab.key)} className={`min-w-max ${chipClassName}`} isDeepBackground={isDeepBackground}>
                         {tab.children}
-                    </Tab>
+                    </Chip>
+                    // <Tab
+                    //     className={`border flex ${isActive ? 'border-teal ' : 'border-divider dark:border-divider-dark '}`}
+                    //     onClick={() => onChangeTab(tab.key)}
+                    //     key={tab.key}
+                    //     active={isActive}
+                    //     disabled={isActive}
+                    //     id={tab.key}
+                    // >
+                    //     {tab.children}
+                    // </Tab>
                 );
             })}
         </TabWrapper>
     );
 };
 
-const TabWrapper = styled.div.attrs({ className: 'flex gap-4 items-center' })`
+const TabWrapper = styled.div`
     ${({ isOverflow }) =>
         !isOverflow
             ? css`

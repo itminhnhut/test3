@@ -14,7 +14,7 @@ import { EXCHANGE_ACTION, WALLET_SCREENS } from 'pages/wallet';
 import SvgWalletOverview from 'components/svg/SvgWalletOverview';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { PartnersIcon, MoreHorizIcon, PortfolioIcon, FutureExchangeIcon } from 'components/svg/SvgIcon';
+import { PartnersIcon, MoreHorizIcon, FutureExchangeIcon } from 'components/svg/SvgIcon';
 import styled from 'styled-components';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Types from 'components/screens/Account/types';
@@ -92,20 +92,23 @@ const OverviewWallet = (props) => {
                 <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary flex items-center gap-x-3">
                     {isHideAsset
                         ? SECRET_STRING
-                        : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + partnersEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}{' '}
+                        : formatWallet(
+                              exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + naoFuturesEstBtc?.totalValue + partnersEstBtc?.totalValue,
+                              exchangeEstBtc?.assetDigit
+                          )}{' '}
                     BTC
-                    {/* <button className="hidden md:block" onClick={() => router.push(PATHS?.FUTURES_PORTFOLIO)}>
-                        <PortfolioIcon />
-                    </button> */}
                 </div>
                 <div className="font-normal text-sm md:text-base mt-1">
                     {isHideAsset
                         ? SECRET_STRING
-                        : `$ ${formatWallet(exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue + partnersRefPrice?.totalValue, 2)}`}
+                        : `$ ${formatWallet(
+                              exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue + naoFuturesRefPrice?.totalValue + partnersRefPrice?.totalValue,
+                              2
+                          )}`}
                 </div>
             </>
         );
-    }, [exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice, isHideAsset]);
+    }, [exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice, naoFuturesEstBtc, naoFuturesRefPrice, isHideAsset]);
 
     const renderExchangeEstBalance = useCallback(() => {
         return (
@@ -380,7 +383,7 @@ const OverviewWallet = (props) => {
                 <CardWallet onClick={() => onHandleClick('details_nao_futures')} isSmallScreen={isSmallScreen}>
                     <AssetBalance
                         title="NAO Futures"
-                        icon={<Image width={20} height={20} src={getS3Url('/images/nao/ic_nao.png')} />}
+                        icon={<Image width={32} height={32} src={getS3Url('/images/nao/ic_nao.png')} />}
                         renderEstBalance={renderNAOFuturesEstBalance}
                         isSmallScreen={isSmallScreen}
                         onHandleClick={onHandleClick}
@@ -389,7 +392,7 @@ const OverviewWallet = (props) => {
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
                         {!isSmallScreen && (
                             <div className="flex items-center text-base font-normal text-gray-15 dark:text-gray-4 mr-3">
-                                <Trans>{t('wallet:futures_overview')}</Trans>
+                                <Trans>{t('wallet:nao_overview')}</Trans>
                             </div>
                         )}
                         <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>

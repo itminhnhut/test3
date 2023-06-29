@@ -134,13 +134,15 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
             </Head>
-            <div className="bg-bgPrimary dark:bg-bgPrimary-dark text-txtPrimary dark:text-txtPrimary-dark min-h-full font-SF-Pro">
-
-                <AlertContext.Provider value={{
-                    alert: alert.current,
-                    alertV2: alertV2.current
-                }}>
-                    {isHeader ?
+            {/* remove force dark mode by remove the wrapper */}
+            <div className="bg-bgPrimary dark:bg-bgPrimary-dark text-txtPrimary dark:text-txtPrimary-dark min-h-full font-SF-Pro relative">
+                <AlertContext.Provider
+                    value={{
+                        alert: alert.current,
+                        alertV2: alertV2.current
+                    }}
+                >
+                    {isHeader ? (
                         <Background width={width}>
                             <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
                                 <NaoHeader />
@@ -148,9 +150,9 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
                             </div>
                             <NaoFooter />
                         </Background>
-                        :
+                    ) : (
                         children
-                    }
+                    )}
                 </AlertContext.Provider>
                 <div id={`${PORTAL_MODAL_ID}`} />
                 <AlertNaoModal ref={alert} />

@@ -234,5 +234,22 @@
             "btn": "Tải xuống",
             "scan_and_join": "Chia sẻ"
         }
-    }
+    },
+    "update_date": "Thời gian cập nhật",
+    "ranking_conditions": "Điều kiện xét hạng",
+    "ranking_conditions_tooltip": "Để thăng hạng, Đối tác cộng đồng cần đáp ứng khối lượng giao dịch tại cấp tiếp theo, cụ thể:</br>- Exchange (Bao gồm Nami Spot, Nami Swap) </br>hoặc</br> - Futures (Bao gồm Nami Futures, NAO Futures)",
+    "maintaining_conditions": "Điều kiện duy trì",
+    "maintenance_point": "Điểm duy trì hạng hiện tại",
+    "maintain_modal": {
+        "you_need": "Để duy trì Hạng hiện tại, Đối tác cộng đồng cần",
+        "new_friends": "Số bạn bè mới",
+        "commissions_value": "Giá trị Hoa hồng",
+        "and_one": "Và đáp ứng một trong hai điều kiện KLGD sau"
+    },
+    "official_partner": "Đối tác chính thức",
+    "gold_partner": "Đối tác Vàng",
+    "platinum_partner": "Đối tác Bạch Kim",
+    "diamond_partner": "Đối tác Kim Cương",
+    "invited_by": "Giới thiệu bởi",
+    "statistic": "Thống kê"
 }

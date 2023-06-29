@@ -252,7 +252,8 @@
         "invalid_input": "The parameters you entered are not valid, please try again.",
         "unknown_err": "Unknown error, please contact to support for more information.",
         "push_btn_description": "If your Deposit Order has not been updated on Nami, use the Push Order button to have Nami update the balance automatically.",
-        "pushed_orders": "Your push request has been record, please wait a moment."
+        "pushed_orders": "Your push request has been record, please wait a moment.",
+        "max_months_filter": "Select your time range within {{maxMonths}} months"
     },
     "global_label": {
         "notice": "Notice",
@@ -451,5 +452,11 @@
         "reward_received": "Reward received successfully"
     },
     "wallet": "{{wallet}} Wallet",
-    "reload": "Reload"
+    "reload": "Reload",
+    "congratulations": "Congratulation",
+    "waiting_verify_ekyc": "Waiting for eKYC verification",
+    "waiting_verify_ekyc_des": "You have submitted successfully. Please wait a few minutes for the results.",
+    "kyc_status": "KYC status",
+    "account_locking": "Account is temporarily locked",
+    "account_locking_content": "Your account has been temporarily locked due to AML-CFT compliance terms. Please contact our support for more details."
 }

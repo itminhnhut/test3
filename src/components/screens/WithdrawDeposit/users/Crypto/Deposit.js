@@ -629,6 +629,7 @@ const CryptoDeposit = ({ assetId }) => {
                 dataIndex: 'txId',
                 title: 'ID',
                 align: 'left',
+                width: 220,
                 render: (txHash) => {
                     return txHash ? shortHashAddress(txHash, 6, 6) : '--';
                 }
@@ -638,6 +639,7 @@ const CryptoDeposit = ({ assetId }) => {
                 dataIndex: 'assetId',
                 title: t('common:asset'),
                 align: 'left',
+                width: 148,
                 render: (assetId) => {
                     const config = mapAssetConfig[assetId] || {};
                     return (
@@ -652,13 +654,14 @@ const CryptoDeposit = ({ assetId }) => {
                 key: 'network',
                 dataIndex: 'network',
                 title: t('wallet:network'),
-                align: 'left'
+                align: 'left',
+                width: 148,
             },
             {
                 key: 'time',
                 dataIndex: 'executeAt',
                 title: t('common:time'),
-                // width: 100,
+                width: 126,
                 align: 'left',
                 render: (time) => {
                     return time && format(new Date(time), 'dd/MM/yyy');
@@ -669,6 +672,7 @@ const CryptoDeposit = ({ assetId }) => {
                 dataIndex: 'amount',
                 title: t('common:amount'),
                 align: 'right',
+                width: 220,
                 render: (amount, item) => {
                     const config = mapAssetConfig[item?.assetId] || {};
                     return formatNumber(amount, config?.assetDigit);
@@ -679,6 +683,7 @@ const CryptoDeposit = ({ assetId }) => {
                 dataIndex: ['metadata', 'address'],
                 title: t('common:address_wallet'),
                 align: 'right',
+                width: 220,
                 render: (address) => {
                     return address ? shortHashAddress(address, 6, 6) : '--';
                 }
@@ -687,7 +692,7 @@ const CryptoDeposit = ({ assetId }) => {
                 key: 'status',
                 dataIndex: 'status',
                 title: t('common:status'),
-                // width: 160,
+                width: 230,
                 align: 'right',
                 render: (status) =>
                     ({
@@ -835,7 +840,7 @@ const CryptoDeposit = ({ assetId }) => {
     return (
         <>
             <div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div
                         className={classNames(
                             'rounded-3xl p-6 space-y-4 nami-light-shadow bg-white',

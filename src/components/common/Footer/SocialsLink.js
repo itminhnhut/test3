@@ -65,7 +65,7 @@ const SocialsLink = ({ language }) => {
                         href={
                             social.name !== 'coingecko'
                                 ? social.href
-                                : `${social.href}/${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token`
+                                : `${social.href}/${language}/${language === LANGUAGE_TAG.VI ? 'san_giao_dich' : 'exchanges'}/nami_exchange`
                         }
                     >
                         <a target="_blank" className="!flex items-center w-[32px] h-[32px] text-txtPrimary dark:text-txtPrimary-dark ">

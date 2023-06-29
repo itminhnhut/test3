@@ -27,6 +27,7 @@ import TickFbIcon from 'components/svg/TickFbIcon';
 import RePagination from 'components/common/ReTable/RePagination';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
+import useUpdateEffect from 'hooks/useUpdateEffect';
 
 const ContestTeamRanks = ({
     onShowDetail,
@@ -74,15 +75,15 @@ const ContestTeamRanks = ({
         if (mount.current) getRanks(tab);
     }, [quoteAsset]);
 
-    useEffect(() => {
+    useUpdateEffect(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const individual = urlParams.get('individual') !== 'pnl' ? 'volume' : 'pnl';
         urlParams.set('individual', individual);
         urlParams.set('team', tab === 'pnl' ? 'pnl' : 'volume');
         const url = `/${router.locale}/contest${router.query.season ? '/' + router.query.season : ''}?${urlParams.toString()}`;
-        window.history.pushState(null, null, url);
-    }, [tab, router]);
+        window.history.replaceState(null, null, url);
+    }, [tab]);
 
     const rank = tab === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
     const getRanks = async (tab) => {
@@ -159,7 +160,7 @@ const ContestTeamRanks = ({
                     <>
                         <img src={getS3Url('/images/nao/contest/ic_top_teal.png')} className="w-6 h-6" width="24" height="24" alt="" />
                         <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
-                            {item?.rowIndex + 4}
+                            {_rank}
                         </span>
                     </>
                 ) : (
@@ -305,7 +306,7 @@ const ContestTeamRanks = ({
                                                     <span className="font-semibold">{item?.name} </span>
                                                     {item?.is_group_master && <TickFbIcon size={16} />}
                                                 </div>
-                                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm ">
+                                                <div className="min-w-[1.5rem] text-txtSecondary dark:text-txtSecondary-dark text-sm ">
                                                     {loading ? (
                                                         <Skeletor width={24} height={24} circle />
                                                     ) : item?.[rank] && item?.[rank] <= top_ranks_team ? (
@@ -318,7 +319,7 @@ const ContestTeamRanks = ({
                                                                 alt=""
                                                             />
                                                             <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
-                                                                {index + 4}
+                                                                {item?.[rank]}
                                                             </span>
                                                         </div>
                                                     ) : (

@@ -64,7 +64,7 @@ const CategoryFilter = ({ category, setCategory, categoryConfig, language, t }) 
                                         if (isCategoryChosen) return;
                                         setCategory(cate);
                                         popoverRef?.current?.close();
-                                        setSearch('');
+                                        setTimeout(() => setSearch(''), 100);
                                     }}
                                     key={cate.category_id}
                                     className={classNames(

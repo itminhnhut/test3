@@ -13,6 +13,7 @@ import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const MILLISECOND = 1;
+const LIMIT = 10;
 
 const Charts = ({ t, id }) => {
     const timeTabs = [

@@ -8,7 +8,6 @@ import { editPartnerConfig } from 'redux/actions/withdrawDeposit';
 import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
 import classNames from 'classnames';
-import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from '../constants';
 import FetchApi from 'utils/fetch-api';

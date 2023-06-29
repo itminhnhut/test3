@@ -2,10 +2,8 @@ import TagV2 from 'components/common/V2/TagV2';
 import CreditCard from 'components/svg/CreditCard';
 import numeral from 'numeral';
 import React from 'react';
-import { ChevronRight } from 'react-feather';
 import { formatNumber, formatPhoneNumber, formatTime, formatTimePartner } from 'redux/actions/utils';
 import InfoCard from './common/InfoCard';
-import Link from 'next/link';
 import { PATHS } from 'constants/paths';
 
 import { BxChevronDown, CalendarFillIcon, ContactIcon, MoneyIcon, OrderIcon, TimerIcon } from 'components/svg/SvgIcon';
@@ -15,7 +13,7 @@ import Card from './common/Card';
 import Skeletor from 'components/common/Skeletor';
 import { Trans } from 'next-i18next';
 
-const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) => {
+const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
     const router = useRouter();
     return (
         <div>
@@ -95,8 +93,6 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                         </div>
                     </div>
                 </div>
-
-                {/* <hr className="my-4 border-divider dark:border-divider-dark" /> */}
             </Card>
             <div className="flex flex-wrap justify-between -m-3">
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
@@ -108,7 +104,7 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                             <div>{t('dw_partner:avg_process_time')}</div>
                         </div>
 
-                        <div className="txtPri-3">~{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</div>
+                        <div className="txtPri-3">{!partner?.status ? '-' : `~${formatTimePartner(t, partner?.analyticMetadata?.avgTime)}`}</div>
                     </Card>
                 </div>
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
@@ -124,7 +120,9 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                                 </Trans>
                             </div>
                         </div>
-                        <div className="txtPri-3 uppercase">{numeral(partner?.analyticMetadata?.totalValue).format('0a')} VND</div>
+                        <div className="txtPri-3 uppercase">
+                            {!partner?.status ? '-' : `${numeral(partner?.analyticMetadata?.totalValue).format('0a')} VND`}
+                        </div>
                     </Card>
                 </div>
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
@@ -136,8 +134,11 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) =>
                             <div>{t('dw_partner:total_completed_order')}</div>
                         </div>
                         <div className="txtPri-3">
-                            {formatNumber(partner?.analyticMetadata?.count || 0)}{' '}
-                            {`${t('dw_partner:order')}${partner?.analyticMetadata?.count > 1 && language === LANGUAGE_TAG.EN ? 's' : ''}`}
+                            {!partner?.status
+                                ? '-'
+                                : `${formatNumber(partner?.analyticMetadata?.count || 0)} ${t('dw_partner:order')}${
+                                      partner?.analyticMetadata?.count > 1 && language === LANGUAGE_TAG.EN ? 's' : ''
+                                  }`}
                         </div>
                     </Card>
                 </div>

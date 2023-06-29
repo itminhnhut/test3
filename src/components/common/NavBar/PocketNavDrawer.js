@@ -22,6 +22,7 @@ import ButtonV2 from '../V2/ButtonV2/Button';
 import TagV2 from '../V2/TagV2';
 import { buildLogoutUrl } from 'src/utils';
 import { useRouter } from 'next/router';
+import classNames from 'classnames';
 
 const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, page, spotState, resetDefault, onChangeSpotState }) => {
     const [state, set] = useState({
@@ -31,7 +32,9 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
     const router = useRouter();
 
     const { user: auth } = useSelector((state) => state.auth) || null;
-    const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
+    // const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
+    const isNotVerified = [KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(auth?.kyc_status);
+    const isLocking = auth?.kyc_status === KYC_STATUS.LOCKING;
     const isVerified = auth?.kyc_status >= KYC_STATUS.APPROVED;
     const isPartner = auth?.partner_type === 2;
 
@@ -55,26 +58,32 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
         onClose();
     };
 
+    const handleURLHref = (data) => {
+        return !data?.listUrl ? data.url : data.listUrl?.[language] || '#';
+    };
+
     const renderNavItem = useCallback(() => {
         return MOBILE_NAV_DATA.map((nav) => {
-            const { key, title, spaceLine, localized, isNew, url, child_lv1 } = nav;
+            const { key, title, spaceLine, localized, isNew, url, child_lv1, hide } = nav;
 
             if ((title === 'Wallet' || title === 'Profile') && !auth) return null;
 
-            if (child_lv1 && child_lv1.length) {
+            if (child_lv1.length) {
                 const itemsLevel1 = [];
                 child_lv1.forEach((item) => {
                     const { localized, notSameOrigin } = item;
                     const Icon = NavbarIcons?.[localized];
                     if (localized === 'partner' && !isPartner) return;
                     itemsLevel1.push(
-                        <Link href={item.url} key={`${item.key}_${item.title}`}>
+                        <Link href={handleURLHref(item)} key={`${item.key}_${item.title}`}>
                             <a
-                                className="mal-pocket-navbar__drawer__navlink__group___item__lv1__item mal-pocket-nabar__item___hover  !px-12"
+                                className={classNames('mal-pocket-navbar__drawer__navlink__group___item__lv1__item mal-pocket-nabar__item___hover !px-12', {
+                                    '!hidden': item.hide
+                                })}
                                 onClick={() => onClose()}
                                 target={notSameOrigin ? '_blank' : '_self'}
                             >
-                                <div className="text-txtSecondary dark:text-txtSecondary-dark">{Icon ? <Icon size={24} /> : getIcon(localized)}</div>
+                                <div className="text-txtSecondary dark:text-txtSecondary-dark h-6">{Icon ? <Icon size={24} /> : getIcon(localized)}</div>
                                 <span className="ml-3 font-medium text-sm text-txtPrimary  dark:text-txtPrimary-dark">
                                     {t(`navbar:submenu.${item.localized}`)}
                                 </span>
@@ -87,8 +96,14 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     <>
                         <div key={`${title}_${key}`}>
                             <div
-                                className={`relative mal-pocket-navbar__drawer__navlink__group___item ${spaceLine ? '!mb-0 ' : ' '}
-                                    ${!state.navActiveLv1[`${title}_${key}`] ? 'mal-pocket-nabar__item___hover ' : 'bg-hover dark:bg-hover-dark'}`}
+                                className={classNames('relative mal-pocket-navbar__drawer__navlink__group___item', {
+                                    '!mb-0': spaceLine,
+                                    'mal-pocket-nabar__item___hover': !state.navActiveLv1[`${title}_${key}`],
+                                    'bg-hover dark:bg-hover-dark': state.navActiveLv1[`${title}_${key}`],
+                                    '!hidden': hide
+                                })}
+                                // className={`relative mal-pocket-navbar__drawer__navlink__group___item ${spaceLine ? '!mb-0 ' : ' '}
+                                //     ${!state.navActiveLv1[`${title}_${key}`] ? 'mal-pocket-nabar__item___hover ' : 'bg-hover dark:bg-hover-dark'}`}
                                 onClick={() =>
                                     setState({
                                         navActiveLv1: {
@@ -126,7 +141,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                 return (
                     <a
                         key={`${title}_${key}`}
-                        className="mal-pocket-navbar__drawer__navlink__group___item mal-pocket-nabar__item___hover"
+                        className={classNames('mal-pocket-navbar__drawer__navlink__group___item mal-pocket-nabar__item___hover', { '!hidden': hide })}
                         onClick={() => {
                             onClose();
                             window.fcWidget?.open();
@@ -142,7 +157,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
             return (
                 <Link key={`${title}_${key}`} href={url}>
                     <a
-                        className="mal-pocket-navbar__drawer__navlink__group___item mal-pocket-nabar__item___hover"
+                        className={classNames('mal-pocket-navbar__drawer__navlink__group___item mal-pocket-nabar__item___hover', { '!hidden': hide })}
                         onClick={(e) => {
                             // e.preventDefault()
                             onClose();
@@ -216,8 +231,8 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     alt="avatar_user"
                                 />
 
-                                <div className="ml-3">
-                                    <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2">
+                                <div className="ml-3 mr-8">
+                                    <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2 whitespace-pre-wrap break-words">
                                         {auth?.username || auth?.name || auth?.email}
                                     </div>
 
@@ -239,10 +254,11 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     </div>
                                 </div>
                                 {!isNotVerified ? (
-                                    <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
-                                        <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}>
-                                            {isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
-                                        </div>
+                                    <TagV2 type={isLocking ? 'failed' : isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
+                                        {/* <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}> */}
+                                        {/* {isVerified ? t('navbar:verified') : t('navbar:pending_approval')} */}
+                                        {isLocking ? t('navbar:temp_locking') : isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
+                                        {/* </div> */}
                                     </TagV2>
                                 ) : (
                                     <ButtonV2 onClick={() => window.open(PATHS.ACCOUNT.IDENTIFICATION)} className="max-w-[150px] !text-sm">
@@ -259,7 +275,13 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                         {page === 'futures' ? (
                             <div className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark ">
                                 <div>{t('navbar:menu.mode')}</div>
-                                <FuturesSetting isDrawer spotState={spotState} resetDefault={resetDefault} onChangeSpotState={onChangeSpotState} className="px-0" />
+                                <FuturesSetting
+                                    isDrawer
+                                    spotState={spotState}
+                                    resetDefault={resetDefault}
+                                    onChangeSpotState={onChangeSpotState}
+                                    className="px-0"
+                                />
                             </div>
                         ) : (
                             <a className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark " onClick={themeToggle}>
@@ -310,35 +332,32 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
     );
 });
 
-const getIcon = (code) => {
-    switch (code) {
-        case 'market':
-            return <SvgIcon name="activity" size={20} style={{ marginRight: 8 }} />;
-        case 'spot':
-            return <Image src={getS3Url('/images/icon/ic_exchange.png')} width="32" height="32" />;
-        case 'swap':
-            return <Image src={getS3Url('/images/icon/ic_swap.png')} width="32" height="32" />;
-        case 'futures':
-            return <Image src={getS3Url('/images/icon/ic_futures.png')} width="32" height="32" />;
-        case 'launchpad':
-            return <Image src={getS3Url('/images/icon/ic_rocket.png')} width="32" height="32" />;
-        case 'copytrade':
-            return <Image src={getS3Url('/images/icon/ic_copytrade.png')} width="32" height="32" />;
-        case 'staking':
-            return <Image src={getS3Url('/images/icon/ic_staking.png')} width="32" height="32" />;
-        case 'farming':
-            return <Image src={getS3Url('/images/icon/ic_farming.png')} width="32" height="32" />;
-        case 'referral':
-            return <Image src={getS3Url('/images/icon/ic_referral.png')} width="32" height="32" />;
-        case 'language':
-            return <SvgIcon name="globe" size={18} style={{ marginRight: 8, marginLeft: 2 }} />;
-        case 'moon':
-            return <SvgIcon name="moon" size={20} style={{ marginRight: 8 }} />;
-        case 'sun':
-            return <SvgIcon name="sun" size={20} style={{ marginRight: 8 }} />;
-        default:
-            return null;
-    }
+const getNavIcon = {
+    market: <SvgIcon name="activity" size={20} style={{ marginRight: 8 }} />,
+    spot: <Image src={getS3Url('/images/icon/ic_exchange.png')} width="32" height="32" />,
+    swap: <Image src={getS3Url('/images/icon/ic_swap.png')} width="32" height="32" />,
+    futures: <Image src={getS3Url('/images/icon/ic_futures.png')} width="32" height="32" />,
+    launchpad: <Image src={getS3Url('/images/icon/ic_rocket.png')} width="32" height="32" />,
+    copytrade: <Image src={getS3Url('/images/icon/ic_copytrade.png')} width="32" height="32" />,
+    staking: <Image src={getS3Url('/images/icon/ic_staking.png')} width="32" height="32" />,
+    farming: <Image src={getS3Url('/images/icon/ic_farming.png')} width="32" height="32" />,
+    referral: <Image src={getS3Url('/images/icon/ic_referral.png')} width="32" height="32" />,
+    language: <SvgIcon name="globe" size={18} style={{ marginRight: 8, marginLeft: 2 }} />,
+    moon: <SvgIcon name="moon" size={20} style={{ marginRight: 8 }} />,
+    sun: <SvgIcon name="sun" size={20} style={{ marginRight: 8 }} />,
+    report_commission: <Image src={'/images/icon/nav/ic_report_commission.png'} width="24" height="24" />,
+    race_top_referral: <Image src={'/images/icon/nav/ic_race_top_referral.png'} width="24" height="24" />,
+    whitepaper: <Image src={'/images/icon/nav/ic_whitepaper.png'} width="24" height="24" />,
+    noti: <Image src={'/images/icon/nav/ic_noti.png'} width="24" height="24" />,
+    pool: <Image src={'/images/icon/nav/ic_pool.png'} width="24" height="24" />,
+    stake_nao: <Image src={'/images/icon/nav/ic_stake_nao.png'} width="24" height="24" />,
+    race_top: <Image src={'/images/icon/nav/ic_race_top.png'} width="24" height="24" />,
+    staking: <Image src={'/images/icon/nav/ic_staking.png'} width="24" height="24" />
+};
+
+const getIcon = (localized) => {
+    if (!localized) return '';
+    return getNavIcon[localized];
 };
 
 export default PocketNavDrawer;
