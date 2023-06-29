@@ -200,8 +200,8 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 height: '100%',
                 width: '100%',
                 events: {
-                    mounted: reorderSvg
-                    // updated: reorderSvg
+                    mounted: reorderSvg,
+                    updated: reorderSvg
                 }
             },
             dataLabels: {
