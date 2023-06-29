@@ -63,7 +63,7 @@
     "bank": "Bank",
     "no_bank": "No bank found",
     "transfer_description": "Description",
-    "only_show_when_confirm":"Displayed only when the partner confirms the order",
+    "only_show_when_confirm": "Displayed only when the partner confirms the order",
     "rating_modal": {
         "title": "Partner Review",
         "description": "How satisfied are you with this partner's transaction?",
@@ -150,6 +150,9 @@
     "disabled_smart_otp_title": "Deactivation",
     "disabled_smart_otp_des": "Smart OTP feature has been deactivated due to incorrect Smart OTP input 5 times. Please verify transactions with another OTP methods or reactivate Smart OTP to continue using.",
     "verify_by_email": "Email Authentification",
+    "verify_now": "Verify Now",
+    "partner_inactive":"You need to qualify as a Community Development Partner from the Official level to participate in the Deposit and Withdrawal Partner program, <0>read more</0>.",
+    "not_have_payment_content": "You can optionally perform payment method verification to use directly Buy Sell via Partner of Nami.",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
         "max_amount": "Maximum amount is {{amount}} {{asset}}",
@@ -165,7 +168,8 @@
         "not_found_order": "Order #{{displayingId}} not found or being processed, please reload or contact support.",
         "invalid_otp": "OTP is invalid. Please try again.",
         "invalid_secret": "Verification code is incorrect {{timesErr}}/5, please get OTP from Nami Exchange App.",
-        "invalid_smart_otp": "Verification code is incorrect {{timesErr}}/5, please try again"
+        "invalid_smart_otp": "Verification code is incorrect {{timesErr}}/5, please try again",
+        "invalid_amount": "Invalid amount"
     },
     "filter": {
         "a_day": "1 day",
@@ -192,5 +196,8 @@
         "system_success": "Order is updated to the status: Success",
         "system_reject": "Order is updated to the status: Rejected",
         "system_dispute": "Order is updated to the status: Disputed"
-    }
+    },
+    "partner_bonus": "Partner Bonus",
+    "partner_bonus_tooltip": "The option to enter the bonus for the partner processing the order, you can skip it if you do not want to send this bonus.",
+    "vnd_amount": "VND Amount"
 }

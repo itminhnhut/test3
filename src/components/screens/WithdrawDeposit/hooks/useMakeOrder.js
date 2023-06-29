@@ -9,7 +9,7 @@ import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
 import toast from 'utils/toast';
 import { ORDER_TYPES } from '../constants';
 
-const useMakeOrder = ({ setState, input }) => {
+const useMakeOrder = ({ setState, input}) => {
     const { partnerBank, accountBank, partner } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
     const { t } = useTranslation();
@@ -72,7 +72,7 @@ const useMakeOrder = ({ setState, input }) => {
         return errorHandler[orderResponse?.status]?.() || toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
     };
 
-    const onMakeOrderHandler = async (otp, locale) => {
+    const onMakeOrderHandler = async (otp, locale, tip) => {
         try {
             setState({ loadingConfirm: true });
 
@@ -83,7 +83,8 @@ const useMakeOrder = ({ setState, input }) => {
                 quantity: input,
                 side,
                 otp,
-                locale
+                locale,
+                tip: +tip
             });
 
             if (orderResponse?.status === ApiStatus.SUCCESS || orderResponse?.status === ApiResultCreateOrder.TOO_MUCH_REQUEST) {

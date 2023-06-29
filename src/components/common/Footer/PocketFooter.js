@@ -82,6 +82,9 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <Link href="/terms-of-service">
                                 <a>{language === LANGUAGE_TAG.VI ? 'Điều khoản' : 'Terms of Services'}</a>
                             </Link>
+                            <Link href="/licences">
+                                <a>{language === LANGUAGE_TAG.VI ? 'Giấy phép' : 'Licences'}</a>
+                            </Link>
                             <Link href={auth ? PATHS.FEE_STRUCTURES.TRADING : PATHS.FEE_STRUCTURES.DEPWDL}>
                                 <a>{t('navbar:menu.fee')}</a>
                             </Link>

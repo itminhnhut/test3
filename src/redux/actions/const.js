@@ -777,12 +777,13 @@ export const OLD_LS_KEYS = [
 ];
 
 export const KYC_STATUS = {
+    LOCKING: -1,
     NO_KYC: 0,
     PENDING_APPROVAL: 1,
     APPROVED: 2,
-    ADVANCE_KYC: 3,
-    APPROVED_PENDING_APPROVAL_ADVANCE: 4, // cập nhật thêm số cmnd + ảnh mặt
-    PENDING_APPROVAL_ADVANCE: 5 // user kyc từ đầu cập nhật hết
+    REJECT: 3,
+    // APPROVED_PENDING_APPROVAL_ADVANCE: 4, // cập nhật thêm số cmnd + ảnh mặt
+    // PENDING_APPROVAL_ADVANCE: 5 // user kyc từ đầu cập nhật hết
 };
 
 export const SECURITY_VERIFICATION = {

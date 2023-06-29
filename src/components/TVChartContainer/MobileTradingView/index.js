@@ -831,18 +831,24 @@ const ModalFundingRate = ({ onClose, t, symbol }) => {
     const [currentTheme] = useDarkMode();
 
     const onRedirect = () => {
-        const uri = `/futures/funding-history?theme=${currentTheme}&source=app&symbol=${symbol}&head=false&title=${t('futures:funding_history')}`;
-        emitWebViewEvent(encodeUrlFromApp(uri));
-        if (onClose) onClose();
+        router.push(`/${router.locale}/futures/funding-history?theme=${currentTheme}&source=app&symbol=${symbol}`);
+        // const uri = `/futures/funding-history?theme=${currentTheme}&source=app&symbol=${symbol}&head=false&title=${t('futures:funding_history')}`;
+        // emitWebViewEvent(encodeUrlFromApp(uri));
+        // if (onClose) onClose();
     };
 
     const onDetail = () => {
-        const uri =
+        // const uri =
+        //     router.locale === 'en'
+        //         ? `/support/faq/noti-en-announcement/apply-funding-rates-on-nami-futures-and-nao-futures`
+        //         : `/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures`;
+        // emitWebViewEvent(encodeUrlFromApp(uri + `?theme=${currentTheme}&source=app&head=false&title=Nami FAQ`));
+        // if (onClose) onClose();
+        const url =
             router.locale === 'en'
-                ? `/support/faq/noti-en-announcement/apply-funding-rates-on-nami-futures-and-nao-futures`
-                : `/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures`;
-        emitWebViewEvent(encodeUrlFromApp(uri + `?theme=${currentTheme}&source=app&head=false&title=Nami FAQ`));
-        if (onClose) onClose();
+                ? '/support/faq/noti-en-announcement/apply-funding-rates-on-nami-futures-and-nao-futures'
+                : '/vi/support/faq/noti-vi-thong-bao/ra-mat-co-che-funding-rate-tren-nami-futures-va-nao-futures';
+        router.push(url + `?theme=${currentTheme}&source=app&alb=true`);
     };
 
     return (

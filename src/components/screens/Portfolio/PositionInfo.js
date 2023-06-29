@@ -61,7 +61,8 @@ const PositionInfo = ({
     return (
         <div className="py-6 px-4 md:p-8 rounded-xl bg-gray-13 dark:bg-dark-4 static">
             {isMobile ? (
-                <CollapseV2
+                <>
+                {/* <CollapseV2
                     key={`Collapse_${type}`}
                     divLabelClassname="w-full justify-between"
                     chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
@@ -75,7 +76,13 @@ const PositionInfo = ({
                     }
                     labelClassname="text-base font-semibold"
                     setIsOpen={setIsOpen}
-                >
+                > */}
+                    <HeaderTooltip
+                            isMobile
+                            title={t('portfolio:side_position', {side: t(`common:${type.toLowerCase()}`)})}
+                            tooltipContent={t('portfolio:side_position_tooltip', {side: t(`common:${type.toLowerCase()}`)})}
+                            tooltipId={`${type}_position_tooltip`}
+                        />
                     <div>
                         <div className="mt-6 md:mt-12 mb-6 text-lg md:text-2xl font-semibold">
                             {t(`common:position:sum_${type.toLowerCase()}`)}: {isNeverTrade ? '-' : total}
@@ -112,7 +119,8 @@ const PositionInfo = ({
                             <div>{t('portfolio:total_profit')}: {isNeverTrade ? '-' : `${formatNanNumber((totalProfitPosition / total) * 100, 2)}%`}</div>
                         </div>
                     </div>
-                </CollapseV2>
+                {/* </CollapseV2> */}
+                </>
             ) : (
                 <>
                     <HeaderTooltip

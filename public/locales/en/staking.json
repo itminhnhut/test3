@@ -1,0 +1,43 @@
+{
+    "header": {
+        "title": "Get interest every day, no lock required with Nami Exchange Daily Staking program",
+        "des": "Nami Exchange's Daily Staking Program is a effective tool to optimize profits from idle digital assets with an APY up to 12.79% for VNDC and 6% for USDT.",
+        "deposit_now": "Deposit now",
+        "statistics": " Statistics"
+    },
+    "why_nami": {
+        "title": "Why Nami Exchange?"
+    },
+    "calculate_interest": {
+        "head_title": "Interest Calculation",
+        "sub_title": "Select digital asset and enter the quantity to refer to the profit received over time from Nami Exchange's Daily Staking program",
+        "select_asset": "Asset",
+        "after_xx_month": "After {{month}} months, you will receive:",
+        "total_interest": "Total interest",
+        "total_balance": "Total balance"
+    },
+    "faq": { "title": "FAQ" },
+    "statics": {
+        "profit_stats": "Profit Statistics",
+        "program_infor": "Program information",
+        "not_auth": "<0>Register</0> now to start receive Daily Staking interest or <1>login</1> to check your statistics",
+        "interest": {
+            "balance": "Total balance",
+            "balance_description": "Total balance of VNDC or USDT on all wallets",
+            "apy_interest": "APY (compound):",
+            "deposit_now": "Deposit Now",
+            "daily_interest": "Daily interest",
+            "annual_interest": "Estimated annual interest"
+        },
+        "history": {
+            "title": "Interest History",
+            "profit_received": "Total Profit Received",
+            "columns": {
+                "type": "Stablecoins",
+                "amount": "Quantity",
+                "time": "Time",
+                "status": "Status"
+            }
+        }
+    }
+}
