@@ -94,8 +94,8 @@ const FuturesSetting = memo(
 
         const getFeeSettings = () => {
             return [
-                { key: 'VNDC', label: 'Phí VNDC Futures', value: settingFee.VNDC.user_setting ?? '', isCheckBox: false },
-                { key: 'USDT', label: 'Phí USDT Futures', value: settingFee.USDT.user_setting ?? '', isCheckBox: false }
+                { key: 'VNDC', label: t('futures:fee_modal:futures_fee', { value: 'VNDC' }), value: settingFee?.VNDC?.user_setting ?? '', isCheckBox: false },
+                { key: 'USDT', label: t('futures:fee_modal:futures_fee', { value: 'USDT' }), value: settingFee?.USDT?.user_setting ?? '', isCheckBox: false }
             ];
         };
 
@@ -310,9 +310,11 @@ const FuturesSetting = memo(
                                                     }
                                                 })}
                                         </div>
-                                        <TextButton className="pt-6 text-center" onClick={onSetDefault}>
-                                            {t('spot:setting.reset_default_layout')}
-                                        </TextButton>
+                                        <div className="pt-6">
+                                            <TextButton className="h-10 sm:h-11 text-center" onClick={onSetDefault}>
+                                                {t('spot:setting.reset_default_layout')}
+                                            </TextButton>
+                                        </div>
                                     </div>
                                 </Popover.Panel>
                             </Transition>

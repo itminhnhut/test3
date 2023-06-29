@@ -530,6 +530,7 @@
     },
     "fee_modal": {
         "select_currency": "Select the currency to use for transaction fees",
-        "save": "Save"
+        "save": "Save",
+        "futures_fee": "{{value}} Futures fee"
     }
 }

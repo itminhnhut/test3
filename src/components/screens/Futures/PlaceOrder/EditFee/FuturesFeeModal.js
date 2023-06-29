@@ -115,7 +115,7 @@ const FuturesFeeModal = memo(
             const arr = [];
             for (let i = 1; i <= 2; i++) {
                 arr.push(
-                    <div key={i} className={classNames('p-6 ring-transparent ring-[1px] rounded-xl bg-dark-4 cursor-pointer')}>
+                    <div key={i} className={classNames('p-6 ring-transparent ring-[1px] rounded-xl bg-gray-13 dark:bg-dark-4 cursor-pointer')}>
                         <div className="flex items-center justify-between space-x-4">
                             <div className="flex items-center justify-between w-full">
                                 <div className="flex flex-col space-y-1">
@@ -163,7 +163,7 @@ const FuturesFeeModal = memo(
                                   <div
                                       key={item.assetId}
                                       onClick={() => setFee(item)}
-                                      className={classNames('p-6 ring-transparent ring-[1px] rounded-xl bg-dark-4 cursor-pointer', {
+                                      className={classNames('p-6 ring-transparent ring-[1px] rounded-xl bg-gray-13 dark:bg-dark-4 cursor-pointer', {
                                           'ring-teal': active
                                       })}
                                   >
@@ -193,7 +193,7 @@ const FuturesFeeModal = memo(
                                               {active ? (
                                                   <CheckCircleIcon size={24} color={colors.teal} />
                                               ) : (
-                                                  <div style={{ minWidth: 20 }} className="w-5 h-5 rounded-full border-2 border-dark-6 m-auto"></div>
+                                                  <div style={{ minWidth: 20 }} className="w-5 h-5 rounded-full border-2 border-gray-16 dark:border-dark-6 m-auto"></div>
                                               )}
                                           </div>
                                       </div>

@@ -532,6 +532,7 @@
     },
     "fee_modal": {
         "select_currency": "Chọn đồng tiền dùng để làm phí giao dịch",
-        "save": "Lưu cài đặt"
+        "save": "Lưu cài đặt",
+        "futures_fee": "Phí {{value}} Futures"
     }
 }
