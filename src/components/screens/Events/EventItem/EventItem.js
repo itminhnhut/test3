@@ -89,7 +89,7 @@ const EventItem = (props) => {
                     <div className="flex flex-wrap gap-2 mb:gap-3 items-center text-txtSecondary dark:text-txtSecondary-dark text-xs mb:text-sm">
                         {getStatusBadge(props.startTime, props.endTime)}
                         <span className="w-full mb:w-auto">
-                            {formatTime(props.startTime, 'HH:mm:ss dd/MM/yyyy')} - {formatTime(props.endTime, 'HH:mm:ss dd/MM/yyyy')}
+                            {formatTime(props.startTime, 'HH:mm dd/MM/yyyy')} - {formatTime(props.endTime, 'HH:mm dd/MM/yyyy')}
                         </span>
                     </div>
                     <div className="mt-2 mb:mt-3 font-semibold text-base mb:text-xl line-clamp-2">{props.title}</div>

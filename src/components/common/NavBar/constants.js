@@ -536,6 +536,14 @@ export const MOBILE_NAV_DATA = [
     //     child_lv1: []
     // },
     {
+        key: 'events',
+        title: 'Events',
+        localized: 'events',
+        isNew: false,
+        url: '/events',
+        child_lv1: []
+    },
+    {
         key: 2,
         title: 'Support Center',
         localized: 'support_center',
