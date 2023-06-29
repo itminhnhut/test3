@@ -685,7 +685,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 </div>
             </div>
             <div className="mt-6 grid grid-cols-12 gap-4 sm:gap-6">
-                <CardNao className="sm:!min-w-[50%] sm:!px-8 sm:!py-8 flex flex-col col-span-12 xl:col-span-4" customHeight="sm:max-h-[514px]">
+                <CardNao className="sm:!min-w-[50%] sm:!px-8 sm:!py-8 flex flex-col col-span-12 lg:col-span-4" customHeight="sm:max-h-[514px]">
                     <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg font-semibold">{t('nao:pool:nao_staked')}</label>
                     <div className="flex flex-col mt-4">
                         <div className="text-xl sm:text-2xl font-semibold flex items-center space-x-2">
@@ -747,12 +747,12 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     </div>
                 </CardNao>
                 <CardNao
-                    className="sm:!min-w-[50%] sm:!p-8 !p-4 flex-col sm:items-start whitespace-nowrap min-h-[360px] col-span-12 xl:col-span-8 !flex-none"
+                    className="sm:!min-w-[50%] sm:!p-8 !p-4 flex-col sm:items-start whitespace-nowrap min-h-[360px] col-span-12 lg:col-span-8 !flex-none"
                     customHeight="sm:max-h-[514px]"
                 >
                     <div className="order-first w-full">
                         {/* <TextLiner className="w-full">{t('nao:onus_performance:chart_title')}</TextLiner> */}
-                        <div className="flex gap-last xl:justify-end w-auto overflow-auto no-scrollbar space-x-4">
+                        <div className="flex gap-last lg:justify-end w-auto overflow-auto no-scrollbar space-x-4">
                             {Object.values(CHART_TYPES).map((type) => (
                                 <button
                                     type="BUTTON"

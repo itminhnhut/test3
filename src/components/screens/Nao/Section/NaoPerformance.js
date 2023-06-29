@@ -548,8 +548,8 @@ const NaoPerformance = memo(({}) => {
                     </div>
                 </div>
             </div>
-            <div className="pt-5 flex flex-col xl:flex-row sm:pt-8 gap-4 sm:gap-6">
-                <div className="w-full xl:w-1/3 flex flex-col gap-y-4 sm:gap-y-6 z-[1]">
+            <div className="pt-5 flex flex-col lg:flex-row sm:pt-8 gap-4 sm:gap-6">
+                <div className="w-full lg:w-1/3 flex flex-col gap-y-4 sm:gap-y-6 z-[1]">
                     <CardNao className="rounded-lg !min-w-max w-full !px-8 !pt-6 !pb-7 relative" customHeight="sm:min-h-[328px]">
                         <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
                             {t('nao:onus_performance:total_volume')}
@@ -630,11 +630,11 @@ const NaoPerformance = memo(({}) => {
                         </div>
                     </CardNao>
                 </div>
-                <div className="w-full xl:w-2/3 h-full z-0">
+                <div className="w-full lg:w-2/3 h-full z-0">
                     <CardNao className="rounded-lg whitespace-nowrap min-h-[360px] !p-4 sm:!p-8" customHeight="sm:max-h-[514px]">
                         <div className="order-first">
                             {/* <TextLiner className="w-full">{t('nao:onus_performance:chart_title')}</TextLiner> */}
-                            <div className="flex gap-last xl:justify-end w-full overflow-auto no-scrollbar space-x-4">
+                            <div className="flex gap-last lg:justify-end w-full overflow-auto no-scrollbar space-x-4">
                                 <button
                                     type="BUTTON"
                                     className={classNames('flex flex-col justify-center items-center text-sm sm:text-base text-txtSecondary', {
