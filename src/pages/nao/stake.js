@@ -130,7 +130,7 @@ const Stake = () => {
                         >
                             <img
                                 className="max-h-[124px]"
-                                src={currentTheme === THEME_MODE.DARK ? getS3Url('/images/icon/ic_login.png') : '/images/nao/login.png'}
+                                src={currentTheme === THEME_MODE.DARK ? getS3Url('/images/icon/ic_login.png') : getS3Url('/images/nao/login.png')}
                             />
                             <div className="flex flex-wrap justify-center space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
                                 <span className="whitespace-pre-wrap text-center">
@@ -238,8 +238,9 @@ const Tabs = styled.div.attrs({
 `;
 
 const TabItem = styled.div.attrs(({ active }) => ({
-    className: `pb-3 w-full flex items-center justify-center text-sm mb:text-base leading-6 hover:cursor-pointer ${active ? 'text-txtPrimary dark:text-txtPrimary-dark font-semibold' : 'text-txtSecondary dark:text-txtSecondary-dark'
-        }`
+    className: `pb-3 w-full flex items-center justify-center text-sm mb:text-base leading-6 hover:cursor-pointer ${
+        active ? 'text-txtPrimary dark:text-txtPrimary-dark font-semibold' : 'text-txtSecondary dark:text-txtSecondary-dark'
+    }`
 }))``;
 
 export const getStaticProps = async ({ locale }) => ({
