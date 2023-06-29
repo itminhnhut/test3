@@ -27,7 +27,7 @@ import Skeletor from 'components/common/Skeletor';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import classNames from 'classnames';
-import { MonetizationOnIcon, MoneyIcon } from 'components/svg/SvgIcon';
+import { DwPartnerIconSingle, MonetizationOnIcon, MoneyIcon } from 'components/svg/SvgIcon';
 
 const LIMIT_ROW = 5;
 
@@ -73,7 +73,10 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
 
                         <div className="p-2 flex justify-end lg:justify-start w-1/2 lg:w-1/4">
                             <div className="space-y-2 text-right lg:text-left">
-                                <div className="capitalize txtPri-1 break-words">{orderDetail?.userMetadata?.name?.toLowerCase()}</div>
+                                <div className="capitalize txtPri-1 break-words flex items-center gap-x-4">
+                                    {orderDetail?.userMetadata?.name?.toLowerCase()}
+                                    <DwPartnerIconSingle />
+                                </div>
                                 <div className="txtSecond-3">{orderDetail?.userMetadata?.code}</div>
                             </div>
                         </div>

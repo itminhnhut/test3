@@ -9,8 +9,8 @@ import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
 import toast from 'utils/toast';
 import { ORDER_TYPES } from '../constants';
 
-const useMakeOrder = ({ setState, input}) => {
-    const { partnerBank, accountBank, partner } = useSelector((state) => state.withdrawDeposit);
+const useMakeOrder = ({ setState, input }) => {
+    const { partnerBank, accountBank, partner, isAutoSuggest } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -84,7 +84,8 @@ const useMakeOrder = ({ setState, input}) => {
                 side,
                 otp,
                 locale,
-                tip: +tip
+                tip: +tip,
+                type: isAutoSuggest ? 'auto' : 'normal'
             });
 
             if (orderResponse?.status === ApiStatus.SUCCESS || orderResponse?.status === ApiResultCreateOrder.TOO_MUCH_REQUEST) {
@@ -93,6 +94,8 @@ const useMakeOrder = ({ setState, input}) => {
                 } else {
                     if (orderResponse?.data?.remaining_time) {
                         setState({ showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time, isUseSmartOtp: false });
+                    } else if(isAutoSuggest) {
+                        setState({ showProcessSuggestPartner: orderResponse.data });
                     } else {
                         onMakeOrderSuccess(orderResponse.data);
                         return;

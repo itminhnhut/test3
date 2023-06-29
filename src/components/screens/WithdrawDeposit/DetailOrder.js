@@ -152,6 +152,14 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         fetchData(id);
     }, [id, refetch]);
 
+    useEffect(() => {
+        return () => {
+            setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                visible: false
+            });
+        };
+    }, []);
+
     const onOpenChat = () => {
         if (window?.fcWidget?.isOpen()) return;
         window?.fcWidget?.open({ name: 'Inbox', replyText: '' });

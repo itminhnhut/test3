@@ -72,18 +72,22 @@ const NamiToast = ({ render, text, type }) => {
     );
 };
 
-const toast = ({ text = '', render = undefined, type = 'default', duration = 5000, className='' }) => {
+const toast = ({ text = '', render = undefined, type = 'default', duration = 5000, className = '', customActionClose }) => {
+    console.log('______customActionClose: ', duration, customActionClose);
     return rcToast(<NamiToast render={render} text={text} type={type} />, {
         className: `flex items-center justify-between min-w-[375px] max-w-[756px] ${className}`,
         bodyClassName: 'flex items-center justify-center',
         autoClose: duration,
         // pauseOnHover: true,
         closeOnClick: false,
-        closeButton: ({ closeToast }) => (
-            <button className="ml-4 text-gray-15  dark:text-gray-4" onClick={closeToast}>
-                <CloseIcon size={24} color="currentColor" />
-            </button>
-        )
+        closeButton: ({ closeToast }) =>
+            customActionClose ? (
+                customActionClose(closeToast)
+            ) : (
+                <button className="ml-4 text-gray-15  dark:text-gray-4" onClick={closeToast}>
+                    <CloseIcon size={24} color="currentColor" />
+                </button>
+            )
     });
 };
 

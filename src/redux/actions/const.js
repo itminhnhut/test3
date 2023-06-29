@@ -839,7 +839,9 @@ export const UserSocketEvent = {
     FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error',
     FUTURE_PROCESSING_ORDER_ERROR_NAO: 'future:processing_order_error_nao',
     PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER',
-    SMART_OTP: 'SMART_OTP'
+    SMART_OTP: 'SMART_OTP',
+    USER_CREATE_ORDER: 'USER_CREATE_ORDER',
+    PARTNER_UPDATE_ORDER_AUTO_SUGGEST: 'PARTNER_UPDATE_ORDER_AUTO_SUGGEST'
 };
 
 export const EarnOrder_Status = {

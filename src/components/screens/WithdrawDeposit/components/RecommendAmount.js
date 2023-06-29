@@ -70,32 +70,20 @@ const RecommendAmount = ({ amount, setAmount, loadingRate }) => {
     }, [lastOrders, amount, maximumAllowed, minimumAllowed]);
 
     return (
-        <div className={`flex items-center gap-3 flex-wrap ${!loadingOrders && !loadingRate && rcmdAmount.length && 'mb-6'}`}>
+        <div className={`flex items-center gap-3 flex-wrap ${!loadingOrders && !loadingRate && rcmdAmount.length && 'mb-4'}`}>
             {!loadingOrders && !loadingRate && rcmdAmount.length ? (
                 <TabV2
                     //  chipClassName="!bg-white hover:!bg-gray-6"
                     isOverflow={true}
                     activeTabKey={amount}
                     onChangeTab={(key) => setAmount(key)}
+                    variants='suggestion'
                     tabs={rcmdAmount.map((amountRcmd) => ({
                         key: amountRcmd + '',
                         children: formatPrice(amountRcmd, 0)
                     }))}
                 />
             ) : (
-                // rcmdAmount.map((amountRcmd, index) => (
-                //     <Chip
-                //         selected={+amount === amountRcmd}
-                //         variants={'suggestion'}
-                //         onClick={() => {
-                //             setAmount(amountRcmd);
-                //             // setRcmdAmount((prev) => prev.filter((item) => item !== amountRcmd));
-                //         }}
-                //         key={index}
-                //     >
-                //         {formatPrice(amountRcmd, 0)}
-                //     </Chip>
-                // ))
                 <></>
             )}
         </div>

@@ -94,8 +94,8 @@ export const getPartner = ({ params, cancelToken, callbackFn = () => {} }) => {
     };
 };
 
-export const createNewOrder = async ({ assetId, bankAccountId, partnerId, quantity, side, otp, locale, tip }) => {
-    const res = await Axios.post(API_CREATE_ORDER, { assetId: +assetId, bankAccountId, partnerId, quantity: +quantity, side, otp, locale, tip });
+export const createNewOrder = async ({ assetId, bankAccountId, partnerId, quantity, side, otp, locale, tip, type }) => {
+    const res = await Axios.post(API_CREATE_ORDER, { assetId: +assetId, bankAccountId, partnerId, quantity: +quantity, side, otp, locale, tip, type });
     return res.data;
 };
 

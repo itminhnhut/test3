@@ -25,7 +25,9 @@ export const initialState = {
     loadingPartner: false,
     minimumAllowed: 0,
     maximumAllowed: 0,
-    modal: INITIAL_MODAL_STATE
+    modal: INITIAL_MODAL_STATE,
+    isCanSubmitOrder: false,
+    isAutoSuggest: true
 };
 
 export default (state = initialState, action) => {
@@ -64,11 +66,16 @@ export default (state = initialState, action) => {
                     }
                 }
             };
-        case types.RESET_PARTNER_MODAL:
+        case types.SET_ALLOWED_SUBMIT_ORDER:
             return {
                 ...state,
-                modal: INITIAL_MODAL_STATE
+                isCanSubmitOrder: !action.payload
             };
+        case types.SET_AUTO_SUGGEST:
+            return {
+                ...state,
+                isAutoSuggest: !state.isAutoSuggest
+            }
         default:
             return state;
     }
