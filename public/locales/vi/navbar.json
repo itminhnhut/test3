@@ -1,15 +1,15 @@
 {
     "menu": {
-        "spot": "Giao dịch Spot",
+        "spot": "Giao dịch giao ngay",
         "trade": "Giao dịch",
         "swap": "Quy đổi",
         "wallet": "Ví",
-        "futures": "Futures",
+        "futures": "Giao dịch Futures",
         "markets": "Thị trường",
         "utilities": "Tiện ích",
         "support": "Hỗ trợ",
         "api": "API",
-        "fee": "Biểu phí",
+        "fee": "Biểu phí giao dịch",
         "blog": "Blog",
         "home": "Trang chủ",
         "about": "Về chúng tôi",
@@ -24,6 +24,9 @@
         "explained": "Explained",
         "today": "Nami Today",
         "more": "Thêm",
+        "trading_info": "Thông tin giao dịch",
+        "trading_rules": "Quy định giao dịch Futures",
+        "funding_history": "Lịch sử funding",
         "user": {
             "user": "Quản lí người dùng",
             "profile": "Thông tin cá nhân",
