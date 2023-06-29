@@ -66,8 +66,7 @@ const FilterTypes = ({ type, setType, types, t, className }) => {
                 <div
                     key={e.id}
                     className={classnames(
-                        ` ${
-                            type !== e.id && 'text-txtTextBtn-tonal_dark'
+                        ` ${type !== e.id && 'text-txtTextBtn-tonal_dark'
                         } flex w-fit items-center justify-center px-4 py-2 text-sm rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap`,
                         {
                             'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
@@ -263,15 +262,17 @@ const ContestInfo = forwardRef(
                             ))}
                         </TabsNao>
                     )}
-                    <div className="flex flex-col lg:flex-row flex-wrap gap-5 md:mt-9 sm:mt-6 mt-6 text-sm">
-                        <CardNao className={`px-4 py-6 md:!p-8 lg:!max-w-[375px] ${previous && contest_id !== 10 ? '' : '!justify-center space-y-3'}`}>
+                    <div className="flex flex-col lg:flex-row flex-wrap gap-5 md:mt-9 sm:mt-6 mt-6 text-sm md:text-base">
+                        <CardNao className={`px-4 py-6 md:!p-8 lg:!max-w-[375px] !justify-center space-y-3`}>
                             <label className="text-xl sm:text-2xl text-teal font-semibold leading-8 capitalize">{capitalize(userData?.name)}</label>
                             <div className="flex items-center w-full mb-2 !mt-6 gap-2">
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm">User ID: {userData?.[userID]}</span>
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm md:text-base">User ID: {userData?.[userID]}</span>
                                 <CopyIcon data={userData?.[userID]} className="cursor-pointer" size={16} />
                             </div>
-
-                            <div className=" text-txtSecondary dark:text-txtSecondary-dark flex flex-col items-start text-sm">
+                            <div
+                                className={`${invitations?.invites.length > 0 ? '' : 'hidden'
+                                    } text-txtSecondary dark:text-txtSecondary-dark flex flex-col items-start text-sm md:text-base`}
+                            >
                                 {previous && contest_id !== 10 && <div className="leading-6">ID: {userData?.[userID]}</div>}
                                 {/* <span className="text-gray-15 dark:text-gray-7 mx-2 sm:hidden">•</span> */}
                                 <div className="flex text-txtSecondary dark:text-txtSecondary-dark leading-6 mt-1 mb-2">
@@ -299,9 +300,9 @@ const ContestInfo = forwardRef(
                                 </div>
                             </div>
                         </CardNao>
-                        <CardNao className="!min-h-[136px] !py-6 sm:!py-10 w-full lg:w-max md:!gap-2 px-4 md:!px-8 gap-3">
+                        <CardNao className="!min-h-[136px] !py-6 sm:!py-10 w-full lg:w-max px-4 md:!px-8 gap-3">
                             {/* {(!previous || contest_id === 10) && ( */}
-                            <div className="flex items-center justify-between md:space-x-12 flex-wrap md:flex-nowrap gap-3 md:gap-0">
+                            <div className="flex items-center justify-between md:space-x-8 flex-wrap md:flex-nowrap gap-3 md:gap-0">
                                 {/* <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">ID</label>
                                     <div className="font-semibold leading-8 text-right">{userData?.[userID]}</div>
@@ -326,13 +327,12 @@ const ContestInfo = forwardRef(
                             </div>
                             {/* )} */}
 
-                            <div className="flex items-center justify-between md:space-x-12 flex-wrap md:flex-nowrap gap-3 md:gap-0">
+                            <div className="flex items-center justify-between md:space-x-8 flex-wrap md:flex-nowrap gap-3 md:gap-0">
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_pnl')}</label>
                                     <div
-                                        className={`font-semibold text-right ${
-                                            !!userData?.total_pnl && (userData?.total_pnl < 0 ? 'text-red-2' : 'text-teal')
-                                        }`}
+                                        className={`font-semibold text-right ${!!userData?.total_pnl && (userData?.total_pnl < 0 ? 'text-red-2' : 'text-teal')
+                                            }`}
                                     >
                                         {userData?.total_pnl ? formatNumber(userData?.total_pnl, 0, 0, true) + ` ${quoteAsset}` : '-'}
                                     </div>
@@ -356,7 +356,7 @@ const ContestInfo = forwardRef(
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between md:space-x-12 flex-wrap md:flex-nowrap gap-3 md:gap-0">
+                            <div className="flex items-center justify-between md:space-x-8 flex-wrap md:flex-nowrap gap-3 md:gap-0">
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:pnl_rank')}</label>
                                     <div className="font-semibold text-right">{userData?.individual_rank_pnl ? '#' + userData?.individual_rank_pnl : '-'}</div>
@@ -369,7 +369,7 @@ const ContestInfo = forwardRef(
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between md:space-x-12 flex-wrap md:flex-nowrap md:!mr-12 gap-3 md:gap-0">
+                            <div className="flex items-center justify-between md:space-x-8 flex-wrap md:flex-nowrap md:!mr-8 gap-3 md:gap-0">
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume_rank')}</label>
                                     <div className="font-semibold text-right">

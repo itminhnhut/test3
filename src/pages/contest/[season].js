@@ -16,7 +16,7 @@ export const getServerSideProps = async (context) => {
     return {
         props: {
             season: season,
-            ...(await serverSideTranslations(context.locale, ['common', 'nao', 'error'])),
+            ...(await serverSideTranslations(context.locale, ['common', 'nao', 'error', 'navbar'])),
         },
     };
 };

@@ -431,7 +431,8 @@ module.exports = {
                 'nao-corner': "url('/images/nao/bg-corner-light.webp')",
                 'nao-corner-mb': "url('/images/nao/bg-corner-light-mb.webp')",
                 'nao-corner-dark': "url('/images/nao/bg-corner.webp')",
-                'nao-corner-mb-dark': "url('/images/nao/bg-corner-mb.webp')"
+                'nao-corner-mb-dark': "url('/images/nao/bg-corner-mb.webp')",
+                'nao-corner-mb-2': "url('/images/nao/bg-light-stake-mb.png')"
             },
             backgroundSize: {
                 auto: 'auto',

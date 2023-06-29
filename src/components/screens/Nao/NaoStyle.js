@@ -27,11 +27,10 @@ export const TextLiner = styled.div.attrs({
 
 export const CardNao = styled.div.attrs(({ noBg, customHeight, bgCorner, bgStake }) => ({
     className: classNames(
-        `p-6 sm:px-10 sm:py-9 rounded-xl w-full min-w-full sm:min-w-[320px] ${
-            customHeight ? customHeight : 'sm:min-h-[180px]'
+        `p-6 sm:px-10 sm:py-9 rounded-xl w-full min-w-full sm:min-w-[320px] ${customHeight ? customHeight : 'sm:min-h-[180px]'
         } flex flex-col justify-between flex-1 relative`,
         // { 'border-dashed border-[0.5px] border-[#7686B1]': noBg },
-        { 'bg-white dark:bg-darkBlue-3': !noBg && !bgCorner && !bgStake },
+        { 'bg-white dark:bg-darkBlue-3 border border-divider dark:border-none': !noBg && !bgCorner && !bgStake },
         { 'bg-nao-corner-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full': !noBg && bgCorner && !bgStake },
         { 'bg-nao-stake-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full': !noBg && !bgCorner && bgStake }
     )
@@ -48,7 +47,7 @@ export const SectionNao = styled.div.attrs(({ noBg }) => ({
         noBg &&
         `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%237686B1' stroke-width='${stroke}' stroke-dasharray='4 %2c 6' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e")`};
 
-`;
+        `;
 
 export const Divider = styled.div.attrs({
     className: 'h-[1px] opacity-[0.3] my-[10px]'
@@ -458,8 +457,8 @@ const WarningIcon = () => {
 export const capitalize = (text) => {
     return text
         ? String(text)
-              .toLowerCase()
-              .replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase())
+            .toLowerCase()
+            .replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase())
         : null;
 };
 
