@@ -247,7 +247,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     }
                 },
                 padding: {
-                    left: -2
+                    left: 0
                 }
             },
             xaxis: {
@@ -295,7 +295,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     formatter: (value) => {
                         return formatAbbreviateNumber(value, 3);
                     },
-                    offsetX: -15,
+                    offsetX: -10,
                     align: 'left',
                 }
             },
