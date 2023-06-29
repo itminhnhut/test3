@@ -357,7 +357,7 @@ const TradingFee = () => {
                     <div className={`flex flex-col space-y-3 items-center justify-center`}>
                         <img
                             className="max-h-[124px]"
-                            src={currentTheme === THEME_MODE.DARK ? getS3Url('/images/icon/ic_login.png') : '/images/nao/login.png'}
+                            src={currentTheme === THEME_MODE.DARK ? getS3Url('/images/icon/ic_login.png') : getS3Url('/images/nao/login.png')}
                         />
                         <div className="flex flex-wrap justify-center space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
                             <span className="whitespace-pre-wrap text-center">
