@@ -857,7 +857,7 @@ const ShareRankModal = ({ isVisible, onClose, data, t }) => {
                 image = 'official'
                 break;
         }
-        return <img width={320} height={320} src={`/images/reference/bg_share_rank_${image}.png`} />
+        return <img width={'100%'} height={'100%'} src={`/images/reference/bg_share_rank_${image}.png`} />
     }, [])
 
     const onDownLoad = async () => {
