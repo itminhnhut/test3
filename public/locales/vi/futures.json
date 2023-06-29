@@ -523,5 +523,10 @@
         "service": "Đồng ý thoả thuận sử dụng của Nami.",
         "futures": "Đồng ý thoả thuận giao dịch tại Nami Futures."
     },
+    "fee_modal": {
+        "select_currency": "Chọn đồng tiền dùng để làm phí giao dịch",
+        "save": "Lưu cài đặt",
+        "futures_fee": "Phí {{value}} Futures"
+    },
     "trading_rules_tooltip": "Áp dụng cho cả NAMI Futures và NAO Futures"
 }

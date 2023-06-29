@@ -115,6 +115,12 @@ export const fees = [
     { assetId: 22, assetCode: 'USDT', ratio: '0.06%' }
 ];
 
+export const fees_futures = [
+    { assetId: 72, assetCode: 'VNDC', ratio: '0.06%' },
+    { assetId: 1, assetCode: 'NAMI', ratio: '0.042%' },
+    { assetId: 22, assetCode: 'USDT', ratio: '0.06%' }
+];
+
 export const modeOrders = {
     detail: 'detail',
     shortcut: 'shortcut'
