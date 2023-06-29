@@ -7,11 +7,11 @@ import { useSelector } from 'react-redux';
 
 const NaoInfo = ({ dataSource, assetNao, ammData }) => {
     const { t } = useTranslation();
-    const user = useSelector(state => state.auth.user) || null;
+    const user = useSelector((state) => state.auth.user) || null;
 
     const holders_wallet = useMemo(() => {
-        return 22250000 - ammData - dataSource?.totalStaked
-    }, [dataSource, ammData])
+        return 22250000 - ammData - dataSource?.totalStaked;
+    }, [dataSource, ammData]);
 
     return (
         <section id="nao_info" className="flex items-center justify-between pt-12 sm:pt-20 flex-wrap gap-8">
@@ -57,7 +57,7 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                             <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:holders_wallet')}</label>
                             <div className="flex items-center space-x-2">
                                 {ammData ? (
-                                    <div className="font-semibold text-right break-all">{formatNumber(holders_wallet, assetNao?.assetDigit ?? 8)}</div>
+                                    <div className="font-semibold text-right break-all">{formatNumber(holders_wallet, 0)}</div>
                                 ) : (
                                     <div className="font-semibold">-</div>
                                 )}
@@ -68,7 +68,7 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                             <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:liq_pools')}</label>
                             <div className="flex items-center space-x-2">
                                 {ammData ? (
-                                    <div className="font-semibold text-right break-all">{formatNumber(ammData, assetNao?.assetDigit ?? 8)}</div>
+                                    <div className="font-semibold text-right break-all">{formatNumber(ammData, 0)}</div>
                                 ) : (
                                     <div className="font-semibold">-</div>
                                 )}
@@ -78,7 +78,7 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                         <div className="flex items-center justify-between space-x-2">
                             <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:governance_pool')}</label>
                             <div className="flex items-center space-x-2">
-                                <div className="font-semibold text-right break-all">{formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8)}</div>
+                                <div className="font-semibold text-right break-all">{formatNumber(dataSource?.totalStaked, 0)}</div>
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                             </div>
                         </div>
@@ -89,13 +89,10 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
     );
 };
 
-
 const BackgroundImage = styled.div.attrs({
     className: 'min-w-[90px] w-[90px] h-[90px] sm:min-w-[116px] sm:w-[116px] sm:h-[116px] rounded-[50%] flex justify-center items-center mr-4 sm:mr-6'
 })`
     background: linear-gradient(136deg, #00144e -5%, #003a33 115%);
 `;
-
-
 
 export default NaoInfo;
