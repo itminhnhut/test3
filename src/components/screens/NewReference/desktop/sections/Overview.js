@@ -919,7 +919,7 @@ const ShareRankModal = ({ isVisible, onClose, data, t }) => {
                 </div>
             </div>
             <ButtonV2 disabled={loading} loading={loading} onClick={onDownLoad}>
-                {t(`futures:${loading ? 'order_table:loading' : 'download'}`)}
+                {t('common:save')}
             </ButtonV2>
         </ModalV2>
     );
