@@ -168,6 +168,12 @@ body {
         // padding:0 16px;
         margin: auto;
 
+        @media (min-width: 1024px) and (max-width: 1279px) {
+            &.mal-footer__wrapper {
+                max-width: unset;
+            }
+        }
+
         @media (min-width: 1024px) {
             max-width: 900px;
         }
