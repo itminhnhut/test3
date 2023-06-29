@@ -22,6 +22,7 @@ const AssetDigitalStaking = ({ isMobile }) => {
     } = useTranslation();
 
     const handleWithdrawDeposit = (data) => {
+        alert(!!auth);
         isFromApp && emitWebViewEvent(data);
     };
 
