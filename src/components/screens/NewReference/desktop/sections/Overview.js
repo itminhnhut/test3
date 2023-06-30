@@ -938,24 +938,6 @@ const MaintainConditionModal = ({ isVisible, onBackdropCb, data, className, t })
                 {t('reference:maintaining_conditions')}
             </div>
             <div className="mt-8 text-txtSecondary dark:text-txtSecondary-dark">
-                <div>
-                    {t('reference:maintain_modal.you_need')}:
-                </div>
-                <div className='mt-6 p-4 bg-gray-13 dark:bg-dark-4 rounded-xl'>
-                    <div className="flex justify-between w-full items-center ">
-                        <div className=''>
-                            {t('reference:maintain_modal.new_friends')}
-                        </div>
-                        <Text text1={data?.current?.ref} text2={data?.maintain?.ref} useFormatNumber />
-                    </div>
-                    <div className="flex justify-between w-full items-center mt-3">
-                        <div className=''>
-                            {t('reference:maintain_modal.commissions_value')}
-                        </div>
-                        <Text text1={data?.current?.commission} text2={data?.maintain?.commission} useFormatNumber />
-
-                    </div>
-                </div>
                 <div className="mt-6">
                     {t('reference:maintain_modal.and_one')}:
                 </div>

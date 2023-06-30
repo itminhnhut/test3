@@ -216,8 +216,8 @@ const FriendList = ({ language, t, id }) => {
                 url: API_GET_REFERRAL_FRIENDS_BY_CODE.replace(':code', row?.code)
             });
             if (status === 'ok') {
-                const { name = '', code = '' } = row;
-                setDetailFriend({ ...data, name, code });
+                const { name = '', code = '', email = '' } = row;
+                setDetailFriend({ ...data, name, code, email });
             }
         } catch (err) {
             console.error(err);
