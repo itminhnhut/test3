@@ -241,13 +241,13 @@
     "update_date": "Updated at",
     "ranking_conditions": "Rank Upgrade Conditions",
     "ranking_conditions_tooltip": "To rank-up, Community Partners need to meet the following trading volume at the next level, detail:</br>- Exchange including Nami Spot and Nami Swap </br>or</br>- Futures including Nami Futures, NAO Futures",
-    "maintaining_conditions": "Maintaining Conditions",
+    "maintaining_conditions": "Conditions",
     "maintenance_point": "Current Rank Maintenance Point",
     "maintain_modal": {
         "you_need": "To maintain your current Rank, Community Partners must achieve",
         "new_friends": "New referred",
         "commissions_value": "Commission value (USDT)",
-        "and_one": "And meeting one of the following two volume conditions"
+        "and_one": "To maintain your current Rank, Community Partners must achieve"
     },
     "official_partner": "Official Partner",
     "gold_partner": "Gold Partner",

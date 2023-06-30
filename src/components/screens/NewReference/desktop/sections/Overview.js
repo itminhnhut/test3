@@ -330,7 +330,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                     </div>
                                 </div>
                             </div>
-                            <Tooltip id={'description'} place="top" effect="solid" className="max-w-[340px]">
+                            {/* <Tooltip id={'description'} place="top" effect="solid" className="max-w-[340px]">
                                 <div dangerouslySetInnerHTML={{ __html: t('reference:ranking_conditions_tooltip') }}></div>
                             </Tooltip>
                             <div
@@ -339,7 +339,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                 data-for={'description'}
                             >
                                 {t('reference:ranking_conditions')}
-                            </div>
+                            </div> */}
                             <div className="text-sm space-y-3 relative">
                                 <div className="w-full flex items-center justify-between text-gray-1">
                                     <div className=''>{t('reference:referral.current_volume')}</div>
@@ -934,10 +934,12 @@ const MaintainConditionModal = ({ isVisible, onBackdropCb, data, className, t })
         className={className}
     >
         <div>
-            <div className="text-2xl font-semibold text-txtPrimary dark:text-txtPrimary-dark">
+            {/* <div className="text-2xl font-semibold text-txtPrimary dark:text-txtPrimary-dark">
                 {t('reference:maintaining_conditions')}
-            </div>
-            <div className="mt-8 text-txtSecondary dark:text-txtSecondary-dark">
+            </div> */}
+
+            <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                <div className="" dangerouslySetInnerHTML={{ __html: t('reference:ranking_conditions_tooltip') }}></div>
                 <div className="mt-6">
                     {t('reference:maintain_modal.and_one')}:
                 </div>
