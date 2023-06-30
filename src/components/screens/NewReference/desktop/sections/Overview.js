@@ -934,11 +934,11 @@ const MaintainConditionModal = ({ isVisible, onBackdropCb, data, className, t })
         className={className}
     >
         <div>
-            {/* <div className="text-2xl font-semibold text-txtPrimary dark:text-txtPrimary-dark">
+            <div className="text-2xl font-semibold text-txtPrimary dark:text-txtPrimary-dark">
                 {t('reference:maintaining_conditions')}
-            </div> */}
+            </div>
 
-            <div className="text-txtSecondary dark:text-txtSecondary-dark">
+            <div className="mt-6 text-txtSecondary dark:text-txtSecondary-dark">
                 <div className="" dangerouslySetInnerHTML={{ __html: t('reference:ranking_conditions_tooltip') }}></div>
                 <div className="mt-6">
                     {t('reference:maintain_modal.and_one')}:
