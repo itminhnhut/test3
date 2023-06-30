@@ -12,6 +12,7 @@ import { useTranslation } from 'next-i18next';
 import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import { get } from 'lodash';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
+import DWRelationIcon from 'components/common/DWRelationIcon';
 
 const RENDER_INFORMATION = [
     {
@@ -113,7 +114,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                         ) : (
                                             <>
                                                 <span>{orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase()}</span>
-                                                <DwPartnerIconMulti />
+                                                <DWRelationIcon userIsPartner={orderDetail?.userIsPartner}/>
                                             </>
                                         )}
                                     </div>

@@ -1,27 +1,23 @@
 import { useTranslation } from 'next-i18next';
-import { ArrowForwardIcon } from 'components/svg/SvgIcon';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { ApiStatus, UserSocketEvent } from 'redux/actions/const';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { useRouter } from 'next/router';
 import FetchApi from 'utils/fetch-api';
-import toast from 'utils/toast';
-import { X } from 'react-feather';
-import colors from 'styles/colors';
-import CustomOtpInput from 'components/screens/WithdrawDeposit/components/CustomOtpInput';
 import MCard from 'components/common/MCard';
 import { CountdownClock } from './components/common/CircleCountdown';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { API_CANCEL_AUTO_SUGGEST_ORDER, API_CONTINUE_AUTO_SUGGEST_ORDER } from 'redux/actions/apis';
 import { useSelector } from 'react-redux';
 import ModalLoading from 'components/common/ModalLoading';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb }) => {
     const [state, setState] = useState({ side: SIDE.BUY, countdownTime: null, timeExpire: null });
     const router = useRouter();
+    const [currentTheme] = useDarkMode();
 
     useEffect(() => {
         if (!showProcessSuggestPartner) return;
@@ -44,13 +40,13 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                 // make sure the socket displayingId is the current details/[id] page
                 if (!data) return;
-                console.log('_______data socket: ', data);
+                console.log('_________Socket user: ', data, showProcessSuggestPartner);
 
                 // lệnh bị timeout / tất cả partner từ chối:
-                if (data?.status === 2 && data?.displayingId) return forceUpdateState();
+                if (data?.status === 2 && data?.displayingId === showProcessSuggestPartner?.displayingId) return forceUpdateState();
 
                 // partner chấp nhận:
-                if (data?.status === 0 && data?.partnerAcceptStatus === 1) return handlePartnerAccept();
+                if (data?.status === 0 && data?.partnerAcceptStatus === 1) return handlePartnerAccept(data.displayingId);
             });
         }
 
@@ -61,10 +57,11 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 });
             }
         };
-    }, [userSocket]);
+    }, [userSocket, showProcessSuggestPartner]);
 
     const handleCancelOrderSuggest = async () => {
-        const { status, data, code } = await FetchApi({
+        console.log("________handleCancelOrderSuggest______");
+        return await FetchApi({
             url: API_CANCEL_AUTO_SUGGEST_ORDER,
             options: {
                 method: 'POST'
@@ -74,7 +71,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
             }
         });
 
-        onBackdropCb();
+        // onBackdropCb();
     };
 
     const forceUpdateState = () => {
@@ -82,11 +79,12 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
         setIsNotFoundPartner(true);
     };
 
-    const handlePartnerAccept = () => {
+    const handlePartnerAccept = (orderId) => {
         setIsAccepted(true);
         setTimeout(() => {
-            router.push(`withdraw-deposit/partner/details/${showProcessSuggestPartner.displayingId}`)
-        }, 500);
+            onBackdropCb();
+            router.push(`/withdraw-deposit/partner/details/${orderId}`);
+        }, 1000);
     };
 
     const handleContinueFindPartner = async () => {
@@ -126,14 +124,17 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 className="!max-w-[488px]"
                 wrapClassName="p-8 flex flex-col items-center txtSecond-4 "
             >
-                <div className="w-[124px] h-[124px] bg-dominant"></div>
-                <h1 classNamwe="txtPri-3 mt-6 mb-4">{isAccepted ? 'Đã tìm được đối tác cho bạn ' : 'Đang tìm đối tác cho bạn...'}</h1>
+                <video class="pointer-events-none" width="124" height="124" loop muted autoPlay preload="none" playsInline>
+                    <source src={`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`} type="video/mp4" />
+                </video>
+
+                <h1 className="txtPri-3 mt-6 mb-4">{isAccepted ? 'Đã tìm được đối tác cho bạn ' : 'Đang tìm đối tác cho bạn...'}</h1>
                 <div className="text-center">Nami Exchange sẽ tìm ra đối tác phù hợp với giao dịch của bạn nhất</div>
                 <div className="p-1 mt-4">
                     <CountdownClock
                         key={state.timeExpire}
                         countdownTime={state.countdownTime}
-                        onComplete={() => setIsAwaitSocketNotFoundPartner(true)}
+                        onComplete={() => !isNotFoundPartner && setIsAwaitSocketNotFoundPartner(true)}
                         timeExpire={state.timeExpire}
                     />
                 </div>
@@ -147,7 +148,14 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                         <span className="text-gray-15 dark:text-gray-4 font-semibold">20,000,000 VNDC</span>
                     </div>
                 </MCard>
-                <ButtonV2 onClick={handleCancelOrderSuggest} className="mt-10" variants="secondary">
+                <ButtonV2
+                    onClick={() => {
+                        handleCancelOrderSuggest();
+                        onBackdropCb();
+                    }}
+                    className="mt-10"
+                    variants="secondary"
+                >
                     Huỷ lệnh
                 </ButtonV2>
             </ModalV2>
@@ -178,6 +186,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 onClose={() => {
                     setIsErrorContinue('');
                     setTimeout(() => {
+                        setIsNotFoundPartner(false);
                         onBackdropCb();
                     }, 200);
                 }}

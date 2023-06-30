@@ -71,22 +71,6 @@ const MadivesLayout = ({
 
     useEffect(() => {
         store.dispatch(setTheme());
-        // toast({
-        //     text: t('common:title'),
-        //     type: 'warning',
-        //     duration: 1500000,
-        //     customActionClose: (closeToast) => (
-        //         <span
-        //             className="ml-6 text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4 cursor-pointer"
-        //             onClick={() => {
-        //                 router.push('/');
-        //                 closeToast();
-        //             }}
-        //         >
-        //             Xem
-        //         </span>
-        //     )
-        // });
     }, []);
 
     const router = useRouter();
@@ -99,14 +83,18 @@ const MadivesLayout = ({
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                 // make sure the socket displayingId is the current details/[id] page
-                if (!data) return;
+                if (!data || data?.status !== 0 || data.partnerAcceptStatus !== 0) return;
+
+                console.log('______Socket partner: ', data);
+
                 const { displayingId, quoteQty, baseAssetId, userMetadata } = data;
                 toast({
+                    key: displayingId,
                     text: `Lệnh mua #${displayingId} trị giá ${formatNumber(quoteQty)} ${baseAssetId === 72 ? 'VNDC' : 'USDT'} vừa được tạo bởi ${
                         userMetadata?.name
                     }`,
-                    type: 'warning',
-                    duration: 1500000,
+                    type: 'info',
+                    duration: 60000,
                     customActionClose: (closeToast) => (
                         <span
                             className="ml-6 text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4 cursor-pointer"
@@ -188,7 +176,9 @@ const MadivesLayout = ({
                 <div id={`${PORTAL_MODAL_ID}`} />
                 {isPartner && <HookPartnerSocket />}
             </div>
-            {showPartnerSuggest && <PartnerModalDetailsOrderSuggest showProcessSuggestPartner={showPartnerSuggest} onBackdropCb={() => setShowPartnerSuggest(null)}/>}
+            {showPartnerSuggest && (
+                <PartnerModalDetailsOrderSuggest showProcessSuggestPartner={showPartnerSuggest} onBackdropCb={() => setShowPartnerSuggest(null)} />
+            )}
         </>
     );
 };

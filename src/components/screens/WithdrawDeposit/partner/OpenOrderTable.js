@@ -28,6 +28,7 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import classNames from 'classnames';
 import { DwPartnerIconSingle, MonetizationOnIcon, MoneyIcon } from 'components/svg/SvgIcon';
+import DWRelationIcon from 'components/common/DWRelationIcon';
 
 const LIMIT_ROW = 5;
 
@@ -75,7 +76,7 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
                             <div className="space-y-2 text-right lg:text-left">
                                 <div className="capitalize txtPri-1 break-words flex items-center gap-x-4">
                                     {orderDetail?.userMetadata?.name?.toLowerCase()}
-                                    <DwPartnerIconSingle />
+                                    <DWRelationIcon userIsPartner={orderDetail?.userIsPartner}/>
                                 </div>
                                 <div className="txtSecond-3">{orderDetail?.userMetadata?.code}</div>
                             </div>

@@ -7,10 +7,16 @@ export const MODAL_TYPE = {
     CONFIRM: 'confirm',
     AFTER_CONFIRM: 'afterConfirm'
 };
+
 export const SIDE = {
     BUY: 'BUY',
     SELL: 'SELL'
 };
+
+export const PROCESS_AUTO_SUGGEST = {
+    ACCEPTED: 1,
+    REJECTED: 2
+}
 
 const INITIAL_MODAL_STATE = {
     [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
