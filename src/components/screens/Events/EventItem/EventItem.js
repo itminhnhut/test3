@@ -28,6 +28,10 @@ const getStatus = (start, end) => {
     return start > now ? STATUSES.upcoming : end && end < now ? STATUSES.ended : STATUSES.ongoing;
 };
 
+const pad = (n) => {
+    return n < 10 ? '0' + n : n;
+};
+
 /**
  *
  * @param {{ _id: string, thumbnailImgEndpoint?: string, bannerImgEndpoint?: string, title: string, startTime: string , endTime: string, anticipate: bool, prize: string, postLink: string, isHot: bool, creatorName: string, priority: number, isHidden: bool }} props
@@ -57,7 +61,7 @@ const EventItem = (props) => {
             }
             return `${format.days} ${t('common:days')}`;
         }
-        return `${format.hours}:${format.minutes}:${format.seconds}`;
+        return `${pad(format.hours)}:${pad(format.minutes)}:${pad(format.seconds)}`;
     };
     const getUnfinishedBagde = (start, end) => {
         const status = getStatus(start, end);
