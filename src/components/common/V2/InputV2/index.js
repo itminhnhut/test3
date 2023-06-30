@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { forwardRef, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import { X } from 'react-feather';
@@ -18,7 +18,7 @@ const ErrorTriangle = ({ size = 16 }) => {
     );
 };
 
-const InputV2 = ({
+const InputV2 = forwardRef(({
     className,
     label,
     value,
@@ -36,7 +36,7 @@ const InputV2 = ({
     classNameDivInner = '',
     showDividerSuffix = true,
     ...restProps
-}) => {
+}, forwardedRef) => {
     const { t } = useTranslation();
 
     const inputRef = useRef(null);
@@ -80,7 +80,12 @@ const InputV2 = ({
             >
                 {prefix ? prefix : null}
                 <input
-                    ref={inputRef}
+                    ref={(current) => {
+                        inputRef.current = current;
+                        if (forwardedRef) {
+                            forwardedRef.current = current;
+                        }
+                    }}
                     className={classNames(
                         'flex-1 text-sm sm:text-base !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark text-txtPrimary dark:text-txtPrimary-dark',
                         classNameInput
@@ -126,6 +131,6 @@ const InputV2 = ({
             </div>
         </div>
     );
-};
+});
 
 export default InputV2;
