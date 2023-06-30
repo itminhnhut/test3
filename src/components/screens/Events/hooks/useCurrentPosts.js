@@ -23,7 +23,7 @@ function useCurrentPosts() {
         },
         {
             persist: true,
-            ttl: '2h'
+            ttl: '30m'
         }
     );
 }

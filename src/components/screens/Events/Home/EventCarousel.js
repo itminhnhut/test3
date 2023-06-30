@@ -26,7 +26,7 @@ const Wrapper = styled.div`
     }
 `;
 
-const CarouselItem = ({ banner, link, title }) => {
+const CarouselItem = ({ thumbnail, banner, link, title }) => {
     return (
         <div className="keen-slider__slide p-0" title={title}>
             <Link href={link} passHref>
@@ -35,7 +35,7 @@ const CarouselItem = ({ banner, link, title }) => {
                         <Image src={getEventImg(banner)} alt={title} width={1440} height={522} className="object-cover w-full h-auto" />
                     </div>
                     <div className="mb:hidden block">
-                        <Image src={getEventImg(banner)} alt={title} width={820} height={430} className="object-cover w-full h-auto" />
+                        <Image src={getEventImg(thumbnail)} alt={title} width={820} height={430} className="object-cover w-full h-auto" />
                     </div>
                 </a>
             </Link>
@@ -86,7 +86,13 @@ const Carousel = ({ data }) => {
         <Wrapper>
             <div className="keen-slider" ref={sliderRef}>
                 {data.slice(0, MAX_SIZE).map((item, idx) => (
-                    <CarouselItem banner={item.bannerImgEndpoint} link={item.postLink || '#'} key={item._id || idx} title={item.title} />
+                    <CarouselItem
+                        banner={item.bannerImgEndpoint}
+                        thumbnail={item.thumbnailImgEndpoint}
+                        link={item.postLink || '#'}
+                        key={item._id || idx}
+                        title={item.title}
+                    />
                 ))}
             </div>
             <div className="keen-slider__dots__wrapper !mt-4">{renderDots()}</div>

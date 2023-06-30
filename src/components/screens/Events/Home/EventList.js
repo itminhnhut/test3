@@ -161,7 +161,8 @@ const EventList = () => {
     const { width } = useWindowSize();
 
     const query = new URLSearchParams(router.asPath.replace(router.route, '').replace('?', ''));
-    const queryStatus = isNaN(+query.get('status')) ? STATUSES.all : +query.get('status');
+    const stat = query.get('status');
+    const queryStatus = stat && isNaN(+stat) ? +stat : STATUSES.all;
     const initialStatus = queryStatus >= STATUSES.all && queryStatus <= STATUSES.ended ? queryStatus : STATUSES.all;
     const [filter, setFilter] = useState({
         status: initialStatus,
