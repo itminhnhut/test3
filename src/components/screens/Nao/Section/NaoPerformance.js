@@ -685,7 +685,7 @@ const NaoPerformance = memo(({}) => {
                             </ApexChartWrapper>
                         )}
                     </CardNao>
-                    <div className="col-span-12 mt-3 bg-white dark:bg-darkBlue-3 text-txtSecondary dark:text-txtSecondary-dark text-xs mb:hidden py-3 px-4 rounded-md">
+                    <div className="col-span-12 mt-3 bg-gray-13 dark:bg-darkBlue-3 text-txtSecondary dark:text-txtSecondary-dark text-xs mb:hidden py-3 px-4 rounded-md">
                         <div className="flex items-center space-x-2">
                             <BxsInfoCircle size={16} color="currentColor" />
                             <span>{t('nao:pool:mobile_chart_note')}</span>
