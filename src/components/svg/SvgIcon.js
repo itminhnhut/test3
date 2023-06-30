@@ -1323,6 +1323,17 @@ export const SystemInfoCircleFilled = ({ size = 80 }) => {
     );
 };
 
+const ProfitStats = ({ className, color, size = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694B3' : '#47cc85';
+
+    return (
+        <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.5 6.5h1v10h-1v-10zm4-3h1v13h-1v-13zm-8 6h1v7h-1v-7zm-5 10h15v1h-15v-1zm1-7h1v4h-1v-4z" fill={color || defaultColor} stroke="#8694B3" />
+        </svg>
+    );
+};
+
 export {
     FutureInsurance,
     ArrowDownIcon,
@@ -1399,5 +1410,6 @@ export {
     TwitterIcon,
     TelegramIcon,
     FutureNaoIcon,
-    PortfolioIconNoColor
+    PortfolioIconNoColor,
+    ProfitStats
 };

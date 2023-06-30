@@ -661,6 +661,14 @@ export const USER_CP = [
         child_lv1: []
     },
     {
+        key: 4,
+        title: 'profit stats',
+        localized: 'profit_stats',
+        isNew: true,
+        url: '/staking/statistic',
+        child_lv1: []
+    },
+    {
         key: 6,
         title: 'daily_reward',
         localized: 'daily_reward',

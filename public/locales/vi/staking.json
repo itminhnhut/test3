@@ -2,7 +2,8 @@
     "header": {
         "title": "Nhận lãi suất mỗi ngày, không yêu cầu khóa tài sản với chương trình Nhận lãi hàng ngày từ Nami Exchange",
         "des": "Chương trình Nhận lãi ngày từ Nami Exchange là công cụ tối ưu lợi nhuận từ tài sản số nhàn rỗi với mức lãi suất lên đến 12.79% /năm với VNDC và 6% /năm với USDT.",
-        "deposit_now": "Bắt đầu ngay"
+        "deposit_now": "Bắt đầu ngay",
+        "statistics": " Thống kê"
     },
     "why_nami": {
         "title": "Tại sao nên chọn Nami Exchange?"
@@ -15,5 +16,28 @@
         "total_interest": "Tổng lãi cuối kỳ",
         "total_balance": "Tổng số dư cuối kỳ"
     },
-    "faq": { "title": "Câu hỏi thường gặp" }
+    "faq": { "title": "Câu hỏi thường gặp" },
+    "statics": {
+        "profit_stats": "Thống kê lợi nhuận",
+        "program_infor": "Thông tin về chương trình",
+        "not_auth": "<0>Đăng ký</0> ngay để tham gia nhận lãi hàng ngày từ Nami hoặc <1>đăng nhập</1> để xem thống kê của bạn",
+        "interest": {
+            "balance": "Tổng số dư",
+            "balance_description": "Tổng số dư VNDC hoặc USDT trên tất cả các Ví ",
+            "apy_interest": "Lãi suất năm (kép):",
+            "deposit_now": "Nạp ngay",
+            "daily_interest": "Lợi nhuận ngày",
+            "annual_interest": "Lợi nhuận dự kiến năm"
+        },
+        "history": {
+            "title": "Lịch sử nhận lãi",
+            "profit_received": "Tổng lợi nhuận đã nhận",
+            "columns": {
+                "type": "Loại tài sản",
+                "amount": "Số lượng",
+                "time": "Thời gian",
+                "status": "Trạng thái"
+            }
+        }
+    }
 }

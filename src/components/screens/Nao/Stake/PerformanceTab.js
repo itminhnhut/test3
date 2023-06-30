@@ -102,7 +102,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 const DeskStakingHistoryWrapper = styled.div`
     height: ${(props) => `${props.height || 0}px`};
-`
+`;
 
 const getAssets = createSelector([(state) => state.utils, (utils, params) => params], (utils, params) => {
     const assets = {};
@@ -521,7 +521,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             </CardNao>
                         </div>
                         <div className="w-1/2 p-3">
-                            <CardNao className="!py-6 h-full flex flex-col justify-between !px-2">
+                            <CardNao className="!pt-6 !pb-2 h-full flex flex-col justify-between !px-2">
                                 <div className="text-txtPrimary dark:text-txtPrimary-dark text-lg font-semibold px-4">Staking</div>
                                 <DeskStakingHistoryWrapper
                                     // height={deskProfitRef?.current ? deskProfitRef.current.offsetHeight - 114 : 0}

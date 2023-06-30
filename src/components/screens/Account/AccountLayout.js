@@ -47,12 +47,12 @@ const TABS = [
     {
         key: 'identify_tab',
         localized: 'navbar:menu.user.profile',
-        href: PATHS.ACCOUNT.IDENTIFICATION
+        href: PATHS.ACCOUNT.PROFILE
     },
     {
         key: 'kyc_tab',
         localized: 'identification:kyc_title',
-        href: PATHS.ACCOUNT.PROFILE
+        href: PATHS.ACCOUNT.IDENTIFICATION
     },
     {
         key: 'payment_tab',

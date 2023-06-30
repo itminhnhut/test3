@@ -24,6 +24,9 @@ import { useRouter } from 'next/router';
 import { useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
 import NaoHeader from 'components/screens/Nao/NaoHeader';
 import NaoFooter from 'components/screens/Nao/NaoFooter';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { getLoginUrl } from 'redux/actions/utils';
 
 const getAssetNao = createSelector([(state) => state.utils.assetConfig, (utils, params) => params], (assets, params) => {
     return assets.find((rs) => rs.assetCode === params);
@@ -41,6 +44,8 @@ const Stake = () => {
     const assetNao = useSelector((state) => getAssetNao(state, 'NAO'));
     const refStake = useRef(null);
     const router = useRouter();
+    const user = useSelector((state) => state.auth.user) || null;
+    const [currentTheme] = useDarkMode();
 
     useEffect(() => {
         getStake();
@@ -65,14 +70,15 @@ const Stake = () => {
     };
 
     return (
-        <LayoutNaoToken isHeader={false}>
-            <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0 mb:block hidden">
+        <MaldivesLayout>
+            <LayoutNaoToken isHeader={false}>
+                {/* <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0 mb:block hidden">
                 <NaoHeader />
-            </div>
-            <div className="mb:min-h-[calc(100vh-16.75rem)]">
-                <div className="mb_only:sticky top-0 z-10 px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
-                    <div className="stake_header bg-bgPrimary dark:bg-bgPrimary-dark relative z-[9]">
-                        {/* <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
+            </div> */}
+                <div className={`${user ? 'mb:min-h-[calc(100vh-16.75rem)]' : 'mb:pb-[7.5rem] pb-10'} px-4`}>
+                    <div className="mb_only:sticky top-0 z-10 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                        <div className="stake_header bg-bgPrimary dark:bg-bgPrimary-dark relative z-[9]">
+                            {/* <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                     language={language} t={t} />
                 <div className="flex items-center justify-between px-4 pt-6">
                     <img src={getS3Url("/images/nao/ic_nao.png")} alt="" width={40} height={40} />
@@ -89,37 +95,73 @@ const Stake = () => {
                         </div>
                     }
                 </div> */}
-                        <div className="flex items-center pb-4 pt-6 mb:pt-20 mb:pb-12">
-                            <ChevronLeft size={20} onClick={() => router.back()} className="mb:hidden mr-2" />
-                            <label onClick={() => router.back()} className="font-semibold mb:text-5xl">
-                                {t('nao:governance_pool')}
-                            </label>
-                        </div>
-                        <Tabs isMobile={isMobile} tab={tab}>
-                            <TabItem className="py-4 mb:w-[fit-content]" onClick={() => setTab(0)} active={tab === 0}>
-                                {t('nao:pool:stake_nao')}
-                            </TabItem>
-                            <TabItem className="py-4 mb:w-[fit-content]" onClick={() => setTab(1)} active={tab === 1}>
-                                {t('nao:pool:performance')}
-                            </TabItem>
-                        </Tabs>
-                    </div>
-                </div>
-                <div className="px-4 nao:px-0 max-w-[72.5rem] w-full m-auto !mt-0">
-                    <div className={`h-full w-full py-6 mb:py-8`}>
-                        <div className={tab !== 0 ? 'hidden' : ''}>
-                            <StakeTab ref={refStake} assetNao={assetNao} dataSource={dataSource} getStake={getStake} />
-                        </div>
-                        <div className={tab !== 1 ? 'hidden' : height < 600 ? 'min-h-[600px] relative' : ''}>
-                            <PerformanceTab onShowLock={onShowLock} assetNao={assetNao} isSmall={height < 600} dataSource={dataSource} />
+                            <div className={`flex items-center pb-4 pt-6 mb:pt-20 ${user ? 'mb:pb-12' : 'mb:pb-7'} `}>
+                                <ChevronLeft size={20} onClick={() => router.back()} className="mb:hidden mr-2" />
+                                <label onClick={() => router.back()} className="font-semibold mb:text-5xl">
+                                    {t('nao:governance_pool')}
+                                </label>
+                            </div>
+                            {user && (
+                                <Tabs isMobile={isMobile} tab={tab}>
+                                    <TabItem className="py-4 mb:w-[fit-content]" onClick={() => setTab(0)} active={tab === 0}>
+                                        {t('nao:pool:stake_nao')}
+                                    </TabItem>
+                                    <TabItem className="py-4 mb:w-[fit-content]" onClick={() => setTab(1)} active={tab === 1}>
+                                        {t('nao:pool:performance')}
+                                    </TabItem>
+                                </Tabs>
+                            )}
                         </div>
                     </div>
+                    {user ? (
+                        <div className="nao:px-0 max-w-[72.5rem] w-full m-auto !mt-0">
+                            <div className={`h-full w-full py-6 mb:py-8`}>
+                                <div className={tab !== 0 ? 'hidden' : ''}>
+                                    <StakeTab ref={refStake} assetNao={assetNao} dataSource={dataSource} getStake={getStake} />
+                                </div>
+                                <div className={tab !== 1 ? 'hidden' : height < 600 ? 'min-h-[600px] relative' : ''}>
+                                    <PerformanceTab onShowLock={onShowLock} assetNao={assetNao} isSmall={height < 600} dataSource={dataSource} />
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div
+                            className={`flex flex-col space-y-3 items-center justify-center font-semibold leading-normal mb:bg-bgPrimary mb:dark:bg-[#141921] p-4 max-w-[72.5rem] w-full m-auto h-[16.25rem] rounded-xl`}
+                        >
+                            <img
+                                className="max-h-[124px]"
+                                src={currentTheme === THEME_MODE.DARK ? getS3Url('/images/icon/ic_login.png') : getS3Url('/images/nao/login.png')}
+                            />
+                            <div className="flex flex-wrap justify-center space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
+                                <span className="whitespace-pre-wrap text-center">
+                                    <span
+                                        className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 cursor-pointer"
+                                        onClick={() => {
+                                            window.location.href = getLoginUrl('sso');
+                                        }}
+                                    >
+                                        {t('common:sign_in')}
+                                    </span>{' '}
+                                    <span>{t('common:or')}</span>{' '}
+                                    <span
+                                        className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 cursor-pointer"
+                                        onClick={() => {
+                                            window.location.href = getLoginUrl('sso', 'register');
+                                        }}
+                                    >
+                                        {t('common:sign_up')}
+                                    </span>{' '}
+                                    {t('nao:to_stake_now')}
+                                </span>
+                            </div>
+                        </div>
+                    )}
                 </div>
-            </div>
-            <div className="hidden mb:block">
+                {/* <div className="hidden mb:block">
                 <NaoFooter />
-            </div>
-        </LayoutNaoToken>
+            </div> */}
+            </LayoutNaoToken>
+        </MaldivesLayout>
     );
 };
 
@@ -203,7 +245,7 @@ const TabItem = styled.div.attrs(({ active }) => ({
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'nao', 'error']))
+        ...(await serverSideTranslations(locale, ['common', 'nao', 'error', 'navbar']))
     }
 });
 export default Stake;

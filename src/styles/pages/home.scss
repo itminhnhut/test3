@@ -1662,7 +1662,7 @@
     }
 
     .homepage-community___channel__group {
-      @apply flex flex-row flex-wrap;
+      @apply flex flex-row flex-wrap justify-center;
       margin-top: 8px;
 
       .homepage-community___channel__group___item {
