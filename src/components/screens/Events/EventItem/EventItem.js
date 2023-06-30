@@ -88,7 +88,7 @@ const EventItem = (props) => {
             <a className="relative flex mt-4 mb:mt-7 rounded-xl overflow-hidden flex-wrap mb:flex-nowrap bg-white dark:bg-dark-4 border dark:border-none border-divider shadow-card_light">
                 {getUnfinishedBagde(props.startTime, props.endTime)}
                 <ImageWrapper>
-                    <Image src={getEventImg(props.thumbnailImgEndpoint)} width={503} height={265} className="object-cover bg-gray" />
+                    <img src={getEventImg(props.thumbnailImgEndpoint)} width={503} height={265} className="object-cover bg-gray" />
                 </ImageWrapper>
                 <div className="p-4 mb:px-7 mb:py-12 mb:w-7/12">
                     <div className="flex flex-wrap gap-2 mb:gap-3 items-center text-txtSecondary dark:text-txtSecondary-dark text-xs mb:text-sm">

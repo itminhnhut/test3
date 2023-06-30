@@ -32,10 +32,10 @@ const CarouselItem = ({ thumbnail, banner, link, title }) => {
             <Link href={link} passHref>
                 <a className="block bg-gray-4 dark:bg-dark-2 rounded-2xl overflow-hidden leading-[0]">
                     <div className="mb:block hidden">
-                        <Image src={getEventImg(banner)} alt={title} width={1440} height={522} className="object-cover w-full h-auto" />
+                        <img src={getEventImg(banner)} alt={title} width={1440} height={522} className="object-cover w-full h-auto" />
                     </div>
                     <div className="mb:hidden block">
-                        <Image src={getEventImg(thumbnail)} alt={title} width={820} height={430} className="object-cover w-full h-auto" />
+                        <img src={getEventImg(thumbnail)} alt={title} width={820} height={430} className="object-cover w-full h-auto" />
                     </div>
                 </a>
             </Link>
