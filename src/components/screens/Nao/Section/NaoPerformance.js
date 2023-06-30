@@ -422,7 +422,7 @@ const NaoPerformance = memo(({}) => {
                     }
                 },
                 padding: {
-                    left: 0,
+                    left: 2,
                 }
             },
             xaxis: {

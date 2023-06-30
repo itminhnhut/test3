@@ -247,7 +247,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     }
                 },
                 padding: {
-                    left: 0
+                    left: 2
                 }
             },
             xaxis: {
