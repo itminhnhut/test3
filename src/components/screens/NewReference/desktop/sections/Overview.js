@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReferralLevelIcon from 'components/svg/RefIcons';
 import { Progressbar } from 'components/screens/NewReference/mobile/sections/Info';
 import { RegisterPartnerModal } from 'components/screens/NewReference/mobile/sections/Overview';
@@ -21,13 +21,16 @@ import { IconLoading } from 'components/common/Icons';
 import ReactDOM from 'react-dom';
 import domtoimage from 'dom-to-image-more';
 import { throttle } from 'lodash';
-import { getS3Url, getLoginUrl } from 'redux/actions/utils';
+import { getS3Url, getLoginUrl, formatNumber, formatTime } from 'redux/actions/utils';
 import TagV2 from 'components/common/V2/TagV2';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
 import toast from 'utils/toast';
 import { useSelector } from 'react-redux';
+import Tooltip from 'components/common/Tooltip';
+import DomToImage from 'dom-to-image';
 
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
@@ -44,6 +47,8 @@ const Partner = dynamic(() => import('components/svg/Partner'), { ssr: false });
 const Spinner = dynamic(() => import('components/svg/Spinner'), { ssr: false });
 import { useDispatch } from 'react-redux';
 import { getMe } from 'redux/actions/user';
+import { ShareIcon } from 'components/svg/SvgIcon';
+import styled from 'styled-components';
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact'
@@ -52,6 +57,11 @@ const formatter = Intl.NumberFormat('en', {
 const policyLinkVI = 'https://nami.exchange/vi/support/announcement/tin-tuc-ve-nami/ra-mat-co-che-gioi-thieu-moi-tren-nami-exchange';
 const policyLinkEN = 'https://nami.exchange/support/announcement/nami-news/officially-apply-the-new-referral-mechanism-on-nami-exchange';
 const STATUS_OK = 'ok';
+
+const renderNumber = (number, useFormatNumber = false) => {
+    const format = useFormatNumber ? formatNumber : formatter.format
+    return isNaN(number) ? '--' : format(number, 0)
+}
 
 const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading }) => {
     const [showRef, setShowRef] = useState(false);
@@ -63,7 +73,9 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
 
     const [isPartner, setIsPartner] = useState(true);
     const [isWithdrawal, setIsWithdrawal] = useState(true);
+    const [shareRankModal, setShareRankModal] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
+    const [maintainConditionModal, setMaintainConditionModal] = useState(false);
 
     const [isModalWithDrawal, setIsModalWithDrawal] = useState(false);
 
@@ -141,19 +153,65 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
         }
     };
 
-    const rank = {
+    const rank = useMemo(() => ({
         1: t('reference:referral.normal'),
         2: t('reference:referral.official'),
         3: t('reference:referral.gold'),
         4: t('reference:referral.platinum'),
         5: t('reference:referral.diamond')
-    };
+    }), [t]);
 
     const refLink = data?.defaultRefCode?.code ? 'https://nami.exchange/ref/' + data?.defaultRefCode?.code : '---';
     const policyLink = language === 'vi' ? policyLinkVI : policyLinkEN;
 
+    const profileVolume = useMemo(() => {
+        const currentVolumeSpot = data?.volume?.current?.spot
+        const targetVolumeSpot = data?.volume?.target?.spot
+        const maintainVolumeSpot = data?.volume?.maintain?.spot
+        const currentVolumeFutures = data?.volume?.current?.futures
+        const targetVolumeFutures = data?.volume?.target?.futures
+        const maintainVolumeFutures = data?.volume?.maintain?.futures ?? targetVolumeFutures
+
+
+        const isFuturesRateGreater = (currentVolumeFutures / targetVolumeFutures) > (currentVolumeSpot / targetVolumeSpot)
+
+        const isEligible = (currentVolumeFutures >= maintainVolumeFutures) || (currentVolumeSpot >= maintainVolumeSpot)
+
+        const maintainRate = targetVolumeSpot ? (((maintainVolumeSpot ?? targetVolumeSpot) / targetVolumeSpot) * 100) : 100
+
+        return {
+            currentVolumeSpot,
+            targetVolumeSpot: targetVolumeSpot ?? maintainVolumeSpot,
+            maintainVolumeSpot: maintainVolumeSpot ?? targetVolumeSpot,
+            currentVolumeFutures,
+            targetVolumeFutures: targetVolumeFutures ?? maintainVolumeFutures,
+            maintainVolumeFutures: maintainVolumeFutures ?? targetVolumeFutures,
+            isEligible,
+            maintainRate,
+            isFuturesRateGreater
+        }
+    }, [data?.volume])
+
     return (
         <>
+            {maintainConditionModal ?
+                <MaintainConditionModal
+                    isVisible={maintainConditionModal}
+                    onBackdropCb={() => setMaintainConditionModal(false)}
+                    className='max-w-[488px]'
+                    data={data?.volume}
+                    t={t}
+                /> : null}
+
+            {Number(data?.rank) > 1 && shareRankModal ?
+                <ShareRankModal
+                    data={data}
+                    isVisible={shareRankModal}
+                    onClose={() => setShareRankModal(false)}
+                    rank={rank}
+                    t={t}
+                /> : null}
+
             {/* Card banner slogan */}
             <div className="w-full bg-[#0C0C0C] ">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
@@ -225,10 +283,10 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
             </div>
 
             {/* Card infor general */}
-
             <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
                 {auth ? (
-                    <div className="container  bg-white dark:bg-darkBlue-3 grid grid-cols-2 rounded-2xl p-6">
+                    <div className="container relative bg-white dark:bg-darkBlue-3 grid grid-cols-2 rounded-2xl p-6">
+                        <div className="absolute top-0 left-4">{ReferralLevelIcon(data?.rank ?? user?.rank_id?.toString() ?? 1, 32)}</div>
                         <div className="border-r dark:border-divider-dark pr-8">
                             <div className="w-full flex justify-between items-center">
                                 <div className="flex gap-4 items-center mb-10">
@@ -241,141 +299,218 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                             src={user?.avatar || '/images/default_avatar.png'}
                                         />
                                         {/* <img src={user?.avatar || '/images/default_avatar.png'} className="h-full w-20 h-20 rounded-full object-fit" /> */}
-                                        <div className="absolute bottom-[-1px] right-[-1px]">{ReferralLevelIcon(data?.rank ?? 1, 32)}</div>
+
                                     </div>
                                     <div className="h-full flex flex-col">
-                                        <p className="font-semibold text-2xl leading-[30px] mb-2">
+                                        <p className="font-semibold text-2xl leading-[30px] mb-2 text-txtPrimary dark:text-txtPrimary-dark">
                                             {auth?.name ?? auth?.username ?? auth?.email ?? auth?.namiID ?? t('common:unknown')}
                                         </p>
-                                        <span className="text-txtSecondary dark:text-txtSecondary-dark leading-6">
-                                            <span>{t('reference:referral.ranking')}: </span>
-                                            <span className="text-teal font-semibold">{rank[data?.rank?.toString() ?? user?.rank_id?.toString() ?? '1']}</span>
-                                        </span>
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark leading-6 flex gap-2 items-center">
+                                            <div>
+                                                <span>{t('reference:referral.ranking')}: </span>
+                                                <span className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">{rank[data?.rank?.toString() ?? user?.rank_id?.toString() ?? '1']}</span>
+                                            </div>
+                                            {Number(data?.rank) > 1 ?
+                                                <>
+                                                    <div className="">
+                                                        <ShareIcon size={24} color={colors.teal} className="cursor-pointer" onClick={() => setShareRankModal(true)} />
+                                                    </div>
+                                                    <div className="">
+                                                        •
+                                                    </div>
+                                                    <div
+                                                        className="text-center font-semibold text-base text-teal cursor-pointer"
+                                                        onClick={() => setMaintainConditionModal(true)}
+                                                    >
+                                                        {t('reference:maintaining_conditions')}
+                                                    </div>
+                                                </>
+                                                : null}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="text-sm space-y-3">
+                            {/* <Tooltip id={'description'} place="top" effect="solid" className="max-w-[340px]">
+                                <div dangerouslySetInnerHTML={{ __html: t('reference:ranking_conditions_tooltip') }}></div>
+                            </Tooltip>
+                            <div
+                                className='w-max font-semibold text-base text-txtPrimary dark:text-gray-4 mb-4 border-b border-darkBlue-5 border-dashed cursor-pointer'
+                                data-tip={'hello world'}
+                                data-for={'description'}
+                            >
+                                {t('reference:ranking_conditions')}
+                            </div> */}
+                            <div className="text-sm space-y-3 relative">
                                 <div className="w-full flex items-center justify-between text-gray-1">
-                                    <div>{t('reference:referral.current_volume')}</div>
-                                    <div>{data?.rank !== 5 ? t('reference:referral.next_level') : null}</div>
+                                    <div className=''>{t('reference:referral.current_volume')}</div>
+                                    <div className=''>
+                                        {data?.rank !== 5 ? t('reference:referral.next_level') : null}
+                                    </div>
                                 </div>
-                                <div className="w-full bg-gray-12 rounded-full overflow-hidden flex">
-                                    <Progressbar
-                                        background={colors.green[3]}
-                                        percent={(data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100}
-                                        height={8}
-                                        className={data?.volume?.current?.futures ? '!rounded-l-lg' : '!rounded-lg'}
-                                    />
-                                    <Progressbar
-                                        background={colors.blue[5]}
-                                        percent={(data?.volume?.current?.futures / data?.volume?.target?.futures ?? 1) * 100}
-                                        height={8}
-                                        className="!rounded-r-lg"
-                                    />
+                                <div className="w-full">
+                                    <div className="w-full bg-gray-12 dark:bg-dark-2 rounded-full overflow-hidden flex relative h-2">
+                                        <Progressbar
+                                            background={colors.green[3]}
+                                            percent={(profileVolume?.currentVolumeSpot / profileVolume?.targetVolumeSpot ?? 1) * 100}
+                                            height={8}
+                                            className={classNames('absolute left-0 !rounded-r-lg', {
+                                                'z-[1]': profileVolume?.isFuturesRateGreater
+                                            })}
+                                        />
+                                        <Progressbar
+                                            background={colors.blue[5]}
+                                            percent={(profileVolume?.currentVolumeFutures / profileVolume?.targetVolumeFutures ?? 1) * 100}
+                                            height={8}
+                                            className="absolute left-0 !rounded-r-lg"
+                                        />
+                                    </div>
+                                    {profileVolume?.maintainVolumeSpot ?
+                                        <div className={`absolute top-6 z-10 rounded-full`}
+                                            style={{
+                                                left: `calc(${profileVolume?.maintainRate}% - 8px)`
+                                            }}
+                                        >
+                                            <Tooltip id={'maintain_condition'} place="top" effect="solid"
+                                                className={`!px-6 !py-3`}
+                                                arrowColor={currentTheme === 'dark' ? colors.dark[2] : colors.gray[15]}
+                                            >
+                                                <div>
+                                                    <div className='text-white dark:text-gray-4'>
+                                                        {t('reference:maintenance_point')}
+                                                    </div>
+                                                    <div className="text-teal">
+                                                        Spot: {renderNumber(profileVolume?.maintainVolumeSpot)} USDT
+                                                    </div>
+                                                    <div className='text-blue-crayola'>
+                                                        Futures: {renderNumber(profileVolume?.maintainVolumeFutures)} USDT
+                                                    </div>
+                                                </div>
+                                            </Tooltip>
+                                            <CheckpointCircle isEligible={profileVolume?.isEligible} data-tip={"1123123213"} data-for="maintain_condition" />
+                                        </div>
+                                        : null}
                                 </div>
-                                <div className="w-full flex flex-col leading-5">
+                                <div className="w-full flex flex-col leading-5 gap-1">
+
                                     <div className="w-full flex justify-between text-teal">
-                                        <div>Exchange: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
-                                        <div>Exchange: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
-                                        {/* {data?.rank !== 5 ? (
-                                            <div>Spot: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
-                                        ) : null} */}
+                                        <div className='flex items-center h-6 gap-1'>
+                                            <div>
+                                                Exchange:
+                                            </div>
+                                            {renderNumber(profileVolume?.currentVolumeSpot)} USDT</div>
+                                        {data?.rank !== 5 ? <div className='flex items-center h-6 gap-1'>
+                                            <div>
+                                                Exchange:
+                                            </div>
+                                            {renderNumber(profileVolume?.targetVolumeSpot)} USDT</div> : null}
+
                                     </div>
                                     <div className="w-full flex justify-between text-blue-crayola">
-                                        <div>
-                                            Futures: {isNaN(data?.volume?.current?.futures) ? '--' : formatter.format(data?.volume?.current?.futures)} USDT
-                                        </div>
-                                        <div>Futures: {isNaN(data?.volume?.target?.futures) ? '--' : formatter.format(data?.volume?.target?.futures)} USDT</div>
-                                        {/* {data?.rank !== 5 ? (
+                                        <div className='flex items-center h-6 gap-1'>
                                             <div>
-                                                Futures: {isNaN(data?.volume?.target?.futures) ? '--' : formatter.format(data?.volume?.target?.futures)} USDT
+                                                Futures:
                                             </div>
-                                        ) : null} */}
+                                            {renderNumber(profileVolume?.currentVolumeFutures)} USDT
+                                        </div>
+                                        {data?.rank !== 5 ? <div className='flex items-center h-6 gap-1'>
+                                            <div>
+                                                Futures:
+                                            </div>
+                                            {renderNumber(profileVolume?.targetVolumeFutures)} USDT
+                                        </div> : null}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="pl-8 space-y-5">
+                        <div className="pl-8 flex flex-col justify-between">
                             <div className="flex items-center justify-between py-3">
-                                <p className="text-sm font-semibold">
-                                    {t('reference:referral.rate', {
-                                        value1: isNaN(youGet) ? '--' : youGet,
-                                        value2: isNaN(friendsGet) ? '--' : friendsGet
-                                    })}
-                                </p>
+                                <div className="text-base font-semibold"
+                                    dangerouslySetInnerHTML={{
+                                        __html: t('reference:referral.rate', {
+                                            value1: isNaN(youGet) ? '--' : youGet,
+                                            value2: isNaN(friendsGet) ? '--' : friendsGet
+                                        })
+                                    }}
+                                />
                                 <ButtonV2 className="!w-auto px-6" onClick={() => setShowRef(true)}>
                                     {t('reference:referral.referral_code_management')}
                                 </ButtonV2>
                             </div>
-                            <div className="flex">
-                                <div className="mr-6">
-                                    <p className="mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('reference:referral.referral_code')}</p>
-                                    <div className="flex items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2">
-                                        <span className="pr-4 font-semibold leading-6">{data?.defaultRefCode?.code ?? '---'}</span>
-                                        {loading ? (
-                                            <Spinner size={16} color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
-                                        ) : (
-                                            <CopyIcon data={data?.defaultRefCode?.code} size={16} className="cursor-pointer" />
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('reference:referral.link')}</p>
-                                    <div className="relative flex justify-between items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2">
-                                        <div className="w-full relative flex flex-1 min-w-0 pr-2 leading-6 font-semibold">{refLink}</div>
-                                        {loading ? (
-                                            <Spinner size={16} color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
-                                        ) : (
-                                            <CopyIcon data={refLink} size={16} className="cursor-pointer" />
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-5 gap-6">
-                                <div
-                                    className="flex justify-center bg-gray-10 dark:bg-dark-2 rounded-md py-[10px] cursor-pointer"
-                                    onClick={() => setOpenShareModal(true)}
-                                >
-                                    <QRCodeScanFilled color={currentTheme === THEME_MODE.DARK ? colors.gray['10'] : colors.darkBlue} />
-                                </div>
-                                {[
-                                    {
-                                        btn: FacebookShareButton,
-                                        icon: FacebookFilled,
-                                        link: '',
-                                        name: 'facebook'
-                                    },
-                                    {
-                                        btn: TwitterShareButton,
-                                        icon: TwitterFilled,
-                                        link: '',
-                                        name: 'twitter'
-                                    },
-                                    {
-                                        btn: TelegramShareButton,
-                                        icon: TelegramFilled,
-                                        link: '',
-                                        name: 'telegram'
-                                    },
-                                    {
-                                        btn: RedditShareButton,
-                                        icon: RedditFilled,
-                                        link: '',
-                                        name: 'reddit'
-                                    }
-                                ].map((e) => {
-                                    return (
-                                        <div key={e.name} className="flex justify-center bg-gray-10 dark:bg-dark-2 rounded-md py-[10px] cursor-pointer">
-                                            {React.createElement(e.btn, {
-                                                children: React.createElement(e.icon, {
-                                                    color: currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.gray['10'],
-                                                    color2: currentTheme === THEME_MODE.LIGHT ? colors.gray['10'] : colors.dark['2']
-                                                }),
-                                                url: refLink
-                                            })}
+                            <div className='flex flex-col justify-between gap-6'>
+                                <div className="flex">
+                                    <div className="mr-6">
+                                        <p className="mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('reference:referral.referral_code')}</p>
+                                        <div className="flex items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2">
+                                            <span className="pr-4 font-semibold leading-6">{data?.defaultRefCode?.code ?? '---'}</span>
+                                            {loading ? (
+                                                <Spinner size={16} color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
+                                            ) : (
+                                                <CopyIcon data={data?.defaultRefCode?.code} size={16} className="cursor-pointer" />
+                                            )}
                                         </div>
-                                    );
-                                })}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('reference:referral.link')}</p>
+                                        <div className="flex justify-between items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2 w-full">
+                                            <div className="w-full pr-2 leading-6 font-semibold overflow-hidden truncate">{refLink}</div>
+                                            {loading ? (
+                                                <div>
+                                                    <Spinner size={16} color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <CopyIcon data={refLink} size={16} className="cursor-pointer" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-5 gap-6">
+                                    <div
+                                        className="flex justify-center bg-gray-10 dark:bg-dark-2 rounded-md py-[10px] cursor-pointer"
+                                        onClick={() => setOpenShareModal(true)}
+                                    >
+                                        <QRCodeScanFilled color={currentTheme === THEME_MODE.DARK ? colors.gray['10'] : colors.darkBlue} />
+                                    </div>
+                                    {[
+                                        {
+                                            btn: FacebookShareButton,
+                                            icon: FacebookFilled,
+                                            link: '',
+                                            name: 'facebook'
+                                        },
+                                        {
+                                            btn: TwitterShareButton,
+                                            icon: TwitterFilled,
+                                            link: '',
+                                            name: 'twitter'
+                                        },
+                                        {
+                                            btn: TelegramShareButton,
+                                            icon: TelegramFilled,
+                                            link: '',
+                                            name: 'telegram'
+                                        },
+                                        {
+                                            btn: RedditShareButton,
+                                            icon: RedditFilled,
+                                            link: '',
+                                            name: 'reddit'
+                                        }
+                                    ].map((e) => {
+                                        return (
+                                            <div key={e.name} className="flex justify-center bg-gray-10 dark:bg-dark-2 rounded-md py-[10px] cursor-pointer">
+                                                {React.createElement(e.btn, {
+                                                    children: React.createElement(e.icon, {
+                                                        color: currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.gray['10'],
+                                                        color2: currentTheme === THEME_MODE.LIGHT ? colors.gray['10'] : colors.dark['2']
+                                                    }),
+                                                    url: refLink
+                                                })}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -665,3 +800,169 @@ const ModalShareRefCode = ({ code, open, onClose, t }) => {
         </ModalV2>
     );
 };
+
+const CheckpointCircle = ({ isEligible = false, ...props }) => {
+    return <div className="w-6 h-6 rounded-full bg-dark-12 dark:bg-dark-4 p-[2px] cursor-pointer" {...props} >
+        <div className={classNames("w-full h-full p-1 rounded-full", {
+            "bg-yellow-2": isEligible,
+            "dark:bg-dark-2 bg-dark-12": !isEligible,
+        })}>
+            <div className='bg-white dark:bg-dark-4 w-full h-full rounded-full'>
+
+            </div>
+        </div>
+    </div>
+}
+
+const ShareRankModal = ({ isVisible, onClose, data, t }) => {
+    const refCode = useSelector((state) => state.auth?.user?.code_refer);
+    const content = useRef();
+    const [loading, setLoading] = useState(false);
+
+    const rank = useMemo(() => ({
+        1: t('reference:normal_partner'),
+        2: t('reference:official_partner'),
+        3: t('reference:gold_partner'),
+        4: t('reference:platinum_partner'),
+        5: t('reference:diamond_partner')
+    }), [t]);
+
+    const saveFile = (file, name) => {
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    };
+
+    const renderBanner = useCallback((level) => {
+        let image = ''
+        switch (Number(level)) {
+            case 2:
+                image = 'official'
+                break
+            case 3:
+                image = 'gold'
+                break
+            case 4:
+                image = 'platinum'
+                break
+            case 5:
+                image = 'diamond'
+                break
+            default:
+                image = 'official'
+                break;
+        }
+        return <img width={'100%'} height={'100%'} src={`/images/reference/bg_share_rank_${image}.png`} />
+        // return <Image width={340} height={238} src={getS3Url(`/images/reference/bg_share_rank_${image}.png`)} />
+    }, [])
+
+    const onDownLoad = async () => {
+        try {
+            setLoading(true);
+            const scale = 2;
+            const option = {
+                height: content.current.offsetHeight * scale,
+                width: content.current.offsetWidth * scale,
+                style: {
+                    transform: 'scale(' + scale + ')',
+                    transformOrigin: 'top left',
+                    width: content.current.offsetWidth + 'px',
+                    height: content.current.offsetHeight + 'px'
+                }
+            };
+            await DomToImage.toBlob(content.current, option).then((blob) => {
+                return saveFile(new File([blob], `${refCode}.png`, { type: 'image/png' }), `${refCode}.png`);
+            });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <ModalV2 loading={loading} wrapClassName="dark:!bg-dark-4" className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
+            <div className='px-10 mb-10'>
+                <div ref={content} className=' bg-dark-4 border-[1px] border-solid border-divider-dark'>
+                    {renderBanner(data?.rank)}
+                    <div className={classNames(`text-teal text-center font-semibold text-4xl mt-4 mb-5`, {
+                        'text-teal': Number(data?.rank) === 2,
+                        'text-[#efc827]': Number(data?.rank) === 3,
+                        'text-[#b2d1d0]': Number(data?.rank) === 4,
+                        'text-[#88b9f3]': Number(data?.rank) === 5,
+                    })}>
+                        {rank[data?.rank?.toString() ?? user?.rank_id?.toString() ?? '1']}
+                    </div>
+                    <div className='text-txtPrimary-dark text-center font-semibold text-lg'>
+                        {t('common:congratulations')} <br />
+                        {data?.name}
+                    </div>
+                    <div className='mt-[18px] mb-3 text-xs font-normal text-txtSecondary-dark text-center'>
+                        {t('reference:update_date')}: {formatTime(data?.last_update_rank?.created_at ?? new Date(), 'dd/MM/yyyy')}
+                    </div>
+                    <div id="section_bottom" className="py-3 w-full flex items-center justify-between px-4" style={{ background: "linear-gradient(to bottom, #071713 28%, #091b16 75%, #132e27 100%)" }}>
+                        <div className="bg-cover w-[114px] h-9 bg-no-repeat" style={{ backgroundImage: 'url(/images/logo/nami-logo-v2.png)' }} />
+                        <div className="flex items-center space-x-6">
+                            <div className="flex flex-col text-white">
+                                <span className="text-xs">{t('futures:share:ref_id')}</span>
+                                <span className="font-semibold text-sm">{refCode}</span>
+                            </div>
+                            <div className="p-1 bg-white rounded-[3px]">
+                                <QRCode value={`https://nami.exchange/ref/${refCode}`} size={48} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ButtonV2 disabled={loading} loading={loading} onClick={onDownLoad}>
+                {t('common:save')}
+            </ButtonV2>
+        </ModalV2>
+    );
+};
+
+
+const MaintainConditionModal = ({ isVisible, onBackdropCb, data, className, t }) => {
+    return <ModalV2
+        isVisible={isVisible}
+        onBackdropCb={onBackdropCb}
+        className={className}
+    >
+        <div>
+            <div className="text-2xl font-semibold text-txtPrimary dark:text-txtPrimary-dark">
+                {t('reference:maintaining_conditions')}
+            </div>
+
+            <div className="mt-6 text-txtSecondary dark:text-txtSecondary-dark">
+                <div className="" dangerouslySetInnerHTML={{ __html: t('reference:ranking_conditions_tooltip') }}></div>
+                <div className="mt-6">
+                    {t('reference:maintain_modal.and_one')}:
+                </div>
+                <div className='mt-6 p-4 bg-gray-13 dark:bg-dark-4 rounded-xl'>
+                    <div className="flex justify-between w-full items-center ">
+                        <div className=''>
+                            Futures (USDT)
+                        </div>
+                        <Text text1={data?.current?.futures} text2={data?.maintain?.futures} />
+                    </div>
+                    <div className="flex justify-between w-full items-center mt-3">
+                        <div className=''>
+                            Spot (USDT)
+                        </div>
+                        <Text text1={data?.current?.spot} text2={data?.maintain?.spot} />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ModalV2>
+}
+
+const Text = ({ text1, text2, useFormatNumber = false }) => <div className='font-semibold text-txtPrimary dark:text-txtPrimary-dark'>
+    {renderNumber(text1, useFormatNumber)}/<span className='text-teal'>{renderNumber(text2, useFormatNumber)}</span>
+</div>
+
