@@ -225,6 +225,14 @@ export const NAV_DATA = [
     // },
     {
         key: 4,
+        title: 'Events',
+        localized: 'events',
+        isNew: false,
+        url: '/events',
+        child_lv1: []
+    },
+    {
+        key: 5,
         title: 'Support Center',
         localized: 'support_center',
         isNew: false,
@@ -527,6 +535,14 @@ export const MOBILE_NAV_DATA = [
     //     url: 'https://nami.today/',
     //     child_lv1: []
     // },
+    {
+        key: 'events',
+        title: 'Events',
+        localized: 'events',
+        isNew: false,
+        url: '/events',
+        child_lv1: []
+    },
     {
         key: 2,
         title: 'Support Center',
