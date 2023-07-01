@@ -15,7 +15,7 @@ const CardContent = ({ contentClass, image, imageSrc, imgSize, mainContent, subC
 
             <div>
                 {mainContent && <div className="txtPri-1 text-left capitalize line-clamp-2">{mainContent}</div>}
-                {subContent && <div className="txtSecond-3 mt-2">{subContent}</div>}
+                {subContent && <div className={`txtSecond-3 ${mainContent && 'mt-2'}`}>{subContent}</div>}
             </div>
         </div>
     );
@@ -42,7 +42,7 @@ const InfoCard = ({ imgSize = 52, content, endIcon, endIconPosition, loading, em
                 <>
                     <CardContent
                         image={
-                            <div className="w-14 h-14 text-txtSecondary dark:text-txtSecondary-dark dark:bg-bgBtnV2-dark_disabled bg-gray-11 rounded-full flex items-center justify-center">
+                            <div className="w-[52px] h-[52px] text-txtSecondary dark:text-txtSecondary-dark dark:bg-bgBtnV2-dark_disabled bg-gray-11 rounded-full flex items-center justify-center">
                                 <BxsUserIcon size={24} color="currentColor" />
                             </div>
                         }

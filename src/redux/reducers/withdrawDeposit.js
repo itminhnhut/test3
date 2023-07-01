@@ -80,7 +80,8 @@ export default (state = initialState, action) => {
         case types.SET_AUTO_SUGGEST:
             return {
                 ...state,
-                isAutoSuggest: !state.isAutoSuggest
+                isAutoSuggest: !state.isAutoSuggest,
+                partner: null
             }
         default:
             return state;

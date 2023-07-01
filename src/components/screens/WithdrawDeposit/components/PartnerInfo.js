@@ -16,7 +16,7 @@ export const PartnerSubcontent = ({ partner, t, language }) => {
     const countRating = partner?.analyticMetadata?.countRating || 0;
     return (
         <div className="flex items-center gap-2 text-txtSecondary dark:text-txtSecondary-dark">
-            {countRating > 0 && (
+            {/* {countRating > 0 && (
                 <TagV2 icon={false} type={TYPES.WARNING}>
                     <div className="flex items-center text-sm gap-2 text-yellow-100">
                         <span>{partner?.analyticMetadata?.rating || 0}</span>
@@ -24,7 +24,7 @@ export const PartnerSubcontent = ({ partner, t, language }) => {
                         <span>({partner?.analyticMetadata?.countRating})</span>
                     </div>
                 </TagV2>
-            )}
+            )} */}
 
             <TagV2 icon={false} type={TYPES.DEFAULT} className="dark:!bg-divider-dark">
                 <div className="flex gap-2 items-center">
@@ -53,7 +53,7 @@ export const PartnerSubcontent = ({ partner, t, language }) => {
     );
 };
 
-const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimumAllowed, maximumAllowed, selectedPartner, t }) => {
+const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimumAllowed, maximumAllowed, selectedPartner, t, isAutoSuggest = true }) => {
     const dispatch = useDispatch();
     const [search, setSearch] = useState('');
 
@@ -63,7 +63,7 @@ const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimu
         data: partners,
         loading: loadingPartners,
         error
-    } = useFetchApi({ url: API_GET_PARTNERS, params: { quantity: +quantity, assetId, side } }, conditionToFetch, [conditionToFetch, quantity, assetId, side]);
+    } = useFetchApi({ url: API_GET_PARTNERS, params: { quantity: +quantity, assetId, side } }, conditionToFetch, [conditionToFetch, quantity, assetId, side, isAutoSuggest], isAutoSuggest);
 
     return (
         <DropdownCard
@@ -86,6 +86,9 @@ const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimu
                     subContent: <PartnerSubcontent partner={selectedPartner} language={language} t={t} />,
                     imgSrc: selectedPartner?.avatar,
                     contentClass: 'overflow-x-auto overflow-y-hidden pb-1'
+                },
+                emptyContent: {
+                    subContent: isAutoSuggest && 'Đối tác sẽ tự động được lựa chọn'
                 },
                 item: (partner) =>
                     selectedPartner && (

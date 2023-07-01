@@ -13,6 +13,7 @@ import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import { get } from 'lodash';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import DWRelationIcon from 'components/common/DWRelationIcon';
+import { isBoolean } from 'lodash';
 
 const RENDER_INFORMATION = [
     {
@@ -114,7 +115,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                         ) : (
                                             <>
                                                 <span>{orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase()}</span>
-                                                <DWRelationIcon userIsPartner={orderDetail?.userIsPartner}/>
+                                                {isBoolean(orderDetail?.userIsPartner) && <DWRelationIcon userIsPartner={orderDetail?.userIsPartner}/>}
                                             </>
                                         )}
                                     </div>

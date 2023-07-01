@@ -946,7 +946,7 @@ export const PartnerOrderLog = {
     TIMEOUT_NOT_RECEIVE: 11,
     SYSTEM_UPDATE_SUCCESS: 12,
     SYSTEM_UPDATE_REJECT: 13,
-    SYSTEM_UPDATE_DISPUTE: 14
+    SYSTEM_UPDATE_DISPUTE: 14,
 };
 
 export const PartnerOrderStatusLog = {

@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
-import { PartnerOrderLog, PartnerOrderStatusLog } from 'redux/actions/const';
+import { PartnerOrderLog, PartnerOrderStatus, PartnerOrderStatusLog } from 'redux/actions/const';
 import { formatTime } from 'redux/actions/utils';
 import styled from 'styled-components';
 import colors from 'styles/colors';
@@ -8,6 +8,7 @@ import { MODE } from '../constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { useTranslation } from 'next-i18next';
 import { BxsImage } from 'components/svg/SvgIcon';
+import { TYPES } from 'components/common/V2/TagV2';
 
 const Row = styled.div.attrs({
     className: 'relative'
@@ -47,6 +48,11 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
     const logs = orderDetail?.logMetadata || [];
     const side = orderDetail?.side || '';
     const lastIndexUploadType = logs.map((log) => log.type).lastIndexOf(PartnerOrderLog.UPLOADED);
+
+    const isHaveLogOrderCompleted = logs.find((log) => log.type === PartnerOrderLog.SYSTEM_UPDATE_SUCCESS);
+    if (!isHaveLogOrderCompleted) {
+        if (orderDetail?.status === PartnerOrderStatus.SUCCESS) logs.push({ type: PartnerOrderLog.SYSTEM_UPDATE_SUCCESS, time: logs[logs.length - 1].time });
+    }
 
     return logs && logs.length ? (
         <div className="space-y-6">

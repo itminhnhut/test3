@@ -41,7 +41,9 @@ export const BankInfo = ({
                     )}
 
                     <div data-tip="" className="inline-flex !cursor-default" data-for="payment-method-description" id="payment-method-description">
-                        <div className={classNames({ 'nami-underline-dotted': showTooltip })}>{t('dw_partner:payment_method')}</div>
+                        <div className={classNames({'cursor-pointer border-b border-darkBlue-5 border-dashed pb-0.5"': showTooltip })}>
+                            <span>{t('dw_partner:payment_method')}</span>
+                        </div>
                     </div>
                 </>
             }

@@ -28,7 +28,9 @@ const CardPartner = () => {
         i18n: { language }
     } = useTranslation();
 
-    const { partner, partnerBank, accountBank, input, loadingPartner, minimumAllowed, maximumAllowed , isAutoSuggest} = useSelector((state) => state.withdrawDeposit);
+    const { partner, partnerBank, accountBank, input, loadingPartner, minimumAllowed, maximumAllowed, isAutoSuggest } = useSelector(
+        (state) => state.withdrawDeposit
+    );
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -68,8 +70,8 @@ const CardPartner = () => {
     );
 
     let canSubmit = true;
-    if(!isAutoSuggest) {
-        canSubmit === !partner || loadingPartner || (!partnerBank && side === SIDE.BUY)
+    if (!isAutoSuggest) {
+        canSubmit === !partner || loadingPartner || (!partnerBank && side === SIDE.BUY);
     }
 
     return (
@@ -77,7 +79,7 @@ const CardPartner = () => {
             <Card className="flex flex-col">
                 <div className="txtSecond-3 mb-4">{t('dw_partner:payment_infor')}</div>
                 {side === SIDE.SELL && (
-                    <div className='relative mb-8'>
+                    <div className="relative mb-8">
                         <BankInfo
                             additionalActions={accountBankAction}
                             showTag
@@ -94,54 +96,60 @@ const CardPartner = () => {
                         />
                     </div>
                 )}
-                <div className="flex items-center gap-x-3 mb-6 transition-all">
+                {/* <div className="flex items-center gap-x-3 mb-6 transition-all">
                     <span className={isAutoSuggest ? 'font-semibold' : 'txtSecond-4'}>Tự động gợi ý</span>
-                    {/* <Switcher /> */}
                     <SwitchV2 onChange={() => dispatch({ type: SET_AUTO_SUGGEST })} checked={!isAutoSuggest} />
                     <span className={!isAutoSuggest ? 'font-semibold' : 'txtSecond-4'}>Tuỳ chọn</span>
+                </div> */}
+                <div className={`grid grid-cols-2 mb-6 w-full`}>
+                    <button
+                        onClick={() => dispatch({ type: SET_AUTO_SUGGEST })}
+                        className={`border border-divider dark:border-divider-dark rounded-l-md px-4 md:px-9 py-2 md:py-3 ${
+                            isAutoSuggest ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-r-none'
+                        }`}
+                    >
+                        Tự động gợi ý
+                    </button>
+                    <button
+                        onClick={() => dispatch({ type: SET_AUTO_SUGGEST })}
+                        className={`border border-divider dark:border-divider-dark rounded-r-md px-4 md:px-9 py-2 md:py-3 ${
+                            !isAutoSuggest ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-l-none'
+                        }`}
+                    >
+                        Tuỳ chọn
+                    </button>
                 </div>
                 <div className="flex-1">
-                    {isAutoSuggest ? (
-                        <MCard>
-                            <div className="flex gap-x-2 items-center">
-                                <BxsInfoCircle size={16} />
-                                <span className='font-semibold'>Lưu ý</span>
-                            </div>
-                            <div className="mt-2 txtSecond-4">
-                                Khi ở chế độ tự động gợi ý, Nami sẽ tự động tìm kiếm đối tác phù hợp với giao dịch của bạn nhất
-                            </div>
-                        </MCard>
-                    ) : (
-                        <div className="space-y-4">
-                            <PartnerInfo
-                                minimumAllowed={minimumAllowed}
-                                maximumAllowed={maximumAllowed}
-                                quantity={input}
-                                assetId={assetId}
-                                side={side}
-                                loadingPartner={loadingPartner}
-                                selectedPartner={partner}
+                    <div className="space-y-4">
+                        <PartnerInfo
+                            minimumAllowed={minimumAllowed}
+                            maximumAllowed={maximumAllowed}
+                            quantity={input}
+                            assetId={assetId}
+                            side={side}
+                            loadingPartner={loadingPartner}
+                            selectedPartner={partner}
+                            t={t}
+                            language={language}
+                            isAutoSuggest={isAutoSuggest}
+                        />
+                        {side === SIDE.BUY && partner && !isAutoSuggest && (
+                            <BankInfo
+                                selectedBank={partnerBank}
+                                onSelect={(bank) => dispatch(setPartnerBank(bank))}
+                                banks={banks}
+                                loading={loadingPartner}
+                                containerClassname="z-40"
                                 t={t}
-                                language={language}
+                                loadingBanks={loadingBanks}
+                                showDropdownIcon={!loadingBanks && banks && banks.length > 1}
+                                disabled={!banks || banks?.length < 2}
                             />
-                            {side === SIDE.BUY && partner && (
-                                <BankInfo
-                                    selectedBank={partnerBank}
-                                    onSelect={(bank) => dispatch(setPartnerBank(bank))}
-                                    banks={banks}
-                                    loading={loadingPartner}
-                                    containerClassname="z-40"
-                                    t={t}
-                                    loadingBanks={loadingBanks}
-                                    showDropdownIcon={!loadingBanks && banks && banks.length > 1}
-                                    disabled={!banks || banks?.length < 2}
-                                />
-                            )}
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
 
-                <ButtonBuySell canSubmit={canSubmit}/>
+                <ButtonBuySell canSubmit={canSubmit} />
             </Card>
             <ModalBankDefault
                 banks={sortBy(accountBanks || [], [(o) => -o.isDefault])}

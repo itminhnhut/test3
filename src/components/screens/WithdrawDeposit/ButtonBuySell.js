@@ -15,7 +15,7 @@ import DWAddPhoneNumber from 'components/common/DWAddPhoneNumber';
 import ModalOtp from './components/ModalOtp';
 import ModalProcessSuggestPartner from './ModalProcessSuggestPartner';
 
-const ButtonBuySell = ({canSubmit}) => {
+const ButtonBuySell = ({ canSubmit }) => {
     const {
         t,
         i18n: { language }
@@ -33,7 +33,7 @@ const ButtonBuySell = ({canSubmit}) => {
     const { input, loadingPartner, isCanSubmitOrder, modal: modalProps } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
     const { side, assetId } = router.query;
-    const configs = useSelector((state) => state.utils.assetConfig)
+    const configs = useSelector((state) => state.utils.assetConfig);
     const assetCode = find(configs, { id: +assetId })?.assetCode || '';
 
     const { onMakeOrderHandler, setModalState } = useMakeOrder({ setState, input });
@@ -69,16 +69,21 @@ const ButtonBuySell = ({canSubmit}) => {
     };
 
     useEffect(() => {
-      return () => {
-        setModalState(MODAL_TYPE.AFTER_CONFIRM, {
-            visible: false
-        });
-      }
-    }, [])
+        return () => {
+            setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                visible: false
+            });
+        };
+    }, []);
 
     return (
         <>
-            <ButtonV2 loading={loadingConfirm || loadingPartner} onClick={handleSubmitOrder} disabled={!isCanSubmitOrder || !canSubmit} className="disabled:cursor-default mt-10">
+            <ButtonV2
+                loading={loadingConfirm || loadingPartner}
+                onClick={handleSubmitOrder}
+                disabled={!isCanSubmitOrder || !canSubmit}
+                className="disabled:cursor-default mt-10"
+            >
                 {t(`common:${side.toLowerCase()}`) + ` ${assetCode}`}
             </ButtonV2>
             <DWAddPhoneNumber isVisible={isOpenModalAddPhone} onBackdropCb={() => setIsOpenModalAddPhone(false)} />
@@ -113,7 +118,16 @@ const ButtonBuySell = ({canSubmit}) => {
                 title={t('dw_partner:disabled_smart_otp_title')}
                 message={t('dw_partner:disabled_smart_otp_des')}
             />
-            <ModalProcessSuggestPartner showProcessSuggestPartner={state.showProcessSuggestPartner} onBackdropCb={() => setState({showProcessSuggestPartner: null})}/>
+            <ModalProcessSuggestPartner
+                showProcessSuggestPartner={state.showProcessSuggestPartner}
+                onBackdropCb={() => {
+                    setState({ showProcessSuggestPartner: null });
+                    state.showOtp &&
+                        setTimeout(() => {
+                            setState({ showOtp: false });
+                        }, 200);
+                }}
+            />
         </>
     );
 };

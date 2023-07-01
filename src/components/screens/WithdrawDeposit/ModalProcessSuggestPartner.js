@@ -13,16 +13,17 @@ import { API_CANCEL_AUTO_SUGGEST_ORDER, API_CONTINUE_AUTO_SUGGEST_ORDER } from '
 import { useSelector } from 'react-redux';
 import ModalLoading from 'components/common/ModalLoading';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { formatNumber } from 'utils/reference-utils';
 
 const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb }) => {
-    const [state, setState] = useState({ side: SIDE.BUY, countdownTime: null, timeExpire: null });
+    const [state, setState] = useState({ side: SIDE.BUY, countdownTime: null, timeExpire: null, baseQty: 0, baseAssetId: 72 });
     const router = useRouter();
     const [currentTheme] = useDarkMode();
 
     useEffect(() => {
         if (!showProcessSuggestPartner) return;
-        const { side, countdownTime, timeExpire } = showProcessSuggestPartner;
-        setState({ side, countdownTime, timeExpire });
+        const { side, countdownTime, timeExpire, baseQty, baseAssetId } = showProcessSuggestPartner;
+        setState({ side, countdownTime, timeExpire, baseQty, baseAssetId });
     }, [showProcessSuggestPartner]);
 
     const [isAwaitSocketNotFoundPartner, setIsAwaitSocketNotFoundPartner] = useState(false);
@@ -60,7 +61,6 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
     }, [userSocket, showProcessSuggestPartner]);
 
     const handleCancelOrderSuggest = async () => {
-        console.log("________handleCancelOrderSuggest______");
         return await FetchApi({
             url: API_CANCEL_AUTO_SUGGEST_ORDER,
             options: {
@@ -145,7 +145,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                     </div>
                     <div className="flex items-center justify-between mt-3">
                         <span>Số lượng</span>
-                        <span className="text-gray-15 dark:text-gray-4 font-semibold">20,000,000 VNDC</span>
+                        <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(state.baseQty, state.baseAssetId === 72 ? 0 : 4)} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`}</span>
                     </div>
                 </MCard>
                 <ButtonV2
