@@ -42,7 +42,7 @@ const InfoCard = ({ imgSize = 52, content, endIcon, endIconPosition, loading, em
                 <>
                     <CardContent
                         image={
-                            <div className="w-[52px] h-[52px] text-txtSecondary dark:text-txtSecondary-dark dark:bg-bgBtnV2-dark_disabled bg-gray-11 rounded-full flex items-center justify-center">
+                            <div className="w-[52px] h-[52px] text-gray-1 dark:text-gray-7 dark:bg-bgBtnV2-dark_disabled bg-gray-11 rounded-full flex items-center justify-center">
                                 <BxsUserIcon size={24} color="currentColor" />
                             </div>
                         }

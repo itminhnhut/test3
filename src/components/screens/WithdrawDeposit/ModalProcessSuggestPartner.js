@@ -21,6 +21,7 @@ import { formatNanNumber } from 'redux/actions/utils';
 import { setFee } from 'redux/actions/withdrawDeposit';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import Card from './components/common/Card';
+import toast from 'utils/toast';
 
 const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb }) => {
     const { fee } = useSelector((state) => state.withdrawDeposit);

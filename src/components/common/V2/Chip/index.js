@@ -4,7 +4,7 @@ import React from 'react';
 const Chip = ({ children, className = '', variants = 'filter', selected = false, disabled = false, loading = false, onClick, isDeepBackground = false }) => {
     const extendClass = {
         suggestion: 'border-divider dark:border-divider-dark bg-transparent',
-        filter: 'bg-gray-13 dark:bg-dark-4 border-transparent'
+        filter: 'bg-gray-12 dark:bg-dark-4 border-transparent'
     }[variants];
 
     return (

@@ -22,6 +22,7 @@ import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import DarkNote from 'components/common/DarkNote';
 import DetailOrderHeader from './components/DetailOrderHeader';
 import DetailLog from './components/DetailLog';
+import toast from 'utils/toast';
 
 export const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
@@ -138,6 +139,10 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         setState({
                             orderDetail: data
                         });
+
+                        if (data.type === 'auto-accepted') {
+                            toast({ text: `Bạn đã đặt thành công lệnh ${data.side} ${data?.displayingId}`, key: `suggest_order_success_${data?.displayingId}` });
+                        }
                         if (data?.status !== PartnerOrderStatus.PENDING) {
                             setIsRefetchOrderDetailAfterCountdown(false);
                         }
