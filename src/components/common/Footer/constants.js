@@ -64,7 +64,7 @@ export const SOCIALS_HREF = {
         {
             key: 4,
             name: 'coingecko',
-            href: 'https://www.coingecko.com/en/exchanges/nami_exchange'
+            href: 'https://www.coingecko.com/vi/san_giao_dich/nami_exchange'
         },
         {
             key: 5,

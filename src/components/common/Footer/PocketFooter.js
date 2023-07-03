@@ -14,17 +14,18 @@ import { THEME_MODE } from 'hooks/useDarkMode';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import { BREAK_POINTS } from 'constants/constants';
 
 const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, language }) => {
     const router = useRouter();
     return (
         <>
             <div className="mal-footer___pocket">
-                <div className={`mal-footer___pocket___company ${width >= 1200 ? '!w-[255px] tracking-normal' : ''} `}>
+                <div className={`mal-footer___pocket___company ${width >= BREAK_POINTS.footer ? '!w-56 tracking-normal flex-shrink-0' : ''} `}>
                     {auth ? (
-                        width >= 1200 && (
+                        width >= BREAK_POINTS.footer && (
                             <>
-                                <div className="mal-footer___pocket__logo mb-6">
+                                <div className="mal-footer___pocket__logo mb-6 leading-[0]">
                                     <Image
                                         // src={getS3Url('/images/logo/nami-logo-v2.png')}
                                         src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
@@ -39,16 +40,16 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             </>
                         )
                     ) : (
-                        <div className={`${width >= 1200 ? ' ' : 'px-4 w-full'}`}>
-                            <div className="font-semibold text-3xl lg:text-xl mb-6">{t('navbar:footer_title')}</div>
+                        <div className={`${width >= BREAK_POINTS.footer ? ' ' : 'w-full'}`}>
+                            <div className="font-semibold text-3xl lg:text-2xl mb-6 lg:mb-8">{t('navbar:footer_title')}</div>
                             <div className="flex items-center">
                                 <ButtonV2
                                     onClick={() => window.open(getLoginUrl('sso', 'register'), '_self')}
                                     className={classNames(
-                                        'rounded-md',
-                                        { 'w-[151px] !h-12 font-medium': width > 1200 },
+                                        'rounded-md font-semibold',
+                                        { 'w-[151px] !h-12': width > BREAK_POINTS.footer },
                                         {
-                                            'font-semibold !text-sm': width <= 1200
+                                            '!text-sm': width <= BREAK_POINTS.footer
                                         }
                                     )}
                                 >
@@ -56,13 +57,13 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                 </ButtonV2>
                             </div>
 
-                            {width < 1200 && <hr className="border-divider dark:border-divider-dark my-6" />}
+                            {width < BREAK_POINTS.footer && <hr className="border-divider dark:border-divider-dark my-6" />}
                         </div>
                     )}
                 </div>
 
                 <div className="mal-footer___pocket__links___group">
-                    <div className="mal-footer___pocket__links___group__item">
+                    <div className={classNames('mal-footer___pocket__links___group__item', width < BREAK_POINTS.footer && '-mx-4')}>
                         <div
                             className={`mal-footer___pocket__links___group__item__expander ${active?.about ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { about: !active.about } })}
@@ -97,7 +98,9 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             >
                                 <a className="">{language === LANGUAGE_TAG.VI ? 'Hợp tác kinh doanh' : 'Business Cooperation'}</a>
                             </Link>
-                            <a className="cursor-pointer">Info@nami.exchange</a>
+                            <Link href="mailto:info@nami.exchange" className="cursor-pointer">
+                                info@nami.exchange
+                            </Link>
                             {/* <Link href={`https://nami.exchange/files/whitepaper_${language}_1510.pdf`}>
                                 <a className="invisible">Whitepaper</a>
                             </Link>
@@ -116,7 +119,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                         </div>
                     </div>
 
-                    <div className="mal-footer___pocket__links___group__item">
+                    <div className={classNames('mal-footer___pocket__links___group__item', width < BREAK_POINTS.footer && '-mx-4')}>
                         <div
                             className={`mal-footer___pocket__links___group__item__expander ${active?.product ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { product: !active.product } })}
@@ -160,7 +163,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                         </div>
                     </div>
 
-                    <div className="mal-footer___pocket__links___group__item">
+                    <div className={classNames('mal-footer___pocket__links___group__item', width < BREAK_POINTS.footer && '-mx-4')}>
                         <div
                             className={`mal-footer___pocket__links___group__item__expander ${active?.trading_info ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { trading_info: !active.trading_info } })}
@@ -187,7 +190,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                         </div>
                     </div>
 
-                    <div className="mal-footer___pocket__links___group__item">
+                    <div className={classNames('mal-footer___pocket__links___group__item', width < BREAK_POINTS.footer && '-mx-4')}>
                         <div
                             className={`mal-footer___pocket__links___group__item__expander ${active?.support ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { support: !active.support } })}
@@ -225,8 +228,8 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                         </div>
                     </div>
 
-                    <div className="mal-footer___pocket__links___group__item">
-                        {width >= 1200 ? (
+                    <div className={classNames('mal-footer___pocket__links___group__item', width >= BREAK_POINTS.footer ? '!w-40 !px-0' : '-mx-4')}>
+                        {width >= BREAK_POINTS.footer ? (
                             <ScanQr t={t} />
                         ) : (
                             <div>
