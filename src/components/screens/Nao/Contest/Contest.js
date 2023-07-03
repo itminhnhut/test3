@@ -255,8 +255,8 @@ export const seasons = [
             isHtml: false
         },
         rules: {
-            vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-7',
-            en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-7'
+            vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-8-t7-2023',
+            en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-8-july-2023'
         },
         weekly_contest_time: {
             start: '2023-07-09T17:00:00.000Z',
