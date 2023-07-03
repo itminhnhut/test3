@@ -115,7 +115,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                         ) : (
                                             <>
                                                 <span>{orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase()}</span>
-                                                {isBoolean(orderDetail?.userIsPartner) && <DWRelationIcon userIsPartner={orderDetail?.userIsPartner}/>}
+                                                {isBoolean(orderDetail?.userIsPartner) && <DWRelationIcon userIsPartner={mode === MODE.USER || orderDetail?.userIsPartner} />}
                                             </>
                                         )}
                                     </div>

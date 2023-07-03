@@ -81,6 +81,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                 loading={loadingProcessOrder}
                 isVisible={showProcessSuggestPartner}
                 onBackdropCb={onBackdropCb}
+                canBlur={false}
                 // isVisible={true}
                 className="!max-w-[488px]"
                 // wrapClassName="p-8 flex flex-col items-center txtSecond-4 "

@@ -27,7 +27,7 @@ import Skeletor from 'components/common/Skeletor';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import classNames from 'classnames';
-import { DwPartnerIconSingle, MonetizationOnIcon, MoneyIcon } from 'components/svg/SvgIcon';
+import {  MonetizationOnIcon } from 'components/svg/SvgIcon';
 import DWRelationIcon from 'components/common/DWRelationIcon';
 import PartnerModalDetailsOrderSuggest from '../PartnerModalDetailsOrderSuggest';
 import { isBoolean } from 'lodash';

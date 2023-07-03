@@ -90,7 +90,7 @@ const MadivesLayout = ({
                         userMetadata?.name
                     }`,
                     type: 'info',
-                    duration: 60000,
+                    duration: 5000,
                     customActionClose: (closeToast) => (
                         <span
                             className="ml-6 text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4 cursor-pointer"
