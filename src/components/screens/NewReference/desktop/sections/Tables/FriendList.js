@@ -189,11 +189,11 @@ const FriendList = ({ language, t, id }) => {
         }
         return levelFriend > 0
             ? BREADCRUMB?.map((value, key) => {
-                  if (path?.[key] && key > 0) {
-                      value['parentCode'] = path[key];
-                  }
-                  return value;
-              })
+                if (path?.[key] && key > 0) {
+                    value['parentCode'] = path[key];
+                }
+                return value;
+            })
             : [];
     }, [dataSource, levelFriend]);
 
@@ -216,8 +216,8 @@ const FriendList = ({ language, t, id }) => {
                 url: API_GET_REFERRAL_FRIENDS_BY_CODE.replace(':code', row?.code)
             });
             if (status === 'ok') {
-                const { name = '', code = '' } = row;
-                setDetailFriend({ ...data, name, code });
+                const { name = '', code = '', email = '' } = row;
+                setDetailFriend({ ...data, name, code, email });
             }
         } catch (err) {
             console.error(err);
@@ -430,6 +430,13 @@ const FriendList = ({ language, t, id }) => {
                 detailFriend={detailFriend}
                 defaultOption={DEFAULT_TOKENS}
                 onChangeOption={handleChangeOption}
+                range={
+                    {
+                        from: filter?.total_commissions?.value?.startDate,
+                        to: filter?.total_commissions?.value?.endDate
+                    }
+                }
+                invitedBy={dataSource?.path?.at(-1)}
             />
             <div className="w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8">
                 {/* <div className="font-semibold text-[22px] leading-7 mx-6 mb-8">{t('reference:referral.friend_list')}</div> */}
@@ -446,8 +453,9 @@ const FriendList = ({ language, t, id }) => {
                         <TableFilter config={filters} filter={filter} setFilter={setFilter} resetParentCode={handleResetParentCode} />
                     </div>
                     <ButtonV2
-                        className="hidden w-[122px] whitespace-nowrap hover:bg-gray-12 bg-dark-12 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7
-                        px-4 rounded-md px-auto py-auto font-semibold h-12"
+                        className="hidden w-[122px] whitespace-nowrap rounded-md px-auto py-auto font-semibold h-12"
+
+                        variants='secondary'
                     >
                         <ExportIcon />
                         <span className="ml-2">{t('reference:friend_list.filter.export')}</span>

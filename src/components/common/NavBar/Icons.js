@@ -17,7 +17,8 @@ import {
     BxsLogoutCircle as logout,
     PartnerIcon as partner,
     FutureInsurance as nami_insurance,
-    PortfolioIconNoColor as futures_portfolio
+    PortfolioIconNoColor as futures_portfolio,
+    ProfitStats as profit_stats
 } from '../../svg/SvgIcon';
 
 export default {
@@ -39,5 +40,6 @@ export default {
     partner,
     payment_method,
     nami_insurance,
-    futures_portfolio
+    futures_portfolio,
+    profit_stats
 };

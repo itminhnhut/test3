@@ -466,6 +466,22 @@ const GooglePlayIcon = ({ size = 24, ...props }) => (
     </svg>
 );
 
+const AndroidIcon = ({ size = 24, color = 'currentColor', ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
+        <g clip-path="url(#vtok890oea)">
+            <path
+                d="m17.6 9.482 1.84-3.18c.16-.31.04-.69-.26-.85a.637.637 0 0 0-.83.22l-1.88 3.24a11.463 11.463 0 0 0-8.94 0l-1.88-3.24a.643.643 0 0 0-.87-.2c-.28.18-.37.54-.22.83l1.84 3.18a10.78 10.78 0 0 0-5.4 8.52h22a10.78 10.78 0 0 0-5.4-8.52zM7 15.252a1.25 1.25 0 1 1 0-2.501 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.501 1.25 1.25 0 0 1 0 2.5z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="vtok890oea">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 const LogoIcon = ({ size = 24, ...props }) => (
     <svg width={size} height={size} {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -1266,6 +1282,17 @@ export const MonetizationOnIcon = ({ size = 24, color = '#47CC85', className = '
     </svg>
 );
 
+const ProfitStats = ({ className, color, size = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694B3' : '#47cc85';
+
+    return (
+        <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.5 6.5h1v10h-1v-10zm4-3h1v13h-1v-13zm-8 6h1v7h-1v-7zm-5 10h15v1h-15v-1zm1-7h1v4h-1v-4z" fill={color || defaultColor} stroke="#8694B3" />
+        </svg>
+    );
+};
+
 export {
     FutureInsurance,
     ArrowDownIcon,
@@ -1293,6 +1320,7 @@ export {
     FutureAdvanceIcon,
     AppleIcon,
     GooglePlayIcon,
+    AndroidIcon,
     LogoIcon,
     BxChevronDown,
     SyncAltIcon,
@@ -1342,5 +1370,6 @@ export {
     TwitterIcon,
     TelegramIcon,
     FutureNaoIcon,
-    PortfolioIconNoColor
+    PortfolioIconNoColor,
+    ProfitStats
 };

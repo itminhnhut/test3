@@ -17,7 +17,7 @@ import styled from 'styled-components';
 import { isFunction } from 'lodash';
 import { differenceInMonths } from 'date-fns';
 
-const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside, customHeaderCalendar, maxMonths  }) => {
+const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside, customHeaderCalendar, maxMonths, minDate, maxDate, ignoreAuth  }) => {
     const [showPicker, setShowPicker] = useState(false);
     const wrapperRef = useRef(null);
 
@@ -26,7 +26,8 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
         i18n: { language }
     } = useTranslation();
 
-    const { user: auth } = useSelector((state) => state.auth) || null;
+    const { user } = useSelector((state) => state.auth);
+    const auth = user || ignoreAuth;
 
     const [theme] = useDarkMode();
 
@@ -47,8 +48,10 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
     const Component = !isCalendar ? DateRangePicker : Calendar;
 
     useEffect(() => {
-        if (!initDate?.startDate && !initDate?.endDate) {
+        if (!initDate?.startDate && !initDate?.endDate && !isCalendar) {
             setDate({ ...initDate, ...(!initDate?.key && { key: 'selection' }) });
+        } else if (isCalendar) {
+            setDate(initDate);
         }
     }, [initDate]);
 
@@ -196,6 +199,8 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                             monthDisplayFormat="MMMM yyyy"
                             moveRangeOnFirstSelection={false}
                             showSelectionPreview={true}
+                            minDate={minDate}
+                            maxDate={maxDate}
                         />
                     </DatePickerWrapper>
                     <ButtonV2 disabled={maxMonths && Math.abs(differenceInMonths(date?.startDate, date?.endDate)) >= maxMonths} onClick={onConfirm} className="mx-6 mt-2 mb-8 w-auto">

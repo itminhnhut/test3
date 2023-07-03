@@ -354,7 +354,7 @@ export const RangePopover = ({ language, active = {}, onChange, popoverClassName
                             <div className="sm:hidden">
                                 <SvgFilter size={24} color="currentColor" className="text-txtPrimary dark:text-txtPrimary-dark" />
                             </div>
-                            <div className="hidden sm:flex px-4 py-3 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtSecondary dark:text-txtSecondary-dark rounded-md !font-SF-Pro !text-base">
+                            <div className="hidden sm:flex px-4 py-3 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtTabHover dark:text-txtSecondary-dark rounded-md !font-SF-Pro !text-base">
                                 {active[language]}
                                 <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
                             </div>

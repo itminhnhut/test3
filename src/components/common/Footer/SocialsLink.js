@@ -14,7 +14,7 @@ import TiktokFilled from 'components/svg/TiktokFilled';
 import FacebookGroupFilled from 'components/svg/FacebookGroupFilled';
 import YoutubeFilled from 'components/svg/YoutubeFilled';
 
-const getSocialImage = (socialType) => {
+export const getSocialImage = (socialType) => {
     let Icon = null;
     switch (socialType) {
         case 'facebook':
