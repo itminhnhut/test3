@@ -97,6 +97,7 @@ padding-block:48px;
           }
 
           .mal-footer___pocket__links___group__item__links__active {
+            @apply pt-2;
             max-height: 40em;
           }
         }
@@ -134,12 +135,12 @@ padding-block:48px;
       }
 
       .mal-footer___pocket__links___group {
-        @apply flex flex-row -mx-2;
+        @apply flex flex-row;
 
         margin-top: 0;
 
         .mal-footer___pocket__links___group__item {
-          @apply w-[200px] px-2;
+          @apply w-[200px] pr-4;
 
           .mal-footer___pocket__links___group__item__expander {
             @apply text-txtPrimary dark:text-txtPrimary-dark capitalize font-semibold py-0 mb-4;
