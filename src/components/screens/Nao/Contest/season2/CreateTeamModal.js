@@ -244,7 +244,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                                 {t('nao:contest:member_list')}
                             </div>
                             <div className="flex flex-col space-y-4 mt-6">
-                                <TextField label={t('nao:contest:captain_id')} value={userData?.[userID]} prefix={capitalize(userData?.name)} readOnly />
+                                <TextField label={t('nao:contest:captain_id')} value={userData?.[userID]} prefix={userData?.name} readOnly />
                                 {Object.keys(initMember).map((m, idx) => (
                                     <TextField
                                         key={idx}
@@ -254,7 +254,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                                         onBlur={onBlur}
                                         name={m}
                                         value={member[m]}
-                                        prefix={capitalize(fullname.current[m])}
+                                        prefix={fullname.current[m]}
                                         onChange={(e) => onHandleChange(e, 'member')}
                                         placeholder="ID"
                                     />
