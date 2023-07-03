@@ -141,7 +141,14 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         });
 
                         if (data.type === 'auto-accepted') {
-                            toast({ text: `Bạn đã đặt thành công lệnh ${data.side} ${data?.displayingId}`, key: `suggest_order_success_${data?.displayingId}` });
+                            toast({
+                                text: t('dw_partner:toast_user_place_suggest_order_success', {
+                                    side: t(`common:${data.side.toLowerCase().trim()}`),
+                                    orderId: data?.displayingId
+                                }),
+                                // text: `Bạn đã đặt thành công lệnh ${t(`common:${data.side.toLowerCase()}`)} ${data?.displayingId}`,
+                                key: `suggest_order_success_${data?.displayingId}`
+                            });
                         }
                         if (data?.status !== PartnerOrderStatus.PENDING) {
                             setIsRefetchOrderDetailAfterCountdown(false);

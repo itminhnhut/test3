@@ -25,7 +25,8 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
             onBackdropCb();
             router.push(`/partner-dw/details/${state.displayingId}`);
         } else {
-            setIsFailAccept(status);
+            console.log('______status: ', status);
+            setIsFailAccept(t(`dw_partner:error.${status.toLowerCase().trim()}`));
         }
     };
 

@@ -81,14 +81,17 @@ const MadivesLayout = ({
                 // make sure the socket displayingId is the current page
                 if (!data || data?.status !== 0 || data.partnerAcceptStatus !== 0) return;
 
-                const { displayingId, quoteQty, baseAssetId, userMetadata } = data;
+                const { displayingId, quoteQty, baseAssetId, userMetadata, side } = data;
 
                 if (router?.query?.id === PARTNER_WD_TABS.OPEN_ORDER) return;
                 toast({
                     key: `suggest_order_${displayingId}`,
-                    text: `Lệnh mua #${displayingId} trị giá ${formatNumber(quoteQty)} ${baseAssetId === 72 ? 'VNDC' : 'USDT'} vừa được tạo bởi ${
-                        userMetadata?.name
-                    }`,
+                    text: t('common:partner_toast_suggest_order', {
+                        side: t(`common:${side.toLowerCase()}`),
+                        displayingID: displayingId,
+                        amount: quoteQty,
+                        asset: baseAssetId === 72 ? 'VNDC' : 'USDT'
+                    }),
                     type: 'info',
                     duration: 5000,
                     customActionClose: (closeToast) => (

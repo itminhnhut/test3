@@ -169,7 +169,10 @@
         "invalid_otp": "OTP is invalid. Please try again.",
         "invalid_secret": "Verification code is incorrect {{timesErr}}/5, please get OTP from Nami Exchange App.",
         "invalid_smart_otp": "Verification code is incorrect {{timesErr}}/5, please try again",
-        "invalid_amount": "Invalid amount"
+        "invalid_amount": "Invalid amount",
+        "order_has_been_canceled": "User canceled the transaction",
+        "order_has_expired": "Transaction confirmation timeout",
+        "order_has_been_accepted_by_another_partner": "The transaction has been processed by another partner"
     },
     "filter": {
         "a_day": "1 day",
@@ -210,5 +213,6 @@
     "transaction_info": "Transaction info",
     "transaction_type": "Transaction type",
     "alert_suggest_not_found_order": "Order {{displayingId}} not found or being processed, please reload or contact support.",
-    "alert_suggest_not_found_partner": "Oops, it seems no partners match your transaction at the moment, please try again."
+    "alert_suggest_not_found_partner": "Oops, it seems no partners match your transaction at the moment, please try again.",
+    "toast_user_place_suggest_order_success": "{{side}} order {{orderId}} successfully placed."
 }

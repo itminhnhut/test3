@@ -49,6 +49,7 @@ const CardInput = () => {
     useEffect(() => {
         if (minimumAllowed) {
             setState({ amount: minimumAllowed });
+            dispatch(setFee(MIN_TIP));
         }
     }, [minimumAllowed]);
 
@@ -133,42 +134,76 @@ const CardInput = () => {
         }
     };
 
-    const [tipValidator, setTipValidator] = useState({ isValid: true, msg: '', isError: false });
-
-    const validateTip = (tipAmount) => {
-        let isValid = true;
-        let msg = '';
-
-        if (tipAmount && (tipAmount + '').length > 21) {
-            isValid = false;
-            msg = t('dw_partner:error.invalid_amount');
+    const tipValidator = useMemo(() => {
+        if (!hasRendered) {
+            return { isValid: true, msg: '', isError: false };
         }
 
-        if (tipAmount && tipAmount < MIN_TIP) {
-            isValid = false;
-            msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' });
+        if (side === SIDE.SELL && (!fee || fee < MIN_TIP))
+            return {
+                isValid: false,
+                msg: t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' })
+            };
+
+        if (fee && (fee + '').length > 21) {
+            return {
+                isValid: false,
+                msg: t('wallet:errors.invalid_insufficient_balance')
+            };
         }
 
         // const maxTip = state.amount * rate - 50000;
         const maxTip = state.amount * rate;
-        if (side === 'SELL' && +tipAmount > maxTip) {
-            isValid = false;
-            msg = t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' });
+        if (side === 'SELL' && +fee > maxTip) {
+            return {
+                isValid: false,
+                msg: t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' })
+            };
         }
 
-        setTipValidator({ isValid, msg, isError: !isValid });
-    };
+        return { isValid: true, msg: '', isError: false };
+    }, [fee, side]);
+
+    // const [tipValidator, setTipValidator] = useState({ isValid: true, msg: '', isError: false });
+
+    // const validateTip = (tipAmount) => {
+    //     let isValid = true;
+    //     let msg = '';
+
+    //     if (!hasRendered) {
+    //         return setTipValidator({ isValid, msg, isError: !isValid });
+    //     }
+
+    //     if (tipAmount && (tipAmount + '').length > 21) {
+    //         isValid = false;
+    //         msg = t('dw_partner:error.invalid_amount');
+    //     }
+
+    //     if (side === SIDE.SELL && (!tipAmount || tipAmount < MIN_TIP)) {
+    //         isValid = false;
+    //         msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' });
+    //     }
+
+    //     // const maxTip = state.amount * rate - 50000;
+    //     const maxTip = state.amount * rate;
+    //     if (side === 'SELL' && +tipAmount > maxTip) {
+    //         isValid = false;
+    //         msg = t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' });
+    //     }
+
+    //     setTipValidator({ isValid, msg, isError: !isValid });
+    // };
 
     const handleChangeTip = (input = '') => {
         const numberValue = input.value;
         dispatch(setFee(numberValue));
         // setState({ fee: numberValue });
-        validateTip(numberValue);
+        // validateTip(numberValue);
     };
 
-    useEffect(() => {
-        validateTip(fee);
-    }, [state.amount, rate]);
+    // useEffect(() => {
+    //     validateTip(fee);
+    // }, [state.amount, rate]);
 
     const amountWillReceived = state.amount * rate; //+ (side === SIDE.BUY ? +fee : -fee);
 
@@ -302,7 +337,7 @@ const CardInput = () => {
                                     {t('dw_partner:partner_bonus')}
                                 </h1>
                             }
-                            value={fee}
+                            value={fee || ''}
                             allowNegative={false}
                             thousandSeparator={true}
                             containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
@@ -314,8 +349,8 @@ const CardInput = () => {
                             allowedDecimalSeparators={[',', '.']}
                             clearAble
                             placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
-                            errorEmpty={false}
-                            // onFocus={handleFocusInput}
+                            errorEmpty
+                            onFocus={handleFocusInput}
                             renderTail={<span className="txtSecond-4">VND</span>}
                         />
                         <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 2,000 VND</div>
