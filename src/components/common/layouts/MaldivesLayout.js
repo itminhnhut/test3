@@ -1,5 +1,5 @@
 import { DESKTOP_NAV_HEIGHT, MOBILE_NAV_HEIGHT } from 'src/components/common/NavBar/constants';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { ReactNotifications } from 'react-notifications-component';
 import { useWindowSize } from 'utils/customHooks';
 import useApp from 'hooks/useApp';
@@ -9,7 +9,6 @@ import { useStore } from 'src/redux/store';
 import { setTheme } from 'redux/actions/user';
 import dynamic from 'next/dynamic';
 import { isMobile } from 'react-device-detect';
-import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 import { useSelector } from 'react-redux';
 import { THEME_MODE } from 'hooks/useDarkMode';
@@ -19,10 +18,8 @@ import toast from 'utils/toast';
 import { useTranslation } from 'next-i18next';
 import { UserSocketEvent } from 'redux/actions/const';
 import { useRouter } from 'next/router';
-import HrefButton from '../V2/ButtonV2/HrefButton';
 import { formatNumber } from 'utils/reference-utils';
-import ModalProcessSuggestPartner from 'components/screens/WithdrawDeposit/ModalProcessSuggestPartner';
-import PartnerModalDetailsOrderSuggest from 'components/screens/WithdrawDeposit/PartnerModalDetailsOrderSuggest';
+import { PARTNER_WD_TABS, PATHS } from 'constants/paths';
 
 const NavBar = dynamic(() => import('src/components/common/NavBar/NavBar'), {
     ssr: false,
@@ -67,7 +64,6 @@ const MadivesLayout = ({
     const isPartner = user?.partner_type === 2;
     const isApp = useApp();
     const store = useStore();
-    const [showPartnerSuggest, setShowPartnerSuggest] = useState(null);
 
     useEffect(() => {
         store.dispatch(setTheme());
@@ -82,14 +78,14 @@ const MadivesLayout = ({
 
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
-                // make sure the socket displayingId is the current details/[id] page
+                // make sure the socket displayingId is the current page
                 if (!data || data?.status !== 0 || data.partnerAcceptStatus !== 0) return;
 
-                console.log('______Socket partner: ', data);
-
                 const { displayingId, quoteQty, baseAssetId, userMetadata } = data;
+
+                if (router?.query?.id === PARTNER_WD_TABS.OPEN_ORDER) return;
                 toast({
-                    key: displayingId,
+                    key: `suggest_order_${displayingId}`,
                     text: `Lệnh mua #${displayingId} trị giá ${formatNumber(quoteQty)} ${baseAssetId === 72 ? 'VNDC' : 'USDT'} vừa được tạo bởi ${
                         userMetadata?.name
                     }`,
@@ -99,9 +95,8 @@ const MadivesLayout = ({
                         <span
                             className="ml-6 text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4 cursor-pointer"
                             onClick={() => {
-                                // router.push('/partner-dw/opening-orders');
-                                setShowPartnerSuggest(data);
                                 closeToast();
+                                router.push({ pathname: PATHS.PARTNER_WITHDRAW_DEPOSIT.OPEN_ORDER, query: { suggest: displayingId } });
                             }}
                         >
                             Xem
@@ -118,7 +113,7 @@ const MadivesLayout = ({
                 });
             }
         };
-    }, [userSocket]);
+    }, [userSocket, router]);
 
     return (
         <>
@@ -176,9 +171,6 @@ const MadivesLayout = ({
                 <div id={`${PORTAL_MODAL_ID}`} />
                 {isPartner && <HookPartnerSocket />}
             </div>
-            {showPartnerSuggest && (
-                <PartnerModalDetailsOrderSuggest showProcessSuggestPartner={showPartnerSuggest} onBackdropCb={() => setShowPartnerSuggest(null)} />
-            )}
         </>
     );
 };

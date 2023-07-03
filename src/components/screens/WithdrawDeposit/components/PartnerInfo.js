@@ -88,7 +88,7 @@ const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimu
                     contentClass: 'overflow-x-auto overflow-y-hidden pb-1'
                 },
                 emptyContent: {
-                    subContent: isAutoSuggest && 'Đối tác sẽ tự động được lựa chọn'
+                    subContent: isAutoSuggest && <span className='text-base'>Đối tác sẽ tự động được lựa chọn</span>
                 },
                 item: (partner) =>
                     selectedPartner && (

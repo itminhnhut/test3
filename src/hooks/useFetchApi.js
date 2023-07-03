@@ -9,7 +9,6 @@ const useFetchApi = ({ url = '', params, successCallBack = () => {} }, condition
 
     useEffect(() => {
         const source = axios.CancelToken.source();
-        console.log("___condition: ", condition);
         if(isNotFetch) return setData(null)
         if (condition) {
             (async () => {

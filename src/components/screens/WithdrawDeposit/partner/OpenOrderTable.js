@@ -29,6 +29,8 @@ import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import classNames from 'classnames';
 import { DwPartnerIconSingle, MonetizationOnIcon, MoneyIcon } from 'components/svg/SvgIcon';
 import DWRelationIcon from 'components/common/DWRelationIcon';
+import PartnerModalDetailsOrderSuggest from '../PartnerModalDetailsOrderSuggest';
+import { isBoolean } from 'lodash';
 
 const LIMIT_ROW = 5;
 
@@ -76,7 +78,7 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
                             <div className="space-y-2 text-right lg:text-left">
                                 <div className="capitalize txtPri-1 break-words flex items-center gap-x-4">
                                     {orderDetail?.userMetadata?.name?.toLowerCase()}
-                                    <DWRelationIcon userIsPartner={orderDetail?.userIsPartner}/>
+                                    {isBoolean(orderDetail?.userIsPartner) && <DWRelationIcon userIsPartner={orderDetail.userIsPartner} />}
                                 </div>
                                 <div className="txtSecond-3">{orderDetail?.userMetadata?.code}</div>
                             </div>
@@ -114,7 +116,7 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
                 <div className="lg:ml-10 flex flex-col items-center justify-center lg:max-w-[164px] w-full gap-3">
                     {orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.ACCEPTED ? (
                         <ButtonV2
-                            onClick={() => router.push(`${PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS}/${orderDetail?.displayingId}`)}
+                            onClick={() => router.push(`${PATHS.PARTNER_WITHDRAW_DEPOSIT.DETAILS}/${orderDetail?.displayingId}`)}
                             variants="text"
                             className="!py-0 items-center"
                         >
@@ -201,11 +203,19 @@ const OpenOrderTable = () => {
                 dataRef.current = newOrderList;
                 return;
             });
+            userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
+                // make sure the socket displayingId is the current page
+                if (!data || data?.status !== 0 || data.partnerAcceptStatus !== 0) return;
+                setShowPartnerSuggest(data);
+            });
         }
         return () => {
             if (userSocket) {
                 userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
                     console.log('socket removeListener PARTNER_UPDATE_ORDER:', data);
+                });
+                userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
+                    console.log('socket removeListener PARTNER_UPDATE_ORDER_AUTO_SUGGEST:', data);
                 });
             }
         };
@@ -249,8 +259,14 @@ const OpenOrderTable = () => {
         };
     }, [state.params, refetch]);
 
+    const [showPartnerSuggest, setShowPartnerSuggest] = useState(null);
+    useEffect(() => {
+        if (router?.query?.suggest) setShowPartnerSuggest(router?.query?.suggest);
+    }, [router.query]);
+
     return (
         <>
+            <PartnerModalDetailsOrderSuggest showProcessSuggestPartner={showPartnerSuggest} onBackdropCb={() => setShowPartnerSuggest(null)} />
             {/* CONFIRM */}
             <ModalConfirm
                 mode={MODE.PARTNER}

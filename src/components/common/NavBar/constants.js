@@ -297,7 +297,7 @@ export const MOBILE_NAV_DATA = [
                 isPartner: true,
                 // hide: true,
                 isNew: true,
-                url: PATHS?.PARNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
+                url: PATHS?.PARTNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
                 child_lv1: []
             },
             {
@@ -607,7 +607,7 @@ export const USER_CP = [
     //     isPartner: true,
     //     // hide: true,
     //     isNew: true,
-    //     url: PATHS?.PARNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
+    //     url: PATHS?.PARTNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
     //     child_lv1: []
     // }
     // {
@@ -673,7 +673,7 @@ export const USER_CP = [
         isPartner: true,
         // hide: true,
         isNew: true,
-        url: PATHS?.PARNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
+        url: PATHS?.PARTNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
         child_lv1: []
     },
     {

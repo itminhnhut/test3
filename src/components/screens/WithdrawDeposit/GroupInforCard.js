@@ -87,7 +87,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                     {/* Chi tiết giao dịch */}
                     <div className="w-full md:w-2/5 p-3">
                         <div className="flex  flex-col  min-h-full">
-                            <div className="flex-1   overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 flex flex-col">
+                            <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 pb-10 flex flex-col">
                                 <div className="flex justify-between items-center mb-4">
                                     <div className="txtPri-1 ">{t(`dw_partner:${otherMode}`)}</div>
 

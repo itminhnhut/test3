@@ -49,9 +49,11 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
     const side = orderDetail?.side || '';
     const lastIndexUploadType = logs.map((log) => log.type).lastIndexOf(PartnerOrderLog.UPLOADED);
 
-    const isHaveLogOrderCompleted = logs.find((log) => log.type === PartnerOrderLog.SYSTEM_UPDATE_SUCCESS);
-    if (!isHaveLogOrderCompleted) {
-        if (orderDetail?.status === PartnerOrderStatus.SUCCESS) logs.push({ type: PartnerOrderLog.SYSTEM_UPDATE_SUCCESS, time: logs[logs.length - 1].time });
+    if(logs && logs.length > 0) {
+        const isHaveLogOrderCompleted = logs.find((log) => log.type === PartnerOrderLog.SYSTEM_UPDATE_SUCCESS);
+        if (!isHaveLogOrderCompleted) {
+            if (orderDetail?.status === PartnerOrderStatus.SUCCESS) logs.push({ type: PartnerOrderLog.SYSTEM_UPDATE_SUCCESS, time: logs[logs.length - 1].time });
+        }
     }
 
     return logs && logs.length ? (
