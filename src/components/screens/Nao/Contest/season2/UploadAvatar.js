@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 import colors from 'styles/colors';
+const support = ['image/jpeg', 'image/jpg', 'image/png'];
 
 const UploadAvatar = ({ onChange }) => {
     const [avatar, setAvatar] = useState({ file: null, url: null });
@@ -19,7 +20,7 @@ const UploadAvatar = ({ onChange }) => {
 
     const fileHandler = (file, name, type) => {
         try {
-            if (!['image/png', 'image/jpg'].includes(type)) {
+            if (!support.includes(type)) {
                 context.alertV2.show('warning', t(`error:futures:INVALID_IMAGE`));
                 return false;
             }
@@ -91,7 +92,7 @@ const UploadAvatar = ({ onChange }) => {
             container.current.removeEventListener('drop', onDrop, false);
         };
     }, [container]);
-
+    console.log(support.join(','));
     return (
         <WrapperUpload className="flex-1">
             <div
@@ -117,10 +118,10 @@ const UploadAvatar = ({ onChange }) => {
                     )}
                 </div>
                 <div className="text-sm mt-12 hidden sm:flex flex-col space-y-1 text-center">
-                    <span className="font-semibold">Kéo thả hình ảnh hoặc click để tải hình ảnh</span>
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">Hỗ trợ định dạng JPG, PNG</span>
+                    <span className="font-semibold">{t('nao:contest:drag_drop')}</span>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:format_support')} JPEG, JPG, PNG</span>
                 </div>
-                <input type="file" id="avatar_team" className="hidden" accept="image/png, image/jpeg" onChange={onChangeAvatar} />
+                <input type="file" id="avatar_team" className="hidden" accept={support.join(',')} onChange={onChangeAvatar} />
             </div>
         </WrapperUpload>
     );

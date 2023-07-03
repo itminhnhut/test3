@@ -250,7 +250,10 @@
             "number_of_friends": "Number of friends",
             "tooltip_friends": "Referred friends need to complete KYC during the program period, read more at “Detail Rules”"
         },
-        "personal_achievements_note": "Note: Monthly statistics are calculated from the start of the tournament, weekly statistics are calculated from 00:00 every Monday (UTC+7)"
+        "personal_achievements_note": "Note: Monthly statistics are calculated from the start of the tournament, weekly statistics are calculated from 00:00 every Monday (UTC+7)",
+        "team_avatar": "Team avatar",
+        "drag_drop": "Drag and drop an image or click to upload an image",
+        "format_support": "Image format support"
     },
     "year_summary": {
         "title": "NAO Futures {{version}} Achievements",

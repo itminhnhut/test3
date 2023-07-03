@@ -251,7 +251,9 @@
             "tooltip_friends": "Bạn bè cần hoàn tất KYC trong thời gian diễn ra chương trình, đọc thêm tại “Thể lệ chi tiết”"
         },
         "personal_achievements_note": "Lưu ý: Thành tích tháng được tính từ khi giải đấu bắt đầu, thành tích tuần được tính từ 00:00 thứ 2 hàng tuần (UTC+7)",
-        "add_friends": "Thêm bạn bè"
+        "team_avatar": "Ảnh đại điện của đội",
+        "drag_drop": "Kéo thả hình ảnh hoặc click để tải hình ảnh",
+        "format_support": "Hỗ trợ định dạng"
     },
     "year_summary": {
         "title": "Tổng kết NAO Futures {{version}}",

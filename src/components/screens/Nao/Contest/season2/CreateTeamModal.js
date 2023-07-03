@@ -212,7 +212,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                 )}
             >
                 <div className="sm:min-w-[300px] flex flex-col mb-4 sm:mb-0">
-                    <div className="font-semibold mb-6 hidden sm:flex">Ảnh đại điện của đội</div>
+                    <div className="font-semibold mb-6 hidden sm:flex">{t('nao:contest:team_avatar')}</div>
                     <div className="font-semibold mb-4 text-sm flex sm:hidden">{t('nao:contest:team_information')}</div>
                     <UploadAvatar onChange={setAvatar} />
                 </div>
