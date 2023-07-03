@@ -197,7 +197,13 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
     const isMobile = width <= 640;
 
     return (
-        <ModalV2 isMobile={isMobile} isVisible={true} onBackdropCb={() => onClose()} className="max-w-[884px] h-full overflow-hidden">
+        <ModalV2
+            isMobile={isMobile}
+            isVisible={true}
+            onBackdropCb={() => onClose()}
+            className="max-w-[884px] sm:max-h-[860px] h-full overflow-hidden"
+            wrapClassName="flex flex-col"
+        >
             <div className="text-xl sm:text-2xl font-semibold">{t('nao:contest:create_a_team')}</div>
             <div
                 className={classNames(
@@ -259,7 +265,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                 </div>
             </div>
 
-            <div className="!px-4 flex items-center space-x-4 mt-8">
+            <div className="flex items-center space-x-4 mt-8 sm:mt-auto">
                 {/* <ButtonNao onClick={() => onClose()} variant={ButtonNaoVariants.SECONDARY} className="w-full !rounded-md">{t('common:close')}</ButtonNao> */}
                 <ButtonNao onClick={onSubmit} disabled={disabled || loading || isLoading.current} className="w-full !rounded-md">
                     {loading && <IconLoading className="!m-0" color="currentColor" />} {t('nao:contest:create_team')}
