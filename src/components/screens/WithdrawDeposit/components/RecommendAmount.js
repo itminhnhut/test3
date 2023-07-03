@@ -34,7 +34,7 @@ const RecommendAmount = ({ amount, setAmount, loadingRate }) => {
             url: API_GET_HISTORY_DW_PARTNERS,
             params: {
                 page: 0,
-                pageSize: MAXIMUM_RECOMMEND_LENGTH,
+                pageSize: 20,
                 lastId: null,
                 mode: 'user',
                 side,
@@ -49,7 +49,15 @@ const RecommendAmount = ({ amount, setAmount, loadingRate }) => {
         if (minimumAllowed > 0 && maximumAllowed > 0) {
             if (!amount) {
                 if (lastOrders && lastOrders.orders.length) {
-                    setRcmdAmount(lastOrders.orders.map((order) => order.baseQty));
+                    setRcmdAmount(
+                        lastOrders.orders
+                            .map((order) => order.baseQty)
+                            .reduce((prev, cur) => {
+                                if (prev.length >= MAXIMUM_RECOMMEND_LENGTH) return prev;
+                                if (prev.includes(cur)) return prev;
+                                return [...prev, cur];
+                            }, [])
+                    );
                 } else {
                     setRcmdAmount(
                         MULTIPLIES_AMOUNT[assetId]
@@ -57,14 +65,9 @@ const RecommendAmount = ({ amount, setAmount, loadingRate }) => {
                             .filter((amountRecommend) => amountRecommend >= minimumAllowed && amountRecommend <= maximumAllowed)
                     );
                 }
-            } else if (amount) {
+            } else {
                 const suggestArr = getArraySuggestion(amount, minimumAllowed, maximumAllowed);
                 setRcmdAmount(suggestArr);
-                // setRcmdAmount(
-                //     MULTIPLIES_AMOUNT[assetId]
-                //         .map((times) => +amount * times)
-                //         .filter((amountRecommend) => amountRecommend >= minimumAllowed && amountRecommend <= maximumAllowed)
-                // );
             }
         }
     }, [lastOrders, amount, maximumAllowed, minimumAllowed]);
@@ -77,7 +80,7 @@ const RecommendAmount = ({ amount, setAmount, loadingRate }) => {
                     isOverflow={true}
                     activeTabKey={amount}
                     onChangeTab={(key) => setAmount(key)}
-                    variants='suggestion'
+                    variants="suggestion"
                     tabs={rcmdAmount.map((amountRcmd) => ({
                         key: amountRcmd + '',
                         children: formatPrice(amountRcmd, 0)

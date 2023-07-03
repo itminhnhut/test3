@@ -19,11 +19,13 @@ import { find } from 'lodash';
 import RecommendAmount from './components/RecommendAmount';
 import TabV2 from 'components/common/V2/TabV2';
 import { SET_ALLOWED_SUBMIT_ORDER } from 'redux/actions/types';
+import { setFee } from 'redux/actions/withdrawDeposit';
+import { MIN_TIP } from 'redux/actions/const';
 
 const CardInput = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const { partner, accountBank, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
+    const { fee, partner, accountBank, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
 
     // const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
@@ -31,8 +33,7 @@ const CardInput = () => {
     const { side, assetId } = router.query;
 
     const [state, set] = useState({
-        amount: '',
-        tip: ''
+        amount: ''
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
@@ -143,9 +144,9 @@ const CardInput = () => {
             msg = t('dw_partner:error.invalid_amount');
         }
 
-        if (tipAmount && tipAmount < 5000) {
+        if (tipAmount && tipAmount < MIN_TIP) {
             isValid = false;
-            msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(5000), asset: 'VND' });
+            msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' });
         }
 
         // const maxTip = state.amount * rate - 50000;
@@ -160,15 +161,16 @@ const CardInput = () => {
 
     const handleChangeTip = (input = '') => {
         const numberValue = input.value;
-        setState({ tip: numberValue });
+        dispatch(setFee(numberValue));
+        // setState({ fee: numberValue });
         validateTip(numberValue);
     };
 
     useEffect(() => {
-        validateTip(state.tip);
+        validateTip(fee);
     }, [state.amount, rate]);
 
-    const amountWillReceived = state.amount * rate; //+ (side === SIDE.BUY ? +state.tip : -state.tip);
+    const amountWillReceived = state.amount * rate; //+ (side === SIDE.BUY ? +fee : -fee);
 
     useEffect(() => {
         let isCanSubmitOrder = true;
@@ -300,7 +302,7 @@ const CardInput = () => {
                                     {t('dw_partner:partner_bonus')}
                                 </h1>
                             }
-                            value={state.tip}
+                            value={fee}
                             allowNegative={false}
                             thousandSeparator={true}
                             containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
@@ -316,15 +318,15 @@ const CardInput = () => {
                             // onFocus={handleFocusInput}
                             renderTail={<span className="txtSecond-4">VND</span>}
                         />
-                        <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 5,000 VND</div>
+                        <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 2,000 VND</div>
                         <div className="flex items-center gap-3 mb-4 flex-wrap">
                             <TabV2
                                 //  chipClassName="!bg-white hover:!bg-gray-6"
                                 variants="suggestion"
                                 isOverflow={true}
-                                activeTabKey={+state.tip}
+                                activeTabKey={+fee}
                                 onChangeTab={(key) => handleChangeTip({ value: key })}
-                                tabs={[5000, 10000, 20000].map((suggestItem) => ({
+                                tabs={[MIN_TIP, 5000, 10000, 20000].map((suggestItem) => ({
                                     key: suggestItem,
                                     children: formatNanNumber(suggestItem, 0)
                                 }))}
@@ -406,11 +408,11 @@ const CardInput = () => {
                             <div className="">VND</div>
                         </div>
                     </div>
-                    {state.tip && (
+                    {fee && (
                         <div className="flex items-center justify-between ">
                             <div className="txtSecond-2">{t(`dw_partner:partner_bonus`)}</div>
                             <div data-tip="" className="inline-flex txtPri-1 space-x-1 !cursor-default">
-                                {formatNanNumber(state.tip)} VND
+                                {formatNanNumber(fee)} VND
                             </div>
                         </div>
                     )}

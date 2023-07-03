@@ -2,28 +2,36 @@ import { useTranslation } from 'next-i18next';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { useEffect, useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { ApiStatus, UserSocketEvent } from 'redux/actions/const';
+import { ApiStatus, MIN_TIP, UserSocketEvent } from 'redux/actions/const';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { useRouter } from 'next/router';
 import FetchApi from 'utils/fetch-api';
 import MCard from 'components/common/MCard';
 import { CountdownClock } from './components/common/CircleCountdown';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { API_CANCEL_AUTO_SUGGEST_ORDER, API_CONTINUE_AUTO_SUGGEST_ORDER } from 'redux/actions/apis';
-import { useSelector } from 'react-redux';
+import { API_CANCEL_AUTO_SUGGEST_ORDER, API_CONTINUE_AUTO_SUGGEST_ORDER, API_GET_ORDER_PRICE } from 'redux/actions/apis';
+import { useDispatch, useSelector } from 'react-redux';
 import ModalLoading from 'components/common/ModalLoading';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { formatNumber } from 'utils/reference-utils';
+import TradingInputV2 from 'components/trade/TradingInputV2';
+import useFetchApi from 'hooks/useFetchApi';
+import TabV2 from 'components/common/V2/TabV2';
+import { formatNanNumber } from 'redux/actions/utils';
+import { setFee } from 'redux/actions/withdrawDeposit';
+import CollapseV2 from 'components/common/V2/CollapseV2';
+import Card from './components/common/Card';
 
 const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb }) => {
-    const [state, setState] = useState({ side: SIDE.BUY, countdownTime: null, timeExpire: null, baseQty: 0, baseAssetId: 72 });
+    const { fee } = useSelector((state) => state.withdrawDeposit);
+    const [state, setState] = useState({ side: SIDE.BUY, countdownTime: null, timeExpire: null, baseQty: 0, baseAssetId: 72, displayingId: '' });
     const router = useRouter();
     const [currentTheme] = useDarkMode();
 
     useEffect(() => {
         if (!showProcessSuggestPartner) return;
-        const { side, countdownTime, timeExpire, baseQty, baseAssetId } = showProcessSuggestPartner;
-        setState({ side, countdownTime, timeExpire, baseQty, baseAssetId });
+        const { side, countdownTime, timeExpire, baseQty, baseAssetId, displayingId } = showProcessSuggestPartner;
+        setState({ side, countdownTime, timeExpire, baseQty, baseAssetId, displayingId });
     }, [showProcessSuggestPartner]);
 
     const [isAwaitSocketNotFoundPartner, setIsAwaitSocketNotFoundPartner] = useState(false);
@@ -96,15 +104,16 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                     method: 'POST'
                 },
                 params: {
-                    displayingId: showProcessSuggestPartner?.displayingId
+                    displayingId: showProcessSuggestPartner?.displayingId,
+                    fee: fee
                 }
             });
 
             if (status === ApiStatus.SUCCESS && data) {
-                const { side, countdownTime, timeExpire } = data;
+                const { side, countdownTime, timeExpire, displayingId } = data;
                 setIsNotFoundPartner(false);
 
-                setState({ side, countdownTime, timeExpire });
+                setState((prev) => ({ ...prev, side, countdownTime, timeExpire, displayingId }));
             } else {
                 setIsErrorContinue(status ?? data);
             }
@@ -113,6 +122,52 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
             setIsLoadingContinue(false);
         }
     };
+
+    // Tip handle:
+    const { side, assetId } = router.query;
+    const dispatch = useDispatch();
+    const {
+        data: rate,
+        loading: loadingRate,
+        error
+    } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
+
+    const [tipValidator, setTipValidator] = useState({ isValid: true, msg: '', isError: false });
+
+    const validateTip = (tipAmount) => {
+        let isValid = true;
+        let msg = '';
+
+        if (tipAmount && (tipAmount + '').length > 21) {
+            isValid = false;
+            msg = t('dw_partner:error.invalid_amount');
+        }
+
+        if (tipAmount && tipAmount < MIN_TIP) {
+            isValid = false;
+            msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' });
+        }
+
+        // const maxTip = state.amount * rate - 50000;
+        const maxTip = state.amount * rate;
+        if (side === 'SELL' && +tipAmount > maxTip) {
+            isValid = false;
+            msg = t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' });
+        }
+
+        setTipValidator({ isValid, msg, isError: !isValid });
+    };
+
+    const handleChangeTip = (input = '') => {
+        const numberValue = input.value;
+        dispatch(setFee(numberValue));
+        // setState({ fee: numberValue });
+        validateTip(numberValue);
+    };
+
+    useEffect(() => {
+        validateTip(fee);
+    }, [state.amount, rate]);
 
     return (
         <>
@@ -138,16 +193,24 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                         timeExpire={state.timeExpire}
                     />
                 </div>
-                <MCard addClass={'w-full mt-6 !p-4'}>
+                <div className={'w-full bg-gray-13 dark:bg-dark-4 rounded-xl mt-6 p-4'}>
                     <div className="flex items-center justify-between">
                         <span>Loại giao dịch</span>
-                        <span className="text-teal font-semibold">{t(`common:${state.side.toLowerCase()}`)}</span>
+                        <span className={`font-semibold ${state.side === SIDE.BUY ? 'text-teal' : 'text-red-2'}`}>
+                            {t(`common:${state.side.toLowerCase()}`)}
+                        </span>
                     </div>
                     <div className="flex items-center justify-between mt-3">
                         <span>Số lượng</span>
-                        <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(state.baseQty, state.baseAssetId === 72 ? 0 : 4)} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`}</span>
+                        <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(state.baseQty, state.baseAssetId === 72 ? 0 : 4)} ${
+                            state.baseAssetId === 72 ? 'VNDC' : 'USDT'
+                        }`}</span>
                     </div>
-                </MCard>
+                    <div className="flex items-center justify-between mt-3">
+                        <span>Phí giao dịch</span>
+                        <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(fee)} VNĐ`}</span>
+                    </div>
+                </div>
                 <ButtonV2
                     onClick={() => {
                         handleCancelOrderSuggest();
@@ -163,6 +226,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
             <AlertModalV2
                 isVisible={isNotFoundPartner}
                 // isVisible={true}
+                // isVisible={!!showProcessSuggestPartner}
                 onClose={() => {
                     setIsNotFoundPartner(false);
                     setTimeout(() => {
@@ -178,7 +242,81 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                         Tiếp tục
                     </ButtonV2>
                 }
-            />
+            >
+                {state.side === SIDE.SELL && (
+                    <div className="w-full mt-6">
+                        <TradingInputV2
+                            id="TradingInputV2"
+                            label={
+                                <h1
+                                    data-tip={t('dw_partner:partner_bonus_tooltip')}
+                                    data-for="partner_bonus_tooltip"
+                                    className="txtSecond-3 border-b border-dashed border-darkBlue-5 w-fit"
+                                >
+                                    {t('dw_partner:partner_bonus')}
+                                </h1>
+                            }
+                            value={fee}
+                            allowNegative={false}
+                            thousandSeparator={true}
+                            containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
+                            inputClassName="!text-left !ml-0"
+                            onValueChange={handleChangeTip}
+                            validator={tipValidator}
+                            errorTooltip={false}
+                            decimalScale={0}
+                            allowedDecimalSeparators={[',', '.']}
+                            clearAble
+                            placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
+                            errorEmpty={false}
+                            // onFocus={handleFocusInput}
+                            renderTail={<span className="txtSecond-4">VND</span>}
+                        />
+                        <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 2,000 VND</div>
+                        <div className="flex items-center gap-3 mb-4 flex-wrap">
+                            <TabV2
+                                //  chipClassName="!bg-white hover:!bg-gray-6"
+                                variants="suggestion"
+                                isOverflow={true}
+                                activeTabKey={+fee}
+                                onChangeTab={(key) => handleChangeTip({ value: key })}
+                                tabs={[MIN_TIP, 5000, 10000, 20000].map((suggestItem) => ({
+                                    key: suggestItem,
+                                    children: formatNanNumber(suggestItem, 0)
+                                }))}
+                            />
+                        </div>
+                        <CollapseV2
+                            key={`collapse_${state.displayingId}`}
+                            // divLabelClassname="w-full justify-between"
+                            chrevronStyled={{ size: 20 }}
+                            label="Tuỳ chỉnh nâng cao"
+                            labelClassname="!text-base font-semibold"
+                            // setIsOpen={setIsCollapse}
+                        >
+                            <div className="txtSecond-4">
+                                <div className="flex items-center justify-between">
+                                    <span>Loại giao dịch</span>
+                                    <span className={`font-semibold ${state.side === SIDE.BUY ? 'text-teal' : 'text-red-2'}`}>
+                                        {t(`common:${state.side.toLowerCase()}`)}
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between mt-3">
+                                    <span>Số lượng</span>
+                                    <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(
+                                        state.baseQty,
+                                        state.baseAssetId === 72 ? 0 : 4
+                                    )} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`}</span>
+                                </div>
+                                <div className="flex items-center justify-between mt-3">
+                                    <span>Phí giao dịch</span>
+                                    <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(fee)} VND`}</span>
+                                </div>
+                            </div>
+                        </CollapseV2>
+                    </div>
+                )}
+            </AlertModalV2>
 
             <AlertModalV2
                 isVisible={isErrorContinue}

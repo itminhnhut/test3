@@ -39,7 +39,7 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
     const assetCode = asset?.assetCode;
 
     return (
-        <Card className={classNames('border-0 bg-white !dark:bg-dark-4')}>
+        <Card className={classNames('border-0 !bg-white dark:!bg-dark-4')}>
             <div className="flex items-center flex-wrap lg:flex-nowrap">
                 <div className="flex-grow border-b pb-5 lg:border-r border-divider dark:border-divider-dark lg:pb-0 lg:pr-10 lg:border-b-0 ">
                     <div className="flex items-center mb-8">
@@ -105,11 +105,11 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
                             </div>
                         </div>
                     </div>
-                    {orderDetail?.tip ? (
+                    {orderDetail?.fee ? (
                         <div className="mt-6 flex border-l-2 border-divider dark:border-divider-dark font-semibold">
                             <MonetizationOnIcon className="mx-2" />
                             <span>{t('dw_partner:partner_bonus')}:&nbsp;</span>
-                            <span className="text-green-3 dark:text-green-2">+{formatBalanceFiat(orderDetail.tip)} VND</span>
+                            <span className="text-green-3 dark:text-green-2">+{formatBalanceFiat(orderDetail.fee)} VND</span>
                         </div>
                     ) : null}
                 </div>

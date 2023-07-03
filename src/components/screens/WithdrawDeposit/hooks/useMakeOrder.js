@@ -72,7 +72,7 @@ const useMakeOrder = ({ setState, input }) => {
         return errorHandler[orderResponse?.status]?.() || toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
     };
 
-    const onMakeOrderHandler = async (otp, locale, tip) => {
+    const onMakeOrderHandler = async (otp, locale, fee) => {
         try {
             setState({ loadingConfirm: true });
 
@@ -84,7 +84,7 @@ const useMakeOrder = ({ setState, input }) => {
                 side,
                 otp,
                 locale,
-                tip: +tip,
+                fee: +fee,
                 type: isAutoSuggest ? 'auto' : 'normal'
             });
 

@@ -33,13 +33,16 @@ export const initialState = {
     maximumAllowed: 0,
     modal: INITIAL_MODAL_STATE,
     isCanSubmitOrder: false,
-    isAutoSuggest: true
+    isAutoSuggest: true,
+    fee: ''
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
         case types.SET_WITHDRAW_DEPOSIT_AMOUNT:
             return { ...state, input: action.payload };
+        case types.SET_WITHDRAW_DEPOSIT_FEE:
+            return { ...state, fee: action.payload };
         case types.SET_ALLOWED_AMOUNT:
             return { ...state, minimumAllowed: action.payload.min, maximumAllowed: action.payload.max };
         case types.SET_LOADING_PARTNER:

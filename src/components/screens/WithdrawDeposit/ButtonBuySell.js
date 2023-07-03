@@ -30,13 +30,13 @@ const ButtonBuySell = ({ canSubmit }) => {
         showProcessSuggestPartner: null
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
-    const { input, loadingPartner, isCanSubmitOrder, modal: modalProps } = useSelector((state) => state.withdrawDeposit);
+    const { fee, input, loadingPartner, isCanSubmitOrder, modal: modalProps } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
     const { side, assetId } = router.query;
     const configs = useSelector((state) => state.utils.assetConfig);
     const assetCode = find(configs, { id: +assetId })?.assetCode || '';
 
-    const { onMakeOrderHandler, setModalState } = useMakeOrder({ setState, input });
+    const { onMakeOrderHandler, setModalState } = useMakeOrder({ setState, input, fee });
 
     const [loadingConfirm, setLoadingConfirm] = useState(false);
     const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
@@ -55,7 +55,7 @@ const ButtonBuySell = ({ canSubmit }) => {
             })
                 .then(({ status, data }) => {
                     if (status === 'ok') {
-                        !data?.phone ? setIsOpenModalAddPhone(true) : onMakeOrderHandler(null, null, state.tip);
+                        !data?.phone ? setIsOpenModalAddPhone(true) : onMakeOrderHandler(null, null, fee);
                     }
                 })
                 .finally(() => setLoadingConfirm(false));
@@ -88,7 +88,7 @@ const ButtonBuySell = ({ canSubmit }) => {
             </ButtonV2>
             <DWAddPhoneNumber isVisible={isOpenModalAddPhone} onBackdropCb={() => setIsOpenModalAddPhone(false)} />
             <ModalOtp
-                onConfirm={(otp) => onMakeOrderHandler(otp, language, state.tip)}
+                onConfirm={(otp) => onMakeOrderHandler(otp, language, fee)}
                 isVisible={state.showOtp}
                 otpExpireTime={state.otpExpireTime}
                 onClose={() => {
@@ -112,7 +112,7 @@ const ButtonBuySell = ({ canSubmit }) => {
                 textButton={t('dw_partner:verify_by_email')}
                 onConfirm={() => {
                     setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false });
-                    onMakeOrderHandler(null, null, state.tip);
+                    onMakeOrderHandler(null, null, fee);
                 }}
                 type="error"
                 title={t('dw_partner:disabled_smart_otp_title')}

@@ -4,7 +4,7 @@ export const EPS = 0.00000001;
 
 export const LOCAL_STORAGE_KEY = {
     THEME: 'theme',
-    HIDE_BALANCE:'hide_wallet_balance'
+    HIDE_BALANCE: 'hide_wallet_balance'
 };
 
 const TokenConfigNetwork = {
@@ -581,7 +581,7 @@ export const ExchangeOrderEnum = {
         TOO_MUCH_ORDERS: 'TOO_MUCH_ORDERS',
         INSTRUMENTS_DO_NOT_MATCH: 'INSTRUMENTS_DO_NOT_MATCH',
         INSTRUMENT_NOT_LISTED_FOR_TRADING_YET: 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET',
-        NAO_IS_MAINTAINED: "NAO_IS_MAINTAINED",
+        NAO_IS_MAINTAINED: 'NAO_IS_MAINTAINED',
         INVALID_PRICE: 'INVALID_PRICE',
         INVALID_TICK_SIZE: 'INVALID_TICK_SIZE',
         INVALID_STEP_SIZE: 'INVALID_STEP_SIZE',
@@ -781,7 +781,7 @@ export const KYC_STATUS = {
     NO_KYC: 0,
     PENDING_APPROVAL: 1,
     APPROVED: 2,
-    REJECT: 3,
+    REJECT: 3
     // APPROVED_PENDING_APPROVAL_ADVANCE: 4, // cập nhật thêm số cmnd + ảnh mặt
     // PENDING_APPROVAL_ADVANCE: 5 // user kyc từ đầu cập nhật hết
 };
@@ -948,7 +948,7 @@ export const PartnerOrderLog = {
     TIMEOUT_NOT_RECEIVE: 11,
     SYSTEM_UPDATE_SUCCESS: 12,
     SYSTEM_UPDATE_REJECT: 13,
-    SYSTEM_UPDATE_DISPUTE: 14,
+    SYSTEM_UPDATE_DISPUTE: 14
 };
 
 export const PartnerOrderStatusLog = {
@@ -969,3 +969,5 @@ export const PartnerReasonDisputed = {
     TIME_OUT: 1,
     USER_DISPUTED: 2
 };
+
+export const MIN_TIP = 2000;
