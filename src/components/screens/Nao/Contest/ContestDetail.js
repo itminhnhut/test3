@@ -258,7 +258,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                         />
                     )}
                 </div>
-                <div>{capitalize(data) ?? t('nao:contest:member', { value: item?.rowIndex + 1 })}</div>
+                <div>{data ?? t('nao:contest:member', { value: item?.rowIndex + 1 })}</div>
                 {item?.is_onus_master && <TickFbIcon size={16} />}
             </div>
         );
@@ -305,8 +305,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 </div>
                                 <div className="flex items-center space-x-2 mt-2">
                                     <LeadIcon />
-                                    <div className="capitalize text-txtSecondary dark:text-txtSecondary-dark">
-                                        {t('nao:contest:captain')}: {capitalize(dataSource?.leader_name) ?? '-'}
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                        {t('nao:contest:captain')}: {dataSource?.leader_name ?? '-'}
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-2 mt-1">
@@ -345,9 +345,9 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <LeadIcon />
-                                            <div className="capitalize text-txtSecondary dark:text-txtSecondary-dark">
+                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
                                                 {t('nao:contest:captain')}:{' '}
-                                                {loading ? <Skeletor onusMode width={100} height={10} /> : capitalize(dataSource?.leader_name) ?? '-'}
+                                                {loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.leader_name ?? '-'}
                                             </div>
                                             {visibleStatus &&
                                                 (loading ? (
@@ -370,7 +370,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             </div>
                         )}
 
-                        {!isPending.group && (
+                        {!isPending.group && !loading && (
                             <CardNao
                                 noBg
                                 className="!p-4 sm:!py-4 sm:!px-12 mt-8 !min-h-[92px] sm:flex-row w-full sm:min-w-[577px] dark:bg-none dark:bg-darkBlue-3"
@@ -450,8 +450,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                                 />
                                                             )}
                                                         </div>
-                                                        <div className="text-sm font-semibold leading-5 capitalize flex items-center space-x-2">
-                                                            <span>{capitalize(item?.name) ?? t('nao:contest:member', { value: index + 1 })}</span>
+                                                        <div className="text-sm font-semibold leading-5 flex items-center space-x-2">
+                                                            <span>{item?.name ?? t('nao:contest:member', { value: index + 1 })}</span>
                                                             {item?.is_onus_master && <TickFbIcon size={16} />}
                                                         </div>
                                                     </div>
@@ -525,22 +525,9 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                     ) : (
                         <Table dataSource={dataSource?.members ?? []} classWrapper="border border-divider dark:border-none">
                             <Column minWidth={50} className="font-semibold" title={t('nao:contest:no')} fieldName={'index'} />
-                            <Column
-                                minWidth={280}
-                                ellipsis
-                                className="font-semibold capitalize"
-                                title={t('nao:contest:name')}
-                                fieldName="name"
-                                cellRender={renderName}
-                            />
+                            <Column minWidth={280} ellipsis className="font-semibold" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                             <Column minWidth={200} ellipsis className="" title={'User ID'} fieldName={userID} />
-                            <Column
-                                visible={visibleStatus}
-                                minWidth={160}
-                                title={t('common:status')}
-                                fieldName="status"
-                                cellRender={renderStatusMember}
-                            />
+                            <Column visible={visibleStatus} minWidth={160} title={t('common:status')} fieldName="status" cellRender={renderStatusMember} />
                             <Column
                                 visible={!isPending.group}
                                 minWidth={70}

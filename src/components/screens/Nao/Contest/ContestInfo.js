@@ -276,7 +276,7 @@ const ContestInfo = forwardRef(
                     )}
                     <div className="flex flex-col lg:flex-row flex-wrap gap-5 md:mt-9 sm:mt-6 mt-6 text-sm md:text-base">
                         <CardNao className={`px-4 py-6 md:!p-8 lg:!max-w-[375px] !justify-center space-y-3`}>
-                            <label className="text-xl sm:text-2xl text-teal font-semibold leading-8 capitalize">{capitalize(userData?.name)}</label>
+                            <label className="text-xl sm:text-2xl text-teal font-semibold leading-8">{userData?.name}</label>
                             <div className="flex items-center w-full mb-2 !mt-6 gap-2">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm md:text-base">User ID: {userData?.[userID]}</span>
                                 <CopyIcon data={userData?.[userID]} className="cursor-pointer" size={16} />
@@ -286,7 +286,7 @@ const ContestInfo = forwardRef(
                                     hidden: !top_ranks_team
                                 })}
                             >
-                                {previous && contest_id !== 10 && <div className="leading-6">ID: {userData?.[userID]}</div>}
+                                {/* {previous && contest_id !== 10 && <div className="leading-6">ID: {userData?.[userID]}</div>} */}
                                 {/* <span className="text-gray-15 dark:text-gray-7 mx-2 sm:hidden">•</span> */}
                                 <div className="flex text-txtSecondary dark:text-txtSecondary-dark leading-6 mt-1 mb-2">
                                     {t('nao:contest:team_label')}:&nbsp;

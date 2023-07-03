@@ -53,7 +53,7 @@ const AddMemberModal = ({ onClose, contest_id }) => {
         if (value) {
             await checkMember(value, (data) => {
                 if (data?.name) {
-                    fullname.current = data?.name;
+                    fullname.current = data?.username ?? data?.name;
                     _error.message = !data?.result ? t('nao:contest:invalid_member') : '';
                     _error.error = !data?.result;
                 } else {
@@ -116,7 +116,7 @@ const AddMemberModal = ({ onClose, contest_id }) => {
                 onBlur={onBlur}
                 label={t('nao:contest:id_member')}
                 value={member}
-                prefix={capitalize(fullname.current)}
+                prefix={fullname.current}
                 error={error.error}
                 helperText={error.message}
                 onChange={onHandleChange}

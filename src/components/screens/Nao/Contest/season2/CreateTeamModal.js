@@ -85,7 +85,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                             }
                         }
                     });
-                    fullname.current[name] = data?.name;
+                    fullname.current[name] = data?.username ?? data?.name;
                     if (checkDup(value, name)) {
                         _errors[name]['duplicate'] = true;
                         _errors[name]['error'] = true;

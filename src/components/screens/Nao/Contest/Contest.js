@@ -259,8 +259,8 @@ export const seasons = [
             en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-7'
         },
         weekly_contest_time: {
-            start: '2023-06-04T17:00:00.000Z',
-            end: '2023-07-02T17:00:00.000Z'
+            start: '2023-07-09T17:00:00.000Z',
+            end: '2023-08-06T17:00:00.000Z'
         },
         total_rewards: '600,000,000 VNDC',
         total_weekly_rewards: '50,000,000 VNDC',
