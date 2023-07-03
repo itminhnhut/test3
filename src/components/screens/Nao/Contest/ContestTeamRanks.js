@@ -19,7 +19,6 @@ import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_RANK_GROUP_PNL, API_CONTEST_GET_RANK_GROUP_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
-import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
@@ -28,6 +27,7 @@ import RePagination from 'components/common/ReTable/RePagination';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import useUpdateEffect from 'hooks/useUpdateEffect';
+import classNames from 'classnames';
 
 const ContestTeamRanks = ({
     onShowDetail,
@@ -40,7 +40,8 @@ const ContestTeamRanks = ({
     top_ranks_team,
     showPnl,
     currencies,
-    hasTabCurrency
+    hasTabCurrency,
+    top_ranks_week
 }) => {
     const [tab, setTab] = useState(sort);
     const [quoteAsset, setQuoteAsset] = useState(q);
@@ -170,7 +171,7 @@ const ContestTeamRanks = ({
         );
     };
     return (
-        <section className="contest_individual_ranks py-6 sm:pb-14">
+        <section className={classNames('contest_individual_ranks py-6 sm:pb-14', { 'pt-12 sm:pt-20': top_ranks_week })}>
             {minVolumeTeam && (
                 <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-team-rank">
                     <div

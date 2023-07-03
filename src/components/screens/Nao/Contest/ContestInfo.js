@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef, useMemo } from 'react';
+import React, { useEffect, useState, forwardRef, useMemo, useImperativeHandle } from 'react';
 import { CardNao, TextLiner, ButtonNao, Tooltip, capitalize, TabsNao, TabItemNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
@@ -10,8 +10,9 @@ import { ApiStatus } from 'redux/actions/const';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import classnames from 'classnames';
 import { getWeeksInRange } from './ContestWeekRanks';
-import { useUpdateEffect } from 'react-use';
 import { CopyIcon } from 'components/screens/NewReference/PopupModal';
+import { BxsBellIcon } from 'components/svg/SvgIcon';
+import colors from 'styles/colors';
 
 // this code block is used for mocking data
 
@@ -66,7 +67,8 @@ const FilterTypes = ({ type, setType, types, t, className }) => {
                 <div
                     key={e.id}
                     className={classnames(
-                        ` ${type !== e.id && 'text-txtTextBtn-tonal_dark'
+                        ` ${
+                            type !== e.id && 'text-txtTextBtn-tonal_dark'
                         } flex w-fit items-center justify-center px-4 py-2 text-sm rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap`,
                         {
                             'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
@@ -96,7 +98,8 @@ const ContestInfo = forwardRef(
             hasTabCurrency,
             userID,
             weekly_contest_time,
-            top_ranks_week
+            top_ranks_week,
+            top_ranks_team
         },
         ref
     ) => {
@@ -112,6 +115,10 @@ const ContestInfo = forwardRef(
         const [quoteAsset, setQuoteAsset] = useState(q);
         const [tabIndex, setTabIndex] = useState(0);
         const [isLoading, setIsLoading] = useState(false);
+
+        useImperativeHandle(ref, () => ({
+            onGetInfo: getData
+        }));
 
         const week = useMemo(() => {
             if (top_ranks_week && weekly_contest_time && weekly_contest_time.start && weekly_contest_time.end) {
@@ -225,7 +232,7 @@ const ContestInfo = forwardRef(
                         </Tooltip>
                     )}
                     <div className="md:flex md:justify-between">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between space-x-2">
                             <div className="flex items-center space-x-2">
                                 <TextLiner>{t('nao:contest:personal')}</TextLiner>
                                 {top_ranks_week && (
@@ -234,14 +241,14 @@ const ContestInfo = forwardRef(
                                     </div>
                                 )}
                             </div>
-                            {!userData?.group_name && isValidCreate && (
-                                <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()}>
+                            {!userData?.group_name && isValidCreate && !top_ranks_week && (
+                                <ButtonNao className="hidden sm:flex !h-9" onClick={() => onShowCreate()}>
                                     {t('nao:contest:create_team')}
                                 </ButtonNao>
                             )}
                         </div>
                         {top_ranks_week && (
-                            <div className="mt-6 md:mt-0">
+                            <div className="mt-6 md:mt-0 flex items-center space-x-2">
                                 <FilterTypes
                                     type={tabIndex}
                                     setType={(index) => {
@@ -250,6 +257,11 @@ const ContestInfo = forwardRef(
                                     types={[...FILTER_STRUCTURE]}
                                     t={t}
                                 />
+                                {!userData?.group_name && isValidCreate && (
+                                    <ButtonNao className="hidden !text-sm sm:flex !h-9" onClick={() => onShowCreate()}>
+                                        {t('nao:contest:create_team')}
+                                    </ButtonNao>
+                                )}
                             </div>
                         )}
                     </div>
@@ -270,8 +282,9 @@ const ContestInfo = forwardRef(
                                 <CopyIcon data={userData?.[userID]} className="cursor-pointer" size={16} />
                             </div>
                             <div
-                                className={`${invitations?.invites.length > 0 ? '' : 'hidden'
-                                    } text-txtSecondary dark:text-txtSecondary-dark flex flex-col items-start text-sm md:text-base`}
+                                className={classnames('text-txtSecondary dark:text-txtSecondary-dark flex flex-col items-start text-sm md:text-base', {
+                                    hidden: !top_ranks_team
+                                })}
                             >
                                 {previous && contest_id !== 10 && <div className="leading-6">ID: {userData?.[userID]}</div>}
                                 {/* <span className="text-gray-15 dark:text-gray-7 mx-2 sm:hidden">•</span> */}
@@ -289,10 +302,11 @@ const ContestInfo = forwardRef(
                                         </span>
                                     ) : invitations?.invites && invitations.invites.length !== 0 ? (
                                         <span
-                                            className="text-teal font-semibold cursor-pointer underline"
+                                            className="text-teal font-semibold cursor-pointer flex items-center space-x-2"
                                             onClick={() => invitations && onShowInvitations(invitations.invites)}
                                         >
                                             {t('nao:contest:spending_invitations', { value: invitations.invites.length })}
+                                            <BxsBellIcon color={colors.teal} size={16} />
                                         </span>
                                     ) : (
                                         <span className="">{t('nao:contest:no_invitation')}</span>
@@ -331,8 +345,9 @@ const ContestInfo = forwardRef(
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_pnl')}</label>
                                     <div
-                                        className={`font-semibold text-right ${!!userData?.total_pnl && (userData?.total_pnl < 0 ? 'text-red-2' : 'text-teal')
-                                            }`}
+                                        className={`font-semibold text-right ${
+                                            !!userData?.total_pnl && (userData?.total_pnl < 0 ? 'text-red-2' : 'text-teal')
+                                        }`}
                                     >
                                         {userData?.total_pnl ? formatNumber(userData?.total_pnl, 0, 0, true) + ` ${quoteAsset}` : '-'}
                                     </div>
@@ -380,7 +395,9 @@ const ContestInfo = forwardRef(
                         </CardNao>
                     </div>
                 </section>
-                {showCreateTeamModal && <CreateTeamModal contest_id={contest_id} userData={userData} onClose={onShowCreate} onShowDetail={onShowDetail} />}
+                {showCreateTeamModal && (
+                    <CreateTeamModal contest_id={contest_id} userData={userData} onClose={onShowCreate} onShowDetail={onShowDetail} userID={userID} />
+                )}
                 {!userData?.group_name && isValidCreate && (
                     <div className="sm:hidden bottom-0 left-0 fixed bg-bgPrimary dark:bg-bgPrimary-dark px-4 py-6 z-10 w-full">
                         <ButtonNao onClick={() => onShowCreate()} className="!rounded-md">
