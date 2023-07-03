@@ -63,7 +63,12 @@ const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimu
         data: partners,
         loading: loadingPartners,
         error
-    } = useFetchApi({ url: API_GET_PARTNERS, params: { quantity: +quantity, assetId, side } }, conditionToFetch, [conditionToFetch, quantity, assetId, side, isAutoSuggest], isAutoSuggest);
+    } = useFetchApi(
+        { url: API_GET_PARTNERS, params: { quantity: +quantity, assetId, side } },
+        conditionToFetch,
+        [conditionToFetch, quantity, assetId, side, isAutoSuggest],
+        isAutoSuggest
+    );
 
     return (
         <DropdownCard
@@ -88,7 +93,7 @@ const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimu
                     contentClass: 'overflow-x-auto overflow-y-hidden pb-1'
                 },
                 emptyContent: {
-                    subContent: isAutoSuggest && <span className='text-base'>Đối tác sẽ tự động được lựa chọn</span>
+                    subContent: isAutoSuggest && <span className="text-base">{t('dw_partner:auto_suggestion_des')}</span>
                 },
                 item: (partner) =>
                     selectedPartner && (

@@ -197,7 +197,18 @@
         "system_reject": "Lệnh được cập nhật trạng thái: Từ chối",
         "system_dispute": "Lệnh được cập nhật trạng thái: Tranh chấp"
     },
-    "partner_bonus": "Thưởng đối tác",
-    "partner_bonus_tooltip": "Tùy chọn nhập số thưởng dành cho đối tác xử lý lệnh Nạp Rút, bạn có thể bỏ qua nếu không muốn gửi đi phần thưởng này.",
-    "vnd_amount": "Số VND"
+    "partner_bonus": "Phí giao dịch",
+    "partner_bonus_tooltip": "Phí giao dịch áp dụng khi bán qua đối tác nạp rút, bạn có thể tùy chỉnh phí này để dễ dàng tìm kiếm đối tác và giao dịch nhanh hơn.",
+    "vnd_amount": "Số VND",
+    "auto_suggestion": "Tự động gợi ý",
+    "auto_suggestion_des": "Nami sẽ giúp bạn tìm kiếm đối tác phù hợp nhất",
+    "looking_for_partner_loading": "Đang tìm đối tác...",
+    "auto_suggestion_des_more": "Nami Exchange đang tìm đối tác phù hợp với giao dịch của bạn vui lòng chờ trong giây lát.",
+    "cancel": "Hủy lệnh",
+    "keep_looking_for_partners": "Tiếp tục tìm kiếm đối tác ",
+    "keep_looking_for_partner_des": "Rất tiếc, hiện không có đối tác nào phù hợp cho giao dịch của bạn, bạn có muốn tiếp tục tìm đối tác không?",
+    "transaction_info": "Thông tin giao dịch",
+    "transaction_type": "Loại giao dịch",
+    "alert_suggest_not_found_order": "Không tìm thấy lệnh {{displayingId}} hoặc lệnh đang được xử lý, vui lòng tải lại dữ liệu hoặc liên hệ hỗ trợ.",
+    "alert_suggest_not_found_partner": "Rất tiếc, hiện không có đối tác nào phù hợp cho giao dịch của bạn, vui lòng thử lại."
 }

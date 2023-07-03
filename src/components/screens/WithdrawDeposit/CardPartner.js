@@ -96,11 +96,6 @@ const CardPartner = () => {
                         />
                     </div>
                 )}
-                {/* <div className="flex items-center gap-x-3 mb-6 transition-all">
-                    <span className={isAutoSuggest ? 'font-semibold' : 'txtSecond-4'}>Tự động gợi ý</span>
-                    <SwitchV2 onChange={() => dispatch({ type: SET_AUTO_SUGGEST })} checked={!isAutoSuggest} />
-                    <span className={!isAutoSuggest ? 'font-semibold' : 'txtSecond-4'}>Tuỳ chọn</span>
-                </div> */}
                 <div className={`grid grid-cols-2 mb-6 w-full`}>
                     <button
                         onClick={() => dispatch({ type: SET_AUTO_SUGGEST })}
@@ -108,7 +103,7 @@ const CardPartner = () => {
                             isAutoSuggest ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-r-none'
                         }`}
                     >
-                        Tự động gợi ý
+                        {t('dw_partner:auto_suggestion')}
                     </button>
                     <button
                         onClick={() => dispatch({ type: SET_AUTO_SUGGEST })}
@@ -116,7 +111,7 @@ const CardPartner = () => {
                             !isAutoSuggest ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-l-none'
                         }`}
                     >
-                        Tuỳ chọn
+                        {t('common:custom_2')}
                     </button>
                 </div>
                 <div className="flex-1">

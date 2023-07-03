@@ -88,26 +88,26 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
             >
                 <div id={`suggest_order_${state.displayingId}`} className="flex flex-col items-center w-full">
                     <SystemInfoCircleFilled />
-                    <h1 className="txtPri-3 mt-6 mb-10">Thông tin giao dịch</h1>
+                    <h1 className="txtPri-3 mt-6 mb-10">{t('dw_partner:transaction_info')}</h1>
                 </div>
 
                 <div className="flex flex-col gap-y-3 w-full txtPri-2 !font-semibold">
                     <div className="flex justify-between">
-                        <span className="txtSecond-4">Loại giao dịch</span>
+                        <span className="txtSecond-4">{t('dw_partner:transaction_type')}</span>
                         <span className="text-green-3 dark:text-green-2">{t(`common:${state.side?.toLowerCase()}`)}</span>
                     </div>
                     <div className="flex justify-between">
-                        <span className="txtSecond-4">Số lượng</span>
+                        <span className="txtSecond-4">{t('common:amount')}</span>
                         <span>{`${formatNumber(state.quoteQty, state.baseAssetId === 72 ? 0 : 4)} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`}</span>
                     </div>
                     {state.transferMetadata?.bankName && (
                         <div className="flex justify-between">
-                            <span className="txtSecond-4">Ngân hàng</span>
+                            <span className="txtSecond-4">{t('dw_partner:bank')}</span>
                             <span className="max-w-[280px] truncate">{state.transferMetadata?.bankName}</span>
                         </div>
                     )}
                     <div className="flex justify-between">
-                        <span className="txtSecond-4">Người dùng</span>
+                        <span className="txtSecond-4">{t('dw_partner:user')}</span>
                         <div>
                             <div className="text-right">{state.userMetadata?.name}</div>
                             <div className="text-right txtSecond-3">{state.userMetadata?.code}</div>
@@ -115,7 +115,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                     </div>
                 </div>
                 <ButtonV2 loading={loadingProcessOrder} className="mt-10" onClick={handleAcceptOrder}>
-                    Nhận lệnh
+                    {t('common:accept')}
                 </ButtonV2>
             </ModalV2>
             <AlertModalV2

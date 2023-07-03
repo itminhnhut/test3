@@ -39,7 +39,6 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
     const [isNotFoundPartner, setIsNotFoundPartner] = useState(false);
     const [isLoadingContinue, setIsLoadingContinue] = useState(false);
     const [isErrorContinue, setIsErrorContinue] = useState('');
-    const [isAccepted, setIsAccepted] = useState(false);
 
     const { t } = useTranslation();
 
@@ -89,11 +88,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
     };
 
     const handlePartnerAccept = (orderId) => {
-        setIsAccepted(true);
-        setTimeout(() => {
-            onBackdropCb();
-            router.push(`/withdraw-deposit/partner/details/${orderId}`);
-        }, 1000);
+        onBackdropCb();
+        router.push(`/withdraw-deposit/partner/details/${orderId}`);
     };
 
     const handleContinueFindPartner = async () => {
@@ -116,7 +112,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
 
                 setState((prev) => ({ ...prev, side, countdownTime, timeExpire, displayingId }));
             } else {
-                setIsErrorContinue(status ?? data);
+                setIsErrorContinue(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: data.displayingId }));
             }
         } catch (error) {
         } finally {
@@ -184,8 +180,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                     <source src={`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`} type="video/mp4" />
                 </video>
 
-                <h1 className="txtPri-3 mt-6 mb-4">{isAccepted ? 'Đã tìm được đối tác cho bạn ' : 'Đang tìm đối tác cho bạn...'}</h1>
-                <div className="text-center">Nami Exchange sẽ tìm ra đối tác phù hợp với giao dịch của bạn nhất</div>
+                <h1 className="txtPri-3 mt-6 mb-4">{t('dw_partner:looking_for_partner_loading')}</h1>
+                <div className="text-center">{t('dw_partner:auto_suggestion_des_more')}</div>
                 <div className="p-1 mt-4">
                     <CountdownClock
                         key={state.timeExpire}
@@ -196,19 +192,19 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 </div>
                 <div className={'w-full bg-gray-13 dark:bg-dark-4 rounded-xl mt-6 p-4'}>
                     <div className="flex items-center justify-between">
-                        <span>Loại giao dịch</span>
+                        <span>{t('common:transaction_type')}</span>
                         <span className={`font-semibold ${state.side === SIDE.BUY ? 'text-teal' : 'text-red-2'}`}>
                             {t(`common:${state.side.toLowerCase()}`)}
                         </span>
                     </div>
                     <div className="flex items-center justify-between mt-3">
-                        <span>Số lượng</span>
+                        <span>{t('common:amount')}</span>
                         <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(state.baseQty, state.baseAssetId === 72 ? 0 : 4)} ${
                             state.baseAssetId === 72 ? 'VNDC' : 'USDT'
                         }`}</span>
                     </div>
                     <div className="flex items-center justify-between mt-3">
-                        <span>Phí giao dịch</span>
+                        <span>{t('common:transaction_fee')}</span>
                         <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(fee)} VNĐ`}</span>
                     </div>
                 </div>
@@ -220,7 +216,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                     className="mt-10"
                     variants="secondary"
                 >
-                    Huỷ lệnh
+                    {t('dw_partner:cancel')}
                 </ButtonV2>
             </ModalV2>
 
@@ -235,12 +231,12 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                     }, 200);
                 }}
                 type="warning"
-                title="Tiếp tục tìm kiếm đối tác"
-                message="Hệ thống hiện tại chưa tìm được đối tác phù hợp với giao dịch của bạn."
+                title={t('dw_partner:keep_looking_for_partners')}
+                message={t('dw_partner:keep_looking_for_partner_des')}
                 isButton={true}
                 customButton={
                     <ButtonV2 loading={isLoadingContinue} onClick={handleContinueFindPartner}>
-                        Tiếp tục
+                        {t('common:continue')}
                     </ButtonV2>
                 }
             >
@@ -297,20 +293,20 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                         >
                             <div className="txtSecond-4">
                                 <div className="flex items-center justify-between">
-                                    <span>Loại giao dịch</span>
+                                    <span>{t('dw_partner:transaction_type')}</span>
                                     <span className={`font-semibold ${state.side === SIDE.BUY ? 'text-teal' : 'text-red-2'}`}>
                                         {t(`common:${state.side.toLowerCase()}`)}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between mt-3">
-                                    <span>Số lượng</span>
+                                    <span>{t('common:amount')}</span>
                                     <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(
                                         state.baseQty,
                                         state.baseAssetId === 72 ? 0 : 4
                                     )} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`}</span>
                                 </div>
                                 <div className="flex items-center justify-between mt-3">
-                                    <span>Phí giao dịch</span>
+                                    <span>{t('common:transaction_fee')}</span>
                                     <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(fee)} VND`}</span>
                                 </div>
                             </div>
@@ -330,8 +326,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                     }, 200);
                 }}
                 type="error"
-                title={isErrorContinue}
-                message="Hệ thống hiện tại không thể tìm được đối tác phù hợp với bạn. Vui lòng thử lại sau ít phút."
+                title={'common:error'}
+                message={isErrorContinue}
             />
 
             <ModalLoading isVisible={isAwaitSocketNotFoundPartner} onBackdropCb={() => setIsAwaitSocketNotFoundPartner(false)} />
