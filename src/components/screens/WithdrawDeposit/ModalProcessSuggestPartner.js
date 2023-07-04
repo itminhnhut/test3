@@ -106,7 +106,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 }
             });
 
-            console.log(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: data?.displayingId }));
+            console.log(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: state?.displayingId }));
 
             if (status === ApiStatus.SUCCESS && data) {
                 const { side, countdownTime, timeExpire, displayingId } = data;
@@ -114,7 +114,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
 
                 setState((prev) => ({ ...prev, side, countdownTime, timeExpire, displayingId }));
             } else {
-                setIsErrorContinue(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: data?.displayingId }));
+                setIsErrorContinue(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: state?.displayingId }));
             }
         } catch (error) {
             console.log('________error catch: ', error);
@@ -132,7 +132,6 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
         error
     } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
-    console.log("_______rate: ", rate);
     const [tipValidator, setTipValidator] = useState({ isValid: true, msg: '', isError: false });
 
     const validateTip = (tipAmount) => {
@@ -151,7 +150,6 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
 
         // const maxTip = state.amount * rate - 50000;
         const maxTip = state.baseQty * rate;
-        console.log('________maxTip: ', state.baseQty, rate, maxTip);
         if (side === 'SELL' && +tipAmount > maxTip) {
             isValid = false;
             msg = t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' });
@@ -181,7 +179,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 className="!max-w-[488px]"
                 wrapClassName="p-8 flex flex-col items-center txtSecond-4 "
             >
-                <video class="pointer-events-none" width="124" height="124" loop muted autoPlay preload="none" playsInline>
+                <video className="pointer-events-none" width="124" height="124" loop muted autoPlay preload="none" playsInline>
                     {/* <source src={`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`} type="video/mp4" /> */}
                     <source src={getS3Url(`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`)} type="video/mp4" />
                 </video>
@@ -229,8 +227,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
             </ModalV2>
 
             <AlertModalV2
-                // isVisible={isNotFoundPartner}
-                isVisible={!!showProcessSuggestPartner}
+                isVisible={isNotFoundPartner}
+                // isVisible={!!showProcessSuggestPartner}
                 onClose={() => {
                     setIsNotFoundPartner(false);
                     setTimeout(() => {
@@ -249,6 +247,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
             >
                 {state.side === SIDE.SELL && (
                     <div className="w-full mt-6">
+                        <Tooltip place={'right'} className={`max-w-[360px] !w-auto !px-6 !py-3 !mr-4`} effect="solid" isV3 id="partner_bonus_tooltip" />
                         <TradingInputV2
                             id="TradingInputV2"
                             label={
@@ -319,21 +318,6 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                                 )}
                             </div>
                         </CollapseV2>
-                        <Tooltip
-                            // overridePosition={(e) => {
-                            //     if (e?.left < 0)
-                            //         return {
-                            //             left: e.left < 16 ? 16 : e.left,
-                            //             top: e.top
-                            //         };
-                            //     return e;
-                            // }}
-                            place={'right'}
-                            className={`max-w-[360px] !w-auto !px-6 !py-3 !mr-4`}
-                            effect="solid"
-                            isV3
-                            id="partner_bonus_tooltip"
-                        />
                     </div>
                 )}
             </AlertModalV2>

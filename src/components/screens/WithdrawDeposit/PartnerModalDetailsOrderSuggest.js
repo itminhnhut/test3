@@ -7,7 +7,7 @@ import { ApiStatus } from 'redux/actions/const';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { useRouter } from 'next/router';
 import FetchApi from 'utils/fetch-api';
-import { PROCESS_AUTO_SUGGEST } from 'redux/reducers/withdrawDeposit';
+import { PROCESS_AUTO_SUGGEST, SIDE } from 'redux/reducers/withdrawDeposit';
 import { API_GET_ORDER_DETAILS, API_PROCESS_AUTO_SUGGEST_ORDER } from 'redux/actions/apis';
 import { formatNumber } from 'utils/reference-utils';
 import { isString } from 'lodash';
@@ -99,7 +99,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                 <div className="flex flex-col gap-y-3 w-full txtPri-2 !font-semibold">
                     <div className="flex justify-between">
                         <span className="txtSecond-4">{t('dw_partner:transaction_type')}</span>
-                        <span className="text-green-3 dark:text-green-2">{t(`common:${state.side?.toLowerCase()}`)}</span>
+                        <span className={state.side === SIDE.BUY ? 'text-green-3 dark:text-green-2' : 'text-red'}>{t(`common:${state.side?.toLowerCase()}`)}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="txtSecond-4">{t('common:amount')}</span>
