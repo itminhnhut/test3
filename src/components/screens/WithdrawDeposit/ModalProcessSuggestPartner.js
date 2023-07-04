@@ -227,8 +227,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
             </ModalV2>
 
             <AlertModalV2
-                // isVisible={isNotFoundPartner}
-                isVisible={!!showProcessSuggestPartner}
+                isVisible={isNotFoundPartner}
+                // isVisible={!!showProcessSuggestPartner}
                 onClose={() => {
                     setIsNotFoundPartner(false);
                     setTimeout(() => {
