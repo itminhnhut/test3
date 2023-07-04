@@ -448,7 +448,7 @@ const CryptoDeposit = ({ assetId }) => {
         }
         return (
             <div className={'flex items-center justify-between rounded-xl'}>
-                <div className="cursor-text break-all">{state.address.addressTag}</div>
+                <div className="font-medium cursor-text break-all">{state.address.addressTag}</div>
                 <CopyToClipboard text={state.address.addressTag} onCopy={() => !state.isCopying?.memo && onCopy('memo')}>
                     <span
                         className={
@@ -864,8 +864,8 @@ const CryptoDeposit = ({ assetId }) => {
                             {renderAddressInput()}
                         </div>
                         {state.address?.addressTag && state.selectedNetwork?.memoRegex && (
-                            <div className="relative bg-darkBlue-3 rounded-xl p-4 cursor-pointer">
-                                <p className="mb-2 dark:text-txtSecondary-dark">Memo</p>
+                            <div className="relative bg-gray-13 dark:bg-darkBlue-3 rounded-xl p-4 cursor-pointer">
+                                <p className="mb-2 text-txtSecondary dark:text-txtSecondary-dark">Memo</p>
                                 {renderMemoInput()}
                             </div>
                         )}

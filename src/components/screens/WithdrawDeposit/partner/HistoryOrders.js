@@ -307,7 +307,7 @@ const HistoryOrders = () => {
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 loading={state.loading}
-                onRowClick={(transaction) => router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + transaction.displayingId)}
+                onRowClick={(transaction) => router.push(PATHS.PARTNER_WITHDRAW_DEPOSIT.DETAILS + '/' + transaction.displayingId)}
                 height={600}
                 className="bg-white dark:bg-transparent rounded-lg"
                 tableStyle={{

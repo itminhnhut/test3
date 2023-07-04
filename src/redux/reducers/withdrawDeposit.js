@@ -7,10 +7,16 @@ export const MODAL_TYPE = {
     CONFIRM: 'confirm',
     AFTER_CONFIRM: 'afterConfirm'
 };
+
 export const SIDE = {
     BUY: 'BUY',
     SELL: 'SELL'
 };
+
+export const PROCESS_AUTO_SUGGEST = {
+    ACCEPTED: 1,
+    REJECTED: 2
+}
 
 const INITIAL_MODAL_STATE = {
     [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
@@ -25,13 +31,18 @@ export const initialState = {
     loadingPartner: false,
     minimumAllowed: 0,
     maximumAllowed: 0,
-    modal: INITIAL_MODAL_STATE
+    modal: INITIAL_MODAL_STATE,
+    isCanSubmitOrder: false,
+    isAutoSuggest: true,
+    fee: ''
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
         case types.SET_WITHDRAW_DEPOSIT_AMOUNT:
             return { ...state, input: action.payload };
+        case types.SET_WITHDRAW_DEPOSIT_FEE:
+            return { ...state, fee: action.payload };
         case types.SET_ALLOWED_AMOUNT:
             return { ...state, minimumAllowed: action.payload.min, maximumAllowed: action.payload.max };
         case types.SET_LOADING_PARTNER:
@@ -64,11 +75,17 @@ export default (state = initialState, action) => {
                     }
                 }
             };
-        case types.RESET_PARTNER_MODAL:
+        case types.SET_ALLOWED_SUBMIT_ORDER:
             return {
                 ...state,
-                modal: INITIAL_MODAL_STATE
+                isCanSubmitOrder: !action.payload
             };
+        case types.SET_AUTO_SUGGEST:
+            return {
+                ...state,
+                isAutoSuggest: !state.isAutoSuggest,
+                partner: null
+            }
         default:
             return state;
     }
