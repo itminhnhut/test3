@@ -219,7 +219,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                         handleCancelOrderSuggest();
                         onBackdropCb();
                     }}
-                    className="mt-10"
+                    className="mt-10 !bg-gray-12 dark:!bg-dark-2"
                     variants="secondary"
                 >
                     {t('dw_partner:cancel')}

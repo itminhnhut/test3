@@ -137,7 +137,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                         onBackdropCb();
                     }, 200);
                 }}
-                type="error"
+                type="warning"
                 title={t('common:failure')}
                 message={isFailAccept}
                 isButton={false}

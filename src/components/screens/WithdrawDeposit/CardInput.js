@@ -209,9 +209,10 @@ const CardInput = () => {
 
     useEffect(() => {
         let isCanSubmitOrder = true;
+        console.log("_______tipValidator: ", tipValidator);
 
         isCanSubmitOrder =
-            tipValidator.isError ||
+            !tipValidator?.isValid ||
             // !partner ||
             // loadingPartner ||
             validator?.isError ||
@@ -222,7 +223,7 @@ const CardInput = () => {
             type: SET_ALLOWED_SUBMIT_ORDER,
             payload: isCanSubmitOrder
         });
-    }, [tipValidator, validator, side, state.amount, availableAsset, limitWithdraw, rate, accountBank]);
+    }, [tipValidator, validator, side, state.amount, fee, availableAsset, limitWithdraw, rate, accountBank]);
 
     return (
         <>
