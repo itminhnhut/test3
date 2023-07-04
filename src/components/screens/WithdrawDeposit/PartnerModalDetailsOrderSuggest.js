@@ -100,7 +100,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                         <span className="txtSecond-4">{t('common:amount')}</span>
                         <span>{`${formatNumber(state.quoteQty, state.baseAssetId === 72 ? 0 : 4)} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`}</span>
                     </div>
-                    {state.fee && (
+                    {state.fee > 0 && (
                         <div className="flex justify-between">
                             <span className="txtSecond-4">{t('common:transaction_fee')}</span>
                             <span>{`${formatNumber(state.fee)} VND`}</span>

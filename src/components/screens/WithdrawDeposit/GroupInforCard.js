@@ -18,9 +18,9 @@ import { isBoolean } from 'lodash';
 const RENDER_INFORMATION = [
     {
         key: 'phone',
-        icon: <ContactIcon color="currentColor" size={16} />,
+        icon: <ContactIcon color="currentColor" size={16} className="rotate-90" />,
         mode: [MODE.PARTNER, MODE.USER],
-        render: ({ data }) => (data ? formatPhoneNumber(data) : null)
+        render: ({ data }) => (data ? <TextCopyable className="gap-x-1 text-right" text={data} showingText={formatPhoneNumber(data)} /> : null)
     },
     {
         key: 'code',
@@ -115,7 +115,9 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                         ) : (
                                             <>
                                                 <span>{orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase()}</span>
-                                                {isBoolean(orderDetail?.userIsPartner) && <DWRelationIcon userIsPartner={mode === MODE.USER || orderDetail?.userIsPartner} />}
+                                                {isBoolean(orderDetail?.userIsPartner) && (
+                                                    <DWRelationIcon userIsPartner={mode === MODE.USER || orderDetail?.userIsPartner} />
+                                                )}
                                             </>
                                         )}
                                     </div>
@@ -164,14 +166,13 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                         {DETAIL_PAYMENT_INFORMATION.map((detail) => {
                                             let fullContent;
                                             if (orderDetail?.fee && detail.copyText === 'quoteQty') {
-                                                fullContent =
-                                                    side === SIDE.SELL ? orderDetail?.userQtyIn : orderDetail?.quoteQty
-                                                        // ? mode === MODE.USER
-                                                        //     ? orderDetail?.userQtyIn
-                                                        //     : orderDetail?.partnerOut
-                                                        // : mode === MODE.USER
-                                                        // ? orderDetail?.userQtyOut
-                                                        // : orderDetail?.partnerIn;
+                                                fullContent = side === SIDE.SELL ? orderDetail?.userQtyIn : orderDetail?.quoteQty;
+                                                // ? mode === MODE.USER
+                                                //     ? orderDetail?.userQtyIn
+                                                //     : orderDetail?.partnerOut
+                                                // : mode === MODE.USER
+                                                // ? orderDetail?.userQtyOut
+                                                // : orderDetail?.partnerIn;
                                             } else {
                                                 fullContent = get(orderDetail, detail.copyText);
                                             }

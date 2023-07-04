@@ -924,8 +924,8 @@ const CalendarFillIcon = ({ size = 24, color = 'currentColor', className = '' })
     </svg>
 );
 
-const ContactIcon = ({ size = 24, color = 'currentColor' }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+const ContactIcon = ({ size = 24, color = 'currentColor' , className}) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
         <g clipPath="url(#2ocmtc1tna)">
             <path
                 d="M10.307 2 9.9 5.513l1.68 1.68a10.03 10.03 0 0 1-4.393 4.394L5.5 9.9l-3.5.407v3.673C8.787 14.367 14.367 8.787 13.98 2h-3.673z"
