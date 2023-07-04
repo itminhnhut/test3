@@ -12,23 +12,12 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import { find, get, isNumber, isString } from 'lodash';
 import classNames from 'classnames';
 import { TRANSACTION_TYPES, modalDetailColumn, COLUMNS_TYPE } from './constant';
-import { WalletType, EarnWalletType } from 'redux/actions/const';
+import { WalletTypeById } from 'redux/actions/const';
 import { ArrowCompareIcon } from '../../svg/SvgIcon';
 import { customFormatBalance } from '.';
 
 const NULL_ASSET = '--';
-export const WalletTypeById = {
-    0: WalletType.SPOT,
-    1: WalletType.MARGIN,
-    2: WalletType.FUTURES,
-    3: WalletType.P2P,
-    4: WalletType.POOL,
-    5: WalletType.EARN,
-    6: EarnWalletType.STAKE,
-    7: EarnWalletType.FARM,
-    8: WalletType.BROKER,
-    9: WalletType.NAO_FUTURES
-};
+
 const renderWallet = ({ t, key, language }) => {
     const wallet = {
         [WalletType.SPOT]: t('common:wallet', { wallet: 'Nami Spot' }),
