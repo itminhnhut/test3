@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PartnerOrderLog, PartnerOrderStatus, PartnerOrderStatusLog } from 'redux/actions/const';
 import { formatTime } from 'redux/actions/utils';
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { useTranslation } from 'next-i18next';
 import { BxsImage } from 'components/svg/SvgIcon';
 import { TYPES } from 'components/common/V2/TagV2';
+import toast from 'utils/toast';
 
 const Row = styled.div.attrs({
     className: 'relative'
@@ -43,18 +44,33 @@ const Dot = styled.div.attrs({
 })``;
 
 const Line = styled.div.attrs({ className: 'line text-divider dark:text-divider-dark' })``;
+
 const DetailLog = ({ orderDetail, onShowProof, mode }) => {
     const { t } = useTranslation();
     const logs = orderDetail?.logMetadata || [];
     const side = orderDetail?.side || '';
     const lastIndexUploadType = logs.map((log) => log.type).lastIndexOf(PartnerOrderLog.UPLOADED);
 
-    if(logs && logs.length > 0) {
+    if (logs && logs.length > 0) {
         const isHaveLogOrderCompleted = logs.find((log) => log.type === PartnerOrderLog.SYSTEM_UPDATE_SUCCESS);
         if (!isHaveLogOrderCompleted) {
-            if (orderDetail?.status === PartnerOrderStatus.SUCCESS) logs.push({ type: PartnerOrderLog.SYSTEM_UPDATE_SUCCESS, time: logs[logs.length - 1].time });
+            if (orderDetail?.status === PartnerOrderStatus.SUCCESS)
+                logs.push({ type: PartnerOrderLog.SYSTEM_UPDATE_SUCCESS, time: logs[logs.length - 1].time });
         }
     }
+
+    useEffect(() => {
+        if (orderDetail?.type === 'auto-accepted' && logs.length === 2) {
+            toast({
+                text: t('dw_partner:toast_user_place_suggest_order_success', {
+                    side: t(`common:${orderDetail.side.toLowerCase().trim()}`),
+                    orderId: orderDetail?.displayingId
+                }),
+                // text: `Bạn đã đặt thành công lệnh ${t(`common:${orderDetail.side.toLowerCase()}`)} ${data?.displayingId}`,
+                key: `suggest_order_success_${orderDetail?.displayingId}`
+            });
+        }
+    }, [orderDetail]);
 
     return logs && logs.length ? (
         <div className="space-y-6">

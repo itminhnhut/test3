@@ -66,6 +66,14 @@ const useMakeOrder = ({ setState, input }) => {
             [ApiResultCreateOrder.SOTP_INVALID_EXCEED_TIME]: () => {
                 setState({ showAlertDisableSmartOtp: true });
                 return true;
+            },
+            [ApiResultCreateOrder.NOT_FOUND_AUTO_PARTNER]: () => {
+                toast({ text: t('dw_partner:error.not_found_auto_partner'), type: 'warning' });
+                return true;
+            },
+            [ApiResultCreateOrder.INVALID_MAX_FEE]: () => {
+                toast({ text: t('dw_partner:error.invalid_max_fee'), type: 'warning' });
+                return true;
             }
         };
 
@@ -94,7 +102,7 @@ const useMakeOrder = ({ setState, input }) => {
                 } else {
                     if (orderResponse?.data?.remaining_time) {
                         setState({ showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time, isUseSmartOtp: false });
-                    } else if(isAutoSuggest) {
+                    } else if (isAutoSuggest) {
                         setState({ showProcessSuggestPartner: orderResponse.data });
                     } else {
                         onMakeOrderSuccess(orderResponse.data);

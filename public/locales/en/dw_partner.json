@@ -172,7 +172,9 @@
         "invalid_amount": "Invalid amount",
         "order_has_been_canceled": "User canceled the transaction",
         "order_has_expired": "Transaction confirmation timeout",
-        "order_has_been_accepted_by_another_partner": "The transaction has been processed by another partner"
+        "order_has_been_accepted_by_another_partner": "The transaction has been processed by another partner",
+        "not_found_auto_partner": "Oops, it seems no partners match your transaction at the moment, please try again.",
+        "invalid_max_fee": "The transaction fee cannot exceed the amount you want to sell."
     },
     "filter": {
         "a_day": "1 day",
@@ -214,5 +216,6 @@
     "transaction_type": "Transaction type",
     "alert_suggest_not_found_order": "Order {{displayingId}} not found or being processed, please reload or contact support.",
     "alert_suggest_not_found_partner": "Oops, it seems no partners match your transaction at the moment, please try again.",
-    "toast_user_place_suggest_order_success": "{{side}} order {{orderId}} successfully placed."
+    "toast_user_place_suggest_order_success": "{{side}} order {{orderId}} successfully placed.",
+    "alert_suggest_invalid_max_fee": "The transaction fee cannot exceed the amount you want to sell."
 }

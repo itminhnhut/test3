@@ -25,7 +25,6 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
             onBackdropCb();
             router.push(`/partner-dw/details/${state.displayingId}`);
         } else {
-            console.log('______status: ', status);
             setIsFailAccept(t(`dw_partner:error.${status.toLowerCase().trim()}`));
         }
     };
@@ -68,7 +67,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                 if (status === ApiStatus.SUCCESS) {
                     setState(data);
                 } else {
-                    setIsFailAccept(status);
+                    setIsFailAccept(t(`dw_partner:error.${status.toLowerCase().trim()}`));
                 }
             });
         else {
@@ -89,7 +88,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
             >
                 <div id={`suggest_order_${state.displayingId}`} className="flex flex-col items-center w-full">
                     <SystemInfoCircleFilled />
-                    <h1 className="txtPri-3 mt-6 mb-10">{t('dw_partner:transaction_info')}</h1>
+                    <h1 className="txtPri-3 mt-6 mb-10 capitalize">{t('dw_partner:transaction_info')}</h1>
                 </div>
 
                 <div className="flex flex-col gap-y-3 w-full txtPri-2 !font-semibold">
@@ -101,6 +100,12 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                         <span className="txtSecond-4">{t('common:amount')}</span>
                         <span>{`${formatNumber(state.quoteQty, state.baseAssetId === 72 ? 0 : 4)} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`}</span>
                     </div>
+                    {state.fee && (
+                        <div className="flex justify-between">
+                            <span className="txtSecond-4">{t('common:transaction_fee')}</span>
+                            <span>{`${formatNumber(state.fee)} VND`}</span>
+                        </div>
+                    )}
                     {state.transferMetadata?.bankName && (
                         <div className="flex justify-between">
                             <span className="txtSecond-4">{t('dw_partner:bank')}</span>

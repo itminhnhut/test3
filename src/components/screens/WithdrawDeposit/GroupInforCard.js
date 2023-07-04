@@ -163,15 +163,15 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                     <div className="flex flex-col gap-y-4">
                                         {DETAIL_PAYMENT_INFORMATION.map((detail) => {
                                             let fullContent;
-                                            if (orderDetail?.tip && detail.copyText === 'quoteQty') {
+                                            if (orderDetail?.fee && detail.copyText === 'quoteQty') {
                                                 fullContent =
-                                                    side === SIDE.SELL
-                                                        ? mode === MODE.USER
-                                                            ? orderDetail?.userQtyIn
-                                                            : orderDetail?.partnerOut
-                                                        : mode === MODE.USER
-                                                        ? orderDetail?.userQtyOut
-                                                        : orderDetail?.partnerIn;
+                                                    side === SIDE.SELL ? orderDetail?.userQtyIn : orderDetail?.quoteQty
+                                                        // ? mode === MODE.USER
+                                                        //     ? orderDetail?.userQtyIn
+                                                        //     : orderDetail?.partnerOut
+                                                        // : mode === MODE.USER
+                                                        // ? orderDetail?.userQtyOut
+                                                        // : orderDetail?.partnerIn;
                                             } else {
                                                 fullContent = get(orderDetail, detail.copyText);
                                             }

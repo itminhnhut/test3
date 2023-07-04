@@ -49,7 +49,7 @@ const CardInput = () => {
     useEffect(() => {
         if (minimumAllowed) {
             setState({ amount: minimumAllowed });
-            dispatch(setFee(MIN_TIP));
+            if (side === SIDE.SELL) dispatch(setFee(MIN_TIP));
         }
     }, [minimumAllowed]);
 
@@ -443,7 +443,7 @@ const CardInput = () => {
                             <div className="">VND</div>
                         </div>
                     </div>
-                    {fee && (
+                    {fee && side === SIDE.SELL && (
                         <div className="flex items-center justify-between ">
                             <div className="txtSecond-2">{t(`dw_partner:partner_bonus`)}</div>
                             <div data-tip="" className="inline-flex txtPri-1 space-x-1 !cursor-default">

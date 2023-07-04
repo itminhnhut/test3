@@ -10,7 +10,7 @@ import { setTheme } from 'redux/actions/user';
 import dynamic from 'next/dynamic';
 import { isMobile } from 'react-device-detect';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import Skeletor from '../Skeletor';
 import Head from 'next/head';
@@ -20,6 +20,7 @@ import { UserSocketEvent } from 'redux/actions/const';
 import { useRouter } from 'next/router';
 import { formatNumber } from 'utils/reference-utils';
 import { PARTNER_WD_TABS, PATHS } from 'constants/paths';
+import { getNotifications } from 'redux/actions/notification';
 
 const NavBar = dynamic(() => import('src/components/common/NavBar/NavBar'), {
     ssr: false,
@@ -64,6 +65,7 @@ const MadivesLayout = ({
     const isPartner = user?.partner_type === 2;
     const isApp = useApp();
     const store = useStore();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         store.dispatch(setTheme());
@@ -71,7 +73,8 @@ const MadivesLayout = ({
 
     const router = useRouter();
 
-    const { t } = useTranslation();
+    const { t, i18n} = useTranslation();
+
     const userSocket = useSelector((state) => state.socket.userSocket);
     useEffect(() => {
         if (user?.partner_type !== 2) return;
@@ -84,6 +87,8 @@ const MadivesLayout = ({
                 const { displayingId, quoteQty, baseAssetId, userMetadata, side } = data;
 
                 if (router?.query?.id === PARTNER_WD_TABS.OPEN_ORDER) return;
+
+                dispatch(getNotifications({ lang: i18n.language }));
                 toast({
                     key: `suggest_order_${displayingId}`,
                     text: t('common:partner_toast_suggest_order', {
@@ -116,7 +121,7 @@ const MadivesLayout = ({
                 });
             }
         };
-    }, [userSocket, router]);
+    }, [userSocket, i18n]);
 
     return (
         <>

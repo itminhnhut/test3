@@ -49,7 +49,6 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                 // make sure the socket displayingId is the current details/[id] page
                 if (!data) return;
-                console.log('_________Socket user: ', data, showProcessSuggestPartner);
 
                 // lệnh bị timeout / tất cả partner từ chối:
                 if (data?.status === 2 && data?.displayingId === showProcessSuggestPartner?.displayingId) return forceUpdateState();
@@ -203,10 +202,12 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                             state.baseAssetId === 72 ? 'VNDC' : 'USDT'
                         }`}</span>
                     </div>
-                    <div className="flex items-center justify-between mt-3">
-                        <span>{t('common:transaction_fee')}</span>
-                        <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(fee)} VNĐ`}</span>
-                    </div>
+                    {state.side === SIDE.SELL && (
+                        <div className="flex items-center justify-between mt-3">
+                            <span>{t('common:transaction_fee')}</span>
+                            <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(fee)} VND`}</span>
+                        </div>
+                    )}
                 </div>
                 <ButtonV2
                     onClick={() => {
@@ -287,7 +288,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                             key={`collapse_${state.displayingId}`}
                             // divLabelClassname="w-full justify-between"
                             chrevronStyled={{ size: 20 }}
-                            label="Tuỳ chỉnh nâng cao"
+                            label={t('dw_partner:transaction_info')}
                             labelClassname="!text-base font-semibold"
                             // setIsOpen={setIsCollapse}
                         >
@@ -305,10 +306,12 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                                         state.baseAssetId === 72 ? 0 : 4
                                     )} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`}</span>
                                 </div>
-                                <div className="flex items-center justify-between mt-3">
-                                    <span>{t('common:transaction_fee')}</span>
-                                    <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(fee)} VND`}</span>
-                                </div>
+                                {state.side && (
+                                    <div className="flex items-center justify-between mt-3">
+                                        <span>{t('common:transaction_fee')}</span>
+                                        <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(fee)} VND`}</span>
+                                    </div>
+                                )}
                             </div>
                         </CollapseV2>
                     </div>
