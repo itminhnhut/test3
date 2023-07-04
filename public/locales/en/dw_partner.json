@@ -204,7 +204,7 @@
     },
     "partner_bonus": "Transaction Fee",
     "partner_bonus_tooltip": "Transaction fee applies when selling through deposit and withdrawal partners, you can customize this fee to easily find partners and trade faster.",
-    "vnd_amount": "VND Amount",
+    "vnd_amount": "VND amount",
     "auto_suggestion": "Automatic suggestion",
     "auto_suggestion_des": "Nami will help you find the most suitable partner",
     "looking_for_partner_loading": "Looking for a partner...",
@@ -215,7 +215,7 @@
     "transaction_info": "Transaction info",
     "transaction_type": "Transaction type",
     "alert_suggest_not_found_order": "Order {{displayingId}} not found or being processed, please reload or contact support.",
-    "alert_suggest_not_found_partner": "Oops, it seems no partners match your transaction at the moment, please try again.",
+    "alert_suggest_not_found_auto_partner": "Oops, it seems no partners match your transaction at the moment, please try again.",
     "toast_user_place_suggest_order_success": "{{side}} order {{orderId}} successfully placed.",
     "alert_suggest_invalid_max_fee": "The transaction fee cannot exceed the amount you want to sell."
 }

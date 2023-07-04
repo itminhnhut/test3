@@ -445,7 +445,7 @@ const CardInput = () => {
                     </div>
                     {fee && side === SIDE.SELL && (
                         <div className="flex items-center justify-between ">
-                            <div className="txtSecond-2">{t(`dw_partner:partner_bonus`)}</div>
+                            <div className="txtSecond-2">{t(`common:transaction_fee`)}</div>
                             <div data-tip="" className="inline-flex txtPri-1 space-x-1 !cursor-default">
                                 {formatNanNumber(fee)} VND
                             </div>

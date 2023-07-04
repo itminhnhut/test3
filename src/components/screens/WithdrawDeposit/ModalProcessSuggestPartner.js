@@ -17,7 +17,7 @@ import { formatNumber } from 'utils/reference-utils';
 import TradingInputV2 from 'components/trade/TradingInputV2';
 import useFetchApi from 'hooks/useFetchApi';
 import TabV2 from 'components/common/V2/TabV2';
-import { formatNanNumber } from 'redux/actions/utils';
+import { formatNanNumber, getS3Url } from 'redux/actions/utils';
 import { setFee } from 'redux/actions/withdrawDeposit';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import Card from './components/common/Card';
@@ -105,15 +105,18 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 }
             });
 
+            console.log(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: data?.displayingId }));
+
             if (status === ApiStatus.SUCCESS && data) {
                 const { side, countdownTime, timeExpire, displayingId } = data;
                 setIsNotFoundPartner(false);
 
                 setState((prev) => ({ ...prev, side, countdownTime, timeExpire, displayingId }));
             } else {
-                setIsErrorContinue(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: data.displayingId }));
+                setIsErrorContinue(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: data?.displayingId }));
             }
         } catch (error) {
+            console.log('________error catch: ', error);
         } finally {
             setIsLoadingContinue(false);
         }
@@ -176,7 +179,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 wrapClassName="p-8 flex flex-col items-center txtSecond-4 "
             >
                 <video class="pointer-events-none" width="124" height="124" loop muted autoPlay preload="none" playsInline>
-                    <source src={`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`} type="video/mp4" />
+                    {/* <source src={`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`} type="video/mp4" /> */}
+                    <source src={getS3Url(`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`)} type="video/mp4" />
                 </video>
 
                 <h1 className="txtPri-3 mt-6 mb-4">{t('dw_partner:looking_for_partner_loading')}</h1>
@@ -329,7 +333,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                     }, 200);
                 }}
                 type="error"
-                title={'common:error'}
+                title={t('common:error')}
                 message={isErrorContinue}
             />
 
