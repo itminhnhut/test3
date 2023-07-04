@@ -197,7 +197,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 <div className={'w-full bg-gray-13 dark:bg-dark-4 rounded-xl mt-6 p-4'}>
                     <div className="flex items-center justify-between">
                         <span>{t('common:transaction_type')}</span>
-                        <span className={`font-semibold ${state.side === SIDE.BUY ? 'text-teal' : 'text-red-2'}`}>
+                        <span className={`font-semibold ${state.side === SIDE.BUY ? 'text-green-3 dark:text-green-2' : 'text-red-2'}`}>
                             {t(`common:${state.side.toLowerCase()}`)}
                         </span>
                     </div>
