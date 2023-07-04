@@ -89,16 +89,16 @@ export const NAV_DATA = [
                 hide: true,
                 url: '/reference',
                 child_lv2: []
+            },
+            {
+                key: 4,
+                title: 'Nami Insurance',
+                localized: 'nami_insurance',
+                isNew: false,
+                notSameOrigin: true,
+                url: 'https://namiinsurance.io/',
+                child_lv2: []
             }
-            // {
-            //     key: 4,
-            //     title: 'Nami Insurance',
-            //     localized: 'nami_insurance',
-            //     isNew: false,
-            //     notSameOrigin: true,
-            //     url: 'https://namiinsurance.io/',
-            //     child_lv2: []
-            // }
         ]
     },
     {

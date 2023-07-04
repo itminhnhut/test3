@@ -53,7 +53,7 @@ export const getSocialImage = (socialType) => {
     return <Icon />;
 };
 
-const SocialsLink = ({ language }) => {
+const SocialsLink = ({ language = 'en' }) => {
     return (
         <div className="flex flex-wrap gap-4 socials_link">
             {SOCIALS_HREF[language].map((social) => {

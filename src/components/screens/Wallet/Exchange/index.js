@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { dwLinkBuilder, formatNumber as formatWallet, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
-import { MoreHorizIcon } from 'components/svg/SvgIcon';
+import { BxChevronDown, FutureInsurance, MoreHorizIcon } from 'components/svg/SvgIcon';
 
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils';
@@ -545,13 +545,21 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
             </div> */}
 
             {/* Khi nao co Function Chuyen so du nho thanh Nami thi enable code nay */}
-            <div className="mt-12 md:mt-16 lg:items-center lg:justify-between">
+            <div className="mt-4 md:mt-16 lg:items-center lg:justify-between">
                 <div className="t-common-v2 hidden md:block">
                     {language === LANGUAGE_TAG.VI ? 'Ví' : ''} {t('wallet:spot_short')}
                 </div>
-                <div className="flex items-end justify-between md:pt-8">
-                    <TransferSmallBalanceToNami className="hidden md:flex" width={width} allAssets={allAssets} />
-
+                <div className="flex items-end justify-between md:pt-8 w-full md:w-fit flex-wrap">
+                    <div className="flex items-center mb-12 md:mb-0">
+                        <TransferSmallBalanceToNami className="hidden md:flex mr-4" width={width} allAssets={allAssets} />
+                        <ButtonV2 variants="secondary" className="w-fit px-4 py-3" onClick={() => window?.open('https://namiinsurance.io/', '_ blank')}>
+                            <span className="mr-3">
+                                <FutureInsurance size={24} />
+                            </span>
+                            <span className="font-normal !mr-4">Buy insurances</span>
+                            <BxChevronDown size={24} />
+                        </ButtonV2>
+                    </div>
                     {isSmallScreen ? (
                         <div className="w-full flex items-center justify-between">
                             <SearchBoxV2
