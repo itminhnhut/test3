@@ -75,12 +75,17 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
         }
     }, [showProcessSuggestPartner]);
 
+    const handleCloseModal = () => {
+        handleProcessOrder(PROCESS_AUTO_SUGGEST.REJECTED);
+        onBackdropCb();
+    };
+
     return (
         <>
             <ModalV2
                 loading={loadingProcessOrder}
                 isVisible={showProcessSuggestPartner}
-                onBackdropCb={onBackdropCb}
+                onBackdropCb={handleCloseModal}
                 canBlur={false}
                 // isVisible={true}
                 className="!max-w-[488px]"

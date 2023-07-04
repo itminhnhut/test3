@@ -17,7 +17,7 @@ import { formatNumber } from 'utils/reference-utils';
 import TradingInputV2 from 'components/trade/TradingInputV2';
 import useFetchApi from 'hooks/useFetchApi';
 import TabV2 from 'components/common/V2/TabV2';
-import { formatNanNumber, getS3Url } from 'redux/actions/utils';
+import { formatBalanceFiat, formatNanNumber, getS3Url } from 'redux/actions/utils';
 import { setFee } from 'redux/actions/withdrawDeposit';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import Card from './components/common/Card';
@@ -132,6 +132,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
         error
     } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
+    console.log("_______rate: ", rate);
     const [tipValidator, setTipValidator] = useState({ isValid: true, msg: '', isError: false });
 
     const validateTip = (tipAmount) => {
@@ -143,13 +144,14 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
             msg = t('dw_partner:error.invalid_amount');
         }
 
-        if (tipAmount && tipAmount < MIN_TIP) {
+        if (!tipAmount || tipAmount < MIN_TIP) {
             isValid = false;
             msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' });
         }
 
         // const maxTip = state.amount * rate - 50000;
-        const maxTip = state.amount * rate;
+        const maxTip = state.baseQty * rate;
+        console.log('________maxTip: ', state.baseQty, rate, maxTip);
         if (side === 'SELL' && +tipAmount > maxTip) {
             isValid = false;
             msg = t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' });
@@ -167,7 +169,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
 
     useEffect(() => {
         validateTip(fee);
-    }, [state.amount, rate]);
+    }, [state.baseQty, rate]);
 
     return (
         <>
@@ -227,8 +229,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
             </ModalV2>
 
             <AlertModalV2
-                isVisible={isNotFoundPartner}
-                // isVisible={!!showProcessSuggestPartner}
+                // isVisible={isNotFoundPartner}
+                isVisible={!!showProcessSuggestPartner}
                 onClose={() => {
                     setIsNotFoundPartner(false);
                     setTimeout(() => {
@@ -240,7 +242,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 message={t('dw_partner:keep_looking_for_partner_des')}
                 isButton={true}
                 customButton={
-                    <ButtonV2 loading={isLoadingContinue} onClick={handleContinueFindPartner}>
+                    <ButtonV2 disabled={tipValidator?.isError} loading={isLoadingContinue} onClick={handleContinueFindPartner}>
                         {t('common:continue')}
                     </ButtonV2>
                 }
@@ -270,8 +272,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                             allowedDecimalSeparators={[',', '.']}
                             clearAble
                             placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
-                            errorEmpty={false}
-                            // onFocus={handleFocusInput}
+                            errorEmpty
                             renderTail={<span className="txtSecond-4">VND</span>}
                         />
                         <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 2,000 VND</div>

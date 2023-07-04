@@ -60,7 +60,7 @@ const DetailLog = ({ orderDetail, onShowProof, mode }) => {
     }
 
     useEffect(() => {
-        if (orderDetail?.type === 'auto-accepted' && logs.length === 2) {
+        if (orderDetail?.type === 'auto-accepted' && logs.length === 2 && mode === MODE.USER) {
             toast({
                 text: t('dw_partner:toast_user_place_suggest_order_success', {
                     side: t(`common:${orderDetail.side.toLowerCase().trim()}`),

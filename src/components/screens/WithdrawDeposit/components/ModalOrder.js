@@ -21,9 +21,10 @@ const ModalOrder = ({ mode, isVisible, onClose, loading, type = ORDER_TYPES.CONF
             // isVisible={true}
             isVisible={isVisible}
             isMobile
-            wrapClassName=""
             onBackdropCb={loading ? undefined : () => onClose()}
-            className={classNames(` md:!max-w-[488px] overflow-y-auto select-none border-divider`)}
+            wrapClassName="!p-8"
+            btnCloseclassName="!pt-0"
+            className={classNames(`md:!max-w-[488px] overflow-y-auto select-none border-divider`)}
         >
             {type && (
                 <div className="text-center ">
