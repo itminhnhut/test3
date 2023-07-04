@@ -487,7 +487,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                 <div className='w-full flex justify-between items-center'>
                     <EstBalance onClick={() => setIsHideAsset(!isHideAsset)} isHide={isHideAsset} isSmallScreen={isSmallScreen} />
                     <Link href={'/staking'}>
-                        <a className='flex gap-2 items-center text-teal font-semibold text-base cursor-pointer'>
+                        <a className='flex gap-2 items-center text-teal font-semibold text-sm md:text-base cursor-pointer'>
                             {t('wallet:staking')} <ChevronRight color={colors.teal} size={16} />
                         </a>
                     </Link>
