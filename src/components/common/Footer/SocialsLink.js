@@ -56,7 +56,7 @@ export const getSocialImage = (socialType) => {
 const SocialsLink = ({ language }) => {
     return (
         <div className="flex flex-wrap gap-4 socials_link">
-            {SOCIALS_HREF[language].map((social) => {
+            {SOCIALS_HREF?.[language]?.map((social) => {
                 const ImageIcon = getSocialImage(social.name);
                 return (
                     <Link

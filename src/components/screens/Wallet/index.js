@@ -30,6 +30,7 @@ import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import useWindowSize from 'hooks/useWindowSize';
 import NAOFuturesWallet from './NaoFutures';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import InsuranceWallet from './Insurance';
 export const WIDTH_MD = 768;
 
 const INITIAL_STATE = {
@@ -65,6 +66,11 @@ const INITIAL_STATE = {
     naoFuturesRefPrice: null,
     naoFuturesMarketWatch: null,
 
+    allInsuranceAsset: null,
+    insuranceEstBtc: null,
+    insuranceRefPrice: null,
+    insuranceMarketWatch: null,
+
     allPartnersAsset: null,
     partnersEstBtc: null,
     partnersRefPrice: null,
@@ -85,6 +91,7 @@ const Wallet = () => {
     // Rdx
     const auth = useSelector((state) => state.auth?.user) || null;
     const allWallet = useSelector((state) => state.wallet?.SPOT) || null;
+    const allInsuranceWallet = useSelector((state) => state.wallet.INSURANCE) || null;
     const allFuturesWallet = useSelector((state) => state.wallet?.FUTURES) || null;
     const allNAOFuturesWallet = useSelector((state) => state.wallet?.NAO_FUTURES) || null;
     const allPartnersWallet = useSelector((state) => state.wallet?.PARTNERS) || null;
@@ -124,30 +131,17 @@ const Wallet = () => {
                         });
                     }
                 });
-            // console.log('namidev-DEBUG: ___ ', orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']))
         }
 
         const stateKey = {
             [WalletType.SPOT]: 'allAssets',
             [WalletType.FUTURES]: 'allFuturesAsset',
             [WalletType.NAO_FUTURES]: 'allNAOFuturesAsset',
+            [WalletType.INSURANCE]: 'allInsuranceAsset',
             [WalletType.PARTNERS]: 'allPartnersAsset'
         }?.[walletType];
         if (!stateKey) return;
         setState({ [stateKey]: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
-
-        // if (walletType === WalletType.SPOT) {
-        //     setState({ allAssets: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
-        // }
-        // if (walletType === WalletType.FUTURES) {
-        //     setState({ allFuturesAsset: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
-        // }
-        // if (walletType === WalletType.NAO_FUTURES) {
-        //     setState({ allNAOFuturesAsset: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
-        // }
-        // if (walletType === WalletType.PARTNERS) {
-        //     setState({ allPartnersAsset: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
-        // }
     };
 
     const getStakingSummary = async () => {
@@ -180,54 +174,14 @@ const Wallet = () => {
         }
     };
 
-    // const getStakingConfig = async () => {
-    //     setState({ loadingStaking: true });
-    //     try {
-    //         const { data: { status, data: stakingConfig } } = await Axios.get(GET_STAKING_CONFIG);
-    //         if (status === ApiStatus.SUCCESS && stakingConfig) {
-    //             setState({ stakingConfig });
-    //         }
-    //     } catch (e) {
-    //         console.log(`Can't get staking config `, e);
-    //     } finally {
-    //         setState({ loadingStaking: false });
-    //     }
-    // };
-    //
-    // const getFarmingkingConfig = async () => {
-    //     setState({ loadingFarming: true });
-    //     try {
-    //         const { data: { status, data: farmingConfig } } = await Axios.get(GET_FARMING_CONFIG);
-    //         if (status === ApiStatus.SUCCESS && farmingConfig) {
-    //             setState({ farmingConfig });
-    //         }
-    //     } catch (e) {
-    //         console.log(`Can't get staking config `, e);
-    //     } finally {
-    //         setState({ loadingFarming: false });
-    //     }
-    // };
-
     const reNewUsdRate = async () => {
         const usdRate = await getUsdRate();
         usdRate && setState({ usdRate });
     };
 
     const { width } = useWindowSize();
-    // const limitExchangeAsset = useMemo(() => {
-    //     let limit = 5;
-    //     if (width >= 1280) limit = 7;
-    //     return limit;
-    // }, [width]);
 
-    // const isSmallScreen = width < WIDTH_MD;
-    // const isSmallScreen = useMemo(() => {
-    //     return;
-    // }, [width]);
-    const [isSmallScreen, setIsSmallScreen] = useState(false);
-    useEffect(() => {
-        setIsSmallScreen(width < WIDTH_MD);
-    }, [width]);
+    const isSmallScreen = width < WIDTH_MD;
 
     // Render Handler
     const renderScreenTab = useCallback(() => {
@@ -316,75 +270,41 @@ const Wallet = () => {
 
     useEffect(() => {
         const allAssetValue = state.usdRate;
-        const exchangeList = [];
-        const futuresList = [];
-        const naoFuturesList = [];
-        const partnersList = [];
+        const walletTypes = ['exchange', 'futures', 'naoFutures', 'insurance', 'partners'];
+        const walletAssetsMapper = {
+            exchange: 'allAssets',
+            futures: 'allFuturesAsset',
+            naoFutures: 'allNAOFuturesAsset',
+            insurance: 'allInsuranceAsset',
+            partners: 'allPartnersAsset'
+        };
+        const walletList = walletTypes.reduce((accu, walletType) => ({ ...accu, [walletType]: [] }), {});
 
-        state.allAssets?.map((asset) => {
-            const assetValue = +allAssetValue?.[asset?.id] || 0;
-            exchangeList.push({
-                assetCode: asset?.assetCode,
-                usdRate: +assetValue,
-                available: +asset?.[AVAILBLE_KEY],
-                totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
-                totalValueUsd: +asset?.wallet?.value * assetValue,
-                totalLockedUsd: +asset?.wallet?.locked_value * assetValue
+        walletTypes.forEach((walletType) => {
+            state?.[walletAssetsMapper[walletType]]?.forEach((asset) => {
+                const assetValue = +allAssetValue?.[asset?.id] || 0;
+                walletList[walletType]?.push({
+                    assetCode: asset?.assetCode,
+                    usdRate: +assetValue,
+                    available: +asset?.[AVAILBLE_KEY],
+                    totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
+                    totalValueUsd: +asset?.wallet?.value * assetValue,
+                    totalLockedUsd: +asset?.wallet?.locked_value * assetValue
+                });
             });
         });
 
-        state.allFuturesAsset?.map((asset) => {
-            const assetValue = +allAssetValue?.[asset?.id] || 0;
-            futuresList.push({
-                assetCode: asset?.assetCode,
-                usdRate: +assetValue,
-                available: +asset?.[AVAILBLE_KEY],
-                totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
-                totalValueUsd: +asset?.wallet?.value * assetValue,
-                totalLockedUsd: +asset?.wallet?.locked_value * assetValue
-            });
-        });
-
-        state.allNAOFuturesAsset?.map((asset) => {
-            const assetValue = +allAssetValue?.[asset?.id] || 0;
-            naoFuturesList.push({
-                assetCode: asset?.assetCode,
-                usdRate: +assetValue,
-                available: +asset?.[AVAILBLE_KEY],
-                totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
-                totalValueUsd: +asset?.wallet?.value * assetValue,
-                totalLockedUsd: +asset?.wallet?.locked_value * assetValue
-            });
-        });
-
-        state.allPartnersAsset?.map((asset) => {
-            const assetValue = +allAssetValue?.[asset?.id] || 0;
-            partnersList.push({
-                assetCode: asset?.assetCode,
-                usdRate: +assetValue,
-                available: +asset?.[AVAILBLE_KEY],
-                totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
-                totalValueUsd: +asset?.wallet?.value * assetValue,
-                totalLockedUsd: +asset?.wallet?.locked_value * assetValue
-            });
-        });
-
-        // traditional
-        const totalExchange = sumBy(exchangeList, 'totalUsd');
-        const totalValueExchange = sumBy(exchangeList, 'totalValueUsd');
-        const lockedExchange = sumBy(exchangeList, 'totalLockedUsd');
-
-        const totalFutures = sumBy(futuresList, 'totalUsd');
-        const totalValueFutures = sumBy(futuresList, 'totalValueUsd');
-        const lockedFutures = sumBy(futuresList, 'totalLockedUsd');
-
-        const totalNAOFutures = sumBy(naoFuturesList, 'totalUsd');
-        const totalValueNAOFutures = sumBy(naoFuturesList, 'totalValueUsd');
-        const lockedNAOFutures = sumBy(naoFuturesList, 'totalLockedUsd');
-
-        const totalPartners = sumBy(partnersList, 'totalUsd');
-        const totalValuePartners = sumBy(partnersList, 'totalValueUsd');
-        const lockedPartners = sumBy(partnersList, 'totalLockedUsd');
+        const walletValueMapper = walletTypes.reduce(
+            (accu, walletType) => ({
+                ...accu,
+                [walletType]: {
+                    total: sumBy(walletList[walletType], 'totalUsd'),
+                    totalValue: sumBy(walletList[walletType], 'totalValueUsd'),
+                    locked: sumBy(walletList[walletType], 'totalLockedUsd')
+                }
+            }),
+            {}
+        );
 
         // earn
         const namiUsdRate = allAssetValue?.['1'] || 1;
@@ -422,59 +342,25 @@ const Wallet = () => {
         }
 
         if (btcUsdRate > 0) {
-            setState({
-                exchangeEstBtc: {
-                    totalValue: totalValueExchange / btcUsdRate,
-                    value: totalExchange / btcUsdRate,
-                    locked: lockedExchange / btcUsdRate,
-                    assetDigit: btcDigit
-                },
-                exchangeRefPrice: {
-                    totalValue: totalValueExchange,
-                    value: totalExchange,
-                    locked: lockedExchange,
-                    assetDigit: 2
-                },
+            const newWalletState = walletTypes.reduce((obj, walletType) => {
+                return {
+                    ...obj,
+                    [`${walletType}EstBtc`]: {
+                        totalValue: walletValueMapper?.[walletType]?.totalValue / btcUsdRate,
+                        value: walletValueMapper?.[walletType]?.total / btcUsdRate,
+                        locked: walletValueMapper?.[walletType]?.locked / btcUsdRate,
+                        assetDigit: btcDigit
+                    },
+                    [`${walletType}RefPrice`]: {
+                        totalValue: walletValueMapper?.[walletType]?.totalValue / btcUsdRate,
+                        value: walletValueMapper?.[walletType]?.total,
+                        locked: walletValueMapper?.[walletType]?.locked,
+                        assetDigit: 2
+                    }
+                };
+            }, {});
 
-                futuresEstBtc: {
-                    totalValue: totalValueFutures / btcUsdRate,
-                    value: totalFutures / btcUsdRate,
-                    locked: lockedFutures / btcUsdRate,
-                    assetDigit: btcDigit
-                },
-                futuresRefPrice: {
-                    totalValue: totalValueFutures,
-                    value: totalFutures,
-                    locked: lockedFutures,
-                    assetDigit: 2
-                },
-
-                naoFuturesEstBtc: {
-                    totalValue: totalValueNAOFutures / btcUsdRate,
-                    value: totalNAOFutures / btcUsdRate,
-                    locked: lockedNAOFutures / btcUsdRate,
-                    assetDigit: btcDigit
-                },
-                naoFuturesRefPrice: {
-                    totalValue: totalValueNAOFutures,
-                    value: totalNAOFutures,
-                    locked: lockedNAOFutures,
-                    assetDigit: 2
-                },
-
-                partnersEstBtc: {
-                    totalValue: totalValuePartners / btcUsdRate,
-                    value: totalPartners / btcUsdRate,
-                    locked: lockedPartners / btcUsdRate,
-                    assetDigit: btcDigit
-                },
-                partnersRefPrice: {
-                    totalValue: totalValuePartners,
-                    value: totalPartners,
-                    locked: lockedPartners,
-                    assetDigit: 2
-                }
-            });
+            setState(newWalletState);
         }
     }, [state.allAssets, state.allFuturesAsset, state.allPartnersAsset, state.stakingSummary, state.farmingSummary, state.usdRate]);
 
@@ -513,6 +399,8 @@ const Wallet = () => {
                                 futuresRefPrice={state.futuresRefPrice}
                                 naoFuturesEstBtc={state.naoFuturesEstBtc}
                                 naoFuturesRefPrice={state.naoFuturesRefPrice}
+                                insuranceEstBtc={state.insuranceEstBtc}
+                                insuranceRefPrice={state.insuranceRefPrice}
                                 partnersEstBtc={state.partnersEstBtc}
                                 partnersRefPrice={state.partnersRefPrice}
                                 stakingSummary={state.stakingSummary}
@@ -549,6 +437,19 @@ const Wallet = () => {
                                 setIsHideAsset={setIsHideAsset}
                             />
                         )}
+
+                        {state.screen === WALLET_SCREENS.INSURANCE && (
+                            <InsuranceWallet
+                                estBtc={state.insuranceEstBtc}
+                                estUsd={state.insuranceRefPrice}
+                                usdRate={state.usdRate}
+                                marketWatch={state.futuresMarketWatch}
+                                isSmallScreen={isSmallScreen}
+                                isHideAsset={isHideAsset}
+                                setIsHideAsset={setIsHideAsset}
+                            />
+                        )}
+
                         {state.screen === WALLET_SCREENS.NAO_FUTURES && (
                             <NAOFuturesWallet
                                 estBtc={state.naoFuturesEstBtc}
@@ -608,6 +509,12 @@ const SCREEN_TAB_SERIES = [
         key: 3,
         code: WALLET_SCREENS.NAO_FUTURES,
         title: 'NAO Futures',
+        localized: null
+    },
+    {
+        key: 5,
+        code: WALLET_SCREENS.INSURANCE,
+        title: 'Insurance',
         localized: null
     },
     {

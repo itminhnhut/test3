@@ -4,7 +4,7 @@ export const EPS = 0.00000001;
 
 export const LOCAL_STORAGE_KEY = {
     THEME: 'theme',
-    HIDE_BALANCE:'hide_wallet_balance'
+    HIDE_BALANCE: 'hide_wallet_balance'
 };
 
 const TokenConfigNetwork = {
@@ -476,12 +476,27 @@ export const WalletType = {
     BROKER: 'BROKER',
     EARN: 'EARN',
     ONUS: 'ONUS',
-    NAO_FUTURES: 'NAO_FUTURES'
+    NAO_FUTURES: 'NAO_FUTURES',
+    INSURANCE: 'INSURANCE'
 };
 
 export const EarnWalletType = {
     STAKING: 'stake',
     FARMING: 'farm'
+};
+
+export const WalletTypeById = {
+    0: WalletType.SPOT,
+    1: WalletType.MARGIN,
+    2: WalletType.FUTURES,
+    3: WalletType.P2P,
+    4: WalletType.POOL,
+    5: WalletType.EARN,
+    6: EarnWalletType.STAKE,
+    7: EarnWalletType.FARM,
+    8: WalletType.BROKER,
+    9: WalletType.NAO_FUTURES,
+    10: WalletType.INSURANCE
 };
 
 export const WalletTypeReducerKey = {
@@ -581,7 +596,7 @@ export const ExchangeOrderEnum = {
         TOO_MUCH_ORDERS: 'TOO_MUCH_ORDERS',
         INSTRUMENTS_DO_NOT_MATCH: 'INSTRUMENTS_DO_NOT_MATCH',
         INSTRUMENT_NOT_LISTED_FOR_TRADING_YET: 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET',
-        NAO_IS_MAINTAINED: "NAO_IS_MAINTAINED",
+        NAO_IS_MAINTAINED: 'NAO_IS_MAINTAINED',
         INVALID_PRICE: 'INVALID_PRICE',
         INVALID_TICK_SIZE: 'INVALID_TICK_SIZE',
         INVALID_STEP_SIZE: 'INVALID_STEP_SIZE',
@@ -781,7 +796,7 @@ export const KYC_STATUS = {
     NO_KYC: 0,
     PENDING_APPROVAL: 1,
     APPROVED: 2,
-    REJECT: 3,
+    REJECT: 3
     // APPROVED_PENDING_APPROVAL_ADVANCE: 4, // cập nhật thêm số cmnd + ảnh mặt
     // PENDING_APPROVAL_ADVANCE: 5 // user kyc từ đầu cập nhật hết
 };

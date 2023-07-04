@@ -17,7 +17,16 @@ import colors from '../../styles/colors';
 import { useRouter } from 'next/router';
 import isNil from 'lodash/isNil';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { AddCircleColorIcon, ArrowDownIcon, ArrowDropDownIcon, ArrowForwardIcon, CheckCircleIcon, PartnersIcon, SyncAltIcon } from 'components/svg/SvgIcon';
+import {
+    AddCircleColorIcon,
+    ArrowDownIcon,
+    ArrowDropDownIcon,
+    ArrowForwardIcon,
+    CheckCircleIcon,
+    FutureInsurance,
+    PartnersIcon,
+    SyncAltIcon
+} from 'components/svg/SvgIcon';
 import CheckSuccess from 'components/svg/CheckSuccess';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
@@ -44,13 +53,15 @@ const ALLOWED_WALLET_FROM = {
     SPOT: WalletType.SPOT,
     FUTURES: WalletType.FUTURES,
     NAO_FUTURES: WalletType.NAO_FUTURES,
+    INSURANCE: WalletType.INSURANCE,
     BROKER: WalletType.BROKER
 };
 
 const ALLOWED_WALLET_TO = {
     SPOT: WalletType.SPOT,
     FUTURES: WalletType.FUTURES,
-    NAO_FUTURES: WalletType.NAO_FUTURES
+    NAO_FUTURES: WalletType.NAO_FUTURES,
+    INSURANCE: WalletType.INSURANCE
 };
 
 const NOT_ALLOWED_WALLET_TO = Object.values(ALLOWED_WALLET_FROM).filter((wallet) => !Object.values(ALLOWED_WALLET_TO).includes(wallet));
@@ -69,7 +80,8 @@ export const WalletTypeV1 = {
     P2P: 3,
     POOL: 4,
     PARTNERS: 8,
-    NAO_FUTURES: 9
+    NAO_FUTURES: 9,
+    INSURANCE: 10
 };
 
 export const MinTransferFromBroker = {
@@ -81,6 +93,7 @@ export const MinTransferFromBroker = {
 
 const ALLOWED_ASSET = ['VNDC', 'NAMI', 'USDT', 'NAC', 'NAO'];
 const ALLOWED_ASSET_FUTURES = ['VNDC', 'NAMI', 'USDT', 'NAC'];
+const ALLOWED_ASSET_INSURANCE = ['VNDC', 'USDT'];
 
 const INITIAL_STATE = {
     fromWallet: null,
@@ -110,6 +123,9 @@ const getTitleWallet = (wallet, t, language) => {
             break;
         case WalletType.NAO_FUTURES:
             _strTitleWallet = t('common:wallet', { wallet: 'NAO Futures' });
+            break;
+        case WalletType.INSURANCE:
+            _strTitleWallet = t('common:wallet', { wallet: 'Insurance' });
             break;
         case WalletType.PARTNERS:
             _strTitleWallet = t('common:partners');
@@ -188,6 +204,7 @@ const TransferModal = ({ isMobile, alert }) => {
     const auth = useSelector((state) => state.auth?.user);
     const allExchangeWallet = useSelector((state) => state.wallet?.SPOT) || null;
     const allFuturesWallet = useSelector((state) => state.wallet?.FUTURES) || null;
+    const allInsuranceWallet = useSelector((state) => state.wallet?.INSURANCE) || null;
     const allPartnersWallet = useSelector((state) => state.wallet?.PARTNERS) || null;
     const allNAOsWallet = useSelector((state) => state.wallet.NAO_FUTURES) || null;
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
@@ -293,16 +310,6 @@ const TransferModal = ({ isMobile, alert }) => {
                     type: 'warning',
                     title: t('common:failure')
                 });
-
-                // if (isMobile && alert) {
-                //     alert.show('error', t('common:failure'), message);
-                // } else {
-                //     showNotification({
-                //         message,
-                //         title: t('common:failure'),
-                //         type: 'failure'
-                //     });
-                // }
             }
         } catch (e) {
             console.error('Swap error: ', e);
@@ -395,6 +402,10 @@ const TransferModal = ({ isMobile, alert }) => {
                 [WalletType.NAO_FUTURES]: {
                     icon: <Image width={20} height={20} src={getS3Url('/images/nao/ic_nao.png')} />,
                     type: 'NAO Futures'
+                },
+                [WalletType.INSURANCE]: {
+                    icon: <FutureInsurance size={20} />,
+                    type: 'Insurance'
                 }
             };
 
@@ -610,7 +621,7 @@ const TransferModal = ({ isMobile, alert }) => {
 
     const renderTransferButton = useCallback(() => {
         const isErrors = !Object.values(state.errors)?.findIndex((item) => item?.length);
-        const isAmountEmpty = !(state.amount?.length && typeof +state.amount === 'number');
+        const isAmountEmpty = !+state.amount;
         const isInsufficient = currentWallet?.available < +state.amount;
         if (!auth) {
             return (
@@ -718,14 +729,23 @@ const TransferModal = ({ isMobile, alert }) => {
                 [ALLOWED_WALLET_FROM.SPOT]: allExchangeWallet,
                 [ALLOWED_WALLET_FROM.FUTURES]: allFuturesWallet,
                 [ALLOWED_WALLET_FROM.BROKER]: allPartnersWallet,
-                [ALLOWED_WALLET_FROM.NAO_FUTURES]: allNAOsWallet
+                [ALLOWED_WALLET_FROM.NAO_FUTURES]: allNAOsWallet,
+                [ALLOWED_WALLET_FROM.INSURANCE]: allInsuranceWallet
             };
 
             const currentWallets = currentWalletMapping?.[state.fromWallet];
 
-            const isFuturesWalletSelected = state.fromWallet === WalletType.FUTURES || state.toWallet === WalletType.FUTURES;
+            const isFuturesWalletSelected = [state.fromWallet, state.toWallet].includes(WalletType.FUTURES);
+            const isInsuranceWalletSelected = [state.fromWallet, state.toWallet].includes(WalletType.INSURANCE);
 
-            const allowAssets = isFuturesWalletSelected ? ALLOWED_ASSET_FUTURES : ALLOWED_ASSET;
+            const getAllowedAssets = () => {
+                let allowAssets = ALLOWED_ASSET;
+                if (isFuturesWalletSelected) allowAssets = ALLOWED_ASSET_FUTURES;
+                if (isInsuranceWalletSelected) allowAssets = ALLOWED_ASSET_INSURANCE;
+                return allowAssets;
+            };
+
+            const allowAssets = getAllowedAssets();
 
             allWallets = assetConfig
                 .filter((asset) => {
@@ -892,6 +912,8 @@ const convertToWalletV1Type = (walletType) => {
             return WalletTypeV1.PARTNERS;
         case WalletType.NAO_FUTURES:
             return WalletTypeV1.NAO_FUTURES;
+        case WalletType.INSURANCE:
+            return WalletTypeV1.INSURANCE;
         default:
             return null;
     }
