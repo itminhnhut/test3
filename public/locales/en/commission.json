@@ -1,0 +1,26 @@
+{
+    "commission_statistics": "Commission statistics",
+    "total_commission": "Total commission",
+    "total_USDT_commission": "Total USDT commission",
+    "total_VNDC_commission": "Total VNDC commission",
+    "chart": {
+        "title": "Statistics chart",
+        "deposit": "Deposit chart",
+        "withdraw": "Withdraw chart",
+        "spot": "Spot chart",
+        "futures": "Futures chart",
+        "swap": "Swap chart",
+        "insurance": "Insurance chart",
+        "all": "Combined chart",
+        "note": "Click to a milestone to show detail"
+    },
+    "variants": {
+        "all": "All",
+        "deposit": "Deposit",
+        "withdraw": "Withdraw",
+        "spot": "Spot",
+        "futures": "Futures",
+        "swap": "Swap",
+        "insurance": "Insurance"
+    }
+}

@@ -61,6 +61,7 @@ const FilterTimeTabV2 = ({
                     break;
                 case 'w':
                     date.setDate(date.getDate() - 6);
+                    interval = 'd';
                     break;
                 case 'm':
                     date.setDate(date.getDate() - 30);
@@ -159,7 +160,7 @@ const FilterTimeTabV2 = ({
     return (
         <Fragment>
             <div className={isMobile && 'w-full overflow-hidden'}>
-                <div className={`flex gap-2 md:gap-3 items-center ${isMobile && 'overflow-x-auto no-scrollbar'} h-full ${className}`}>
+                <div className={classNames('flex gap-2 md:gap-3 items-center h-full', isMobile && 'overflow-x-auto no-scrollbar', className)}>
                     {timeFilter.map((item, i) => {
                         if (i === 0 && !isTabAll) return null;
                         const isActive = timeTab === item.value;
