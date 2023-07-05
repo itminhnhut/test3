@@ -73,7 +73,7 @@ const MadivesLayout = ({
 
     const router = useRouter();
 
-    const { t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const userSocket = useSelector((state) => state.socket.userSocket);
     useEffect(() => {
@@ -88,7 +88,10 @@ const MadivesLayout = ({
 
                 if (router?.query?.id === PARTNER_WD_TABS.OPEN_ORDER) return;
 
-                dispatch(getNotifications({ lang: i18n.language }));
+                setTimeout(() => {
+                    dispatch(getNotifications({ lang: i18n.language }));
+                }, 3000);
+
                 toast({
                     key: `suggest_order_${displayingId}`,
                     text: t('common:partner_toast_suggest_order', {
