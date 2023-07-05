@@ -7,6 +7,7 @@
         "futures": "Futures",
         "markets": "Markets",
         "utilities": "Utilities",
+        "events": "Events",
         "support": "Support",
         "api": "API",
         "fee": "Fee Structure",
@@ -37,7 +38,8 @@
             "partner": "Partner",
             "payment_method": "Payment Method",
             "daily_reward": "Daily Trading Reward",
-            "futures_portfolio": "Futures Statistics"
+            "futures_portfolio": "Futures Statistics",
+            "profit_stats": "Profit Statistics"
         },
         "top_referral": "Top Referral"
     },

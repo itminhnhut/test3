@@ -1,5 +1,7 @@
 export const EMPTY_VALUE = '--'
 
+export const ONE_DAY = 86400000
+
 export const NAMI_FUTURES_EARNED_SHARE = 'NamiFutures_TakeProfit_'
 
 export const ROOT_TOKEN = 'NAMI'
@@ -35,6 +37,7 @@ export const BREAK_POINTS = {
     sm: 640,
     md: 768,
     lg: 1024,
+    mb: 820,
     xl: 1280,
     '2xl': 1536,
 }

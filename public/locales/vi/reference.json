@@ -126,7 +126,7 @@
         "readmore": "Xem thêm tại",
         "referral_policy": "Cơ chế giới thiệu",
         "referral_code": "Mã giới thiệu",
-        "rate": "Bạn nhận: {{value1}}% - Bạn bè nhận: {{value2}}%",
+        "rate": "Bạn nhận: {{value1}}% <br/> Bạn bè nhận: {{value2}}%",
         "ref_link": "Liên kết giới thiệu",
         "invite_friends": "Mời bạn bè",
         "ranking": "Cấp",
@@ -234,5 +234,22 @@
             "btn": "Tải xuống",
             "scan_and_join": "Chia sẻ"
         }
-    }
+    },
+    "update_date": "Thời gian cập nhật",
+    "ranking_conditions": "Điều kiện xét hạng",
+    "ranking_conditions_tooltip": "Để thăng hạng, Đối tác cộng đồng cần đáp ứng khối lượng giao dịch tại cấp tiếp theo, cụ thể:</br>- Exchange (Bao gồm Nami Spot, Nami Swap) </br>hoặc</br> - Futures (Bao gồm Nami Futures, NAO Futures)",
+    "maintaining_conditions": "Điều kiện",
+    "maintenance_point": "Điểm duy trì hạng hiện tại",
+    "maintain_modal": {
+        "you_need": "Để duy trì Hạng hiện tại, Đối tác cộng đồng cần đạt",
+        "new_friends": "Số bạn bè mới",
+        "commissions_value": "Giá trị Hoa hồng",
+        "and_one": "Để duy trì Hạng hiện tại, Đối tác cộng đồng cần đạt"
+    },
+    "official_partner": "Đối tác chính thức",
+    "gold_partner": "Đối tác Vàng",
+    "platinum_partner": "Đối tác Bạch Kim",
+    "diamond_partner": "Đối tác Kim Cương",
+    "invited_by": "Giới thiệu bởi",
+    "statistic": "Thống kê"
 }

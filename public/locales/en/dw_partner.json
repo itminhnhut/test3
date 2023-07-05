@@ -151,6 +151,7 @@
     "disabled_smart_otp_des": "Smart OTP feature has been deactivated due to incorrect Smart OTP input 5 times. Please verify transactions with another OTP methods or reactivate Smart OTP to continue using.",
     "verify_by_email": "Email Authentification",
     "verify_now": "Verify Now",
+    "partner_inactive": "You need to qualify as a Community Development Partner from the Official level to participate in the Deposit and Withdrawal Partner program, <0>read more</0>.",
     "not_have_payment_content": "You can optionally perform payment method verification to use directly Buy Sell via Partner of Nami.",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
@@ -168,7 +169,12 @@
         "invalid_otp": "OTP is invalid. Please try again.",
         "invalid_secret": "Verification code is incorrect {{timesErr}}/5, please get OTP from Nami Exchange App.",
         "invalid_smart_otp": "Verification code is incorrect {{timesErr}}/5, please try again",
-        "invalid_amount": "Invalid amount"
+        "invalid_amount": "Invalid amount",
+        "order_has_been_canceled": "User canceled the transaction",
+        "order_has_expired": "Transaction confirmation timeout",
+        "order_has_been_accepted_by_another_partner": "The transaction has been processed by another partner",
+        "not_found_auto_partner": "Oops, it seems no partners match your transaction at the moment, please try again.",
+        "invalid_max_fee": "The transaction fee cannot exceed the amount you want to sell."
     },
     "filter": {
         "a_day": "1 day",
@@ -196,7 +202,20 @@
         "system_reject": "Order is updated to the status: Rejected",
         "system_dispute": "Order is updated to the status: Disputed"
     },
-    "partner_bonus": "Partner Bonus",
-    "partner_bonus_tooltip": "The option to enter the bonus for the partner processing the order, you can skip it if you do not want to send this bonus.",
-    "vnd_amount": "VND Amount"
+    "partner_bonus": "Transaction Fee",
+    "partner_bonus_tooltip": "Transaction fee applies when selling through deposit and withdrawal partners, you can customize this fee to easily find partners and trade faster.",
+    "vnd_amount": "VND Amount",
+    "auto_suggestion": "Automatic suggestion",
+    "auto_suggestion_des": "Nami will help you find the most suitable partner",
+    "looking_for_partner_loading": "Looking for a partner...",
+    "auto_suggestion_des_more": "Looking for a suitable partner for your transaction, please wait a moment.",
+    "cancel": "Cancel",
+    "keep_looking_for_partners": "Keep looking for partners",
+    "keep_looking_for_partner_des": "Oops, it seems no partners match your transaction at the moment, do you want to continue looking for a partner?",
+    "transaction_info": "Transaction info",
+    "transaction_type": "Transaction type",
+    "alert_suggest_not_found_order": "Order {{displayingId}} not found or being processed, please reload or contact support.",
+    "alert_suggest_not_found_partner": "Oops, it seems no partners match your transaction at the moment, please try again.",
+    "toast_user_place_suggest_order_success": "{{side}} order {{orderId}} successfully placed.",
+    "alert_suggest_invalid_max_fee": "The transaction fee cannot exceed the amount you want to sell."
 }

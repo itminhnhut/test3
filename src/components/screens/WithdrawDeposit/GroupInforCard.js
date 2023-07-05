@@ -1,23 +1,19 @@
 import React from 'react';
-import CountdownTimer from '../../common/CountdownTimer';
-import OrderStatusTag from 'components/common/OrderStatusTag';
-import { formatTime, formatPhoneNumber, formatBalance, formatBalanceFiat, formatTimePartner } from 'redux/actions/utils';
+import { formatPhoneNumber, formatBalance, formatTimePartner } from 'redux/actions/utils';
 
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import { BxsUserCircle, ContactIcon, OrderIcon, QrCodeScannIcon, TimerIcon } from 'components/svg/SvgIcon';
+import { BxsUserCircle, ContactIcon, DwPartnerIconMulti, QrCodeScannIcon, TimerIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { DefaultAvatar, PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
+import { DefaultAvatar } from 'redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
 import { MODE } from './constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import Divider from 'components/common/Divider';
 import { useTranslation } from 'next-i18next';
-import { LANGUAGE_TAG } from 'hooks/useLanguage';
-import { CountdownClock } from './components/common/CircleCountdown';
 import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import { get } from 'lodash';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import DWRelationIcon from 'components/common/DWRelationIcon';
+import { isBoolean } from 'lodash';
 
 const RENDER_INFORMATION = [
     {
@@ -91,7 +87,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                     {/* Chi tiết giao dịch */}
                     <div className="w-full md:w-2/5 p-3">
                         <div className="flex  flex-col  min-h-full">
-                            <div className="flex-1   overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 flex flex-col">
+                            <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 pb-10 flex flex-col">
                                 <div className="flex justify-between items-center mb-4">
                                     <div className="txtPri-1 ">{t(`dw_partner:${otherMode}`)}</div>
 
@@ -113,8 +109,15 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                         />
                                     )}
 
-                                    <div className="txtPri-1 capitalize font-semibold mb-3">
-                                        {!orderDetail ? <Skeletor width={150} /> : orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase()}
+                                    <div className="flex items-center gap-x-2 txtPri-1 capitalize font-semibold mb-3">
+                                        {!orderDetail ? (
+                                            <Skeletor width={150} />
+                                        ) : (
+                                            <>
+                                                <span>{orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase()}</span>
+                                                {isBoolean(orderDetail?.userIsPartner) && <DWRelationIcon userIsPartner={mode === MODE.USER || orderDetail?.userIsPartner} />}
+                                            </>
+                                        )}
                                     </div>
                                     <div className="flex gap-2">
                                         {RENDER_INFORMATION.map((item) => {
@@ -160,15 +163,15 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, mode = MODE.USER, isDar
                                     <div className="flex flex-col gap-y-4">
                                         {DETAIL_PAYMENT_INFORMATION.map((detail) => {
                                             let fullContent;
-                                            if (orderDetail?.tip && detail.copyText === 'quoteQty') {
+                                            if (orderDetail?.fee && detail.copyText === 'quoteQty') {
                                                 fullContent =
-                                                    side === SIDE.SELL
-                                                        ? mode === MODE.USER
-                                                            ? orderDetail?.userQtyIn
-                                                            : orderDetail?.partnerOut
-                                                        : mode === MODE.USER
-                                                        ? orderDetail?.userQtyOut
-                                                        : orderDetail?.partnerIn;
+                                                    side === SIDE.SELL ? orderDetail?.userQtyIn : orderDetail?.quoteQty
+                                                        // ? mode === MODE.USER
+                                                        //     ? orderDetail?.userQtyIn
+                                                        //     : orderDetail?.partnerOut
+                                                        // : mode === MODE.USER
+                                                        // ? orderDetail?.userQtyOut
+                                                        // : orderDetail?.partnerIn;
                                             } else {
                                                 fullContent = get(orderDetail, detail.copyText);
                                             }

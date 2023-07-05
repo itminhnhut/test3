@@ -81,8 +81,8 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                     });
 
                     // push to detail page when partner accept order on 'Opening Order' page
-                    if (isProcessOrderAction && userStatus === PartnerAcceptStatus.ACCEPTED && !router.asPath.includes(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS)) {
-                        router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + id);
+                    if (isProcessOrderAction && userStatus === PartnerAcceptStatus.ACCEPTED && !router.asPath.includes(PATHS.PARTNER_WITHDRAW_DEPOSIT.DETAILS)) {
+                        router.push(PATHS.PARTNER_WITHDRAW_DEPOSIT.DETAILS + '/' + id);
                     }
 
                     // open after confirm modal

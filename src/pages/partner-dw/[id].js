@@ -62,15 +62,15 @@ export default PartnerDepositWithdraw;
 export const getServerSideProps = async (context) => {
     const { id } = context.params;
 
-    const existedId = Object.values(PATHS.PARNER_WITHDRAW_DEPOSIT).reduce((result, path) => {
-        return result || id === path.replace(PATHS.PARNER_WITHDRAW_DEPOSIT.DEFAULT, '');
+    const existedId = Object.values(PATHS.PARTNER_WITHDRAW_DEPOSIT).reduce((result, path) => {
+        return result || id === path.replace(PATHS.PARTNER_WITHDRAW_DEPOSIT.DEFAULT, '');
     }, false);
 
     const redirectObj = existedId
         ? {}
         : {
               redirect: {
-                  destination: PATHS.PARNER_WITHDRAW_DEPOSIT.DEFAULT,
+                  destination: PATHS.PARTNER_WITHDRAW_DEPOSIT.DEFAULT,
                   permanent: false
               }
           };

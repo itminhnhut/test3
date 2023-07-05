@@ -2,16 +2,17 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
-import { Progressbar } from 'components/screens/Nao/NaoStyle';
+import { ButtonNao, Progressbar } from 'components/screens/Nao/NaoStyle';
 import { useSelector } from 'react-redux';
+import Link from 'next/link';
 
 const NaoInfo = ({ dataSource, assetNao, ammData }) => {
     const { t } = useTranslation();
-    const user = useSelector(state => state.auth.user) || null;
+    const user = useSelector((state) => state.auth.user) || null;
 
     const holders_wallet = useMemo(() => {
-        return 22250000 - ammData - dataSource?.totalStaked
-    }, [dataSource, ammData])
+        return 22250000 - ammData - dataSource?.totalStaked;
+    }, [dataSource, ammData]);
 
     return (
         <section id="nao_info" className="flex items-center justify-between pt-12 sm:pt-20 flex-wrap gap-8">
@@ -27,11 +28,20 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                             <span className="mx-2">•</span>
                             <div className="capitalize">Nami frame futures</div>
                         </div>
+                        {user && (
+                            <div className="hidden sm:block">
+                                <Link href={'/nao/stake'}>
+                                    <a>
+                                        <ButtonNao className="!rounded-md h-10 !px-6 !py-2 mt-6">{t(`nao:Stake NAO`)}</ButtonNao>
+                                    </a>
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
             <div className="bg-gray-13 dark:bg-dark-4 rounded-xl p-6 sm:px-8 sm:py-[26px] relative z-0 flex-1">
-                <div className="bg-nao-corner-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full w-full h-full absolute z-0 left-0 top-0"></div>
+                <div className="bg-nao-corner-mb sm:bg-nao-corner-mb-2 dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full w-full h-full absolute z-0 left-0 top-0"></div>
                 <div className="relative z-10 flex sm:flex-none flex-col sm:flex-row">
                     <div className="flex flex-col w-full">
                         <label className="font-semibold sm:text-lg pb-2 leading-7">{t('nao:circulating_supply')}</label>
@@ -85,6 +95,15 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                     </div>
                 </div>
             </div>
+            {user && (
+                <div className="sm:hidden w-full -mt-2">
+                    <Link href={'/nao/stake'}>
+                        <a>
+                            <ButtonNao className="!rounded-md h-10 !px-6 !py-2">{t(`nao:Stake NAO`)}</ButtonNao>
+                        </a>
+                    </Link>
+                </div>
+            )}
         </section>
     );
 };

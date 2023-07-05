@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { getLoginUrl } from 'src/redux/actions/utils';
+import { getLoginUrl, emitWebViewEvent } from 'src/redux/actions/utils';
 import { useSelector } from 'react-redux';
 
 import { useTranslation } from 'next-i18next';
@@ -14,22 +14,36 @@ import { ASSET_DIGITAL } from 'constants/staking';
 const AssetDigitalStaking = ({ isMobile }) => {
     const auth = useSelector((state) => state.auth?.user);
     const router = useRouter();
+    const { source } = router.query;
+    const isFromApp = source === 'app';
+
     const {
         i18n: { language }
     } = useTranslation();
 
+    const handleWithdrawDeposit = (data) => {
+        isFromApp && emitWebViewEvent(data);
+    };
+
     const renderBtnAssetDigital = (data) => {
         return !auth ? (
             <a
+                onClick={() => handleWithdrawDeposit('daily_staking_signin')}
                 className="w-full"
-                href={getLoginUrl('sso', 'login', {
-                    redirect: `${process.env.NEXT_PUBLIC_API_URL}/${router.locale}/withdraw-deposit/crypto?side=BUY&assetId=${data?.title}`
-                })}
+                href={
+                    isFromApp
+                        ? '#'
+                        : getLoginUrl('sso', 'login', {
+                              redirect: `${process.env.NEXT_PUBLIC_API_URL}${
+                                  router.locale === 'en' ? '' : `/${router.locale}`
+                              }/withdraw-deposit/crypto?side=BUY&assetId=${data?.title}`
+                          })
+                }
             >
                 <ButtonV2>{data?.btn[language]}</ButtonV2>
             </a>
         ) : (
-            <a className="w-full" href={data?.href}>
+            <a onClick={() => handleWithdrawDeposit('daily_staking_withdraw')} className="w-full" href={isFromApp ? '#' : data?.href}>
                 <ButtonV2>{data?.btn[language]}</ButtonV2>
             </a>
         );
@@ -59,7 +73,7 @@ const AssetDigitalStaking = ({ isMobile }) => {
                 </section>
             );
         });
-    }, [auth]);
+    }, [auth, isFromApp]);
 
     return (
         <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">

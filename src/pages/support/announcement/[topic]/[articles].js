@@ -66,8 +66,8 @@ const AnnouncementArticle = (props) => {
                 url={router.asPath}
                 description={article?.excerpt}
                 image={article?.feature_image || 'https://static.namifutures.com/nami.exchange/images/common-featured.png'}
-                createdAt={article?.created_at}
-                updatedAt={article?.updated_at}
+                createdAt={article?.published_at}
+                updatedAt={article?.published_at}
             />
             {renderAppHeader()}
             <TopicsLayout
@@ -81,7 +81,7 @@ const AnnouncementArticle = (props) => {
                 </div>
                 <div
                     className='sm:mt-2 text-[10px] sm:text-xs lg:text-[16px] lg:mt-4 font-medium text-txtSecondary dark:text-txtSecondary-dark'>
-                    {formatTime(props?.data?.article?.created_at, 'dd/MM/yyyy')}
+                    {formatTime(props?.data?.article?.published_at, 'dd/MM/yyyy')}
                 </div>
                 <GhostContent content={props?.data?.article?.html}/>
             </TopicsLayout>

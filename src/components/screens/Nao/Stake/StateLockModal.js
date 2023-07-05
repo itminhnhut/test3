@@ -223,7 +223,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                 <label className="text-sm mb:text-base text-txtPrimary dark:text-txtPrimary-dark leading-6 font-semibold mb:px-4 mb:mt-4">
                                     {t('nao:pool:lock_overview')}
                                 </label>
-                                <CardNao className="mt-2 !p-4 space-y-2 mb:space-y-3 !bg-gray-13 dark:!bg-dark-4 !min-w-0 mb:!block mb:!min-h-0">
+                                <CardNao className="mt-2 !p-4 space-y-2 mb:space-y-3 !bg-gray-13 dark:!bg-dark-4 !min-w-0 mb:!block mb:!min-h-0 !border-none">
                                     <div className="text-sm mb:text-base flex justify-between items-center">
                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:pool:qty_lock')}</div>
                                         <span className="font-semibold">{formatNumber(data?.availableStaked, assetNao?.assetDigit ?? 8)} NAO</span>

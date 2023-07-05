@@ -466,6 +466,22 @@ const GooglePlayIcon = ({ size = 24, ...props }) => (
     </svg>
 );
 
+const AndroidIcon = ({ size = 24, color = 'currentColor', ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
+        <g clip-path="url(#vtok890oea)">
+            <path
+                d="m17.6 9.482 1.84-3.18c.16-.31.04-.69-.26-.85a.637.637 0 0 0-.83.22l-1.88 3.24a11.463 11.463 0 0 0-8.94 0l-1.88-3.24a.643.643 0 0 0-.87-.2c-.28.18-.37.54-.22.83l1.84 3.18a10.78 10.78 0 0 0-5.4 8.52h22a10.78 10.78 0 0 0-5.4-8.52zM7 15.252a1.25 1.25 0 1 1 0-2.501 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.501 1.25 1.25 0 0 1 0 2.5z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="vtok890oea">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 const LogoIcon = ({ size = 24, ...props }) => (
     <svg width={size} height={size} {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -729,11 +745,19 @@ const MoreHorizIcon = ({ size, color, onClick }) => {
     );
 };
 
-const BxsInfoCircle = ({ size = 24, color = '#768394' }) => (
-    <svg style={{ minWidth: size }} width={size} height={size} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12.398 2.344c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm1 15h-2v-6h2v6zm0-8h-2v-2h2v2z" fill={color} />
-    </svg>
-);
+const BxsInfoCircle = ({ size = 24, color }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+
+    return (
+        <svg style={{ minWidth: size }} width={size} height={size} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M12.398 2.344c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm1 15h-2v-6h2v6zm0-8h-2v-2h2v2z"
+                fill={color ?? defaultColor}
+            />
+        </svg>
+    );
+};
 
 const ShareIcon = ({ color = '#1E1E1E', size = 20, ...props }) => (
     <svg {...props} width={size} height={size} viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1266,6 +1290,66 @@ export const MonetizationOnIcon = ({ size = 24, color = '#47CC85', className = '
     </svg>
 );
 
+export const DwPartnerIconMulti = ({ size = 16 }) => {
+    return (
+        <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#h8pv48o2za)">
+                <path
+                    d="M15.998 12.138a3.53 3.53 0 0 1-3.52 3.543h-1.715a3.516 3.516 0 0 1-3.52-3.476h1.534V8.617h3.7c1.941 0 3.521 1.58 3.521 3.52z"
+                    fill="#0D994E"
+                />
+                <path d="M11.443 7.317a1.92 1.92 0 1 0 0-3.84 1.92 1.92 0 0 0 0 3.84zM8.753 8.617H7.22v3.588h1.534V8.617z" fill="#9FF2C5" />
+                <path
+                    d="M8.756 8.616H7.221v3.588h-3.7C1.58 12.204 0 10.624 0 8.684V8.66c0-1.94 1.58-3.52 3.52-3.52h1.716c1.94 0 3.52 1.557 3.52 3.475z"
+                    fill="#5BD891"
+                />
+                <path d="M4.225 3.84a1.92 1.92 0 1 0 0-3.84 1.92 1.92 0 0 0 0 3.84z" fill="#9FF2C5" />
+            </g>
+            <defs>
+                <clipPath id="h8pv48o2za">
+                    <path fill="#fff" d="M0 0h16v16H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
+
+export const DwPartnerIconSingle = ({ size = 16 }) => {
+    return (
+        <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M8.753 8.616h.003c0-1.918-1.58-3.475-3.52-3.475H3.52C1.58 5.14 0 6.72 0 8.66v.023c0 1.94 1.58 3.52 3.52 3.52H8.753V8.615z"
+                fill="#5BD891"
+            />
+            <path d="M4.225 3.84a1.92 1.92 0 1 0 0-3.84 1.92 1.92 0 0 0 0 3.84z" fill="#9FF2C5" />
+        </svg>
+    );
+};
+
+export const SystemInfoCircleFilled = ({ size = 80 }) => {
+    return (
+        <svg width={size} height={size} viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M39.997 6.668c-18.38 0-33.333 14.953-33.333 33.333s14.953 33.334 33.333 33.334S73.331 58.38 73.331 40c0-18.38-14.954-33.333-33.334-33.333zm3.334 50h-6.667v-20h6.667v20zm0-26.667h-6.667v-6.666h6.667V30z"
+                fill="#47CC85"
+            />
+        </svg>
+    );
+};
+
+const ProfitStats = ({ className, color, size = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694B3' : '#47cc85';
+
+    return (
+        <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.5 6.5h1v10h-1v-10zm4-3h1v13h-1v-13zm-8 6h1v7h-1v-7zm-5 10h15v1h-15v-1zm1-7h1v4h-1v-4z" fill={color || defaultColor} stroke="#8694B3" />
+        </svg>
+    );
+};
+
 export {
     FutureInsurance,
     ArrowDownIcon,
@@ -1293,6 +1377,7 @@ export {
     FutureAdvanceIcon,
     AppleIcon,
     GooglePlayIcon,
+    AndroidIcon,
     LogoIcon,
     BxChevronDown,
     SyncAltIcon,
@@ -1342,5 +1427,6 @@ export {
     TwitterIcon,
     TelegramIcon,
     FutureNaoIcon,
-    PortfolioIconNoColor
+    PortfolioIconNoColor,
+    ProfitStats
 };

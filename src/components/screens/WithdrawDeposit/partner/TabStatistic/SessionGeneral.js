@@ -35,7 +35,7 @@ const SessionGeneral = ({ filter, setFilter }) => {
             </div>
 
             {/* Body */}
-            <div className="flex gap-x-6">
+            <div className="block md:flex gap-x-6">
                 <CardWrapper className="flex-auto flex">
                     <div className="w-1/2 pr-7 border-r border-divider dark:border-divider-dark">
                         {/* top */}
@@ -65,7 +65,6 @@ const SessionGeneral = ({ filter, setFilter }) => {
                         <h1 className="txtSecond-3">
                             <Trans i18nKey="dw_partner:total_volume">
                                 <span className="text-teal" />
-
                                 <span className="text-txtPrimary dark:text-txtPrimary-dark" />
                             </Trans>
                         </h1>
@@ -77,7 +76,7 @@ const SessionGeneral = ({ filter, setFilter }) => {
                         </div>
                     </div>
                 </CardWrapper>
-                <CardWrapper className="flex gap-x-6 justify-between">
+                <CardWrapper className="flex gap-x-6 justify-between mt-8 md:mt-0">
                     <div className="max-w-[237px] flex flex-col">
                         <div className="txtPri-5 pb-4">{t('dw_partner:standard_partner')}</div>
                         <div className="txtSecond-3 text-left flex items-center flex-auto">{t('dw_partner:standard_partner_des')}</div>

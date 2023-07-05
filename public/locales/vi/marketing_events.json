@@ -1,0 +1,37 @@
+{
+    "title": "Sự kiện",
+    "all": "Tất cả",
+    "ended": "Đã kết thúc",
+    "ongoing": "Đang diễn ra",
+    "upcoming": "Sắp diễn ra",
+    "postponed": "Tạm hoãn",
+    "starts_in": "Bắt đầu sau",
+    "ends_in": "Kết thúc sau",
+    "add_to_calendar": "Thêm vào lịch của bạn",
+    "related_post": "Sự kiện HOT liên quan",
+    "no_related": "Không có sự kiện HOT liên quan",
+    "total_prizes": "Tổng giải thưởng",
+    "no_result": "Không có kết quả phù hợp",
+    "community": {
+        "title": "Cộng đồng của Nami",
+        "telegram": "Telegram VN group",
+        "telegram_international": "Telegram international group",
+        "facebook": "Facebook",
+        "website": "Website",
+        "twitter": "Twitter"
+    },
+    "download": "Cài đặt ứng dụng Nami Exchange tại",
+    "filter": {
+        "from": "Từ ngày",
+        "to": "Đến ngày",
+        "start_time": "Thời gian bắt đầu",
+        "end_time": "Thời gian kết thúc",
+        "search_placeholder": "Tìm kiếm sự kiện",
+        "search_label": "Tên sự kiện",
+        "date": "Tùy chỉnh",
+        "customize": "Tuỳ chọn",
+        "time_placeholder": "Chọn ngày",
+        "time_placeholder_desk": "Tuỳ chỉnh"
+    },
+    "by": "Bởi"
+}

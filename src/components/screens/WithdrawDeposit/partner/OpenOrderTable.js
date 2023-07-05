@@ -27,7 +27,10 @@ import Skeletor from 'components/common/Skeletor';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import classNames from 'classnames';
-import { MonetizationOnIcon, MoneyIcon } from 'components/svg/SvgIcon';
+import {  MonetizationOnIcon } from 'components/svg/SvgIcon';
+import DWRelationIcon from 'components/common/DWRelationIcon';
+import PartnerModalDetailsOrderSuggest from '../PartnerModalDetailsOrderSuggest';
+import { isBoolean } from 'lodash';
 
 const LIMIT_ROW = 5;
 
@@ -36,7 +39,7 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
     const assetCode = asset?.assetCode;
 
     return (
-        <Card className={classNames('border-0 bg-white dark:bg-dark-4', {})}>
+        <Card className={classNames('border-0 !bg-white dark:!bg-dark-4')}>
             <div className="flex items-center flex-wrap lg:flex-nowrap">
                 <div className="flex-grow border-b pb-5 lg:border-r border-divider dark:border-divider-dark lg:pb-0 lg:pr-10 lg:border-b-0 ">
                     <div className="flex items-center mb-8">
@@ -73,7 +76,10 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
 
                         <div className="p-2 flex justify-end lg:justify-start w-1/2 lg:w-1/4">
                             <div className="space-y-2 text-right lg:text-left">
-                                <div className="capitalize txtPri-1 break-words">{orderDetail?.userMetadata?.name?.toLowerCase()}</div>
+                                <div className="capitalize txtPri-1 break-words flex items-center gap-x-4">
+                                    {orderDetail?.userMetadata?.name?.toLowerCase()}
+                                    {isBoolean(orderDetail?.userIsPartner) && <DWRelationIcon userIsPartner={orderDetail.userIsPartner} />}
+                                </div>
                                 <div className="txtSecond-3">{orderDetail?.userMetadata?.code}</div>
                             </div>
                         </div>
@@ -99,18 +105,18 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
                             </div>
                         </div>
                     </div>
-                    {orderDetail?.tip ? (
+                    {orderDetail?.fee ? (
                         <div className="mt-6 flex border-l-2 border-divider dark:border-divider-dark font-semibold">
                             <MonetizationOnIcon className="mx-2" />
                             <span>{t('dw_partner:partner_bonus')}:&nbsp;</span>
-                            <span className="text-green-3 dark:text-green-2">+{formatBalanceFiat(orderDetail.tip)} VND</span>
+                            <span className="text-green-3 dark:text-green-2">+{formatBalanceFiat(orderDetail.fee)} VND</span>
                         </div>
                     ) : null}
                 </div>
                 <div className="lg:ml-10 flex flex-col items-center justify-center lg:max-w-[164px] w-full gap-3">
                     {orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.ACCEPTED ? (
                         <ButtonV2
-                            onClick={() => router.push(`${PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS}/${orderDetail?.displayingId}`)}
+                            onClick={() => router.push(`${PATHS.PARTNER_WITHDRAW_DEPOSIT.DETAILS}/${orderDetail?.displayingId}`)}
                             variants="text"
                             className="!py-0 items-center"
                         >
@@ -197,11 +203,19 @@ const OpenOrderTable = () => {
                 dataRef.current = newOrderList;
                 return;
             });
+            userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
+                // make sure the socket displayingId is the current page
+                if (!data || data?.status !== 0 || data.partnerAcceptStatus !== 0) return;
+                setShowPartnerSuggest(data);
+            });
         }
         return () => {
             if (userSocket) {
                 userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
                     console.log('socket removeListener PARTNER_UPDATE_ORDER:', data);
+                });
+                userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
+                    console.log('socket removeListener PARTNER_UPDATE_ORDER_AUTO_SUGGEST:', data);
                 });
             }
         };
@@ -245,8 +259,14 @@ const OpenOrderTable = () => {
         };
     }, [state.params, refetch]);
 
+    const [showPartnerSuggest, setShowPartnerSuggest] = useState(null);
+    useEffect(() => {
+        if (router?.query?.suggest) setShowPartnerSuggest(router?.query?.suggest);
+    }, [router.query]);
+
     return (
         <>
+            <PartnerModalDetailsOrderSuggest showProcessSuggestPartner={showPartnerSuggest} onBackdropCb={() => setShowPartnerSuggest(null)} />
             {/* CONFIRM */}
             <ModalConfirm
                 mode={MODE.PARTNER}

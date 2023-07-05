@@ -27,8 +27,8 @@ const Footer = () => {
             submenu: [
                 { name: t('social_coingecko'), route: 'https://www.coingecko.com/en/exchanges/nami_exchange' },
                 { name: t('social_facebook'), route: 'https://www.facebook.com/nami.trade.official' },
-                { name: t('social_twitter'), route: 'https://twitter.com/NamiTrade' },
-                { name: t('social_telegram'), route: 'https://t.me/namitradevn' },
+                { name: t('social_twitter'), route: 'https://twitter.com/NamiExchange' },
+                { name: t('social_telegram'), route: 'https://t.me/NamiGlobal' },
                 { name: t('social_youtube'), route: 'https://www.youtube.com/channel/UCYAqEagemhtu0MOtnE7rNJQ' },
             ],
 
