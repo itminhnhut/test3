@@ -206,7 +206,9 @@ const OpenOrderTable = () => {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                 // make sure the socket displayingId is the current page
                 if (!data || data?.status !== 0 || data.partnerAcceptStatus !== 0) return;
-                setShowPartnerSuggest(data);
+                router.query.suggest = data?.displayingId
+                router.push(router)
+                // setShowPartnerSuggest(data);
             });
         }
         return () => {

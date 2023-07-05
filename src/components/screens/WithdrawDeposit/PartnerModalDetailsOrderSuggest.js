@@ -55,6 +55,8 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
     }, []);
 
     useEffect(() => {
+        setIsFailAccept(false)
+        setLoadingProcessOrder(false)
         if (!showProcessSuggestPartner) return;
         if (isString(showProcessSuggestPartner))
             FetchApi({
