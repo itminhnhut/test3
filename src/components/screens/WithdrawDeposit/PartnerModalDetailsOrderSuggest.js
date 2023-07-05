@@ -93,7 +93,8 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
             >
                 <div id={`suggest_order_${state.displayingId}`} className="flex flex-col items-center w-full">
                     <SystemInfoCircleFilled />
-                    <h1 className="txtPri-3 mt-6 mb-10 capitalize">{t('dw_partner:transaction_info')}</h1>
+                    <h1 className="txtPri-3 mt-6 text-center">{t('dw_partner:partner_suggest_order_title')}</h1>
+                    <span className="txtSecond-4 mt-4 mb-10 text-center">{t('dw_partner:partner_suggest_order_subtitle')}</span>
                 </div>
 
                 <div className="flex flex-col gap-y-3 w-full txtPri-2 !font-semibold">
@@ -126,7 +127,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                     </div>
                 </div>
                 <ButtonV2 loading={loadingProcessOrder} className="mt-10" onClick={handleAcceptOrder}>
-                    {t('common:accept')}
+                    {t('dw_partner:btn_accept')}
                 </ButtonV2>
             </ModalV2>
             <AlertModalV2

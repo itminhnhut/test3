@@ -218,5 +218,8 @@
     "alert_suggest_not_found_order": "Order {{displayingId}} not found or being processed, please reload or contact support.",
     "alert_suggest_not_found_auto_partner": "Oops, it seems no partners match your transaction at the moment, please try again.",
     "toast_user_place_suggest_order_success": "{{side}} order {{orderId}} successfully placed.",
-    "alert_suggest_invalid_max_fee": "The transaction fee cannot exceed the amount you want to sell."
+    "alert_suggest_invalid_max_fee": "The transaction fee cannot exceed the amount you want to sell.",
+    "btn_accept": "Accept",
+    "partner_suggest_order_title": "Looking for partners for deposit/withdrawal transactions",
+    "partner_suggest_order_subtitle": "Users who are looking for a partner for the following transaction, please confirm as soon as possible to start processing the transaction"
 }

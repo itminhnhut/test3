@@ -110,7 +110,7 @@ const MadivesLayout = ({
                                 router.push({ pathname: PATHS.PARTNER_WITHDRAW_DEPOSIT.OPEN_ORDER, query: { suggest: displayingId } });
                             }}
                         >
-                            Xem
+                            {i18n.language === 'en' ? 'Detail' : 'Chi tiết'}
                         </span>
                     )
                 });
