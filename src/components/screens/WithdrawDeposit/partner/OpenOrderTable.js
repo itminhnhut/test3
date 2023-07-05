@@ -108,7 +108,7 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
                     {orderDetail?.fee ? (
                         <div className="mt-6 flex border-l-2 border-divider dark:border-divider-dark font-semibold">
                             <MonetizationOnIcon className="mx-2" />
-                            <span>{t('dw_partner:partner_bonus')}:&nbsp;</span>
+                            <span>{t('common:transaction_fee')}:&nbsp;</span>
                             <span className="text-green-3 dark:text-green-2">+{formatBalanceFiat(orderDetail.fee)} VND</span>
                         </div>
                     ) : null}
@@ -216,6 +216,8 @@ const OpenOrderTable = () => {
                 userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
                     console.log('socket removeListener PARTNER_UPDATE_ORDER:', data);
                 });
+
+                userSocket.off(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST)
                 userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                     console.log('socket removeListener PARTNER_UPDATE_ORDER_AUTO_SUGGEST:', data);
                 });

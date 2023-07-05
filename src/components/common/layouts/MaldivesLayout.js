@@ -104,7 +104,7 @@ const MadivesLayout = ({
                     duration: 5000,
                     customActionClose: (closeToast) => (
                         <span
-                            className="ml-6 text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4 cursor-pointer"
+                            className="ml-6 font-semibold text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4 cursor-pointer"
                             onClick={() => {
                                 closeToast();
                                 router.push({ pathname: PATHS.PARTNER_WITHDRAW_DEPOSIT.OPEN_ORDER, query: { suggest: displayingId } });
@@ -119,6 +119,7 @@ const MadivesLayout = ({
 
         return () => {
             if (userSocket) {
+                userSocket.off(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST)
                 userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                     console.log('socket removeListener PARTNER_UPDATE_ORDER_AUTO_SUGGEST:', data);
                 });
