@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { ApiStatus, MIN_TIP, UserSocketEvent } from 'redux/actions/const';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
@@ -9,7 +9,7 @@ import FetchApi from 'utils/fetch-api';
 import MCard from 'components/common/MCard';
 import { CountdownClock } from './components/common/CircleCountdown';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { API_CANCEL_AUTO_SUGGEST_ORDER, API_CONTINUE_AUTO_SUGGEST_ORDER, API_GET_ORDER_PRICE } from 'redux/actions/apis';
+import { API_CANCEL_AUTO_SUGGEST_ORDER, API_CONTINUE_AUTO_SUGGEST_ORDER, API_GET_ORDER_DETAILS, API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import { useDispatch, useSelector } from 'react-redux';
 import ModalLoading from 'components/common/ModalLoading';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
@@ -37,6 +37,9 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
     }, [showProcessSuggestPartner]);
 
     const [isAwaitSocketNotFoundPartner, setIsAwaitSocketNotFoundPartner] = useState(false);
+    const isAwaitSocketNotFoundPartnerRef = useRef(isAwaitSocketNotFoundPartner);
+    isAwaitSocketNotFoundPartnerRef.current = isAwaitSocketNotFoundPartner;
+
     const [isNotFoundPartner, setIsNotFoundPartner] = useState(false);
     const [isLoadingContinue, setIsLoadingContinue] = useState(false);
     const [isErrorContinue, setIsErrorContinue] = useState('');
@@ -123,6 +126,32 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
         }
     };
 
+    const handleAwaitSocketOrderTimeout = () => {
+        if (isNotFoundPartner) return;
+        setIsAwaitSocketNotFoundPartner(true);
+
+        setTimeout(() => {
+            if (!isAwaitSocketNotFoundPartnerRef.current) return;
+            // nếu 5s mà còn chưa nhận được socket thì phải force get api coi tình trạng Order thế nào.
+            FetchApi({
+                url: API_GET_ORDER_DETAILS,
+                options: { method: 'GET' },
+                params: {
+                    displayingId: state.displayingId
+                }
+            })
+                .then(({ data, status }) => {
+                    if (isNotFoundPartner || isErrorContinue) return;
+                    if (status === ApiStatus.SUCCESS) {
+                        setIsNotFoundPartner(true);
+                    } else {
+                        setIsErrorContinue(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: state?.displayingId }));
+                    }
+                })
+                .finally(setIsAwaitSocketNotFoundPartner(false));
+        }, 5000);
+    };
+
     // Tip handle:
     const { side, assetId } = router.query;
     const dispatch = useDispatch();
@@ -173,8 +202,6 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
         <>
             <ModalV2
                 isVisible={!!showProcessSuggestPartner}
-                // isVisible={true}
-                // onBackdropCb={onBackdropCb}
                 closeButton={false}
                 className="!max-w-[488px]"
                 wrapClassName="p-8 flex flex-col items-center txtSecond-4 "
@@ -190,7 +217,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                     <CountdownClock
                         key={state.timeExpire}
                         countdownTime={state.countdownTime}
-                        onComplete={() => !isNotFoundPartner && setIsAwaitSocketNotFoundPartner(true)}
+                        onComplete={handleAwaitSocketOrderTimeout}
                         timeExpire={state.timeExpire}
                     />
                 </div>
@@ -226,6 +253,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 </ButtonV2>
             </ModalV2>
 
+            {/* Popup tiếp tục tìm kiếm */}
             <AlertModalV2
                 isVisible={isNotFoundPartner}
                 // isVisible={!!showProcessSuggestPartner}
@@ -240,7 +268,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 message={t('dw_partner:keep_looking_for_partner_des')}
                 isButton={true}
                 customButton={
-                    <ButtonV2 disabled={tipValidator?.isError} loading={isLoadingContinue} onClick={handleContinueFindPartner}>
+                    <ButtonV2 disabled={state.side === SIDE.SELL && !tipValidator?.isValid} loading={isLoadingContinue} onClick={handleContinueFindPartner}>
                         {t('common:continue')}
                     </ButtonV2>
                 }
@@ -322,6 +350,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 )}
             </AlertModalV2>
 
+            {/* Popup lỗi */}
             <AlertModalV2
                 isVisible={isErrorContinue}
                 // isVisible={true}
@@ -337,7 +366,13 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 message={isErrorContinue}
             />
 
-            <ModalLoading isVisible={isAwaitSocketNotFoundPartner} onBackdropCb={() => setIsAwaitSocketNotFoundPartner(false)} />
+            {isAwaitSocketNotFoundPartner && (
+                <ModalLoading
+                    animateModal={false}
+                    isVisible={isAwaitSocketNotFoundPartner}
+                    // onBackdropCb={() => setIsAwaitSocketNotFoundPartner(false)}
+                />
+            )}
         </>
     );
 };

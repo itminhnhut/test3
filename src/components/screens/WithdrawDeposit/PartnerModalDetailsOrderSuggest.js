@@ -99,7 +99,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                 <div className="flex flex-col gap-y-3 w-full txtPri-2 !font-semibold">
                     <div className="flex justify-between">
                         <span className="txtSecond-4">{t('dw_partner:transaction_type')}</span>
-                        <span className={state.side === SIDE.BUY ? 'text-green-3 dark:text-green-2' : 'text-red'}>{t(`common:${state.side?.toLowerCase()}`)}</span>
+                        <span className={state.side === SIDE.BUY ? 'text-green-3 dark:text-green-2' : 'text-red'}>{t(`common:${state.side?.toLowerCase()}`) || '_'}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="txtSecond-4">{t('common:amount')}</span>
