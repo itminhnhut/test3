@@ -45,7 +45,7 @@ const SelectV2 = ({
                             className={classNames(
                                 'absolute right-0 z-[99] w-full',
                                 {
-                                    'top-0 mt-2': position === 'bottom',
+                                    'top-full mt-2': position === 'bottom',
                                     'bottom-full mb-2': position === 'top'
                                 },
                                 popoverPanelClassName

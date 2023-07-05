@@ -12,6 +12,7 @@ import { Search } from 'react-feather';
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import SelectV2 from 'components/common/V2/SelectV2';
 
 const Tables = ({ language, t, commisionConfig, id1, id2 }) => {
     return (
@@ -64,10 +65,22 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
         );
     };
 
+    const Select = ({ item, filter, key }) => {
+        const data = filter?.[key] || {};
+        return (
+            <SelectV2 
+                options={item?.values || []} 
+                value={data?.value || null} 
+                onChange={(e) => onChange(e, key)} 
+            />
+        );
+    };
+
     const ListFilter = {
         dateRange: (data) => DatePicker(data),
         input: (data) => Input(data),
-        reset: (data) => Reset(data)
+        reset: (data) => Reset(data),
+        popover: (data) => Select(data)
     };
 
     const onChange = (value, key) => {

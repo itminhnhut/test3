@@ -16,7 +16,8 @@ const KIND = {
     Spot: { vi: 'KL Nami Spot', en: 'Nami Spot Vol' },
     Futures: { vi: 'KL Nami Futures', en: 'Nami Futures Vol' },
     Staking: { vi: 'KL Nami Daily Staking', en: 'Nami Daily Staking Vol' },
-    nao_futures: { vi: 'KL NAO Futures', en: 'NAO Futures Vol' }
+    nao_futures: { vi: 'KL NAO Futures', en: 'NAO Futures Vol' },
+    insurance: { vi: 'Kí quỹ bảo hiểm', en: 'Insurace margin' }
 };
 
 const ModalFriendDetail = ({
@@ -37,7 +38,6 @@ const ModalFriendDetail = ({
         const commissionByAsset = (detailFriend?.commission || [])?.find((f) => f?.asset === options?.commission) || {};
         return commissionByAsset?.total || {};
     }, [detailFriend?.commission, options?.commission]);
-
     const totalOrderVol = useMemo(() => {
         const orderVolByAsset = (detailFriend?.order_vol || [])?.find((f) => f?.asset === options?.orderVol) || {};
         return orderVolByAsset?.total?.reduce((acc, curr) => {
@@ -45,7 +45,6 @@ const ModalFriendDetail = ({
             return acc;
         }, {});
     }, [detailFriend?.order_vol, options?.orderVol]);
-
     const valueCommission = useMemo(() => {
         return defaultOption.find((f) => f.value === options.commission)?.value;
     }, [options]);
@@ -70,18 +69,24 @@ const ModalFriendDetail = ({
             <div className="bg-dark-13 dark:bg-dark-4 p-4 rounded-xl mt-6">
                 <div className="flex flex-row justify-between">
                     <div className="text-gray-1 dark:text-gray-7">Email</div>
-                    <div className='font-semibold flex items-center gap-2'>
-                        {detailFriend?.email ? <>
-                            <div className="overflow-hidden truncate max-w-[190px]" title={detailFriend?.email}>
-                                {detailFriend?.email}
-                            </div>
-                            <CopyIcon data={detailFriend?.email} size={16} className="cursor-pointer" />
-                        </> : "-"}
+                    <div className="font-semibold flex items-center gap-2">
+                        {detailFriend?.email ? (
+                            <>
+                                <div className="overflow-hidden truncate max-w-[190px]" title={detailFriend?.email}>
+                                    {detailFriend?.email}
+                                </div>
+                                <CopyIcon data={detailFriend?.email} size={16} className="cursor-pointer" />
+                            </>
+                        ) : (
+                            '-'
+                        )}
                     </div>
                 </div>
                 <div className="flex flex-row justify-between mt-3">
                     <div className="text-gray-1 dark:text-gray-7">{t('reference:invited_by')}</div>
-                    <div className="font-semibold flex items-center gap-2">{invitedBy} <CopyIcon data={invitedBy} size={16} className="cursor-pointer" /></div>
+                    <div className="font-semibold flex items-center gap-2">
+                        {invitedBy} <CopyIcon data={invitedBy} size={16} className="cursor-pointer" />
+                    </div>
                 </div>
                 <div className="flex flex-row justify-between mt-3">
                     <div className="text-gray-1 dark:text-gray-7">{t('reference:statistic')}</div>
@@ -147,6 +152,10 @@ const ModalFriendDetail = ({
                 </div>
                 <div className="flex flex-row justify-between mb-3 last:mb-0">
                     <div className="text-gray-1 dark:text-gray-7">{KIND['nao_futures']?.[language]}</div>
+                    <div className="font-semibold">{handleTotal(valueOrderVol, totalOrderVol?.nao_futures)}</div>
+                </div>
+                <div className="flex flex-row justify-between mb-3 last:mb-0">
+                    <div className="text-gray-1 dark:text-gray-7">{KIND['insurance']?.[language]}</div>
                     <div className="font-semibold">{handleTotal(valueOrderVol, totalOrderVol?.nao_futures)}</div>
                 </div>
             </div>
