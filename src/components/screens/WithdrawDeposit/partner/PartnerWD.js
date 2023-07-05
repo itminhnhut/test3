@@ -1,39 +1,36 @@
-import React, { useState } from 'react';
-import Container from '../components/common/Container';
+import React from 'react';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
-import OpenOrderTable from './OpenOrderTable';
 import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 
-const getTabIdFromHref = (path) => path.replace(PATHS.PARNER_WITHDRAW_DEPOSIT.DEFAULT, '');
+const getTabIdFromHref = (path) => path.replace(PATHS.PARTNER_WITHDRAW_DEPOSIT.DEFAULT, '');
 
 const TABS = [
     {
         localized: 'dw_partner:pending_transaction',
         key: 1,
-        href: PATHS.PARNER_WITHDRAW_DEPOSIT.OPEN_ORDER
+        href: PATHS.PARTNER_WITHDRAW_DEPOSIT.OPEN_ORDER
     },
     {
         localized: 'dw_partner:transaction_history',
         key: 2,
-        href: PATHS.PARNER_WITHDRAW_DEPOSIT.HISTORY_ORDER
+        href: PATHS.PARTNER_WITHDRAW_DEPOSIT.HISTORY_ORDER
     },
     {
         localized: 'dw_partner:achievement',
         key: 3,
-        href: PATHS.PARNER_WITHDRAW_DEPOSIT.STATS
+        href: PATHS.PARTNER_WITHDRAW_DEPOSIT.STATS
     },
     {
         localized: 'dw_partner:information',
         key: 4,
-        href: PATHS.PARNER_WITHDRAW_DEPOSIT.PROFILE
+        href: PATHS.PARTNER_WITHDRAW_DEPOSIT.PROFILE
     },
     {
         localized: 'dw_partner:commission_history',
         key: 5,
-        href: PATHS.PARNER_WITHDRAW_DEPOSIT.HISTORY_REFERRAL
+        href: PATHS.PARTNER_WITHDRAW_DEPOSIT.HISTORY_REFERRAL
     }
 ];
 

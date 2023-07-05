@@ -11,6 +11,8 @@ import colors from 'styles/colors';
 import { useClickAway } from 'react-use';
 import { BxsBellIcon } from '../svg/SvgIcon';
 import classNames from 'classnames';
+import { useRouter } from 'next/router';
+import { PATHS } from 'constants/paths';
 
 const NOTI_READ = NotificationStatus.DELETED;
 
@@ -26,6 +28,7 @@ const IconNoti = {
 const NotificationList = ({ btnClass }) => {
     const { t, i18n } = useTranslation(['navbar']);
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const ref = useRef(null);
 
@@ -100,7 +103,12 @@ const NotificationList = ({ btnClass }) => {
                                 }
                             )}
                             key={notification?._id || notification?.created_at}
-                            onClick={() => handleMarkRead(notification?._id, notification.status)}
+                            onClick={() => {
+                                handleMarkRead(notification?._id, notification.status);
+                                if (notification?.context?.isAutoSuggest)
+                                    router.push({ pathname: PATHS.PARTNER_WITHDRAW_DEPOSIT.OPEN_ORDER, query: { suggest: notification?.context?.displayingId } });
+                                    closeDropdownPopover();
+                            }}
                         >
                             <div className="min-w-[48px] min-h-[48px] mr-4 p-2 sm:p-3 bg-hover-1 dark:bg-dark-2 rounded-full flex justify-center items-center ">
                                 {IconNoti?.[notification?.category] || <IconBell size={24} color={colors.teal} />}
@@ -120,7 +128,7 @@ const NotificationList = ({ btnClass }) => {
                             </div>
                             <div
                                 className={classNames('ml-3 bg-dominant w-2 h-2 rounded-full', {
-                                    'hidden': notification?.status === NOTI_READ
+                                    hidden: notification?.status === NOTI_READ
                                 })}
                             />
                         </div>

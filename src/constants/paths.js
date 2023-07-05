@@ -101,7 +101,7 @@ export const PARTNER_WD_TABS = {
     DETAILS: 'details'
 };
 
-const PARNER_WITHDRAW_DEPOSIT = {
+const PARTNER_WITHDRAW_DEPOSIT = {
     DEFAULT: '/partner-dw/',
     OPEN_ORDER: `/partner-dw/${PARTNER_WD_TABS.OPEN_ORDER}`,
     HISTORY_ORDER: `/partner-dw/${PARTNER_WD_TABS.HISTORY_ORDER}`,
@@ -123,7 +123,7 @@ export const PATHS = {
     SUPPORT,
     TRANSACTION_HISTORY,
     WITHDRAW_DEPOSIT,
-    PARNER_WITHDRAW_DEPOSIT,
+    PARTNER_WITHDRAW_DEPOSIT,
     FUTURES_PORTFOLIO: '/statistics'
     // Add news path here
 };

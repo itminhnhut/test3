@@ -18,6 +18,7 @@ import useDarkMode from 'hooks/useDarkMode';
 import { useRefWindowSize } from 'hooks/useWindowSize';
 import Skeletor from '../components/common/Skeletor';
 import { useAsync } from 'react-use';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
@@ -59,10 +60,20 @@ const Index = () => {
     const [state, set] = useState({
         showQR: false,
         streamLineData: null,
-        trendData: null
+        trendData: null,
+        loadingTrendData: false,
+        marketTrendCurrency: null
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const futuresConfigs = useSelector((state) => state.futures.pairConfigs);
+
+    const setMarketTrendCurrency = useCallback(
+        (currencyCode) =>
+            setState({
+                marketTrendCurrency: currencyCode
+            }),
+        []
+    );
 
     // * Use Hooks
     const {
@@ -71,6 +82,10 @@ const Index = () => {
     } = useTranslation(['home', 'modal']);
     const [currentTheme] = useDarkMode();
     const { width } = useRefWindowSize();
+
+    useEffect(() => {
+        setMarketTrendCurrency(language === LANGUAGE_TAG.VI ? 'VNDC' : 'USDT');
+    }, [language]);
 
     // * Render Handler
     const renderQrCodeModal = useCallback(() => {
@@ -103,7 +118,10 @@ const Index = () => {
     }, [state.showQR]);
 
     useAsync(async () => {
-        if (!(futuresConfigs && futuresConfigs.length)) return;
+        if (!(futuresConfigs && futuresConfigs.length) || !state.marketTrendCurrency) return;
+        setState({
+            loadingTrendData: true
+        });
         const originPairs = await getFuturesMarketWatch();
         let pairs = originPairs;
         pairs = compact(
@@ -119,7 +137,7 @@ const Index = () => {
                 return null;
             })
         );
-        pairs = filter(pairs, { q: 'VNDC' });
+        pairs = filter(pairs, { q: state.marketTrendCurrency });
 
         pairs = uniqBy(pairs, 'b');
 
@@ -146,6 +164,7 @@ const Index = () => {
         ]);
 
         setState({
+            loadingTrendData: false,
             trendData: {
                 topView: topView.slice(0, 5),
                 topGainers: topGainers.slice(0, 5),
@@ -156,13 +175,18 @@ const Index = () => {
                 total: originPairs.length
             }
         });
-    }, [futuresConfigs]);
+    }, [futuresConfigs, state.marketTrendCurrency]);
 
     return (
         <MaldivesLayout navMode={NAVBAR_USE_TYPE.FLUENT}>
             <div className="homepage">
                 <HomeIntroduce width={width} trendData={state.trendData} t={t} />
-                <HomeMarketTrend trendData={state.trendData} />
+                <HomeMarketTrend
+                    loadingTrendData={state.loadingTrendData}
+                    trendData={state.trendData}
+                    setCurrency={setMarketTrendCurrency}
+                    marketCurrency={state.marketTrendCurrency}
+                />
                 <HomeNews />
                 <HomeAdditional t={t} width={width} currentTheme={currentTheme} />
                 <HomeLightDark t={t} onShowQr={() => setState({ showQR: true })} />
