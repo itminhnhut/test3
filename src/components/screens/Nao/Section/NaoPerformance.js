@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { ButtonNao, CardNao, TextLiner } from 'components/screens/Nao/NaoStyle';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -21,7 +21,7 @@ import RangePopover from '../Components/RangePopover';
 import { formatAbbreviateNumber } from 'redux/actions/utils';
 import { useIsomorphicLayoutEffect } from 'react-use';
 import dynamic from 'next/dynamic';
-import { format, parse } from 'date-fns';
+import { addDays, format, parse } from 'date-fns';
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const ApexChartWrapper = styled.div`
@@ -232,11 +232,14 @@ const NaoPerformance = memo(({}) => {
     const getDataChart = async () => {
         if (!isValidCustomDay) return;
         let filterDay = filter.day;
-        if (filter.day === 'd' || filter.day === '-d') {
-            filterDay = 'w';
-            if (dataChartSource[0]?.data?.length) return;
+        let startDate = range?.startDate;
+        let endDate = range?.endDate;
+        if ((filter.day === 'd' || filter.day === '-d')) {
+            filterDay = 'custom';
+            endDate = new Date();
+            startDate = addDays(endDate, -7);
+            // if (dataChartSource[0]?.data?.length) return;
         }
-
         setChartLoading(true);
         try {
             const data = await fetchApi({
@@ -244,8 +247,8 @@ const NaoPerformance = memo(({}) => {
                 options: { method: 'GET' },
                 params: {
                     range: filterDay,
-                    from: range?.startDate?.getTime(),
-                    to: range?.endDate?.getTime(),
+                    from: startDate?.getTime(),
+                    to: endDate?.getTime(),
                     marginCurrency: filter.marginCurrency,
                     userCategory: 2
                 }
