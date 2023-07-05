@@ -84,7 +84,7 @@ const MadivesLayout = ({
                 // make sure the socket displayingId is the current page
                 if (!data || data?.status !== 0 || data.partnerAcceptStatus !== 0) return;
 
-                const { displayingId, quoteQty, baseAssetId, userMetadata, side } = data;
+                const { displayingId, baseQty, baseAssetId, side } = data;
 
                 if (router?.query?.id === PARTNER_WD_TABS.OPEN_ORDER) return;
 
@@ -97,7 +97,7 @@ const MadivesLayout = ({
                     text: t('common:partner_toast_suggest_order', {
                         side: t(`common:${side.toLowerCase()}`),
                         displayingID: displayingId,
-                        amount: quoteQty,
+                        amount: baseQty,
                         asset: baseAssetId === 72 ? 'VNDC' : 'USDT'
                     }),
                     type: 'info',
