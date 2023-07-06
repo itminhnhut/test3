@@ -58,6 +58,18 @@ const types = {
                 />
             </svg>
         )
+    },
+    info: {
+        light: (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="#1E1E1E" />
+            </svg>
+        ),
+        dark: (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="#E2E8F0" />
+            </svg>
+        )
     }
 };
 
@@ -72,18 +84,22 @@ const NamiToast = ({ render, text, type }) => {
     );
 };
 
-const toast = ({ text = '', render = undefined, type = 'default', duration = 5000, className='' }) => {
+const toast = ({ key, text = '', render = undefined, type = 'default', duration = 5000, className = '', customActionClose }) => {
     return rcToast(<NamiToast render={render} text={text} type={type} />, {
         className: `flex items-center justify-between min-w-[375px] max-w-[756px] ${className}`,
         bodyClassName: 'flex items-center justify-center',
         autoClose: duration,
-        // pauseOnHover: true,
+        pauseOnHover: false,
         closeOnClick: false,
-        closeButton: ({ closeToast }) => (
-            <button className="ml-4 text-gray-15  dark:text-gray-4" onClick={closeToast}>
-                <CloseIcon size={24} color="currentColor" />
-            </button>
-        )
+        toastId: key,
+        closeButton: ({ closeToast }) =>
+            customActionClose ? (
+                customActionClose(closeToast)
+            ) : (
+                <button className="ml-4 text-gray-15  dark:text-gray-4" onClick={closeToast}>
+                    <CloseIcon size={24} color="currentColor" />
+                </button>
+            )
     });
 };
 

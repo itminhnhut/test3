@@ -43,9 +43,17 @@ const PnlChanging = ({
     });
 
     useEffect(() => {
-        console.log('___________', dataPnl.values);
         if (dataPnl?.labels?.length > 0) {
-            let labels = dataPnl.labels.map((obj) => parseTitle(obj.date, dataPnl?.interval, false, filter.startDate));
+            let labels = dataPnl.labels.map((obj, idx) =>
+                parseTitle(
+                    obj.date,
+                    dataPnl?.interval,
+                    false,
+                    idx === 0 ? filter.startDate : filter.endDate,
+                    idx === 0 || idx === dataPnl.labels.length - 1,
+                    idx
+                )
+            );
             let values = dataPnl.values.map((obj) => obj.pnl);
 
             // const min = -100000;
@@ -80,14 +88,25 @@ const PnlChanging = ({
             setShowDetails(item[0]?.index);
         },
         plugins: {
+            legend: {
+                display: false
+            },
             tooltip: {
                 enabled: false,
                 position: 'nearest',
                 external: (context) => {
                     if (!isMobile) {
                         const { dataIndex } = context?.chart?.tooltip?.dataPoints?.['0'];
+                        let isMarkPoints = dataIndex === 0 || dataIndex === dataPnl.labels.length - 1;
 
-                        const title = parseTitle(dataPnl.labels[dataIndex]?.date, dataPnl?.interval, true, filter.startDate);
+                        const title = parseTitle(
+                            dataPnl.labels[dataIndex]?.date,
+                            dataPnl?.interval,
+                            true,
+                            dataIndex === 0 ? filter.startDate : filter.endDate,
+                            isMarkPoints,
+                            dataIndex
+                        );
 
                         let margin = dataPnl.values[dataIndex].margin ?? 1;
                         let pnl = dataPnl.values[dataIndex].pnl;
@@ -236,7 +255,14 @@ const PnlChanging = ({
                                 <div className="flex items-center justify-between">
                                     <span className="txtSecond-3">{t('common:global_label.date')}</span>
                                     <div className="whitespace-nowrap font-semibold flex items-center">
-                                        {parseTitle(dataPnl.labels[showDetails]?.date, dataPnl?.interval, false, filter.startDate)}
+                                        {parseTitle(
+                                            dataPnl.labels[showDetails]?.date,
+                                            dataPnl?.interval,
+                                            false,
+                                            showDetails === 0 ? filter.startDate : filter.endDate,
+                                            showDetails === 0 || showDetails === dataPnl.labels.length - 1,
+                                            showDetails
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between mt-2.5">
@@ -343,7 +369,7 @@ const generateThead = (isDark, label) => {
     th.style.fontSize = '14px';
     th.style.fontWeight = 'normal';
     th.style.paddingBottom = '12px';
-    th.style.whiteSpace = 'nowrap'
+    th.style.whiteSpace = 'nowrap';
     const text = document.createTextNode(label);
 
     th.appendChild(text);
@@ -436,7 +462,7 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
 
     // console.log(barEl.x, tooltipWidth, chartWidth);
     if (barEl.x + tooltipWidth > chartWidth) {
-        tooltipEl.style.left = barEl.x - tooltipWidth / 2 - barEl.width - 6 -1 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
+        tooltipEl.style.left = barEl.x - tooltipWidth / 2 - barEl.width - 6 - 1 + 'px'; // positionX + tooltip.caretX + tooltipWidth / 2 + 'px';
         tooltipEl.style.font = tooltip.options.bodyFont.string;
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
         tooltipEl.style.opacity = 1;
@@ -487,25 +513,35 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
     tooltipEl.appendChild(tooltipCaretEl);
 };
 
-const parseTitle = (stringDate, interval, isDetails = false, startDate) => {
-    const dayOfWeek = getDay(new Date(startDate));
+const parseTitle = (stringDate, interval, isDetails = false, markTime, isMarkTime, dataIndex) => {
+    let curDate = new Date(stringDate);
 
-    // Calculate the delta from Monday (assuming Monday is the start of the week)
-    const delta = (dayOfWeek + 6) % 7;
+    if (isMarkTime && dataIndex === 0) {
+        const dayOfWeek = getDay(new Date(markTime));
+        const delta = (dayOfWeek + 6) % 7;
+
+        curDate = addDays(curDate, delta);
+    }
 
     let title = '';
-    const curDate = addDays(new Date(stringDate), delta);
+    let getToTime = (cb) => {
+        if(isMarkTime && dataIndex !== 0) return formatTime(new Date(markTime), 'dd/MM/yyyy')
+        return formatTime(subDays(cb(new Date(stringDate), 1), 1), 'dd/MM/yyyy')
+    }
+
     switch (interval) {
         case INTERVAL.DAY:
             title = formatTime(curDate, isDetails ? 'dd/MM/yyyy' : 'dd/MM');
             break;
         case INTERVAL.WEEK:
             if (!isDetails) title = formatTime(curDate, 'dd/MM');
-            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(subDays(addWeeks(curDate, 1), 1), 'dd/MM/yyyy');
+            else {
+                title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + getToTime(addWeeks);
+            }
             break;
         case INTERVAL.MONTH:
             if (!isDetails) title = formatTime(curDate, 'MM/yyyy');
-            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + formatTime(subDays(addMonths(curDate, 1), 1), 'dd/MM/yyyy');
+            else title = formatTime(curDate, 'dd/MM/yyyy') + ' - ' + getToTime(addMonths);
             break;
         default:
             break;

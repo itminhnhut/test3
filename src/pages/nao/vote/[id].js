@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import LoadingPage from 'components/screens/Nao_futures/LoadingPage';
 import colors from 'styles/colors';
-import ModalV2 from 'components/common/V2/ModalV2';
+import ModalV2 from 'components/screens/Nao/Components/ModalV2';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
 import { useWindowSize } from 'utils/customHooks';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';

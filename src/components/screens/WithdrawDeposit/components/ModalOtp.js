@@ -24,7 +24,7 @@ const INITAL_OTP_STATE = {
 
 const OTP_MODE = ['email', 'tfa'];
 
-const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUseSmartOtp }) => {
+const ModalOtp = ({isVisible, onClose, otpExpireTime, loading, onConfirm, isUseSmartOtp }) => {
     const [state, set] = useState({
         otp: INITAL_OTP_STATE,
         pasted: {
@@ -36,7 +36,6 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUse
         validateSmartOtp: false,
         errorTimes: 0
     });
-
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
@@ -104,9 +103,8 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUse
         } catch {}
     };
 
-
     const onSubmitSmartOtp = async (code) => {
-        setState({validateSmartOtp: true})
+        setState({ validateSmartOtp: true });
 
         try {
             const response = await onConfirm({ smartOtp: code?.smartOtp });
@@ -115,7 +113,7 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUse
         } catch (error) {
             console.error('ERROR WHEN SUBMIT OTP CODE: ', error);
         } finally {
-            setState({ validateSmartOtp: false })
+            setState({ validateSmartOtp: false });
         }
     };
 
@@ -125,8 +123,18 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUse
             isVisible={isVisible}
             wrapClassName=""
             onBackdropCb={() => {
+                setState({
+                    otp: INITAL_OTP_STATE,
+                    pasted: {
+                        email: false,
+                        tfa: false
+                    },
+                    isError: false,
+                    modes: OTP_MODE,
+                    validateSmartOtp: false,
+                    errorTimes: 0
+                });
                 onClose();
-                setState({ otp: INITAL_OTP_STATE, isError: false });
             }}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`)}
             customHeader={() => (

@@ -70,11 +70,10 @@ const ModalQr = ({ isVisible, onClose, bank, className, t, orderId }) => {
 export const ModalDownLoadImg = ({ loading, isVisible, onClose, onDownload, className, children, t, downloadText }) => {
     return (
         <ModalV2
-            isMobile
             isVisible={isVisible}
             wrapClassName=""
             onBackdropCb={onClose}
-            className={classNames(`md:!max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
+            className={classNames(`md:!max-w-[488px] overflow-y-auto select-none`, { className })}
         >
             {children}
             <ButtonV2 loading={loading} className="mt-10" disabled={!onDownload} onClick={() => onDownload && onDownload?.()}>

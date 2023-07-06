@@ -1,9 +1,10 @@
 import classNames from 'classnames';
 import React from 'react';
 
-const Chip = ({ children, className = '', variants, selected = false, disabled = false, loading = false, onClick, isDeepBackground = false }) => {
+const Chip = ({ children, className = '', variants = 'filter', selected = false, disabled = false, loading = false, onClick, isDeepBackground = false }) => {
     const extendClass = {
-        suggestion: 'border-divider dark:border-divider-dark'
+        suggestion: 'border-divider dark:border-divider-dark bg-transparent',
+        filter: 'bg-gray-12 dark:bg-dark-4 border-transparent'
     }[variants];
 
     return (
@@ -11,7 +12,7 @@ const Chip = ({ children, className = '', variants, selected = false, disabled =
             onClick={onClick}
             className={classNames(
                 `rounded-md py-2 px-4 text-sm text-gray-1 dark:text-gray-7 hover:text-gray-15 dark:hover:text-gray-4 hover:cursor-pointer
-                 dark:bg-dark-4 dark:hover:bg-dark-5 transition-all duration-75 border border-transparent whitespace-nowrap`,
+                  dark:hover:bg-dark-5 transition-all duration-75 border whitespace-nowrap`,
                 {
                     'bg-gray-13 hover:bg-gray-6': !isDeepBackground,
                     'bg-white hover:bg-gray-6': isDeepBackground,

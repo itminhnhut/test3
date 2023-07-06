@@ -102,8 +102,6 @@ const ModalConfirm = ({ selectedAsset, selectedNetwork, open, address, memo, amo
     };
 
     const alertErr = (errStatus, dataErr) => {
-        console.log("______alertErr: ", errStatus, dataErr)
-
         return toast({
             text: errorMessageMapper(t, errStatus, dataErr),
             type: 'warning',

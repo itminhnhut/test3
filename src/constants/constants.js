@@ -276,3 +276,15 @@ export const FUTURES_PRODUCT = {
     NAMI: { id: 0, name: 'Nami Futures'},
     NAO: { id: 2, name: 'NAO Futures'}
 }
+
+export const CHART_JS_RANGE = {
+    millisecond: 'millisecond',
+    second: 'second',
+    minute: 'minute',
+    hour: 'hour',
+    day: 'day',
+    week: 'week',
+    month: 'month',
+    quarter: 'quarter',
+    year: 'year'
+};

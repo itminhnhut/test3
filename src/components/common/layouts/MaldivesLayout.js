@@ -10,10 +10,17 @@ import { setTheme } from 'redux/actions/user';
 import dynamic from 'next/dynamic';
 import { isMobile } from 'react-device-detect';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import Skeletor from '../Skeletor';
 import Head from 'next/head';
+import toast from 'utils/toast';
+import { useTranslation } from 'next-i18next';
+import { UserSocketEvent } from 'redux/actions/const';
+import { useRouter } from 'next/router';
+import { formatNumber } from 'utils/reference-utils';
+import { PARTNER_WD_TABS, PATHS } from 'constants/paths';
+import { getNotifications } from 'redux/actions/notification';
 
 const NavBar = dynamic(() => import('src/components/common/NavBar/NavBar'), {
     ssr: false,
@@ -27,6 +34,10 @@ const navbarStyle = {
     position: 'fixed',
     top: 0,
     left: 0
+};
+
+const HookPartnerSocket = () => {
+    return <></>;
 };
 
 const MadivesLayout = ({
@@ -50,12 +61,67 @@ const MadivesLayout = ({
     // Use Hooks
     const { width } = useWindowSize();
     const theme = useSelector((state) => state.user.theme);
+    const { user } = useSelector((state) => state.auth) || null;
+    const isPartner = user?.partner_type === 2;
     const isApp = useApp();
-
     const store = useStore();
+    const dispatch = useDispatch();
+
     useEffect(() => {
         store.dispatch(setTheme());
     }, []);
+
+    const router = useRouter();
+
+    const { t, i18n} = useTranslation();
+
+    const userSocket = useSelector((state) => state.socket.userSocket);
+    useEffect(() => {
+        if (user?.partner_type !== 2) return;
+
+        if (userSocket) {
+            userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
+                // make sure the socket displayingId is the current page
+                if (!data || data?.status !== 0 || data.partnerAcceptStatus !== 0) return;
+
+                const { displayingId, quoteQty, baseAssetId, userMetadata, side } = data;
+
+                if (router?.query?.id === PARTNER_WD_TABS.OPEN_ORDER) return;
+
+                dispatch(getNotifications({ lang: i18n.language }));
+                toast({
+                    key: `suggest_order_${displayingId}`,
+                    text: t('common:partner_toast_suggest_order', {
+                        side: t(`common:${side.toLowerCase()}`),
+                        displayingID: displayingId,
+                        amount: quoteQty,
+                        asset: baseAssetId === 72 ? 'VNDC' : 'USDT'
+                    }),
+                    type: 'info',
+                    duration: 5000,
+                    customActionClose: (closeToast) => (
+                        <span
+                            className="ml-6 text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4 cursor-pointer"
+                            onClick={() => {
+                                closeToast();
+                                router.push({ pathname: PATHS.PARTNER_WITHDRAW_DEPOSIT.OPEN_ORDER, query: { suggest: displayingId } });
+                            }}
+                        >
+                            Xem
+                        </span>
+                    )
+                });
+            });
+        }
+
+        return () => {
+            if (userSocket) {
+                userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
+                    console.log('socket removeListener PARTNER_UPDATE_ORDER_AUTO_SUGGEST:', data);
+                });
+            }
+        };
+    }, [userSocket, i18n]);
 
     return (
         <>
@@ -111,6 +177,7 @@ const MadivesLayout = ({
                 {!hideFooter && !hideInApp && <Footer />}
                 <TransferModal />
                 <div id={`${PORTAL_MODAL_ID}`} />
+                {isPartner && <HookPartnerSocket />}
             </div>
         </>
     );

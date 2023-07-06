@@ -4,25 +4,15 @@ import styled, { css } from 'styled-components';
 import colors from 'styles/colors';
 import Chip from '../Chip';
 
-const TabV2 = ({ wrapperClassName, activeTabKey, tabs, onChangeTab, isOverflow, chipClassName, isDeepBackground }) => {
+const TabV2 = ({ wrapperClassName, activeTabKey, tabs, onChangeTab, isOverflow, chipClassName, isDeepBackground, ...props }) => {
     return (
         <TabWrapper className={classNames('flex gap-4 items-center', wrapperClassName)} isOverflow={isOverflow}>
             {tabs.map((tab) => {
                 const isActive = tab.key === activeTabKey;
                 return (
-                    <Chip selected={isActive} key={tab.key} onClick={() => onChangeTab(tab.key)} className={`min-w-max ${chipClassName}`} isDeepBackground={isDeepBackground}>
+                    <Chip {...props} selected={isActive} key={tab.key} onClick={() => onChangeTab(tab.key)} className={`min-w-max ${chipClassName}`} isDeepBackground={isDeepBackground}>
                         {tab.children}
                     </Chip>
-                    // <Tab
-                    //     className={`border flex ${isActive ? 'border-teal ' : 'border-divider dark:border-divider-dark '}`}
-                    //     onClick={() => onChangeTab(tab.key)}
-                    //     key={tab.key}
-                    //     active={isActive}
-                    //     disabled={isActive}
-                    //     id={tab.key}
-                    // >
-                    //     {tab.children}
-                    // </Tab>
                 );
             })}
         </TabWrapper>

@@ -4,7 +4,6 @@ import CardPartner from './CardPartner';
 import HistoryTable from './HistoryTable';
 
 const WithdrawDeposit = () => {
-    console.log('aaaaaabb')
     return (
         <div>
             <div className="mb-20">

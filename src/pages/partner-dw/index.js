@@ -11,7 +11,7 @@ export default index;
 export const getServerSideProps = async (context) => {
     return {
         redirect: {
-            destination: PATHS.PARNER_WITHDRAW_DEPOSIT.OPEN_ORDER,
+            destination: PATHS.PARTNER_WITHDRAW_DEPOSIT.OPEN_ORDER,
             permanent: false
         }
     };

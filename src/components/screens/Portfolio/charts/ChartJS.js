@@ -40,7 +40,7 @@ const ChartJS = memo(
         redraw = true,
         options = {
             responsive: true,
-            maintainAspectRatio: false
+            maintainAspectRatio: true
         }
     }) => {
         let chart = <Line options={options} data={data} width={width} height={height} />;
