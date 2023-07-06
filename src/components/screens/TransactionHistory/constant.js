@@ -28,7 +28,8 @@ export const TRANSACTION_TYPES = {
     REWARD: 'reward',
     FUTURESCOMMISSION: 'futurescommission',
     PARTNERCOMMISSION: 'partnercommission',
-    COMMISSION: 'commision'
+    COMMISSION: 'commision',
+    INSURANCE: 'insurance'
 };
 
 export const TransactionTabs = [
@@ -86,6 +87,12 @@ export const TransactionTabs = [
         key: TRANSACTION_TYPES.REWARD,
         localized: 'commission',
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.REWARD)
+    },
+    {
+        key: TRANSACTION_TYPES.INSURANCE,
+        localized: null,
+        title: 'Insurance',
+        href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.INSURANCE)
     }
 ];
 

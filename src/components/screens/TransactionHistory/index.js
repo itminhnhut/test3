@@ -259,7 +259,7 @@ const TransactionHistory = ({ id }) => {
                             onChangeTab={onChangeTab}
                             tabs={TransactionTabs.map((tab) => ({
                                 key: tab.key,
-                                children: <div className="">{t('transaction-history:tab.' + tab.localized)}</div>
+                                children: <div className="">{tab.localized ? t('transaction-history:tab.' + tab.localized) : tab.title}</div>
                             }))}
                         />
                     </div>

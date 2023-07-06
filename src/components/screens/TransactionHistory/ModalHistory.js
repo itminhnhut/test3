@@ -12,7 +12,7 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import { find, get, isNumber, isString } from 'lodash';
 import classNames from 'classnames';
 import { TRANSACTION_TYPES, modalDetailColumn, COLUMNS_TYPE } from './constant';
-import { WalletTypeById } from 'redux/actions/const';
+import { WalletTypeById, WalletType } from 'redux/actions/const';
 import { ArrowCompareIcon } from '../../svg/SvgIcon';
 import { customFormatBalance } from '.';
 
