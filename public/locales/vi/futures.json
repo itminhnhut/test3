@@ -14,6 +14,13 @@
     "close_order_success": "Lệnh #{{orderId}} đã được đóng thành công.",
     "close_order_failed": "Đóng lệnh #{{orderId}} thất bại.",
     "fee_level": "Mức phí",
+    "insurance": {
+        "rules": "Thể lệ bảo hiểm",
+        "title": "Hợp đồng bảo hiểm",
+        "contract": "Hợp đồng",
+        "contracts": "Hợp đồng",
+        "difference": "Khoảng cách bảo hiểm gần nhất"
+    },
     "order_table": {
         "opening_volume": "Khối lượng mở",
         "opening_volume_tooltips": "Khối lượng mở = Số lượng tài sản giao dịch x Giá mở",

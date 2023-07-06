@@ -13,6 +13,13 @@
     "last_price": "Last",
     "last_price_tooltip": "Fill in the current last price",
     "fee_level": "Fee level",
+    "insurance": {
+        "rules": "Insurance rules",
+        "title": "Insurances",
+        "contract": "Contract",
+        "contracts": "Contracts",
+        "difference": "Difference of the last insurance"
+    },
     "order_table": {
         "opening_volume": "Opening Volume",
         "opening_volume_tooltips": "Opening Volume = Quantity x Opening Price",

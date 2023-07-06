@@ -1,6 +1,7 @@
 import { getV1Url } from 'redux/actions/utils';
 import { PATHS } from 'constants/paths';
 import { KYC_STATUS } from 'redux/actions/const';
+import { INSURANCE_URL } from 'constants/constants';
 
 export const DESKTOP_NAV_HEIGHT = 80;
 
@@ -96,7 +97,7 @@ export const NAV_DATA = [
                 localized: 'nami_insurance',
                 isNew: false,
                 notSameOrigin: true,
-                url: 'https://namiinsurance.io/',
+                url: INSURANCE_URL,
                 child_lv2: []
             }
         ]

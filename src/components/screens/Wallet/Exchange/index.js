@@ -29,6 +29,7 @@ import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceTo
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { INSURANCE_URL } from 'constants/constants';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -552,11 +553,11 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                 <div className="flex items-end justify-between md:pt-8 w-full md:w-fit flex-wrap">
                     <div className="flex items-center mb-12 md:mb-0">
                         <TransferSmallBalanceToNami className="hidden md:flex mr-4" width={width} allAssets={allAssets} />
-                        <ButtonV2 variants="secondary" className="w-fit px-4 py-3" onClick={() => window?.open('https://namiinsurance.io/', '_ blank')}>
+                        <ButtonV2 variants="secondary" className="w-fit px-4 py-3" onClick={() => window?.open(INSURANCE_URL, '_ blank')}>
                             <span className="mr-3">
                                 <FutureInsurance size={24} />
                             </span>
-                            <span className="font-normal !mr-4">Buy insurances</span>
+                            <span className="font-normal !mr-4">{t('wallet:buy_insurance')}</span>
                             <BxChevronDown size={24} />
                         </ButtonV2>
                     </div>

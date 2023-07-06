@@ -10,6 +10,12 @@ import { useSelector } from 'react-redux';
 import { fees, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import get from 'lodash/get';
 import Tooltip from 'components/common/Tooltip';
+import { ChevronRight } from 'react-feather';
+import { FutureInsurance } from 'components/svg/SvgIcon';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { INSURANCE_URL } from 'constants/constants';
+import InsuranceRuleModal from './InsuranceRuleModal';
+import InsuranceListModal from './InsuranceListModal';
 
 const getAllAssets = createSelector([(state) => state.utils, (utils, params) => params], (utils, params) => {
     const assets = {};
@@ -30,6 +36,9 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const pairTicker = marketWatch[order?.symbol];
     const _lastPrice = pairTicker ? pairTicker?.lastPrice : lastPrice;
+
+    const [showRules, setShowRules] = useState(false);
+    const [showList, setShowList] = useState(false);
 
     const price = order?.status === VndcFutureOrderType.Status.PENDING ? order?.price : order?.open_price;
 
@@ -78,6 +87,29 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
                 })}
             />
             <div className="text-2xl font-semibold mb-8">{t('futures:mobile:order_detail')}</div>
+            <div className="mb-8 p-4 bg-white dark:bg-dark-4 border dark:border-none rounded-xl">
+                <div className="flex justify-between items-center">
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:insurance:title')}</div>
+                    <div className="text-teal hover:text-green-4 font-semibold flex items-center space-x-2 cursor-pointer" onClick={() => setShowRules(true)}>
+                        <span>{t('futures:insurance:rules')}</span>
+                        <ChevronRight color="currentColor" size={16} strokeWidth={1.5} />
+                    </div>
+                </div>
+                <div className="mt-4 flex justify-between items-center">
+                    <div className="flex space-x-1 text-2xl font-semibold">
+                        <span>12 {t('futures:insurance:contracts')}</span>
+                        <FutureInsurance size={32} />
+                    </div>
+                    <div className="flex space-x-2">
+                        <ButtonV2 className="px-4 py-3" variants="secondary" onClick={() => setShowList(true)}>
+                            {t('common:view_all')}
+                        </ButtonV2>
+                        <ButtonV2 className="w-fit px-4 py-3 whitespace-nowrap" onClick={() => window?.open(INSURANCE_URL, '_ blank')}>
+                            {t('wallet:buy_insurance')}
+                        </ButtonV2>
+                    </div>
+                </div>
+            </div>
             <div className="grid grid-cols-2 gap-8">
                 <div>
                     <Row>
@@ -170,6 +202,8 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
                     </Row>
                 </div>
             </div>
+            {showRules && <InsuranceRuleModal visible={showRules} onClose={() => setShowRules(false)} />}
+            {showList && <InsuranceListModal visible={showList} onClose={() => setShowList(false)} />}
         </ModalV2>
     );
 };
