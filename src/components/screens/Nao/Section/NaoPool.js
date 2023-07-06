@@ -246,9 +246,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         show: !isMobile
                     }
                 },
-                padding: {
-                    left: 2
-                }
+                // padding: {
+                //     left: 2
+                // }
             },
             xaxis: {
                 type: 'datetime',
@@ -295,8 +295,8 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     formatter: (value) => {
                         return formatAbbreviateNumber(value, 3);
                     },
-                    offsetX: -10,
-                    align: 'left',
+                    // offsetX: -10,
+                    align: 'left'
                 }
             },
             fill: {
@@ -309,15 +309,19 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     // shade: 'dark'
                 }
             },
+            variable: {
+                referencePrice
+            },
             tooltip: {
                 custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                     const y = series[seriesIndex][dataPointIndex];
                     const x = w.globals.seriesX[0][dataPointIndex];
+                    const _referencePrice = w.config.referencePrice || referencePrice;
                     return `
                         <div class="bg-gray-15 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
                             <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? format(x, 'dd/MM/yyyy') : ''}</div>
                             <div class="text-white dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${formatNumber(
-                                y / (referencePrice['VNDC'] ?? 0),
+                                y / (_referencePrice['VNDC'] ?? 1 / 23400),
                                 0
                             )} VNDC</div>
                             <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">$ ${formatNumber(y, 2)}</div>
@@ -538,10 +542,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     totalUsers: last?.document?.totalUser || 0
                 }));
 
-                const _chartData =
-                    _data?.result.map((item) => {
-                        return [parse(item['_id'], 'dd/MM/yyyy', new Date()), item.document?.totalStakedUsdt || 0];
-                    });
+                const _chartData = _data?.result.map((item) => {
+                    return [parse(item['_id'], 'dd/MM/yyyy', new Date()), item.document?.totalStakedUsdt || 0];
+                });
                 dispatch({
                     type: CHART_TYPES.pool_info,
                     payload: [{ name: 'pool info', data: _chartData }]
@@ -597,7 +600,6 @@ const NaoPool = ({ dataSource, assetNao }) => {
             }
         }
     };
-
 
     // // zoom and pan stuff
     // useEffect(() => {

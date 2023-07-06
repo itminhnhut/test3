@@ -424,9 +424,9 @@ const NaoPerformance = memo(({}) => {
                         show: !isMobile
                     }
                 },
-                padding: {
-                    left: 2,
-                }
+                // padding: {
+                //     left: 2
+                // }
             },
             xaxis: {
                 type: 'datetime',
@@ -470,8 +470,8 @@ const NaoPerformance = memo(({}) => {
                     formatter: (value) => {
                         return formatAbbreviateNumber(value, 3);
                     },
-                    offsetX: -10,
-                    align: 'left',
+                    // offsetX: -10,
+                    align: 'left'
                 }
             },
             fill: {
@@ -484,10 +484,14 @@ const NaoPerformance = memo(({}) => {
                     // shade: 'dark'
                 }
             },
+            variable: {
+                referencePrice
+            },
             tooltip: {
                 custom: ({ series, seriesIndex, dataPointIndex, w }) => {
                     const y = series[seriesIndex][dataPointIndex];
                     const x = w.globals.seriesX[0][dataPointIndex];
+                    const _referencePrice = w.config.referencePrice || referencePrice;
                     const type = w.globals.seriesNames[0];
                     const currency = filter.marginCurrency;
                     const isUSD = currency === 22;
@@ -496,7 +500,7 @@ const NaoPerformance = memo(({}) => {
                     let currencyText = isMonetary ? (isUSD ? 'USDT' : 'VNDC') : '';
 
                     const body = `${titleText}: ${formatNumber(y, isUSD ? 4 : 0)} ${currencyText}`;
-                    const fiatUSD = isMonetary ? `$ ${formatNumber(y * (referencePrice[`${assetCodeFromId(currency)}/USD`] || 1 / 23400), 2)}` : '';
+                    const fiatUSD = isMonetary ? `$ ${formatNumber(y * (_referencePrice[`${assetCodeFromId(currency)}/USD`] || 1 / 23400), 2)}` : '';
                     return `
                         <div class="bg-gray-15 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
                             <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? format(x, 'dd/MM/yyyy') : ''}</div>
