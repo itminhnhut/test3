@@ -27,7 +27,8 @@ export const TextLiner = styled.div.attrs({
 
 export const CardNao = styled.div.attrs(({ noBg, customHeight, bgCorner, bgStake }) => ({
     className: classNames(
-        `p-6 sm:px-10 sm:py-9 rounded-xl w-full min-w-full sm:min-w-[320px] ${customHeight ? customHeight : 'sm:min-h-[180px]'
+        `p-6 sm:px-10 sm:py-9 rounded-xl w-full min-w-full sm:min-w-[320px] ${
+            customHeight ? customHeight : 'sm:min-h-[180px]'
         } flex flex-col justify-between flex-1 relative`,
         // { 'border-dashed border-[0.5px] border-[#7686B1]': noBg },
         { 'bg-white dark:bg-darkBlue-3 border border-divider dark:border-none': !noBg && !bgCorner && !bgStake },
@@ -46,8 +47,7 @@ export const SectionNao = styled.div.attrs(({ noBg }) => ({
     background-image: ${({ noBg, stroke = 0.8 }) =>
         noBg &&
         `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%237686B1' stroke-width='${stroke}' stroke-dasharray='4 %2c 6' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e")`};
-
-        `;
+`;
 
 export const Divider = styled.div.attrs({
     className: 'h-[1px] opacity-[0.3] my-[10px]'
@@ -417,11 +417,18 @@ export const TextField = (props) => {
     );
 };
 
-export const WrapInput = styled.div.attrs(({ error }) => ({
-    className: classNames('w-full relative flex items-center justify-between bg-gray-12 dark:bg-dark-2 px-3 py-2 rounded-md', { 'border border-red-2': error })
+export const WrapInput = styled.div.attrs(({ error, readOnly }) => ({
+    className: classNames(
+        'w-full relative flex items-center justify-between bg-gray-12 dark:bg-dark-2 px-3 py-2 rounded-md',
+        'border border-transparent hover:border-teal',
+        {
+            'border-red-2': error,
+            'border-none': readOnly
+        }
+    )
 }))`
     :hover {
-        border: ${({ readOnly }) => (readOnly ? 'none' : `solid 1px ${colors.teal}`)};
+        /* border: ${({ readOnly }) => (readOnly ? 'none' : `solid 1px ${colors.teal}`)}; */
         &::after {
             display: none;
         }
@@ -457,8 +464,8 @@ const WarningIcon = () => {
 export const capitalize = (text) => {
     return text
         ? String(text)
-            .toLowerCase()
-            .replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase())
+              .toLowerCase()
+              .replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase())
         : null;
 };
 
