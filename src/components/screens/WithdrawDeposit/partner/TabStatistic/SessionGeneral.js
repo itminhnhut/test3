@@ -16,7 +16,7 @@ const SessionGeneral = ({ filter, setFilter }) => {
         {
             url: API_GET_COMMISSION_REPORT_PARTNER,
             params: {
-                from: convertDateToMs(filter?.range?.startDate),
+                from: filter?.range?.startDate ? convertDateToMs(filter?.range?.startDate) : 0,
                 to: convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf')
             }
         },
@@ -53,28 +53,24 @@ const SessionGeneral = ({ filter, setFilter }) => {
                     </div>
                     <div>
                         <span>{t('common:transaction_fee')}</span>
-                        <div className="pt-2 txtPri-1">
-                            {loading ? <Skeletor width="100px" /> : formatNanNumber(data?.totalFee, 0) + ' VND'}
-                        </div>
+                        <div className="pt-2 txtPri-1">{loading ? <Skeletor width="100px" /> : formatNanNumber(data?.totalFee, 0) + ' VND'}</div>
                     </div>
                 </div>
                 <div className="flex flex-col items-end justify-center">
-                        <h1 className="txtSecond-3">
-                            <Trans i18nKey="dw_partner:total_volume">
-                                <span className="text-teal" />
-                                <span className="text-txtPrimary dark:text-txtPrimary-dark" />
-                            </Trans>
-                        </h1>
-                        <div className="pt-1 txtPri-3 flex items-center">
-                            <span className="text-green-3 dark:text-green-2">
-                                {loading ? <Skeletor width="50px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
-                            </span>
-                            /{loading ? <Skeletor width="40px" /> : <span>{formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}</span>}
-                        </div>
+                    <h1 className="txtSecond-3">
+                        <Trans i18nKey="dw_partner:total_volume">
+                            <span className="text-teal" />
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark" />
+                        </Trans>
+                    </h1>
+                    <div className="pt-1 txtPri-3 flex items-center">
+                        <span className="text-green-3 dark:text-green-2">
+                            {loading ? <Skeletor width="50px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
+                        </span>
+                        {loading ? <Skeletor width="40px" /> : <span>/{formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}</span>}
                     </div>
+                </div>
             </CardWrapper>
-
-
         </div>
     );
 };

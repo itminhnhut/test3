@@ -404,7 +404,7 @@ const SuccessfulTransactionIcon = ({ size = 36, ...props }) => {
             <defs>
                 <linearGradient id="6xmltrwi7a" x1="4.649" y1="8.7" x2="25.199" y2="13.5" gradientUnits="userSpaceOnUse">
                     <stop stop-color="#BDFEE7" />
-                    <stop offset=".891" stop-color="#60F1A6" stop-opacity=".93" />
+                    <stop offset=".891" stop-color="#60F1A6" stopOpacity=".93" />
                     <stop offset="1" stop-color="#47ED95" />
                 </linearGradient>
             </defs>

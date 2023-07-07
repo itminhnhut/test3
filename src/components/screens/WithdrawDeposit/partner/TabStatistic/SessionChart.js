@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Fragment } from 'react';
 import { useTranslation } from 'next-i18next';
 import CardWrapper from 'components/common/CardWrapper';
 import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs';
@@ -196,9 +196,11 @@ const SessionChart = ({ filter }) => {
                     <div>
                         <Tabs tab={typeTab} className="gap-6 border-b border-divider dark:border-divider-dark">
                             {TabStatistic.map((item) => (
-                                <TabItem className="!px-0 select-none" value={item.value} onClick={() => setTypeTab(item.value)}>
-                                    {t(item.localized)}
-                                </TabItem>
+                                <Fragment key={item.value}>
+                                    <TabItem className="!px-0 select-none" value={item.value} onClick={() => setTypeTab(item.value)}>
+                                        {t(item.localized)}
+                                    </TabItem>
+                                </Fragment>
                             ))}
                         </Tabs>
                     </div>

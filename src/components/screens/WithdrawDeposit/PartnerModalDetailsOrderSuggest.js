@@ -11,21 +11,29 @@ import { PROCESS_AUTO_SUGGEST, SIDE } from 'redux/reducers/withdrawDeposit';
 import { API_GET_ORDER_DETAILS, API_PROCESS_AUTO_SUGGEST_ORDER } from 'redux/actions/apis';
 import { formatNumber } from 'utils/reference-utils';
 import { isString } from 'lodash';
+import toast from 'utils/toast';
 
 const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdropCb }) => {
     const router = useRouter();
     const { t } = useTranslation();
     const [state, setState] = useState({});
-    const [isFailAccept, setIsFailAccept] = useState(false);
     const [loadingProcessOrder, setLoadingProcessOrder] = useState(false);
 
+    const toastError = (statusError = '') => {
+        return toast({
+            key: `accept_err_suggest_order_${router?.query?.suggest}`,
+            text: t(`dw_partner:error.${statusError.toLowerCase().trim()}`, { displayingId: router?.query?.suggest }),
+            type: 'error',
+            duration: 5000
+        });
+    };
     const handleAcceptOrder = async () => {
-        const { status } = await handleProcessOrder(PROCESS_AUTO_SUGGEST.ACCEPTED);
+        const { status, data } = await handleProcessOrder(PROCESS_AUTO_SUGGEST.ACCEPTED);
         if (status === ApiStatus.SUCCESS) {
             onBackdropCb();
             router.push(`/partner-dw/details/${state.displayingId}`);
         } else {
-            setIsFailAccept(t(`dw_partner:error.${status.toLowerCase().trim()}`));
+            toastError(status);
         }
     };
 
@@ -55,8 +63,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
     }, []);
 
     useEffect(() => {
-        setIsFailAccept(false)
-        setLoadingProcessOrder(false)
+        setLoadingProcessOrder(false);
         if (!showProcessSuggestPartner) return;
         if (isString(showProcessSuggestPartner))
             FetchApi({
@@ -69,7 +76,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                 if (status === ApiStatus.SUCCESS) {
                     setState(data);
                 } else {
-                    setIsFailAccept(t(`dw_partner:error.${status.toLowerCase().trim()}`));
+                    toastError(status);
                 }
             });
         else {
@@ -85,7 +92,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
     return (
         <>
             <ModalV2
-                loading={loadingProcessOrder}
+                // loading={loadingProcessOrder}
                 isVisible={showProcessSuggestPartner}
                 onBackdropCb={handleCloseModal}
                 canBlur={false}
@@ -102,11 +109,17 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                 <div className="flex flex-col gap-y-3 w-full txtPri-2 !font-semibold">
                     <div className="flex justify-between">
                         <span className="txtSecond-4">{t('dw_partner:transaction_type')}</span>
-                        <span className={state.side === SIDE.BUY ? 'text-green-3 dark:text-green-2' : 'text-red'}>{t(`common:${state.side?.toLowerCase()}`) || '_'}</span>
+                        <span className={state.side === SIDE.BUY ? 'text-green-3 dark:text-green-2' : 'text-red'}>
+                            {state.side ? t(`common:${state.side?.toLowerCase()}`) : '_'}
+                        </span>
                     </div>
                     <div className="flex justify-between">
                         <span className="txtSecond-4">{t('common:amount')}</span>
-                        <span>{`${formatNumber(state.baseQty, state.baseAssetId === 72 ? 0 : 4)} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`}</span>
+                        <span>
+                            {state.baseQty
+                                ? `${formatNumber(state.baseQty, state.baseAssetId === 72 ? 0 : 4)} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`
+                                : '_'}
+                        </span>
                     </div>
                     {state.fee > 0 && (
                         <div className="flex justify-between">
@@ -123,16 +136,16 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                     <div className="flex justify-between">
                         <span className="txtSecond-4">{t('dw_partner:user')}</span>
                         <div>
-                            <div className="text-right">{state.userMetadata?.name}</div>
+                            <div className="text-right">{state.userMetadata?.name || '_'}</div>
                             <div className="text-right txtSecond-3">{state.userMetadata?.code}</div>
                         </div>
                     </div>
                 </div>
-                <ButtonV2 loading={loadingProcessOrder} className="mt-10" onClick={handleAcceptOrder}>
+                <ButtonV2 loading={loadingProcessOrder} disabled={loadingProcessOrder} className="mt-10" onClick={handleAcceptOrder}>
                     {t('dw_partner:btn_accept')}
                 </ButtonV2>
             </ModalV2>
-            <AlertModalV2
+            {/* <AlertModalV2
                 isVisible={isFailAccept}
                 onClose={() => {
                     setIsFailAccept('');
@@ -144,7 +157,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                 title={t('common:failure')}
                 message={isFailAccept}
                 isButton={false}
-            />
+            /> */}
         </>
     );
 };
