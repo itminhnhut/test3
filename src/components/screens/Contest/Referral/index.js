@@ -13,7 +13,7 @@ export const seasons = [
         start: '2023-06-04T17:00:00.000Z',
         end: '2023-06-30T17:00:00.000Z',
         contestId: 'contest0623',
-        // title_detail: { vi: 'Đua TOP giới thiệu tháng 06/2023', en: 'Top Referral 06/2023' },
+        title_detail: { vi: 'Đua TOP giới thiệu tháng 06/2023', en: 'Top Referral 06/2023' },
         // title: { vi: 'NAO Futures', en: 'NAO Futures' },
         title_champion: { vi: 'Đua TOP giới thiệu tháng 06/2023', en: 'Top Referral 06/2023' },
         minVolumeInd: {
@@ -24,6 +24,29 @@ export const seasons = [
         rules: {
             vi: 'https://nami.exchange/vi/support/announcement/su-kien/cong-bo-chuong-trinh-dua-top-gioi-thieu-thang-6-2023',
             en: 'https://nami.exchange/support/announcement/events/launching-the-top-referral-tournament-of-june-2023'
+        },
+        total_rewards: '50,000,000 VNDC',
+        quoteAsset: 'VNDC',
+        active: false,
+        top_ranks_per: 20,
+        lastUpdated: true
+    },
+    {
+        season: 2,
+        start: '2023-07-06T17:00:00.000Z',
+        end: '2023-07-31T17:00:00.000Z',
+        contestId: 'contest0723',
+        title_detail: { vi: 'Đua TOP giới thiệu tháng 07/2023', en: 'Top Referral 07/2023' },
+        // title: { vi: 'NAO Futures', en: 'NAO Futures' },
+        title_champion: { vi: 'Đua TOP giới thiệu tháng 07/2023', en: 'Top Referral 07/2023' },
+        minVolumeInd: {
+            vi: 'Người dùng cần đạt đủ Điều kiện cơ bản về số lượng bạn bè để được xếp hạng, đọc thêm tại "Thể lệ chi tiết".',
+            en: 'User need to meet basic requirements of number of friends to be ranked, read more at "Detail Rules"',
+            isHtml: false
+        },
+        rules: {
+            vi: 'https://nami.exchange/vi/support/announcement/su-kien/chuong-trinh-dua-top-gioi-thieu-thang-7-2023',
+            en: 'https://nami.exchange/support/announcement/events/launching-top-referral-tournament-of-july-2023'
         },
         total_rewards: '50,000,000 VNDC',
         quoteAsset: 'VNDC',
