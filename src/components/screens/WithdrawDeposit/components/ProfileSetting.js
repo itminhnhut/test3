@@ -8,7 +8,7 @@ import { editPartnerConfig } from 'redux/actions/withdrawDeposit';
 import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
 import classNames from 'classnames';
-import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
+import { API_CONFIG_AUTO_SUGGEST_PARTNER, API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from '../constants';
 import FetchApi from 'utils/fetch-api';
 
@@ -113,7 +113,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
             return (
                 <div className="">
                     <div className="flex justify-between items-center mb-4">
-                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px] ">{t(`common:${side.toLowerCase()}`)}</div>
+                        <div className="txtPri-7">{t(`common:${side.toLowerCase()}`)}</div>
                         <SwitchV2
                             disabled={loading}
                             checked={orderConfig?.status === 1}
@@ -165,6 +165,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
             <div className="flex flex-wrap -m-3 items-center">
                 <div className="p-3 w-full md:w-1/2">
                     <div className="mb-8 txtPri-3 font-semibold">{t('dw_partner:buy_sell_title', { assetCode: 'VNDC' })}</div>
+                    <ConfigAutoSuggest key={`config_auto_asset_VNDC`} assetId={72} autoSuggest={partner?.autoSuggestConfig?.statusVndc} />
                     <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
                         {editDWConfig({
                             side: SIDE.BUY,
@@ -185,6 +186,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                 </div>
                 <div className="p-3 w-full md:w-1/2">
                     <div className="mb-8 txtPri-3 font-semibold">{t('dw_partner:buy_sell_title', { assetCode: 'USDT' })}</div>
+                    <ConfigAutoSuggest key={`config_auto_asset_USDT`} assetId={22} autoSuggest={partner?.autoSuggestConfig?.statusUsdt} />
                     <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
                         {editDWConfig({
                             side: SIDE.BUY,
@@ -219,3 +221,37 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
 };
 
 export default ProfileSetting;
+
+const ConfigAutoSuggest = ({ assetId, autoSuggest }) => {
+    const [isAutoSuggest, setIsAutoSuggest] = useState(autoSuggest);
+    const [hasRendered, setHasRendered] = useState(false);
+
+    useEffect(() => {
+        if (!hasRendered) {
+            setHasRendered(true);
+            return;
+        }
+
+        const fetchSearchUser = setTimeout(handleSetConfigSuggest, 500);
+        return () => clearTimeout(fetchSearchUser);
+    }, [isAutoSuggest]);
+
+    const handleSetConfigSuggest = async () => {
+        // Call api set config here
+        await FetchApi({
+            url: API_CONFIG_AUTO_SUGGEST_PARTNER,
+            options: { method: 'POST' },
+            params: {
+                assetId,
+                status: isAutoSuggest ? 1 : 0
+            }
+        });
+    };
+
+    return (
+        <div className="rounded-xl flex items-center justify-between bg-white dark:bg-darkBlue-3 px-8 py-6 mb-4 txtPri-7">
+            Nhận lệnh tự động
+            <SwitchV2 onChange={() => setIsAutoSuggest(!isAutoSuggest)} checked={isAutoSuggest} />
+        </div>
+    );
+};

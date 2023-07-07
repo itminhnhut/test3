@@ -57,7 +57,7 @@ const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
                             </>
                         )}
                     </div>
-                    <div className="md:min-w-[460px] p-3">
+                    <div className="min-w-[460px] p-3">
                         <div
                             onClick={() => router.push(PATHS.ACCOUNT?.PAYMENT_METHOD || '/')}
                             className="p-4 bg-gray-12 dark:bg-dark-2 rounded-xl w-full cursor-pointer flex items-center justify-between"
@@ -66,7 +66,7 @@ const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
                                 loading={loading}
                                 imgSize={loading || bankDefault ? 40 : 24}
                                 content={{
-                                    mainContent: !bankDefault ? t('dw_partner:payment_method') : <div className="max-w-[300px]">{bankDefault?.bankName}</div>,
+                                    mainContent: !bankDefault ? t('dw_partner:payment_method') : <div >{bankDefault?.bankName}</div>,
                                     subContent: bankDefault && (
                                         <div className="flex space-x-2 items-center ">
                                             <span>{bankDefault?.accountNumber}</span>
