@@ -309,6 +309,7 @@ export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends-v2';
 export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + 'users/referral/commission-history';
 export const API_GET_REFERRAL_FRIENDS_BY_CODE = API_V3_PREFIX + 'users/referral/:code/friends-detail';
 export const API_GET_CONTEST_REFERRAL = API_V3_PREFIX + 'users/referral/getTopReferral';
+export const API_SET_NICKNAME = API_PREFIX + 'user/nickname';
 
 // convert small balance to Nami
 export const API_GET_NAMI_RATE = API_V3_PREFIX + 'convert/nami_asset_value';
@@ -348,9 +349,9 @@ export const API_SET_PHONE_REQUEST = API_PREFIX + 'user/set_phone_request';
 export const API_SET_PHONE_VERIFY = API_PREFIX + 'user/set_phone_verify';
 
 // Deposit withdraw Partner 22/06:
-export const API_PROCESS_AUTO_SUGGEST_ORDER = API_V3_PREFIX + "dw_partner_new/process_auto_suggest_order"
-export const API_CANCEL_AUTO_SUGGEST_ORDER = API_V3_PREFIX + "dw_partner_new/cancel_auto_suggest_order"
-export const API_CONTINUE_AUTO_SUGGEST_ORDER = API_V3_PREFIX + "dw_partner_new/continue_auto_suggest_order"
+export const API_PROCESS_AUTO_SUGGEST_ORDER = API_V3_PREFIX + 'dw_partner_new/process_auto_suggest_order';
+export const API_CANCEL_AUTO_SUGGEST_ORDER = API_V3_PREFIX + 'dw_partner_new/cancel_auto_suggest_order';
+export const API_CONTINUE_AUTO_SUGGEST_ORDER = API_V3_PREFIX + 'dw_partner_new/continue_auto_suggest_order';
 
 // internal
 export const API_INTERNAL_FIND_USER = API_V3_PREFIX + 'spot/internal-find-user';

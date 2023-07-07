@@ -125,5 +125,13 @@
     "ref_placeholder": "Enter referral code",
     "ref_success": "Congrats, you inserted referral code {{value}} successfully",
     "ref_error": "Invalid referral code",
-    "ref_error_format": "The Referral ID is incorrectly formatted"
+    "ref_error_format": "The Referral ID is incorrectly formatted",
+    "nickname": {
+        "nickname_existed": "Nickname already in use",
+        "already_has_nickname": "You cannot change the nickname after setting it before",
+        "content": "Your nickname has been changed successfully",
+        "placeholder": "Enter your nickname (1-30 characters) and include only letters, numbers, periods, and underscores",
+        "title": "Nickname",
+        "add_nickname": "Edit Nickname"
+    }
 }
