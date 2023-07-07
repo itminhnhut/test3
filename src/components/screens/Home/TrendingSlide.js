@@ -21,7 +21,7 @@ const TrendingSlide = ({ trending }) => {
             {listTrending.map((pair, index) => {
                 const _ = initMarketWatchItem(pair);
                 return (
-                    <Link key={index} href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`}>
+                    <Link key={index} href={`/futures/${pair.s}`}>
                         <a className="!text-txtPrimary-dark md:hover:opacity-80 text-xs font-semibold flex py-3">
                             <div>
                                 <span>{_?.baseAsset}</span>

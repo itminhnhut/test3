@@ -211,7 +211,10 @@ export const API_FUTURES_CAMPAIGN_WITHDRAW_STATUS = API_PREFIX + 'futures_campai
 export const API_FUTURES_CAMPAIGN_TRANSFER_STATUS = API_PREFIX + 'futures_campaign/onboarding/transferStatus';
 
 //NAO token
-export const API_NAO_DASHBOARD_STATISTIC = API_V3_PREFIX + 'nao-dashboard/statistic';
+export const API_NAO_DASHBOARD_STATISTIC = API_V3_PREFIX + 'nao-dashboard/statistic-v2';
+export const API_NAO_DASHBOARD_STATISTIC_CHART = API_V3_PREFIX + 'nao-dashboard/statistic/chart';
+export const API_NAO_DASHBOARD_FEE_REVENUE = API_V3_PREFIX + 'pool/fee-revenue-statistic';
+export const API_NAO_DASHBOARD_POOL_STATISTIC = API_V3_PREFIX + 'pool/statistic';
 //POOL
 export const API_POOL_INFO = API_V3_PREFIX + 'pool/info';
 export const API_POOL_AMM = API_V3_PREFIX + 'pool/amm-analytic';

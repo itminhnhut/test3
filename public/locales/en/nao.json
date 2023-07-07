@@ -21,7 +21,12 @@
         "total_volume": "Total volume",
         "total_orders": "Total trades",
         "total_fee": "Total fee",
-        "users": "Users"
+        "users": "Users",
+        "chart_total_volume": "Volume",
+        "chart_total_orders": "Trades",
+        "chart_users": "Users",
+        "chart_total_fee": "Fee",
+        "chart_title": ""
     },
     "pool": {
         "title": "Governance pool {{value}}",
@@ -94,7 +99,14 @@
         "fail": "Fail",
         "no_transaction_history": "No transaction history",
         "unlock_status": "Unlock: {{value}}",
-        "week": "Week {{value}}:"
+        "week": "Week {{value}}:",
+        "pool_value": "Total NAO Value locked",
+        "pool_value_tooltip": "Pool value is calculated from the NAO price at the time of showing",
+        "mobile_chart_note": "Click on each milestone for detail",
+        "chart": {
+            "pool_info": "TVL",
+            "fee_revenue": "Pool Revenue"
+        }
     },
     "vote": {
         "title": "Proposals",

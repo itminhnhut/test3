@@ -23,36 +23,35 @@ Chart.register(
     ArcElement,
     Title,
     Tooltip,
-    Filler
-    // Legend
+    Filler,
+    Legend
 );
 
 import React, { memo } from 'react';
 
 // @ts-ignore
-const ChartJS = memo(
+const NaoChartJS = memo(
     ({
-        type,
-        data,
-        height = '100%',
-        width = '100%',
-        plugins,
-        redraw = true,
-        options = {
-            responsive: true,
-            maintainAspectRatio: true
-        }
-    }) => {
+         type,
+         data,
+         height = '100%',
+         width = '100%',
+         plugins,
+         options = {
+             responsive: true,
+             maintainAspectRatio: true
+         }
+     }) => {
         let chart = <Line options={options} data={data} width={width} height={height} />;
         switch (type) {
             case 'area':
                 chart = <Line options={options} data={data} width={width} height={height} />;
                 break;
             case 'bar':
-                chart = <Bar options={options} data={data} width={width} height={height} plugins={plugins} redraw={redraw} />;
+                chart = <Bar options={options} data={data} width={width} height={height} plugins={plugins} redraw={true} />;
                 break;
             case 'doughnut':
-                chart = <Doughnut options={options} data={data} width={width} height={height} plugins={plugins} redraw={redraw} />;
+                chart = <Doughnut options={options} data={data} width={width} height={height} plugins={plugins} redraw={true} />;
                 break;
             case 'bubble':
                 chart = <Bubble options={options} data={data} width={width} height={height} />;
@@ -63,4 +62,4 @@ const ChartJS = memo(
     }
 );
 
-export default ChartJS;
+export default NaoChartJS;
