@@ -145,7 +145,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
         const end = new Date(item?.end).getTime();
         if (now < start && now < end) {
             return (
-                <div className="text-yellow-2 bg-yellow-2/[0.15] px-2 py-1 !pl-3 sm:!pl-2  rounded-r-[80px] sm:rounded-[80px]">{t('nao:coming_soon_2')}</div>
+                <div className="text-yellow-2 bg-yellow-2/[0.15] px-2 py-1 !pl-3 sm:!pl-2  rounded-r-[80px] sm:rounded-[80px] w-max">{t('nao:coming_soon_2')}</div>
             );
         } else if (now > start && now < end) {
             return (
@@ -155,7 +155,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
                 </div>
             );
         } else {
-            return <div className="text-gray-7 bg-gray-7/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-r-[80px] sm:rounded-[80px]">{t('nao:ended')}</div>;
+            return <div className="text-gray-7 bg-gray-7/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-r-[80px] sm:rounded-[80px] w-max">{t('nao:ended')}</div>;
         }
     };
 
@@ -211,7 +211,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language, inHome 
                                         key={index}
                                         className="px-3 sm:px-4 sm:space-x-2 py-2 hover:bg-hover-1 dark:hover:bg-hover-dark cursor-pointer flex sm:items-center flex-col space-y-2 sm:space-y-0 sm:flex-row"
                                     >
-                                        <div className="-ml-4 sm:ml-0 text-[10px] leading-[12px] sm:text-sm whitespace-nowrap w-max">{progress(item)}</div>
+                                        <div className="-ml-4 sm:ml-0 text-[10px] leading-[12px] sm:text-sm whitespace-nowrap min-w-[7rem]">{progress(item)}</div>
                                         <span className="sm:text-base">{item?.title_detail?.[language]} </span>
                                     </div>
                                 ))}
