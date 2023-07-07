@@ -151,5 +151,6 @@
     "trade_on": "Download on the",
     "scan_qr": "Scan the QR code to download Nami Exchange",
     "down_with_qr": "Download Nami Exchange",
-    "footer_title": "Secure Spot and Futures Exchange"
+    "footer_title": "Secure Spot and Futures Exchange",
+    "noti_setting": "Notification Settings"
 }

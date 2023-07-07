@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { debounce, omit } from 'lodash';
 import Image from 'next/image';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { getNotifications, markAllAsRead } from 'src/redux/actions/notification';
 import { NotificationStatus } from 'src/redux/actions/const';
@@ -18,6 +18,7 @@ import Switch from 'components/common/V2/SwitchV2';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_NOTI_SETTING } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
+import useWindowSize, { useRefWindowSize } from 'hooks/useWindowSize';
 
 const NOTI_READ = NotificationStatus.DELETED;
 
@@ -39,6 +40,9 @@ const NotificationList = ({ btnClass }) => {
     const { t, i18n: { language } } = useTranslation(['navbar']);
     const dispatch = useDispatch();
     const router = useRouter();
+
+    const { width } = useRefWindowSize()
+    const isMobile = width < 640
 
     const ref = useRef(null);
 
@@ -152,7 +156,7 @@ const NotificationList = ({ btnClass }) => {
     }
     return (
         <>
-            {showNotiSetting ? <NotiSettingModal isVisible={showNotiSetting} onClose={() => setShowNotiSetting(false)} language={language} /> : null}
+            {showNotiSetting ? <NotiSettingModal isMobile={false} isVisible={showNotiSetting} onClose={() => setShowNotiSetting(false)} language={language} t={t} /> : null}
             <div ref={ref} className="mal-navbar__hamburger__spacing h-full sm:relative">
                 <button
                     type="button"
@@ -203,7 +207,7 @@ const NotificationList = ({ btnClass }) => {
                                     onClick={() => { }}
                                     className={classNames('text-sm font-semibold cursor-pointer hover:opacity-70 transition-opacity')}
                                 >
-                                    <SettingIcon size={24} onClick={() => setShowNotiSetting(true)} />
+                                    <SettingIcon size={24} onClick={() => isMobile ? router.push('/account/noti-setting') : setShowNotiSetting(true)} />
                                 </div>
                             </div>
 
@@ -254,7 +258,7 @@ const NOTI_GROUP_KEYS = {
     SYSTEM: "SYSTEM",
 }
 
-const NotiSettingModal = ({ isVisible, onClose, language }) => {
+export const NotiSettingModal = ({ isVisible, onClose, language, isMobile, t }) => {
     const [userNotiSetting, setUserNotiSetting] = useState({})
     const [notiGroup, setNotiGroup] = useState({})
     const [loading, setLoading] = useState(true)
@@ -286,8 +290,12 @@ const NotiSettingModal = ({ isVisible, onClose, language }) => {
         currentSetting = {
             ...currentSetting,
             [keyToChange]: !userNotiSetting?.[keyToChange]
-
         }
+
+        if(isMobile) {
+            setUserNotiSetting(currentSetting)
+        }
+
         FetchApi({
             url: API_GET_NOTI_SETTING,
             options: {
@@ -302,15 +310,22 @@ const NotiSettingModal = ({ isVisible, onClose, language }) => {
         })
     }, 500)
 
-    return <ModalV2
-        isVisible={isVisible} className={classNames("w-[488px] overflow-auto no-scrollbar", {
-            '!cursor-wait': updating
-        })} onBackdropCb={onClose}
+    const Wrapper = useMemo(() => isMobile ? DivWrapper : ModalV2, [isMobile])
+
+    return <Wrapper
+        isMobile={isMobile}
+        isVisible={isVisible}
+        className={classNames("overflow-auto no-scrollbar", {
+            '!cursor-wait': updating,
+            'w-[488px]': !isMobile,
+            'w-full h-full': isMobile
+        })}
+        onBackdropCb={onClose}
     >
         <div className='text-base font-normal text-txtPrimary dark:text-txtPrimary-dark'>
             <div>
                 <div className='text-2xl font-semibold mb-6'>
-                    Cài đặt thông báo
+                    {t('navbar:noti_setting')}
                 </div>
                 <div className='pb-6 w-full border-b-[1px] border-b-divider dark:border-b-divider-dark'>
                     <NotiToggle
@@ -339,7 +354,7 @@ const NotiSettingModal = ({ isVisible, onClose, language }) => {
                 })}
             </div>
         </div>
-    </ModalV2>
+    </Wrapper>
 }
 
 const NotiToggle = ({ text, isAvailable = false, onToggle, isOn = false, loading = true, updating = false }) => {
@@ -352,6 +367,8 @@ const NotiToggle = ({ text, isAvailable = false, onToggle, isOn = false, loading
         </div>
     </div>
 }
+
+const DivWrapper = ({ children, ...props }) => <div {...props}>{children}</div>
 
 NotificationList.defaultProps = {
     btnClass: '',
