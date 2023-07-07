@@ -6,7 +6,7 @@
 padding-block:48px;
 @media screen and (min-width:1024px) {
   padding-inline:16px;
-  padding-bottom: 80px;
+  padding-bottom: 60px;
   padding-top:60px;
 
 }
@@ -26,7 +26,7 @@ padding-block:48px;
           margin-top: 14px;
           font-weight: 500;
           font-size: 14px;
-          line-height: 24px;
+          line-height: 20px;
         }
 
         .mal-footer___pocket__license {
@@ -36,6 +36,8 @@ padding-block:48px;
 
 
       .mal-footer___pocket__links___group {
+        @apply text-sm;
+
 
         .mal-footer___pocket__links___group__item {
          @apply mt-2;
@@ -71,7 +73,7 @@ padding-block:48px;
              }
             font-weight: 600;
             font-size: 14px;
-            line-height: 24px;
+            line-height: 20px;
             cursor: pointer;
             white-space: nowrap;        
           }
@@ -81,10 +83,9 @@ padding-block:48px;
             overflow: hidden;
             transition: max-height .3s ease;
             a {
-              @apply text-sm mt-2 py-3 block;
+              @apply font-normal text-sm py-3 block;
               
               padding-left:48px;      
-              font-weight: 500;
               line-height: 20px;
               @media screen and (min-width:1200px) {
                 @apply p-0 text-sm;
@@ -96,6 +97,7 @@ padding-block:48px;
           }
 
           .mal-footer___pocket__links___group__item__links__active {
+            @apply pt-2;
             max-height: 40em;
           }
         }
@@ -113,7 +115,7 @@ padding-block:48px;
 
 
     .mal-footer___pocket {
-      @apply flex flex-row;
+      @apply flex flex-row justify-between;
 
 
       .mal-footer___pocket___company {
@@ -128,19 +130,20 @@ padding-block:48px;
 
           margin-top: 47px;
           font-size: 14px;
-          line-height: 24px;
+          line-height: 20px;
         }
       }
 
       .mal-footer___pocket__links___group {
-        @apply w-3/4 flex flex-row justify-between;
+        @apply flex flex-row;
 
         margin-top: 0;
 
         .mal-footer___pocket__links___group__item {
+          @apply w-[200px] pr-4;
 
           .mal-footer___pocket__links___group__item__expander {
-            @apply text-txtPrimary dark:text-txtPrimary-dark capitalize text-sm font-semibold py-0 mb-4;
+            @apply text-txtPrimary dark:text-txtPrimary-dark capitalize font-semibold py-0 mb-4;
             pointer-events: none;
             svg {
               @apply hidden;
@@ -158,7 +161,6 @@ padding-block:48px;
                 @apply mt-3;
               }
               display:block;
-              font-size: 14px;
             
               
             }

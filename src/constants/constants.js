@@ -40,7 +40,8 @@ export const BREAK_POINTS = {
     mb: 820,
     xl: 1280,
     '2xl': 1536,
-}
+    footer: 1200,
+};
 
 export const FEE_STRUCTURES = {
     EXCHANGE: {

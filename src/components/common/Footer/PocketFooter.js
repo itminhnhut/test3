@@ -14,17 +14,18 @@ import { THEME_MODE } from 'hooks/useDarkMode';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import { BREAK_POINTS } from 'constants/constants';
 
 const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, language }) => {
     const router = useRouter();
     return (
         <>
             <div className="mal-footer___pocket">
-                <div className={`mal-footer___pocket___company ${width >= 1200 ? '!w-[255px] tracking-normal' : ''} `}>
+                <div className={`mal-footer___pocket___company ${width >= BREAK_POINTS.footer ? '!w-56 tracking-normal flex-shrink-0' : ''} `}>
                     {auth ? (
-                        width >= 1200 && (
+                        width >= BREAK_POINTS.footer && (
                             <>
-                                <div className="mal-footer___pocket__logo mb-6">
+                                <div className="mal-footer___pocket__logo mb-6 leading-[0]">
                                     <Image
                                         // src={getS3Url('/images/logo/nami-logo-v2.png')}
                                         src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
@@ -39,16 +40,16 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             </>
                         )
                     ) : (
-                        <div className={`${width >= 1200 ? ' ' : 'px-4 w-full'}`}>
-                            <div className="font-semibold text-3xl lg:text-xl mb-6">{t('navbar:footer_title')}</div>
+                        <div className={`${width >= BREAK_POINTS.footer ? ' ' : 'w-full'}`}>
+                            <div className="font-semibold text-3xl lg:text-2xl mb-6 lg:mb-8">{t('navbar:footer_title')}</div>
                             <div className="flex items-center">
                                 <ButtonV2
                                     onClick={() => window.open(getLoginUrl('sso', 'register'), '_self')}
                                     className={classNames(
-                                        'rounded-md',
-                                        { 'w-[151px] !h-12 font-medium': width > 1200 },
+                                        'rounded-md font-semibold',
+                                        { 'w-[151px] !h-12': width > BREAK_POINTS.footer },
                                         {
-                                            'font-semibold !text-sm': width <= 1200
+                                            '!text-sm': width <= BREAK_POINTS.footer
                                         }
                                     )}
                                 >
@@ -56,18 +57,18 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                 </ButtonV2>
                             </div>
 
-                            {width < 1200 && <hr className="border-divider dark:border-divider-dark my-6" />}
+                            {width < BREAK_POINTS.footer && <hr className="border-divider dark:border-divider-dark my-6" />}
                         </div>
                     )}
                 </div>
 
                 <div className="mal-footer___pocket__links___group">
-                    <div className="mal-footer___pocket__links___group__item">
+                    <div className={classNames('mal-footer___pocket__links___group__item', width < BREAK_POINTS.footer && '-mx-4')}>
                         <div
                             className={`mal-footer___pocket__links___group__item__expander ${active?.about ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { about: !active.about } })}
                         >
-                            {language === LANGUAGE_TAG.VI ? 'Về chúng tôi' : 'About Us'}
+                            {t('navbar:menu.about')}
                             <SvgIcon
                                 name="chevron_down"
                                 size={16}
@@ -80,7 +81,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                      ${active.about ? 'mal-footer___pocket__links___group__item__links__active' : ''}`}
                         >
                             <Link href="/terms-of-service">
-                                <a>{language === LANGUAGE_TAG.VI ? 'Điều khoản' : 'Terms of Services'}</a>
+                                <a>{language === LANGUAGE_TAG.VI ? 'Thỏa thuận dịch vụ' : 'Terms of Services'}</a>
                             </Link>
                             <Link href="/licences">
                                 <a>{language === LANGUAGE_TAG.VI ? 'Giấy phép' : 'Licences'}</a>
@@ -96,6 +97,9 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                 }
                             >
                                 <a className="">{language === LANGUAGE_TAG.VI ? 'Hợp tác kinh doanh' : 'Business Cooperation'}</a>
+                            </Link>
+                            <Link href="mailto:info@nami.exchange" className="cursor-pointer">
+                                info@nami.exchange
                             </Link>
                             {/* <Link href={`https://nami.exchange/files/whitepaper_${language}_1510.pdf`}>
                                 <a className="invisible">Whitepaper</a>
@@ -115,7 +119,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                         </div>
                     </div>
 
-                    <div className="mal-footer___pocket__links___group__item">
+                    <div className={classNames('mal-footer___pocket__links___group__item', width < BREAK_POINTS.footer && '-mx-4')}>
                         <div
                             className={`mal-footer___pocket__links___group__item__expander ${active?.product ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { product: !active.product } })}
@@ -132,6 +136,9 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             className={`mal-footer___pocket__links___group__item__links
                                      ${active.product ? 'mal-footer___pocket__links___group__item__links__active' : ''}`}
                         >
+                            <Link href="/swap">
+                                <a>{t('navbar:menu.swap')}</a>
+                            </Link>
                             <Link href="/trade">
                                 <a>{t('navbar:menu.spot')}</a>
                             </Link>
@@ -150,76 +157,40 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <Link href={getV1Url('/staking')}>
                                 <a>Staking</a>
                             </Link> */}
-                            <Link href={getV1Url('/reference')}>
+                            {/* <Link href={getV1Url('/reference')}>
                                 <a>{t('navbar:submenu.referral')}</a>
+                            </Link> */}
+                        </div>
+                    </div>
+
+                    <div className={classNames('mal-footer___pocket__links___group__item', width < BREAK_POINTS.footer && '-mx-4')}>
+                        <div
+                            className={`mal-footer___pocket__links___group__item__expander ${active?.trading_info ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
+                            onClick={() => parentState({ active: { trading_info: !active.trading_info } })}
+                        >
+                            {t('navbar:menu.trading_info')}
+                            <SvgIcon
+                                name="chevron_down"
+                                size={16}
+                                className={`${active?.trading_info ? '!rotate-0 ' : ' '}`}
+                                color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
+                            />
+                        </div>
+                        <div
+                            className={`mal-footer___pocket__links___group__item__links
+                                     ${active.trading_info ? 'mal-footer___pocket__links___group__item__links__active' : ''}`}
+                        >
+                            <Link href="/futures/trading-rule" className="cursor-pointer">
+                                {language === LANGUAGE_TAG.VI ? 'Quy định giao dịch Futures' : 'Trading Rules'}
                             </Link>
-                            <Link href="/swap">
-                                <a>{t('navbar:menu.swap')}</a>
+
+                            <Link href="/futures/funding-history" className="cursor-pointer">
+                                {language === LANGUAGE_TAG.VI ? 'Lịch sử Funding' : 'Funding Rate History'}
                             </Link>
                         </div>
                     </div>
 
-                    {/* <div className="mal-footer___pocket__links___group__item">
-                    <div
-                        className="mal-footer___pocket__links___group__item__expander"
-                        onClick={() => parentState({ active: { community: !active.community } })}
-                    >
-                        {language === LANGUAGE_TAG.VI ? 'Cộng đồng' : 'Community'}
-                        {active?.community ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                    </div>
-                  <div
-                        className={`mal-footer___pocket__links___group__item__links
-                                     ${active.community ? 'mal-footer___pocket__links___group__item__links__active' : ''}`}
-                    >
-
-
-                         <Link href="https://www.facebook.com/namifutures">
-                            <a target="_blank" className="!flex items-center ">
-                                <div className="mr-3 border p-2 rounded-full border-divider">
-                                    <img src={getS3Url('/images/icon/ic_footer_fb.png')} alt="" width="16" height="16" />
-                                </div>
-                                Facebook Fanpage
-                            </a>
-                        </Link>
-                        <Link href="https://www.facebook.com/groups/nami.exchange">
-                            <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('/images/icon/ic_footer_fb.png')} className="mr-3" alt="" width="16" height="16" /> Facebook Group
-                            </a>
-                        </Link>
-                        <Link href="https://t.me/namitradevn">
-                            <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('/images/icon/ic_footer_telegram.png')} className="mr-3" alt="" width="16" height="16" /> Telegram Vietnam
-                            </a>
-                        </Link>
-                        <Link href="https://t.me/namitrade">
-                            <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('/images/icon/ic_footer_telegram.png')} className="mr-3" alt="" width="16" height="16" /> Telegram Global
-                            </a>
-                        </Link>
-                        <Link href="https://twitter.com/NamiTrade">
-                            <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('/images/icon/ic_footer_twitter.png')} className="mr-3" alt="" width="16" height="16" /> Twitter
-                            </a>
-                        </Link>
-                        <Link href="https://www.reddit.com/r/NAMIcoin">
-                            <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('/images/icon/ic_footer_reddit.png')} className="mr-3" alt="" width="16" height="16" /> Reddit
-                            </a>
-                        </Link>
-                        <Link href="/support">
-                            <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('/images/icon/ic_footer_globe.png')} className="mr-3" alt="" width="16" height="16" /> Blog
-                            </a>
-                        </Link>
-                        <Link href={`https://www.coingecko.com/${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token`}>
-                            <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('/images/icon/ic_footer_coingecko.png')} className="mr-3" alt="" width="16" height="16" /> CoinGecko
-                            </a>
-                        </Link>
-                    </div>
-                </div>*/}
-
-                    <div className="mal-footer___pocket__links___group__item">
+                    <div className={classNames('mal-footer___pocket__links___group__item', width < BREAK_POINTS.footer && '-mx-4')}>
                         <div
                             className={`mal-footer___pocket__links___group__item__expander ${active?.support ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { support: !active.support } })}
@@ -241,28 +212,24 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <Link href="/support/announcement" className="cursor-pointer">
                                 {language === LANGUAGE_TAG.VI ? 'Thông báo' : 'Announcements'}
                             </Link>
-                            <Link href="/support" className="cursor-pointer">
-                                {language === LANGUAGE_TAG.VI ? 'Trung tâm hỗ trợ' : 'Support Center'}
+                            <Link href="/support/faq" className="cursor-pointer">
+                                {language === LANGUAGE_TAG.VI ? 'Câu hỏi thường gặp' : 'FAQs'}
+                            </Link>
+                            <Link href={language === LANGUAGE_TAG.VI ? '/support/faq/huong-dan-chung' : '/support/faq/tutorials'} className="cursor-pointer">
+                                {language === LANGUAGE_TAG.VI ? 'Hướng dẫn cơ bản' : 'Basic Instructions'}
                             </Link>
                             <a onClick={() => window.fcWidget.open()} className="cursor-pointer">
                                 {language === LANGUAGE_TAG.VI ? 'Liên hệ hỗ trợ' : 'Chat with support'}
                             </a>
-                            <Link href="/support/faq" className="cursor-pointer">
-                                {language === LANGUAGE_TAG.VI ? 'FAQs' : 'FAQs'}
-                            </Link>
-                            <Link href="/futures/trading-rule" className="cursor-pointer">
-                                {language === LANGUAGE_TAG.VI ? 'Quy tắc giao dịch' : 'Trading Rules'}
-                            </Link>
 
-                            <Link href="/futures/funding-history" className="cursor-pointer">
-                                {language === LANGUAGE_TAG.VI ? 'Lịch sử Funding' : 'Funding Rate History'}
+                            <Link href="mailto:support@nami.exchange" className="cursor-pointer">
+                                Support@nami.exchange
                             </Link>
-                            <a className="cursor-pointer">Support@nami.exchange</a>
                         </div>
                     </div>
 
-                    <div className="mal-footer___pocket__links___group__item">
-                        {width >= 1200 ? (
+                    <div className={classNames('mal-footer___pocket__links___group__item', width >= BREAK_POINTS.footer ? '!w-40 !px-0' : '-mx-4')}>
+                        {width >= BREAK_POINTS.footer ? (
                             <ScanQr t={t} />
                         ) : (
                             <div>
