@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash';
+import { debounce, omit } from 'lodash';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -9,12 +9,22 @@ import { getTimeAgo, getS3Url } from 'src/redux/actions/utils';
 import { IconBell } from '../common/Icons';
 import colors from 'styles/colors';
 import { useClickAway } from 'react-use';
-import { BxsBellIcon } from '../svg/SvgIcon';
+import { BxsBellIcon, SettingIcon } from '../svg/SvgIcon';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
+import ModalV2 from 'components/common/V2/ModalV2';
+import Switch from 'components/common/V2/SwitchV2';
+import FetchApi from 'utils/fetch-api';
+import { API_GET_NOTI_SETTING } from 'redux/actions/apis';
+import Skeletor from 'components/common/Skeletor';
 
 const NOTI_READ = NotificationStatus.DELETED;
+
+const MarkReadAllIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-1.999 14.413-3.713-3.705L7.7 11.292l2.299 2.295 5.294-5.294 1.414 1.414-6.706 6.706z" fill="#8694B3" />
+</svg>
+
 
 const IconNoti = {
     0: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: ALL
@@ -26,13 +36,14 @@ const IconNoti = {
 };
 
 const NotificationList = ({ btnClass }) => {
-    const { t, i18n } = useTranslation(['navbar']);
+    const { t, i18n: { language } } = useTranslation(['navbar']);
     const dispatch = useDispatch();
     const router = useRouter();
 
     const ref = useRef(null);
 
     const [isPopover, setPopover] = useState(false);
+    const [showNotiSetting, setShowNotiSetting] = useState(false);
 
     useClickAway(ref, () => {
         closeDropdownPopover();
@@ -47,8 +58,8 @@ const NotificationList = ({ btnClass }) => {
     const unreadCount = useSelector((state) => state.notification.unreadCount);
 
     useEffect(() => {
-        dispatch(getNotifications({ lang: i18n.language }));
-    }, [i18n, dispatch]);
+        dispatch(getNotifications({ lang: language }));
+    }, [language, dispatch]);
 
     const [notificationLoading, setNotificationLoading] = useState(false);
 
@@ -107,7 +118,7 @@ const NotificationList = ({ btnClass }) => {
                                 handleMarkRead(notification?._id, notification.status);
                                 if (notification?.context?.isAutoSuggest)
                                     router.push({ pathname: PATHS.PARTNER_WITHDRAW_DEPOSIT.OPEN_ORDER, query: { suggest: notification?.context?.displayingId } });
-                                    closeDropdownPopover();
+                                closeDropdownPopover();
                             }}
                         >
                             <div className="min-w-[48px] min-h-[48px] mr-4 p-2 sm:p-3 bg-hover-1 dark:bg-dark-2 rounded-full flex justify-center items-center ">
@@ -119,9 +130,8 @@ const NotificationList = ({ btnClass }) => {
                                 </div>
                                 <div className="text-xs sm:text-sm text-txtPrimary dark:text-txtPrimary-dark mb-2 break-words">{notification.content}</div>
                                 <div
-                                    className={`text-xs ${
-                                        notification?.status !== NOTI_READ ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'
-                                    } `}
+                                    className={`text-xs ${notification?.status !== NOTI_READ ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'
+                                        } `}
                                 >
                                     {getTimeAgo(notification.createdAt)}
                                 </div>
@@ -142,6 +152,7 @@ const NotificationList = ({ btnClass }) => {
     }
     return (
         <>
+            {showNotiSetting ? <NotiSettingModal isVisible={showNotiSetting} onClose={() => setShowNotiSetting(false)} language={language} /> : null}
             <div ref={ref} className="mal-navbar__hamburger__spacing h-full sm:relative">
                 <button
                     type="button"
@@ -152,9 +163,8 @@ const NotificationList = ({ btnClass }) => {
                     }}
                 >
                     <div
-                        className={`${
-                            isPopover ? 'text-dominant ' : 'text-txtSecondary dark:text-txtPrimary-dark lg:dark:text-txtSecondary-dark'
-                        } hover:!text-dominant relative`}
+                        className={`${isPopover ? 'text-dominant ' : 'text-txtSecondary dark:text-txtPrimary-dark lg:dark:text-txtSecondary-dark'
+                            } hover:!text-dominant relative`}
                     >
                         <BxsBellIcon size={24} />
                         {unreadCount > 0 && <div className="bg-red w-2 h-2 rounded-full absolute top-1 right-0" />}
@@ -177,14 +187,24 @@ const NotificationList = ({ btnClass }) => {
                         <div className="flex items-center px-6 justify-between mb-8">
                             <div className="text-base sm:text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
 
-                            <div
-                                onClick={handleMarkAllRead}
-                                className={classNames('text-sm font-semibold', {
-                                    'cursor-pointer  hover:opacity-70 transition-opacity text-teal': unreadCount > 0,
-                                    'pointer-events-none text-txtDisabled dark:text-txtDisabled-dark': !unreadCount
-                                })}
-                            >
-                                {t('navbar:mark_read')}
+                            <div className='flex gap-4 items-center'>
+                                <div
+                                    onClick={handleMarkAllRead}
+                                    className={classNames('text-sm font-semibold', {
+                                        'cursor-pointer hover:opacity-70 transition-opacity': unreadCount > 0,
+                                        'pointer-events-none text-txtDisabled hidden': !unreadCount
+                                    })}
+                                >
+                                    {/* {t('navbar:mark_read')} */}
+                                    <MarkReadAllIcon />
+                                </div>
+
+                                <div
+                                    onClick={() => { }}
+                                    className={classNames('text-sm font-semibold cursor-pointer hover:opacity-70 transition-opacity')}
+                                >
+                                    <SettingIcon size={24} onClick={() => setShowNotiSetting(true)} />
+                                </div>
                             </div>
 
                             {/* {unreadCount > 0 && (
@@ -223,6 +243,115 @@ const NotificationList = ({ btnClass }) => {
         </>
     );
 };
+
+const NOTI_GROUP_KEYS = {
+    ALL: "ALL",
+    FUTURES: "FUTURES",
+    SPOT: "SPOT",
+    COMMISSION: "COMMISSION",
+    DEPOSIT_WITHDRAW: "DEPOSIT_WITHDRAW",
+    PROMOTION: "PROMOTION",
+    SYSTEM: "SYSTEM",
+}
+
+const NotiSettingModal = ({ isVisible, onClose, language }) => {
+    const [userNotiSetting, setUserNotiSetting] = useState({})
+    const [notiGroup, setNotiGroup] = useState({})
+    const [loading, setLoading] = useState(true)
+    const [updating, setUpdating] = useState(null)
+
+    const fetchUserSetting = async () => {
+        const { status, data } = await FetchApi({
+            url: API_GET_NOTI_SETTING,
+            options: {
+                method: 'GET'
+            }
+        })
+        if (status === 'ok' && data) {
+            setUserNotiSetting(data?.settings)
+            setNotiGroup(data?.groups)
+            setLoading(false)
+            setUpdating(null)
+        }
+    }
+
+    useEffect(() => {
+        setLoading(true)
+        fetchUserSetting()
+    }, [])
+
+    const handleToggleNotiSetting = debounce((keyToChange) => {
+        setUpdating(true)
+        const currentSetting = userNotiSetting
+        currentSetting = {
+            ...currentSetting,
+            [keyToChange]: !userNotiSetting?.[keyToChange]
+
+        }
+        FetchApi({
+            url: API_GET_NOTI_SETTING,
+            options: {
+                method: 'POST'
+            },
+            params: currentSetting
+
+        }).then(({ status, data }) => {
+            if (status === 'ok' && data) {
+                fetchUserSetting()
+            }
+        })
+    }, 500)
+
+    return <ModalV2
+        isVisible={isVisible} className={classNames("w-[488px] overflow-auto no-scrollbar", {
+            '!cursor-wait': updating
+        })} onBackdropCb={onClose}
+    >
+        <div className='text-base font-normal text-txtPrimary dark:text-txtPrimary-dark'>
+            <div>
+                <div className='text-2xl font-semibold mb-6'>
+                    Cài đặt thông báo
+                </div>
+                <div className='pb-6 w-full border-b-[1px] border-b-divider dark:border-b-divider-dark'>
+                    <NotiToggle
+                        updating={updating}
+                        text={notiGroup?.[NOTI_GROUP_KEYS.ALL]?.[language]}
+                        loading={loading}
+                        isAvailable
+                        isOn={userNotiSetting?.[NOTI_GROUP_KEYS.ALL]}
+                        onToggle={() => handleToggleNotiSetting(NOTI_GROUP_KEYS.ALL)}
+                    />
+                </div>
+            </div>
+            <div className='mt-6'>
+                {(loading ? [1, 2, 3, 4, 5] : Object.values(omit(notiGroup, NOTI_GROUP_KEYS.ALL))).map(e => {
+                    const key = e.key
+                    return <div className='my-6'>
+                        <NotiToggle
+                            updating={updating}
+                            text={notiGroup?.[key]?.[language]}
+                            loading={loading}
+                            isAvailable={userNotiSetting?.[NOTI_GROUP_KEYS.ALL]}
+                            isOn={userNotiSetting?.[key]}
+                            onToggle={() => handleToggleNotiSetting(key)}
+                        />
+                    </div>
+                })}
+            </div>
+        </div>
+    </ModalV2>
+}
+
+const NotiToggle = ({ text, isAvailable = false, onToggle, isOn = false, loading = true, updating = false }) => {
+    return loading ? <Skeletor width={'100%'} height={24} /> : <div className='flex justify-between w-full items-center'>
+        <div>
+            {text}
+        </div>
+        <div>
+            <Switch disabled={!isAvailable} checked={isOn} onChange={onToggle} processing={updating} />
+        </div>
+    </div>
+}
 
 NotificationList.defaultProps = {
     btnClass: '',
