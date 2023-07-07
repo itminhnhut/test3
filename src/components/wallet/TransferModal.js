@@ -218,7 +218,7 @@ const TransferModal = ({ isMobile, alert }) => {
 
         return {
             ..._,
-            available: isNaN(available) ? 0 : available
+            available: isNaN(available) || available < 0 ? 0 : available
         };
     }, [state.asset, state.allWallets, state.maxValue, isVisible]);
 
