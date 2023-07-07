@@ -87,9 +87,10 @@ const NicknameModal = ({ isVisible, onClose }) => {
                 type={message.current.type}
                 title={message.current.title}
                 message={message.current.message}
+                isButton={false}
             />
             <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
-                <div className="text-xl mb-6">{t('profile:nickname:add_nickname')}</div>
+                <div className="text-xl mb-6 font-medium">{t('profile:nickname:add_nickname')}</div>
                 <InputV2
                     className="pb-0"
                     value={value}
