@@ -221,5 +221,8 @@
     "alert_suggest_invalid_max_fee": "Phí giao dịch không được vượt quá số lượng bạn muốn bán.",
     "btn_accept": "Nhận lệnh",
     "partner_suggest_order_title": "Tìm kiếm đối tác cho giao dịch nạp/rút",
-    "partner_suggest_order_subtitle": "Người dùng đang tìm kiếm đối tác cho giao dịch sau, vui lòng xác nhận nhanh nhất có thể để bắt đầu giao dịch"
+    "partner_suggest_order_subtitle": "Người dùng đang tìm kiếm đối tác cho giao dịch sau, vui lòng xác nhận nhanh nhất có thể để bắt đầu giao dịch",
+    "fee_received": "Phí nhận được",
+    "auto_suggestion_mode": "Chế độ tự động gợi ý",
+    "auto_suggestion_mode_tooltip": "Cho phép hệ thống tự động gợi ý tới người dùng để xử lý lệnh"
 }

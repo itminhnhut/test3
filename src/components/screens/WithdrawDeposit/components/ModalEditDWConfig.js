@@ -109,9 +109,9 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
         <ModalV2
             isMobile
             isVisible={isVisible}
-            wrapClassName=""
             onBackdropCb={loading ? undefined : () => onClose()}
-            className={classNames(` md:!max-w-[588px] overflow-y-auto select-none border-divider`)}
+            wrapClassName='!px-8 !pb-8'
+            className={classNames(`md:!max-w-[588px] overflow-y-auto select-none !border border-divider dark:border-divider-dark`)}
         >
             <form
                 onSubmit={(e) => {
@@ -125,7 +125,7 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
                         (language === 'en' ? `Buy ${ALLOWED_ASSET[+assetId]} Order Limit` : `Giới hạn lệnh Mua ${ALLOWED_ASSET[+assetId]}`)}
                     {side && side === SIDE.SELL && t(`dw_partner:sell_order_limit`, { assetCode: ALLOWED_ASSET[+assetId] })}
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-6">
                     {['min', 'max'].map((key) => (
                         <div key={key}>
                             <label htmlFor={key} className="flex items-center  mb-2 justify-between">

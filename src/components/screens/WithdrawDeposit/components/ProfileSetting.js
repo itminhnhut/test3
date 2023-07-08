@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import { API_CONFIG_AUTO_SUGGEST_PARTNER, API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from '../constants';
 import FetchApi from 'utils/fetch-api';
+import { useTranslation } from 'next-i18next';
 
 const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
     const [modal, setModal] = useState({
@@ -91,7 +92,9 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                 else {
                     toast({
                         text: t('dw_partner:change_side_limit', { side: t(`common:${side?.toLowerCase()}`), assetCode: ALLOWED_ASSET[+assetId] }),
-                        type: 'success'
+                        type: 'success',
+                        duration: 4000,
+                        customActionClose: () => {}
                     });
                 }
                 onCloseModal();
@@ -129,7 +132,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                         />
                     </div>
                     <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">{t('dw_partner:order_vol_limit')}</div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mt-3">
                         <div className={classNames('flex text-dominant font-semibold items-center space-x-1')}>
                             <span className={classNames('text-dominant font-semibold')}>{formatNumber(orderConfig?.min)}</span>
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">-</span>
@@ -160,8 +163,9 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
         },
         [partner, t, rate]
     );
+
     return (
-        <div className="mt-20">
+        <div className="mt-[68px]">
             <div className="flex flex-wrap -m-3 items-center">
                 <div className="p-3 w-full md:w-1/2">
                     <div className="mb-8 txtPri-3 font-semibold">{t('dw_partner:buy_sell_title', { assetCode: 'VNDC' })}</div>
@@ -174,7 +178,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                             onChange: onEditOrderConfig,
                             loading: loading || loadingPartner
                         })}
-                        <hr className="border-t my-9 dark:border-divider-dark border-divider" />
+                        <hr className="border-t my-4 dark:border-divider-dark border-divider" />
                         {editDWConfig({
                             side: SIDE.SELL,
                             assetId: ALLOWED_ASSET_ID['VNDC'],
@@ -195,7 +199,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                             onChange: onEditOrderConfig,
                             loading: loading || loadingPartner
                         })}
-                        <hr className="border-t my-9 dark:border-divider-dark border-divider" />
+                        <hr className="border-t my-4 dark:border-divider-dark border-divider" />
                         {editDWConfig({
                             side: SIDE.SELL,
                             assetId: ALLOWED_ASSET_ID['USDT'],
@@ -225,6 +229,7 @@ export default ProfileSetting;
 const ConfigAutoSuggest = ({ assetId, autoSuggest }) => {
     const [isAutoSuggest, setIsAutoSuggest] = useState(autoSuggest);
     const [hasRendered, setHasRendered] = useState(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!hasRendered) {
@@ -238,7 +243,7 @@ const ConfigAutoSuggest = ({ assetId, autoSuggest }) => {
 
     const handleSetConfigSuggest = async () => {
         // Call api set config here
-        await FetchApi({
+        const { status, data } = await FetchApi({
             url: API_CONFIG_AUTO_SUGGEST_PARTNER,
             options: { method: 'POST' },
             params: {
@@ -246,11 +251,27 @@ const ConfigAutoSuggest = ({ assetId, autoSuggest }) => {
                 status: isAutoSuggest ? 1 : 0
             }
         });
+        if (status === ApiStatus.SUCCESS) {
+            toast({
+                // text: t('dw_partner:change_side_limit', { side: t(`common:${side?.toLowerCase()}`), assetCode: ALLOWED_ASSET[+assetId] }),
+                text: t('common:success'),
+                type: 'success',
+                duration: 4000,
+                customActionClose: () => {}
+            });
+        } else {
+            toast({
+                text: t('common:failure'),
+                type: 'error',
+                duration: 4000,
+                customActionClose: () => {}
+            });
+        }
     };
 
     return (
         <div className="rounded-xl flex items-center justify-between bg-white dark:bg-darkBlue-3 px-8 py-6 mb-4 txtPri-7">
-            Nhận lệnh tự động
+            {t('dw_partner:auto_suggestion_mode')}
             <SwitchV2 onChange={() => setIsAutoSuggest(!isAutoSuggest)} checked={isAutoSuggest} />
         </div>
     );

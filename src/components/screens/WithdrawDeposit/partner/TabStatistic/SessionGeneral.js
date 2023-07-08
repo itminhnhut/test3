@@ -28,7 +28,7 @@ const SessionGeneral = ({ filter, setFilter }) => {
         <div>
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
-                <div className="font-semibold text-[20px] leading-6">{t('dw_partner:report_commission')}</div>
+                <div className="txtPri-3">{t('dw_partner:report_commission')}</div>
                 <FilterTimeTabV2 filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll maxMonths={3} isDeepBackground={true} />
             </div>
 
@@ -52,14 +52,14 @@ const SessionGeneral = ({ filter, setFilter }) => {
                         <div className="pt-2 txtPri-1">{loading ? <Skeletor width="100px" /> : `${formatPercentage(data?.commissionRate * 100, 2)}%`} </div>
                     </div>
                     <div>
-                        <span>{t('common:transaction_fee')}</span>
+                        <span>{t('dw_partner:fee_received')}</span>
                         <div className="pt-2 txtPri-1">{loading ? <Skeletor width="100px" /> : formatNanNumber(data?.totalFee, 0) + ' VND'}</div>
                     </div>
                 </div>
                 <div className="flex flex-col items-end justify-center">
                     <h1 className="txtSecond-3">
                         <Trans i18nKey="dw_partner:total_volume">
-                            <span className="text-teal" />
+                            <span className="text-green-3 dark:text-green-2" />
                             <span className="text-txtPrimary dark:text-txtPrimary-dark" />
                         </Trans>
                     </h1>

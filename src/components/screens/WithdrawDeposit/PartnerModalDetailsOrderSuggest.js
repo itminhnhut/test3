@@ -123,7 +123,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                     </div>
                     {state.fee > 0 && (
                         <div className="flex justify-between">
-                            <span className="txtSecond-4">{t('common:transaction_fee')}</span>
+                            <span className="txtSecond-4">{t('dw_partner:fee_received')}</span>
                             <span>{`${formatNumber(state.fee)} VND`}</span>
                         </div>
                     )}

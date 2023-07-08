@@ -221,5 +221,8 @@
     "alert_suggest_invalid_max_fee": "The transaction fee cannot exceed the amount you want to sell.",
     "btn_accept": "Accept",
     "partner_suggest_order_title": "Looking for partners for deposit/withdrawal transactions",
-    "partner_suggest_order_subtitle": "Users who are looking for a partner for the following transaction, please confirm as soon as possible to start processing the transaction"
+    "partner_suggest_order_subtitle": "Users who are looking for a partner for the following transaction, please confirm as soon as possible to start processing the transaction",
+    "fee_received": "Fee received",
+    "auto_suggestion_mode": "Auto-suggestion mode",
+    "auto_suggestion_mode_tooltip": "Allow system automatically suggests to the users to execute orders"
 }

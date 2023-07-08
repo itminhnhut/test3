@@ -185,7 +185,7 @@ const SessionChart = ({ filter }) => {
         <div className="mt-20">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
-                <h1 className="font-semibold text-[20px] leading-6">{t('table:mini_chart')}</h1>
+                <h1 className="txtPri-3">{t('table:mini_chart')}</h1>
                 {/* <FilterTokenTab curToken={curToken} setCurToken={setCurToken} /> */}
             </div>
 
@@ -193,7 +193,7 @@ const SessionChart = ({ filter }) => {
             <CardWrapper>
                 <div className="flex items-center justify-between">
                     {/* Tabs */}
-                    <div>
+                    <div className='w-full'>
                         <Tabs tab={typeTab} className="gap-6 border-b border-divider dark:border-divider-dark">
                             {TabStatistic.map((item) => (
                                 <Fragment key={item.value}>

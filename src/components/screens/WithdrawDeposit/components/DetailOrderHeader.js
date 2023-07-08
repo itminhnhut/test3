@@ -74,7 +74,7 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                         </div>
                         {orderDetail?.fee ? (
                             <div>
-                                <div className="mb-2 txtSecond-3">{t('common:transaction_fee')}</div>
+                                <div className="mb-2 txtSecond-3">{mode === MODE.USER ? t('common:transaction_fee') : t('dw_partner:fee_received')}</div>
                                 <div>{formatBalanceFiat(orderDetail?.fee, 'VNDC')} VND</div>
                             </div>
                         ) : null}
