@@ -28,7 +28,7 @@ import { Spinner } from 'components/common/Icons';
 import { isFunction } from 'lodash';
 import colors from 'styles/colors';
 import dynamic from 'next/dynamic';
-import { format, parse } from 'date-fns';
+import { addDays, differenceInDays, endOfMonth, endOfWeek, format, isValid, parse, startOfMonth, startOfWeek } from 'date-fns';
 import styled from 'styled-components';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -94,6 +94,23 @@ const getAssets = createSelector([(state) => state.utils, (utils, params) => par
     return assets;
 });
 
+const showTimeRange = (timestamp, chartInterval) => {
+    const today = addDays(new Date(), 1);
+    switch (chartInterval) {
+        case 'week': {
+            const weekend = addDays(endOfWeek(timestamp), 1);
+            return `${format(timestamp, 'dd/MM/yyyy')} - ${format(today.getTime() < weekend.getTime() ? today : weekend, 'dd/MM/yyyy')}`;
+        }
+        case 'month': {
+            const monthEnd = addDays(endOfMonth(timestamp), 1);
+            return `${format(timestamp, 'dd/MM/yyyy')} - ${format(today.getTime() < monthEnd.getTime() ? today : monthEnd, 'dd/MM/yyyy')}`;
+        }
+        default: {
+            return format(timestamp, 'dd/MM/yyyy');
+        }
+    }
+};
+
 const SubPrice = ({ price, digitsPrice = 3, isShowLabel = true }) => (
     <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6">
         {' '}
@@ -153,10 +170,13 @@ const NaoPool = ({ dataSource, assetNao }) => {
     });
     const [range, setRange] = useState({
         startDate: undefined,
-        endDate: undefined,
+        endDate: new Date(),
         key: 'selection'
     });
-    const [chartInterval, setChartInterval] = useState('day');
+    const [chartInterval, setChartInterval] = useState({
+        [CHART_TYPES.pool_info]: 'day',
+        [CHART_TYPES.fee_revenue]: 'day'
+    });
     const [loading, setLoading] = useState(true);
     const [chartLoading, setChartLoading] = useState(false);
     const [data, setData] = useState({
@@ -245,17 +265,17 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     lines: {
                         show: !isMobile
                     }
-                },
-                padding: {
-                    left: 2
                 }
+                // padding: {
+                //     left: 2
+                // }
             },
             xaxis: {
                 type: 'datetime',
                 labels: {
                     formatter: (value) => {
                         if (!value) return '';
-                        if (chartInterval === 'month') {
+                        if (chartInterval[chartType] === 'month') {
                             return format(value, 'MM/yyyy');
                         }
                         return format(value, 'dd/MM');
@@ -295,8 +315,8 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     formatter: (value) => {
                         return formatAbbreviateNumber(value, 3);
                     },
-                    offsetX: -10,
-                    align: 'left',
+                    // offsetX: -10,
+                    align: 'left'
                 }
             },
             fill: {
@@ -309,24 +329,30 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     // shade: 'dark'
                 }
             },
+            variable: {
+                referencePrice,
+                chartInterval: chartInterval[chartType]
+            },
             tooltip: {
                 custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                     const y = series[seriesIndex][dataPointIndex];
                     const x = w.globals.seriesX[0][dataPointIndex];
+                    const _referencePrice = w.config.variable.referencePrice || referencePrice;
+                    const _chartInterval = w.config.variable.chartInterval || 'day';
                     return `
                         <div class="bg-gray-15 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
-                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? format(x, 'dd/MM/yyyy') : ''}</div>
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? showTimeRange(x, _chartInterval) : ''}</div>
                             <div class="text-white dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${formatNumber(
-                                y / (referencePrice['VNDC'] ?? 0),
+                                y / (_referencePrice['VNDC'] ?? 1 / 23400),
                                 0
                             )} VNDC</div>
-                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">$ ${formatNumber(y, 2)}</div>
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">$ ${formatNumber(y, 4)}</div>
                         </div>
                     `;
                 }
             }
         };
-    }, [isDark, isMobile, referencePrice, chartInterval]);
+    }, [isDark, isMobile, referencePrice, chartInterval[chartType]]);
 
     const onNavigate = (isNext) => {
         if (sliderRef.current) {
@@ -449,7 +475,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
         return result;
     };
 
-    const isValidCustomDay = filter.day !== 'custom' || !!(range.startDate && range.endDate);
+    const isValidCustomDay = filter.day !== 'custom' || (isValid(range.startDate) && isValid(range.endDate));
 
     useIsomorphicLayoutEffect(() => {
         const { poolRange } = router.query;
@@ -504,18 +530,26 @@ const NaoPool = ({ dataSource, assetNao }) => {
             return;
         }
         setLoading(true);
+        let startDate = range?.startDate && new Date(range?.startDate);
+        let endDate = range?.endDate && new Date(range?.endDate);
+        if (filter.day === 'custom' && differenceInDays(range.endDate, range.startDate) <= 1) {
+            startDate = addDays(endDate, -7);
+        }
         try {
             const { data: _data } = await fetchApi({
                 url: API_NAO_DASHBOARD_POOL_STATISTIC,
                 options: { method: 'GET' },
                 params: {
                     range: filter.day,
-                    from: range.startDate,
-                    to: range.endDate
+                    from: startDate,
+                    to: endDate
                 }
             });
 
-            setChartInterval(_data?.interval);
+            setChartInterval((old) => ({
+                ...old,
+                [CHART_TYPES.pool_info]: _data?.interval || 'day',
+            }));
             const length = _data?.result.length || 0;
             if (!length) {
                 setData((old) => ({
@@ -538,10 +572,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     totalUsers: last?.document?.totalUser || 0
                 }));
 
-                const _chartData =
-                    _data?.result.map((item) => {
-                        return [parse(item['_id'], 'dd/MM/yyyy', new Date()), item.document?.totalStakedUsdt || 0];
-                    });
+                const _chartData = _data?.result.map((item) => {
+                    return [parse(item['_id'], 'dd/MM/yyyy', new Date()), item.document?.totalStakedUsdt || 0];
+                });
                 dispatch({
                     type: CHART_TYPES.pool_info,
                     payload: [{ name: 'pool info', data: _chartData }]
@@ -562,17 +595,25 @@ const NaoPool = ({ dataSource, assetNao }) => {
             return;
         }
         setLoading(true);
+        let startDate = range?.startDate && new Date(range?.startDate);
+        let endDate = range?.endDate && new Date(range?.endDate);
+        if (filter.day === 'custom' && differenceInDays(range.endDate, range.startDate) <= 1) {
+            startDate = addDays(endDate, -7);
+        }
         try {
             const { data: _data } = await fetchApi({
                 url: API_NAO_DASHBOARD_FEE_REVENUE,
                 options: { method: 'GET' },
                 params: {
                     range: filter.day,
-                    from: range.startDate,
-                    to: range.endDate
+                    from: startDate,
+                    to: endDate
                 }
             });
-            setChartInterval(_data?.interval);
+            setChartInterval((old) => ({
+                ...old,
+                [CHART_TYPES.fee_revenue]: _data?.interval || 'day'
+            }));
             const length = _data?.result.length;
             if (!length) {
                 dispatch({
@@ -597,7 +638,6 @@ const NaoPool = ({ dataSource, assetNao }) => {
             }
         }
     };
-
 
     // // zoom and pan stuff
     // useEffect(() => {

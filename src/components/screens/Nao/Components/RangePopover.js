@@ -6,7 +6,7 @@ import vi from 'date-fns/locale/vi';
 import en from 'date-fns/locale/en-US';
 import { Fragment, useRef, useState } from 'react';
 import CheckCircle from 'components/svg/CheckCircle';
-import { addDays, format } from 'date-fns';
+import { addDays, format, isValid } from 'date-fns';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import { DateRangePicker } from 'react-date-range';
@@ -35,12 +35,18 @@ const DatePickerWrapper = styled.div`
     .rdrDayDisabled {
         background-color: transparent;
     }
+
+    .rdrMonth{
+        max-width: calc(100% - 3rem);
+        padding-left: 0;
+        padding-right: 0;
+    }
 `;
 
-const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange, popoverClassName = '', range = { startDate: undefined, endDate: undefined }, setRange }) => {
+const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange, popoverClassName = '', range = { startDate: undefined, endDate: new Date() }, setRange }) => {
     const popOverClasses = classNames('relative flex', popoverClassName);
     const { t } = useTranslation();
-    const [internalRange, setInternalRange] = useState(range);
+    const [internalRange, setInternalRange] = useState({ ...range, endDate: new Date() });
     const [showPicker, setShowPicker] = useState(false);
     const shouldShowPicker = showPicker || (active.value === 'custom' && (!range.startDate || !range.endDate));
     const [theme] = useDarkMode();
@@ -50,7 +56,7 @@ const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange
     const isMobile = width < 820;
     const isCustom = active.value === 'custom';
     const handleOutside = () => {
-        if (shouldShowPicker && (!range.startDate || !range.endDate)) {
+        if (shouldShowPicker && (!isValid(range.startDate) || !isValid(range.endDate))) {
             setShowPicker(false);
             onChange(fallbackDay);
             // uncomment this code block to clear previous input
@@ -66,7 +72,7 @@ const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange
     useOutsideClick(wrapperRef, () => !isMobile && handleOutside());
     const onConfirm = () => {
         setShowPicker(false);
-        if (!internalRange.startDate || !internalRange.endDate) {
+        if (!isValid(internalRange.startDate) && !isValid(internalRange.endDate)) {
             onChange('d');
             // uncomment this code block to clear previous input
 
@@ -76,13 +82,18 @@ const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange
             // });
             return;
         }
-        if (range?.startDate !== internalRange.startDate || range !== internalRange.endDate) {
+        if (!isValid(internalRange.startDate)) {
+            internalRange.startDate = internalRange.endDate;
+        } else if (!isValid(internalRange.endDate)) {
+            internalRange.endDate = internalRange.startDate
+        }
+        if (range?.startDate !== internalRange.startDate || range?.endDate !== internalRange.endDate) {
             setRange?.({ ...internalRange, endDate: addDays(internalRange.endDate, 1) });
         }
     };
 
     const showActive = () => {
-        if (active.value === 'custom' && range?.startDate && range?.endDate) {
+        if (active.value === 'custom' && isValid(range?.startDate) && isValid(range?.endDate)) {
             return `${format(range.startDate, 'dd/MM/yyyy')} - ${format(addDays(range.endDate, -1), 'dd/MM/yyyy')}`;
         }
         return active[language];
@@ -151,7 +162,7 @@ const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange
                                                 'first:rounded-t-md last:rounded-b-md hover:bg-hover-1 dark:hover:bg-hover-dark'
                                             )}
                                         >
-                                            <span className='whitespace-nowrap'>{isCustom && isActive ? showActive() : day[language]}</span>
+                                            <span className="whitespace-nowrap">{isCustom && isActive ? showActive() : day[language]}</span>
                                             {isActive && <CheckCircle color="currentColor" size={16} />}
                                         </div>
                                     );
@@ -217,7 +228,7 @@ const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange
                                         containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
                                     >
                                         <div className="text-xl text-txtPrimary dark:text-txtPrimary-dark font-semibold">{t('nao:pool:duration')}</div>
-                                        <div className="date-range-picker flex flex-col justify-center !bg-transparent !pt-8">
+                                        <div className="date-range-picker flex flex-col justify-center !bg-transparent !pt-8 !shadow-none !border-none max-w-[24em]ß">
                                             <DatePickerWrapper
                                                 noDatePicked={
                                                     !internalRange.startDate || !internalRange.endDate || internalRange?.startDate === internalRange?.endDate
