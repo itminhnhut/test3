@@ -12,10 +12,10 @@ const CSwitch = ({ checked, disabled = false, onChange, processing = false}) => 
             checked={checked}
             onChange={_onChange}
             className={classnames('relative h-6 min-w-[48px] px-2 cursor-pointer rounded-full', 'transition-colors duration-200 ease-in-out', {
-                'bg-teal': checked,
+                'dark:bg-teal bg-bgBtnV2': checked,
                 'bg-gray-11 dark:bg-dark-2': !checked,
-                'bg-gray-1 cursor-not-allowed opacity-70': !checked && disabled,
-                'bg-[#436654] cursor-not-allowed opacity-70': checked && disabled,
+                'dark:!bg-gray-1 !bg-gray-13 cursor-not-allowed': !checked && disabled,
+                'dark:!bg-[#436654] !bg-green-5 cursor-not-allowed': checked && disabled,
                 '!cursor-wait': processing
             })}
         >
@@ -27,7 +27,7 @@ const CSwitch = ({ checked, disabled = false, onChange, processing = false}) => 
                     {
                         'translate-x-6': checked,
                         'translate-x-0': !checked,
-                        '!bg-dark-6': disabled
+                        'dark:!bg-dark-6 !bg-gray-16': disabled
                     }
                 )}
             />
