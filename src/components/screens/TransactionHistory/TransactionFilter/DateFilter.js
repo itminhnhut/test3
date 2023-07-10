@@ -28,6 +28,7 @@ const DateFilter = ({ filter, setFilter, t }) => {
                 hasShadow
                 position={width > getWidthByBreakpoint('lg') ? 'left' : 'right'}
                 wrapperClassname="z-40"
+                maxMonths={3}
                 text={
                     <div
                         className={classNames(
