@@ -282,7 +282,7 @@ export const LastedArticles = ({ lastedArticles, loading = false, language, isAp
                                                     : null}
                                             </div>
                                             <div className='mt-2 sm:mt-3 font-normal text-xs leading-4 text-txtSecondary dark:text-darkBlue-5 whitespace-nowrap'>
-                                                {formatTime(article.created_at, 'dd/MM/yyyy')}
+                                                {formatTime(article?.published_at, 'dd/MM/yyyy')}
                                             </div>
                                         </div>
                                     </a>

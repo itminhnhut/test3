@@ -7,8 +7,10 @@ import { getPartner, setAllowedAmount, setInput, setLoadingPartner, setPartner }
 
 const DEBOUNCE_TIME = 300;
 const useGetPartner = ({ assetId, side, amount, rate, assetConfig }) => {
-    const { input, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
+    const { input, maximumAllowed, minimumAllowed, isAutoSuggest } = useSelector((state) => state.withdrawDeposit);
+
     const dispatch = useDispatch();
+
 
     useEffect(() => {
         if (rate && assetConfig) {
@@ -22,18 +24,24 @@ const useGetPartner = ({ assetId, side, amount, rate, assetConfig }) => {
     }, [rate, side, assetConfig?.assetCode, assetConfig?.assetDigit]);
 
     useEffect(() => {
+
         let timeout = setTimeout(() => {
             dispatch(setInput(amount));
         }, DEBOUNCE_TIME);
+
         if (+amount >= minimumAllowed && +amount <= maximumAllowed) {
+            if(isAutoSuggest) return;
+
             dispatch(setLoadingPartner(true));
         }
         return () => {
             clearTimeout(timeout);
         };
-    }, [amount, minimumAllowed, maximumAllowed]);
+    }, [amount, minimumAllowed, maximumAllowed, isAutoSuggest]);
 
     useEffect(() => {
+        if(isAutoSuggest) return;
+
         let mounted = false;
         const source = axios.CancelToken.source();
         const fetchPartner = () => {
@@ -63,7 +71,7 @@ const useGetPartner = ({ assetId, side, amount, rate, assetConfig }) => {
             mounted = true;
             source.cancel();
         };
-    }, [input, assetId, side, minimumAllowed, maximumAllowed]);
+    }, [input, assetId, side, minimumAllowed, maximumAllowed, isAutoSuggest]);
 };
 
 export default useGetPartner;

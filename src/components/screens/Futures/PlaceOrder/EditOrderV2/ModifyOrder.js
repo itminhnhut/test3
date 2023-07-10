@@ -75,8 +75,8 @@ const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, marketWat
             <ModalV2 className="!max-w-[800px]" isVisible={isVisible} onBackdropCb={onClose}>
                 <div className="text-2xl font-semibold mb-2">{t('futures:mobile:modify_order')}</div>
                 <Tabs isDark tab={tab} className="gap-6 border-b border-divider dark:border-divider-dark">
-                    {tabs?.map((item) => (
-                        <TabItem V2 className="!text-left !px-0 !text-base" value={item.value} onClick={(isClick) => isClick && setTab(item.value)}>
+                    {tabs?.map((item, idx) => (
+                        <TabItem key={idx} V2 className="!text-left !px-0 !text-base" value={item.value} onClick={(isClick) => isClick && setTab(item.value)}>
                             {t(item.label)}
                         </TabItem>
                     ))}

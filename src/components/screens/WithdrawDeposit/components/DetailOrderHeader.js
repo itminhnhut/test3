@@ -53,47 +53,40 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                 </div>
             </div>
 
-            <Card className="border !border-divider dark:border-0 bg-white !dark:bg-dark-4">
-                <div className="flex flex-grow items-center justify-between">
-                    <div className="flex items-center -m-5">
-                        <div className="flex p-5">
-                            <div className="">
-                                <div className="mb-2">
-                                    {!orderDetail ? (
-                                        <Skeletor width="100px" />
-                                    ) : (
-                                        <TextCopyable className="gap-x-1 txtPri-1 " text={orderDetail?.displayingId} />
-                                    )}
-                                </div>
-                                <div className="txtSecond-2 ">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
+            <Card className="border !border-divider dark:border-0 bg-white dark:bg-dark-4">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-10 txtPri-1">
+                        <div>
+                            <div className="mb-2 txtSecond-3">Mã lệnh</div>
+                            <div>
+                                {!orderDetail ? <Skeletor width="100px" /> : <TextCopyable className="gap-x-1 txtPri-1" text={orderDetail?.displayingId} />}
                             </div>
                         </div>
-
-                        <div className="flex p-5">
-                            <div className="">
-                                <div className="mb-2 txtPri-1">{t('dw_partner:rate')}</div>
-                                <div className="txtSecond-2 ">
-                                    1 {assetCode} = {formatBalanceFiat(orderDetail?.price, 'VNDC')} VND
-                                </div>
+                        <div>
+                            <div className="mb-2 txtSecond-3">{t('dw_partner:rate')}</div>
+                            <div>
+                                1 {assetCode} = {formatBalanceFiat(orderDetail?.price, 'VNDC')} VND
                             </div>
                         </div>
-                        {orderDetail?.tip ? (
-                            <div className="flex p-5">
-                                <div className="">
-                                    <div className="mb-2 txtPri-1">{t('dw_partner:partner_bonus')}</div>
-                                    <div className="txtSecond-2">{formatBalanceFiat(orderDetail?.tip, 'VNDC')} VND</div>
-                                </div>
+                        <div>
+                            <div className="mb-2 txtSecond-3">{t('common:time')}</div>
+                            <div>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
+                        </div>
+                        {orderDetail?.fee ? (
+                            <div>
+                                <div className="mb-2 txtSecond-3">{t('dw_partner:partner_bonus')}</div>
+                                <div>{formatBalanceFiat(orderDetail?.fee, 'VNDC')} VND</div>
                             </div>
                         ) : null}
                     </div>
 
-                    <div className="flex p-2 text-right ">
+                    <div className="flex text-right ">
                         <div className="">
-                            <div className="mb-2 txtPri-3 font-semibold">
+                            <div className="mb-1 txtPri-3 font-semibold">
                                 {(side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER) ? '+' : '-'}
                                 {formatBalanceFiat(orderDetail?.baseQty, assetCode)} {assetCode}
                             </div>
-                            <div className="txtSecond-2 ">{formatBalanceFiat(orderDetail?.quoteQty, 'VNDC')} VND</div>
+                            <div className="txtSecond-3">{formatBalanceFiat(orderDetail?.quoteQty, 'VNDC')} VND</div>
                         </div>
                     </div>
                 </div>

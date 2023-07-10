@@ -144,7 +144,7 @@ const ContestPerRanks = ({
                         alt=""
                     />
                 </div>
-                <div>{capitalize(data)}</div>
+                <div>{data}</div>
                 {item?.is_onus_master && <TickFbIcon size={16} />}
             </div>
         );
@@ -237,8 +237,8 @@ const ContestPerRanks = ({
                                         <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col" style={{ wordBreak: 'break-word' }}>
-                                        <div className="flex items-center gap-2 font-semibold capitalize">
-                                            <span>{capitalize(item?.name)}</span>
+                                        <div className="flex items-center gap-2 font-semibold">
+                                            <span>{item?.name}</span>
                                             {item?.is_onus_master && <TickFbIcon size={16} />}
                                         </div>
                                         <span className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">{item?.[userID]}</span>
@@ -299,7 +299,7 @@ const ContestPerRanks = ({
                                                 />
                                                 <div>
                                                     <div className="flex items-center space-x-2">
-                                                        <label className="font-semibold capitalize">{capitalize(item?.name)}</label>
+                                                        <label className="font-semibold">{item?.name}</label>
                                                         {item?.is_onus_master && <TickFbIcon size={16} />}
                                                     </div>
                                                     <div className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">ID: {item?.[userID]}</div>
@@ -379,7 +379,7 @@ const ContestPerRanks = ({
                             fieldName={rank}
                             cellRender={renderRank}
                         />
-                        <Column minWidth={280} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
+                        <Column minWidth={280} className="font-semibold" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                         <Column minWidth={150} className="text-txtPrimary dark:text-txtPrimary-dark" title={'User ID'} fieldName={userID} />
                         <Column
                             minWidth={120}

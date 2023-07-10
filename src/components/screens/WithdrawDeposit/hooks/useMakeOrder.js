@@ -9,8 +9,8 @@ import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
 import toast from 'utils/toast';
 import { ORDER_TYPES } from '../constants';
 
-const useMakeOrder = ({ setState, input}) => {
-    const { partnerBank, accountBank, partner } = useSelector((state) => state.withdrawDeposit);
+const useMakeOrder = ({ setState, input }) => {
+    const { partnerBank, accountBank, partner, isAutoSuggest } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -66,13 +66,21 @@ const useMakeOrder = ({ setState, input}) => {
             [ApiResultCreateOrder.SOTP_INVALID_EXCEED_TIME]: () => {
                 setState({ showAlertDisableSmartOtp: true });
                 return true;
+            },
+            [ApiResultCreateOrder.NOT_FOUND_AUTO_PARTNER]: () => {
+                toast({ text: t('dw_partner:error.not_found_auto_partner'), type: 'warning' });
+                return true;
+            },
+            [ApiResultCreateOrder.INVALID_MAX_FEE]: () => {
+                toast({ text: t('dw_partner:error.invalid_max_fee'), type: 'warning' });
+                return true;
             }
         };
 
         return errorHandler[orderResponse?.status]?.() || toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
     };
 
-    const onMakeOrderHandler = async (otp, locale, tip) => {
+    const onMakeOrderHandler = async (otp, locale, fee) => {
         try {
             setState({ loadingConfirm: true });
 
@@ -84,7 +92,8 @@ const useMakeOrder = ({ setState, input}) => {
                 side,
                 otp,
                 locale,
-                tip: +tip
+                fee: +fee,
+                type: isAutoSuggest ? 'auto' : 'normal'
             });
 
             if (orderResponse?.status === ApiStatus.SUCCESS || orderResponse?.status === ApiResultCreateOrder.TOO_MUCH_REQUEST) {
@@ -93,6 +102,8 @@ const useMakeOrder = ({ setState, input}) => {
                 } else {
                     if (orderResponse?.data?.remaining_time) {
                         setState({ showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time, isUseSmartOtp: false });
+                    } else if (isAutoSuggest) {
+                        setState({ showProcessSuggestPartner: orderResponse.data });
                     } else {
                         onMakeOrderSuccess(orderResponse.data);
                         return;

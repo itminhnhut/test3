@@ -1,18 +1,21 @@
 import AssetLogo from 'components/wallet/AssetLogo';
 import colors from 'styles/colors';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState, memo } from 'react';
 import { useWindowSize } from 'utils/customHooks';
-import { formatPrice, render24hChange } from 'redux/actions/utils';
+import { formatPrice, render24hChange, scrollHorizontal } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
-import { ArrowRightIcon } from 'components/svg/SvgIcon';
+import { ArrowRightIcon, CheckCircleIcon } from 'components/svg/SvgIcon';
 import { HotIcon } from 'components/screens/MarketV2/MarketTable';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import classNames from 'classnames';
+import SvgIcon from 'components/svg';
+import { useClickAway } from 'react-use';
+import Skeletor from 'components/common/Skeletor';
 
 const types = [
     {
@@ -38,7 +41,7 @@ const types = [
     }
 ];
 
-const TrendTab = ({ width, type, setType, setState, types, t }) => {
+const TrendTab = ({ width, type, setType, setState, types, t, setCurrency, marketCurrency }) => {
     return (
         <div className="w-full flex justify-between">
             <TokenTypes
@@ -50,6 +53,8 @@ const TrendTab = ({ width, type, setType, setState, types, t }) => {
                 lang={'vi'}
                 setState={setState}
                 t={t}
+                setCurrency={setCurrency}
+                marketCurrency={marketCurrency}
             />
             {width >= 992 && (
                 <span className="flex flex-row items-center text-base font-semibold">
@@ -67,53 +72,84 @@ const TrendTab = ({ width, type, setType, setState, types, t }) => {
     );
 };
 
-const TokenTypes = ({ type, setType, types, lang, width, setState, t }) => {
-    const isMobile = width < 992;
+const SelectAsset = ({ setCurrency, marketCurrency }) => {
+    const ref = useRef(null);
+    const [toggleOpen, setToggleOpen] = useState(false);
+    useClickAway(ref, () => {
+        if (toggleOpen) {
+            setToggleOpen(false);
+        }
+    });
+
     return (
-        <div
-            className={
-                isMobile
-                    ? 'flex space-x-3 h-9 font-normal text-sm overflow-auto no-scrollbar haha'
-                    : 'flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar haha'
-            }
-        >
-            {types.map((e, index) => {
-                const Content = e?.content;
-                return (
-                    <div
-                        id={e.id}
-                        key={e.id}
-                        className={
-                            isMobile
-                                ? classNames(
-                                      'flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
-                                      {
-                                          '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
-                                      }
-                                  )
-                                : classNames(
-                                      'h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
-                                      {
-                                          '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
-                                      }
-                                  )
+        <div className="border-r border-divider dark:border-divider-dark pr-3 relative z-[11]">
+            <div ref={ref} onClick={() => setToggleOpen((prev) => !prev)} className="flex rounded-md py-2 px-4 items-center bg-gray-13 dark:bg-dark-4">
+                <div className="flex items-center text-sm space-x-2 text-txtSecondary dark:text-txtSecondary-dark">
+                    <div className="">{marketCurrency}</div>
+                    <SvgIcon name="chevron_down" size={16} className={classNames({ 'rotate-0': toggleOpen })} color="currentColor" />
+                </div>
+
+                <div
+                    className={classNames(
+                        'shadow-card_light absolute mt-2 w-full bg-white dark:bg-bgTabInactive-dark py-2 border border-divider dark:border-divider-dark top-full left-0 rounded-md',
+                        {
+                            hidden: !toggleOpen
                         }
-                        onClick={() => {
-                            setType(e);
-                            setState({ marketTabIndex: index });
-                            // document.getElementById(e.id).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'end' });
-                        }}
-                    >
-                        <Content t={t} />
-                        {/* {e?.content[lang]} */}
-                    </div>
-                );
-            })}
+                    )}
+                >
+                    {['VNDC', 'USDT'].map((currency) => (
+                        <button
+                            key={currency}
+                            onClick={() => setCurrency(currency)}
+                            className="py-3 w-full justify-between cursor-pointer items-center text-txtPrimary dark:text-txtPrimary-dark px-4 flex dark:hover:bg-hover-dark hover:bg-hover first:mb-3 disabled:cursor-default"
+                        >
+                            {currency}
+                            {currency === marketCurrency && <CheckCircleIcon color="currentColor" size={16} />}
+                        </button>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };
 
-const HomeMarketTrend = ({ trendData }) => {
+const TokenTypes = ({ type, setType, types, lang, width, setState, t, setCurrency, marketCurrency }) => {
+    const isMobile = width < 992;
+    const parentRef = useRef(null);
+    return (
+        <div className="flex items-center w-full">
+            <SelectAsset setCurrency={setCurrency} marketCurrency={marketCurrency} />
+            <div ref={parentRef} className=" flex space-x-3 h-9 font-normal text-sm  pl-3 overflow-x-auto w-full no-scrollbar">
+                {types.map((e, index) => {
+                    const Content = e?.content;
+                    return (
+                        <div
+                            id={e.id}
+                            key={e.id}
+                            className={classNames(
+                                'rounded-md py-2 px-4 text-sm text-gray-1 dark:text-gray-7 hover:text-gray-15 dark:hover:text-gray-4 hover:cursor-pointer dark:bg-dark-4 dark:hover:bg-dark-5 transition-all duration-75 bg-gray-13 hover:bg-gray-6 border border-transparent whitespace-nowrap ',
+                                {
+                                    '!bg-teal/10 hover:!bg-teal/30 !text-green-3 dark:!text-green-3 hover:!text-green-3 dark:hover:!text-green-3 font-semibold':
+                                        e.id === type
+                                }
+                            )}
+                            onClick={() => {
+                                setType(e);
+                                setState({ marketTabIndex: index });
+                                const currentElement = document.getElementById(e.id);
+                                scrollHorizontal(currentElement, parentRef.current);
+                            }}
+                        >
+                            <Content t={t} />
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const HomeMarketTrend = ({ loadingTrendData, trendData, setCurrency, marketCurrency }) => {
     // * Initial State
     const [type, setType] = useState(types[0]);
     const [state, set] = useState({
@@ -141,6 +177,10 @@ const HomeMarketTrend = ({ trendData }) => {
     }, [width]);
 
     const renderMarketBody = useCallback(() => {
+        // Loading State
+        if (loadingTrendData) return [...Array(5).keys()].map((element) => <Skeletor key={element} width="100%" height={70} />);
+
+        // Loading finish state
         const tabMap = ['topView', 'newListings', 'topGainers', 'topLosers'];
         const pairs = trendData ? trendData?.[tabMap[state.marketTabIndex]] : null;
         if (!pairs) return null;
@@ -153,7 +193,6 @@ const HomeMarketTrend = ({ trendData }) => {
                 if (_24hChange <= 0) sparkLineColor = colors.red2;
             }
             const sparkLine = sparkLineBuilder(pair?.s, sparkLineColor);
-
             if (width >= 992) {
                 return (
                     <Link key={`markettrend_${pair?.s}__${state.marketTabIndex}`} href={`/futures/${pair?.s}`} passHref>
@@ -219,7 +258,7 @@ const HomeMarketTrend = ({ trendData }) => {
                 );
             }
         });
-    }, [width, trendData, state.marketTabIndex]);
+    }, [width, trendData, state.marketTabIndex, loadingTrendData]);
 
     return (
         <section className="homepage-markettrend">
@@ -227,7 +266,16 @@ const HomeMarketTrend = ({ trendData }) => {
                 <div className="homepage-markettrend__tab_and_title">
                     <div className="homepage-markettrend__title">{t('home:markettrend.title')}</div>
                     <div className="homepage-markettrend__tab">
-                        <TrendTab type={type} width={width} types={types} setType={setType} t={t} setState={setState} />
+                        <TrendTab
+                            setCurrency={setCurrency}
+                            marketCurrency={marketCurrency}
+                            type={type}
+                            width={width}
+                            types={types}
+                            setType={setType}
+                            t={t}
+                            setState={setState}
+                        />
                     </div>
                 </div>
 
@@ -254,4 +302,4 @@ const HomeMarketTrend = ({ trendData }) => {
     );
 };
 
-export default HomeMarketTrend;
+export default memo(HomeMarketTrend);

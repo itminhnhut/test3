@@ -22,6 +22,7 @@ import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import DarkNote from 'components/common/DarkNote';
 import DetailOrderHeader from './components/DetailOrderHeader';
 import DetailLog from './components/DetailLog';
+import toast from 'utils/toast';
 
 export const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
@@ -30,7 +31,7 @@ export const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, 
 const GroupInforCard = dynamic(() => import('./GroupInforCard'), { ssr: false });
 const ModalQr = dynamic(() => import('./components/ModalQr'), { ssr: false });
 const ModalOrder = dynamic(() => import('./components/ModalOrder'));
-const ModalRating = dynamic(() => import('./components/ModalRating', { ssr: false }));
+// const ModalRating = dynamic(() => import('./components/ModalRating', { ssr: false }));
 const ModalUploadImage = dynamic(() => import('./components/ModalUploadImage', { ssr: false }));
 const ModalPreviewProof = dynamic(() => import('./components/ModalPreviewProof', { ssr: false }));
 
@@ -47,8 +48,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         isShowQr: false,
         isShowUploadImg: false,
         firstLoad: true,
-        isShowRating: false,
-        needRating: false,
+        // isShowRating: false,
+        // needRating: false,
         isShowProof: false
     });
 
@@ -72,17 +73,17 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
 
     const refetchOrderDetailHandler = (data) => {
         toggleRefetch();
-        if (mode === MODE.USER && data?.status === PartnerOrderStatus.SUCCESS && !data?.reasonDisputedCode) {
-            if (data?.side === SIDE.BUY) {
-                setState({
-                    isShowRating: true
-                });
-            } else {
-                setState({
-                    needRating: true
-                });
-            }
-        }
+        // if (mode === MODE.USER && data?.status === PartnerOrderStatus.SUCCESS && !data?.reasonDisputedCode) {
+        //     if (data?.side === SIDE.BUY) {
+        //         setState({
+        //             isShowRating: true
+        //         });
+        //     } else {
+        //         setState({
+        //             needRating: true
+        //         });
+        //     }
+        // }
     };
 
     const { onMarkWithStatus, onProcessOrder, setModalState } = useMarkOrder({
@@ -99,17 +100,17 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         orderDetail: data
                     });
                     setIsRefetchOrderDetailAfterCountdown(false);
-                    if (mode === MODE.USER && data?.status === PartnerOrderStatus.SUCCESS && !data?.reasonDisputedCode) {
-                        if (data?.side === SIDE.BUY) {
-                            setState({
-                                isShowRating: true
-                            });
-                        } else {
-                            setState({
-                                needRating: true
-                            });
-                        }
-                    }
+                    // if (mode === MODE.USER && data?.status === PartnerOrderStatus.SUCCESS && !data?.reasonDisputedCode) {
+                    //     if (data?.side === SIDE.BUY) {
+                    //         setState({
+                    //             isShowRating: true
+                    //         });
+                    //     } else {
+                    //         setState({
+                    //             needRating: true
+                    //         });
+                    //     }
+                    // }
                 }
             });
         }
@@ -151,6 +152,14 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         };
         fetchData(id);
     }, [id, refetch]);
+
+    useEffect(() => {
+        return () => {
+            setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                visible: false
+            });
+        };
+    }, []);
 
     const onOpenChat = () => {
         if (window?.fcWidget?.isOpen()) return;
@@ -394,7 +403,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     {/* Lưu ý */}
                     {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) &&
                         status.status !== PartnerOrderStatus.REJECTED && (
-                            <div className="w-full rounded-md border border-divider dark:border-0 dark:bg-darkBlue-3 py-4 px-6">
+                            <div className="w-full rounded-md border border-divider dark:border-0 dark:bg-darkBlue-3 p-6">
                                 <DarkNote title={t('wallet:note')} />
                                 <div className="txtSecond-2 mt-2">
                                     {status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? (
@@ -417,7 +426,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 <DetailLog orderDetail={state.orderDetail} mode={mode} onShowProof={() => setState({ isShowProof: true })} />
 
                 {/* Actions */}
-
                 <div className="flex items-center justify-between">
                     {renderButton()}
 
@@ -461,11 +469,11 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     });
 
                     // show rating modal only if user is on SELL mode then after close AFTER_CONFIRM modal
-                    if (state.needRating) {
-                        setState({
-                            isShowRating: true
-                        });
-                    }
+                    // if (state.needRating) {
+                    //     setState({
+                    //         isShowRating: true
+                    //     });
+                    // }
                 }}
             />
 
@@ -477,7 +485,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 mode={mode}
             />
             <ModalLoading isVisible={isRefetchOrderDetailAfterCountdown} onBackdropCb={() => setIsRefetchOrderDetailAfterCountdown(false)} />
-            <ModalRating isVisible={state.isShowRating} onClose={() => setState({ isShowRating: false })} orderDetail={state.orderDetail} />
+            {/* <ModalRating isVisible={state.isShowRating} onClose={() => setState({ isShowRating: false })} orderDetail={state.orderDetail} /> */}
             <ModalPreviewProof
                 mode={mode}
                 orderDetail={state.orderDetail}

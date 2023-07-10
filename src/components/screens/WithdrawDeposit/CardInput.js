@@ -1,63 +1,39 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import TradingInputV2 from 'components/trade/TradingInputV2';
-import dynamic from 'next/dynamic';
 import Card from './components/common/Card';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
 import { formatBalanceFiat, getExactBalanceFiat, formatNanNumber } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import Chip from 'components/common/V2/Chip';
 import Skeletor from 'components/common/Skeletor';
 import { useRouter } from 'next/router';
 import useFetchApi from 'hooks/useFetchApi';
-import { API_GET_ORDER_PRICE, API_CHECK_LIMIT_WITHDRAW, API_GET_ME } from 'redux/actions/apis';
-import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
+import { API_GET_ORDER_PRICE, API_CHECK_LIMIT_WITHDRAW } from 'redux/actions/apis';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { PATHS } from 'constants/paths';
 import { useTranslation } from 'next-i18next';
-import useMakeOrder from './hooks/useMakeOrder';
 import useGetPartner from './hooks/useGetPartner';
-import FetchApi from 'utils/fetch-api';
-import { ModalConfirm } from './DetailOrder';
-import { ALLOWED_ASSET, ALLOWED_ASSET_ID, MODE } from './constants';
-import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import { ALLOWED_ASSET_ID } from './constants';
 import Tooltip from 'components/common/Tooltip';
-import InputV2 from 'components/common/V2/InputV2';
 import { find } from 'lodash';
 import RecommendAmount from './components/RecommendAmount';
 import TabV2 from 'components/common/V2/TabV2';
-
-const ModalOtp = dynamic(() => import('./components/ModalOtp'));
-const DWAddPhoneNumber = dynamic(() => import('components/common/DWAddPhoneNumber'));
+import { SET_ALLOWED_SUBMIT_ORDER } from 'redux/actions/types';
+import { setFee } from 'redux/actions/withdrawDeposit';
+import { MIN_TIP } from 'redux/actions/const';
 
 const CardInput = () => {
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation();
-    const {
-        input,
-        partner,
-        partnerBank,
-        accountBank,
-        loadingPartner,
-        maximumAllowed,
-        minimumAllowed,
-        modal: modalProps
-    } = useSelector((state) => state.withdrawDeposit);
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+    const { fee, partner, accountBank, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
 
-    const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
+    // const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
     const router = useRouter();
     const { side, assetId } = router.query;
 
     const [state, set] = useState({
-        amount: '',
-        tip: '',
-        loadingConfirm: false,
-        showOtp: false,
-        otpExpireTime: null,
-        isUseSmartOtp: false,
-        showAlertDisableSmartOtp: false
+        amount: ''
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
@@ -65,13 +41,15 @@ const CardInput = () => {
     const assetConfig = useMemo(() => {
         return find(configs, { id: +assetId });
     }, [configs, assetId]);
-    const { assetCode = '' } = assetConfig;
+    // const { assetCode = '' } = assetConfig;
+    const assetCode = assetConfig?.assetCode || '';
 
     const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
     // Setting DEFAULT amount
     useEffect(() => {
         if (minimumAllowed) {
             setState({ amount: minimumAllowed });
+            if (side === SIDE.SELL) dispatch(setFee(MIN_TIP));
         }
     }, [minimumAllowed]);
 
@@ -88,8 +66,6 @@ const CardInput = () => {
     } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
     useGetPartner({ assetId, side, amount: state.amount, rate, assetConfig });
-
-    const { onMakeOrderHandler, setModalState } = useMakeOrder({ setState, input });
 
     const availableAsset = useMemo(
         () => getExactBalanceFiat(wallets?.[+assetId]?.value - wallets?.[+assetId]?.locked_value, assetCode),
@@ -158,70 +134,95 @@ const CardInput = () => {
         }
     };
 
-    const handleSubmitOrder = () => {
-        setState({ loadingConfirm: true });
-        try {
-            FetchApi({
-                url: API_GET_ME,
-                options: {
-                    method: 'GET'
-                },
-                params: {
-                    resetCache: true
-                }
-            })
-                .then(({ status, data }) => {
-                    if (status === 'ok') {
-                        !data?.phone ? setIsOpenModalAddPhone(true) : onMakeOrderHandler(null, null, state.tip);
-                    }
-                })
-                .finally(() => setState({ loadingConfirm: false }));
-        } catch (error) {
-            console.error('ERROR WHEN HANDLE SUBMIT ORDER: ', error);
-            toast({
-                text: 'System error, please try again in a few minutes',
-                type: 'error'
-            });
-        }
-    };
-
-    const [tipValidator, setTipValidator] = useState({ isValid: true, msg: '', isError: false });
-
-    const validateTip = (tipAmount) => {
-        let isValid = true;
-        let msg = '';
-
-        if (tipAmount && (tipAmount + '').length > 21) {
-            isValid = false;
-            msg = t('dw_partner:error.invalid_amount');
+    const tipValidator = useMemo(() => {
+        if (!hasRendered) {
+            return { isValid: true, msg: '', isError: false };
         }
 
-        if (tipAmount && tipAmount < 5000) {
-            isValid = false;
-            msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(5000), asset: 'VND' });
+        if (side === SIDE.SELL && (!fee || fee < MIN_TIP))
+            return {
+                isValid: false,
+                msg: t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' })
+            };
+
+        if (fee && (fee + '').length > 21) {
+            return {
+                isValid: false,
+                msg: t('wallet:errors.invalid_insufficient_balance')
+            };
         }
 
         // const maxTip = state.amount * rate - 50000;
         const maxTip = state.amount * rate;
-        if (side === 'SELL' && +tipAmount > maxTip) {
-            isValid = false;
-            msg = t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' });
+        if (side === 'SELL' && +fee > maxTip) {
+            return {
+                isValid: false,
+                msg: t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' })
+            };
         }
 
-        setTipValidator({ isValid, msg, isError: !isValid });
-    };
+        return { isValid: true, msg: '', isError: false };
+    }, [fee, side]);
+
+    // const [tipValidator, setTipValidator] = useState({ isValid: true, msg: '', isError: false });
+
+    // const validateTip = (tipAmount) => {
+    //     let isValid = true;
+    //     let msg = '';
+
+    //     if (!hasRendered) {
+    //         return setTipValidator({ isValid, msg, isError: !isValid });
+    //     }
+
+    //     if (tipAmount && (tipAmount + '').length > 21) {
+    //         isValid = false;
+    //         msg = t('dw_partner:error.invalid_amount');
+    //     }
+
+    //     if (side === SIDE.SELL && (!tipAmount || tipAmount < MIN_TIP)) {
+    //         isValid = false;
+    //         msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' });
+    //     }
+
+    //     // const maxTip = state.amount * rate - 50000;
+    //     const maxTip = state.amount * rate;
+    //     if (side === 'SELL' && +tipAmount > maxTip) {
+    //         isValid = false;
+    //         msg = t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' });
+    //     }
+
+    //     setTipValidator({ isValid, msg, isError: !isValid });
+    // };
 
     const handleChangeTip = (input = '') => {
         const numberValue = input.value;
-        setState({ tip: numberValue });
-        validateTip(numberValue)
+        dispatch(setFee(numberValue));
+        // setState({ fee: numberValue });
+        // validateTip(numberValue);
     };
 
-    useEffect(() => {
-        validateTip(state.tip)
-    }, [state.amount, rate]);
+    // useEffect(() => {
+    //     validateTip(fee);
+    // }, [state.amount, rate]);
 
-    const amountWillReceived = state.amount * rate //+ (side === SIDE.BUY ? +state.tip : -state.tip);
+    const amountWillReceived = state.amount * rate; //+ (side === SIDE.BUY ? +fee : -fee);
+
+    useEffect(() => {
+        let isCanSubmitOrder = true;
+
+        isCanSubmitOrder =
+            tipValidator.isError ||
+            // !partner ||
+            // loadingPartner ||
+            validator?.isError ||
+            // (!partnerBank && side === SIDE.BUY) ||
+            (side === SIDE.SELL && (+state.amount > availableAsset || +state.amount > limitWithdraw?.remain / rate || !accountBank));
+
+        dispatch({
+            type: SET_ALLOWED_SUBMIT_ORDER,
+            payload: isCanSubmitOrder
+        });
+    }, [tipValidator, validator, side, state.amount, availableAsset, limitWithdraw, rate, accountBank]);
 
     return (
         <>
@@ -323,61 +324,53 @@ const CardInput = () => {
                 </div>
                 <RecommendAmount amount={state.amount} setAmount={(value) => setState({ amount: value })} loadingRate={loadingRate} />
 
-                <TradingInputV2
-                    id="TradingInputV2"
-                    label={
-                        <h1
-                            data-tip={t('dw_partner:partner_bonus_tooltip')}
-                            data-for="partner_bonus_tooltip"
-                            className="txtSecond-3 border-b border-dashed border-darkBlue-5 w-fit"
-                        >
-                            {t('dw_partner:partner_bonus')}
-                        </h1>
-                    }
-                    value={state.tip}
-                    allowNegative={false}
-                    thousandSeparator={true}
-                    containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
-                    inputClassName="!text-left !ml-0"
-                    onValueChange={handleChangeTip}
-                    validator={tipValidator}
-                    errorTooltip={false}
-                    decimalScale={0}
-                    allowedDecimalSeparators={[',', '.']}
-                    clearAble
-                    placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
-                    errorEmpty={false}
-                    // onFocus={handleFocusInput}
-                    renderTail={<span className="txtSecond-4">VND</span>}
-                />
-                <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 5,000 VND</div>
+                {side === SIDE.SELL && (
+                    <>
+                        <TradingInputV2
+                            id="TradingInputV2"
+                            label={
+                                <h1
+                                    data-tip={t('dw_partner:partner_bonus_tooltip')}
+                                    data-for="partner_bonus_tooltip"
+                                    className="txtSecond-3 border-b border-dashed border-darkBlue-5 w-fit"
+                                >
+                                    {t('dw_partner:partner_bonus')}
+                                </h1>
+                            }
+                            value={fee || ''}
+                            allowNegative={false}
+                            thousandSeparator={true}
+                            containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
+                            inputClassName="!text-left !ml-0"
+                            onValueChange={handleChangeTip}
+                            validator={tipValidator}
+                            errorTooltip={false}
+                            decimalScale={0}
+                            allowedDecimalSeparators={[',', '.']}
+                            clearAble
+                            placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
+                            errorEmpty
+                            onFocus={handleFocusInput}
+                            renderTail={<span className="txtSecond-4">VND</span>}
+                        />
+                        <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 2,000 VND</div>
+                        <div className="flex items-center gap-3 mb-4 flex-wrap">
+                            <TabV2
+                                //  chipClassName="!bg-white hover:!bg-gray-6"
+                                variants="suggestion"
+                                isOverflow={true}
+                                activeTabKey={+fee}
+                                onChangeTab={(key) => handleChangeTip({ value: key })}
+                                tabs={[MIN_TIP, 5000, 10000, 20000].map((suggestItem) => ({
+                                    key: suggestItem,
+                                    children: formatNanNumber(suggestItem, 0)
+                                }))}
+                            />
+                        </div>
+                    </>
+                )}
 
-                <div className="flex items-center gap-3 mb-8 flex-wrap">
-                <TabV2
-                    //  chipClassName="!bg-white hover:!bg-gray-6"
-                    isOverflow={true}
-                    activeTabKey={+state.tip}
-                    onChangeTab={(key) => handleChangeTip({ value: key })}
-                    tabs={[5000, 10000, 20000].map((suggestItem) => ({
-                        key: suggestItem,
-                        children: formatNanNumber(suggestItem, 0)
-                    }))}
-                />
-                    {/* {[5000, 10000, 20000].map((suggestItem) => {
-                        return (
-                            <Chip
-                                key={'sugggest_amount_' + suggestItem}
-                                selected={+state.tip === suggestItem}
-                                variants={'suggestion'}
-                                onClick={() => handleChangeTip({ value: suggestItem })}
-                            >
-                                {formatNanNumber(suggestItem, 0)}
-                            </Chip>
-                        );
-                    })} */}
-                </div>
-
-                <div className="space-y-2 mb-10">
+                <div className="space-y-2">
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t('dw_partner:rate')}</div>
                         <div className="txtPri-1 flex items-center space-x-1">
@@ -450,65 +443,16 @@ const CardInput = () => {
                             <div className="">VND</div>
                         </div>
                     </div>
-                    {state.tip && (
+                    {fee && side === SIDE.SELL && (
                         <div className="flex items-center justify-between ">
                             <div className="txtSecond-2">{t(`dw_partner:partner_bonus`)}</div>
                             <div data-tip="" className="inline-flex txtPri-1 space-x-1 !cursor-default">
-                                {formatNanNumber(state.tip)} VND
+                                {formatNanNumber(fee)} VND
                             </div>
                         </div>
                     )}
                 </div>
-                <ButtonV2
-                    loading={state.loadingConfirm || loadingPartner}
-                    onClick={handleSubmitOrder}
-                    disabled={
-                        tipValidator.isError ||
-                        !partner ||
-                        loadingPartner ||
-                        validator?.isError ||
-                        (!partnerBank && side === SIDE.BUY) ||
-                        (side === SIDE.SELL && (+state.amount > availableAsset || +state.amount > limitWithdraw?.remain / rate || !accountBank))
-                    }
-                    className="disabled:cursor-default"
-                >
-                    {t(`common:${side.toLowerCase()}`) + ` ${assetCode}`}
-                </ButtonV2>
             </Card>
-
-            <DWAddPhoneNumber isVisible={isOpenModalAddPhone} onBackdropCb={() => setIsOpenModalAddPhone(false)} />
-
-            <ModalOtp
-                onConfirm={(otp) => onMakeOrderHandler(otp, language, state.tip)}
-                isVisible={state.showOtp}
-                otpExpireTime={state.otpExpireTime}
-                onClose={() => {
-                    setState({ showOtp: false });
-                }}
-                loading={state.loadingConfirm}
-                isUseSmartOtp={state.isUseSmartOtp}
-            />
-            <ModalConfirm
-                mode={MODE.USER}
-                modalProps={modalProps[MODAL_TYPE.AFTER_CONFIRM]}
-                onClose={() => {
-                    setModalState(MODAL_TYPE.AFTER_CONFIRM, {
-                        visible: false
-                    });
-                }}
-            />
-            <AlertModalV2
-                isVisible={state.showAlertDisableSmartOtp}
-                onClose={() => setState({ showAlertDisableSmartOtp: false, showOtp: false })}
-                textButton={t('dw_partner:verify_by_email')}
-                onConfirm={() => {
-                    setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false });
-                    onMakeOrderHandler(null, null, state.tip);
-                }}
-                type="error"
-                title={t('dw_partner:disabled_smart_otp_title')}
-                message={t('dw_partner:disabled_smart_otp_des')}
-            />
         </>
     );
 };

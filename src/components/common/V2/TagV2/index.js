@@ -18,7 +18,7 @@ const typeStyles = {
     [TYPES.DEFAULT]: {},
     [TYPES.SUCCESS]: {
         backgroundColor: 'bg-teal/[0.1]',
-        colorContent: 'text-teal',
+        colorContent: 'text-green-3 dark:text-teal',
         icon: CheckCircle
     },
     [TYPES.FAILED]: {

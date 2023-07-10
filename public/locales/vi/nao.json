@@ -21,7 +21,12 @@
         "total_volume": "Khối lượng giao dịch",
         "total_orders": "Số lệnh giao dịch",
         "total_fee": "Tổng phí giao dịch",
-        "users": "Người dùng"
+        "users": "Người dùng",
+        "chart_total_volume": "Khối lượng",
+        "chart_total_orders": "Số lệnh",
+        "chart_users": "Người dùng",
+        "chart_total_fee": "Phí",
+        "chart_title": ""
     },
     "pool": {
         "title": "Pool quản trị {{value}}",
@@ -94,7 +99,14 @@
         "fail": "Lỗi",
         "no_transaction_history": "Không có lịch sử giao dịch",
         "unlock_status": "Mở khóa: {{value}}",
-        "week": "Tuần {{value}}:"
+        "week": "Tuần {{value}}:",
+        "pool_value": "Giá trị pool",
+        "pool_value_tooltip": "Giá trị pool được tính dựa trên giá NAO tại thời điểm hiển thị",
+        "mobile_chart_note": "Nhấn vào từng mốc để xem thống kê chi tiết",
+        "chart": {
+            "pool_info": "Giá trị Pool",
+            "fee_revenue": "Doanh thu Pool"
+        }
     },
     "vote": {
         "title": "Biểu quyết",
@@ -173,6 +185,7 @@
         "captain": "Đội trưởng",
         "information": "Thông tin",
         "team_ranking": "Bảng xếp hạng đội nhóm",
+        "monthly_team_ranking": "Bảng xếp hạng đội nhóm theo tháng",
         "details": "Thành viên",
         "volume_ranking": "Thứ hạng KL",
         "pnl_ranking": "Thứ hạng LN",
@@ -235,8 +248,8 @@
         "contest_ranking": "BXH giải đấu",
         "contest_special": "BXH đặc biệt",
         "tournament": "Giải đấu",
-        "weekly_ranking": "Bảng xếp hạng tuần",
-        "monthly_ranking": "Bảng xếp hạng theo tháng",
+        "weekly_ranking": "Bảng xếp hạng cá nhân theo tuần",
+        "monthly_ranking": "Bảng xếp hạng cá nhân theo tháng",
         "weekly_ranking_desc": "Người dùng đủ điều kiện sẽ được xét hạng và tranh giải thưởng hàng tuần trị giá {{value}}. Đọc thêm tại “Thể lệ chi tiết”.",
         "rules": "Thể lệ",
         "week": "Tuần {{value}}",
@@ -249,7 +262,10 @@
             "number_of_friends": "Số bạn bè",
             "tooltip_friends": "Bạn bè cần hoàn tất KYC trong thời gian diễn ra chương trình, đọc thêm tại “Thể lệ chi tiết”"
         },
-        "personal_achievements_note": "Lưu ý: Thành tích tháng được tính từ khi giải đấu bắt đầu, thành tích tuần được tính từ 00:00 thứ 2 hàng tuần (UTC+7)"
+        "personal_achievements_note": "Lưu ý: Thành tích tháng được tính từ khi giải đấu bắt đầu, thành tích tuần được tính từ 00:00 thứ 2 hàng tuần (UTC+7)",
+        "team_avatar": "Ảnh đại điện của đội",
+        "drag_drop": "Kéo thả hình ảnh hoặc click để tải hình ảnh",
+        "format_support": "Hỗ trợ định dạng"
     },
     "year_summary": {
         "title": "Tổng kết NAO Futures {{version}}",
