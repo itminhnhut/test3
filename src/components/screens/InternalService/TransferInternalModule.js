@@ -24,11 +24,23 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { API_INTERNAL_FIND_USER, API_INTERNAL_TRANSFER } from 'redux/actions/apis';
 import TextArea from 'components/common/V2/InputV2/TextArea';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
 const DEFAULT_PAIR = {
     fromAsset: 'VNDC',
     toAsset: 'USDT'
 };
+
+const TABS = [
+    {
+        key: 'personal',
+        localized: 'Personal'
+    },
+    {
+        key: 'multiple',
+        localized: 'Multiple'
+    }
+];
 
 const fromAssetRef = createRef();
 
@@ -78,6 +90,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
         i18n: { language }
     } = useTranslation(['navbar', 'common', 'error', 'convert', 'wallet']);
     const [currentTheme] = useDarkMode();
+
     const isDark = currentTheme === THEME_MODE.DARK;
     useOutsideClick(fromAssetListRef, () => state.openAssetList?.from && setState({ openAssetList: { from: false }, search: '' }));
     useOutsideClick(toUserListRef, () => state.openAssetList?.to && setState({ openAssetList: { to: false } }));
@@ -323,14 +336,26 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
             );
     };
 
+    // Handle screen Personal/Multiple transfer
+    const [selectedTab, setSelectedTab] = useState(TABS[0].key);
+
     return (
         <>
-            <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
-                <div className="relative min-w-[488px] max-w-[508px] rounded-xl">
-                    <div className="flex flex-col justify-center items-center">
-                        <span className="text-[32px] leading-[38px] font-semibold">Transfer Internal</span>
-                    </div>
-                    <div className="mt-8 p-6 rounded-xl shadow-card_light dark:border dark:border-divider-dark dark:bg-dark bg-white">
+            <div className="relative flex flex-row-reverse items-end tracking-normal w-full">
+                <Tabs tab={selectedTab} className="gap-6 border-b border-divider dark:border-divider-dark sm:w-max">
+                    {TABS?.map((rs) => (
+                        <TabItem key={rs.key} V2 className="!px-0" value={rs.key} onClick={(isClick) => isClick && setSelectedTab(rs.key)}>
+                            {t(rs.localized)}
+                        </TabItem>
+                    ))}
+                </Tabs>
+                <div className="absolute left-0 hidden md:block">
+                    <span className="text-[32px] leading-[38px] font-semibold">Transfer Internal</span>
+                </div>
+            </div>
+            <div className="mt-10 flex items-center justify-center w-full h-full">
+                <div className="relative flex min-w-[488px] mt-8 p-6 rounded-xl shadow-card_light dark:border dark:border-divider-dark dark:bg-dark bg-white">
+                    <div>
                         {/*INPUT WRAPPER*/}
                         <div className="relative flex flex-col gap-y-6">
                             <Input isFocus={state.inputHighlighted === 'from'}>
@@ -388,7 +413,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                                     onHitEnterButton={handleSearchToUser}
                                     value={state.searchUser}
                                     onChange={(value) => (value ? setState({ searchUser: value }) : setState({ searchUser: value, toUser: null }))}
-                                    placeholder={t('common:to')}
+                                    placeholder={t('common:to') + ' (email/nami_id)'}
                                     suffix={<Search color={colors.darkBlue5} size={16} />}
                                     className="pb-0 w-full"
                                     error={state.errorToUser}
@@ -446,6 +471,8 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                             {t(`futures:mobile.close_all_positions.preview`)}
                         </ButtonV2>
                     </div>
+                {selectedTab === 'multiple' && <div>Tab partners</div>}
+
                 </div>
             </div>
             <ModalV2
