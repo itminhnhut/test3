@@ -65,12 +65,12 @@ const SessionGeneral = ({ filter, setFilter }) => {
                     </h1>
                     <div className="pt-1 txtPri-3 flex items-center">
                         <span className="text-green-3 dark:text-green-2">
-                            {loading ? <Skeletor width="50px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
+                            {loading ? <Skeletor width="50px" /> : formatNanNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
                         </span>
                         {loading ? (
                             <Skeletor width="40px" />
                         ) : (
-                            <span>/{formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}&nbsp;VNDC</span>
+                            <span>/{formatNanNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}&nbsp;VNDC</span>
                         )}
                     </div>
                 </div>
