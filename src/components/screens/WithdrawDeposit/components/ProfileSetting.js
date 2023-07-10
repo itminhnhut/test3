@@ -136,10 +136,10 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                     </div>
                     <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">{t('dw_partner:order_vol_limit')}</div>
                     <div className="flex items-center justify-between mt-3">
-                        <div className={classNames('flex text-dominant font-semibold items-center space-x-1')}>
-                            <span className={classNames('text-dominant font-semibold')}>{formatNumber(orderConfig?.min)}</span>
+                        <div className={classNames('flex text-green-3 dark:text-green-2 font-semibold items-center space-x-1')}>
+                            <span className={classNames('text-green-3 dark:text-green-2 font-semibold')}>{formatNumber(orderConfig?.min)}</span>
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">-</span>
-                            <span className={classNames('text-dominant  font-semibold')}>{formatNumber(orderConfig?.max)} </span>
+                            <span className={classNames('text-green-3 dark:text-green-2  font-semibold')}>{formatNumber(orderConfig?.max)} </span>
                             <span className="">VND</span>
                         </div>
 
@@ -174,7 +174,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                 <div className="p-3 w-full md:w-1/2">
                     <div className="mb-8 txtPri-3 font-semibold">{t('dw_partner:buy_sell_title', { assetCode: 'VNDC' })}</div>
                     <ConfigAutoSuggest key={`config_auto_asset_VNDC`} assetId={72} autoSuggest={partner?.autoSuggestConfig?.statusVndc} />
-                    <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
+                    <div className="rounded-xl bg-white dark:bg-darkBlue-3 px-8 py-6">
                         {editDWConfig({
                             side: SIDE.BUY,
                             assetId: ALLOWED_ASSET_ID['VNDC'],
@@ -197,7 +197,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                 <div className="p-3 w-full md:w-1/2">
                     <div className="mb-8 txtPri-3 font-semibold">{t('dw_partner:buy_sell_title', { assetCode: 'USDT' })}</div>
                     <ConfigAutoSuggest key={`config_auto_asset_USDT`} assetId={22} autoSuggest={partner?.autoSuggestConfig?.statusUsdt} />
-                    <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
+                    <div className="rounded-xl bg-white dark:bg-darkBlue-3 px-8 py-6">
                         {editDWConfig({
                             side: SIDE.BUY,
                             assetId: ALLOWED_ASSET_ID['USDT'],

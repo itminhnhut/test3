@@ -156,6 +156,10 @@ const FilterTimeTabV2 = ({
         setShowPicker(false);
     };
 
+    const isHaveEndDateText = filter?.range?.endDate - filter?.range?.startDate >= 86400000;
+    const formattedTextDate =
+        formatTime(filter?.range?.startDate, 'dd/MM/yyyy') + (isHaveEndDateText ? ` - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}` : '');
+
     return (
         <Fragment>
             <div className={isMobile && 'w-full overflow-hidden'}>
@@ -225,11 +229,7 @@ const FilterTimeTabV2 = ({
                                     isDeepBackground={isDeepBackground}
                                 >
                                     {!isMobile && <CalendarFillIcon className="mr-2" color={timeTab === 'custom' ? colors.teal : '#8694b2'} size={20} />}
-                                    <span className="whitespace-nowrap">
-                                        {isCustomDay
-                                            ? `${formatTime(filter?.range?.startDate, 'dd/MM/yyyy')} - ${formatTime(filter?.range?.endDate, 'dd/MM/yyyy')}`
-                                            : t('common:custom_2')}
-                                    </span>
+                                    <span className="whitespace-nowrap">{isCustomDay ? formattedTextDate : t('common:custom_2')}</span>
                                 </Chip>
                             }
                             customHeaderCalendar={maxMonths ? () => <div className="px-8 pb-3 txtSecond-3">{t('portfolio:max_range_datepicker')}</div> : null}
