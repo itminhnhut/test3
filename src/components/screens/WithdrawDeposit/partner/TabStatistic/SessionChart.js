@@ -28,8 +28,8 @@ const TabStatistic = [
     },
     {
         value: 'fee',
-        localized: 'common:transaction_fee',
-        details_localized: 'common:transaction_fee'
+        localized: 'dw_partner:fee_received',
+        details_localized: 'dw_partner:fee_received'
     }
 ];
 

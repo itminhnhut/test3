@@ -60,14 +60,13 @@ const SessionGeneral = ({ filter, setFilter }) => {
                     <h1 className="txtSecond-3">
                         <Trans i18nKey="dw_partner:total_volume">
                             <span className="text-green-3 dark:text-green-2" />
-                            <span className="text-txtPrimary dark:text-txtPrimary-dark" />
                         </Trans>
                     </h1>
                     <div className="pt-1 txtPri-3 flex items-center">
                         <span className="text-green-3 dark:text-green-2">
                             {loading ? <Skeletor width="50px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
                         </span>
-                        {loading ? <Skeletor width="40px" /> : <span>/{formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}</span>}
+                        {loading ? <Skeletor width="40px" /> : <span>/{formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}&nbsp;VNDC</span>}
                     </div>
                 </div>
             </CardWrapper>

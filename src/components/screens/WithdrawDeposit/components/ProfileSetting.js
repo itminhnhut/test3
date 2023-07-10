@@ -12,6 +12,9 @@ import { API_CONFIG_AUTO_SUGGEST_PARTNER, API_GET_ORDER_PRICE } from 'redux/acti
 import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from '../constants';
 import FetchApi from 'utils/fetch-api';
 import { useTranslation } from 'next-i18next';
+import Tooltip from 'components/common/Tooltip';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import colors from 'styles/colors';
 
 const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
     const [modal, setModal] = useState({
@@ -110,11 +113,11 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
     };
 
     const editDWConfig = useCallback(
-        ({ side, assetId, onOpenModal, onChange, loading }) => {
+        ({ side, assetId, onOpenModal, onChange, loading, isHide = false, className = '' }) => {
             const orderConfig = partner?.orderConfig?.[side?.toLowerCase() + (assetId === ALLOWED_ASSET_ID['VNDC'] ? '' : 'Usdt')];
 
             return (
-                <div className="">
+                <div className={className}>
                     <div className="flex justify-between items-center mb-4">
                         <div className="txtPri-7">{t(`common:${side.toLowerCase()}`)}</div>
                         <SwitchV2
@@ -144,20 +147,21 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                             {t('common:edit')}
                         </ButtonV2>
                     </div>
-
-                    <div
-                        className={classNames('text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1', {
-                            'opacity-0 pointer-events-none': assetId === ALLOWED_ASSET_ID['VNDC']
-                        })}
-                    >
-                        {rate[side]?.[assetId]
-                            ? `${formatNumber(orderConfig?.min / rate[side]?.[assetId], assetId === 72 ? 0 : 4)} - ${formatNumber(
-                                  orderConfig?.max / rate[side]?.[assetId],
-                                  assetId === 72 ? 0 : 4
-                              )}`
-                            : `0 - 0`}{' '}
-                        {ALLOWED_ASSET[+assetId]}
-                    </div>
+                    {!isHide && (
+                        <div
+                            className={classNames('text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1', {
+                                'opacity-0 pointer-events-none': assetId === ALLOWED_ASSET_ID['VNDC']
+                            })}
+                        >
+                            {rate[side]?.[assetId]
+                                ? `${formatNumber(orderConfig?.min / rate[side]?.[assetId], assetId === 72 ? 0 : 4)} - ${formatNumber(
+                                      orderConfig?.max / rate[side]?.[assetId],
+                                      assetId === 72 ? 0 : 4
+                                  )}`
+                                : `0 - 0`}{' '}
+                            {ALLOWED_ASSET[+assetId]}
+                        </div>
+                    )}
                 </div>
             );
         },
@@ -184,7 +188,9 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                             assetId: ALLOWED_ASSET_ID['VNDC'],
                             onOpenModal,
                             onChange: onEditOrderConfig,
-                            loading: loading || loadingPartner
+                            loading: loading || loadingPartner,
+                            isHide: true,
+                            className: 'pt-5'
                         })}
                     </div>
                 </div>
@@ -230,6 +236,8 @@ const ConfigAutoSuggest = ({ assetId, autoSuggest }) => {
     const [isAutoSuggest, setIsAutoSuggest] = useState(autoSuggest);
     const [hasRendered, setHasRendered] = useState(false);
     const { t } = useTranslation();
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
 
     useEffect(() => {
         if (!hasRendered) {
@@ -271,7 +279,25 @@ const ConfigAutoSuggest = ({ assetId, autoSuggest }) => {
 
     return (
         <div className="rounded-xl flex items-center justify-between bg-white dark:bg-darkBlue-3 px-8 py-6 mb-4 txtPri-7">
-            {t('dw_partner:auto_suggestion_mode')}
+            <div className="border-b border-dashed border-gray-1 dark:border-gray-7 cursor-pointer" data-tip={t('dw_partner:auto_suggestion_mode_tooltip')} data-for={`auto_suggestion_mode_tooltip_${assetId}`}>
+                {t('dw_partner:auto_suggestion_mode')}
+                <Tooltip
+                    delayShow={100}
+                    delayHide={50}
+                    overridePosition={(e) => {
+                        if (e?.left < 0)
+                            return {
+                                left: e.left < 16 ? 16 : e.left,
+                                top: e.top
+                            };
+                        return e;
+                    }}
+                    id={`auto_suggestion_mode_tooltip_${assetId}`}
+                    place={'top'}
+                    arrowColor={isDark ? colors.dark['1'] : colors.gray['11']}
+                    className={`max-w-[${500}px] !px-6 !py-3 mr-4 !bg-gray-11 dark:!bg-dark-1 !text-gray-15 dark:!text-gray-4`}
+                />
+            </div>
             <SwitchV2 onChange={() => setIsAutoSuggest(!isAutoSuggest)} checked={isAutoSuggest} />
         </div>
     );
