@@ -22,8 +22,7 @@ function useCurrentPosts() {
             return res.data.events;
         },
         {
-            persist: true,
-            ttl: '30m'
+            persist: false,
         }
     );
 }
