@@ -19,6 +19,7 @@ import FetchApi from 'utils/fetch-api';
 import { API_GET_NOTI_SETTING } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
 import useWindowSize, { useRefWindowSize } from 'hooks/useWindowSize';
+import Setting from 'components/svg/Setting';
 
 const NOTI_READ = NotificationStatus.DELETED;
 
@@ -207,7 +208,18 @@ const NotificationList = ({ btnClass }) => {
                                     onClick={() => { }}
                                     className={classNames('text-sm font-semibold cursor-pointer hover:opacity-70 transition-opacity')}
                                 >
-                                    <SettingIcon size={24} onClick={() => isMobile ? router.push('/account/noti-setting') : setShowNotiSetting(true)} />
+                                    <svg
+                                        onClick={() => isMobile ? router.push('/account/noti-setting') : setShowNotiSetting(true)}
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_3854_61579)">
+                                            <path d="M19.4391 12.99L19.4291 13.01C19.4691 12.68 19.5091 12.34 19.5091 12C19.5091 11.66 19.4791 11.34 19.4391 11.01L19.4491 11.03L21.8891 9.11L19.4591 4.89L16.5891 6.05L16.5991 6.06C16.0791 5.66 15.5091 5.32 14.8891 5.06H14.8991L14.4391 2H9.56914L9.12914 5.07H9.13914C8.51914 5.33 7.94914 5.67 7.42914 6.07L7.43914 6.06L4.55914 4.89L2.11914 9.11L4.55914 11.03L4.56914 11.01C4.52914 11.34 4.49914 11.66 4.49914 12C4.49914 12.34 4.52914 12.68 4.57914 13.01L4.56914 12.99L2.46914 14.64L2.13914 14.9L4.56914 19.1L7.44914 17.95L7.42914 17.91C7.95914 18.32 8.52914 18.66 9.15914 18.92H9.12914L9.57914 22H14.4291C14.4291 22 14.4591 21.82 14.4891 21.58L14.8691 18.93H14.8591C15.4791 18.67 16.0591 18.33 16.5891 17.92L16.5691 17.96L19.4491 19.11L21.8791 14.91C21.8791 14.91 21.7391 14.79 21.5491 14.65L19.4391 12.99ZM11.9991 15.5C10.0691 15.5 8.49914 13.93 8.49914 12C8.49914 10.07 10.0691 8.5 11.9991 8.5C13.9291 8.5 15.4991 10.07 15.4991 12C15.4991 13.93 13.9291 15.5 11.9991 15.5Z" fill="#8694B3" />
+                                        </g>
+                                        <defs>
+                                            <clipPath id="clip0_3854_61579">
+                                                <rect width="24" height="24" fill="white" />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
                                 </div>
                             </div>
 
@@ -292,7 +304,7 @@ export const NotiSettingModal = ({ isVisible, onClose, language, isMobile, t }) 
             [keyToChange]: !userNotiSetting?.[keyToChange]
         }
 
-        if(isMobile) {
+        if (isMobile) {
             setUserNotiSetting(currentSetting)
         }
 
@@ -341,7 +353,7 @@ export const NotiSettingModal = ({ isVisible, onClose, language, isMobile, t }) 
             <div className='mt-6'>
                 {(loading ? [1, 2, 3, 4, 5] : Object.values(omit(notiGroup, NOTI_GROUP_KEYS.ALL))).map(e => {
                     const key = e.key
-                    return <div className='my-6'>
+                    return <div className='mt-6'>
                         <NotiToggle
                             updating={updating}
                             text={notiGroup?.[key]?.[language]}
