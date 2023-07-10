@@ -164,7 +164,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
     const [actIdx, setActIdx] = useState(0);
     const isMobile = width < 820;
     const { poolRange } = router.query;
-    const initRange = isValidRange(poolRange) ? poolRange : 'd';
+    const initRange = isValidRange(poolRange) ? poolRange : 'w';
     const [filter, setFilter] = useState({
         day: initRange
     });
