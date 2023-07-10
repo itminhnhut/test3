@@ -295,7 +295,7 @@ const ConfigAutoSuggest = ({ assetId, autoSuggest }) => {
                     id={`auto_suggestion_mode_tooltip_${assetId}`}
                     place={'top'}
                     arrowColor={isDark ? colors.dark['1'] : colors.gray['11']}
-                    className={`max-w-[${500}px] !px-6 !py-3 mr-4 !bg-gray-11 dark:!bg-dark-1 !text-gray-15 dark:!text-gray-4`}
+                    className={`max-w-[500px] !px-6 !py-3 mr-4 !bg-gray-11 dark:!bg-dark-1 !text-gray-15 dark:!text-gray-4`}
                 />
             </div>
             <SwitchV2 onChange={() => setIsAutoSuggest(!isAutoSuggest)} checked={isAutoSuggest} />
