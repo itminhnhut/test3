@@ -57,7 +57,7 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-10 txtPri-1">
                         <div>
-                            <div className="mb-2 txtSecond-3">Mã lệnh</div>
+                            <div className="mb-2 txtSecond-3">{t('dw_partner:order_id')}</div>
                             <div>
                                 {!orderDetail ? <Skeletor width="100px" /> : <TextCopyable className="gap-x-1 txtPri-1" text={orderDetail?.displayingId} />}
                             </div>
@@ -74,7 +74,7 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                         </div>
                         {orderDetail?.fee ? (
                             <div>
-                                <div className="mb-2 txtSecond-3">{t('dw_partner:partner_bonus')}</div>
+                                <div className="mb-2 txtSecond-3">{mode === MODE.USER ? t('common:transaction_fee') : t('dw_partner:fee_received')}</div>
                                 <div>{formatBalanceFiat(orderDetail?.fee, 'VNDC')} VND</div>
                             </div>
                         ) : null}

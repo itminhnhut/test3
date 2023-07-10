@@ -17,9 +17,9 @@ const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
     const router = useRouter();
     return (
         <div>
-            <Card className="px-8 dark:!bg-darkBlue-3 mb-6 border-0">
-                <div className="flex -m-3 flex-wrap items-center justify-center md:justify-between ">
-                    <div className="flex p-3 md:flex-grow items-center">
+            <Card className="px-8 py-[42px] dark:!bg-darkBlue-3 mb-6 border-0">
+                <div className="flex flex-wrap items-center justify-center md:justify-between">
+                    <div className="flex md:flex-grow items-center">
                         {!partner ? (
                             <>
                                 <Skeletor circle width={80} height={80} />
@@ -49,7 +49,7 @@ const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
                                             <div className="text-txtPrimary dark:text-txtPrimary-dark ml-2">{formatTime(partner?.startedAt, 'dd/MM/yyyy')}</div>
                                         </div>
                                         <div className="ml-4 flex items-center">
-                                            <ContactIcon color="currentColor" size={16} />
+                                            <ContactIcon className='rotate-90' color="currentColor" size={16} />
                                             <div className="text-txtPrimary dark:text-txtPrimary-dark ml-2">{formatPhoneNumber(partner?.phone)}</div>
                                         </div>
                                     </div>
@@ -57,7 +57,7 @@ const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
                             </>
                         )}
                     </div>
-                    <div className="md:min-w-[460px] p-3">
+                    <div className="min-w-[460px]">
                         <div
                             onClick={() => router.push(PATHS.ACCOUNT?.PAYMENT_METHOD || '/')}
                             className="p-4 bg-gray-12 dark:bg-dark-2 rounded-xl w-full cursor-pointer flex items-center justify-between"
@@ -66,7 +66,7 @@ const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
                                 loading={loading}
                                 imgSize={loading || bankDefault ? 40 : 24}
                                 content={{
-                                    mainContent: !bankDefault ? t('dw_partner:payment_method') : <div className="max-w-[300px]">{bankDefault?.bankName}</div>,
+                                    mainContent: !bankDefault ? t('dw_partner:payment_method') : <div >{bankDefault?.bankName}</div>,
                                     subContent: bankDefault && (
                                         <div className="flex space-x-2 items-center ">
                                             <span>{bankDefault?.accountNumber}</span>

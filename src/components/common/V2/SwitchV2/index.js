@@ -12,7 +12,7 @@ const CSwitch = ({ checked, disabled = false, onChange }) => {
             checked={checked}
             onChange={_onChange}
             className={classnames('relative h-6 min-w-[48px] px-2 cursor-pointer rounded-full', 'transition-colors duration-200 ease-in-out', {
-                'bg-teal': checked,
+                'bg-green-3 dark:bg-green-2': checked,
                 'bg-gray-11 dark:bg-dark-2': !checked,
                 'bg-gray-1 cursor-not-allowed': disabled
             })}

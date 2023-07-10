@@ -77,9 +77,9 @@ const CardPartner = () => {
     return (
         <>
             <Card className="flex flex-col">
-                <div className="txtSecond-3 mb-4">{t('dw_partner:payment_infor')}</div>
                 {side === SIDE.SELL && (
                     <div className="relative mb-8">
+                        <div className="txtSecond-3 mb-4">{t('dw_partner:payment_infor')}</div>
                         <BankInfo
                             additionalActions={accountBankAction}
                             showTag
@@ -96,23 +96,26 @@ const CardPartner = () => {
                         />
                     </div>
                 )}
-                <div className={`grid grid-cols-2 mb-6 w-full`}>
-                    <button
-                        onClick={() => dispatch({ type: SET_AUTO_SUGGEST })}
-                        className={`border border-divider dark:border-divider-dark rounded-l-md px-4 md:px-9 py-2 md:py-3 ${
-                            isAutoSuggest ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-r-none'
-                        }`}
-                    >
-                        {t('dw_partner:auto_suggestion')}
-                    </button>
-                    <button
-                        onClick={() => dispatch({ type: SET_AUTO_SUGGEST })}
-                        className={`border border-divider dark:border-divider-dark rounded-r-md px-4 md:px-9 py-2 md:py-3 ${
-                            !isAutoSuggest ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-l-none'
-                        }`}
-                    >
-                        {t('common:custom_2')}
-                    </button>
+                <div>
+                    <div className="txtSecond-3 mb-4">{t('dw_partner:partner_infor')}</div>
+                    <div className={`grid grid-cols-2 mb-6 w-full`}>
+                        <button
+                            onClick={() => dispatch({ type: SET_AUTO_SUGGEST })}
+                            className={`border border-divider dark:border-divider-dark rounded-l-md px-4 md:px-9 py-2 md:py-3 ${
+                                isAutoSuggest ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-r-none'
+                            }`}
+                        >
+                            {t('dw_partner:auto_suggestion')}
+                        </button>
+                        <button
+                            onClick={() => dispatch({ type: SET_AUTO_SUGGEST })}
+                            className={`border border-divider dark:border-divider-dark rounded-r-md px-4 md:px-9 py-2 md:py-3 ${
+                                !isAutoSuggest ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-l-none'
+                            }`}
+                        >
+                            {t('common:custom_2')}
+                        </button>
+                    </div>
                 </div>
                 <div className="flex-1">
                     <div className="space-y-4">

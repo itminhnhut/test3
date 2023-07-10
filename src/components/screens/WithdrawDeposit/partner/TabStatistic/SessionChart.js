@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Fragment } from 'react';
 import { useTranslation } from 'next-i18next';
 import CardWrapper from 'components/common/CardWrapper';
 import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs';
@@ -18,11 +18,18 @@ import Spiner from 'components/common/V2/LoaderV2/Spiner';
 const TabStatistic = [
     {
         value: 'depositwithdraw',
-        localized: 'dw_partner:total_dw'
+        localized: 'dw_partner:total_dw',
+        details_localized: 'common:volume'
     },
     {
         value: 'commission',
-        localized: 'common:partners'
+        localized: 'common:partners',
+        details_localized: 'common:partners'
+    },
+    {
+        value: 'fee',
+        localized: 'dw_partner:fee_received',
+        details_localized: 'dw_partner:fee_received'
     }
 ];
 
@@ -178,7 +185,7 @@ const SessionChart = ({ filter }) => {
         <div className="mt-20">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
-                <h1 className="font-semibold text-[20px] leading-6">{t('table:mini_chart')}</h1>
+                <h1 className="txtPri-3">{t('table:mini_chart')}</h1>
                 {/* <FilterTokenTab curToken={curToken} setCurToken={setCurToken} /> */}
             </div>
 
@@ -186,12 +193,14 @@ const SessionChart = ({ filter }) => {
             <CardWrapper>
                 <div className="flex items-center justify-between">
                     {/* Tabs */}
-                    <div>
+                    <div className='w-full'>
                         <Tabs tab={typeTab} className="gap-6 border-b border-divider dark:border-divider-dark">
                             {TabStatistic.map((item) => (
-                                <TabItem className="!px-0 select-none" value={item.value} onClick={() => setTypeTab(item.value)}>
-                                    {t(item.localized)}
-                                </TabItem>
+                                <Fragment key={item.value}>
+                                    <TabItem className="!px-0 select-none" value={item.value} onClick={() => setTypeTab(item.value)}>
+                                        {t(item.localized)}
+                                    </TabItem>
+                                </Fragment>
                             ))}
                         </Tabs>
                     </div>
@@ -211,7 +220,7 @@ const SessionChart = ({ filter }) => {
                 {/* Chu thich */}
                 <div className="flex justify-between items-center mt-6">
                     <div className="flex items-center gap-x-4">
-                        <Note iconClassName="bg-green-6" title={t('common:buy')} />
+                        {typeTab !== 'fee' && <Note iconClassName="bg-green-6" title={t('common:buy')} />}
                         <Note iconClassName="bg-purple-1" title={t('common:sell')} />
                     </div>
                     <DarkNote variants="secondary" title={t('dw_partner:notice_chart_details')} />
@@ -258,7 +267,7 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dataIndex, typeTab, fil
             wrapClassName="!font-semibold"
         >
             <div>
-                <h1 className="text-2xl">{typeTab === TabStatistic[0].value ? t('common:volume') : t('common:partners')}</h1>
+                <h1 className="text-2xl">{t(TabStatistic.find((obj) => obj.value === typeTab)?.details_localized)}</h1>
                 <CardWrapper className="!p-4 my-6 bg-gray-13">
                     <div className="flex items-center justify-between">
                         <span className="txtSecond-4">{t('common:time')}</span>
@@ -270,20 +279,30 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dataIndex, typeTab, fil
                     </div>
                     <div className="flex items-center justify-between mt-3">
                         <span className="txtSecond-4">{t('common:total')}</span>
-                        <div>{formatNanNumber(totalBuySell, 0)} VNDC</div>
+                        <div>
+                            {formatNanNumber(totalBuySell, 0)} {typeTab === 'fee' ? 'VND' : 'VNDC'}
+                        </div>
                     </div>
                 </CardWrapper>
-                <h3 className="txtSecond-3">{t('common:details')}</h3>
-                <CardWrapper className="!p-4 mt-3 bg-gray-13">
-                    <div className="flex items-center justify-between">
-                        <span className="txtSecond-4">{typeTab === TabStatistic[0].value ? t('dw_partner:buy_volume') : t('dw_partner:buy_commission')}</span>
-                        <div>{formatNanNumber(dataValues?.totalBuy, 0)} VNDC</div>
-                    </div>
-                    <div className="flex items-center justify-between mt-3">
-                        <span className="txtSecond-4">{typeTab === TabStatistic[0].value ? t('dw_partner:sell_volume') : t('dw_partner:sell_commission')}</span>
-                        <div>{formatNanNumber(dataValues?.totalSell, 0)} VNDC</div>
-                    </div>
-                </CardWrapper>
+                {typeTab !== 'fee' && (
+                    <>
+                        <h3 className="txtSecond-3">{t('common:details')}</h3>
+                        <CardWrapper className="!p-4 mt-3 bg-gray-13">
+                            <div className="flex items-center justify-between">
+                                <span className="txtSecond-4">
+                                    {typeTab === TabStatistic[0].value ? t('dw_partner:buy_volume') : t('dw_partner:buy_commission')}
+                                </span>
+                                <div>{formatNanNumber(dataValues?.totalBuy, 0)} VNDC</div>
+                            </div>
+                            <div className="flex items-center justify-between mt-3">
+                                <span className="txtSecond-4">
+                                    {typeTab === TabStatistic[0].value ? t('dw_partner:sell_volume') : t('dw_partner:sell_commission')}
+                                </span>
+                                <div>{formatNanNumber(dataValues?.totalSell, 0)} VNDC</div>
+                            </div>
+                        </CardWrapper>
+                    </>
+                )}
             </div>
         </ModalV2>
     );
