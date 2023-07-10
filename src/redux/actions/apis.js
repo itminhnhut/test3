@@ -99,6 +99,12 @@ export const API_CLOSE_ALL_ORDERS_BY_CONDTION = API_V3_PREFIX + 'futures/vndc/cl
 export const API_DCA_ORDER = API_V3_PREFIX + 'futures/vndc/dca-order';
 export const API_PARTIAL_CLOSE_ORDER = API_V3_PREFIX + 'futures/vndc/partialcloseorderv2';
 
+//fees
+export const API_GET_FEE_ASSET = API_PREFIX + 'futures/fee_asset';
+
+export const API_FEE_SETTING_NAMI_FUTURE = API_PREFIX + 'futures/fee_asset';
+export const API_FEE_SETTING_NAO_FUTURE = API_PREFIX + 'nao/fee_asset';
+
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price';
 export const API_GET_SWAP_HISTORY = API_V3_PREFIX + 'swap/history';
@@ -309,6 +315,7 @@ export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends-v2';
 export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + 'users/referral/commission-history';
 export const API_GET_REFERRAL_FRIENDS_BY_CODE = API_V3_PREFIX + 'users/referral/:code/friends-detail';
 export const API_GET_CONTEST_REFERRAL = API_V3_PREFIX + 'users/referral/getTopReferral';
+export const API_SET_NICKNAME = API_PREFIX + 'user/nickname';
 
 // convert small balance to Nami
 export const API_GET_NAMI_RATE = API_V3_PREFIX + 'convert/nami_asset_value';

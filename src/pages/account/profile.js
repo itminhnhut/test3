@@ -34,6 +34,7 @@ import { getMe } from 'redux/actions/user';
 import Spinner from 'components/svg/Spinner';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
+import NicknameModal from 'components/screens/Account/NicknameModal';
 
 const instructionTransferLink = {
     en: '/support/faq/crypto-deposit-withdrawal',
@@ -236,8 +237,10 @@ const ModalChangeReferee = ({ t, open, onClose }) => {
 
 const UserInformation = ({ t, user }) => {
     const [showSetReferrerModal, setShowSetReferrerModal] = useState(false);
+    const [showEditNickname, setShowEditNickname] = useState(false);
     return (
         <>
+            <NicknameModal isVisible={showEditNickname} onClose={() => setShowEditNickname(false)} />
             <ModalChangeReferee t={t} open={showSetReferrerModal} onClose={() => setShowSetReferrerModal(false)} />
             <div>
                 <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('profile:name')}</span>
@@ -252,6 +255,25 @@ const UserInformation = ({ t, user }) => {
             <div>
                 <span className="text-txtSecondary dark:text-txtSecondary-dark">Nami ID</span>
                 <TextCopyable className="font-semibold text-right float-right" text={user?.code} />
+            </div>
+
+            <div>
+                <span className="text-txtSecondary dark:text-txtSecondary-dark">Nickname</span>
+                <div
+                    className={classnames('flex items-end float-right ', {
+                        'cursor-pointer': !user?.username
+                    })}
+                    onClick={() => !user?.username && setShowEditNickname(true)}
+                >
+                    {!user?.username ? (
+                        <>
+                            <div className="w-[10px] h-[1px] bg-darkBlue-5 dark:bg-white mr-[10px]" />
+                            <Edit className="" size={16} />
+                        </>
+                    ) : (
+                        <span className="font-semibold">{user?.username}</span>
+                    )}
+                </div>
             </div>
 
             <div>
@@ -362,7 +384,7 @@ const Profile = () => {
     const currentPercent = state.namiBalance ? (state.namiBalance * 100) / nextLevel?.nami_holding : '--';
 
     return (
-        <AccountLayout type='identify_tab'>
+        <AccountLayout type="identify_tab">
             <div className="rounded-xl md:p-6 md:bg-white md:dark:bg-darkBlue-3 mt-12">
                 <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:divide-x md:divide-divider md:dark:divide-divider-dark">
                     <div className="flex-1 p-6 md:p-0 md:pr-10 rounded-md md:rounded-none space-y-6 md:space-y-4 bg-white dark:bg-darkBlue-3 md:bg-transparent">

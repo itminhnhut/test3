@@ -1,15 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { formatNumber, formatTime, getLoginUrl, countDecimals, formatPrice } from 'redux/actions/utils';
+import { formatNumber, formatTime, getLoginUrl, countDecimals, getS3Url } from 'redux/actions/utils';
 import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem';
-import { getRatioProfit, renderCellTable, VndcFutureOrderType } from './VndcFutureOrderType';
+import { getRatioProfit, VndcFutureOrderType, fees_futures } from './VndcFutureOrderType';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import { useSelector } from 'react-redux';
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { ApiStatus, DefaultFuturesFee } from 'redux/actions/const';
-
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
-import Big from 'big.js';
 import { isArray } from 'lodash';
 import Link from 'next/link';
 import OrderClose from './OrderClose';
@@ -26,6 +24,8 @@ import Edit from 'components/svg/Edit';
 import { useRouter } from 'next/router';
 import FuturesCloseAllOrder from 'components/screens/Futures/FuturesModal/FuturesCloseAllOrder';
 import PopoverV2 from 'components/common/V2/PopoverV2';
+import SortIcon from 'components/screens/Nao_futures/SortIcon';
+import FuturesFeeModal from 'components/screens/Futures/PlaceOrder/EditFee/FuturesFeeModal';
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, isVndcFutures, pair, status }) => {
     const {
@@ -45,6 +45,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     const [showShareModal, setShowShareModal] = useState(false);
     const [showCloseModal, setShowCloseModal] = useState(false);
     const [showCloseAll, setShowCloseAll] = useState(false);
+    const [showFees, setShowFees] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [loading, setLoading] = useState(true);
     const message = useRef({
@@ -198,6 +199,18 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                     </div>
                 </div>
             </PopoverV2>
+        );
+    };
+
+    const renderFee = (order) => {
+        const assetId = order?.fee_metadata?.close_order?.currency ?? 72;
+        const ratio = fees_futures.find((rs) => rs.assetId === assetId)?.ratio;
+        return (
+            <div onClick={() => onHandleClick('fee', order)} className="flex items-center justify-end space-x-1">
+                <SortIcon size={20} color="currentColor" activeColor="currentColor" className="text-gray-1 dark:text-gray-7" />
+                <span>{ratio}</span>
+                <img src={getS3Url(`/images/coins/64/${assetId}.png`)} width={16} height={16} />
+            </div>
         );
     };
 
@@ -429,6 +442,13 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 sortable: true
             },
             {
+                key: 'fee',
+                title: t('common:fee'),
+                align: 'right',
+                width: 138,
+                render: renderFee,
+            },
+            {
                 key: 'status',
                 visible: !isPosition,
                 title: t('common:status'),
@@ -549,6 +569,10 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 setCloseType(data);
                 setShowCloseAll(true);
                 break;
+            case 'fee':
+                flag.current = true;
+                setShowFees(true);
+                break;
             case 'detail':
                 if (flag.current) {
                     flag.current = false;
@@ -608,6 +632,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 message={message.current.message}
                 className="max-w-[448px]"
             />
+            <FuturesFeeModal order={rowData.current} isVisible={showFees} onClose={() => setShowFees(false)} />
             {/* <OrderClose open={showModalDelete} onClose={() => setShowModalDelete(false)} onConfirm={onConfirm} data={rowData.current} /> */}
             {/* <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={marketWatch[shareOrder?.symbol]} onClose={() => setShareOrder(null)} /> */}
             <FuturesOrderDetailModal order={rowData.current} isVisible={showOrderDetail} onClose={() => setShowOrderDetail(false)} decimals={decimals} />

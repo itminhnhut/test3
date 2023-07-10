@@ -167,6 +167,10 @@ body {
         // @apply container;
         // padding:0 16px;
         margin: auto;
+        &.mal-footer__wrapper {
+            @apply px-4;
+            max-width: unset;
+        }
 
         @media (min-width: 1024px) {
             max-width: 900px;
@@ -174,6 +178,10 @@ body {
 
         @media (min-width: 1280px) {
             max-width: 1164px;
+            &.mal-footer__wrapper {
+                @apply px-0;
+                max-width: 1216px;
+            }
         }
 
         @media (min-width: 1920px) {

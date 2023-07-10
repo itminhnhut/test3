@@ -13,6 +13,7 @@ import GlobeFilled from 'components/svg/GlobeFilled';
 import TiktokFilled from 'components/svg/TiktokFilled';
 import FacebookGroupFilled from 'components/svg/FacebookGroupFilled';
 import YoutubeFilled from 'components/svg/YoutubeFilled';
+import classNames from 'classnames';
 
 export const getSocialImage = (socialType) => {
     let Icon = null;
@@ -59,16 +60,11 @@ const SocialsLink = ({ language }) => {
             {SOCIALS_HREF[language]?.map((social) => {
                 const ImageIcon = getSocialImage(social.name);
                 return (
-                    <Link
-                        key={social.key}
-                        href={
-                            social.name !== 'coingecko'
-                                ? social.href
-                                : `${social.href}/${language}/${language === LANGUAGE_TAG.VI ? 'san_giao_dich' : 'exchanges'}/nami_exchange`
-                        }
-                    >
-                        <a target="_blank" className="!flex items-center w-[32px] h-[32px] text-txtPrimary dark:text-txtPrimary-dark ">
-                            <div className="border p-2 rounded-full border-[#1e1e1e] dark:border-divider">{ImageIcon}</div>
+                    <Link key={social.key} href={social.href}>
+                        <a target="_blank" className="!flex items-center w-[32px] h-[32px] text-txtPrimary dark:text-txtPrimary-dark">
+                            <div className={classNames('p-2 rounded-full ring-1 ring-gray-15 dark:ring-gray-4', social.name === 'facebook_group' && 'pt-[0.3125rem] pr-[0.4375rem]')}>
+                                {ImageIcon}
+                            </div>
                         </a>
                     </Link>
                 );

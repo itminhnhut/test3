@@ -68,6 +68,7 @@ const ACCOUNT = {
     REWARD_CENTER: '/account/reward-center',
     PAYMENT_METHOD: '/account/payment-method',
     REFERRAL: getV1Url('/reference'),
+    REFERRAL_VI: getV1Url('/vi/reference'),
     SETTINGS: '/account/settings'
 };
 
