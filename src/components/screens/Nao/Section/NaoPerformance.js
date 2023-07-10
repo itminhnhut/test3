@@ -21,7 +21,7 @@ import RangePopover from '../Components/RangePopover';
 import { formatAbbreviateNumber } from 'redux/actions/utils';
 import { useIsomorphicLayoutEffect } from 'react-use';
 import dynamic from 'next/dynamic';
-import { addDays, format, parse } from 'date-fns';
+import { addDays, differenceInDays, endOfMonth, endOfWeek, format, isValid, parse } from 'date-fns';
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const ApexChartWrapper = styled.div`
@@ -105,6 +105,23 @@ const CHART_TYPES = {
     fee: 'fee'
 };
 
+const showTimeRange = (timestamp, chartInterval) => {
+    const today = addDays(new Date(), 1);
+    switch (chartInterval) {
+        case 'week': {
+            const weekend = addDays(endOfWeek(timestamp), 1);
+            return `${format(timestamp, 'dd/MM/yyyy')} - ${format(today.getTime() < weekend.getTime() ? today : weekend, 'dd/MM/yyyy')}`;
+        }
+        case 'month': {
+            const monthEnd = addDays(endOfMonth(timestamp), 1);
+            return `${format(timestamp, 'dd/MM/yyyy')} - ${format(today.getTime() < monthEnd.getTime() ? today : monthEnd, 'dd/MM/yyyy')}`;
+        }
+        default: {
+            return format(timestamp, 'dd/MM/yyyy');
+        }
+    }
+};
+
 const isValidRange = (range) => range && days.some(({ value }) => value === range);
 function reorderSvg() {
     const inner = document.querySelector('#nao_performance .apexcharts-inner'),
@@ -139,7 +156,7 @@ const NaoPerformance = memo(({}) => {
     });
     const [range, setRange] = useState({
         startDate: undefined,
-        endDate: undefined,
+        endDate: new Date(),
         key: 'selection'
     });
     const [fee, setFee] = useState(WalletCurrency.VNDC);
@@ -157,7 +174,7 @@ const NaoPerformance = memo(({}) => {
     }, []);
 
     const assetConfig = useSelector((state) => state.utils.assetConfig);
-    const isValidCustomDay = filter.day !== 'custom' || !!(range.startDate && range.endDate);
+    const isValidCustomDay = filter.day !== 'custom' || (isValid(range.startDate) && isValid(range.endDate));;
 
     useIsomorphicLayoutEffect(() => {
         const { performanceRange } = router.query;
@@ -234,11 +251,13 @@ const NaoPerformance = memo(({}) => {
         let filterDay = filter.day;
         let startDate = range?.startDate;
         let endDate = range?.endDate;
-        if ((filter.day === 'd' || filter.day === '-d')) {
+        if (filter.day === 'd' || filter.day === '-d') {
             filterDay = 'custom';
             endDate = new Date();
             startDate = addDays(endDate, -7);
             // if (dataChartSource[0]?.data?.length) return;
+        } else if (filter.day === 'custom' && differenceInDays(range.endDate, range.startDate) <= 1) {
+            startDate = addDays(endDate, -7);
         }
         setChartLoading(true);
         try {
@@ -491,7 +510,7 @@ const NaoPerformance = memo(({}) => {
                 custom: ({ series, seriesIndex, dataPointIndex, w }) => {
                     const y = series[seriesIndex][dataPointIndex];
                     const x = w.globals.seriesX[0][dataPointIndex];
-                    const _referencePrice = w.config.referencePrice || referencePrice;
+                    const _referencePrice = w.config.variable.referencePrice || referencePrice;
                     const type = w.globals.seriesNames[0];
                     const currency = filter.marginCurrency;
                     const isUSD = currency === 22;
@@ -500,12 +519,12 @@ const NaoPerformance = memo(({}) => {
                     let currencyText = isMonetary ? (isUSD ? 'USDT' : 'VNDC') : '';
 
                     const body = `${titleText}: ${formatNumber(y, isUSD ? 4 : 0)} ${currencyText}`;
-                    const fiatUSD = isMonetary ? `$ ${formatNumber(y * (_referencePrice[`${assetCodeFromId(currency)}/USD`] || 1 / 23400), 2)}` : '';
+                    const fiatUSD = isMonetary ? `$ ${formatNumber(y * (_referencePrice[`${assetCodeFromId(currency)}/USD`] || 1 / 23400), 4)}` : '';
                     return `
                         <div class="bg-gray-15 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
-                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? format(x, 'dd/MM/yyyy') : ''}</div>
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? showTimeRange(x, chartInterval) : ''}</div>
                             <div class="text-white dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${body}</div>
-                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-right text-xxs mb:text-sm">${fiatUSD}</div>
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${fiatUSD}</div>
                         </div>
                     `;
                 }
