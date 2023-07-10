@@ -185,7 +185,8 @@
         "name": "Name",
         "captain": "Captain",
         "information": "Details",
-        "team_ranking": "Team Ranking",
+        "team_ranking": "Team ranking",
+        "monthly_team_ranking": "Monthly team ranking",
         "details": "Details",
         "volume_ranking": "Volume ranking",
         "pnl_ranking": "% PnL ranking",
@@ -247,8 +248,8 @@
         "contest_ranking": "Contest Ranking",
         "contest_special": "Special Awards",
         "tournament": "Tournament",
-        "weekly_ranking": "Weekly Ranking",
-        "monthly_ranking": "Monthly Ranking",
+        "weekly_ranking": "Weekly individual ranking",
+        "monthly_ranking": "Monthly individual ranking",
         "weekly_ranking_desc": "Eligible users will be ranked and have a chance to win weekly prize of {{value}}. Read more at “Detailed Rules”.",
         "rules": "Rules",
         "week": "Week {{value}}",
@@ -261,7 +262,10 @@
             "number_of_friends": "Number of friends",
             "tooltip_friends": "Referred friends need to complete KYC during the program period, read more at “Detail Rules”"
         },
-        "personal_achievements_note": "Note: Monthly statistics are calculated from the start of the tournament, weekly statistics are calculated from 00:00 every Monday (UTC+7)"
+        "personal_achievements_note": "Note: Monthly statistics are calculated from the start of the tournament, weekly statistics are calculated from 00:00 every Monday (UTC+7)",
+        "team_avatar": "Team avatar",
+        "drag_drop": "Drag and drop an image or click to upload an image",
+        "format_support": "Image format support"
     },
     "year_summary": {
         "title": "NAO Futures {{version}} Achievements",
@@ -289,7 +293,8 @@
         "total_transactions": "Total number of successful transactions",
         "total_profit_share": "Total profit shared for the Management Pool",
         "total_number_investors": "Total number of investors who have joined the Management Pool",
-        "total_commission": "Total value of commission shared with partners (as of May 7, 2023)"
+        "total_commission": "Total value of commission shared with partners (as of May 7, 2023)",
+        "add_friends": "Add friends"
     },
     "ended": "Ended",
     "going_on": "Going on",

@@ -2,6 +2,7 @@ import React from 'react';
 import { toast as rcToast } from 'react-toastify';
 import useDarkMode from 'hooks/useDarkMode';
 import { CloseIcon } from 'components/svg/SvgIcon';
+import classnames from 'classnames';
 
 const types = {
     default: null,

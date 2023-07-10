@@ -19,7 +19,6 @@ import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_RANK_GROUP_PNL, API_CONTEST_GET_RANK_GROUP_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
-import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
@@ -28,6 +27,7 @@ import RePagination from 'components/common/ReTable/RePagination';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import useUpdateEffect from 'hooks/useUpdateEffect';
+import classNames from 'classnames';
 
 const ContestTeamRanks = ({
     onShowDetail,
@@ -40,7 +40,8 @@ const ContestTeamRanks = ({
     top_ranks_team,
     showPnl,
     currencies,
-    hasTabCurrency
+    hasTabCurrency,
+    top_ranks_week
 }) => {
     const [tab, setTab] = useState(sort);
     const [quoteAsset, setQuoteAsset] = useState(q);
@@ -145,7 +146,7 @@ const ContestTeamRanks = ({
     };
 
     const renderLeader = (data) => {
-        return capitalize(data);
+        return data;
     };
 
     const renderActions = (e) => {
@@ -170,7 +171,7 @@ const ContestTeamRanks = ({
         );
     };
     return (
-        <section className="contest_individual_ranks py-6 sm:pb-14">
+        <section className={classNames('contest_individual_ranks py-6 sm:pb-14', { 'pt-12 sm:pt-20': top_ranks_week })}>
             {minVolumeTeam && (
                 <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" arrowColor="transparent" id="tooltip-team-rank">
                     <div
@@ -183,7 +184,11 @@ const ContestTeamRanks = ({
             )}
             <div className="flex justify-between flex-wrap gap-4">
                 <div className="flex items-center space-x-4">
-                    <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">{t('nao:contest:team_ranking')}</TextLiner>
+                    <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">
+                    {t(`nao:contest:${top_ranks_week ? 'monthly_team_ranking' : 'team_ranking'}`)}
+                    {/* {t('nao:contest:team_ranking')} */}
+                    </TextLiner>
+                    
                     {minVolumeTeam && (
                         <div className="text-txtPrimary dark:text-txtPrimary-dark cursor-pointer" data-tip={''} data-for="tooltip-team-rank">
                             <QuestionMarkIcon size={16} isFilled />
@@ -243,13 +248,11 @@ const ContestTeamRanks = ({
                                         <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
                                     </div>
                                     <div className="space-y-1 flex flex-col" style={{ wordBreak: 'break-word' }}>
-                                        <div className="flex items-center gap-2 font-semibold capitalize">
-                                            <span>{capitalize(item?.name)}</span>
+                                        <div className="flex items-center gap-2 font-semibold ">
+                                            <span>{item?.name}</span>
                                             {item?.is_group_master && <TickFbIcon size={18} />}
                                         </div>
-                                        <span className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer capitalize">
-                                            {capitalize(item?.leader_name)}
-                                        </span>
+                                        <span className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer ">{item?.leader_name}</span>
                                     </div>
                                 </div>
                                 <div className="text-5xl sm:text-6xl pb-0 font-semibold italic">{item?.[rank] > 0 ? `#${index + 1}` : '-'}</div>
@@ -330,7 +333,7 @@ const ContestTeamRanks = ({
                                             <div className="h-8"></div>
                                             <div className="flex items-center justify-between">
                                                 <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:captain')}</label>
-                                                <span className="text-right font-semibold capitalize">{capitalize(item?.leader_name)}</span>
+                                                <span className="text-right font-semibold">{item?.leader_name}</span>
                                             </div>
                                             <div className="flex items-center justify-between pt-3">
                                                 <label className="text-txtSecondary dark:text-txtSecondary-dark">
@@ -391,7 +394,7 @@ const ContestTeamRanks = ({
                         <Column minWidth={280} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                         <Column
                             minWidth={150}
-                            className="text-txtPrimary dark:text-txtPrimary-dark capitalize"
+                            className="text-txtPrimary dark:text-txtPrimary-dark"
                             title={t('nao:contest:captain')}
                             fieldName="leader_name"
                             cellRender={renderLeader}
