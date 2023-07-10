@@ -14,7 +14,7 @@ const ImageWrapper = styled.div`
     @media screen and (min-width: 820px) {
         width: 41.666667% !important;
     }
-    > span {
+    > span, img {
         width: 100% !important;
         height: 100% !important;
     }
@@ -68,13 +68,13 @@ const EventItem = (props) => {
 
         if (status === STATUSES.upcoming) {
             return (
-                <div className="absolute bg-green-2 text-white px-2 text-xs rounded-sm top-4 right-4 z-[1]">
+                <div className="absolute bg-green-2 text-white px-2 py-1 text-xs rounded-sm top-4 right-4 z-[1] font-semibold">
                     {t('marketing_events:starts_in')} <Countdown date={start} renderer={timeRenderer} />
                 </div>
             );
         } else if (end && status === STATUSES.ongoing) {
             return (
-                <div className="absolute bg-red-2 text-white px-2 text-xs rounded-sm top-4 right-4 z-[1]">
+                <div className="absolute bg-red-2 text-white px-2 py-1 text-xs rounded-sm top-4 right-4 z-[1] font-semibold">
                     {t('marketing_events:ends_in')} <Countdown date={end} renderer={timeRenderer} />
                 </div>
             );
@@ -85,7 +85,7 @@ const EventItem = (props) => {
 
     return (
         <Link href={props.postLink || '#'}>
-            <a className="relative flex mt-4 mb:mt-7 rounded-xl overflow-hidden flex-wrap mb:flex-nowrap bg-white dark:bg-dark-4 border dark:border-none border-divider shadow-card_light">
+            <a className="relative flex mt-4 mb:mt-7 rounded-xl overflow-hidden flex-wrap mb:flex-nowrap bg-white dark:bg-dark-4 border dark:border-none border-divider hover:shadow-card_light transition-shadow">
                 {getUnfinishedBagde(props.startTime, props.endTime)}
                 <ImageWrapper>
                     <img src={getEventImg(props.thumbnailImgEndpoint)} width={503} height={265} className="object-cover bg-gray" />
