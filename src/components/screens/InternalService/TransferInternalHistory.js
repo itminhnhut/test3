@@ -13,9 +13,13 @@ import Skeletor from 'components/common/Skeletor';
 import OrderStatusTag from 'components/common/OrderStatusTag';
 import Tooltip from 'components/common/Tooltip';
 
-const addNewRecord = (arr = [], newItem = {}) => {
-    arr.pop(); // Remove last item
-    arr.unshift({ ...newItem, _id: 0 });
+const addNewRecord = (arr = [], newItems = []) => {
+    newItems.forEach((newTrans, idx) => {
+        if (arr.length >= LIMIT_ROW) arr.pop();
+        arr.unshift({ ...newTrans, _id: idx });
+    });
+
+    console.log('______arr: ', arr);
     return arr;
 };
 
@@ -43,7 +47,7 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
 
     useAsync(async () => {
         if (!auth) return;
-        setNewOrder(null);
+        setNewOrder([]);
         setState({ loading: true, histories: null });
         try {
             const {
@@ -77,7 +81,7 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                 title: 'ID',
                 align: 'left',
                 width: 203,
-                render: (row) => (row === 0 ? <Skeletor width={150} /> : <div title={row}>{shortHashAddress(row, 8, 6)}</div>)
+                render: (row) => (typeof row === 'number' ? <Skeletor width={150} /> : <div title={row}>{shortHashAddress(row, 8, 6)}</div>)
             },
             {
                 key: 'asset',
@@ -136,15 +140,11 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                             {shortHashAddress(language === 'vi' ? v?.vi : v?.en, 18, 0)}
                             <Tooltip offset={{ top: 18 }} id={'tooltip-' + item._id} place="top" effect="solid" className={`max-w-[400px]`} isV3>
                                 <div className="w-full">
-                                    <div className="mb-2 text-white dark:text-txtSecondary-dark text-left text-xs">
-                                        Thông báo tiếng Việt:
-                                    </div>
-                                    <div className='text-left mb-6'>{v?.vi}</div>
+                                    <div className="mb-2 text-white dark:text-txtSecondary-dark text-left text-xs">Thông báo tiếng Việt:</div>
+                                    <div className="text-left mb-6">{v?.vi}</div>
 
-                                    <div className="mb-2 text-white dark:text-txtSecondary-dark text-left text-xs">
-                                        Content noti English:
-                                    </div>
-                                    <div className='text-left'>{v?.en}</div>
+                                    <div className="mb-2 text-white dark:text-txtSecondary-dark text-left text-xs">Content noti English:</div>
+                                    <div className="text-left">{v?.en}</div>
                                 </div>
                             </Tooltip>
                         </div>

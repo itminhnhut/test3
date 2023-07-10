@@ -26,6 +26,9 @@ import TextArea from 'components/common/V2/InputV2/TextArea';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import CardWrapper from 'components/common/CardWrapper';
+import CheckBox from 'components/common/CheckBox';
+import AccountAvatar from '../Account/AccountAvatar';
+import MCard from 'components/common/MCard';
 
 const DEFAULT_PAIR = {
     fromAsset: 'VNDC',
@@ -79,6 +82,12 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
     const auth = useSelector((state) => state.auth.user) || null;
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
+
+    // Handle screen Personal/Multiple transfer
+    const [selectedTab, setSelectedTab] = useState(TABS[0].key);
+    const [listUserMultiple, setListUserMultiple] = useState([]);
+    const [listUserIdErrors, setListUserIdErrors] = useState([]);
+
     // Get state from Rdx
     const wallets = useSelector((state) => state.wallet.SPOT);
     const assetConfig = useSelector((state) => state.utils.assetConfig);
@@ -262,6 +271,11 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
         if (state?.toUser?.code === auth.code) setState({ errorToUser: 'Không thể tự chuyển cho chính mình!', toUser: null });
     }, [state.toUser]);
 
+    useEffect(() => {
+        if (selectedTab === 'multiple') setState({ searchUser: '', listUserFounded: [], toUser: null, errorToUser: '' });
+        else setState({ toListUser: '', errorToListUser: '' });
+    }, [selectedTab]);
+
     const handleConfirmTransfer = () => {
         setState({ loadingTransfer: true, resultTransfer: null });
         fetchAPI({
@@ -272,7 +286,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
             params: {
                 assetCode: state.fromAsset,
                 amount: state.fromAmount,
-                toUserId: state.toUser.id,
+                toUserId: selectedTab === 'personal' ? state.toUser.id : listUserMultiple.map((obj) => obj.code),
                 noteVi: state.contentNotiVi ?? '',
                 noteEn: state.contentNotiEn ?? ''
             }
@@ -285,7 +299,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                             msg: 'Chuyển thành công'
                         }
                     });
-                    setNewOrder(res.data);
+                    setNewOrder(res.data?.listTransferSuccess || [res.data]);
                 } else {
                     setState({
                         resultTransfer: {
@@ -338,9 +352,6 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
             }, 200);
     };
 
-    // Handle screen Personal/Multiple transfer
-    const [selectedTab, setSelectedTab] = useState(TABS[1].key);
-    const [listUserMultiple, setListUserMultiple] = useState([]);
     const handlePreview = async () => {
         if (selectedTab === 'personal') setState({ isOpenModalPreview: true });
         else {
@@ -348,9 +359,18 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                 url: API_INTERNAL_FIND_USER,
                 options: { method: 'GET' },
                 params: {
-                    searchContent: state.searchUser
+                    searchContent: state.toListUser
                 }
             });
+
+            if (status === ApiStatus.SUCCESS) {
+                setListUserMultiple(data);
+                const listIdSends = state.toListUser.split(', ');
+
+                setListUserIdErrors(listIdSends.filter((idSend) => !data.find((obj) => obj.code === idSend || obj.email === idSend)));
+            } else setListUserMultiple([]);
+
+            setState({ isOpenModalPreview: true });
         }
     };
 
@@ -369,7 +389,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                     <span className="text-[32px] leading-[38px] font-semibold">Transfer Internal</span>
                 </div>
             </div>
-            <div className="mt-10 flex w-full h-full gap-8">
+            <div className="mt-10 md:flex w-full h-full gap-8">
                 <CardWrapper className="relative flex flex-col gap-y-6 flex-1">
                     <div>
                         <div className="capitalize font-semibold mb-2">* {selectedTab}</div>
@@ -445,14 +465,14 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                             >
                                 <div className="w-full border p-4 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
                                     {state?.toUser?.avatar ? (
-                                        <img src={state.toUser.avatar} alt="avatar_user" className="rounded-full w-16 h-16 bg-cover" />
+                                        <img src={state.toUser.avatar} alt="avatar_user" className="w-16 h-16 rounded-full bg-cover" />
                                     ) : (
                                         <BxsUserCircle size={64} />
                                     )}
                                     <div className="w-full">
                                         <div className="txtPri-1 pl-[1px] flex items-center justify-between w-full">
-                                            <span className="txtSecond-1 !text-base">ID: </span>
-                                            {state?.toUser?.id ?? '???'}
+                                            <span className="txtSecond-1 !text-base">Email: </span>
+                                            {state?.toUser?.email ?? '???'}
                                         </div>
                                         <div className="mt-1 txtPri-1 items-center flex justify-between w-full">
                                             <span className="txtSecond-1 !text-base">Nami ID: </span>
@@ -474,7 +494,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                         />
                     )}
                 </CardWrapper>
-                <CardWrapper className="relative flex flex-col gap-y-6 flex-1">
+                <CardWrapper className="relative flex flex-col gap-y-6 flex-1 mt-8 md:mt-0">
                     <TextArea
                         label="Nội dung thông báo (Tiếng Việt)"
                         value={state?.contentNotiVi}
@@ -493,7 +513,11 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                     />
 
                     {/*TRANSFER BUTTON*/}
-                    <ButtonV2 disabled={!state?.fromAmount || (selectedTab === 'personal' && !state?.toUser)} onClick={handlePreview} className="mt-2">
+                    <ButtonV2
+                        disabled={!state?.fromAmount || (selectedTab === 'personal' ? !state?.toUser : !state?.toListUser)}
+                        onClick={handlePreview}
+                        className="mt-2"
+                    >
                         {t(`futures:mobile.close_all_positions.preview`)}
                     </ButtonV2>
                 </CardWrapper>
@@ -517,24 +541,65 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                 </div>
 
                 <div className="flex flex-col mt-4 items-start justify-between gap-2">
-                    <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">Người nhận:</span>
-                    <div className="w-full rounded-md bg-gray-10 dark:bg-dark-2 px-3 py-2 flex flex-col gap-y-4 text-base items-center leading-6">
-                        <InforTransfer
-                            label="Avatar"
-                            content={
-                                state.toUser?.avatar ? (
-                                    <img src={state.toUser.avatar} alt="avatar_user" className="rounded-full w-8 h-8 bg-cover" />
-                                ) : (
-                                    <BxsUserCircle size={32} />
-                                )
-                            }
-                        />
-                        <InforTransfer label="UID" content={state.toUser?.id ?? '--'} />
-                        <InforTransfer label="Nami ID" content={state.toUser?.code ?? '--'} />
-                        <InforTransfer label="Email" content={state.toUser?.email ?? '--'} />
-                        <InforTransfer label="Name" content={state.toUser?.name ?? '--'} />
-                        <InforTransfer label="Username" content={state.toUser?.username ?? '--'} />
-                    </div>
+                    <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">Người nhận ({listUserMultiple.length}):</span>
+                    {selectedTab === 'personal' ? (
+                        <div className="w-full rounded-md bg-gray-10 dark:bg-dark-2 px-3 py-2 flex flex-col gap-y-4 text-base items-center leading-6">
+                            <InforTransfer
+                                label="Avatar"
+                                content={
+                                    state.toUser?.avatar ? (
+                                        <img src={state.toUser.avatar} alt="avatar_user" className="rounded-full w-8 h-8 bg-cover" />
+                                    ) : (
+                                        <BxsUserCircle size={32} />
+                                    )
+                                }
+                            />
+                            <InforTransfer label="UID" content={state.toUser?.id ?? '--'} />
+                            <InforTransfer label="Nami ID" content={state.toUser?.code ?? '--'} />
+                            <InforTransfer label="Email" content={state.toUser?.email ?? '--'} />
+                            <InforTransfer label="Name" content={state.toUser?.name ?? '--'} />
+                            <InforTransfer label="Username" content={state.toUser?.username ?? '--'} />
+                        </div>
+                    ) : (
+                        <div className="w-full py-2">
+                            <div className="max-h-[332px] h-[332px] overflow-y-scroll">
+                                {listUserMultiple.map((item) => {
+                                    const { avatar, code, code_refer, email, id, kyc_status, name, phone, rank_id, status, username } = item;
+                                    return (
+                                        <MCard key={'convert_small_ballance_' + id} addClass={'!px-0 !py-1 !my-2'}>
+                                            <div className="w-full border p-4 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
+                                                {avatar ? (
+                                                    <img src={avatar} alt="avatar_user" className="rounded-full w-16 h-16 bg-cover" />
+                                                ) : (
+                                                    <BxsUserCircle size={64} />
+                                                )}
+                                                <div className="w-full">
+                                                    <div className="txtPri-1 pl-[1px] flex items-center justify-between w-full">
+                                                        <span className="txtSecond-1 !text-base">Email: </span>
+                                                        {email ?? '???'}
+                                                    </div>
+                                                    <div className="mt-1 txtPri-1 items-center flex justify-between w-full">
+                                                        <span className="txtSecond-1 !text-base">Nami ID: </span>
+                                                        {code ?? '???'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </MCard>
+                                    );
+                                })}
+                            </div>
+                            {listUserIdErrors.length > 0 && (
+                                <div>
+                                    <div className="mt-4 text-sm leading-5 text-red-2">Not found ({listUserIdErrors.length}):</div>
+                                    <div>
+                                        {listUserIdErrors.map((idErr) => (
+                                            <div className="mt-1">{idErr}</div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {state?.contentNotiVi && (
