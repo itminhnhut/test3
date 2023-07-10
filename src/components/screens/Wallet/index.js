@@ -352,7 +352,7 @@ const Wallet = () => {
                         assetDigit: btcDigit
                     },
                     [`${walletType}RefPrice`]: {
-                        totalValue: walletValueMapper?.[walletType]?.totalValue / btcUsdRate,
+                        totalValue: walletValueMapper?.[walletType]?.totalValue,
                         value: walletValueMapper?.[walletType]?.total,
                         locked: walletValueMapper?.[walletType]?.locked,
                         assetDigit: 2
