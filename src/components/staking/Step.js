@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
-import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
+import Image from 'next/image';
+import React, { useMemo } from 'react';
 import { getS3Url } from 'redux/actions/utils';
 
 import classNames from 'classnames';
@@ -16,7 +16,7 @@ const StepStaking = ({ isDark, isMobile }) => {
     const renderStep = useMemo(() => {
         return STEP_STAKING.map((item, key) => {
             return !item?.isDivider ? (
-                <section className="w-full px-[43.5px] lg:px-4 mx-[19.5px] lg:mx-0" key={item.title?.[language]}>
+                <section className="w-full px-[19.5px] lg:px-0" key={item.title?.[language]}>
                     <Image width={isMobile ? 48 : 54} height={isMobile ? 48 : 54} src={getS3Url(item.imgSrc)} />
                     <div className="font-semibold text-gray-15 dark:text-gray-4 mt-6 text-sm lg:text-base">{item.title?.[language]}</div>
                     <div className="text-gray-1 dark:text-gray-7 mt-3 lg:mt-6">{item.subText?.[language]}</div>
@@ -41,7 +41,9 @@ const StepStaking = ({ isDark, isMobile }) => {
             className="mt-[88px] lg:mt-[120px] relative
               border-[1px] dark:border-[#222940] dark:bg-dark-4 bg-divider border-[#30BF73] rounded-3xl  border-solid"
         >
-            <div className="h-full lg:h-[294px] flex flex-col py-[60px] lg:py-0 lg:flex-row gap-x-4 items-center justify-center text-center">{renderStep}</div>
+            <div className="h-full lg:h-[294px] flex flex-col py-[60px] lg:py-0 lg:flex-row gap-x-4 items-center justify-center text-center px-6 lg:px-[76px]">
+                {renderStep}
+            </div>
         </WrapperStep>
     );
 };
