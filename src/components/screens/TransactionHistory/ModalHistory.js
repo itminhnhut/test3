@@ -304,6 +304,33 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             )} ${type ? t('transaction-history:' + type) : ''}`}</div>
                                         );
                                         break;
+                                    case COLUMNS_TYPE.INSURANCE_EXPECT:
+                                        const sideInsurance =
+                                            get(detailTx, col.keys[0])?.toLowerCase() ||
+                                            get(detailTx, 'result.metadata.payload.side')?.toLowerCase() ||
+                                            NULL_ASSET;
+                                        formatKeyData = (
+                                            <div
+                                                className={classNames(
+                                                    'uppercase',
+                                                    { 'text-red': sideInsurance === 'sell' },
+                                                    { 'text-dominant': sideInsurance === 'buy' }
+                                                )}
+                                            >
+                                                {['sell', 'buy'].includes(sideInsurance)
+                                                    ? t('transaction-history:modal_detail.expect_' + sideInsurance)
+                                                    : NULL_ASSET}
+                                            </div>
+                                        );
+                                        break;
+                                    case COLUMNS_TYPE.INSURANCE_PAIR:
+                                        symbol = {
+                                            baseAsset: get(detailTx, 'additionalData.payload.asset_covered') || get(detailTx, 'result.metadata.payload.asset_covered'),
+                                            quoteAsset: get(detailTx, 'additionalData.payload.quote_asset') || get(detailTx, 'result.metadata.payload.quote_asset')
+                                        };
+
+                                        formatKeyData = `${symbol?.baseAsset || NULL_ASSET}/${symbol?.quoteAsset || NULL_ASSET}`;
+                                        break;
                                     case COLUMNS_TYPE.DEPOSIT_WITHDRAW_FEE:
                                         const fee = get(detailTx, col.keys[0]) || get(detailTx, 'result.metadata.fee.value') || 0;
 

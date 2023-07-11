@@ -58,6 +58,9 @@
         "position_id": "ID vị thế",
         "wallet_type": "Loại ví",
         "volume": "Khối lượng giao dịch",
-        "fee": "Phí giao dịch"
+        "fee": "Phí giao dịch",
+        "expect": "Kì vọng",
+        "expect_sell": "Bear",
+        "expect_buy": "Bull"
     }
 }
