@@ -53,12 +53,15 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     // Use Hooks
     const router = useRouter();
 
+
     const {
         t,
         i18n: { language }
     } = useTranslation();
     const { width } = useWindowSize();
     const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
+
     const dispatch = useDispatch();
     const { show } = useContextMenu({ id: MENU_CONTEXT });
     const [curRowSelected, setCurRowSelected] = useState(null);
@@ -487,8 +490,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                 <div className='w-full flex justify-between items-center'>
                     <EstBalance onClick={() => setIsHideAsset(!isHideAsset)} isHide={isHideAsset} isSmallScreen={isSmallScreen} />
                     <Link href={'/staking'}>
-                        <a className='flex gap-2 items-center text-teal font-semibold text-sm md:text-base cursor-pointer'>
-                            {t('wallet:staking')} <ChevronRight color={colors.teal} size={16} />
+                        <a className='flex gap-2 items-center text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 font-semibold text-sm md:text-base cursor-pointer'>
+                            {t('wallet:staking')} <ChevronRight size={16} />
                         </a>
                     </Link>
                 </div>
