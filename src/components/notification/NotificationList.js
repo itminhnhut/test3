@@ -20,6 +20,7 @@ import { API_GET_NOTI_SETTING } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
 import useWindowSize, { useRefWindowSize } from 'hooks/useWindowSize';
 import Setting from 'components/svg/Setting';
+import { showBrowserNotification } from 'utils/notificationService';
 
 const NOTI_READ = NotificationStatus.DELETED;
 
@@ -53,6 +54,12 @@ const NotificationList = ({ btnClass }) => {
     useClickAway(ref, () => {
         closeDropdownPopover();
     });
+
+    useEffect(() => {
+        window?.OneSignal?.on('', () => {
+
+        })
+    }, [])
 
     // const truncateNotificationsDebounce = debounce(() => {
     //     dispatch(truncateNotifications());

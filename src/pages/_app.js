@@ -24,6 +24,7 @@ import { indexingArticles } from 'utils';
 import { isMobile } from 'react-device-detect';
 import { getCookie, setCookie } from 'cookies-next';
 import { WalletType } from 'src/redux/actions/const';
+import initOneSignal from 'components/common/InitOneSignal';
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {
 //         case 'FCP':
@@ -134,6 +135,8 @@ const App = ({ Component, pageProps }) => {
         if (!locale) {
             setCookie('NAMI_LOCALE', router.locale);
         }
+
+        initOneSignal()
     }, []);
 
     // useEffect(() => {
@@ -167,15 +170,23 @@ const App = ({ Component, pageProps }) => {
                 i.getElementById(t)
                     ? initFreshChat()
                     : (((e = i.createElement('script')).id = t),
-                      (e.async = !0),
-                      (e.src = 'https://wchat.freshchat.com/js/widget.js'),
-                      (e.onload = initFreshChat),
-                      i.head.appendChild(e));
+                        (e.async = !0),
+                        (e.src = 'https://wchat.freshchat.com/js/widget.js'),
+                        (e.onload = initFreshChat),
+                        i.head.appendChild(e));
             }
             function initiateCall() {
                 initialize(document, 'freshchat-js-sdk');
             }
             window.addEventListener ? window.addEventListener('load', initiateCall, !1) : window.attachEvent('load', initiateCall, !1);
+
+            if (!Notification) {
+                alert('Desktop notifications not available in your browser. Try Chromium.');
+                return;
+            }
+            if (Notification.permission !== 'granted') {
+                Notification.requestPermission();
+            }
         }
     }, [language]);
 
