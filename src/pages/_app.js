@@ -136,7 +136,14 @@ const App = ({ Component, pageProps }) => {
             setCookie('NAMI_LOCALE', router.locale);
         }
 
-        initOneSignal()
+        // initOneSignal()
+        // if (!Notification) {
+        //     alert('Desktop notifications not available in your browser. Try Chromium.');
+        //     return;
+        // }
+        // if (Notification.permission !== 'granted') {
+        //     Notification.requestPermission();
+        // }
     }, []);
 
     // useEffect(() => {
@@ -179,14 +186,6 @@ const App = ({ Component, pageProps }) => {
                 initialize(document, 'freshchat-js-sdk');
             }
             window.addEventListener ? window.addEventListener('load', initiateCall, !1) : window.attachEvent('load', initiateCall, !1);
-
-            if (!Notification) {
-                alert('Desktop notifications not available in your browser. Try Chromium.');
-                return;
-            }
-            if (Notification.permission !== 'granted') {
-                Notification.requestPermission();
-            }
         }
     }, [language]);
 
