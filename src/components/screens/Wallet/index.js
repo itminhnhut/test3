@@ -91,7 +91,8 @@ const Wallet = () => {
     // Rdx
     const auth = useSelector((state) => state.auth?.user) || null;
     const allWallet = useSelector((state) => state.wallet?.SPOT) || null;
-    const allInsuranceWallet = useSelector((state) => state.wallet.INSURANCE) || null;
+    const allInsuranceWallet = useSelector((state) => state.wallet?.INSURANCE) || null;
+    console.log('allInsuranceWallet:', allInsuranceWallet);
     const allFuturesWallet = useSelector((state) => state.wallet?.FUTURES) || null;
     const allNAOFuturesWallet = useSelector((state) => state.wallet?.NAO_FUTURES) || null;
     const allPartnersWallet = useSelector((state) => state.wallet?.PARTNERS) || null;
@@ -138,7 +139,8 @@ const Wallet = () => {
             [WalletType.FUTURES]: 'allFuturesAsset',
             [WalletType.NAO_FUTURES]: 'allNAOFuturesAsset',
             [WalletType.INSURANCE]: 'allInsuranceAsset',
-            [WalletType.PARTNERS]: 'allPartnersAsset'
+            [WalletType.PARTNERS]: 'allPartnersAsset',
+            [WalletType.INSURANCE]: 'allInsuranceAsset'
         }?.[walletType];
         if (!stateKey) return;
         setState({ [stateKey]: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
@@ -255,6 +257,10 @@ const Wallet = () => {
     }, [allNAOFuturesWallet, assetConfig]);
 
     useEffect(() => {
+        walletMapper(WalletType.INSURANCE, allInsuranceWallet, assetConfig);
+    }, [allInsuranceWallet, assetConfig]);
+
+    useEffect(() => {
         walletMapper(WalletType.PARTNERS, allPartnersWallet, assetConfig);
     }, [allPartnersWallet, assetConfig]);
 
@@ -276,7 +282,7 @@ const Wallet = () => {
             futures: 'allFuturesAsset',
             naoFutures: 'allNAOFuturesAsset',
             insurance: 'allInsuranceAsset',
-            partners: 'allPartnersAsset'
+            partners: 'allPartnersAsset',
         };
         const walletList = walletTypes.reduce((accu, walletType) => ({ ...accu, [walletType]: [] }), {});
 

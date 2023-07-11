@@ -4,7 +4,7 @@ import { ADD_NOTIFICATION_UNREAD_COUNT, SET_NOTIFICATION_UNREAD_COUNT } from 'sr
 import debounce from 'lodash/debounce';
 import fetchAPI from 'utils/fetch-api';
 import { API_GET_SOCKETIO_AUTH_KEY } from './apis';
-import { ApiStatus, UserSocketEvent } from './const';
+import { ApiStatus, UserSocketEvent, WalletTypeById } from './const';
 import Emitter from 'redux/actions/emitter';
 
 let WS;
@@ -50,34 +50,15 @@ export const authUserSocket = debounce(async (dispatch) => {
 
 function onChangeWallet(socket, dispatch) {
     const event = `user:update_balance`;
-    const WalletType = {
-        SPOT: 0,
-        MARGIN: 1,
-        FUTURES: 2,
-        P2P: 3,
-        POOL: 4,
-        EARN: 5,
-        NAO_FUTURES: 9
-    };
 
-    const WalletMap = [
-        'SPOT',
-        'MARGIN',
-        'FUTURES',
-        'P2P',
-        'POOL',
-        'EARN',
-        'NAO_FUTURES'
-    ];
-
-    Object.values(WalletType)
-        .forEach(_type => {
-            const eventKey = event + (_type > 0 ? `:${_type}` : '');
+    Object.keys(WalletTypeById)
+        .forEach(walletId => {
+            const eventKey = event + (walletId > 0 ? `:${walletId}` : '');
             socket.on(eventKey, data => {
                 dispatch({
                     type: types.UPDATE_WALLET,
                     payload: data,
-                    walletType: WalletMap[_type === 9 ? 6 : _type]
+                    walletType: WalletTypeById[walletId]
                 });
             });
         });
