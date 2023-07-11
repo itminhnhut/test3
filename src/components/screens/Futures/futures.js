@@ -25,6 +25,7 @@ import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTe
 import classNames from 'classnames';
 import DefaultMobileView from 'src/components/common/DefaultMobileView';
 import { FuturesSettings } from 'redux/reducers/futures';
+import { useLocalStorage } from 'react-use';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -32,6 +33,7 @@ const FuturesProfitEarned = dynamic(() => import('components/screens/Futures/Tak
 
 const INITIAL_STATE = {
     layouts: futuresGridConfig.layoutsVndc,
+    breakpoint: '2xl',
     loading: false,
     pair: null,
     prevPair: null,
@@ -56,8 +58,13 @@ const initFuturesComponent = {
     // [FuturesSettings.show_sl_tp_order_line]: true
 };
 
+const getDataGridByKey = ({ key, breakpoint }) => futuresGridConfig.layoutsVndc[breakpoint].find((layout) => layout.i === key);
+
 const Futures = () => {
     const [state, set] = useState(INITIAL_STATE);
+
+    const [get, setLocal] = useLocalStorage('settingLayoutFutures1');
+
     const dispatch = useDispatch();
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const userSocket = useSelector((state) => state.socket.userSocket);
@@ -125,22 +132,6 @@ const Futures = () => {
         };
     }, [userSocket]);
 
-    const getLayouts = (layouts) => {
-        return futuresGridConfig.layoutsVndc;
-    };
-
-    const onLayoutChange = (layout, layouts, isVNDC) => {
-        const _layouts = getLayouts(layouts);
-        console.log(layout, _layouts);
-        setState({
-            layouts: futuresGridConfig.layoutsVndc,
-            // favoritePairLayout: layout?.find((o) => o.i === futuresGridKey.favoritePair),
-            // orderBookLayout: layout?.find((o) => o.i === futuresGridKey.orderBook),
-            // tradeRecordLayout: layout?.find((o) => o.i === futuresGridKey.tradeRecord),
-            forceUpdateState: state.forceUpdateState + 1
-        });
-    };
-
     useEffect(() => {
         if (marketWatch?.[state.pair]) {
             setState({
@@ -161,14 +152,6 @@ const Futures = () => {
     // Re-load Previous Pair
     useEffect(() => {
         if (router?.query?.pair) {
-            // if (router.query.pair.indexOf('USDT') !== -1) {
-            //     router.push(
-            //         `${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
-            //         undefined,
-            //         { shallow: true }
-            //     );
-            //     return;
-            // }
             setState({ pair: router.query.pair });
             localStorage.setItem(LOCAL_STORAGE_KEY.PreviousFuturesPair, router.query.pair);
         }
@@ -198,7 +181,7 @@ const Futures = () => {
 
     useEffect(() => {
         setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
-    }, [pairConfig, userSettings, state.layouts]);
+    }, [pairConfig, userSettings]);
 
     useEffect(() => {
         const settings = localStorage.getItem('settingLayoutFutures');
@@ -238,7 +221,7 @@ const Futures = () => {
                         {isMediumDevices ? (
                             <GridLayout
                                 className="layout"
-                                layouts={state.layouts}
+                                layouts={futuresGridConfig.layoutsVndc}
                                 breakpoints={futuresGridConfig.breakpoints}
                                 cols={futuresGridConfig.cols}
                                 margin={[-1, -1]}
@@ -246,91 +229,105 @@ const Futures = () => {
                                 rowHeight={24}
                                 // draggableHandle=".dragHandleArea"
                                 // draggableCancel=".dragCancelArea"
-                                // onLayoutChange={(_layout, _layouts) => onLayoutChange(_layout, _layouts)}
-                                onBreakpointChange={(e) => console.log(e)}
+                                onLayoutChange={(currentLayouts,_layouts) => {
+                                    console.log('_layouts:', _layouts)
+                                    //    console.log('currentLayouts:', currentLayouts)
+                                }}
+                                onBreakpointChange={(breakpoint) => setState({ breakpoint })}
                                 onResize={(e) =>
                                     setState({
                                         forceUpdateState: state.forceUpdateState + 1
                                     })
                                 }
                             >
-                                <div
-                                    key={futuresGridKey.favoritePair}
-                                    className={classNames('border-b border-r border-divider dark:border-divider-dark', {
-                                        hidden: !filterLayout.isShowFavorites
-                                    })}
-                                >
-                                    <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
-                                </div>
-                                <div
-                                    key={futuresGridKey.pairDetail}
-                                    className={classNames('relative z-20 border-r border-divider dark:border-divider-dark', {
-                                        hidden: !filterLayout.isShowPairDetail
-                                    })}
-                                >
-                                    <FuturesPairDetail
-                                        pairPrice={state.pairPrice}
-                                        pairConfig={pairConfig}
-                                        forceUpdateState={state.forceUpdateState}
-                                        isVndcFutures={state.isVndcFutures}
-                                        isAuth={!!auth}
-                                    />
-                                </div>
-                                <div
-                                    id="futures_containter_chart"
-                                    key={futuresGridKey.chart}
-                                    className={classNames('border border-l-0 border-divider dark:border-divider-dark', {
-                                        hidden: !filterLayout.isShowChart
-                                    })}
-                                >
-                                    <FuturesChart
-                                        chartKey="futures_containter_chart"
-                                        pair={pairConfig?.pair}
-                                        initTimeFrame=""
-                                        isVndcFutures={state.isVndcFutures}
-                                        ordersList={ordersList}
-                                    />
-                                </div>
-                                <div
-                                    key={futuresGridKey.tradeRecord}
-                                    className={classNames('border-t border-r border-divider dark:border-divider-dark !h-auto', {
-                                        hidden: !filterLayout.isShowOpenOrders
-                                    })}
-                                >
-                                    <FuturesTradeRecord
-                                        isVndcFutures={true}
-                                        layoutConfig={state.tradeRecordLayout}
-                                        pairConfig={pairConfig}
-                                        pairPrice={state.pairPrice}
-                                        isAuth={!!auth}
-                                        pair={state.pair}
-                                    />
-                                </div>
-                                <div
-                                    key={futuresGridKey.placeOrder}
-                                    className={classNames('border-l border-divider dark:border-divider-dark', {
-                                        hidden: !filterLayout.isShowPlaceOrder
-                                    })}
-                                >
-                                    <FuturesPlaceOrderVndc
-                                        isAuth={!!auth}
-                                        pairConfig={pairConfig}
-                                        userSettings={userSettings}
-                                        assumingPrice={state.assumingPrice}
-                                        isVndcFutures={state.isVndcFutures}
-                                        pairPrice={state.pairPrice}
-                                        pair={state.pair}
-                                        decimals={decimals}
-                                    />
-                                </div>
-                                <div
-                                    key={futuresGridKey.marginRatio}
-                                    className={classNames('border-t border-divider dark:border-divider-dark', {
-                                        hidden: !filterLayout.isShowAssets || !auth
-                                    })}
-                                >
-                                    <FuturesMarginRatioVndc pairConfig={pairConfig} auth={auth} lastPrice={state.pairPrice?.lastPrice} decimals={decimals} />
-                                </div>
+                                {filterLayout.isShowFavorites && (
+                                    <div
+                                        data-grid={getDataGridByKey({ key: futuresGridKey.favoritePair, breakpoint: state.breakpoint })}
+                                        key={futuresGridKey.favoritePair}
+                                        className={classNames('border-b border-r border-divider dark:border-divider-dark')}
+                                    >
+                                        <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
+                                    </div>
+                                )}
+                                {filterLayout.isShowPairDetail && (
+                                    <div
+                                        data-grid={getDataGridByKey({ key: futuresGridKey.pairDetail, breakpoint: state.breakpoint })}
+                                        key={futuresGridKey.pairDetail}
+                                        className={classNames('relative z-20 border-r border-divider dark:border-divider-dark')}
+                                    >
+                                        <FuturesPairDetail
+                                            pairPrice={state.pairPrice}
+                                            pairConfig={pairConfig}
+                                            forceUpdateState={state.forceUpdateState}
+                                            isVndcFutures={state.isVndcFutures}
+                                            isAuth={!!auth}
+                                        />
+                                    </div>
+                                )}
+                                {filterLayout.isShowChart && (
+                                    <div
+                                        id="futures_containter_chart"
+                                        key={futuresGridKey.chart}
+                                        data-grid={getDataGridByKey({ key: futuresGridKey.chart, breakpoint: state.breakpoint })}
+                                        className={classNames('border border-l-0 border-divider dark:border-divider-dark')}
+                                    >
+                                        <FuturesChart
+                                            chartKey="futures_containter_chart"
+                                            pair={pairConfig?.pair}
+                                            initTimeFrame=""
+                                            isVndcFutures={state.isVndcFutures}
+                                            ordersList={ordersList}
+                                        />
+                                    </div>
+                                )}
+                                {filterLayout.isShowOpenOrders && (
+                                    <div
+                                        data-grid={getDataGridByKey({ key: futuresGridKey.tradeRecord, breakpoint: state.breakpoint })}
+                                        key={futuresGridKey.tradeRecord}
+                                        className={classNames('border-t border-r border-divider dark:border-divider-dark !h-auto')}
+                                    >
+                                        <FuturesTradeRecord
+                                            isVndcFutures={true}
+                                            layoutConfig={state.tradeRecordLayout}
+                                            pairConfig={pairConfig}
+                                            pairPrice={state.pairPrice}
+                                            isAuth={!!auth}
+                                            pair={state.pair}
+                                        />
+                                    </div>
+                                )}
+                                {filterLayout.isShowPlaceOrder && (
+                                    <div
+                                        data-grid={getDataGridByKey({ key: futuresGridKey.placeOrder, breakpoint: state.breakpoint })}
+                                        key={futuresGridKey.placeOrder}
+                                        className={classNames('border-l border-divider dark:border-divider-dark')}
+                                    >
+                                        <FuturesPlaceOrderVndc
+                                            isAuth={!!auth}
+                                            pairConfig={pairConfig}
+                                            userSettings={userSettings}
+                                            assumingPrice={state.assumingPrice}
+                                            isVndcFutures={state.isVndcFutures}
+                                            pairPrice={state.pairPrice}
+                                            pair={state.pair}
+                                            decimals={decimals}
+                                        />
+                                    </div>
+                                )}
+                                {filterLayout.isShowAssets && auth && (
+                                    <div
+                                        data-grid={getDataGridByKey({ key: futuresGridKey.marginRatio, breakpoint: state.breakpoint })}
+                                        key={futuresGridKey.marginRatio}
+                                        className={classNames('border-t border-divider dark:border-divider-dark')}
+                                    >
+                                        <FuturesMarginRatioVndc
+                                            pairConfig={pairConfig}
+                                            auth={auth}
+                                            lastPrice={state.pairPrice?.lastPrice}
+                                            decimals={decimals}
+                                        />
+                                    </div>
+                                )}
                             </GridLayout>
                         ) : (
                             <DefaultMobileView />

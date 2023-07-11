@@ -68,7 +68,7 @@ export default {
                 i: futuresGridKey.favoritePair,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -79,7 +79,7 @@ export default {
                 i: futuresGridKey.pairDetail,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -90,7 +90,7 @@ export default {
                 i: futuresGridKey.chart,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -101,7 +101,7 @@ export default {
                 i: futuresGridKey.tradeRecord,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -113,7 +113,7 @@ export default {
                 minW: 4,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -124,7 +124,7 @@ export default {
                 i: futuresGridKey.marginRatio,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             }
         ],
@@ -137,7 +137,7 @@ export default {
                 i: futuresGridKey.favoritePair,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -148,7 +148,7 @@ export default {
                 i: futuresGridKey.pairDetail,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -159,7 +159,7 @@ export default {
                 i: futuresGridKey.chart,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -170,7 +170,7 @@ export default {
                 i: futuresGridKey.tradeRecord,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -182,7 +182,7 @@ export default {
                 minW: 4,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -193,7 +193,7 @@ export default {
                 i: futuresGridKey.marginRatio,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             }
         ],
@@ -206,7 +206,7 @@ export default {
                 i: futuresGridKey.favoritePair,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -217,7 +217,7 @@ export default {
                 i: futuresGridKey.pairDetail,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -228,7 +228,7 @@ export default {
                 i: futuresGridKey.chart,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -239,7 +239,7 @@ export default {
                 i: futuresGridKey.tradeRecord,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -250,7 +250,7 @@ export default {
                 i: futuresGridKey.placeOrder,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -261,7 +261,7 @@ export default {
                 i: futuresGridKey.marginRatio,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             }
         ],
@@ -274,7 +274,7 @@ export default {
                 i: futuresGridKey.favoritePair,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -285,7 +285,7 @@ export default {
                 i: futuresGridKey.pairDetail,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -296,7 +296,7 @@ export default {
                 i: futuresGridKey.chart,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -307,7 +307,7 @@ export default {
                 i: futuresGridKey.tradeRecord,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -318,7 +318,7 @@ export default {
                 i: futuresGridKey.placeOrder,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             },
             {
@@ -329,7 +329,7 @@ export default {
                 i: futuresGridKey.marginRatio,
                 moved: false,
                 static: false,
-                isDraggable: false,
+                isDraggable: true, // false,
                 isResizable: false
             }
         ]
