@@ -58,6 +58,9 @@
         "position_id": "Position ID",
         "wallet_type": "Wallet Type",
         "volume": "Volume",
-        "fee": "Fee"
+        "fee": "Fee",
+        "expect": "Expectation",
+        "expect_sell": "Bear",
+        "expect_buy": "Bull"
     }
 }
