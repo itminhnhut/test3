@@ -27,7 +27,7 @@ const statusGroup = {
     ENABLE: 1
 };
 
-const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules, userID }) => {
+const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules, userID, showPnl }) => {
     const quoteAsset = rowData?.quoteAsset ?? 'VNDC';
     const context = useContext(AlertContext);
     const { t } = useTranslation();
@@ -376,26 +376,30 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 className="!p-4 sm:!py-4 sm:!px-12 mt-8 !min-h-[92px] sm:flex-row w-full sm:min-w-[577px] dark:bg-none dark:bg-darkBlue-3"
                             >
                                 <div className="flex sm:flex-row sm:justify-around flex-col w-full">
-                                    <div className="flex flex-row sm:flex-col gap-1 justify-between items-center">
-                                        <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">
-                                            {t('nao:contest:pnl_ranking')}
-                                        </label>
-                                        <span className="font-semibold">#{dataSource?.current_rank_pnl}</span>
-                                    </div>
-                                    <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
-                                    <div className="flex flex-row sm:flex-col gap-1 justify-between items-center">
-                                        <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">
-                                            {t('nao:contest:per_pnl')}
-                                        </label>
-                                        <span className={`font-semibold flex items-center ${getColor(dataSource?.pnl)}`}>
-                                            <IconArrowOnus
-                                                className={classNames('w-[7px] mr-1.5', dataSource?.pnl > 0 ? '' : 'rotate-180')}
-                                                color="currentColor"
-                                            />
-                                            {`${dataSource?.pnl ? Math.abs(dataSource?.pnl).toFixed(2) : '-'} %`}
-                                        </span>
-                                    </div>
-                                    <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
+                                    {showPnl && (
+                                        <>
+                                            <div className="flex flex-row sm:flex-col gap-1 justify-between items-center">
+                                                <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">
+                                                    {t('nao:contest:pnl_ranking')}
+                                                </label>
+                                                <span className="font-semibold">#{dataSource?.current_rank_pnl}</span>
+                                            </div>
+                                            <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
+                                            <div className="flex flex-row sm:flex-col gap-1 justify-between items-center">
+                                                <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">
+                                                    {t('nao:contest:per_pnl')}
+                                                </label>
+                                                <span className={`font-semibold flex items-center ${getColor(dataSource?.pnl)}`}>
+                                                    <IconArrowOnus
+                                                        className={classNames('w-[7px] mr-1.5', dataSource?.pnl > 0 ? '' : 'rotate-180')}
+                                                        color="currentColor"
+                                                    />
+                                                    {`${dataSource?.pnl ? Math.abs(dataSource?.pnl).toFixed(2) : '-'} %`}
+                                                </span>
+                                            </div>
+                                            <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
+                                        </>
+                                    )}
                                     <div className="flex flex-row sm:flex-col gap-1 justify-between items-center">
                                         <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">
                                             {t('nao:contest:volume_ranking')}
@@ -493,16 +497,20 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                                     </span>
                                                                 </div>
                                                             )}
-                                                            <div className="flex items-center justify-between leading-6">
-                                                                <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
-                                                                <span className={`text-right font-semibold flex items-center ${getColor(item?.pnl)}`}>
-                                                                    <IconArrowOnus
-                                                                        className={classNames('w-[7px] mr-1.5', item?.pnl > 0 ? '' : 'rotate-180')}
-                                                                        color="currentColor"
-                                                                    />
-                                                                    {`${item?.pnl ? Math.abs(item?.pnl).toFixed(2) : '-'} %`}
-                                                                </span>
-                                                            </div>
+                                                            {showPnl && (
+                                                                <div className="flex items-center justify-between leading-6">
+                                                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                                        {t('nao:contest:per_pnl')}
+                                                                    </div>
+                                                                    <span className={`text-right font-semibold flex items-center ${getColor(item?.pnl)}`}>
+                                                                        <IconArrowOnus
+                                                                            className={classNames('w-[7px] mr-1.5', item?.pnl > 0 ? '' : 'rotate-180')}
+                                                                            color="currentColor"
+                                                                        />
+                                                                        {`${item?.pnl ? Math.abs(item?.pnl).toFixed(2) : '-'} %`}
+                                                                    </span>
+                                                                </div>
+                                                            )}
                                                         </>
                                                     )}
                                                 </div>
@@ -556,7 +564,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 suffix={t('common:hours')}
                             />
                             <Column
-                                visible={!isPending.group}
+                                visible={!isPending.group && showPnl}
                                 minWidth={100}
                                 align="right"
                                 className="font-semibold"

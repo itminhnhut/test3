@@ -508,7 +508,16 @@ const Contest = (props) => {
         <MaldivesLayout>
             <div className="mt-2">
                 <LayoutNaoToken isHeader={false}>
-                    {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} userID={userID} />}
+                    {showDetail && (
+                        <ContestDetail
+                            {...props}
+                            showPnl={showPnl}
+                            rowData={rowData.current}
+                            sortName={sortName.current}
+                            onClose={onCloseDetail}
+                            userID={userID}
+                        />
+                    )}
                     {showInvitations && (
                         <InvitationsDetail
                             {...props}

@@ -6,11 +6,13 @@ import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
+import { getS3Url } from 'redux/actions/utils';
+
 import { useWindowSize } from 'react-use';
 import styled from 'styled-components';
 
-import Skeleton from 'components/staking/skeleton';
 import StakingSEO from 'components/staking/SEO';
+import Skeleton from 'components/staking/skeleton';
 
 const CalculateInterest = dynamic(() => import('components/staking/CalculateInterest.js'), { ssr: false });
 const HeaderStaking = dynamic(() => import('components/staking/Header.js'), {
@@ -40,7 +42,11 @@ const Reference = () => {
                         <WhyChooseNamiStaking />
                         <CalculateInterest />
                     </div>
-                    <WrapperAssetFAQ mobile={isMobile} className="relative pt-0  lg:pt-[120px]" id="asset_digital">
+                    <WrapperAssetFAQ
+                        className="relative pt-0  lg:pt-[120px]"
+                        id="asset_digital"
+                        url={`${isMobile ? '/images/staking/bg_digital_faq_mb.png' : '/images/staking/bg_digital_faq.png'}`}
+                    >
                         <AssetDigitalStaking isMobile={isMobile} />
                         <FAQStaking isDark={isDark} />
                     </WrapperAssetFAQ>
@@ -57,7 +63,7 @@ export const getStaticProps = async ({ locale }) => ({
 });
 
 const WrapperAssetFAQ = styled.section`
-    background-image: url(${(props) => (props.mobile ? '/images/staking/bg_digital_faq_mb.png' : '/images/staking/bg_digital_faq.png')});
+    background-image: url(${(props) => `${getS3Url(props.url)}`});
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 100% 100%;

@@ -437,7 +437,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     </div>
                 </div>
             </div>
-
             {state.orderDetail && (
                 <ModalQr
                     orderId={state?.orderDetail?._id}

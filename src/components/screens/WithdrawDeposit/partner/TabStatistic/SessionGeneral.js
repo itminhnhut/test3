@@ -16,7 +16,7 @@ const SessionGeneral = ({ filter, setFilter }) => {
         {
             url: API_GET_COMMISSION_REPORT_PARTNER,
             params: {
-                from: convertDateToMs(filter?.range?.startDate),
+                from: filter?.range?.startDate ? convertDateToMs(filter?.range?.startDate) : 0,
                 to: convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf')
             }
         },
@@ -28,69 +28,53 @@ const SessionGeneral = ({ filter, setFilter }) => {
         <div>
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
-                <div className="font-semibold text-[20px] leading-6">{t('dw_partner:report_commission')}</div>
-                {/* <FilterTimeTab isTabAll filter={filter} setFilter={setFilter} /> */}
-
-                <FilterTimeTabV2 filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll maxMonths={3} isDeepBackground={true}/>
+                <div className="txtPri-3">{t('dw_partner:report_commission')}</div>
+                <FilterTimeTabV2 filter={filter} setFilter={setFilter} positionCalendar="right" isTabAll maxMonths={3} isDeepBackground={true} />
             </div>
 
             {/* Body */}
-            <div className="block md:flex gap-x-6">
-                <CardWrapper className="flex-auto flex">
-                    <div className="w-1/2 pr-7 border-r border-divider dark:border-divider-dark">
-                        {/* top */}
-                        <div>
-                            <h1 className="txtSecond-3">{t('dw_partner:total_commissions')}</h1>
-                            <div className="pt-4 txtPri-5">
-                                {loading ? <Skeletor width="100px" /> : formatNanNumber(data?.totalCommission?.convertedCommissionValue, 0)}
-                            </div>
-                        </div>
 
-                        {/* divider */}
-                        <hr className="border-divider dark:border-divider-dark my-4" />
-
-                        {/* bottom */}
-                        <div>
-                            <Tooltip place="top" effect="solid" isV3 id="commission-rate-description">
-                                <div className="max-w-[300px] py-2 text-sm z-50">{t('dw_partner:commission_rate_description')}</div>
-                            </Tooltip>
-                            <div data-tip="" className="inline-block" data-for="commission-rate-description" id="commission-rate-description">
-                                <h1 className="txtSecond-3 nami-underline-dotted">{t('dw_partner:commission_rate')}</h1>{' '}
-                            </div>
-
-                            <div className="pt-4 txtPri-5">{loading ? <Skeletor width="100px" /> : `${formatPercentage(data?.commissionRate * 100, 2)}%`}</div>
+            <CardWrapper className="w-full flex justify-between items-center txtSecond-3 !p-6">
+                <div className="flex gap-x-10">
+                    <div>
+                        <span>{t('dw_partner:total_commissions')}</span>
+                        <div className="pt-2 txtPri-1">
+                            {loading ? <Skeletor width="100px" /> : formatNanNumber(data?.totalCommission?.convertedCommissionValue, 0) + ' VNDC'}
                         </div>
                     </div>
-                    <div className="w-1/2 flex flex-col items-end justify-center">
-                        <h1 className="txtSecond-3">
-                            <Trans i18nKey="dw_partner:total_volume">
-                                <span className="text-teal" />
-                                <span className="text-txtPrimary dark:text-txtPrimary-dark" />
-                            </Trans>
-                        </h1>
-                        <div className="pt-4 txtPri-6 flex items-center">
-                            <span className="text-green-3 dark:text-green-2">
-                                {loading ? <Skeletor width="50px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
-                            </span>
-                            /{loading ? <Skeletor width="40px" /> : <span>{formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}</span>}
+                    <div>
+                        <Tooltip place="top" effect="solid" isV3 id="commission-rate-description">
+                            <div className="max-w-[300px] py-2 text-sm z-50">{t('dw_partner:commission_rate_description')}</div>
+                        </Tooltip>
+                        <div data-tip="" className="inline-block" data-for="commission-rate-description" id="commission-rate-description">
+                            <h1 className="nami-underline-dotted">{t('dw_partner:commission_rate')}</h1>{' '}
                         </div>
+                        <div className="pt-2 txtPri-1">{loading ? <Skeletor width="100px" /> : `${formatPercentage(data?.commissionRate * 100, 2)}%`} </div>
                     </div>
-                </CardWrapper>
-                <CardWrapper className="flex gap-x-6 justify-between mt-8 md:mt-0">
-                    <div className="max-w-[237px] flex flex-col">
-                        <div className="txtPri-5 pb-4">{t('dw_partner:standard_partner')}</div>
-                        <div className="txtSecond-3 text-left flex items-center flex-auto">{t('dw_partner:standard_partner_des')}</div>
+                    <div>
+                        <span>{t('dw_partner:fee_received')}</span>
+                        <div className="pt-2 txtPri-1">{loading ? <Skeletor width="100px" /> : formatNanNumber(data?.totalFee, 0) + ' VND'}</div>
                     </div>
-                    <div
-                        className="min-w-[168px] min-h-[168px]"
-                        style={{
-                            backgroundImage: `url('${getS3Url('/images/screen/partner/RegisterPartnerSuccess.png')}')`,
-                            // backgroundImage: `url('/images/screen/partner/RegisterPartnerSuccess.png')`,
-                            backgroundSize: 'cover'
-                        }}
-                    ></div>
-                </CardWrapper>
-            </div>
+                </div>
+                <div className="flex flex-col items-end justify-center">
+                    <h1 className="txtSecond-3">
+                        <Trans i18nKey="dw_partner:total_volume">
+                            <span className="text-green-3 dark:text-green-2" />
+                            <span />
+                        </Trans>
+                    </h1>
+                    <div className="pt-1 txtPri-3 flex items-center">
+                        <span className="text-green-3 dark:text-green-2">
+                            {loading ? <Skeletor width="50px" /> : formatNanNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
+                        </span>
+                        {loading ? (
+                            <Skeletor width="40px" />
+                        ) : (
+                            <span>/{formatNanNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}&nbsp;VNDC</span>
+                        )}
+                    </div>
+                </div>
+            </CardWrapper>
         </div>
     );
 };
