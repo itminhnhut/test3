@@ -18,27 +18,28 @@ import { useEffect } from 'react';
 import colors from 'styles/colors';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import classNames from 'classnames';
 
 const KYCUnVerifiedTag = ({ t }) => (
-    <TagV2 className="ml-3" type="default">
+    <TagV2 className="md:ml-3 mx-auto" type="default">
         {t('profile:kyc_unverified')}
     </TagV2>
 );
 const KYCPendingTag = ({ t }) => (
-    <TagV2 className="ml-3" type="warning">
+    <TagV2 className="md:ml-3 mx-auto" type="warning">
         {t('profile:kyc_wait')}
     </TagV2>
 );
 
 const KYCVerifiedTag = ({ t }) => (
-    <TagV2 className="ml-3" type="success">
+    <TagV2 className="md:ml-3 mx-auto" type="success">
         {t('profile:kyc_verified')}
     </TagV2>
 );
 
 // chờ Ekyc xác minh
 const KYCTempLocking = ({ t }) => (
-    <TagV2 className="ml-3" type="failed">
+    <TagV2 className="md:ml-3 mx-auto" type="failed">
         {t('navbar:temp_locking')}
     </TagV2>
 );
@@ -96,35 +97,50 @@ export default function AccountLayout({ children, type }) {
                 <Container className="mal-container px-4">
                     <div className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between">
                         <AccountAvatar currentAvatar={auth?.user?.avatar} />
-                        <div className="mt-6 md:mt-0 md:ml-4 flex-1 flex flex-col md:flex-row justify-between items-center">
-                            <div className="">
+                        <div className="mt-6 md:mt-0 md:ml-4 flex-1 flex flex-col md:flex-row justify-between items-center w-full">
+                            <div className="text-center mb:text-left">
                                 <div className="mb-2 flex items-center">
-                                    <div className="text-xl md:text-2xl !leading-7 font-semibold">
+                                    <div className="text-xl md:text-2xl !leading-7 font-semibold flex-1">
                                         {auth?.user?.name || auth?.user?.username || auth?.user?.email}
                                     </div>
-                                    {{
-                                        [KYC_STATUS.NO_KYC]: <KYCUnVerifiedTag t={t} />,
-                                        [KYC_STATUS.REJECT]: <KYCUnVerifiedTag t={t} />,
-                                        [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                                        [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />,
-                                        [KYC_STATUS.LOCKING]: <KYCTempLocking t={t} />
-                                    }[auth?.user?.kyc_status] || null}
+                                    <div className="mb:block hidden">
+                                        {{
+                                            [KYC_STATUS.NO_KYC]: <KYCUnVerifiedTag t={t} />,
+                                            [KYC_STATUS.REJECT]: <KYCUnVerifiedTag t={t} />,
+                                            [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
+                                            [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />,
+                                            [KYC_STATUS.LOCKING]: <KYCTempLocking t={t} />
+                                        }[auth?.user?.kyc_status] || null}
+                                    </div>
                                 </div>
                                 <TextCopyable
                                     text={auth?.user?.code}
                                     className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark justify-center md:justify-start"
                                 />
+                                {![KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(auth?.user?.kyc_status) &&
+                                <div className="mb:hidden block mt-3">
+                                    {{
+
+                                        [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
+                                        [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />,
+                                        [KYC_STATUS.LOCKING]: <KYCTempLocking t={t} />
+                                    }[auth?.user?.kyc_status] || null}
+                                </div>}
                             </div>
-                            {[KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(auth?.user?.kyc_status) && router.asPath === PATHS.ACCOUNT.PROFILE && (
-                                <Button
-                                    className="w-[90%] md:w-auto px-6 mt-4 md:mt-0"
-                                    onClick={() => {
-                                        router.push(PATHS.ACCOUNT.IDENTIFICATION, null, { scroll: false });
-                                    }}
-                                >
-                                    {t('profile:verify_account')}
-                                </Button>
-                            )}
+                            {[KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(auth?.user?.kyc_status) &&
+                                [PATHS.ACCOUNT.PROFILE, PATHS.ACCOUNT.IDENTIFICATION].includes(router.asPath) && (
+                                    <Button
+                                        className={classNames(
+                                            'w-full md:w-auto px-6 mt-6 md:mt-0',
+                                            router.asPath === PATHS.ACCOUNT.IDENTIFICATION && 'md:hidden'
+                                        )}
+                                        onClick={() => {
+                                            router.push(PATHS.ACCOUNT.IDENTIFICATION, null, { scroll: false });
+                                        }}
+                                    >
+                                        {t('profile:verify_account')}
+                                    </Button>
+                                )}
                         </div>
                     </div>
                     <div className="relative flex tracking-normal mt-12">

@@ -22,7 +22,7 @@ const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 const NotKycCard = ({ t, className }) => {
     return (
         <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
-            <img className="mx-auto w-[7.5rem] w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc_require.png')} />
+            <img className="mx-auto w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc/unverified.png')} />
             <p className="text-teal font-semibold text-xl md:text-2xl mb-1 mt-6">{t('identification:account.not_verified')}</p>
             <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('identification:account.not_verified_content')}</span>
         </div>
@@ -98,7 +98,7 @@ const KYCStepCard = ({ t, className }) => {
 const ProcessKycCard = ({ t, className }) => {
     return (
         <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
-            <img className="mx-auto w-[7.5rem] w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc_wait.png')} />
+            <img className="mx-auto w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc/pending.png')} />
             <p className="text-teal font-semibold tetx-xl md:text-2xl mb-1 mt-6">{t('identification:account.process')}</p>
             <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('identification:account.process_content')}</span>
         </div>
@@ -108,7 +108,7 @@ const ProcessKycCard = ({ t, className }) => {
 const LockingKycCard = ({ t, className }) => {
     return (
         <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
-            <img className="mx-auto w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc_wait.png')} />
+            <img className="mx-auto w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc/locked.png')} />
             <p className="text-teal font-semibold text-xl md:text-2xl mb-1 mt-6">{t('common:account_locking')}</p>
             <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('common:account_locking_content')}</span>
             <TextButton className={'mt-1'} onClick={() => window?.fcWidget?.open({ name: 'Inbox', replyText: '' })}>
@@ -120,15 +120,15 @@ const LockingKycCard = ({ t, className }) => {
 
 const CurrentFuturesCard = ({ t, className }) => {
     return (
-        <div className={classnames(className, 'flex flex-col justify-center p-6 bg-white dark:bg-darkBlue-3 rounded-xl px-6 py-auto')}>
+        <div className={classnames(className, 'flex flex-col justify-center p-6 bg-white dark:bg-darkBlue-3 rounded-xl py-auto')}>
             <div className="mb-8">
                 <p className="font-semibold text-xl md:text-2xl">{t('identification:current_futures:title')}</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-9 gap-x-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex items-center">
-                    <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_1_v2.png')} alt="Nami Exchange" />
+                    <img width={48} height={48} className='dark:bg-dark-2 dark:rounded-full' src={getS3Url('/images/screen/account/ic_feature_1_v2.png')} alt="Nami Exchange" />
                     <div className="ml-4">
-                        <p className="text-sm md:text-base font-semibold">{t('identification:current_futures:buy_sell')}</p>
+                        <p className="text-sm md:text-base font-semibold mb-1">{t('identification:current_futures:buy_sell')}</p>
                         <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">
                             {t('identification:current_futures:price_daily')}
                         </span>
@@ -136,9 +136,9 @@ const CurrentFuturesCard = ({ t, className }) => {
                 </div>
 
                 <div className="flex items-center">
-                    <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_2_v2.png')} alt="Nami Exchange" />
+                    <img width={48} height={48} className='dark:bg-dark-2 dark:rounded-full' src={getS3Url('/images/screen/account/ic_feature_2_v2.png')} alt="Nami Exchange" />
                     <div className="ml-4">
-                        <p className="text-sm md:text-base font-semibold">{t('identification:current_futures:deposit')}</p>
+                        <p className="text-sm md:text-base font-semibold mb-1">{t('identification:current_futures:deposit')}</p>
                         <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">
                             {t('identification:current_futures:unlimited')}
                         </span>
@@ -146,9 +146,9 @@ const CurrentFuturesCard = ({ t, className }) => {
                 </div>
 
                 <div className="flex items-center">
-                    <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_3_v2.png')} alt="Nami Exchange" />
+                    <Image width={48} height={48} className='dark:bg-dark-2 dark:rounded-full' src={getS3Url('/images/screen/account/ic_feature_4_v2.png')} />
                     <div className="ml-4">
-                        <p className="text-sm md:text-base font-semibold">{t('identification:current_futures:withdrawal')}</p>
+                        <p className="text-sm md:text-base font-semibold mb-1">{t('identification:current_futures:withdrawal')}</p>
                         <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">
                             {t('identification:current_futures:unlimited')}
                         </span>
@@ -156,9 +156,9 @@ const CurrentFuturesCard = ({ t, className }) => {
                 </div>
 
                 <div className="flex items-center">
-                    <Image width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_4_v2.png')} />
+                    <img width={48} height={48} className='dark:bg-dark-2 dark:rounded-full' src={getS3Url('/images/screen/account/ic_feature_3_v2.png')} alt="Nami Exchange" />
                     <div className="ml-4">
-                        <p className="text-sm md:text-base font-semibold">{t('identification:current_futures:other')}</p>
+                        <p className="text-sm md:text-base font-semibold mb-1">{t('identification:current_futures:other')}</p>
                         <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('identification:current_futures:reward')}</span>
                     </div>
                 </div>
@@ -169,13 +169,12 @@ const CurrentFuturesCard = ({ t, className }) => {
 
 const VerifiedKycCard = ({ t, className }) => {
     return (
-        <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 rounded-xl text-center px-10 py-12')}>
-            <img className="mx-auto w-[7.5rem] w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc_verified.png')} />
-            <span className="text-teal font-semibold md:leading-8 text-xl md:text-2xl mb-2 mt-6">
-                {t('identification:account.congratulations')}
-                <br />
-                {t('identification:account.verified')}
-            </span>
+        <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 rounded-xl text-center px-10 py-[3.75rem]')}>
+            <img className="mx-auto w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc/verified.png')} />
+            <div className="text-teal font-semibold text-xl md:text-2xl mt-6">
+                <div>{t('identification:account.congratulations')}</div>
+                <div>{t('identification:account.verified')}</div>
+            </div>
         </div>
     );
 };
