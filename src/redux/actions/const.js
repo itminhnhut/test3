@@ -476,8 +476,8 @@ export const WalletType = {
     BROKER: 'BROKER',
     EARN: 'EARN',
     ONUS: 'ONUS',
+    INSURANCE: 'INSURANCE',
     NAO_FUTURES: 'NAO_FUTURES',
-    INSURANCE: 'INSURANCE'
 };
 
 export const EarnWalletType = {
