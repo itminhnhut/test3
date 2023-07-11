@@ -14,12 +14,13 @@ import OrderStatusTag from 'components/common/OrderStatusTag';
 import Tooltip from 'components/common/Tooltip';
 
 const addNewRecord = (arr = [], newItems = []) => {
+    if (newItems.length >= LIMIT_ROW) return newItems.slice(0, LIMIT_ROW);
+
     newItems.forEach((newTrans, idx) => {
         if (arr.length >= LIMIT_ROW) arr.pop();
         arr.unshift({ ...newTrans, _id: idx });
     });
 
-    console.log('______arr: ', arr);
     return arr;
 };
 

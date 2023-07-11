@@ -484,13 +484,13 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                         </>
                     ) : (
                         <TextArea
-                            label="Danh sách Nami ID"
+                            label="Danh sách Nami ID hoặc Email"
                             value={state?.toListUser}
                             onChange={(value) => setState({ toListUser: value })}
-                            placeholder={'Nami001, Nami002, Nami03, ...'}
+                            placeholder={'Nami001, Nami002, Nami003, ...\n\nhoặc\n\nlamnv@nami.trade, abc@gmail.com, ...'}
                             className="pb-0 w-full"
                             classNameInput="!text-base font-semibold h-[176px]"
-                            rows={100}
+                            rows={1000}
                         />
                     )}
                 </CardWrapper>
@@ -529,7 +529,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                 onBackdropCb={() => setState({ isOpenModalPreview: false })}
                 btnCloseclassName="bg-white dark:bg-dark"
             >
-                <div className="my-6 text-left font-semibold text-[24px] leading-[30px] text-dark-2 dark:text-gray-4 hover:bg-transparent">
+                <div className="mb-6 text-left font-semibold text-[24px] leading-[30px] text-dark-2 dark:text-gray-4 hover:bg-transparent">
                     Xác nhận giao dịch
                 </div>
                 <div className="flex flex-col items-start justify-between gap-2">
@@ -562,11 +562,11 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                         </div>
                     ) : (
                         <div className="w-full py-2">
-                            <div className="max-h-[332px] h-[332px] overflow-y-scroll">
+                            <div className="max-h-[250px] h-[250px] overflow-y-scroll">
                                 {listUserMultiple.map((item) => {
                                     const { avatar, code, code_refer, email, id, kyc_status, name, phone, rank_id, status, username } = item;
                                     return (
-                                        <MCard key={'convert_small_ballance_' + id} addClass={'!px-0 !py-1 !my-2'}>
+                                        <MCard key={'convert_small_ballance_' + id} addClass={'!px-0 !py-0 first:!mt-0 !mt-2'}>
                                             <div className="w-full border p-4 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
                                                 {avatar ? (
                                                     <img src={avatar} alt="avatar_user" className="rounded-full w-16 h-16 bg-cover" />
