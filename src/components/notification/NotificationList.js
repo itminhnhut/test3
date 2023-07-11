@@ -164,7 +164,7 @@ const NotificationList = ({ btnClass }) => {
     }
     return (
         <>
-            {showNotiSetting ? <NotiSettingModal isMobile={false} isVisible={showNotiSetting} onClose={() => setShowNotiSetting(false)} language={language} t={t} /> : null}
+            {showNotiSetting ? <NotiSettingModal t={t} isMobile={false} isVisible={showNotiSetting} onClose={() => setShowNotiSetting(false)} language={language} /> : null}
             <div ref={ref} className="mal-navbar__hamburger__spacing h-full sm:relative">
                 <button
                     type="button"
@@ -236,7 +236,7 @@ const NotificationList = ({ btnClass }) => {
                                 </div>
                             )} */}
                         </div>
-                        <div className="max-h-[400px] sm:max-h-[488px]   min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
+                        <div className="max-h-[400px] sm:max-h-[488px] min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
 
                         <div className="font-semibold px-6 mb-2">
                             <div className="flex items-center justify-center">
@@ -349,7 +349,7 @@ export const NotiSettingModal = ({ isVisible, onClose, language, isMobile, t }) 
                 <div className='pb-6 w-full border-b-[1px] border-b-divider dark:border-b-divider-dark'>
                     <NotiToggle
                         updating={updating}
-                        text={notiGroup?.[NOTI_GROUP_KEYS.ALL]?.[language]}
+                        text={t(`navbar:noti_content.${NOTI_GROUP_KEYS.ALL.toLocaleLowerCase()}`, { defaultValue: notiGroup?.[NOTI_GROUP_KEYS.ALL]?.[language] })}
                         loading={loading}
                         isAvailable
                         isOn={userNotiSetting?.[NOTI_GROUP_KEYS.ALL]}
@@ -363,7 +363,7 @@ export const NotiSettingModal = ({ isVisible, onClose, language, isMobile, t }) 
                     return <div className='mt-6'>
                         <NotiToggle
                             updating={updating}
-                            text={notiGroup?.[key]?.[language]}
+                            text={t(`navbar:noti_content.${key?.toLocaleLowerCase()}`, { defaultValue: notiGroup?.[key]?.[language] })}
                             loading={loading}
                             isAvailable={userNotiSetting?.[NOTI_GROUP_KEYS.ALL]}
                             isOn={userNotiSetting?.[key]}

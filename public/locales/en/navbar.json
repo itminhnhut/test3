@@ -155,5 +155,14 @@
     "scan_qr": "Scan the QR code to download Nami Exchange",
     "down_with_qr": "Download Nami Exchange",
     "footer_title": "Secure Spot and Futures Exchange",
-    "noti_setting": "Notification Settings"
+    "noti_setting": "Notification Settings",
+    "noti_content": {
+        "all": "Allow notification",
+        "futures": "NAO Futures & Nami Futures",
+        "spot": "Spot & Swap",
+        "commission": "Commission",
+        "deposit_withdraw": "Deposit / Withdraw",
+        "promotion": "Promotion",
+        "system": "System"
+    }
 }
