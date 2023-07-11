@@ -29,6 +29,8 @@ import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceTo
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { ChevronRight } from 'react-feather';
+import colors from 'styles/colors';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -49,13 +51,17 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Use Hooks
-    const r = useRouter();
+    const router = useRouter();
+
+
     const {
         t,
         i18n: { language }
     } = useTranslation();
     const { width } = useWindowSize();
     const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
+
     const dispatch = useDispatch();
     const { show } = useContextMenu({ id: MENU_CONTEXT });
     const [curRowSelected, setCurRowSelected] = useState(null);
@@ -150,16 +156,16 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     }, [state.currentMarketList]);
 
     useEffect(() => {
-        if (r?.query?.action) {
-            setState({ action: r.query.action });
+        if (router?.query?.action) {
+            setState({ action: router.query.action });
         } else {
             setState({ action: null });
         }
-    }, [r]);
+    }, [router]);
 
     useEffect(() => {
         if (state.action && Object.keys(EXCHANGE_ACTION).includes(state.action.toUpperCase())) {
-            r.replace(`?action=${state.action}`);
+            router.replace(`?action=${state.action}`);
         }
     }, [state.action]);
 
@@ -350,7 +356,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     }, [state.tableData, state.currentPage, width, usdRate, curRowSelected, isHideAsset]);
 
     // Check Kyc before redirect to page Deposit / Withdraw
-    const router = useRouter();
 
     const ListButton = ({ className }) => {
         return (
@@ -482,9 +487,16 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                 addClass={`mt-5 !p-8 rounded-xl
              ${currentTheme === THEME_MODE.DARK ? ' bg-bgTabInactive-dark border border-divider-dark' : ' bg-white shadow-card_light border-none'}`}
             >
+                <div className='w-full flex justify-between items-center'>
+                    <EstBalance onClick={() => setIsHideAsset(!isHideAsset)} isHide={isHideAsset} isSmallScreen={isSmallScreen} />
+                    <Link href={'/staking'}>
+                        <a className='flex gap-2 items-center text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 font-semibold text-sm md:text-base cursor-pointer'>
+                            {t('wallet:staking')} <ChevronRight size={16} />
+                        </a>
+                    </Link>
+                </div>
                 <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 flex justify-between items-end">
                     <div>
-                        <EstBalance onClick={() => setIsHideAsset(!isHideAsset)} isHide={isHideAsset} isSmallScreen={isSmallScreen} />
                         {renderEstWallet()}
                     </div>
                     <div className="hidden md:block">
@@ -629,8 +641,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                             {isHideAsset
                                                 ? SECRET_STRING
                                                 : wallet.value
-                                                ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                : '0.0000'}
+                                                    ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
                                         </span>
                                         &nbsp;
                                         <span className="txtSecond-1  whitespace-nowrap">
@@ -644,8 +656,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                                 {isHideAsset
                                                     ? SECRET_STRING
                                                     : available
-                                                    ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
-                                                    : '0.0000'}
+                                                        ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                        : '0.0000'}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-3">
@@ -654,8 +666,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                                 {isHideAsset
                                                     ? SECRET_STRING
                                                     : wallet.locked_value
-                                                    ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                    : '0.0000'}
+                                                        ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                        : '0.0000'}
                                             </span>
                                         </div>
                                     </div>
