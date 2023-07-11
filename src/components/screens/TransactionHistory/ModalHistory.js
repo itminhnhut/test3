@@ -23,7 +23,8 @@ const renderWallet = ({ t, key, language }) => {
         [WalletType.SPOT]: t('common:wallet', { wallet: 'Nami Spot' }),
         [WalletType.FUTURES]: t('common:wallet', { wallet: 'Nami Futures' }),
         [WalletType.BROKER]: t('common:wallet', { wallet: language === 'vi' ? 'hoa hồng Nami' : 'Nami Commission' }),
-        [WalletType.NAO_FUTURES]: t('common:wallet', { wallet: 'NAO Futures' })
+        [WalletType.NAO_FUTURES]: t('common:wallet', { wallet: 'NAO Futures' }),
+        [WalletType.INSURANCE]: t('common:wallet', { wallet: 'Insurance' })
     };
 
     const walletType = WalletTypeById[key];
