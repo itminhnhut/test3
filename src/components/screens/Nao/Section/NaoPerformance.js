@@ -174,7 +174,7 @@ const NaoPerformance = memo(({}) => {
     }, []);
 
     const assetConfig = useSelector((state) => state.utils.assetConfig);
-    const isValidCustomDay = filter.day !== 'custom' || (isValid(range.startDate) && isValid(range.endDate));;
+    const isValidCustomDay = filter.day !== 'custom' || (isValid(range.startDate) && isValid(range.endDate));
 
     useIsomorphicLayoutEffect(() => {
         const { performanceRange } = router.query;
@@ -442,7 +442,7 @@ const NaoPerformance = memo(({}) => {
                     lines: {
                         show: !isMobile
                     }
-                },
+                }
                 // padding: {
                 //     left: 2
                 // }
@@ -577,14 +577,14 @@ const NaoPerformance = memo(({}) => {
             <div className="pt-5 flex flex-col lg:flex-row sm:pt-8 gap-4 sm:gap-6">
                 <div className="w-full lg:w-1/3 flex flex-col gap-y-4 sm:gap-y-6 z-[1]">
                     <CardNao className="rounded-lg !min-w-max w-full !px-8 !pt-6 !pb-7 relative" customHeight="sm:min-h-[328px]">
-                        <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
+                        <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-sm sm:text-base">
                             {t('nao:onus_performance:total_volume')}
                         </label>
                         <div className="pt-4">
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-xl sm:text-2xl font-semibold pb-2">
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-base sm:text-lg font-semibold pb-2">
                                 {dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}
                             </div>
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base">
                                 {dataSource
                                     ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3)
                                     : '-'}{' '}
@@ -593,28 +593,32 @@ const NaoPerformance = memo(({}) => {
 
                         <hr className="border-divider dark:border-divider-dark my-5 sm:my-8" />
 
-                        <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
+                        <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-sm sm:text-base">
                             {t('nao:onus_performance:total_orders')}
                         </label>
                         <div className="pt-4">
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-xl sm:text-2xl font-semibold pb-2">
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-base sm:text-lg font-semibold pb-2">
                                 {dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}
                             </div>
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base">
                                 {dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}
                             </span>
                         </div>
                     </CardNao>
-                    <CardNao noBg className="bg-bgPrimary dark:bg-bgPrimary-dark !min-w-max !py-6 !px-8 w-full !flex-none z-0 relative" customHeight="sm:max-h-[162px]">
+                    <CardNao
+                        noBg
+                        className="bg-bgPrimary dark:bg-bgPrimary-dark !min-w-max !py-6 !px-8 w-full !flex-none z-0 relative"
+                        customHeight="sm:max-h-[162px]"
+                    >
                         <div className="flex items-center justify-between">
-                            <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-base sm:text-lg">
+                            <label className="text-txtSecondary dark:text-txtSecondary-dark font-semibold text-sm sm:text-base">
                                 {t('nao:onus_performance:total_fee')}
                             </label>
                             <Popover className="relative flex">
                                 {({ open, close }) => (
                                     <>
                                         <Popover.Button>
-                                            <div className="px-2 py-[6px] bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between text-gray-15 dark:text-white min-w-[72px] space-x-1 font-semibold">
+                                            <div className="px-4 py-[0.5rem] bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between text-gray-15 dark:text-white min-w-[72px] space-x-1 font-semibold sm:text-sm">
                                                 {filterFeeAsset.find((a) => a.id === fee)?.label || '--'}
                                                 <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
                                             </div>
@@ -651,8 +655,8 @@ const NaoPerformance = memo(({}) => {
                             </Popover>
                         </div>
                         <div className="">
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-xl sm:text-2xl font-semibold pb-2">{feeFilter.total}</div>
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{feeFilter.ratio}%</span>
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-base sm:text-lg font-semibold pb-2">{feeFilter.total}</div>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base">{feeFilter.ratio}%</span>
                         </div>
                     </CardNao>
                 </div>
