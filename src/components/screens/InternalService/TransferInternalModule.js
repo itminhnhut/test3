@@ -86,7 +86,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Handle screen Personal/Multiple transfer
-    const [selectedTab, setSelectedTab] = useState(TABS[1].key);
+    const [selectedTab, setSelectedTab] = useState(TABS[0].key);
     const [listUserMultiple, setListUserMultiple] = useState([]);
     const [listUserIdErrors, setListUserIdErrors] = useState([]);
 
