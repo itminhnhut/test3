@@ -29,11 +29,13 @@ import CardWrapper from 'components/common/CardWrapper';
 import CheckBox from 'components/common/CheckBox';
 import AccountAvatar from '../Account/AccountAvatar';
 import MCard from 'components/common/MCard';
+import TextCopyable from '../Account/TextCopyable';
 
 const DEFAULT_PAIR = {
-    fromAsset: 'VNDC',
-    toAsset: 'USDT'
+    fromAsset: 'VNDC'
 };
+
+const MAX_TRANSFER_MULTI = 20;
 
 const TABS = [
     {
@@ -84,7 +86,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Handle screen Personal/Multiple transfer
-    const [selectedTab, setSelectedTab] = useState(TABS[0].key);
+    const [selectedTab, setSelectedTab] = useState(TABS[1].key);
     const [listUserMultiple, setListUserMultiple] = useState([]);
     const [listUserIdErrors, setListUserIdErrors] = useState([]);
 
@@ -296,7 +298,8 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                     setState({
                         resultTransfer: {
                             type: 'success',
-                            msg: 'Chuyển thành công'
+                            msg: `Chuyển thành công${selectedTab === 'personal' ? '' : ` (${res.data?.listTransferSuccess.length} user)`}`,
+                            ...res?.data
                         }
                     });
                     setNewOrder(res.data?.listTransferSuccess || [res.data]);
@@ -355,19 +358,22 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
     const handlePreview = async () => {
         if (selectedTab === 'personal') setState({ isOpenModalPreview: true });
         else {
+            const listFormattedUserIds = state.toListUser
+                .split('\n')
+                .map((eachNamiId) => eachNamiId.trim())
+                .filter((obj) => !!obj);
+
             const { status, data } = await fetchAPI({
                 url: API_INTERNAL_FIND_USER,
                 options: { method: 'GET' },
                 params: {
-                    searchContent: state.toListUser
+                    searchContent: JSON.stringify(listFormattedUserIds)
                 }
             });
 
             if (status === ApiStatus.SUCCESS) {
                 setListUserMultiple(data);
-                const listIdSends = state.toListUser.split(', ');
-
-                setListUserIdErrors(listIdSends.filter((idSend) => !data.find((obj) => obj.code === idSend || obj.email === idSend)));
+                setListUserIdErrors(listFormattedUserIds.filter((idSend) => !data.find((obj) => obj.code === idSend || obj.email === idSend)));
             } else setListUserMultiple([]);
 
             setState({ isOpenModalPreview: true });
@@ -484,13 +490,13 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                         </>
                     ) : (
                         <TextArea
-                            label="Danh sách Nami ID hoặc Email"
+                            label={`Danh sách Nami ID hoặc Email (tối đa ${MAX_TRANSFER_MULTI} user)`}
                             value={state?.toListUser}
                             onChange={(value) => setState({ toListUser: value })}
-                            placeholder={'Nami001, Nami002, Nami003, ...\n\nhoặc\n\nlamnv@nami.trade, abc@gmail.com, ...'}
+                            placeholder={'Nami001\nNami002\nNami003\nNami004\n...'}
                             className="pb-0 w-full"
                             classNameInput="!text-base font-semibold h-[176px]"
-                            rows={1000}
+                            rows={20}
                         />
                     )}
                 </CardWrapper>
@@ -588,6 +594,9 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                                     );
                                 })}
                             </div>
+                            {(listUserMultiple.length > MAX_TRANSFER_MULTI || listUserMultiple.length === 0) && (
+                                <div className="mt-2 text-red-2 font-semibold text-base">{`Số lượng User không hợp lệ (0 < total <= ${MAX_TRANSFER_MULTI})`}</div>
+                            )}
                             {listUserIdErrors.length > 0 && (
                                 <div>
                                     <div className="mt-4 text-sm leading-5 text-red-2">Not found ({listUserIdErrors.length}):</div>
@@ -619,7 +628,11 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                     </div>
                 )}
                 <div className="mt-10 w-full flex flex-row items-center justify-between">
-                    <ButtonV2 loading={state.loadingTransfer} onClick={handleConfirmTransfer}>
+                    <ButtonV2
+                        disabled={selectedTab === 'multiple' && (listUserMultiple.length > MAX_TRANSFER_MULTI || listUserMultiple.length === 0)}
+                        loading={state.loadingTransfer}
+                        onClick={handleConfirmTransfer}
+                    >
                         {t('common:confirm')}
                     </ButtonV2>
                 </div>
@@ -632,7 +645,28 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                 title={state.resultTransfer?.msg}
                 buttonClassName="hidden"
                 // message={state.resultErr}
-            />
+            >
+                {state.resultTransfer?.listUserError && state.resultTransfer.listUserError.length > 0 && (
+                    <div className="w-full mt-4 pt-4 border-t border-divider dark:border-divider-dark">
+                        <div className="text-xl text-center font-semibold">Danh sách User chuyển lỗi ({state.resultTransfer.listUserError?.length} user):</div>
+                        <div className="text-base text-red-2 text-center py-4 font-semibold">Lưu ý: Danh sách lỗi chỉ hiện 1 lần duy nhất</div>
+                        {state.resultTransfer.listUserError.map((userErr) => {
+                            return (
+                                <div className="border-t border-divider dark:border-divider-dark py-4">
+                                    <div className="flex items-center justify-between">
+                                        Nami ID:
+                                        <TextCopyable text={userErr?.toUserId} />
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        Reason:
+                                        <div className="text-red-2">{userErr?.reason?.status}</div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </AlertModalV2>
         </>
     );
 };

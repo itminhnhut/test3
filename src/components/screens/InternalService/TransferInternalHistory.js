@@ -12,6 +12,7 @@ import { find, isArray } from 'lodash';
 import Skeletor from 'components/common/Skeletor';
 import OrderStatusTag from 'components/common/OrderStatusTag';
 import Tooltip from 'components/common/Tooltip';
+import TextCopyable from '../Account/TextCopyable';
 
 const addNewRecord = (arr = [], newItems = []) => {
     if (newItems.length >= LIMIT_ROW) return newItems.slice(0, LIMIT_ROW);
@@ -89,7 +90,7 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                 dataIndex: 'currency',
                 title: t('transaction-history:asset'),
                 align: 'left',
-                width: 180,
+                width: 150,
                 render: (row) => {
                     const assetCode = find(assetConfig, { id: +row })?.assetCode;
                     return (
@@ -104,7 +105,7 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                 key: 'created_at',
                 title: t('transaction-history:time'),
                 align: 'left',
-                width: 230,
+                width: 200,
                 render: (_row, item) => <div>{formatTime(item?.created_at || item?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
             },
             {
@@ -118,6 +119,20 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                         <div>
                             {formatPrice(item?.amount || item?.money_use || item?.value, config?.assetDigit ?? 0)}
                             {/* {config?.assetCode ?? 'VNDC'} */}
+                        </div>
+                    );
+                }
+            },
+            {
+                key: 'toUser',
+                title: t('common:to'),
+                align: 'right',
+                width: 200,
+                render: (v, item) => {
+                    return (
+                        <div className='flex flex-col justify-end items-end'>
+                            <TextCopyable text={item?.metadata?.toUser?.code} />
+                            <div className="mt-1 txtSecond-5">{item?.metadata?.toUser?.email}</div>
                         </div>
                     );
                 }
