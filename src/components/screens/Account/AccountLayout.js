@@ -149,7 +149,7 @@ export default function AccountLayout({ children, type }) {
                                 return (
                                     <TabItem
                                         key={item?.key}
-                                        className={`text-left !px-0 !text-base !w-auto first:ml-4 md:first:ml-0`}
+                                        className={`text-left !px-0 !text-sm md:!text-base !w-auto first:ml-4 md:first:ml-0`}
                                         value={item?.key}
                                         onClick={() => router.push(item.href)}
                                     >
@@ -165,7 +165,7 @@ export default function AccountLayout({ children, type }) {
                             </HrefButton>
                         </div>
                     </div>
-                    <div className="pb-28">{children}</div>
+                    <div className="pb-20 md:mb-10">{children}</div>
                 </Container>
             </div>
         </MaldivesLayout>

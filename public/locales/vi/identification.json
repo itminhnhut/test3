@@ -9,7 +9,7 @@
         "scan": "Quét mã này bằng ứng dụng di động Nami Exchange để bắt đầu quá trình KYC"
     },
     "current_futures": {
-        "title": "Các tính năng hiện tại",
+        "title": "Tính năng hiện tại",
         "buy_sell": "Mua và bán tiền điện tử qua ĐTKD",
         "price_daily": "200,000,000 VNDC hàng ngày",
         "deposit": "Giới hạn gửi tiền",
@@ -30,7 +30,7 @@
         "not_verified": "Tài khoản của bạn chưa được xác minh.",
         "not_verified_content": "Hoàn tất xác minh để truy cập các dịch vụ của Nami",
         "process": "Yêu cầu xác minh đang chờ duyệt",
-        "process_content": "Yêu cầu xác minh của bạn sẽ được xử lý trong thời gian sớm nhất. Hệ thống sẽ gửi thông báo qua email và ứng dụng khi tài khoản xác thực thành công.",
+        "process_content": "Yêu cầu xác minh tài khoản của bạn đang được chúng tôi xem xét và xử lý trong thời gian sớm nhất. Hệ thống sẽ gửi thông báo qua email và ứng dụng khi tài khoản của bạn được xác minh thành công.",
         "congratulations": "Chúc mừng!",
         "not_verified_2": "Hoàn tất xác minh để truy cập các dịch vụ của Nami",
         "verified": "Tài khoản của bạn đã được xác minh."
