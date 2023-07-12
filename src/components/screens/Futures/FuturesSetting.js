@@ -17,6 +17,7 @@ import isUndefined from 'lodash/isUndefined';
 import { BxChevronDown } from 'components/svg/SvgIcon';
 import FuturesFeeModal from 'components/screens/Futures/PlaceOrder/EditFee/FuturesFeeModal';
 import { getFuturesFees } from 'redux/actions/utils';
+import { useLocalStorage } from 'react-use';
 
 const FuturesSetting = memo(
     (props) => {
@@ -33,6 +34,9 @@ const FuturesSetting = memo(
         const [mount, setMount] = useState(false);
         const [showFee, setShowFee] = useState(null);
         const [settingFee, setSettingFee] = useState({ VNDC: {}, USDT: {} });
+
+        const [layoutFutures, setLayoutFutures] = useLocalStorage('settingLayoutFutures');
+
         const auth = useSelector((state) => state.auth?.user);
 
         useEffect(() => {
@@ -109,16 +113,15 @@ const FuturesSetting = memo(
         const inActiveLabel = currentTheme === 'dark' ? colors.gray[7] : colors.gray[1];
 
         useEffect(() => {
-            const settingFutures = localStorage.getItem('settingLayoutFutures');
-            if (settings?.user_setting && settingFutures && !mount) {
+            if (settings?.user_setting && layoutFutures && !mount) {
                 Object.keys(settings?.user_setting).map((item) => {
                     spotState[item] = settings?.user_setting?.[item] ?? spotState[item];
                 });
-                localStorage.setItem('settingLayoutFutures', JSON.stringify(spotState));
+                setLayoutFutures(spotState);
                 onChangeSpotState(spotState);
                 setMount(true);
             }
-        }, [settings?.user_setting]);
+        }, [settings?.user_setting, layoutFutures]);
 
         const onChangeSetting = (key, value) => {
             if (!userSetting.find((item) => item.key === key)) return;
@@ -141,7 +144,7 @@ const FuturesSetting = memo(
             clearTimeout(timer.current);
             const _newSpotState = spotState;
             spotState[key] = value;
-            localStorage.setItem('settingLayoutFutures', JSON.stringify(spotState));
+            setLayoutFutures(spotState)
             onChangeSpotState({
                 ...spotState,
                 ..._newSpotState

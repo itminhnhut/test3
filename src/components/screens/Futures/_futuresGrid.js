@@ -69,7 +69,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 8,
@@ -80,7 +80,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 8,
@@ -91,7 +91,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 8,
@@ -102,7 +102,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 4,
@@ -114,7 +114,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 4,
@@ -125,7 +125,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             }
         ],
         lg: [
@@ -138,7 +138,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 10,
@@ -149,7 +149,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 10,
@@ -160,7 +160,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 10,
@@ -171,7 +171,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 4,
@@ -183,7 +183,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 4,
@@ -194,7 +194,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             }
         ],
         xl: [
@@ -207,7 +207,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 12,
@@ -218,7 +218,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 12,
@@ -229,7 +229,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 12,
@@ -240,7 +240,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 4,
@@ -251,7 +251,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 4,
@@ -262,7 +262,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             }
         ],
         '2xl': [
@@ -272,10 +272,12 @@ export default {
                 x: 0,
                 y: 0,
                 i: futuresGridKey.favoritePair,
+                maxH:2.5,
+                minH:2.5,
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 14,
@@ -283,10 +285,12 @@ export default {
                 x: 0,
                 y: 2.5,
                 i: futuresGridKey.pairDetail,
+                maxH:3.5,
+                minH:3.5,
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 14,
@@ -297,18 +301,19 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 14,
-                h: 12,
+                h: 23,
                 x: 0,
                 y: 5,
                 i: futuresGridKey.tradeRecord,
+                minH:23,
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 4,
@@ -319,7 +324,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             },
             {
                 w: 4,
@@ -330,7 +335,7 @@ export default {
                 moved: false,
                 static: false,
                 isDraggable: true, // false,
-                isResizable: false
+                isResizable: true //false
             }
         ]
     },

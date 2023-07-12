@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants';
 import { ApiStatus, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
 import { Responsive, WidthProvider } from 'react-grid-layout';
@@ -25,14 +25,18 @@ import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTe
 import classNames from 'classnames';
 import DefaultMobileView from 'src/components/common/DefaultMobileView';
 import { FuturesSettings } from 'redux/reducers/futures';
-import { useLocalStorage } from 'react-use';
+import { useLocalStorage, usePrevious } from 'react-use';
+import styled from 'styled-components';
 
 const GridLayout = WidthProvider(Responsive);
+
+const NON_LOGIN = 'non-login-layouts';
 
 const FuturesProfitEarned = dynamic(() => import('components/screens/Futures/TakedProfit'), { ssr: false });
 
 const INITIAL_STATE = {
     layouts: futuresGridConfig.layoutsVndc,
+    prevLayouts: futuresGridConfig.layoutsVndc['2xl'],
     breakpoint: '2xl',
     loading: false,
     pair: null,
@@ -58,12 +62,12 @@ const initFuturesComponent = {
     // [FuturesSettings.show_sl_tp_order_line]: true
 };
 
-const getDataGridByKey = ({ key, breakpoint }) => futuresGridConfig.layoutsVndc[breakpoint].find((layout) => layout.i === key);
-
 const Futures = () => {
     const [state, set] = useState(INITIAL_STATE);
 
-    const [get, setLocal] = useLocalStorage('settingLayoutFutures1');
+    const [localGridLayouts, setLocalGridLayout] = useLocalStorage('gridLayoutFutures');
+    const [localLayoutFutures, setLocalLayoutFutures] = useLocalStorage('settingLayoutFutures');
+    const [componentLayoutFutures, setComponentLayoutFutures] = useState(localLayoutFutures || initFuturesComponent);
 
     const dispatch = useDispatch();
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
@@ -77,7 +81,6 @@ const Futures = () => {
     const router = useRouter();
     const { width } = useWindowSize();
     const isMediumDevices = width >= BREAK_POINTS.lg;
-    const [filterLayout, setFilterLayout] = useState({ ...initFuturesComponent });
 
     // Memmoized Variable
     const pairConfig = useMemo(() => allPairConfigs?.find((o) => o.pair === state.pair), [allPairConfigs, state.pair]);
@@ -113,15 +116,15 @@ const Futures = () => {
     useEffect(() => {
         if (auth) {
             dispatch(fetchFuturesSetting());
-            getOrders();
+            dispatch(getOrdersList());
         }
-    }, [auth]);
-
-    const getOrders = () => {
-        if (auth) dispatch(getOrdersList());
-    };
+    }, [auth, dispatch]);
 
     useEffect(() => {
+        const getOrders = () => {
+            if (auth) dispatch(getOrdersList());
+        };
+
         if (userSocket) {
             userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
         }
@@ -130,7 +133,7 @@ const Futures = () => {
                 userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
             }
         };
-    }, [userSocket]);
+    }, [userSocket, auth]);
 
     useEffect(() => {
         if (marketWatch?.[state.pair]) {
@@ -184,13 +187,18 @@ const Futures = () => {
     }, [pairConfig, userSettings]);
 
     useEffect(() => {
-        const settings = localStorage.getItem('settingLayoutFutures');
-        if (!settings) localStorage.setItem('settingLayoutFutures', JSON.stringify(initFuturesComponent));
-    }, []);
+        if (!localLayoutFutures) {
+            setLocalLayoutFutures(initFuturesComponent);
+        }
+    }, [localLayoutFutures]);
 
     const resetDefault = (params) => {
-        localStorage.setItem('settingLayoutFutures', JSON.stringify({ ...initFuturesComponent, ...params }));
-        setFilterLayout({ ...initFuturesComponent, ...params });
+        setLocalLayoutFutures({ ...initFuturesComponent, ...params });
+
+        setComponentLayoutFutures({ ...initFuturesComponent, ...params });
+
+        setState({ layouts: INITIAL_STATE.layouts });
+        setLocalGridLayout({ ...localGridLayouts, [auth?.code || NON_LOGIN]: INITIAL_STATE.layouts });
     };
 
     const decimals = useMemo(() => {
@@ -200,6 +208,8 @@ const Futures = () => {
             symbol: unitConfig?.assetDigit ?? 0
         };
     }, [unitConfig, pairConfig]);
+
+    const getDataGrid = useCallback((key) => state.prevLayouts?.find((layout) => layout.i === key), [state.prevLayouts]);
 
     return (
         <>
@@ -213,15 +223,15 @@ const Futures = () => {
                     }}
                     hideFooter
                     page="futures"
-                    spotState={filterLayout}
-                    onChangeSpotState={setFilterLayout}
+                    spotState={componentLayoutFutures}
+                    onChangeSpotState={setComponentLayoutFutures}
                     resetDefault={resetDefault}
                 >
-                    <div className="w-full">
+                    <div className="w-full ">
                         {isMediumDevices ? (
                             <GridLayout
                                 className="layout"
-                                layouts={futuresGridConfig.layoutsVndc}
+                                layouts={localGridLayouts?.[auth?.code || NON_LOGIN] || state.layouts}
                                 breakpoints={futuresGridConfig.breakpoints}
                                 cols={futuresGridConfig.cols}
                                 margin={[-1, -1]}
@@ -229,9 +239,19 @@ const Futures = () => {
                                 rowHeight={24}
                                 // draggableHandle=".dragHandleArea"
                                 // draggableCancel=".dragCancelArea"
-                                onLayoutChange={(currentLayouts,_layouts) => {
-                                    console.log('_layouts:', _layouts)
-                                    //    console.log('currentLayouts:', currentLayouts)
+
+                                onLayoutChange={(_currentLayout, allNewLayouts) => {
+                                    const flatLayout = [...allNewLayouts[state.breakpoint], ...state.prevLayouts].filter((layout, index, originLayouts) => {
+                                        const firstIndex = originLayouts.findIndex((l) => l.i === layout.i);
+                                        return firstIndex === index;
+                                    });
+
+                                    setLocalGridLayout({
+                                        ...localGridLayouts,
+                                        [auth?.code || NON_LOGIN]: { ...allNewLayouts, [state.breakpoint]: flatLayout }
+                                    });
+
+                                    setState({ prevLayouts: flatLayout, layouts: { ...allNewLayouts, [state.breakpoint]: flatLayout } });
                                 }}
                                 onBreakpointChange={(breakpoint) => setState({ breakpoint })}
                                 onResize={(e) =>
@@ -240,20 +260,20 @@ const Futures = () => {
                                     })
                                 }
                             >
-                                {filterLayout.isShowFavorites && (
+                                {componentLayoutFutures?.isShowFavorites && (
                                     <div
-                                        data-grid={getDataGridByKey({ key: futuresGridKey.favoritePair, breakpoint: state.breakpoint })}
+                                        data-grid={getDataGrid(futuresGridKey.favoritePair)}
                                         key={futuresGridKey.favoritePair}
-                                        className={classNames('border-b border-r border-divider dark:border-divider-dark')}
+                                        className={classNames('border dark:bg-dark-dark bg-white border-divider dark:border-divider-dark')}
                                     >
                                         <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
                                     </div>
                                 )}
-                                {filterLayout.isShowPairDetail && (
+                                {componentLayoutFutures?.isShowPairDetail && (
                                     <div
-                                        data-grid={getDataGridByKey({ key: futuresGridKey.pairDetail, breakpoint: state.breakpoint })}
+                                        data-grid={getDataGrid(futuresGridKey.pairDetail)}
                                         key={futuresGridKey.pairDetail}
-                                        className={classNames('relative z-20 border-r border-divider dark:border-divider-dark')}
+                                        className={classNames('relative z-20 border dark:bg-dark-dark bg-white border-divider dark:border-divider-dark')}
                                     >
                                         <FuturesPairDetail
                                             pairPrice={state.pairPrice}
@@ -264,12 +284,12 @@ const Futures = () => {
                                         />
                                     </div>
                                 )}
-                                {filterLayout.isShowChart && (
+                                {componentLayoutFutures?.isShowChart && (
                                     <div
                                         id="futures_containter_chart"
                                         key={futuresGridKey.chart}
-                                        data-grid={getDataGridByKey({ key: futuresGridKey.chart, breakpoint: state.breakpoint })}
-                                        className={classNames('border border-l-0 border-divider dark:border-divider-dark')}
+                                        data-grid={getDataGrid(futuresGridKey.chart)}
+                                        className={classNames('border border-divider dark:bg-dark-dark bg-white dark:border-divider-dark')}
                                     >
                                         <FuturesChart
                                             chartKey="futures_containter_chart"
@@ -280,11 +300,13 @@ const Futures = () => {
                                         />
                                     </div>
                                 )}
-                                {filterLayout.isShowOpenOrders && (
+                                {componentLayoutFutures?.isShowOpenOrders && (
                                     <div
-                                        data-grid={getDataGridByKey({ key: futuresGridKey.tradeRecord, breakpoint: state.breakpoint })}
+                                        data-grid={getDataGrid(futuresGridKey.tradeRecord)}
                                         key={futuresGridKey.tradeRecord}
-                                        className={classNames('border-t border-r border-divider dark:border-divider-dark !h-auto')}
+                                        className={classNames(
+                                            'border border-divider overflow-x-auto overflow-y-auto dark:bg-dark-dark bg-white dark:border-divider-dark'
+                                        )}
                                     >
                                         <FuturesTradeRecord
                                             isVndcFutures={true}
@@ -296,11 +318,11 @@ const Futures = () => {
                                         />
                                     </div>
                                 )}
-                                {filterLayout.isShowPlaceOrder && (
+                                {componentLayoutFutures?.isShowPlaceOrder && (
                                     <div
-                                        data-grid={getDataGridByKey({ key: futuresGridKey.placeOrder, breakpoint: state.breakpoint })}
+                                        data-grid={getDataGrid(futuresGridKey.placeOrder)}
                                         key={futuresGridKey.placeOrder}
-                                        className={classNames('border-l border-divider dark:border-divider-dark')}
+                                        className={classNames('border border-divider dark:bg-dark-dark bg-white dark:border-divider-dark')}
                                     >
                                         <FuturesPlaceOrderVndc
                                             isAuth={!!auth}
@@ -314,11 +336,11 @@ const Futures = () => {
                                         />
                                     </div>
                                 )}
-                                {filterLayout.isShowAssets && auth && (
+                                {componentLayoutFutures?.isShowAssets && auth && (
                                     <div
-                                        data-grid={getDataGridByKey({ key: futuresGridKey.marginRatio, breakpoint: state.breakpoint })}
+                                        data-grid={getDataGrid(futuresGridKey.marginRatio)}
                                         key={futuresGridKey.marginRatio}
-                                        className={classNames('border-t border-divider dark:border-divider-dark')}
+                                        className={classNames('border border-divider  dark:bg-dark-dark bg-white dark:border-divider-dark')}
                                     >
                                         <FuturesMarginRatioVndc
                                             pairConfig={pairConfig}
@@ -340,5 +362,7 @@ const Futures = () => {
         </>
     );
 };
+
+const GridItem = styled.div.attrs({ className: 'border border-divider dark:bg-dark-dark bg-white dark:border-divider-dark' })``;
 
 export default Futures;
