@@ -121,7 +121,7 @@ const LockingKycCard = ({ t, className }) => {
 const CurrentFuturesCard = ({ t, className }) => {
     return (
         <div className={classnames(className, 'flex flex-col justify-center p-6 bg-white dark:bg-darkBlue-3 rounded-xl py-auto')}>
-            <div className="mb-8">
+            <div className="mb-6 md:mb-8">
                 <p className="font-semibold text-xl md:text-2xl">{t('identification:current_futures:title')}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
