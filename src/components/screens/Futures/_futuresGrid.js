@@ -99,7 +99,7 @@ const layoutDefault = {
         moved: false,
         static: false,
         isDraggable: true,
-        isResizable: false
+        isResizable: true
     },
     [futuresGridKey.marginRatio]: {
         i: futuresGridKey.marginRatio,
