@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants';
 import { ApiStatus, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
 import { Responsive, WidthProvider } from 'react-grid-layout';
@@ -237,9 +237,7 @@ const Futures = () => {
                                 margin={[-1, -1]}
                                 containerPadding={[0, 0]}
                                 rowHeight={24}
-                                // draggableHandle=".dragHandleArea"
-                                // draggableCancel=".dragCancelArea"
-
+                                draggableHandle=".dragHandleArea"
                                 onLayoutChange={(_currentLayout, allNewLayouts) => {
                                     const flatLayout = [...allNewLayouts[state.breakpoint], ...state.prevLayouts].filter((layout, index, originLayouts) => {
                                         const firstIndex = originLayouts.findIndex((l) => l.i === layout.i);
@@ -261,20 +259,22 @@ const Futures = () => {
                                 }
                             >
                                 {componentLayoutFutures?.isShowFavorites && (
-                                    <div
+                                    <GridItem
+                                        className="overflow-x-auto"
                                         data-grid={getDataGrid(futuresGridKey.favoritePair)}
                                         key={futuresGridKey.favoritePair}
-                                        className={classNames('border dark:bg-dark-dark bg-white border-divider dark:border-divider-dark')}
                                     >
+                                        <DragHandleArea />
                                         <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
-                                    </div>
+                                    </GridItem>
                                 )}
                                 {componentLayoutFutures?.isShowPairDetail && (
-                                    <div
+                                    <GridItem
                                         data-grid={getDataGrid(futuresGridKey.pairDetail)}
                                         key={futuresGridKey.pairDetail}
-                                        className={classNames('relative z-20 border dark:bg-dark-dark bg-white border-divider dark:border-divider-dark')}
+                                        className={classNames('relative z-20')}
                                     >
+                                        <DragHandleArea />
                                         <FuturesPairDetail
                                             pairPrice={state.pairPrice}
                                             pairConfig={pairConfig}
@@ -282,15 +282,11 @@ const Futures = () => {
                                             isVndcFutures={state.isVndcFutures}
                                             isAuth={!!auth}
                                         />
-                                    </div>
+                                    </GridItem>
                                 )}
                                 {componentLayoutFutures?.isShowChart && (
-                                    <div
-                                        id="futures_containter_chart"
-                                        key={futuresGridKey.chart}
-                                        data-grid={getDataGrid(futuresGridKey.chart)}
-                                        className={classNames('border border-divider dark:bg-dark-dark bg-white dark:border-divider-dark')}
-                                    >
+                                    <GridItem id="futures_containter_chart" key={futuresGridKey.chart} data-grid={getDataGrid(futuresGridKey.chart)}>
+                                        <DragHandleArea />
                                         <FuturesChart
                                             chartKey="futures_containter_chart"
                                             pair={pairConfig?.pair}
@@ -298,16 +294,15 @@ const Futures = () => {
                                             isVndcFutures={state.isVndcFutures}
                                             ordersList={ordersList}
                                         />
-                                    </div>
+                                    </GridItem>
                                 )}
                                 {componentLayoutFutures?.isShowOpenOrders && (
-                                    <div
+                                    <GridItem
                                         data-grid={getDataGrid(futuresGridKey.tradeRecord)}
                                         key={futuresGridKey.tradeRecord}
-                                        className={classNames(
-                                            'border border-divider overflow-x-auto overflow-y-auto dark:bg-dark-dark bg-white dark:border-divider-dark'
-                                        )}
+                                        className={classNames('overflow-auto')}
                                     >
+                                        <DragHandleArea />
                                         <FuturesTradeRecord
                                             isVndcFutures={true}
                                             layoutConfig={state.tradeRecordLayout}
@@ -316,14 +311,12 @@ const Futures = () => {
                                             isAuth={!!auth}
                                             pair={state.pair}
                                         />
-                                    </div>
+                                    </GridItem>
                                 )}
                                 {componentLayoutFutures?.isShowPlaceOrder && (
-                                    <div
-                                        data-grid={getDataGrid(futuresGridKey.placeOrder)}
-                                        key={futuresGridKey.placeOrder}
-                                        className={classNames('border border-divider dark:bg-dark-dark bg-white dark:border-divider-dark')}
-                                    >
+                                    <GridItem data-grid={getDataGrid(futuresGridKey.placeOrder)} key={futuresGridKey.placeOrder}>
+                                        <DragHandleArea />
+
                                         <FuturesPlaceOrderVndc
                                             isAuth={!!auth}
                                             pairConfig={pairConfig}
@@ -334,21 +327,18 @@ const Futures = () => {
                                             pair={state.pair}
                                             decimals={decimals}
                                         />
-                                    </div>
+                                    </GridItem>
                                 )}
                                 {componentLayoutFutures?.isShowAssets && auth && (
-                                    <div
-                                        data-grid={getDataGrid(futuresGridKey.marginRatio)}
-                                        key={futuresGridKey.marginRatio}
-                                        className={classNames('border border-divider  dark:bg-dark-dark bg-white dark:border-divider-dark')}
-                                    >
+                                    <GridItem data-grid={getDataGrid(futuresGridKey.marginRatio)} key={futuresGridKey.marginRatio}>
+                                        <DragHandleArea />
                                         <FuturesMarginRatioVndc
                                             pairConfig={pairConfig}
                                             auth={auth}
                                             lastPrice={state.pairPrice?.lastPrice}
                                             decimals={decimals}
                                         />
-                                    </div>
+                                    </GridItem>
                                 )}
                             </GridLayout>
                         ) : (
@@ -363,6 +353,22 @@ const Futures = () => {
     );
 };
 
+{
+    /* <div className="dragHandleArea w-1.5 space-y-1 absolute right-0  top-1">
+    <div className="w-full h-0.5 bg-gray-2 dark:bg-darkBlue-4 rounded-md"></div>
+    <div className="w-full h-0.5 bg-gray-2 dark:bg-darkBlue-4 rounded-md"></div>
+    <div className="w-full h-0.5 bg-gray-2 dark:bg-darkBlue-4 rounded-md"></div>
+</div>; */
+}
+
 const GridItem = styled.div.attrs({ className: 'border border-divider dark:bg-dark-dark bg-white dark:border-divider-dark' })``;
+
+const DragHandleArea = () => (
+    <div className="dragHandleArea absolute w-[7px] space-y-1 top-1 right-0">
+        <div className="h-0.5 w-full bg-gray-2 dark:bg-darkBlue-4 rounded-md" />
+        <div className="h-0.5 w-full bg-gray-2 dark:bg-darkBlue-4 rounded-md" />
+        <div className="h-0.5 w-full bg-gray-2 dark:bg-darkBlue-4 rounded-md" />
+    </div>
+);
 
 export default Futures;
