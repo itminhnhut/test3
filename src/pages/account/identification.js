@@ -23,7 +23,7 @@ const NotKycCard = ({ t, className }) => {
     return (
         <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 p-6 md:py-12 rounded-xl text-center md:px-10')}>
             <img className="mx-auto w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc/unverified.png')} />
-            <p className="text-teal font-semibold text-xl md:text-2xl mb-1 mt-6">{t('identification:account.not_verified')}</p>
+            <p className="text-green-3 dark:text-green-2 font-semibold text-xl md:text-2xl mb-1 mt-6">{t('identification:account.not_verified')}</p>
             <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('identification:account.not_verified_content')}</span>
         </div>
     );
@@ -99,7 +99,7 @@ const ProcessKycCard = ({ t, className }) => {
     return (
         <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 p-6 md:py-12 rounded-xl text-center md:px-10')}>
             <img className="mx-auto w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc/pending.png')} />
-            <p className="text-teal font-semibold tetx-xl md:text-2xl mb-1 mt-6">{t('identification:account.process')}</p>
+            <p className="text-green-3 dark:text-green-2 font-semibold tetx-xl md:text-2xl mb-1 mt-6">{t('identification:account.process')}</p>
             <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('identification:account.process_content')}</span>
         </div>
     );
@@ -109,7 +109,7 @@ const LockingKycCard = ({ t, className }) => {
     return (
         <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 p-6 md:py-12 rounded-xl text-center md:px-10')}>
             <img className="mx-auto w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]" src={getS3Url('/images/screen/account/kyc/locked.png')} />
-            <p className="text-teal font-semibold text-xl md:text-2xl mb-1 mt-6">{t('common:account_locking')}</p>
+            <p className="text-green-3 dark:text-green-2 font-semibold text-xl md:text-2xl mb-1 mt-6">{t('common:account_locking')}</p>
             <span className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{t('common:account_locking_content')}</span>
             <TextButton className={'mt-1'} onClick={() => window?.fcWidget?.open({ name: 'Inbox', replyText: '' })}>
                 {t('common:chat_with_support')}
@@ -183,6 +183,8 @@ function Identification() {
     const user = useSelector((state) => state.auth?.user);
 
     const { t } = useTranslation();
+
+    if(user) user.kyc_status = KYC_STATUS.LOCKING
 
     return (
         <AccountLayout type="kyc_tab">
