@@ -550,6 +550,7 @@ const NaoPerformance = memo(({}) => {
                         range={range}
                         setRange={setRange}
                         days={days}
+                        textPopoverClassName="sm:text-sm text-gray-15"
                     />
                     <div className="order-first gap-2 flex gap-last">
                         <button
@@ -565,7 +566,7 @@ const NaoPerformance = memo(({}) => {
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center h-full px-4 text-sm sm:text-base rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
+                                'flex flex-col justify-center h-full px-4 text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
                                 { '!border-teal !bg-teal/10 bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.USDT }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
