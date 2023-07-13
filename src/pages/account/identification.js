@@ -184,8 +184,6 @@ function Identification() {
 
     const { t } = useTranslation();
 
-    if(user) user.kyc_status = KYC_STATUS.LOCKING
-
     return (
         <AccountLayout type="kyc_tab">
             {[KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(user?.kyc_status) && (
