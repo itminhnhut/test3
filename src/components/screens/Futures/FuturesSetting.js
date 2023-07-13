@@ -34,6 +34,7 @@ const FuturesSetting = memo(
         const [mount, setMount] = useState(false);
         const [showFee, setShowFee] = useState(null);
         const [settingFee, setSettingFee] = useState({ VNDC: {}, USDT: {} });
+        const [disableReset, setDisableReset] = useState(false);
 
         const [layoutFutures, setLayoutFutures] = useLocalStorage('settingLayoutFutures');
 
@@ -80,7 +81,8 @@ const FuturesSetting = memo(
             {
                 label: t('common:assets'),
                 key: 'isShowAssets',
-                visible: true
+                visible: true,
+                mustBeAuth: true
             }
         ];
 
@@ -144,7 +146,7 @@ const FuturesSetting = memo(
             clearTimeout(timer.current);
             const _newSpotState = spotState;
             spotState[key] = value;
-            setLayoutFutures(spotState)
+            setLayoutFutures(spotState);
             onChangeSpotState({
                 ...spotState,
                 ..._newSpotState
@@ -156,16 +158,25 @@ const FuturesSetting = memo(
 
         const onSetDefault = () => {
             clearTimeout(timer.current);
+            if (resetDefault) {
+                setDisableReset(true);
+            }
             timer.current = setTimeout(() => {
-                const params = {
-                    setting: {
-                        ...settings?.user_setting,
-                        [FuturesSettings.order_confirm]: true,
-                        [FuturesSettings.show_sl_tp_order_line]: true
-                    }
-                };
-                dispatch(fetchFuturesSetting(params));
-                if (resetDefault) resetDefault({ [FuturesSettings.order_confirm]: true, [FuturesSettings.show_sl_tp_order_line]: true });
+                if (auth) {
+                    const params = {
+                        setting: {
+                            ...settings?.user_setting,
+                            [FuturesSettings.order_confirm]: true,
+                            [FuturesSettings.show_sl_tp_order_line]: true
+                        }
+                    };
+                    dispatch(fetchFuturesSetting(params));
+                }
+
+                if (resetDefault) {
+                    resetDefault({ [FuturesSettings.order_confirm]: true, [FuturesSettings.show_sl_tp_order_line]: true });
+                    setDisableReset(false);
+                }
             }, 500);
         };
 
@@ -230,8 +241,8 @@ const FuturesSetting = memo(
                                         <div className="py-6 divide-y-[1px] divide-divider dark:divide-divider-dark grid grid-cols-1 gap-6">
                                             <div className="space-y-4">
                                                 {FuturesComponents.map((item, index) => {
-                                                    const { label, key, visible } = item;
-                                                    if (!visible) return null;
+                                                    const { label, key, visible, mustBeAuth = false } = item;
+                                                    if (!visible || (mustBeAuth && !auth)) return null;
                                                     return (
                                                         <div className="h-6 flex justify-between" key={key + index}>
                                                             <span className="text-sm text-txtPrimary dark:text-txtPrimary-dark flex items-center">{label}</span>
@@ -314,7 +325,7 @@ const FuturesSetting = memo(
                                                 })}
                                         </div>
                                         <div className="pt-6">
-                                            <TextButton className="h-10 sm:h-11 text-center" onClick={onSetDefault}>
+                                            <TextButton className={'h-10 sm:h-11 text-center'} disabled={disableReset} onClick={onSetDefault}>
                                                 {t('spot:setting.reset_default_layout')}
                                             </TextButton>
                                         </div>

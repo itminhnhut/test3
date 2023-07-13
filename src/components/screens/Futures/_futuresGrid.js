@@ -96,6 +96,7 @@ const layoutDefault = {
         i: futuresGridKey.placeOrder,
         y: 0,
         h: 29,
+        minH: 5,
         moved: false,
         static: false,
         isDraggable: true,
@@ -104,6 +105,7 @@ const layoutDefault = {
     [futuresGridKey.marginRatio]: {
         i: futuresGridKey.marginRatio,
         y: 29,
+        minH: 5,
         moved: false,
         static: false,
         isDraggable: true,
@@ -139,8 +141,8 @@ export default {
             {
                 ...layoutDefault[futuresGridKey.chart],
                 w: 10,
-                minH: 14,
-                minW: 8
+                minH: 12,
+                minW: 5
             },
             {
                 ...layoutDefault[futuresGridKey.tradeRecord],
@@ -173,8 +175,8 @@ export default {
             {
                 ...layoutDefault[futuresGridKey.chart],
                 w: 12,
-                minW: 10,
-                minH: 16
+                minW: 6,
+                minH: 14
             },
             {
                 ...layoutDefault[futuresGridKey.tradeRecord],
@@ -207,8 +209,8 @@ export default {
             {
                 ...layoutDefault[futuresGridKey.chart],
                 w: 14,
-                minW: 10,
-                minH: 18
+                minW: 7,
+                minH: 16
             },
             {
                 ...layoutDefault[futuresGridKey.tradeRecord],
@@ -218,7 +220,7 @@ export default {
             {
                 ...layoutDefault[futuresGridKey.placeOrder],
                 w: COLS['2xl'] - 14,
-                minW: 2,
+                minW: COLS['2xl'] - 14,
                 x: 14
             },
             {
