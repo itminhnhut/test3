@@ -24,12 +24,13 @@ import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
 import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTermsModal';
 import classNames from 'classnames';
 import DefaultMobileView from 'src/components/common/DefaultMobileView';
-import { FuturesSettings } from 'redux/reducers/futures';
-import { useLocalStorage, usePrevious } from 'react-use';
+import { useLocalStorage } from 'react-use';
 import styled from 'styled-components';
-import { XCircle } from 'react-feather';
-import { CloseIcon } from 'components/svg/SvgIcon';
-
+import RemoveItemArea from 'components/common/ReactGridItem/RemoveItemArea';
+// import DragHandleArea from 'components/common/ReactGridItem/DragHandleArea';
+const DragHandleArea = ({ height, dragHandleClassName = '' }) => (
+    <div style={{ height }} className={classNames('dragHandleArea z-[1] h-4 absolute w-full space-y-1 top-0 right-0', dragHandleClassName)} />
+);
 const GridLayout = WidthProvider(Responsive);
 
 const NON_LOGIN = 'non-login-layouts';
@@ -373,16 +374,5 @@ const Futures = () => {
 };
 
 const GridItem = styled.div.attrs({ className: 'group border border-divider dark:bg-dark-dark bg-white dark:border-divider-dark' })``;
-
-const DragHandleArea = ({ height }) => <div style={{ height }} className="dragHandleArea z-[1] h-4 absolute w-full space-y-1 top-0 right-0" />;
-
-const RemoveItemArea = (props) => (
-    <div
-        className="absolute cursor-pointer text-txtSecondary dark:text-txtSecondary-dark hover:text-txtPrimary transition-all dark:hover:text-txtPrimary-dark hidden group-hover:block  z-[2] rounded-full p-[1px] border border-divider dark:border-divider-dark right-[3px] top-[3px]"
-        {...props}
-    >
-        <CloseIcon color="currentColor" size={10} />
-    </div>
-);
 
 export default Futures;
