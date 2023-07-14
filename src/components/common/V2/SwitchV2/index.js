@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch } from '@headlessui/react';
 import classnames from 'classnames';
 
-const CSwitch = ({ checked, disabled = false, onChange }) => {
+const CSwitch = ({ checked, disabled = false, onChange, processing = false}) => {
     const _onChange = (value) => {
         if (!disabled) onChange(value);
     };
@@ -12,9 +12,11 @@ const CSwitch = ({ checked, disabled = false, onChange }) => {
             checked={checked}
             onChange={_onChange}
             className={classnames('relative h-6 min-w-[48px] px-2 cursor-pointer rounded-full', 'transition-colors duration-200 ease-in-out', {
-                'bg-green-3 dark:bg-green-2': checked,
+                'dark:bg-teal bg-bgBtnV2': checked,
                 'bg-gray-11 dark:bg-dark-2': !checked,
-                'bg-gray-1 cursor-not-allowed': disabled
+                'dark:!bg-gray-1 !bg-gray-13 cursor-not-allowed': !checked && disabled,
+                'dark:!bg-[#436654] !bg-green-5 cursor-not-allowed': checked && disabled,
+                '!cursor-wait': processing
             })}
         >
             <span
@@ -24,7 +26,8 @@ const CSwitch = ({ checked, disabled = false, onChange }) => {
                     'transform transition duration-200 ease-in-out',
                     {
                         'translate-x-6': checked,
-                        'translate-x-0': !checked
+                        'translate-x-0': !checked,
+                        'dark:!bg-dark-6 !bg-gray-16': disabled
                     }
                 )}
             />

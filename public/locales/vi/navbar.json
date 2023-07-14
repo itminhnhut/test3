@@ -42,7 +42,7 @@
             "payment_method": "Phương thức thanh toán",
             "daily_reward": "Thưởng giao dịch hàng ngày",
             "futures_portfolio": "Thống kê Futures",
-            "profit_stats": "Thống kê lợi nhuận"
+            "profit_stats": "Nhận lãi hàng ngày"
         },
         "top_referral": "Đua TOP giới thiệu"
     },
@@ -154,5 +154,15 @@
     "trade_on": "Giao dịch trên",
     "scan_qr": "Quét mã QR để tải ứng dụng",
     "down_with_qr": "Tải Nami Exchange ngay nào!",
-    "footer_title": "Giao dịch Spot và Futures an toàn"
+    "footer_title": "Giao dịch Spot và Futures an toàn",
+    "noti_setting": "Cài đặt thông báo",
+    "noti_content": {
+        "all": "Cho phép Thông báo",
+        "futures": "NAO Futures & Nami Futures",
+        "spot": "Spot & Quy đổi",
+        "commission": "Hoa hồng",
+        "deposit_withdraw": "Nạp / Rút",
+        "promotion": "Khuyến mãi",
+        "system": "Hệ thống"
+    }
 }

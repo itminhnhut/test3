@@ -128,6 +128,7 @@ export const API_SET_USER_AVATAR = API_PREFIX + 'user/set_avatar';
 export const API_MARK_NOTIFICATIONS_READ = API_V3_PREFIX + 'notifications/mark-read';
 export const API_GET_NOTIFICATIONS = API_V3_PREFIX + 'notifications/';
 export const API_GET_NOTIFICATIONS_UNREAD_COUNT = API_PREFIX + 'notifications/count_unread';
+export const API_GET_NOTI_SETTING = API_V3_PREFIX + 'notifications/setting';
 
 export const API_WATCH_LIST = API_PREFIX + 'market/watch_list';
 export const API_METRIC_VIEW = API_V3_PREFIX + 'spot/view';
