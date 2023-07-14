@@ -430,7 +430,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                 />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
-                                <div className="mal-navbar__dropdown__user__info__username whitespace-normal"> {auth?.username || auth?.name || auth?.email}</div>
+                                <div className="mal-navbar__dropdown__user__info__username whitespace-normal"> {auth?.name || auth?.email || auth?.code}</div>
                                 <div className="text-txtSecondary items-center font-normal flex">
                                     <TextCopyable text={code} />
                                 </div>
