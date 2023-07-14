@@ -18,6 +18,7 @@ import { BxChevronDown } from 'components/svg/SvgIcon';
 import FuturesFeeModal from 'components/screens/Futures/PlaceOrder/EditFee/FuturesFeeModal';
 import { getFuturesFees } from 'redux/actions/utils';
 import { useLocalStorage } from 'react-use';
+import { futuresLayoutKey } from './_futuresGrid';
 
 const FuturesSetting = memo(
     (props) => {
@@ -36,7 +37,7 @@ const FuturesSetting = memo(
         const [settingFee, setSettingFee] = useState({ VNDC: {}, USDT: {} });
         const [disableReset, setDisableReset] = useState(false);
 
-        const [layoutFutures, setLayoutFutures] = useLocalStorage('settingLayoutFutures');
+        const [layoutFutures, setLocalLayoutFutures] = useLocalStorage('settingLayoutFutures');
 
         const auth = useSelector((state) => state.auth?.user);
 
@@ -55,32 +56,32 @@ const FuturesSetting = memo(
         const FuturesComponents = [
             {
                 label: t('futures:setting:favorites'),
-                key: 'isShowFavorites',
+                key: futuresLayoutKey.favoritePair,
                 visible: true
             },
             {
                 label: t('futures:setting:pair_detail'),
-                key: 'isShowPairDetail',
+                key: futuresLayoutKey.pairDetail,
                 visible: true
             },
             {
                 label: t('futures:setting:chart'),
-                key: 'isShowChart',
+                key: futuresLayoutKey.chart,
                 visible: true
             },
             {
                 label: t('futures:setting:orders_history'),
-                key: 'isShowOpenOrders',
+                key: futuresLayoutKey.tradeRecord,
                 visible: true
             },
             {
                 label: t('futures:setting:place_order'),
-                key: 'isShowPlaceOrder',
+                key: futuresLayoutKey.placeOrder,
                 visible: true
             },
             {
                 label: t('common:assets'),
-                key: 'isShowAssets',
+                key: futuresLayoutKey.marginRatio,
                 visible: true,
                 mustBeAuth: true
             }
@@ -119,7 +120,7 @@ const FuturesSetting = memo(
                 Object.keys(settings?.user_setting).map((item) => {
                     spotState[item] = settings?.user_setting?.[item] ?? spotState[item];
                 });
-                setLayoutFutures(spotState);
+                setLocalLayoutFutures(spotState);
                 onChangeSpotState(spotState);
                 setMount(true);
             }
@@ -146,7 +147,7 @@ const FuturesSetting = memo(
             clearTimeout(timer.current);
             const _newSpotState = spotState;
             spotState[key] = value;
-            setLayoutFutures(spotState);
+            setLocalLayoutFutures(spotState);
             onChangeSpotState({
                 ...spotState,
                 ..._newSpotState

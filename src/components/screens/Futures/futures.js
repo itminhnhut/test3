@@ -11,7 +11,7 @@ import FuturesPairDetail from 'components/screens/Futures/PairDetail';
 import FuturesTradeRecord from 'components/screens/Futures/TradeRecord';
 import FuturesFavoritePairs from 'components/screens/Futures/FavoritePairs';
 import FuturesPlaceOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc';
-import futuresGridConfig, { futuresGridKey } from 'components/screens/Futures/_futuresGrid';
+import futuresGridConfig, { futuresGridKey, futuresLayoutKey } from 'components/screens/Futures/_futuresGrid';
 import useWindowSize from 'hooks/useWindowSize';
 import DynamicNoSsr from 'components/DynamicNoSsr';
 import dynamic from 'next/dynamic';
@@ -27,6 +27,8 @@ import DefaultMobileView from 'src/components/common/DefaultMobileView';
 import { FuturesSettings } from 'redux/reducers/futures';
 import { useLocalStorage, usePrevious } from 'react-use';
 import styled from 'styled-components';
+import { XCircle } from 'react-feather';
+import { CloseIcon } from 'components/svg/SvgIcon';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -193,12 +195,15 @@ const Futures = () => {
     }, [localLayoutFutures]);
 
     const resetDefault = (params) => {
-        setLocalLayoutFutures({ ...initFuturesComponent, ...params });
-
-        setComponentLayoutFutures({ ...initFuturesComponent, ...params });
+        setLayoutFutures({ ...initFuturesComponent, ...params });
 
         setState({ layouts: INITIAL_STATE.layouts });
         setLocalGridLayout({ ...localGridLayouts, [auth?.code || NON_LOGIN]: INITIAL_STATE.layouts });
+    };
+
+    const setLayoutFutures = (newLayoutParams) => {
+        setLocalLayoutFutures(newLayoutParams);
+        setComponentLayoutFutures(newLayoutParams);
     };
 
     const decimals = useMemo(() => {
@@ -238,6 +243,8 @@ const Futures = () => {
                                 containerPadding={[0, 0]}
                                 rowHeight={24}
                                 draggableHandle=".dragHandleArea"
+                                resizeHandles={['se']}
+                                resizeHandle={<div className="hidden group-hover:block react-resizable-handle react-resizable-handle-se"></div>}
                                 onLayoutChange={(_currentLayout, allNewLayouts) => {
                                     const flatLayout = [...allNewLayouts[state.breakpoint], ...state.prevLayouts].filter((layout, index, originLayouts) => {
                                         const firstIndex = originLayouts.findIndex((l) => l.i === layout.i);
@@ -264,6 +271,9 @@ const Futures = () => {
                                         data-grid={getDataGrid(futuresGridKey.favoritePair)}
                                         key={futuresGridKey.favoritePair}
                                     >
+                                        <RemoveItemArea
+                                            onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.favoritePair]: false })}
+                                        />
                                         <DragHandleArea />
                                         <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
                                     </GridItem>
@@ -274,6 +284,7 @@ const Futures = () => {
                                         key={futuresGridKey.pairDetail}
                                         className={classNames('relative z-20')}
                                     >
+                                        <RemoveItemArea onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.pairDetail]: false })} />
                                         <DragHandleArea />
                                         <FuturesPairDetail
                                             pairPrice={state.pairPrice}
@@ -286,6 +297,7 @@ const Futures = () => {
                                 )}
                                 {componentLayoutFutures?.isShowChart && (
                                     <GridItem id="futures_containter_chart" key={futuresGridKey.chart} data-grid={getDataGrid(futuresGridKey.chart)}>
+                                        <RemoveItemArea onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.chart]: false })} />
                                         <DragHandleArea />
                                         <FuturesChart
                                             chartKey="futures_containter_chart"
@@ -302,6 +314,9 @@ const Futures = () => {
                                         key={futuresGridKey.tradeRecord}
                                         className={classNames('overflow-auto')}
                                     >
+                                        <RemoveItemArea
+                                            onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.tradeRecord]: false })}
+                                        />
                                         <DragHandleArea />
                                         <FuturesTradeRecord
                                             isVndcFutures={true}
@@ -311,12 +326,13 @@ const Futures = () => {
                                             isAuth={!!auth}
                                             pair={state.pair}
                                         />
+                                        {/* <div className="" /> */}
                                     </GridItem>
                                 )}
                                 {componentLayoutFutures?.isShowPlaceOrder && (
                                     <GridItem data-grid={getDataGrid(futuresGridKey.placeOrder)} key={futuresGridKey.placeOrder}>
-                                        <DragHandleArea />
-
+                                        <RemoveItemArea onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.placeOrder]: false })} />
+                                        <DragHandleArea height={24} />
                                         <FuturesPlaceOrderVndc
                                             isAuth={!!auth}
                                             pairConfig={pairConfig}
@@ -331,7 +347,10 @@ const Futures = () => {
                                 )}
                                 {componentLayoutFutures?.isShowAssets && auth && (
                                     <GridItem data-grid={getDataGrid(futuresGridKey.marginRatio)} key={futuresGridKey.marginRatio}>
-                                        <DragHandleArea />
+                                        <RemoveItemArea
+                                            onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.marginRatio]: false })}
+                                        />
+                                        <DragHandleArea height={32} />
                                         <FuturesMarginRatioVndc
                                             pairConfig={pairConfig}
                                             auth={auth}
@@ -353,21 +372,16 @@ const Futures = () => {
     );
 };
 
-{
-    /* <div className="dragHandleArea w-1.5 space-y-1 absolute right-0  top-1">
-    <div className="w-full h-0.5 bg-gray-2 dark:bg-darkBlue-4 rounded-md"></div>
-    <div className="w-full h-0.5 bg-gray-2 dark:bg-darkBlue-4 rounded-md"></div>
-    <div className="w-full h-0.5 bg-gray-2 dark:bg-darkBlue-4 rounded-md"></div>
-</div>; */
-}
+const GridItem = styled.div.attrs({ className: 'group border border-divider dark:bg-dark-dark bg-white dark:border-divider-dark' })``;
 
-const GridItem = styled.div.attrs({ className: 'border border-divider dark:bg-dark-dark bg-white dark:border-divider-dark' })``;
+const DragHandleArea = ({ height }) => <div style={{ height }} className="dragHandleArea z-[1] h-4 absolute w-full space-y-1 top-0 right-0" />;
 
-const DragHandleArea = () => (
-    <div className="dragHandleArea absolute w-[7px] space-y-1 top-1 right-0">
-        <div className="h-0.5 w-full bg-gray-2 dark:bg-darkBlue-4 rounded-md" />
-        <div className="h-0.5 w-full bg-gray-2 dark:bg-darkBlue-4 rounded-md" />
-        <div className="h-0.5 w-full bg-gray-2 dark:bg-darkBlue-4 rounded-md" />
+const RemoveItemArea = (props) => (
+    <div
+        className="absolute cursor-pointer text-txtSecondary dark:text-txtSecondary-dark hover:text-txtPrimary transition-all dark:hover:text-txtPrimary-dark hidden group-hover:block  z-[2] rounded-full p-[1px] border border-divider dark:border-divider-dark right-[3px] top-[3px]"
+        {...props}
+    >
+        <CloseIcon color="currentColor" size={10} />
     </div>
 );
 

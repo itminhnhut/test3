@@ -9,10 +9,18 @@ export const futuresGridKey = {
     tradeRecord: 'tradeRecord',
     placeOrder: 'placeOrder',
     marginRatio: 'marginRatio',
-
     title: 'title',
     orderDetail: 'orderDetail',
     logs: 'logs'
+};
+
+export const futuresLayoutKey = {
+    favoritePair: 'isShowFavorites',
+    pairDetail: 'isShowPairDetail',
+    chart: 'isShowChart',
+    tradeRecord: 'isShowOpenOrders',
+    placeOrder: 'isShowPlaceOrder',
+    marginRatio: 'isShowAssets'
 };
 
 export const getLayoutFromLS = (key) => {
@@ -51,7 +59,7 @@ const layoutDefault = {
         h: 2.5,
         minH: 2.5,
         maxH: 2.5,
-        minW: 5,
+        minW: 3,
         x: 0,
         y: 0,
         moved: false,
@@ -64,7 +72,7 @@ const layoutDefault = {
         h: 3.5,
         minH: 3.5,
         maxH: 3.5,
-        minW: 5,
+        minW: 4,
         x: 0,
         y: 2.5,
         moved: false,
@@ -147,7 +155,10 @@ export default {
             {
                 ...layoutDefault[futuresGridKey.tradeRecord],
                 w: 10,
-                h: 15
+                h: 15,
+                minW: 10,
+                minH: 15,
+                isResizable: true
             },
             {
                 ...layoutDefault[futuresGridKey.placeOrder],
@@ -181,7 +192,10 @@ export default {
             {
                 ...layoutDefault[futuresGridKey.tradeRecord],
                 w: 12,
-                h: 15
+                h: 15,
+                minW: 12,
+                minH: 15,
+                isResizable: true
             },
             {
                 ...layoutDefault[futuresGridKey.placeOrder],
@@ -215,7 +229,10 @@ export default {
             {
                 ...layoutDefault[futuresGridKey.tradeRecord],
                 w: 14,
-                h: 24
+                h: 24,
+                minW: 14,
+                minH: 24,
+                isResizable: true
             },
             {
                 ...layoutDefault[futuresGridKey.placeOrder],

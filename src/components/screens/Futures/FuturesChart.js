@@ -5,7 +5,7 @@ const FuturesChart = ({ pair, initTimeFrame, isVndcFutures, ordersList, chartKey
     const { t } = useTranslation();
     if (!pair) return null;
     return (
-        <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark h-full dragHandleArea">
+        <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark h-full ">
             <div className="spot-chart h-full flex flex-col">
                 <Chart t={t} chartKey={chartKey} symbol={pair} initTimeFrame={initTimeFrame} ordersList={ordersList} isVndcFutures={isVndcFutures} {...props} />
             </div>
