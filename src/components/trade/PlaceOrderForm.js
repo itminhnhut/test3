@@ -749,8 +749,9 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
                 message={alert.current.message}
                 notes={alert.current.notes}
             />
-            <div className="py-6 px-4 spot-place-orders-container rounded">
-                <h3 className="font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark mb-6 dragHandleArea">{t('spot:place_order')}</h3>
+            
+            <div className="py-6 px-4 spot-place-orders-container rounded h-full overflow-auto">
+                <h3 className="font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark mb-6">{t('spot:place_order')}</h3>
                 {_renderOrderSide()}
                 {_renderOrderType}
 

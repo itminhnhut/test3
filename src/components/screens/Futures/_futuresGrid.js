@@ -1,4 +1,4 @@
-import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants';
+import { BREAK_POINTS } from 'constants/constants';
 
 export const futuresGridKey = {
     favoritePair: 'favoritePair',
@@ -21,36 +21,6 @@ export const futuresLayoutKey = {
     tradeRecord: 'isShowOpenOrders',
     placeOrder: 'isShowPlaceOrder',
     marginRatio: 'isShowAssets'
-};
-
-export const getLayoutFromLS = (key) => {
-    let ls = {};
-    if (global.localStorage) {
-        try {
-            ls = JSON.parse(global.localStorage.getItem(LOCAL_STORAGE_KEY.FuturesGridLayouts)) || {};
-        } catch (e) {
-            /*Ignore*/
-        }
-    }
-    return ls[key];
-};
-
-export const setLayoutToLS = (key, value) => {
-    if (global.localStorage) {
-        let localStorage = global.localStorage.getItem(LOCAL_STORAGE_KEY.FuturesGridLayouts);
-        if (localStorage) {
-            localStorage = JSON.parse(localStorage);
-            localStorage[key] = value;
-            global.localStorage.setItem(LOCAL_STORAGE_KEY.FuturesGridLayouts, JSON.stringify(localStorage));
-        } else {
-            global.localStorage.setItem(
-                LOCAL_STORAGE_KEY.FuturesGridLayouts,
-                JSON.stringify({
-                    [key]: value
-                })
-            );
-        }
-    }
 };
 
 const layoutDefault = {

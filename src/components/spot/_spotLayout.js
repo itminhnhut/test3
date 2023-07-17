@@ -1,6 +1,37 @@
+export const spotGridKey = {
+    SYMBOL_DETAIL: 'symbolDetail',
+    CHART: 'chart',
+    ORDER_FORM: 'placeOrderForm',
+    ORDER_BOOK: 'orderbook',
+    SYMBOL_LIST: 'symbolList',
+    TRADES: 'trades',
+    ORDER_LIST: 'orderList'
+};
+
+export const spotSettingKey = {
+    CHART: 'isShowChart',
+    SYMBOL_DETAIL: 'isShowSymbolDetail',
+    ORDER_FORM: 'isShowPlaceOrderForm',
+    ORDER_BOOK: 'isShowOrderBook',
+    SYMBOL_LIST: 'isShowSymbolList',
+    TRADES: 'isShowTrades',
+    ORDER_LIST: 'isShowOrderList'
+};
+
+
+export const initSpotSetting = {
+    [spotSettingKey.CHART]: true,
+    [spotSettingKey.SYMBOL_DETAIL]: true,
+    [spotSettingKey.ORDER_BOOK]: true,
+    [spotSettingKey.TRADES]: true,
+    [spotSettingKey.SYMBOL_LIST]: true,
+    [spotSettingKey.ORDER_LIST]: true,
+    [spotSettingKey.ORDER_FORM]: true
+};
+
 export const layoutSimple = [
     {
-        i: 'symbolDetail',
+        i: spotGridKey.SYMBOL_DETAIL,
         x: 0,
         y: 0,
         w: 12.5,
@@ -9,7 +40,7 @@ export const layoutSimple = [
         isResizable: false
     },
     {
-        i: 'orderbook',
+        i: spotGridKey.ORDER_BOOK,
         x: 0,
         y: 4,
         w: 3.5,
@@ -18,7 +49,7 @@ export const layoutSimple = [
         isResizable: false
     },
     {
-        i: 'chart',
+        i: spotGridKey.CHART,
         x: 3.5,
         y: 4,
         w: 9,
@@ -27,7 +58,7 @@ export const layoutSimple = [
         isResizable: false
     },
     {
-        i: 'placeOrderForm',
+        i: spotGridKey.ORDER_FORM,
         x: 3.5,
         y: 6,
         w: 9,
@@ -36,7 +67,7 @@ export const layoutSimple = [
         isResizable: false
     },
     {
-        i: 'symbolList',
+        i: spotGridKey.SYMBOL_LIST,
         x: 12.5,
         y: 0,
         w: 3.5,
@@ -45,7 +76,7 @@ export const layoutSimple = [
         isResizable: false
     },
     {
-        i: 'trades',
+        i: spotGridKey.TRADES,
         x: 12.5,
         y: 17,
         w: 3.5,
@@ -55,7 +86,7 @@ export const layoutSimple = [
         isResizable: false
     },
     {
-        i: 'orderList',
+        i: spotGridKey.ORDER_LIST,
         x: 0,
         y: 26,
         w: 30,
@@ -67,62 +98,74 @@ export const layoutSimple = [
 
 export const layoutPro = [
     {
-        i: 'chart',
+        i: spotGridKey.SYMBOL_DETAIL,
+        x: 0,
+        y: 0,
+        w: 9,
+        minW: 4,
+        h: 4,
+        minH: 4,
+        maxH: 4,
+        isDraggable: true,
+        isResizable: true,
+        isDroppable: false
+    },
+    {
+        i: spotGridKey.CHART,
         x: 0,
         y: 4,
-        w: 9,
-        h: 24,
-        isDraggable: true,
-        isResizable: true,
-        isDroppable: false
-    },
-    {
-        i: 'orderList',
-        x: 0,
-        y: 25,
-        w: 9,
         h: 22,
-        isDraggable: true,
-        isResizable: true,
-        isDroppable: false
-    },
-    {
-        i: 'symbolDetail',
-        x: 0,
-        y: 0,
+        minH: 14,
         w: 9,
-        h: 4,
+        minW: 5,
         isDraggable: true,
         isResizable: true,
         isDroppable: false
     },
     {
-        i: 'orderbook',
-        x: 9,
-        y: 0,
-        w: 3.5,
+        i: spotGridKey.ORDER_LIST,
+        x: 0,
+        y: 26,
+        w: 9,
+        minW: 9,
+        minH: 20,
         h: 28,
         isDraggable: true,
         isResizable: true,
         isDroppable: false
     },
     {
-        i: 'trades',
+        i: spotGridKey.ORDER_BOOK,
         x: 9,
-        y: 17,
-        w: 3.5,
-        h: 33,
-        minW: 10,
+        y: 0,
+        w: 4,
+        h: 28,
+        minW: 3,
+        minH: 12,
         isDraggable: true,
         isResizable: true,
         isDroppable: false
     },
     {
-        i: 'placeOrderForm',
+        i: spotGridKey.TRADES,
+        x: 9,
+        y: 17,
+        w: 4,
+        minW: 3,
+        minH: 12,
+        h: 26,
+        isDraggable: true,
+        isResizable: true,
+        isDroppable: false
+    },
+    {
+        i: spotGridKey.ORDER_FORM,
         x: 13,
         y: 0,
-        w: 3.5,
-        h: 42,
+        w: 3,
+        minW: 2.5,
+        minH: 12,
+        h: 26,
         isDraggable: true,
         isResizable: true,
         isDroppable: false

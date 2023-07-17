@@ -45,7 +45,13 @@ const SpotOrderList = (props) => {
         return (
             <Tabs tab={activeTab} className="gap-6 border-b border-divider dark:border-divider-dark px-6">
                 {tabs?.map((tab) => (
-                    <TabItem key={tab.value} V2 className="!text-left !px-0 !text-sm" value={tab.value} onClick={(isClick) => isClick && setActiveTab(tab.value)}>
+                    <TabItem
+                        key={tab.value}
+                        V2
+                        className="!text-left !px-0 !text-sm"
+                        value={tab.value}
+                        onClick={(isClick) => isClick && setActiveTab(tab.value)}
+                    >
                         {tab.label}
                     </TabItem>
                 ))}
@@ -69,41 +75,10 @@ const SpotOrderList = (props) => {
                         props.isPro ? 'border-b border-divider dark:border-divider-dark' : ''
                     }`}
                 >
-                    {activeTab === 'open' && (
-                        <OpeningOrder
-                            filterByCurrentPair={hideOther}
-                            height={height}
-                            orderListWrapperHeight={props.orderListWrapperHeight}
-                            currentPair={query?.id}
-                            isPro={props.isPro}
-                        />
-                    )}
-                    {activeTab === 'order_history' && (
-                        <OrderHistory
-                            isPro={props.isPro}
-                            filterByCurrentPair={hideOther}
-                            height={height}
-                            orderListWrapperHeight={props.orderListWrapperHeight}
-                            currentPair={query?.id}
-                        />
-                    )}
-                    {activeTab === 'trade_history' && (
-                        <TradeHistory
-                            filterByCurrentPair={hideOther}
-                            height={height}
-                            orderListWrapperHeight={props.orderListWrapperHeight}
-                            currentPair={query?.id}
-                        />
-                    )}
-                    {activeTab === 'fund' && (
-                        <SpotFund
-                            filterByCurrentPair={hideOther}
-                            isPro={props.isPro}
-                            height={height}
-                            orderListWrapperHeight={props.orderListWrapperHeight}
-                            currentPair={query?.id}
-                        />
-                    )}
+                    {activeTab === 'open' && <OpeningOrder filterByCurrentPair={hideOther} currentPair={query?.id} isPro={props.isPro} />}
+                    {activeTab === 'order_history' && <OrderHistory isPro={props.isPro} filterByCurrentPair={hideOther} currentPair={query?.id} />}
+                    {activeTab === 'trade_history' && <TradeHistory filterByCurrentPair={hideOther} currentPair={query?.id} />}
+                    {activeTab === 'fund' && <SpotFund filterByCurrentPair={hideOther} isPro={props.isPro} currentPair={query?.id} />}
                 </div>
             </div>
         </>

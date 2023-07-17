@@ -1,7 +1,7 @@
 
 .react-resizable-handle{
     &::after {
-        @apply border-gray-2 dark:border-darkBlue-4  #{!important};
+        @apply border-[#7B8CB2] dark:border-[#718096] #{!important};
         content: "";
         position: absolute;
         right: 3px;

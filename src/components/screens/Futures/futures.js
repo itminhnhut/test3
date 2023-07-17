@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants';
-import { ApiStatus, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
+import { BREAK_POINTS } from 'constants/constants';
+import { ApiStatus, LOCAL_STORAGE_KEY, NON_LOGIN_KEY, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -27,13 +27,9 @@ import DefaultMobileView from 'src/components/common/DefaultMobileView';
 import { useLocalStorage } from 'react-use';
 import styled from 'styled-components';
 import RemoveItemArea from 'components/common/ReactGridItem/RemoveItemArea';
-// import DragHandleArea from 'components/common/ReactGridItem/DragHandleArea';
-const DragHandleArea = ({ height, dragHandleClassName = '' }) => (
-    <div style={{ height }} className={classNames('dragHandleArea z-[1] h-4 absolute w-full space-y-1 top-0 right-0', dragHandleClassName)} />
-);
-const GridLayout = WidthProvider(Responsive);
+import DragHandleArea from 'components/common/ReactGridItem/DragHandleArea';
 
-const NON_LOGIN = 'non-login-layouts';
+const GridLayout = WidthProvider(Responsive);
 
 const FuturesProfitEarned = dynamic(() => import('components/screens/Futures/TakedProfit'), { ssr: false });
 
@@ -68,8 +64,8 @@ const initFuturesComponent = {
 const Futures = () => {
     const [state, set] = useState(INITIAL_STATE);
 
-    const [localGridLayouts, setLocalGridLayout] = useLocalStorage('gridLayoutFutures');
-    const [localLayoutFutures, setLocalLayoutFutures] = useLocalStorage('settingLayoutFutures');
+    const [localGridLayouts, setLocalGridLayout] = useLocalStorage(LOCAL_STORAGE_KEY.FUTURE_GRID_LAYOUT);
+    const [localLayoutFutures, setLocalLayoutFutures] = useLocalStorage(LOCAL_STORAGE_KEY.FUTURE_SETTING_LAYOUT);
     const [componentLayoutFutures, setComponentLayoutFutures] = useState(localLayoutFutures || initFuturesComponent);
 
     const dispatch = useDispatch();
@@ -199,7 +195,7 @@ const Futures = () => {
         setLayoutFutures({ ...initFuturesComponent, ...params });
 
         setState({ layouts: INITIAL_STATE.layouts });
-        setLocalGridLayout({ ...localGridLayouts, [auth?.code || NON_LOGIN]: INITIAL_STATE.layouts });
+        setLocalGridLayout({ ...localGridLayouts, [auth?.code || NON_LOGIN_KEY]: INITIAL_STATE.layouts });
     };
 
     const setLayoutFutures = (newLayoutParams) => {
@@ -237,7 +233,7 @@ const Futures = () => {
                         {isMediumDevices ? (
                             <GridLayout
                                 className="layout"
-                                layouts={localGridLayouts?.[auth?.code || NON_LOGIN] || state.layouts}
+                                layouts={localGridLayouts?.[auth?.code || NON_LOGIN_KEY] || state.layouts}
                                 breakpoints={futuresGridConfig.breakpoints}
                                 cols={futuresGridConfig.cols}
                                 margin={[-1, -1]}
@@ -245,7 +241,7 @@ const Futures = () => {
                                 rowHeight={24}
                                 draggableHandle=".dragHandleArea"
                                 resizeHandles={['se']}
-                                resizeHandle={<div className="hidden group-hover:block react-resizable-handle react-resizable-handle-se"></div>}
+                                resizeHandle={<div className="opacity-0 group-hover:opacity-100 react-resizable-handle react-resizable-handle-se"></div>}
                                 onLayoutChange={(_currentLayout, allNewLayouts) => {
                                     const flatLayout = [...allNewLayouts[state.breakpoint], ...state.prevLayouts].filter((layout, index, originLayouts) => {
                                         const firstIndex = originLayouts.findIndex((l) => l.i === layout.i);
@@ -254,7 +250,7 @@ const Futures = () => {
 
                                     setLocalGridLayout({
                                         ...localGridLayouts,
-                                        [auth?.code || NON_LOGIN]: { ...allNewLayouts, [state.breakpoint]: flatLayout }
+                                        [auth?.code || NON_LOGIN_KEY]: { ...allNewLayouts, [state.breakpoint]: flatLayout }
                                     });
 
                                     setState({ prevLayouts: flatLayout, layouts: { ...allNewLayouts, [state.breakpoint]: flatLayout } });
@@ -310,11 +306,7 @@ const Futures = () => {
                                     </GridItem>
                                 )}
                                 {componentLayoutFutures?.isShowOpenOrders && (
-                                    <GridItem
-                                        data-grid={getDataGrid(futuresGridKey.tradeRecord)}
-                                        key={futuresGridKey.tradeRecord}
-                                        className={classNames('overflow-auto')}
-                                    >
+                                    <GridItem data-grid={getDataGrid(futuresGridKey.tradeRecord)} key={futuresGridKey.tradeRecord} className={classNames('')}>
                                         <RemoveItemArea
                                             onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.tradeRecord]: false })}
                                         />

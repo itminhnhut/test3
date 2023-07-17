@@ -19,6 +19,7 @@ import FuturesFeeModal from 'components/screens/Futures/PlaceOrder/EditFee/Futur
 import { getFuturesFees } from 'redux/actions/utils';
 import { useLocalStorage } from 'react-use';
 import { futuresLayoutKey } from './_futuresGrid';
+import { LOCAL_STORAGE_KEY } from 'redux/actions/const';
 
 const FuturesSetting = memo(
     (props) => {
@@ -37,7 +38,7 @@ const FuturesSetting = memo(
         const [settingFee, setSettingFee] = useState({ VNDC: {}, USDT: {} });
         const [disableReset, setDisableReset] = useState(false);
 
-        const [layoutFutures, setLocalLayoutFutures] = useLocalStorage('settingLayoutFutures');
+        const [layoutFutures, setLocalLayoutFutures] = useLocalStorage(LOCAL_STORAGE_KEY.FUTURE_SETTING_LAYOUT);
 
         const auth = useSelector((state) => state.auth?.user);
 
