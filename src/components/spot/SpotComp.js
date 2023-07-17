@@ -238,7 +238,9 @@ const SpotComp = () => {
                             <div
                                 data-grid={getDataGrid(spotGridKey.SYMBOL_LIST)}
                                 key={spotGridKey.SYMBOL_LIST}
-                                className={classNames('z-10 group border-l border-divider dark:border-divider-dark bg-bgSpotContainer dark:bg-bgSpotContainer-dark')}
+                                className={classNames(
+                                    'z-10 group border-l border-divider dark:border-divider-dark bg-bgSpotContainer dark:bg-bgSpotContainer-dark'
+                                )}
                             >
                                 <SymbolList publicSocket={publicSocket} symbol={symbol} />
                             </div>
