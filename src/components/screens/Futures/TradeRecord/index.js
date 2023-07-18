@@ -158,7 +158,7 @@ const FuturesTradeRecord = ({
     }, [tabActive, isVndcFutures, pairConfig, onChangeTimePicker, onForceUpdate, isAuth, onLogin, pair, pickedTime, hideOther])
 
     return (
-        <div ref={tableRef} className="flex flex-col overflow-y-hidden">
+        <div ref={tableRef} className="flex flex-col h-full overflow-auto">
             <div className="min-h-[52px] px-5 flex items-center border-b border-divider dark:border-divider-dark">
                 <FuturesRecordTableTab
                     tabActive={tabActive}

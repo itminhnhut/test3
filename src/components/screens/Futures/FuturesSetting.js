@@ -17,6 +17,9 @@ import isUndefined from 'lodash/isUndefined';
 import { BxChevronDown } from 'components/svg/SvgIcon';
 import FuturesFeeModal from 'components/screens/Futures/PlaceOrder/EditFee/FuturesFeeModal';
 import { getFuturesFees } from 'redux/actions/utils';
+import { useLocalStorage } from 'react-use';
+import { futuresLayoutKey } from './_futuresGrid';
+import { LOCAL_STORAGE_KEY } from 'redux/actions/const';
 
 const FuturesSetting = memo(
     (props) => {
@@ -33,6 +36,10 @@ const FuturesSetting = memo(
         const [mount, setMount] = useState(false);
         const [showFee, setShowFee] = useState(null);
         const [settingFee, setSettingFee] = useState({ VNDC: {}, USDT: {} });
+        const [disableReset, setDisableReset] = useState(false);
+
+        const [layoutFutures, setLocalLayoutFutures] = useLocalStorage(LOCAL_STORAGE_KEY.FUTURE_SETTING_LAYOUT);
+
         const auth = useSelector((state) => state.auth?.user);
 
         useEffect(() => {
@@ -50,33 +57,34 @@ const FuturesSetting = memo(
         const FuturesComponents = [
             {
                 label: t('futures:setting:favorites'),
-                key: 'isShowFavorites',
+                key: futuresLayoutKey.favoritePair,
                 visible: true
             },
             {
                 label: t('futures:setting:pair_detail'),
-                key: 'isShowPairDetail',
+                key: futuresLayoutKey.pairDetail,
                 visible: true
             },
             {
                 label: t('futures:setting:chart'),
-                key: 'isShowChart',
+                key: futuresLayoutKey.chart,
                 visible: true
             },
             {
                 label: t('futures:setting:orders_history'),
-                key: 'isShowOpenOrders',
+                key: futuresLayoutKey.tradeRecord,
                 visible: true
             },
             {
                 label: t('futures:setting:place_order'),
-                key: 'isShowPlaceOrder',
+                key: futuresLayoutKey.placeOrder,
                 visible: true
             },
             {
                 label: t('common:assets'),
-                key: 'isShowAssets',
-                visible: true
+                key: futuresLayoutKey.marginRatio,
+                visible: true,
+                mustBeAuth: true
             }
         ];
 
@@ -109,16 +117,15 @@ const FuturesSetting = memo(
         const inActiveLabel = currentTheme === 'dark' ? colors.gray[7] : colors.gray[1];
 
         useEffect(() => {
-            const settingFutures = localStorage.getItem('settingLayoutFutures');
-            if (settings?.user_setting && settingFutures && !mount) {
+            if (settings?.user_setting && layoutFutures && !mount) {
                 Object.keys(settings?.user_setting).map((item) => {
                     spotState[item] = settings?.user_setting?.[item] ?? spotState[item];
                 });
-                localStorage.setItem('settingLayoutFutures', JSON.stringify(spotState));
+                setLocalLayoutFutures(spotState);
                 onChangeSpotState(spotState);
                 setMount(true);
             }
-        }, [settings?.user_setting]);
+        }, [settings?.user_setting, layoutFutures]);
 
         const onChangeSetting = (key, value) => {
             if (!userSetting.find((item) => item.key === key)) return;
@@ -141,7 +148,7 @@ const FuturesSetting = memo(
             clearTimeout(timer.current);
             const _newSpotState = spotState;
             spotState[key] = value;
-            localStorage.setItem('settingLayoutFutures', JSON.stringify(spotState));
+            setLocalLayoutFutures(spotState);
             onChangeSpotState({
                 ...spotState,
                 ..._newSpotState
@@ -153,16 +160,25 @@ const FuturesSetting = memo(
 
         const onSetDefault = () => {
             clearTimeout(timer.current);
+            if (resetDefault) {
+                setDisableReset(true);
+            }
             timer.current = setTimeout(() => {
-                const params = {
-                    setting: {
-                        ...settings?.user_setting,
-                        [FuturesSettings.order_confirm]: true,
-                        [FuturesSettings.show_sl_tp_order_line]: true
-                    }
-                };
-                dispatch(fetchFuturesSetting(params));
-                if (resetDefault) resetDefault({ [FuturesSettings.order_confirm]: true, [FuturesSettings.show_sl_tp_order_line]: true });
+                if (auth) {
+                    const params = {
+                        setting: {
+                            ...settings?.user_setting,
+                            [FuturesSettings.order_confirm]: true,
+                            [FuturesSettings.show_sl_tp_order_line]: true
+                        }
+                    };
+                    dispatch(fetchFuturesSetting(params));
+                }
+
+                if (resetDefault) {
+                    resetDefault({ [FuturesSettings.order_confirm]: true, [FuturesSettings.show_sl_tp_order_line]: true });
+                    setDisableReset(false);
+                }
             }, 500);
         };
 
@@ -227,8 +243,8 @@ const FuturesSetting = memo(
                                         <div className="py-6 divide-y-[1px] divide-divider dark:divide-divider-dark grid grid-cols-1 gap-6">
                                             <div className="space-y-4">
                                                 {FuturesComponents.map((item, index) => {
-                                                    const { label, key, visible } = item;
-                                                    if (!visible) return null;
+                                                    const { label, key, visible, mustBeAuth = false } = item;
+                                                    if (!visible || (mustBeAuth && !auth)) return null;
                                                     return (
                                                         <div className="h-6 flex justify-between" key={key + index}>
                                                             <span className="text-sm text-txtPrimary dark:text-txtPrimary-dark flex items-center">{label}</span>
@@ -311,7 +327,7 @@ const FuturesSetting = memo(
                                                 })}
                                         </div>
                                         <div className="pt-6">
-                                            <TextButton className="h-10 sm:h-11 text-center" onClick={onSetDefault}>
+                                            <TextButton className={'h-10 sm:h-11 text-center'} disabled={disableReset} onClick={onSetDefault}>
                                                 {t('spot:setting.reset_default_layout')}
                                             </TextButton>
                                         </div>

@@ -4,7 +4,12 @@ export const EPS = 0.00000001;
 
 export const LOCAL_STORAGE_KEY = {
     THEME: 'theme',
-    HIDE_BALANCE: 'hide_wallet_balance'
+    HIDE_BALANCE: 'hide_wallet_balance',
+    PreviousFuturesPair: 'previous_futures_pair',
+    SPOT_GRID_LAYOUT: 'gridLayoutSpot',
+    SPOT_SETTING_LAYOUT: 'settingLayoutSpot',
+    FUTURE_GRID_LAYOUT: 'gridLayoutFutures',
+    FUTURE_SETTING_LAYOUT: 'settingLayoutFutures'
 };
 
 const TokenConfigNetwork = {
@@ -973,3 +978,5 @@ export const PartnerReasonDisputed = {
 };
 
 export const MIN_TIP = 2000;
+
+export const NON_LOGIN_KEY = 'non-login-layouts';

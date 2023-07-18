@@ -1,4 +1,4 @@
-import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants';
+import { BREAK_POINTS } from 'constants/constants';
 
 export const futuresGridKey = {
     favoritePair: 'favoritePair',
@@ -9,49 +9,97 @@ export const futuresGridKey = {
     tradeRecord: 'tradeRecord',
     placeOrder: 'placeOrder',
     marginRatio: 'marginRatio',
-
     title: 'title',
     orderDetail: 'orderDetail',
     logs: 'logs'
 };
 
-export const getLayoutFromLS = (key) => {
-    let ls = {};
-    if (global.localStorage) {
-        try {
-            ls = JSON.parse(global.localStorage.getItem(LOCAL_STORAGE_KEY.FuturesGridLayouts)) || {};
-        } catch (e) {
-            /*Ignore*/
-        }
-    }
-    return ls[key];
+export const futuresLayoutKey = {
+    favoritePair: 'isShowFavorites',
+    pairDetail: 'isShowPairDetail',
+    chart: 'isShowChart',
+    tradeRecord: 'isShowOpenOrders',
+    placeOrder: 'isShowPlaceOrder',
+    marginRatio: 'isShowAssets'
 };
 
-export const setLayoutToLS = (key, value) => {
-    if (global.localStorage) {
-        let localStorage = global.localStorage.getItem(LOCAL_STORAGE_KEY.FuturesGridLayouts);
-        if (localStorage) {
-            localStorage = JSON.parse(localStorage);
-            localStorage[key] = value;
-            global.localStorage.setItem(LOCAL_STORAGE_KEY.FuturesGridLayouts, JSON.stringify(localStorage));
-        } else {
-            global.localStorage.setItem(
-                LOCAL_STORAGE_KEY.FuturesGridLayouts,
-                JSON.stringify({
-                    [key]: value
-                })
-            );
-        }
+const layoutDefault = {
+    [futuresGridKey.favoritePair]: {
+        i: futuresGridKey.favoritePair,
+        h: 2.5,
+        minH: 2.5,
+        maxH: 2.5,
+        minW: 3,
+        x: 0,
+        y: 0,
+        moved: false,
+        static: false,
+        isDraggable: true,
+        isResizable: true
+    },
+    [futuresGridKey.pairDetail]: {
+        i: futuresGridKey.pairDetail,
+        h: 3.5,
+        minH: 3.5,
+        maxH: 3.5,
+        minW: 4,
+        x: 0,
+        y: 2.5,
+        moved: false,
+        static: false,
+        isDraggable: true,
+        isResizable: true
+    },
+    [futuresGridKey.chart]: {
+        i: futuresGridKey.chart,
+        x: 0,
+        y: 6,
+        h: 23,
+        moved: false,
+        static: false,
+        isDraggable: true,
+        isResizable: true
+    },
+    [futuresGridKey.tradeRecord]: {
+        i: futuresGridKey.tradeRecord,
+        x: 0,
+        y: 29,
+        h: 15,
+        moved: false,
+        static: false,
+        isDraggable: true,
+        isResizable: false
+    },
+    [futuresGridKey.placeOrder]: {
+        i: futuresGridKey.placeOrder,
+        y: 0,
+        h: 29,
+        minH: 5,
+        moved: false,
+        static: false,
+        isDraggable: true,
+        isResizable: true
+    },
+    [futuresGridKey.marginRatio]: {
+        i: futuresGridKey.marginRatio,
+        y: 29,
+        minH: 5,
+        moved: false,
+        static: false,
+        isDraggable: true,
+        isResizable: true
     }
+};
+
+const COLS = {
+    md: 12,
+    lg: 14,
+    xl: 16,
+    '2xl': 18
 };
 
 export default {
-    cols: {
-        md: 12,
-        lg: 14,
-        xl: 16,
-        '2xl': 18
-    },
+    cols: COLS,
     breakpoints: {
         md: BREAK_POINTS.md,
         lg: BREAK_POINTS.lg,
@@ -59,278 +107,115 @@ export default {
         '2xl': BREAK_POINTS['2xl']
     },
     layoutsVndc: {
-        md: [
-            {
-                w: 8,
-                h: 2.5,
-                x: 0,
-                y: 0,
-                i: futuresGridKey.favoritePair,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
-            },
-            {
-                w: 8,
-                h: 3.5,
-                x: 0,
-                y: 0,
-                i: futuresGridKey.pairDetail,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
-            },
-            {
-                w: 8,
-                h: 23,
-                x: 0,
-                y: 5,
-                i: futuresGridKey.chart,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
-            },
-            {
-                w: 8,
-                h: 15,
-                x: 0,
-                y: 5,
-                i: futuresGridKey.tradeRecord,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
-            },
-            {
-                w: 4,
-                h: 29,
-                x: 9,
-                y: 0,
-                i: futuresGridKey.placeOrder,
-                minW: 4,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
-            },
-            {
-                w: 4,
-                h: 13,
-                x: 8,
-                y: 29,
-                i: futuresGridKey.marginRatio,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
-            }
-        ],
         lg: [
             {
-                w: 10,
-                h: 2.5,
-                x: 0,
-                y: 0,
-                i: futuresGridKey.favoritePair,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                ...layoutDefault[futuresGridKey.favoritePair],
+                w: 10
             },
             {
-                w: 10,
-                h: 3.5,
-                x: 0,
-                y: 0,
-                i: futuresGridKey.pairDetail,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                ...layoutDefault[futuresGridKey.pairDetail],
+                w: 10
             },
             {
+                ...layoutDefault[futuresGridKey.chart],
                 w: 10,
-                h: 23,
-                x: 0,
-                y: 5,
-                i: futuresGridKey.chart,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                minH: 12,
+                minW: 5
             },
             {
+                ...layoutDefault[futuresGridKey.tradeRecord],
                 w: 10,
-                h: 14,
-                x: 0,
-                y: 5,
-                i: futuresGridKey.tradeRecord,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                h: 15,
+                minW: 10,
+                minH: 15,
+                isResizable: true
             },
             {
-                w: 4,
-                h: 29,
+                ...layoutDefault[futuresGridKey.placeOrder],
                 x: 10,
-                y: 0,
-                i: futuresGridKey.placeOrder,
-                minW: 4,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                w: COLS.lg - 10,
+                minW: COLS.lg - 10
             },
             {
-                w: 4,
-                h: 12,
+                ...layoutDefault[futuresGridKey.marginRatio],
                 x: 10,
-                y: 32,
-                i: futuresGridKey.marginRatio,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                w: COLS.lg - 10,
+                minW: 2,
+                h: 15
             }
         ],
         xl: [
             {
-                w: 12,
-                h: 2.5,
-                x: 0,
-                y: 0,
-                i: futuresGridKey.favoritePair,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                ...layoutDefault[futuresGridKey.favoritePair],
+                w: 12
             },
             {
-                w: 12,
-                h: 3.5,
-                x: 0,
-                y: 0,
-                i: futuresGridKey.pairDetail,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                ...layoutDefault[futuresGridKey.pairDetail],
+                w: 12
             },
             {
+                ...layoutDefault[futuresGridKey.chart],
                 w: 12,
-                h: 23,
-                x: 0,
-                y: 5,
-                i: futuresGridKey.chart,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                minW: 6,
+                minH: 14
             },
             {
+                ...layoutDefault[futuresGridKey.tradeRecord],
                 w: 12,
-                h: 13,
-                x: 0,
-                y: 5,
-                i: futuresGridKey.tradeRecord,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                h: 15,
+                minW: 12,
+                minH: 15,
+                isResizable: true
             },
             {
-                w: 4,
-                h: 29,
+                ...layoutDefault[futuresGridKey.placeOrder],
                 x: 12,
-                y: 0,
-                i: futuresGridKey.placeOrder,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                w: COLS['xl'] - 12,
+                minW: COLS['xl'] - 12
             },
             {
-                w: 4,
-                h: 13,
+                ...layoutDefault[futuresGridKey.marginRatio],
                 x: 12,
-                y: 29,
-                i: futuresGridKey.marginRatio,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                w: COLS['xl'] - 12,
+                minW: 2,
+                h: 15
             }
         ],
         '2xl': [
             {
-                w: 14,
-                h: 2.5,
-                x: 0,
-                y: 0,
-                i: futuresGridKey.favoritePair,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                ...layoutDefault[futuresGridKey.favoritePair],
+                w: 14
             },
             {
-                w: 14,
-                h: 3.5,
-                x: 0,
-                y: 2.5,
-                i: futuresGridKey.pairDetail,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                ...layoutDefault[futuresGridKey.pairDetail],
+                w: 14
             },
             {
+                ...layoutDefault[futuresGridKey.chart],
                 w: 14,
-                h: 23,
-                x: 0,
-                y: 5,
-                i: futuresGridKey.chart,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                minW: 7,
+                minH: 16
             },
             {
+                ...layoutDefault[futuresGridKey.tradeRecord],
                 w: 14,
-                h: 12,
-                x: 0,
-                y: 5,
-                i: futuresGridKey.tradeRecord,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                h: 24,
+                minW: 14,
+                minH: 24,
+                isResizable: true
             },
             {
-                w: 4,
-                h: 29,
+                ...layoutDefault[futuresGridKey.placeOrder],
+                w: COLS['2xl'] - 14,
+                minW: COLS['2xl'] - 14,
+                x: 14
+            },
+            {
+                ...layoutDefault[futuresGridKey.marginRatio],
                 x: 14,
-                y: 0,
-                i: futuresGridKey.placeOrder,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
-            },
-            {
-                w: 4,
-                h: 12,
-                x: 14,
-                y: 29,
-                i: futuresGridKey.marginRatio,
-                moved: false,
-                static: false,
-                isDraggable: false,
-                isResizable: false
+                w: COLS['2xl'] - 14,
+                minW: 2,
+                h: 24
             }
         ]
     },

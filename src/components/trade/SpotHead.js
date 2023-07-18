@@ -18,6 +18,7 @@ const SpotHead = (props) => {
 
     useEffect(() => {
         Emitter.on(PublicSocketEvent.SPOT_TICKER_UPDATE, async (data) => {
+            console.log('data:', data)
             if (data?.s === `${symbol.base}${symbol.quote}`) {
                 setLoading(false);
                 setSymbolTicker(data);
@@ -35,7 +36,7 @@ const SpotHead = (props) => {
     // const { t } = useTranslation(['common', 'spot']);
     return (
         <Head>
-            <title>{loading ? 'Loading' : `${formatNumber(symbolTicker?.p, decimals?.price)} | ${symbolTicker?.s}`} | Nami Exchange</title>
+            <title>{loading ? `${symbol?.base}${symbol?.quote}` : `${formatNumber(symbolTicker?.p, decimals?.price)} | ${symbolTicker?.s}`} | Nami Exchange</title>
             <meta property="og:title" content="Nami Exchange" key="title" />
         </Head>
     );

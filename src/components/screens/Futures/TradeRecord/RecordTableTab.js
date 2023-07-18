@@ -6,7 +6,7 @@ const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures, countOrd
     const { t } = useTranslation();
     return (
         <div className="flex items-center flex-grow font-normal text-sm text-txtSecondary dark:text-txtSecondary-dark">
-            <Tabs tab={tabActive} className="gap-6">
+            <Tabs tab={tabActive} className="gap-6 !w-auto">
                 {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((tab, index) => (
                     <TabItem key={index} className="!text-left !px-0 !text-sm" value={tab.code} onClick={() => onChangeTab(tab.code)} isMobile>
                         {isVndcFutures ? t(tab.title) : tab.title}&nbsp;
@@ -14,7 +14,7 @@ const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures, countOrd
                     </TabItem>
                 ))}
             </Tabs>
-            <div className="h-full flex-grow dragHandleArea opacity-0 select-none">dragHandleArea</div>
+            <div className="h-full flex-grow dragHandleArea flex opacity-0 py-4 select-none">dragHandleArea</div>
         </div>
     );
 };

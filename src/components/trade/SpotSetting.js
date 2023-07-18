@@ -3,9 +3,9 @@ import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
+import { LOCAL_STORAGE_KEY, NON_LOGIN_KEY, SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import colors from 'styles/colors';
 import useLanguage from 'hooks/useLanguage';
 import classnames from 'classnames';
@@ -13,50 +13,58 @@ import Switch from 'components/common/V2/SwitchV2';
 import { NavbarSettingIcon, SettingIcon } from 'components/svg/SvgIcon';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import { getS3Url } from 'src/redux/actions/utils';
+import { useLocalStorage } from 'react-use';
+import { useSelector } from 'react-redux';
+import { spotSettingKey } from 'components/spot/_spotLayout';
 
 const SpotSetting = (props) => {
-    const { spotState, onChangeSpotState, resetDefault } = props;
-    const [currentTheme, onThemeSwitch] = useDarkMode();
-    const [currentLocale, onChangeLang] = useLanguage();
     const router = useRouter();
     const { t } = useTranslation();
-
-    const SpotComponents = [
-        {
-            value: t('spot:setting.symbol_detail'),
-            key: 'isShowSymbolDetail'
-        },
-        {
-            value: t('spot:setting.chart'),
-            key: 'isShowChart'
-        },
-        {
-            value: t('spot:setting.order_book'),
-            key: 'isShowOrderBook'
-        },
-        {
-            value: t('spot:setting.trades'),
-            key: 'isShowTrades'
-        },
-        {
-            value: t('spot:setting.symbol_list'),
-            key: 'isShowSymbolList'
-        },
-        {
-            value: t('spot:setting.order_list'),
-            key: 'isShowOrderList'
-        },
-        {
-            value: t('spot:setting.place_order_form'),
-            key: 'isShowPlaceOrderForm'
-        }
-    ];
+    const { spotState, onChangeSpotState, resetDefault } = props;
+    const [currentTheme, onThemeSwitch] = useDarkMode();
     const { layout, id } = router.query;
-    const [layoutMode, setLayoutMode] = useState(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
+    const user = useSelector((state) => state.auth?.user) || null;
+
+    const [localSetting, setLocalSetting] = useLocalStorage(LOCAL_STORAGE_KEY.SPOT_SETTING_LAYOUT);
+
+    const SpotComponents = useMemo(
+        () => [
+            {
+                value: t('spot:setting.symbol_detail'),
+                key: spotSettingKey.SYMBOL_DETAIL
+            },
+            {
+                value: t('spot:setting.chart'),
+                key: spotSettingKey.CHART
+            },
+            {
+                value: t('spot:setting.order_book'),
+                key: spotSettingKey.ORDER_BOOK
+            },
+            {
+                value: t('spot:setting.trades'),
+                key: spotSettingKey.TRADES
+            },
+            {
+                value: t('spot:setting.symbol_list'),
+                key: spotSettingKey.SYMBOL_LIST
+            },
+            {
+                value: t('spot:setting.order_list'),
+                key: spotSettingKey.ORDER_LIST
+            },
+            {
+                value: t('spot:setting.place_order_form'),
+                key: spotSettingKey.ORDER_FORM
+            }
+        ],
+        [t]
+    );
+    const [layoutMode, setLayoutMode] = useState(() => (layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE));
 
     useEffect(() => {
         setLayoutMode(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
-    }, [router.query]);
+    }, [layout]);
 
     const onChangeLayout = (_layout) => {
         router.push(`/trade/${id}?layout=${_layout}`);
@@ -64,12 +72,10 @@ const SpotSetting = (props) => {
     const inActiveLabel = currentTheme === 'dark' ? colors.gray[7] : colors.gray[1];
 
     const onChangeSpotComponent = (key, value) => {
-        const _newSpotState = spotState;
-        spotState[key] = value;
-        onChangeSpotState({
-            ...spotState,
-            ..._newSpotState
-        });
+        const _newSpotSetting = JSON.parse(JSON.stringify(spotState));
+        _newSpotSetting[key] = value;
+        setLocalSetting(_newSpotSetting);
+        onChangeSpotState(_newSpotSetting);
     };
 
     const layouts = [
@@ -81,7 +87,11 @@ const SpotSetting = (props) => {
         <Popover className="relative h-full">
             {({ open, close }) => (
                 <>
-                    <Popover.Button className={`h-full hover:text-teal dark:hover:text-teal text-txtSecondary dark:text-txtSecondary-dark flex items-center ${open ? '' : 'text-opacity-90'} group`}>
+                    <Popover.Button
+                        className={`h-full hover:text-teal dark:hover:text-teal text-txtSecondary dark:text-txtSecondary-dark flex items-center ${
+                            open ? '' : 'text-opacity-90'
+                        } group`}
+                    >
                         <SettingIcon size={24} />
                     </Popover.Button>
                     <Transition
@@ -156,10 +166,10 @@ const SpotSetting = (props) => {
                                 <div className="py-6 text-center space-y-4">
                                     {SpotComponents.map((item, index) => {
                                         const { value, key } = item;
+                                        if (key === spotSettingKey.SYMBOL_LIST && layoutMode === SPOT_LAYOUT_MODE.PRO) return null;
                                         return (
                                             <div className="flex justify-between" key={key + index}>
                                                 <span className="text-sm text-txtPrimary dark:text-txtPrimary-dark">{value}</span>
-                                                {/* <Toggle checked={spotState?.[key]} onChange={(value) => onChangeSpotComponent(key, value)} /> */}
                                                 <Switch checked={spotState?.[key]} onChange={(value) => onChangeSpotComponent(key, value)} />
                                             </div>
                                         );
