@@ -222,7 +222,7 @@ const SpotComp = () => {
                         onResize={handleResize}
                         draggableHandle=".dragHandleArea"
                         draggableCancel=".dragCancelArea"
-                        resizeHandle={() => <ResizeHandleArea />}
+                        resizeHandle={() => <ResizeHandleArea className="!z-30" />}
                     >
                         {!isPro && componentSetting[spotSettingKey.SYMBOL_LIST] && (
                             <div
@@ -345,7 +345,7 @@ const SpotComp = () => {
                                 )}
                             >
                                 {isPro && (
-                                    <RemoveItemArea onClick={() => onLayoutSettingChangeHandler({ ...componentSetting, [spotSettingKey.ORDER_LIST]: false })} />
+                                    <RemoveItemArea className="!z-30" onClick={() => onLayoutSettingChangeHandler({ ...componentSetting, [spotSettingKey.ORDER_LIST]: false })} />
                                 )}
                                 <SpotOrderList isPro={isPro} />
                             </div>

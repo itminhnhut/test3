@@ -8,6 +8,7 @@ import SpotFund from './SpotFund';
 import TradeHistory from './TradeHistory';
 import CheckBox from 'components/common/CheckBox';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import classNames from 'classnames';
 
 const SpotOrderList = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -68,13 +69,18 @@ const SpotOrderList = (props) => {
 
     return (
         <>
-            <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark pb-6 h-full overflow-auto" ref={elementRef}>
+            <div
+                className={classNames(
+                    'bg-bgSpotContainer dark:bg-bgSpotContainer-dark h-full overflow-auto',
+
+                    {
+                        'pb-6': !props.isPro
+                    }
+                )}
+                ref={elementRef}
+            >
                 <div className="flex items-center justify-between relative dragHandleArea">{_renderTab}</div>
-                <div
-                    className={`${currentTheme === THEME_MODE.LIGHT ? 'rdt_light' : 'rdt_dark'} ${
-                        props.isPro ? 'border-b border-divider dark:border-divider-dark' : ''
-                    }`}
-                >
+                <div className={`${currentTheme === THEME_MODE.LIGHT ? 'rdt_light' : 'rdt_dark'}`}>
                     {activeTab === 'open' && <OpeningOrder filterByCurrentPair={hideOther} currentPair={query?.id} isPro={props.isPro} />}
                     {activeTab === 'order_history' && <OrderHistory isPro={props.isPro} filterByCurrentPair={hideOther} currentPair={query?.id} />}
                     {activeTab === 'trade_history' && <TradeHistory filterByCurrentPair={hideOther} currentPair={query?.id} />}
