@@ -28,6 +28,7 @@ import { useLocalStorage } from 'react-use';
 import styled from 'styled-components';
 import RemoveItemArea from 'components/common/ReactGridItem/RemoveItemArea';
 import DragHandleArea from 'components/common/ReactGridItem/DragHandleArea';
+import ResizeHandleArea from 'components/common/ReactGridItem/ResizeHandleArea';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -241,7 +242,7 @@ const Futures = () => {
                                 rowHeight={24}
                                 draggableHandle=".dragHandleArea"
                                 resizeHandles={['se']}
-                                resizeHandle={<div className="opacity-0 group-hover:opacity-100 react-resizable-handle react-resizable-handle-se"></div>}
+                                resizeHandle={<ResizeHandleArea />}
                                 onLayoutChange={(_currentLayout, allNewLayouts) => {
                                     const flatLayout = [...allNewLayouts[state.breakpoint], ...state.prevLayouts].filter((layout, index, originLayouts) => {
                                         const firstIndex = originLayouts.findIndex((l) => l.i === layout.i);

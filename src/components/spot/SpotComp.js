@@ -29,6 +29,7 @@ import classNames from 'classnames';
 import { spotGridKey, layoutPro, layoutSimple, initSpotSetting, spotSettingKey } from './_spotLayout';
 import DragHandleArea from 'components/common/ReactGridItem/DragHandleArea';
 import RemoveItemArea from 'components/common/ReactGridItem/RemoveItemArea';
+import ResizeHandleArea from 'components/common/ReactGridItem/ResizeHandleArea';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -225,14 +226,7 @@ const SpotComp = () => {
                         onResize={handleResize}
                         draggableHandle=".dragHandleArea"
                         draggableCancel=".dragCancelArea"
-                        resizeHandle={() => (
-                            <span
-                                className={classNames('z-[1] react-resizable-handle react-resizable-handle-se opacity-0 group-hover:opacity-100', {
-                                    'nami-react-resizable-handle--dark': currentTheme === 'dark',
-                                    'nami-react-resizable-handle': currentTheme !== 'dark'
-                                })}
-                            />
-                        )}
+                        resizeHandle={() => <ResizeHandleArea />}
                     >
                         {!isPro && componentSetting[spotSettingKey.SYMBOL_LIST] && (
                             <div
