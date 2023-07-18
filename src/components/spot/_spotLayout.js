@@ -114,7 +114,7 @@ export const layoutPro = [
         i: spotGridKey.CHART,
         x: 0,
         y: 4,
-        h: 22,
+        h: 24,
         minH: 14,
         w: 9,
         minW: 5,
