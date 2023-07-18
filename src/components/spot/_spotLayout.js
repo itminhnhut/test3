@@ -129,7 +129,7 @@ export const layoutPro = [
         w: 9,
         minW: 9,
         minH: 20,
-        h: 27,
+        h: 26,
         isDraggable: true,
         isResizable: true,
         isDroppable: false
