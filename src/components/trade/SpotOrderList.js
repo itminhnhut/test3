@@ -68,7 +68,7 @@ const SpotOrderList = (props) => {
 
     return (
         <>
-            <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark pb-6 h-full" ref={elementRef}>
+            <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark pb-6 h-full overflow-auto" ref={elementRef}>
                 <div className="flex items-center justify-between relative dragHandleArea">{_renderTab}</div>
                 <div
                     className={`${currentTheme === THEME_MODE.LIGHT ? 'rdt_light' : 'rdt_dark'} ${

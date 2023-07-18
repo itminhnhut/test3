@@ -106,19 +106,15 @@ const SymbolDetail = (props) => {
                     {_renderSymbolList()}
                 </div>
                 <div className={fullScreen ? 'hidden' : 'flex h-full w-full border-l border-divider dark:border-divider-dark overflow-hidden'}>
-                    <InfoSlider gutter={16} containerClassName="gap-4">
-                        <div className="flex flex-col min-w-[100px] max-w-[150px] items-center space-y-1">
-                            <div>
-                                <div className={`block font-semibold ${symbolTicker?.u ? 'text-teal' : 'text-red'}`}>
-                                    {formatNumber(symbolTicker?.p, decimals.price)}
-                                </div>
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
-                                    <RefCurrency price={symbolTicker?.p} quoteAsset={symbolTicker.q} />
-                                </span>
-                            </div>
+                    <div className="flex ml-4 flex-col h-full min-w-[100px] max-w-[150px] justify-center space-y-1">
+                        <div className={`block font-semibold ${symbolTicker?.u ? 'text-teal' : 'text-red'}`}>
+                            {formatNumber(symbolTicker?.p, decimals.price)}
                         </div>
-                        <Detail symbolTicker={symbolTicker} exchangeConfig={exchangeConfig} symbol={symbol} t={t} decimals={decimals} />
-                    </InfoSlider>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
+                            <RefCurrency price={symbolTicker?.p} quoteAsset={symbolTicker.q} />
+                        </span>
+                    </div>
+                    <Detail symbolTicker={symbolTicker} exchangeConfig={exchangeConfig} symbol={symbol} t={t} decimals={decimals} />
                 </div>
             </div>
         </>
@@ -127,32 +123,38 @@ const SymbolDetail = (props) => {
 
 const Detail = ({ symbolTicker, t, decimals }) => {
     return (
-        <div className="flex items-center w-full h-full gap-6 relative no-scrollbar">
-            <div className="flex flex-col min-w-max space-y-1">
-                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('24h_change')}</div>
-                <div className="block text-xs font-semibold">{render24hChange(symbolTicker, true)}</div>
-            </div>
-            <div className="flex flex-col min-w-max space-y-1">
-                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('high')} 24h</div>
-                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.h, decimals?.price)}</div>
-            </div>
-            <div className="flex flex-col min-w-max space-y-1">
-                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('low')} 24h</div>
-                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.l, decimals?.price)}</div>
-            </div>
-            <div className="flex flex-col min-w-max space-y-1">
-                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
-                    {t('volume')} 24h ({symbolTicker?.b})
+        <InfoSlider gutter={16} containerClassName="gap-6">
+            {/* <div className="flex items-center w-full h-full gap-6 relative no-scrollbar"> */}
+                <div className="flex flex-col min-w-max space-y-1">
+                    <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('24h_change')}</div>
+                    <div className="block text-xs font-semibold">{render24hChange(symbolTicker, true)}</div>
                 </div>
-                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vb, 2)}</div>
-            </div>
-            <div className="2xl:flex flex-col min-w-max space-y-1">
-                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
-                    {t('volume')} 24h ({symbolTicker?.q})
+                <div className="flex flex-col min-w-max space-y-1">
+                    <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('high')} 24h</div>
+                    <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">
+                        {formatNumber(symbolTicker?.h, decimals?.price)}
+                    </div>
                 </div>
-                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vq, 2)}</div>
-            </div>
-        </div>
+                <div className="flex flex-col min-w-max space-y-1">
+                    <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('low')} 24h</div>
+                    <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">
+                        {formatNumber(symbolTicker?.l, decimals?.price)}
+                    </div>
+                </div>
+                <div className="flex flex-col min-w-max space-y-1">
+                    <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
+                        {t('volume')} 24h ({symbolTicker?.b})
+                    </div>
+                    <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vb, 2)}</div>
+                </div>
+                <div className="2xl:flex flex-col min-w-max space-y-1">
+                    <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
+                        {t('volume')} 24h ({symbolTicker?.q})
+                    </div>
+                    <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vq, 2)}</div>
+                </div>
+            {/* </div> */}
+        </InfoSlider>
     );
 };
 

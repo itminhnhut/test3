@@ -1,4 +1,5 @@
 import DragHandleArea from './DragHandleArea';
 import RemoveItemArea from './RemoveItemArea';
+import ResizeHandleArea from './ResizeHandleArea';
 
-export default { RemoveItemArea, DragHandleArea };
+export { RemoveItemArea, ResizeHandleArea, DragHandleArea };

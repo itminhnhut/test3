@@ -1,8 +1,8 @@
-import DefaultMobileView from 'src/components/common/DefaultMobileView';
-import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout';
-import PlaceOrderForm from 'src/components/trade/PlaceOrderForm';
-import SimplePlaceOrderForm from 'src/components/trade/SimplePlaceOrderForm';
-import SymbolDetail from 'src/components/trade/SymbolDetail';
+import DefaultMobileView from 'components/common/DefaultMobileView';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import PlaceOrderForm from 'components/trade/PlaceOrderForm';
+import SimplePlaceOrderForm from 'components/trade/SimplePlaceOrderForm';
+import SymbolDetail from 'components/trade/SymbolDetail';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
@@ -12,31 +12,27 @@ import 'react-grid-layout/css/styles.css';
 import { useSelector } from 'react-redux';
 import { useAsync, useLocalStorage } from 'react-use';
 import { LOCAL_STORAGE_KEY, NON_LOGIN_KEY, SPOT_LAYOUT_MODE } from 'redux/actions/const';
-import Chart from 'src/components/trade/Chart';
-import OrderBook from 'src/components/trade/OrderBook';
-import SpotHead from 'src/components/trade/SpotHead';
-import SpotOrderList from 'src/components/trade/SpotOrderList';
-import SymbolList from 'src/components/trade/SymbolList';
-import Trades from 'src/components/trade/Trades';
-import { PublicSocketEvent } from 'src/redux/actions/const';
-import Emitter from 'src/redux/actions/emitter';
-import { getMarketWatch, postSymbolViews } from 'src/redux/actions/market';
-import { getSymbolString, getDecimalPrice, getDecimalQty } from 'src/redux/actions/utils';
-import { useWindowSize } from 'utils/customHooks';
+import Chart from 'components/trade/Chart';
+import OrderBook from 'components/trade/OrderBook';
+import SpotHead from 'components/trade/SpotHead';
+import SpotOrderList from 'components/trade/SpotOrderList';
+import SymbolList from 'components/trade/SymbolList';
+import Trades from 'components/trade/Trades';
+import { PublicSocketEvent } from 'redux/actions/const';
+import Emitter from 'redux/actions/emitter';
+import { getMarketWatch, postSymbolViews } from 'redux/actions/market';
+import { getSymbolString, getDecimalPrice, getDecimalQty } from 'redux/actions/utils';
 import find from 'lodash/find';
 import useDarkMode from 'hooks/useDarkMode';
 import classNames from 'classnames';
 import { spotGridKey, layoutPro, layoutSimple, initSpotSetting, spotSettingKey } from './_spotLayout';
-import DragHandleArea from 'components/common/ReactGridItem/DragHandleArea';
-import RemoveItemArea from 'components/common/ReactGridItem/RemoveItemArea';
-import ResizeHandleArea from 'components/common/ReactGridItem/ResizeHandleArea';
+import { DragHandleArea, RemoveItemArea, ResizeHandleArea } from 'components/common/ReactGridItem';
 
 const ReactGridLayout = WidthProvider(RGL);
 
 const SpotComp = () => {
     const router = useRouter();
     const { id, timeframe, indicator, layout } = router.query;
-    const [currentTheme] = useDarkMode();
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     const user = useSelector((state) => state.auth?.user) || null;
@@ -247,7 +243,8 @@ const SpotComp = () => {
                                 className={classNames(
                                     `group border-t border-b border-r border-divider dark:border-divider-dark bg-bgSpotContainer dark:bg-bgSpotContainer-dark`,
                                     {
-                                        '!border': isPro
+                                        '!border': isPro,
+                                        '!border-t-transparent': getDataGrid(spotGridKey.CHART).y === 0
                                     }
                                 )}
                             >
@@ -268,7 +265,8 @@ const SpotComp = () => {
                                 className={classNames(
                                     `group border-b border-r border-divider dark:border-divider-dark bg-bgSpotContainer dark:bg-bgSpotContainer-dark`,
                                     {
-                                        '!border': isPro
+                                        '!border': isPro,
+                                        '!border-t-transparent': getDataGrid(spotGridKey.SYMBOL_DETAIL).y === 0
                                     }
                                 )}
                             >
@@ -292,7 +290,8 @@ const SpotComp = () => {
                                 className={classNames(
                                     `group border-l overflow-auto border-t border-divider dark:border-divider-dark bg-bgSpotContainer dark:bg-bgSpotContainer-dark`,
                                     {
-                                        '!border': isPro
+                                        '!border': isPro,
+                                        '!border-t-transparent': getDataGrid(spotGridKey.TRADES).y === 0
                                     }
                                 )}
                             >
@@ -313,7 +312,8 @@ const SpotComp = () => {
                                 className={classNames(
                                     `group border-b border-r border-divider dark:border-divider-dark bg-bgSpotContainer dark:bg-bgSpotContainer-dark`,
                                     {
-                                        '!border': isPro
+                                        '!border': isPro,
+                                        '!border-t-transparent': getDataGrid(spotGridKey.ORDER_FORM).y === 0
                                     }
                                 )}
                             >
@@ -339,7 +339,8 @@ const SpotComp = () => {
                                 className={classNames(
                                     `group border-t border-divider dark:border-divider-dark bg-bgSpotContainer dark:bg-bgSpotContainer-dark`,
                                     {
-                                        '!border': isPro
+                                        '!border': isPro,
+                                        '!border-t-transparent': getDataGrid(spotGridKey.ORDER_LIST).y === 0
                                     }
                                 )}
                             >
@@ -356,7 +357,8 @@ const SpotComp = () => {
                                 className={classNames(
                                     `group border-r border-t border-b border-divider dark:border-divider-dark bg-bgSpotContainer dark:bg-bgSpotContainer-dark`,
                                     {
-                                        '!border': isPro
+                                        '!border': isPro,
+                                        '!border-t-transparent': getDataGrid(spotGridKey.ORDER_BOOK).y === 0
                                     }
                                 )}
                             >

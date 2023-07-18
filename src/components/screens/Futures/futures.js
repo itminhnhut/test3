@@ -26,9 +26,7 @@ import classNames from 'classnames';
 import DefaultMobileView from 'src/components/common/DefaultMobileView';
 import { useLocalStorage } from 'react-use';
 import styled from 'styled-components';
-import RemoveItemArea from 'components/common/ReactGridItem/RemoveItemArea';
-import DragHandleArea from 'components/common/ReactGridItem/DragHandleArea';
-import ResizeHandleArea from 'components/common/ReactGridItem/ResizeHandleArea';
+import { DragHandleArea, RemoveItemArea, ResizeHandleArea } from 'components/common/ReactGridItem';
 
 const GridLayout = WidthProvider(Responsive);
 
