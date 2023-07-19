@@ -19,7 +19,7 @@ import {
     rateCurrency
 } from './const';
 import { SET_BOTTOM_NAVIGATION, SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types';
-import { API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
+import { API_AUTH_INSURANCE, API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
 import fetchAPI from 'utils/fetch-api';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
@@ -44,6 +44,7 @@ import { SIDE as SIDE_DW } from 'redux/reducers/withdrawDeposit';
 import moment from 'moment-timezone';
 import usePrevious from 'hooks/usePrevious';
 import classNames from 'classnames';
+import { INSURANCE_URL } from 'constants/constants';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -1424,10 +1425,10 @@ export const convertDateToMs = (date = 0, type = 'startOf') => {
     return moment.utc(moment(+date).endOf('day')).unix() * 1000;
 };
 
-const md5 = require('md5')
-export const getSignature = (userId, timestamp)=> {
-    return md5(userId.slice(0, 10)+timestamp)
-}
+const md5 = require('md5');
+export const getSignature = (userId, timestamp) => {
+    return md5(userId.slice(0, 10) + timestamp);
+};
 
 export const isBrowser = () => typeof window !== 'undefined';
 export const formatPair = (pair = 'BTCVNDC', t) => {
@@ -1439,3 +1440,20 @@ export const getDayInterestPercent = (apy) =>
         apy / 365, // DAYS_IN_YEAR = 365
         4
     );
+
+export const getInsuranceLoginLink = async (pair = 'BNBUSDT') => {
+    try {
+        const data = await fetchAPI({
+            url: API_AUTH_INSURANCE,
+            params: {
+                redirectDomain: INSURANCE_URL,
+                redirectTo: `${INSURANCE_URL}/buy-covered/${pair}`
+            }
+        });
+        const link = document.createElement('a');
+        link.href = data.data;
+        link.click();
+    } catch (error) {
+        console.error('getInsuranceLoginLink error:', error);
+    }
+};
