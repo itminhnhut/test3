@@ -1,20 +1,11 @@
 import classNames from 'classnames';
-import React, { useRef, useState } from 'react';
-import { getInsuranceLoginLink } from 'redux/actions/utils';
+import React from 'react';
 import { IconLoading } from '../Icons';
+import useInsuranceLoginLink from 'hooks/useInsuranceLoginLink';
 
 const InsuranceRedirectLink = ({ children, isVertical, ...props }) => {
-    const timer = useRef();
-    const [loading, setLoading] = useState(false);
-    const onCreatLinkInsurance = (e) => {
-        setLoading(true);
-        clearTimeout(timer.current);
-        timer.current = setTimeout(async () => {
-            e.preventDefault();
-            await getInsuranceLoginLink();
-            setLoading(false);
-        }, 200);
-    };
+    const { loading, onCreatInsuranceLink } = useInsuranceLoginLink();
+
     return (
         <div
             {...props}
@@ -22,7 +13,7 @@ const InsuranceRedirectLink = ({ children, isVertical, ...props }) => {
                 '!w-full': isVertical,
                 'w-[48%]': !isVertical
             })}
-            onClick={onCreatLinkInsurance}
+            onClick={onCreatInsuranceLink}
         >
             {loading && (
                 <div className="bg-bgPrimary z-10 text-txtPrimary dark:text-txtPrimary-dark opacity-50 rounded-xl absolute w-full h-full top-0 left-0 dark:bg-bgPrimary-dark flex justify-center items-center">
