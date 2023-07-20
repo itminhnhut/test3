@@ -2,7 +2,7 @@ export const EMPTY_VALUE = '--';
 
 export const ONE_DAY = 86400000;
 
-export const INSURANCE_URL = process.env.NODE_ENV === 'production' ? 'https://namiinsurance.io/' : 'https://insurance-fe-test.namifutures.com';
+export const INSURANCE_URL =  'https://insurance-fe-test.namifutures.com' //process.env.NODE_ENV === 'production' ? 'https://namiinsurance.io/' : 'https://insurance-fe-test.namifutures.com';
 
 export const NAMI_FUTURES_EARNED_SHARE = 'NamiFutures_TakeProfit_';
 
