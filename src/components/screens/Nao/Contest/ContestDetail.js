@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import classNames from 'classnames';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter, capitalize, ImageNao, ButtonNaoVariants } from 'components/screens/Nao/NaoStyle';
+import { CardNao, ButtonNao, Table, Column, getColor, renderPnl, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_GROUP_MEMBER, API_CONTEST_CANCEL_INVITE, API_CONTEST_POST_ACCEPT_INVITATION } from 'redux/actions/apis';
@@ -8,15 +8,12 @@ import { ApiStatus } from 'redux/actions/const';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
 import useWindowSize from 'hooks/useWindowSize';
 import Skeletor from 'components/common/Skeletor';
-import Modal from 'components/common/ReModal';
-import { WarningIcon } from '../AlertNaoV2Modal';
 import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
 import AddMemberModal from './season2/AddMemberModal';
 import { IconArrowOnus, IconLoading } from 'components/common/Icons';
-import colors from 'styles/colors';
 import TickFbIcon from 'components/svg/TickFbIcon';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
-import SvgCross from 'components/svg/Cross';
+import ModalV2 from 'components/common/V2/ModalV2';
 
 const statusMember = {
     PENDING: 0,
@@ -30,7 +27,7 @@ const statusGroup = {
     ENABLE: 1
 };
 
-const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules, userID }) => {
+const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules, userID, showPnl }) => {
     const quoteAsset = rowData?.quoteAsset ?? 'VNDC';
     const context = useContext(AlertContext);
     const { t } = useTranslation();
@@ -81,7 +78,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 options: { method: 'POST' },
                 params: {
                     contest_id: contest_id,
-                    invite_onus_user_id: user?.[userID]
+                    canceled_user_id: user?.[userID]
                 }
             });
             if (!index) return;
@@ -90,9 +87,16 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 const members = [..._dataSource?.members];
                 members[index] = null;
                 _dataSource.members = members;
-                context.alertV2.show('success', t('nao:contest:delete_successfully'), t('nao:contest:delete_message', {username: user.name}), null, null, () => {
-                    setDataSource(_dataSource);
-                });
+                context.alertV2.show(
+                    'success',
+                    t('nao:contest:delete_successfully'),
+                    t('nao:contest:delete_message', { username: user.name }),
+                    null,
+                    null,
+                    () => {
+                        setDataSource(_dataSource);
+                    }
+                );
             } else {
                 context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
             }
@@ -105,11 +109,15 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
 
     const renderStatusMember = (status) => {
         if (status === undefined) return '-';
-        const baseClass = 'rounded-[800px] px-2 text-xs sm:text-sm font-normal py-[2px] whitespace-nowrap';
+        const baseClass = 'rounded-full px-4 text-xs sm:text-sm font-normal py-1 whitespace-nowrap';
         let html = '';
         switch (status) {
             case statusMember.PENDING:
-                html = <div className={`${baseClass} text-yellow-2 bg-yellow-2/[0.1]`}>{t('nao:contest:status_pending')}</div>;
+                html = (
+                    <div className={`${baseClass} text-txtSecondary dark:text-txtSecondary-dark bg-gray-13/[0.7] dark:bg-divider-dark/[0.5]`}>
+                        {t('nao:contest:status_pending')}
+                    </div>
+                );
                 break;
             case statusMember.ACCEPTED:
                 html = <div className={`${baseClass} text-green-2 bg-green-2/[0.1]`}>{t('nao:contest:status_joined')}</div>;
@@ -136,11 +144,13 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
         if (invalid) return;
         switch (item?.status) {
             case statusMember.PENDING:
-                return t('nao:contest:delete_invitation');
-            case statusMember.DENIED:
-                return t('nao:contest:add_member');
+                return (
+                    <ButtonNao variant="SECONDARY" className="h-9 !text-sm w-full">
+                        {t('nao:contest:delete_invitation')}
+                    </ButtonNao>
+                );
             default:
-                return t('nao:contest:add_member');
+                return <ButtonNao className="h-9 !text-sm w-full">{t('nao:contest:add_member')}</ButtonNao>;
         }
     };
 
@@ -158,7 +168,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                         onCancelInvite(item, index);
                     },
                     null,
-                    { confirmTitle: t('nao:contest:delete_invitation') }
+                    { confirmTitle: t('nao:contest:delete_invitation'), variant: 'SECONDARY' }
                 );
                 break;
             case statusMember.DENIED:
@@ -210,15 +220,22 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 }
             });
             if (status === ApiStatus.SUCCESS) {
-                setTimeout(() => context.alertV2.show('success', t('nao:contest:join_success'), t('nao:contest:join_message', { teamname: group.name }), null, null, () => {
-                    onClose('trigger');
-                }), 500);
-            } else {
                 setTimeout(
-                    () => context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`)),
+                    () =>
+                        context.alertV2.show(
+                            'success',
+                            t('nao:contest:join_success'),
+                            t('nao:contest:join_message', { teamname: group.name }),
+                            null,
+                            null,
+                            () => {
+                                onClose('trigger');
+                            }
+                        ),
                     500
                 );
-
+            } else {
+                setTimeout(() => context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`)), 500);
             }
         } catch (e) {
             console.log(e);
@@ -241,7 +258,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                         />
                     )}
                 </div>
-                <div>{capitalize(data) ?? t('nao:contest:member', { value: item?.rowIndex + 1 })}</div>
+                <div>{data ?? t('nao:contest:member', { value: item?.rowIndex + 1 })}</div>
                 {item?.is_onus_master && <TickFbIcon size={16} />}
             </div>
         );
@@ -265,19 +282,13 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
     return (
         <>
             {showAddMemberModal && <AddMemberModal onClose={onAddMember} contest_id={contest_id} />}
-            <Modal
-                onusMode={true}
-                center={!isMobile}
+            <ModalV2
+                isMobile={isMobile}
                 isVisible={true}
                 onBackdropCb={onClose}
-                modalClassName="z-[99999]"
-                onusClassName={`${
-                    isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-8 max-w-[979px]'
-                } min-h-[304px] rounded-t-[16px] !overflow-hidden `}
-                containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
+                className="!max-w-[844px] xl:!max-w-[979px]"
+                // onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-8 max-w-[979px]'} min-h-[304px] rounded-t-[16px] !overflow-hidden `}
             >
-                <SvgCross size={24} onClick={onClose} color="currentColor" className="ml-auto cursor-pointer" />
-                <div className="w-full h-6"></div>
                 <div className="pb-3 sm:pb-0 scrollbar-nao overflow-y-auto h-full text-sm sm:text-base">
                     <div className="flex sm:items-center sm:justify-between flex-wrap lg:flex-row flex-col">
                         {isMobile ? (
@@ -289,19 +300,16 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                         </span>
                                     ) : null}
                                     <div className="w-[3.375rem] h-[3.375rem] flex-shrink-0 rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark">
-                                        <ImageNao
-                                            className="rounded-[50%] w-full h-full object-cover"
-                                            src={dataSource?.avatar}
-                                        />
+                                        <ImageNao className="rounded-[50%] w-full h-full object-cover" src={dataSource?.avatar} />
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-2 mt-2">
                                     <LeadIcon />
-                                    <div className="capitalize">
-                                        {t('nao:contest:captain')}: {capitalize(dataSource?.leader_name) ?? '-'}
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                        {t('nao:contest:captain')}: {dataSource?.leader_name ?? '-'}
                                     </div>
                                 </div>
-                                <div className="flex items-center space-x-2">
+                                <div className="flex items-center space-x-2 mt-1">
                                     <div className="text-base sm:text-2xl font-semibold uppercase">
                                         {loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.name ?? '-'}
                                     </div>
@@ -311,8 +319,12 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     (loading ? (
                                         <Skeletor onusMode width={50} height={24} />
                                     ) : (
-                                        <div className="bg-gray-13/[0.7] dark:bg-dark-4/[0.5] rounded-[800px] px-2 mt-2">
-                                            <span className={`text-xs sm:text-sm font-normal ${!dataSource?.status ? 'text-yellow-2' : 'text-txtSecondary dark:text-txtSecondary-dark'}`}>
+                                        <div className="bg-gray-13/[0.7] dark:bg-yellow/[0.15] rounded-full px-3 py-1 mt-3">
+                                            <span
+                                                className={`text-xs sm:text-sm font-normal ${
+                                                    !dataSource?.status ? 'text-yellow-2' : 'text-txtSecondary dark:text-txtSecondary-dark'
+                                                }`}
+                                            >
                                                 {dataSource?.status ? t('nao:contest:eligible') : t('nao:contest:not_eligible')}
                                             </span>
                                         </div>
@@ -322,12 +334,9 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <div className="flex items-center justify-between w-full">
                                 <div className="flex items-center space-x-4">
                                     <div className="w-[3.375rem] h-[3.375rem] flex-shrink-0 rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark">
-                                        <ImageNao
-                                            className="rounded-[50%] w-full h-full object-cover"
-                                            src={dataSource?.avatar}
-                                        />
+                                        <ImageNao className="rounded-[50%] w-full h-full object-cover" src={dataSource?.avatar} />
                                     </div>
-                                    <div className="flex flex-col">
+                                    <div className="flex flex-col space-y-[10px]">
                                         <div className="flex items-center space-x-3">
                                             <div className="text-base sm:text-2xl font-semibold uppercase">
                                                 {loading ? <Skeletor onusMode width={100} height={24} /> : dataSource?.name ?? '-'}
@@ -336,17 +345,19 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <LeadIcon />
-                                            <div className="capitalize">
+                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
                                                 {t('nao:contest:captain')}:{' '}
-                                                {loading ? <Skeletor onusMode width={100} height={10} /> : capitalize(dataSource?.leader_name) ?? '-'}
+                                                {loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.leader_name ?? '-'}
                                             </div>
                                             {visibleStatus &&
                                                 (loading ? (
                                                     <Skeletor onusMode width={50} height={24} />
                                                 ) : (
                                                     <span
-                                                        className={`text-xs sm:text-sm font-normal rounded-[800px] px-2 ${
-                                                            !dataSource?.status ? 'text-yellow-2 bg-yellow-2/[0.1]' : 'text-txtSecondary dark:text-txtSecondary-dark bg-gray-13/[0.7] dark:bg-dark-4/[0.5]'
+                                                        className={`text-xs sm:text-sm font-normal rounded-full py-1 px-4 ${
+                                                            !dataSource?.status
+                                                                ? 'text-yellow-2 bg-yellow-2/[0.1]'
+                                                                : 'text-txtSecondary dark:text-txtSecondary-dark bg-gray-13/[0.7] dark:bg-dark-4/[0.5]'
                                                         }`}
                                                     >
                                                         {dataSource?.status ? t('nao:contest:eligible') : t('nao:contest:not_eligible')}
@@ -355,35 +366,44 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                         </div>
                                     </div>
                                 </div>
-                                {dataSource?.[rank] ? (
-                                    <div className="text-6xl font-semibold pb-0 pr-1 italic">
-                                        #{dataSource?.[rank]}
-                                    </div>
-                                ) : null}
+                                {dataSource?.[rank] ? <div className="text-6xl font-semibold pb-0 pr-1 italic">#{dataSource?.[rank]}</div> : null}
                             </div>
                         )}
 
-                        {!isPending.group && (
-                            <CardNao noBg className="!p-4 sm:!py-4 sm:!px-12 mt-8 !min-h-[92px] sm:flex-row w-full sm:min-w-[577px] dark:bg-none dark:bg-darkBlue-3">
+                        {!isPending.group && !loading && (
+                            <CardNao
+                                noBg
+                                className="!p-4 sm:!py-4 sm:!px-12 mt-8 !min-h-[92px] sm:flex-row w-full sm:min-w-[577px] dark:bg-none dark:bg-darkBlue-3"
+                            >
                                 <div className="flex sm:flex-row sm:justify-around flex-col w-full">
+                                    {showPnl && (
+                                        <>
+                                            <div className="flex flex-row sm:flex-col gap-1 justify-between items-center">
+                                                <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">
+                                                    {t('nao:contest:pnl_ranking')}
+                                                </label>
+                                                <span className="font-semibold">#{dataSource?.current_rank_pnl}</span>
+                                            </div>
+                                            <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
+                                            <div className="flex flex-row sm:flex-col gap-1 justify-between items-center">
+                                                <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">
+                                                    {t('nao:contest:per_pnl')}
+                                                </label>
+                                                <span className={`font-semibold flex items-center ${getColor(dataSource?.pnl)}`}>
+                                                    <IconArrowOnus
+                                                        className={classNames('w-[7px] mr-1.5', dataSource?.pnl > 0 ? '' : 'rotate-180')}
+                                                        color="currentColor"
+                                                    />
+                                                    {`${dataSource?.pnl ? Math.abs(dataSource?.pnl).toFixed(2) : '-'} %`}
+                                                </span>
+                                            </div>
+                                            <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
+                                        </>
+                                    )}
                                     <div className="flex flex-row sm:flex-col gap-1 justify-between items-center">
-                                        <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">{t('nao:contest:pnl_ranking')}</label>
-                                        <span className="font-semibold">#{dataSource?.current_rank_pnl}</span>
-                                    </div>
-                                    <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
-                                    <div className="flex flex-row sm:flex-col gap-1 justify-between items-center">
-                                        <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">{t('nao:contest:per_pnl')}</label>
-                                        <span className={`font-semibold flex items-center ${getColor(dataSource?.pnl)}`}>
-                                            <IconArrowOnus 
-                                                className={classNames('w-[7px] mr-1.5', dataSource?.pnl > 0 ? '' : 'rotate-180')} 
-                                                color="currentColor"
-                                            /> 
-                                            {`${dataSource?.pnl ? Math.abs(dataSource?.pnl).toFixed(2) : '-'} %`}
-                                        </span>
-                                    </div>
-                                    <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
-                                    <div className="flex flex-row sm:flex-col gap-1 justify-between items-center">
-                                        <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">{t('nao:contest:volume_ranking')}</label>
+                                        <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">
+                                            {t('nao:contest:volume_ranking')}
+                                        </label>
                                         <span className="font-semibold">#{dataSource?.[rank]}</span>
                                     </div>
                                     <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
@@ -419,7 +439,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                     </div>
                     {isMobile ? (
                         <div className="mt-8">
-                            <div className="flex flex-col overflow-y-auto space-y-4">
+                            <div className="flex flex-col overflow-y-auto space-y-3">
                                 {Array.isArray(dataSource?.members) && dataSource?.members?.length > 0 ? (
                                     dataSource?.members.map((item, index) => {
                                         return (
@@ -434,28 +454,25 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                                 />
                                                             )}
                                                         </div>
-                                                        <div className="text-sm font-semibold leading-5 capitalize flex items-center space-x-2">
-                                                            <span>{capitalize(item?.name) ?? t('nao:contest:member', { value: index + 1 })}</span>
+                                                        <div className="text-sm font-semibold leading-5 flex items-center space-x-2">
+                                                            <span>{item?.name ?? t('nao:contest:member', { value: index + 1 })}</span>
                                                             {item?.is_onus_master && <TickFbIcon size={16} />}
                                                         </div>
                                                     </div>
                                                     {item?.name && renderStatusMember(item?.status)}
                                                 </div>
-                                                <div className="w-full h-0 my-4" />
-                                                <div className="flex flex-col text-sm space-y-2">
+                                                <div className="w-full h-0 my-3" />
+                                                <div className="flex flex-col text-sm space-y-6">
                                                     <div className="flex items-center justify-between leading-6">
                                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">ID </div>
                                                         <div className="font-semibold">{item?.[userID] ?? '-'}</div>
                                                     </div>
                                                     {validatorLeader(item) && (
-                                                        <div className="flex items-center justify-between leading-6">
-                                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:action')} </div>
-                                                            <div
-                                                                onClick={() => onActions(item, index)}
-                                                                className="text-txtSecondary dark:text-txtSecondary-dark underline cursor-pointer font-semibold"
-                                                            >
-                                                                {renderActions(null, item)}
-                                                            </div>
+                                                        <div
+                                                            onClick={() => onActions(item, index)}
+                                                            className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer font-semibold"
+                                                        >
+                                                            {renderActions(null, item)}
                                                         </div>
                                                     )}
                                                     {dataSource?.status === statusGroup.ENABLE && (
@@ -480,16 +497,20 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                                     </span>
                                                                 </div>
                                                             )}
-                                                            <div className="flex items-center justify-between leading-6">
-                                                                <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
-                                                                <span className={`text-right font-semibold flex items-center ${getColor(item?.pnl)}`}>
-                                                                    <IconArrowOnus
-                                                                        className={classNames('w-[7px] mr-1.5', item?.pnl > 0 ? '' : 'rotate-180')}
-                                                                        color="currentColor"
-                                                                    />
-                                                                    {`${item?.pnl ? Math.abs(item?.pnl).toFixed(2) : '-'} %`}
-                                                                </span>
-                                                            </div>
+                                                            {showPnl && (
+                                                                <div className="flex items-center justify-between leading-6">
+                                                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                                        {t('nao:contest:per_pnl')}
+                                                                    </div>
+                                                                    <span className={`text-right font-semibold flex items-center ${getColor(item?.pnl)}`}>
+                                                                        <IconArrowOnus
+                                                                            className={classNames('w-[7px] mr-1.5', item?.pnl > 0 ? '' : 'rotate-180')}
+                                                                            color="currentColor"
+                                                                        />
+                                                                        {`${item?.pnl ? Math.abs(item?.pnl).toFixed(2) : '-'} %`}
+                                                                    </span>
+                                                                </div>
+                                                            )}
                                                         </>
                                                     )}
                                                 </div>
@@ -512,22 +533,9 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                     ) : (
                         <Table dataSource={dataSource?.members ?? []} classWrapper="border border-divider dark:border-none">
                             <Column minWidth={50} className="font-semibold" title={t('nao:contest:no')} fieldName={'index'} />
-                            <Column
-                                minWidth={280}
-                                ellipsis
-                                className="font-semibold capitalize"
-                                title={t('nao:contest:name')}
-                                fieldName="name"
-                                cellRender={renderName}
-                            />
+                            <Column minWidth={280} ellipsis className="font-semibold" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                             <Column minWidth={200} ellipsis className="" title={'User ID'} fieldName={userID} />
-                            <Column
-                                visible={visibleStatus}
-                                minWidth={isPending.group ? 140 : 160}
-                                title={t('common:status')}
-                                fieldName="status"
-                                cellRender={renderStatusMember}
-                            />
+                            <Column visible={visibleStatus} minWidth={160} title={t('common:status')} fieldName="status" cellRender={renderStatusMember} />
                             <Column
                                 visible={!isPending.group}
                                 minWidth={70}
@@ -548,7 +556,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <Column
                                 minWidth={150}
                                 align="right"
-                                visible={!previous}
+                                visible={!previous && !isPending.group}
                                 className="font-semibold"
                                 title={t('common:ext_gate:time')}
                                 decimal={2}
@@ -556,7 +564,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 suffix={t('common:hours')}
                             />
                             <Column
-                                visible={!isPending.group}
+                                visible={!isPending.group && showPnl}
                                 minWidth={100}
                                 align="right"
                                 className="font-semibold"
@@ -565,10 +573,9 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 cellRender={renderPnl}
                             />
                             <Column
-                                visible={isPending.group}
-                                minWidth={200}
+                                visible={isPending.group && isLeader}
+                                minWidth={150}
                                 align="right"
-                                className="underline cursor-pointer"
                                 fieldName="pnl"
                                 cellRender={renderActions}
                                 onCellClick={(e, item) => validatorLeader(item) && onActions(item, item?.rowIndex)}
@@ -576,15 +583,14 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                         </Table>
                     )}
                     {isPending.person && (
-                        <div className="px-4 w-full mt-8 flex space-x-4">
+                        <div className="w-full mt-8 flex space-x-4">
                             <ButtonNao onClick={onAccept} disabled={disabled} className="!rounded-md font-semibold w-full">
                                 {disabled && <IconLoading className="!m-0" color="currentColor" />} {t('nao:contest:confirm_accept')}
                             </ButtonNao>
                         </div>
                     )}
                 </div>
-
-            </Modal>
+            </ModalV2>
         </>
     );
 };

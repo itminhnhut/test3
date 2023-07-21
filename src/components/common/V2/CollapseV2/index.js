@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
-import styled from 'styled-components';
 import classNames from 'classnames';
 import ChevronDown from 'components/svg/ChevronDown';
 import { isFunction } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
 
 const index = ({
     children,
@@ -16,8 +16,8 @@ const index = ({
     chrevronStyled,
     setIsOpen,
     isDividerBottom,
-    chevronDownClassName='',
-    dividerBottomClassName=''
+    chevronDownClassName = '',
+    dividerBottomClassName = ''
 }) => {
     const [open, setOpen] = useState(false);
     const wrapper = useRef();
@@ -29,7 +29,7 @@ const index = ({
     useEffect(() => {
         if (isCustom) {
             clearTimeout(timer.current);
-            wrapper?.current?.style?.height = active ? list.current.clientHeight + 'px' : 0;
+            wrapper.current.style.height = active ? list.current.clientHeight + 'px' : 0;
             timer.current = setTimeout(
                 () => {
                     setFlag(active);
@@ -42,14 +42,14 @@ const index = ({
     useEffect(() => {
         if (!wrapper.current) return;
         setTimeout(() => {
-            wrapper?.current?.style.height = active ? list.current.clientHeight + 'px' : 0;
+            wrapper.current.style.height = active ? list.current.clientHeight + 'px' : 0;
         }, 100);
     }, [reload]);
 
     const handleOpen = () => {
-        if (isCustom) return;
+        if (isCustom || !wrapper.current) return;
         clearTimeout(timer.current);
-        wrapper?.current?.style.height = !open ? list.current.clientHeight + 'px' : 0;
+        wrapper.current.style.height = !open ? list.current.clientHeight + 'px' : 0;
         timer.current = setTimeout(
             () => {
                 setFlag(!open);

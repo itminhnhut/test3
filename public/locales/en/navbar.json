@@ -4,13 +4,13 @@
         "trade": "Trade",
         "swap": "Swap",
         "wallet": "Wallet",
-        "futures": "Futures",
+        "futures": "Nami Futures",
         "markets": "Markets",
         "utilities": "Utilities",
         "events": "Events",
         "support": "Support",
         "api": "API",
-        "fee": "Fee Structure",
+        "fee": "Trading Fees",
         "blog": "Blog",
         "home": "Homepage",
         "about": "About Us",
@@ -25,9 +25,12 @@
         "explained": "Explained",
         "today": "Nami Today",
         "more": "More",
+        "trading_info": "Trading info",
+        "trading_rules": "Futures trading rules",
+        "funding_history": "Funding history",
         "user": {
             "user": "User Control",
-            "profile": "Personal Information",
+            "profile": "Personal information",
             "security": "Security",
             "identify": "Identify",
             "reward_center": "Reward Center",
@@ -39,7 +42,7 @@
             "payment_method": "Payment Method",
             "daily_reward": "Daily Trading Reward",
             "futures_portfolio": "Futures Statistics",
-            "profit_stats": "Profit Statistics"
+            "profit_stats": "Daily Staking"
         },
         "top_referral": "Top Referral"
     },
@@ -100,7 +103,7 @@
         "stake_nao_description": "Stake NAO into Governance Pool, get weekly revenue share from transaction fees",
         "race_top": "NAO Futures Tournament",
         "race_top_description": "Join the NAO Futures trading tournament, get attractive weekly and monthly rewards",
-        "profile": "Personal Information",
+        "profile": "Personal information",
         "partner": "Partner",
         "payment_method": "Payment Method",
         "daily_reward": "Daily Trading Reward",
@@ -152,5 +155,15 @@
     "trade_on": "Download on the",
     "scan_qr": "Scan the QR code to download Nami Exchange",
     "down_with_qr": "Download Nami Exchange",
-    "footer_title": "Secure Spot and Futures Exchange"
+    "footer_title": "Secure Spot and Futures Exchange",
+    "noti_setting": "Notification Settings",
+    "noti_content": {
+        "all": "Allow notification",
+        "futures": "NAO Futures & Nami Futures",
+        "spot": "Spot & Swap",
+        "commission": "Commission",
+        "deposit_withdraw": "Deposit / Withdraw",
+        "promotion": "Promotion",
+        "system": "System"
+    }
 }

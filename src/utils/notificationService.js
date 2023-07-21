@@ -42,8 +42,23 @@ const showNotification = (options = {}, dismiss = undefined, position = 'top', c
             duration: dismiss || 5000,
             onScreen: false,
         },
-        content: <NotificationContent title={title} message={message} type={type} note={note}/>
+        content: <NotificationContent title={title} message={message} type={type} note={note} />
     });
 };
 
 export default showNotification;
+
+
+export const showBrowserNotification = ({ title = '', content = '', url = 'https://nami.exchange' }) => {
+    if (Notification.permission !== 'granted')
+        return
+    else {
+        const notification = new Notification(title, {
+            icon: '/images/logo/logo.svg',
+            body: content,
+        });
+        notification.onclick = function () {
+            window.open(url);
+        };
+    }
+}

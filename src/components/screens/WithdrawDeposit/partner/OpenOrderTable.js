@@ -108,7 +108,7 @@ const OrderCard = memo(({ loadingProcessOrder, orderDetail, assetConfig, t, rout
                     {orderDetail?.fee ? (
                         <div className="mt-6 flex border-l-2 border-divider dark:border-divider-dark font-semibold">
                             <MonetizationOnIcon className="mx-2" />
-                            <span>{t('dw_partner:partner_bonus')}:&nbsp;</span>
+                            <span>{t('dw_partner:fee_received')}:&nbsp;</span>
                             <span className="text-green-3 dark:text-green-2">+{formatBalanceFiat(orderDetail.fee)} VND</span>
                         </div>
                     ) : null}
@@ -206,7 +206,9 @@ const OpenOrderTable = () => {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                 // make sure the socket displayingId is the current page
                 if (!data || data?.status !== 0 || data.partnerAcceptStatus !== 0) return;
-                setShowPartnerSuggest(data);
+                router.query.suggest = data?.displayingId
+                router.push(router)
+                // setShowPartnerSuggest(data);
             });
         }
         return () => {
@@ -214,6 +216,8 @@ const OpenOrderTable = () => {
                 userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
                     console.log('socket removeListener PARTNER_UPDATE_ORDER:', data);
                 });
+
+                userSocket.off(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST)
                 userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                     console.log('socket removeListener PARTNER_UPDATE_ORDER_AUTO_SUGGEST:', data);
                 });

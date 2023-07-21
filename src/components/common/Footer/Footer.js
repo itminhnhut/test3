@@ -11,6 +11,8 @@ import Image from 'next/image';
 
 import LanguageSelect from './LanguageSelect';
 import { useTranslation } from 'next-i18next';
+import { BREAK_POINTS } from 'constants/constants';
+import classNames from 'classnames';
 
 const Footer = memo(() => {
     // * Initial State
@@ -28,11 +30,12 @@ const Footer = memo(() => {
     const { width } = useWindowSize();
     const isApp = useApp();
     const [currentTheme] = useDarkMode();
+    const isDesktop = width >= BREAK_POINTS.footer;
 
     const MobileCopyright = useCallback(
         () => (
-            <div className="px-4">
-                <div className="flex justify-between items-center mb-8">
+            <>
+                <div className="flex justify-between items-center pt-6 mb-8">
                     <div className="">
                         <Image
                             // src={getS3Url('/images/logo/nami-logo-v2.png')}
@@ -45,7 +48,7 @@ const Footer = memo(() => {
                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
                 <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">Copyright © 2023 Nami Foundation. All rights reserved.</div>
-            </div>
+            </>
         ),
         [t, language, currentTheme]
     );
@@ -53,7 +56,7 @@ const Footer = memo(() => {
     const DesktopNotAuthSocial = useCallback(
         () => (
             <>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center py-4">
                     <div className="">
                         {/*  */}
                         <Image
@@ -67,7 +70,7 @@ const Footer = memo(() => {
                     <SocialsLink language={language} />
                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
-                <hr className="border-divider dark:border-divider-dark my-6" />
+                <hr className="border-divider dark:border-divider-dark mb-20" />
                 <div className="text-txtSecondary dark:text-txtSecondary-dark text-center text-sm">Copyright © 2023 Nami Foundation. All rights reserved.</div>
             </>
         ),
@@ -77,20 +80,20 @@ const Footer = memo(() => {
     if (isApp) return null;
     return (
         <section className="mal-footer border-t border-divider dark:border-divider-dark">
-            <div className={`${width >= 1200 ? 'mal-footer___desktop ' : ''}  mal-footer__wrapper  mal-container`}>
+            <div className={`${isDesktop ? 'mal-footer___desktop ' : ''}  mal-footer__wrapper  mal-container`}>
                 <PocketFooter currentTheme={currentTheme} t={t} language={language} auth={auth} width={width} active={state.active} parentState={setState} />
                 {!auth ? (
                     <>
-                        <hr className="border-divider dark:border-divider-dark my-6" />
+                        <hr className={classNames('border-divider dark:border-divider-dark', isDesktop ? 'mt-20' : 'my-6')} />
 
-                        {width >= 1200 ? <DesktopNotAuthSocial /> : <MobileCopyright />}
+                        {isDesktop ? <DesktopNotAuthSocial /> : <MobileCopyright />}
                     </>
                 ) : (
                     <>
-                        <hr className="border-divider dark:border-divider-dark my-6" />
-                        {width > 1200 ? (
+                        <hr className={classNames('border-divider dark:border-divider-dark', isDesktop ? 'mt-20' : 'mt-6')} />
+                        {isDesktop ? (
                             <>
-                                <div className="flex justify-between items-center">
+                                <div className="flex justify-between items-center my-9">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark text-center text-sm">
                                         Copyright © 2023 Nami Foundation. All rights reserved.
                                     </div>
@@ -104,7 +107,7 @@ const Footer = memo(() => {
                         )}
                     </>
                 )}
-                {/* {width < 1200 && (
+                {/* {width < BREAK_POINTS.footer && (
                     <div style={{ fontSize: 12 }} className="font-medium text-gray-2 mt-6">
                         Copyright © 2023 Nami Foundation. All rights reserved.
                     </div>

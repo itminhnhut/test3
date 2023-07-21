@@ -233,7 +233,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
 
                                 <div className="ml-3 mr-8">
                                     <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2 whitespace-pre-wrap break-words">
-                                        {auth?.username || auth?.name || auth?.email}
+                                        {auth?.name || auth?.email || auth?.code}
                                     </div>
 
                                     <div className="text-txtSecondary text-xs items-center flex">

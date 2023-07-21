@@ -105,7 +105,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
         (isShownOnModal = false) => {
             const className = isShownOnModal
                 ? 'text-[22px] leading-[30px] text-teal font-semibold text-right tracking-normal'
-                : 'text-left text-base font-semibold text-dominant dragHandleArea tracking-normal';
+                : 'text-left text-base font-semibold text-dominant tracking-normal';
             return (
                 <div
                     ref={lastPriceRef}
@@ -483,7 +483,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                 symbol={pairPrice?.baseAsset + pairPrice?.quoteAsset}
             />
             <div
-                className="relative cursor-pointer group pr-4 mr-4 border-r border-divider dark:border-divider-dark"
+                className="relative cursor-pointer pr-4 mr-4 border-r border-divider dark:border-divider-dark"
                 onMouseOver={() => setActivePairList(true)}
                 onMouseLeave={() => setActivePairList(false)}
             >
@@ -506,7 +506,16 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                     {t('futures:tp_sl:perpetual')}
                     <BxsBookIcon />
                 </div>
-                <div className="absolute left-0 z-30 hidden group-hover:block top-full" ref={pairListRef}>
+                <div
+                    className={classNames(
+                        'absolute left-0 z-30 top-full',
+
+                        {
+                            hidden: !activePairList
+                        }
+                    )}
+                    ref={pairListRef}
+                >
                     <FuturesPairList mode={pairListMode} setMode={setPairListMode} isAuth={isAuth} activePairList={activePairList} />
                 </div>
                 {/* )} */}

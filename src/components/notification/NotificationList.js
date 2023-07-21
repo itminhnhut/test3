@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash';
+import { debounce, omit } from 'lodash';
 import Image from 'next/image';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { getNotifications, markAllAsRead } from 'src/redux/actions/notification';
 import { NotificationStatus } from 'src/redux/actions/const';
@@ -9,12 +9,25 @@ import { getTimeAgo, getS3Url } from 'src/redux/actions/utils';
 import { IconBell } from '../common/Icons';
 import colors from 'styles/colors';
 import { useClickAway } from 'react-use';
-import { BxsBellIcon } from '../svg/SvgIcon';
+import { BxsBellIcon, SettingIcon } from '../svg/SvgIcon';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
+import ModalV2 from 'components/common/V2/ModalV2';
+import Switch from 'components/common/V2/SwitchV2';
+import FetchApi from 'utils/fetch-api';
+import { API_GET_NOTI_SETTING } from 'redux/actions/apis';
+import Skeletor from 'components/common/Skeletor';
+import useWindowSize, { useRefWindowSize } from 'hooks/useWindowSize';
+import Setting from 'components/svg/Setting';
+import { showBrowserNotification } from 'utils/notificationService';
 
 const NOTI_READ = NotificationStatus.DELETED;
+
+const MarkReadAllIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-1.999 14.413-3.713-3.705L7.7 11.292l2.299 2.295 5.294-5.294 1.414 1.414-6.706 6.706z" fill="#8694B3" />
+</svg>
+
 
 const IconNoti = {
     0: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: ALL
@@ -26,17 +39,27 @@ const IconNoti = {
 };
 
 const NotificationList = ({ btnClass }) => {
-    const { t, i18n } = useTranslation(['navbar']);
+    const { t, i18n: { language } } = useTranslation(['navbar']);
     const dispatch = useDispatch();
     const router = useRouter();
+
+    const { width } = useRefWindowSize()
+    const isMobile = width < 640
 
     const ref = useRef(null);
 
     const [isPopover, setPopover] = useState(false);
+    const [showNotiSetting, setShowNotiSetting] = useState(false);
 
     useClickAway(ref, () => {
         closeDropdownPopover();
     });
+
+    useEffect(() => {
+        window?.OneSignal?.on('', () => {
+
+        })
+    }, [])
 
     // const truncateNotificationsDebounce = debounce(() => {
     //     dispatch(truncateNotifications());
@@ -47,8 +70,8 @@ const NotificationList = ({ btnClass }) => {
     const unreadCount = useSelector((state) => state.notification.unreadCount);
 
     useEffect(() => {
-        dispatch(getNotifications({ lang: i18n.language }));
-    }, [i18n, dispatch]);
+        dispatch(getNotifications({ lang: language }));
+    }, [language, dispatch]);
 
     const [notificationLoading, setNotificationLoading] = useState(false);
 
@@ -107,7 +130,7 @@ const NotificationList = ({ btnClass }) => {
                                 handleMarkRead(notification?._id, notification.status);
                                 if (notification?.context?.isAutoSuggest)
                                     router.push({ pathname: PATHS.PARTNER_WITHDRAW_DEPOSIT.OPEN_ORDER, query: { suggest: notification?.context?.displayingId } });
-                                    closeDropdownPopover();
+                                closeDropdownPopover();
                             }}
                         >
                             <div className="min-w-[48px] min-h-[48px] mr-4 p-2 sm:p-3 bg-hover-1 dark:bg-dark-2 rounded-full flex justify-center items-center ">
@@ -119,9 +142,8 @@ const NotificationList = ({ btnClass }) => {
                                 </div>
                                 <div className="text-xs sm:text-sm text-txtPrimary dark:text-txtPrimary-dark mb-2 break-words">{notification.content}</div>
                                 <div
-                                    className={`text-xs ${
-                                        notification?.status !== NOTI_READ ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'
-                                    } `}
+                                    className={`text-xs ${notification?.status !== NOTI_READ ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'
+                                        } `}
                                 >
                                     {getTimeAgo(notification.createdAt)}
                                 </div>
@@ -142,6 +164,7 @@ const NotificationList = ({ btnClass }) => {
     }
     return (
         <>
+            {showNotiSetting ? <NotiSettingModal t={t} isMobile={false} isVisible={showNotiSetting} onClose={() => setShowNotiSetting(false)} language={language} /> : null}
             <div ref={ref} className="mal-navbar__hamburger__spacing h-full sm:relative">
                 <button
                     type="button"
@@ -152,9 +175,8 @@ const NotificationList = ({ btnClass }) => {
                     }}
                 >
                     <div
-                        className={`${
-                            isPopover ? 'text-dominant ' : 'text-txtSecondary dark:text-txtPrimary-dark lg:dark:text-txtSecondary-dark'
-                        } hover:!text-dominant relative`}
+                        className={`${isPopover ? 'text-dominant ' : 'text-txtSecondary dark:text-txtPrimary-dark lg:dark:text-txtSecondary-dark'
+                            } hover:!text-dominant relative`}
                     >
                         <BxsBellIcon size={24} />
                         {unreadCount > 0 && <div className="bg-red w-2 h-2 rounded-full absolute top-1 right-0" />}
@@ -177,14 +199,35 @@ const NotificationList = ({ btnClass }) => {
                         <div className="flex items-center px-6 justify-between mb-8">
                             <div className="text-base sm:text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
 
-                            <div
-                                onClick={handleMarkAllRead}
-                                className={classNames('text-sm font-semibold', {
-                                    'cursor-pointer  hover:opacity-70 transition-opacity text-teal': unreadCount > 0,
-                                    'pointer-events-none text-txtDisabled dark:text-txtDisabled-dark': !unreadCount
-                                })}
-                            >
-                                {t('navbar:mark_read')}
+                            <div className='flex gap-4 items-center'>
+                                <div
+                                    onClick={handleMarkAllRead}
+                                    className={classNames('text-sm font-semibold', {
+                                        'cursor-pointer hover:opacity-70 transition-opacity': unreadCount > 0,
+                                        'pointer-events-none text-txtDisabled hidden': !unreadCount
+                                    })}
+                                >
+                                    {/* {t('navbar:mark_read')} */}
+                                    <MarkReadAllIcon />
+                                </div>
+
+                                <div
+                                    onClick={() => { }}
+                                    className={classNames('text-sm font-semibold cursor-pointer hover:opacity-70 transition-opacity')}
+                                >
+                                    <svg
+                                        onClick={() => isMobile ? router.push('/account/noti-setting') : setShowNotiSetting(true)}
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_3854_61579)">
+                                            <path d="M19.4391 12.99L19.4291 13.01C19.4691 12.68 19.5091 12.34 19.5091 12C19.5091 11.66 19.4791 11.34 19.4391 11.01L19.4491 11.03L21.8891 9.11L19.4591 4.89L16.5891 6.05L16.5991 6.06C16.0791 5.66 15.5091 5.32 14.8891 5.06H14.8991L14.4391 2H9.56914L9.12914 5.07H9.13914C8.51914 5.33 7.94914 5.67 7.42914 6.07L7.43914 6.06L4.55914 4.89L2.11914 9.11L4.55914 11.03L4.56914 11.01C4.52914 11.34 4.49914 11.66 4.49914 12C4.49914 12.34 4.52914 12.68 4.57914 13.01L4.56914 12.99L2.46914 14.64L2.13914 14.9L4.56914 19.1L7.44914 17.95L7.42914 17.91C7.95914 18.32 8.52914 18.66 9.15914 18.92H9.12914L9.57914 22H14.4291C14.4291 22 14.4591 21.82 14.4891 21.58L14.8691 18.93H14.8591C15.4791 18.67 16.0591 18.33 16.5891 17.92L16.5691 17.96L19.4491 19.11L21.8791 14.91C21.8791 14.91 21.7391 14.79 21.5491 14.65L19.4391 12.99ZM11.9991 15.5C10.0691 15.5 8.49914 13.93 8.49914 12C8.49914 10.07 10.0691 8.5 11.9991 8.5C13.9291 8.5 15.4991 10.07 15.4991 12C15.4991 13.93 13.9291 15.5 11.9991 15.5Z" fill="#8694B3" />
+                                        </g>
+                                        <defs>
+                                            <clipPath id="clip0_3854_61579">
+                                                <rect width="24" height="24" fill="white" />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                </div>
                             </div>
 
                             {/* {unreadCount > 0 && (
@@ -193,7 +236,7 @@ const NotificationList = ({ btnClass }) => {
                                 </div>
                             )} */}
                         </div>
-                        <div className="max-h-[400px] sm:max-h-[488px]   min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
+                        <div className="max-h-[400px] sm:max-h-[488px] min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
 
                         <div className="font-semibold px-6 mb-2">
                             <div className="flex items-center justify-center">
@@ -223,6 +266,128 @@ const NotificationList = ({ btnClass }) => {
         </>
     );
 };
+
+const NOTI_GROUP_KEYS = {
+    ALL: "ALL",
+    FUTURES: "FUTURES",
+    SPOT: "SPOT",
+    COMMISSION: "COMMISSION",
+    DEPOSIT_WITHDRAW: "DEPOSIT_WITHDRAW",
+    PROMOTION: "PROMOTION",
+    SYSTEM: "SYSTEM",
+}
+
+export const NotiSettingModal = ({ isVisible, onClose, language, isMobile, t }) => {
+    const [userNotiSetting, setUserNotiSetting] = useState({})
+    const [notiGroup, setNotiGroup] = useState({})
+    const [loading, setLoading] = useState(true)
+    const [updating, setUpdating] = useState(null)
+
+    const fetchUserSetting = async () => {
+        const { status, data } = await FetchApi({
+            url: API_GET_NOTI_SETTING,
+            options: {
+                method: 'GET'
+            }
+        })
+        if (status === 'ok' && data) {
+            setUserNotiSetting(data?.settings)
+            setNotiGroup(data?.groups)
+            setLoading(false)
+            setUpdating(null)
+        }
+    }
+
+    useEffect(() => {
+        setLoading(true)
+        fetchUserSetting()
+    }, [])
+
+    const handleToggleNotiSetting = debounce((keyToChange) => {
+        setUpdating(true)
+        const currentSetting = userNotiSetting
+        currentSetting = {
+            ...currentSetting,
+            [keyToChange]: !userNotiSetting?.[keyToChange]
+        }
+
+        if (isMobile) {
+            setUserNotiSetting(currentSetting)
+        }
+
+        FetchApi({
+            url: API_GET_NOTI_SETTING,
+            options: {
+                method: 'POST'
+            },
+            params: currentSetting
+
+        }).then(({ status, data }) => {
+            if (status === 'ok' && data) {
+                fetchUserSetting()
+            }
+        })
+    }, 500)
+
+    const Wrapper = useMemo(() => isMobile ? DivWrapper : ModalV2, [isMobile])
+
+    return <Wrapper
+        isMobile={isMobile}
+        isVisible={isVisible}
+        className={classNames("overflow-auto no-scrollbar", {
+            '!cursor-wait': updating,
+            'w-[488px]': !isMobile,
+            'w-full h-full': isMobile
+        })}
+        onBackdropCb={onClose}
+    >
+        <div className='text-base font-normal text-txtPrimary dark:text-txtPrimary-dark'>
+            <div>
+                <div className='text-2xl font-semibold mb-6'>
+                    {t('navbar:noti_setting')}
+                </div>
+                <div className='pb-6 w-full border-b-[1px] border-b-divider dark:border-b-divider-dark'>
+                    <NotiToggle
+                        updating={updating}
+                        text={t(`navbar:noti_content.${NOTI_GROUP_KEYS.ALL.toLocaleLowerCase()}`, { defaultValue: notiGroup?.[NOTI_GROUP_KEYS.ALL]?.[language] })}
+                        loading={loading}
+                        isAvailable
+                        isOn={userNotiSetting?.[NOTI_GROUP_KEYS.ALL]}
+                        onToggle={() => handleToggleNotiSetting(NOTI_GROUP_KEYS.ALL)}
+                    />
+                </div>
+            </div>
+            <div className='mt-6'>
+                {(loading ? [1, 2, 3, 4, 5] : Object.values(omit(notiGroup, NOTI_GROUP_KEYS.ALL))).map(e => {
+                    const key = e.key
+                    return <div className='mt-6'>
+                        <NotiToggle
+                            updating={updating}
+                            text={t(`navbar:noti_content.${key?.toLocaleLowerCase()}`, { defaultValue: notiGroup?.[key]?.[language] })}
+                            loading={loading}
+                            isAvailable={userNotiSetting?.[NOTI_GROUP_KEYS.ALL]}
+                            isOn={userNotiSetting?.[key]}
+                            onToggle={() => handleToggleNotiSetting(key)}
+                        />
+                    </div>
+                })}
+            </div>
+        </div>
+    </Wrapper>
+}
+
+const NotiToggle = ({ text, isAvailable = false, onToggle, isOn = false, loading = true, updating = false }) => {
+    return loading ? <Skeletor width={'100%'} height={24} /> : <div className='flex justify-between w-full items-center'>
+        <div>
+            {text}
+        </div>
+        <div>
+            <Switch disabled={!isAvailable} checked={isOn} onChange={onToggle} processing={updating} />
+        </div>
+    </div>
+}
+
+const DivWrapper = ({ children, ...props }) => <div {...props}>{children}</div>
 
 NotificationList.defaultProps = {
     btnClass: '',

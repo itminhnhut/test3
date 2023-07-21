@@ -19,7 +19,7 @@ import {
     rateCurrency
 } from './const';
 import { SET_BOTTOM_NAVIGATION, SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types';
-import { API_AUTH_INSURANCE, API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
+import { API_GET_REFERENCE_CURRENCY, API_GET_FEE_ASSET,API_AUTH_INSURANCE } from 'redux/actions/apis';
 import fetchAPI from 'utils/fetch-api';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
@@ -36,15 +36,13 @@ import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { CopyIcon, CheckedIcon } from 'components/svg/SvgIcon';
 import { useSelector } from 'react-redux';
 import utilsSelectors from 'redux/selectors/utilsSelectors';
-import { useRouter } from 'next/router';
 import { log } from 'utils';
-import { cloneDeep } from 'lodash';
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
-import { SIDE as SIDE_DW } from 'redux/reducers/withdrawDeposit';
 import moment from 'moment-timezone';
 import usePrevious from 'hooks/usePrevious';
 import classNames from 'classnames';
 import { INSURANCE_URL } from 'constants/constants';
+import axios from 'axios';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -1456,4 +1454,29 @@ export const getInsuranceLoginLink = async (pair = 'BNBUSDT') => {
     } catch (error) {
         console.error('getInsuranceLoginLink error:', error);
     }
+}
+
+export const getFuturesFees = async (quotes) => {
+    const { data } = await axios.get(API_GET_FEE_ASSET, { params: { marginAsset: quotes } }).then((data) => {
+        return data.data;
+    });
+    return data;
+    // return await Promise.all(
+    //     quotes.reduce((acc, pre) => {
+    //         const api = axios.get(API_GET_FEE_ASSET, { params: { marginAsset: pre } });
+    //         acc ? acc.push(api) : (acc = [api]);
+    //         return acc;
+    //     }, [])
+    // ).then((data) => {
+    //     data = data
+    //         .map((rs) => rs.data.data)
+    //         .reduce((acc, pre) => {
+    //             const quote = quotes.find((q) => pre.accepted_assets.find((rs) => rs.asset === String(q).toLowerCase()));
+    //             if (quote) {
+    //                 acc[quote] = pre;
+    //             }
+    //             return acc;
+    //         }, {});
+    //     return data;
+    // });
 };

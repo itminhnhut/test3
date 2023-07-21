@@ -85,7 +85,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, decimals }) => {
 
     return (
         <div className="p-6 pl-4 h-full !overflow-x-hidden overflow-y-auto ">
-            <div className="flex items-center justify-between dragHandleArea">
+            <div className="flex items-center justify-between">
                 <span className="futures-component-title !text-lg !font-semibold">{t('common:overview')}</span>
             </div>
 

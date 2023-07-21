@@ -41,7 +41,8 @@ export const BREAK_POINTS = {
     lg: 1024,
     mb: 820,
     xl: 1280,
-    '2xl': 1536
+    '2xl': 1536,
+    footer: 1200,
 };
 
 export const FEE_STRUCTURES = {
@@ -69,6 +70,12 @@ export const FEE_STRUCTURES = {
         }
     }
 };
+
+export const NAMI_FEE_FUTURE = [
+    { assetId: 72, assetCode: 'VNDC', ratio: '0.06%' },
+    { assetId: 1, assetCode: 'NAMI', ratio: '0.042%' },
+    { assetId: 22, assetCode: 'USDT', ratio: '0.06%' }
+];
 
 export const FEE_TABLE = [
     {
@@ -164,11 +171,6 @@ export const MIN_WALLET = 1e-10;
 
 export const PORTAL_MODAL_ID = 'PORTAL_MODAL';
 
-export const LOCAL_STORAGE_KEY = {
-    PreviousFuturesPair: 'previous_futures_pair',
-    FuturesGridLayouts: 'futures_grid_layouts'
-};
-
 export const PRODUCT = {
     SPOT: 'Nami Spot',
     FUTURES: 'Nami Futures'
@@ -245,6 +247,18 @@ export const MODE_OTP = {
 };
 
 export const FUTURES_PRODUCT = {
-    NAMI: { id: 0, name: 'Nami Futures' },
-    NAO: { id: 2, name: 'NAO Futures' }
+    NAMI: { id: 0, name: 'Nami Futures'},
+    NAO: { id: 2, name: 'NAO Futures'}
+}
+
+export const CHART_JS_RANGE = {
+    millisecond: 'millisecond',
+    second: 'second',
+    minute: 'minute',
+    hour: 'hour',
+    day: 'day',
+    week: 'week',
+    month: 'month',
+    quarter: 'quarter',
+    year: 'year'
 };

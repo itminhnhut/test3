@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
-import { LOCAL_STORAGE_KEY } from 'constants/constants';
 import { useMemo } from 'react';
+import { LOCAL_STORAGE_KEY } from 'redux/actions/const';
 
 export const FUTURES_DEFAULT_SYMBOL = 'BTCVNDC'
 

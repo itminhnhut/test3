@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { ApiStatus, MIN_TIP, UserSocketEvent } from 'redux/actions/const';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
@@ -9,7 +9,7 @@ import FetchApi from 'utils/fetch-api';
 import MCard from 'components/common/MCard';
 import { CountdownClock } from './components/common/CircleCountdown';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { API_CANCEL_AUTO_SUGGEST_ORDER, API_CONTINUE_AUTO_SUGGEST_ORDER, API_GET_ORDER_PRICE } from 'redux/actions/apis';
+import { API_CANCEL_AUTO_SUGGEST_ORDER, API_CONTINUE_AUTO_SUGGEST_ORDER, API_GET_ORDER_DETAILS, API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import { useDispatch, useSelector } from 'react-redux';
 import ModalLoading from 'components/common/ModalLoading';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
@@ -17,11 +17,12 @@ import { formatNumber } from 'utils/reference-utils';
 import TradingInputV2 from 'components/trade/TradingInputV2';
 import useFetchApi from 'hooks/useFetchApi';
 import TabV2 from 'components/common/V2/TabV2';
-import { formatNanNumber } from 'redux/actions/utils';
+import { formatBalanceFiat, formatNanNumber, getS3Url } from 'redux/actions/utils';
 import { setFee } from 'redux/actions/withdrawDeposit';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import Card from './components/common/Card';
 import toast from 'utils/toast';
+import Tooltip from 'components/common/Tooltip';
 
 const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb }) => {
     const { fee } = useSelector((state) => state.withdrawDeposit);
@@ -36,6 +37,9 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
     }, [showProcessSuggestPartner]);
 
     const [isAwaitSocketNotFoundPartner, setIsAwaitSocketNotFoundPartner] = useState(false);
+    const isAwaitSocketNotFoundPartnerRef = useRef(isAwaitSocketNotFoundPartner);
+    isAwaitSocketNotFoundPartnerRef.current = isAwaitSocketNotFoundPartner;
+
     const [isNotFoundPartner, setIsNotFoundPartner] = useState(false);
     const [isLoadingContinue, setIsLoadingContinue] = useState(false);
     const [isErrorContinue, setIsErrorContinue] = useState('');
@@ -105,18 +109,47 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 }
             });
 
+            console.log(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: state?.displayingId }));
+
             if (status === ApiStatus.SUCCESS && data) {
                 const { side, countdownTime, timeExpire, displayingId } = data;
                 setIsNotFoundPartner(false);
 
                 setState((prev) => ({ ...prev, side, countdownTime, timeExpire, displayingId }));
             } else {
-                setIsErrorContinue(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: data.displayingId }));
+                setIsErrorContinue(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: state?.displayingId }));
             }
         } catch (error) {
+            console.log('________error catch: ', error);
         } finally {
             setIsLoadingContinue(false);
         }
+    };
+
+    const handleAwaitSocketOrderTimeout = () => {
+        if (isNotFoundPartner) return;
+        setIsAwaitSocketNotFoundPartner(true);
+
+        setTimeout(() => {
+            if (!isAwaitSocketNotFoundPartnerRef.current) return;
+            // nếu 5s mà còn chưa nhận được socket thì phải force get api coi tình trạng Order thế nào.
+            FetchApi({
+                url: API_GET_ORDER_DETAILS,
+                options: { method: 'GET' },
+                params: {
+                    displayingId: state.displayingId
+                }
+            })
+                .then(({ data, status }) => {
+                    if (isNotFoundPartner || isErrorContinue) return;
+                    if (status === ApiStatus.SUCCESS) {
+                        setIsNotFoundPartner(true);
+                    } else {
+                        setIsErrorContinue(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: state?.displayingId }));
+                    }
+                })
+                .finally(setIsAwaitSocketNotFoundPartner(false));
+        }, 5000);
     };
 
     // Tip handle:
@@ -139,13 +172,13 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
             msg = t('dw_partner:error.invalid_amount');
         }
 
-        if (tipAmount && tipAmount < MIN_TIP) {
+        if (!tipAmount || tipAmount < MIN_TIP) {
             isValid = false;
             msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' });
         }
 
         // const maxTip = state.amount * rate - 50000;
-        const maxTip = state.amount * rate;
+        const maxTip = state.baseQty * rate;
         if (side === 'SELL' && +tipAmount > maxTip) {
             isValid = false;
             msg = t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' });
@@ -163,20 +196,19 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
 
     useEffect(() => {
         validateTip(fee);
-    }, [state.amount, rate]);
+    }, [state.baseQty, rate]);
 
     return (
         <>
             <ModalV2
                 isVisible={!!showProcessSuggestPartner}
-                // isVisible={true}
-                // onBackdropCb={onBackdropCb}
                 closeButton={false}
                 className="!max-w-[488px]"
                 wrapClassName="p-8 flex flex-col items-center txtSecond-4 "
             >
-                <video class="pointer-events-none" width="124" height="124" loop muted autoPlay preload="none" playsInline>
-                    <source src={`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`} type="video/mp4" />
+                <video className="pointer-events-none" width="124" height="124" loop muted autoPlay preload="none" playsInline>
+                    {/* <source src={`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`} type="video/mp4" /> */}
+                    <source src={getS3Url(`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`)} type="video/mp4" />
                 </video>
 
                 <h1 className="txtPri-3 mt-6 mb-4">{t('dw_partner:looking_for_partner_loading')}</h1>
@@ -185,14 +217,14 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                     <CountdownClock
                         key={state.timeExpire}
                         countdownTime={state.countdownTime}
-                        onComplete={() => !isNotFoundPartner && setIsAwaitSocketNotFoundPartner(true)}
+                        onComplete={handleAwaitSocketOrderTimeout}
                         timeExpire={state.timeExpire}
                     />
                 </div>
                 <div className={'w-full bg-gray-13 dark:bg-dark-4 rounded-xl mt-6 p-4'}>
                     <div className="flex items-center justify-between">
-                        <span>{t('common:transaction_type')}</span>
-                        <span className={`font-semibold ${state.side === SIDE.BUY ? 'text-teal' : 'text-red-2'}`}>
+                        <span>{t('dw_partner:transaction_type')}</span>
+                        <span className={`font-semibold ${state.side === SIDE.BUY ? 'text-green-3 dark:text-green-2' : 'text-red-2'}`}>
                             {t(`common:${state.side.toLowerCase()}`)}
                         </span>
                     </div>
@@ -214,16 +246,16 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                         handleCancelOrderSuggest();
                         onBackdropCb();
                     }}
-                    className="mt-10"
+                    className="mt-10 !bg-gray-12 dark:!bg-dark-2"
                     variants="secondary"
                 >
                     {t('dw_partner:cancel')}
                 </ButtonV2>
             </ModalV2>
 
+            {/* Popup tiếp tục tìm kiếm */}
             <AlertModalV2
                 isVisible={isNotFoundPartner}
-                // isVisible={true}
                 // isVisible={!!showProcessSuggestPartner}
                 onClose={() => {
                     setIsNotFoundPartner(false);
@@ -236,13 +268,14 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 message={t('dw_partner:keep_looking_for_partner_des')}
                 isButton={true}
                 customButton={
-                    <ButtonV2 loading={isLoadingContinue} onClick={handleContinueFindPartner}>
+                    <ButtonV2 disabled={state.side === SIDE.SELL && !tipValidator?.isValid} loading={isLoadingContinue} onClick={handleContinueFindPartner}>
                         {t('common:continue')}
                     </ButtonV2>
                 }
             >
                 {state.side === SIDE.SELL && (
                     <div className="w-full mt-6">
+                        <Tooltip place={'right'} className={`max-w-[360px] !w-auto !px-6 !py-3 !mr-4`} effect="solid" isV3 id="partner_bonus_tooltip" />
                         <TradingInputV2
                             id="TradingInputV2"
                             label={
@@ -266,8 +299,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                             allowedDecimalSeparators={[',', '.']}
                             clearAble
                             placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
-                            errorEmpty={false}
-                            // onFocus={handleFocusInput}
+                            errorEmpty
                             renderTail={<span className="txtSecond-4">VND</span>}
                         />
                         <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 2,000 VND</div>
@@ -318,6 +350,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 )}
             </AlertModalV2>
 
+            {/* Popup lỗi */}
             <AlertModalV2
                 isVisible={isErrorContinue}
                 // isVisible={true}
@@ -329,11 +362,17 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                     }, 200);
                 }}
                 type="error"
-                title={'common:error'}
+                title={t('common:failure')}
                 message={isErrorContinue}
             />
 
-            <ModalLoading isVisible={isAwaitSocketNotFoundPartner} onBackdropCb={() => setIsAwaitSocketNotFoundPartner(false)} />
+            {isAwaitSocketNotFoundPartner && (
+                <ModalLoading
+                    animateModal={false}
+                    isVisible={isAwaitSocketNotFoundPartner}
+                    // onBackdropCb={() => setIsAwaitSocketNotFoundPartner(false)}
+                />
+            )}
         </>
     );
 };

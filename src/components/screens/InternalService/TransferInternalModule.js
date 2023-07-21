@@ -24,11 +24,29 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { API_INTERNAL_FIND_USER, API_INTERNAL_TRANSFER } from 'redux/actions/apis';
 import TextArea from 'components/common/V2/InputV2/TextArea';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import CardWrapper from 'components/common/CardWrapper';
+import CheckBox from 'components/common/CheckBox';
+import AccountAvatar from '../Account/AccountAvatar';
+import MCard from 'components/common/MCard';
+import TextCopyable from '../Account/TextCopyable';
 
 const DEFAULT_PAIR = {
-    fromAsset: 'VNDC',
-    toAsset: 'USDT'
+    fromAsset: 'VNDC'
 };
+
+const MAX_TRANSFER_MULTI = 20;
+
+const TABS = [
+    {
+        key: 'personal',
+        localized: 'Personal'
+    },
+    {
+        key: 'multiple',
+        localized: 'Multiple'
+    }
+];
 
 const fromAssetRef = createRef();
 
@@ -50,6 +68,8 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
         listUserFounded: [],
         toUser: null,
         errorToUser: '',
+        toListUser: '',
+        errorToListUser: '',
 
         // State for noti
         contentNotiVi: '',
@@ -64,6 +84,12 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
     const auth = useSelector((state) => state.auth.user) || null;
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
+
+    // Handle screen Personal/Multiple transfer
+    const [selectedTab, setSelectedTab] = useState(TABS[0].key);
+    const [listUserMultiple, setListUserMultiple] = useState([]);
+    const [listUserIdErrors, setListUserIdErrors] = useState([]);
+
     // Get state from Rdx
     const wallets = useSelector((state) => state.wallet.SPOT);
     const assetConfig = useSelector((state) => state.utils.assetConfig);
@@ -78,6 +104,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
         i18n: { language }
     } = useTranslation(['navbar', 'common', 'error', 'convert', 'wallet']);
     const [currentTheme] = useDarkMode();
+
     const isDark = currentTheme === THEME_MODE.DARK;
     useOutsideClick(fromAssetListRef, () => state.openAssetList?.from && setState({ openAssetList: { from: false }, search: '' }));
     useOutsideClick(toUserListRef, () => state.openAssetList?.to && setState({ openAssetList: { to: false } }));
@@ -246,6 +273,11 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
         if (state?.toUser?.code === auth.code) setState({ errorToUser: 'Không thể tự chuyển cho chính mình!', toUser: null });
     }, [state.toUser]);
 
+    useEffect(() => {
+        if (selectedTab === 'multiple') setState({ searchUser: '', listUserFounded: [], toUser: null, errorToUser: '' });
+        else setState({ toListUser: '', errorToListUser: '' });
+    }, [selectedTab]);
+
     const handleConfirmTransfer = () => {
         setState({ loadingTransfer: true, resultTransfer: null });
         fetchAPI({
@@ -256,7 +288,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
             params: {
                 assetCode: state.fromAsset,
                 amount: state.fromAmount,
-                toUserId: state.toUser.id,
+                toUserId: selectedTab === 'personal' ? state.toUser.id : listUserMultiple.map((obj) => obj.code),
                 noteVi: state.contentNotiVi ?? '',
                 noteEn: state.contentNotiEn ?? ''
             }
@@ -266,10 +298,11 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                     setState({
                         resultTransfer: {
                             type: 'success',
-                            msg: 'Chuyển thành công'
+                            msg: `Chuyển thành công${selectedTab === 'personal' ? '' : ` (${res.data?.listTransferSuccess.length} user)`}`,
+                            ...res?.data
                         }
                     });
-                    setNewOrder(res.data);
+                    setNewOrder(res.data?.listTransferSuccess || [res.data]);
                 } else {
                     setState({
                         resultTransfer: {
@@ -297,7 +330,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
         setState({ resultTransfer: null });
 
         if (isClear)
-            setTimeout(
+            setTimeout(() => {
                 setState({
                     fromAmount: '',
                     fromErrors: {},
@@ -318,77 +351,110 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                     isOpenModalPreview: false,
                     loadingTransfer: false,
                     resultTransfer: null
-                }),
-                500
-            );
+                });
+            }, 200);
+    };
+
+    const handlePreview = async () => {
+        if (selectedTab === 'personal') setState({ isOpenModalPreview: true });
+        else {
+            const listFormattedUserIds = state.toListUser
+                .split('\n')
+                .map((eachNamiId) => eachNamiId.trim())
+                .filter((obj) => !!obj);
+
+            const { status, data } = await fetchAPI({
+                url: API_INTERNAL_FIND_USER,
+                options: { method: 'GET' },
+                params: {
+                    searchContent: JSON.stringify(listFormattedUserIds)
+                }
+            });
+
+            if (status === ApiStatus.SUCCESS) {
+                setListUserMultiple(data);
+                setListUserIdErrors(listFormattedUserIds.filter((idSend) => !data.find((obj) => obj.code === idSend || obj.email === idSend)));
+            } else setListUserMultiple([]);
+
+            setState({ isOpenModalPreview: true });
+        }
     };
 
     return (
         <>
-            <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
-                <div className="relative min-w-[488px] max-w-[508px] rounded-xl">
-                    <div className="flex flex-col justify-center items-center">
-                        <span className="text-[32px] leading-[38px] font-semibold">Transfer Internal</span>
-                    </div>
-                    <div className="mt-8 p-6 rounded-xl shadow-card_light dark:border dark:border-divider-dark dark:bg-dark bg-white">
-                        {/*INPUT WRAPPER*/}
-                        <div className="relative flex flex-col gap-y-6">
-                            <Input isFocus={state.inputHighlighted === 'from'}>
-                                <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
-                                    <span>{t('common:from')}</span>
-                                    <div className="flex gap-2 items-center">
-                                        <span>
-                                            {t('common:available_balance')}:{' '}
-                                            {formatWallet(find(state.fromAssetList, { assetCode: state.fromAsset })?.available)}
-                                        </span>
-                                    </div>
+            {/* Header */}
+            <div className="relative flex flex-row-reverse items-end tracking-normal w-full">
+                <Tabs tab={selectedTab} className="gap-6 border-b border-divider dark:border-divider-dark sm:w-max">
+                    {TABS?.map((rs) => (
+                        <TabItem key={rs.key} V2 className="!px-0" value={rs.key} onClick={(isClick) => isClick && setSelectedTab(rs.key)}>
+                            {t(rs.localized)}
+                        </TabItem>
+                    ))}
+                </Tabs>
+                <div className="absolute left-0 hidden md:block">
+                    <span className="text-[32px] leading-[38px] font-semibold">Transfer Internal</span>
+                </div>
+            </div>
+            <div className="mt-10 md:flex w-full h-full gap-8">
+                <CardWrapper className="relative flex flex-col gap-y-6 flex-1">
+                    <div>
+                        <div className="capitalize font-semibold mb-2">* {selectedTab}</div>
+                        <Input isFocus={state.inputHighlighted === 'from'}>
+                            <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
+                                <span>{t('common:from')}</span>
+                                <div className="flex gap-2 items-center">
+                                    <span>
+                                        {t('common:available_balance')}: {formatWallet(find(state.fromAssetList, { assetCode: state.fromAsset })?.available)}
+                                    </span>
                                 </div>
+                            </div>
 
-                                <div className="flex items-center justify-between bg-transparent font-semibold text-base w-full">
-                                    <div className="flex items-center justify-between w-full">
-                                        <NumberFormat
-                                            thousandSeparator
-                                            allowNegative={false}
-                                            getInputRef={fromAssetRef}
-                                            className="w-full text-left txtPri-3 placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
-                                            value={state.fromAmount}
-                                            onFocus={() => setState({ focus: 'from', inputHighlighted: 'from' })}
-                                            onBlur={() => setState({ inputHighlighted: null })}
-                                            onValueChange={({ value }) => setState({ fromAmount: value })}
-                                            placeholder={(0).toFixed(4)}
-                                            decimalScale={4}
-                                        />
+                            <div className="flex items-center justify-between bg-transparent font-semibold text-base w-full">
+                                <div className="flex items-center justify-between w-full">
+                                    <NumberFormat
+                                        thousandSeparator
+                                        allowNegative={false}
+                                        getInputRef={fromAssetRef}
+                                        className="w-full text-left txtPri-3 placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
+                                        value={state.fromAmount}
+                                        onFocus={() => setState({ focus: 'from', inputHighlighted: 'from' })}
+                                        onBlur={() => setState({ inputHighlighted: null })}
+                                        onValueChange={({ value }) => setState({ fromAmount: value })}
+                                        placeholder={(0).toFixed(4)}
+                                        decimalScale={4}
+                                    />
 
-                                        <button
-                                            className={`border-r border-r-divider dark:border-r-divider-dark mr-3 pr-3 ${
-                                                !!state.fromAmount ? 'visible' : 'invisible'
-                                            }`}
-                                        >
-                                            <CloseIcon onClick={() => setState({ fromAmount: '' })} size={width >= 768 ? 20 : 16} className="cursor-pointer" />
-                                        </button>
-                                    </div>
-                                    <div
-                                        className="flex items-center cursor-pointer select-none"
-                                        onClick={() => setState({ openAssetList: { from: !state.openAssetList?.from } })}
+                                    <button
+                                        className={`border-r border-r-divider dark:border-r-divider-dark mr-3 pr-3 ${
+                                            !!state.fromAmount ? 'visible' : 'invisible'
+                                        }`}
                                     >
-                                        <AssetLogo assetCode={state.fromAsset} size={24} />
-                                        <span className="mx-2 uppercase">{state.fromAsset}</span>
-                                        <span className={`transition-transform duration-50 ${state.openAssetList?.from && 'rotate-180'}`}>
-                                            <ArrowDropDownIcon size={16} />
-                                        </span>
-                                    </div>
+                                        <CloseIcon onClick={() => setState({ fromAmount: '' })} size={width >= 768 ? 20 : 16} className="cursor-pointer" />
+                                    </button>
                                 </div>
-                                {renderFromAssetList()}
-                            </Input>
-                            {/* {renderHelperTextFrom()} */}
-
+                                <div
+                                    className="flex items-center cursor-pointer select-none"
+                                    onClick={() => setState({ openAssetList: { from: !state.openAssetList?.from } })}
+                                >
+                                    <AssetLogo assetCode={state.fromAsset} size={24} />
+                                    <span className="mx-2 uppercase">{state.fromAsset}</span>
+                                    <span className={`transition-transform duration-50 ${state.openAssetList?.from && 'rotate-180'}`}>
+                                        <ArrowDropDownIcon size={16} />
+                                    </span>
+                                </div>
+                            </div>
+                            {renderFromAssetList()}
+                        </Input>
+                    </div>
+                    {selectedTab === 'personal' ? (
+                        <>
                             <div className="relative">
                                 <InputV2
                                     onFocus={handleSearchToUser}
                                     onHitEnterButton={handleSearchToUser}
                                     value={state.searchUser}
                                     onChange={(value) => (value ? setState({ searchUser: value }) : setState({ searchUser: value, toUser: null }))}
-                                    placeholder={t('common:to')}
+                                    placeholder={t('common:to') + ' (email/nami_id)'}
                                     suffix={<Search color={colors.darkBlue5} size={16} />}
                                     className="pb-0 w-full"
                                     error={state.errorToUser}
@@ -405,14 +471,14 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                             >
                                 <div className="w-full border p-4 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
                                     {state?.toUser?.avatar ? (
-                                        <img src={state.toUser.avatar} alt="avatar_user" className="rounded-full w-16 h-16 bg-cover" />
+                                        <img src={state.toUser.avatar} alt="avatar_user" className="w-16 h-16 rounded-full bg-cover" />
                                     ) : (
                                         <BxsUserCircle size={64} />
                                     )}
                                     <div className="w-full">
                                         <div className="txtPri-1 pl-[1px] flex items-center justify-between w-full">
-                                            <span className="txtSecond-1 !text-base">ID: </span>
-                                            {state?.toUser?.id ?? '???'}
+                                            <span className="txtSecond-1 !text-base">Email: </span>
+                                            {state?.toUser?.email ?? '???'}
                                         </div>
                                         <div className="mt-1 txtPri-1 items-center flex justify-between w-full">
                                             <span className="txtSecond-1 !text-base">Nami ID: </span>
@@ -421,32 +487,46 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                                     </div>
                                 </div>
                             </div>
+                        </>
+                    ) : (
+                        <TextArea
+                            label={`Danh sách Nami ID hoặc Email (tối đa ${MAX_TRANSFER_MULTI} user)`}
+                            value={state?.toListUser}
+                            onChange={(value) => setState({ toListUser: value })}
+                            placeholder={'Nami001\nNami002\nNami003\nNami004\n...'}
+                            className="pb-0 w-full"
+                            classNameInput="!text-base font-semibold h-[176px]"
+                            rows={20}
+                        />
+                    )}
+                </CardWrapper>
+                <CardWrapper className="relative flex flex-col gap-y-6 flex-1 mt-8 md:mt-0">
+                    <TextArea
+                        label="Nội dung thông báo (Tiếng Việt)"
+                        value={state?.contentNotiVi}
+                        onChange={(value) => setState({ contentNotiVi: value })}
+                        placeholder={'Nhập nội dung (không bắt buộc)'}
+                        className="pb-0 w-full"
+                        classNameInput="!text-lg h-24"
+                    />
+                    <TextArea
+                        label="Nội dung thông báo (Tiếng Anh)"
+                        value={state?.contentNotiEn}
+                        onChange={(value) => setState({ contentNotiEn: value })}
+                        placeholder={'Nhập nội dung (không bắt buộc)'}
+                        className="pb-0 w-full"
+                        classNameInput="!text-lg h-24"
+                    />
 
-                            <TextArea
-                                label="Nội dung thông báo (Tiếng Việt)"
-                                value={state?.contentNotiVi}
-                                onChange={(value) => setState({ contentNotiVi: value })}
-                                placeholder={'Nhập nội dung (không bắt buộc)'}
-                                className="pb-0 w-full"
-                                classNameInput="!text-lg h-24"
-                            />
-
-                            <TextArea
-                                label="Nội dung thông báo (Tiếng Anh)"
-                                value={state?.contentNotiEn}
-                                onChange={(value) => setState({ contentNotiEn: value })}
-                                placeholder={'Nhập nội dung (không bắt buộc)'}
-                                className="pb-0 w-full"
-                                classNameInput="!text-lg h-24"
-                            />
-                        </div>
-
-                        {/*TRANSFER BUTTON*/}
-                        <ButtonV2 disabled={!state?.fromAmount || !state?.toUser} onClick={() => setState({ isOpenModalPreview: true })} className="mt-8">
-                            {t(`futures:mobile.close_all_positions.preview`)}
-                        </ButtonV2>
-                    </div>
-                </div>
+                    {/*TRANSFER BUTTON*/}
+                    <ButtonV2
+                        disabled={!state?.fromAmount || (selectedTab === 'personal' ? !state?.toUser : !state?.toListUser)}
+                        onClick={handlePreview}
+                        className="mt-2"
+                    >
+                        {t(`futures:mobile.close_all_positions.preview`)}
+                    </ButtonV2>
+                </CardWrapper>
             </div>
             <ModalV2
                 loading={false}
@@ -455,7 +535,7 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                 onBackdropCb={() => setState({ isOpenModalPreview: false })}
                 btnCloseclassName="bg-white dark:bg-dark"
             >
-                <div className="my-6 text-left font-semibold text-[24px] leading-[30px] text-dark-2 dark:text-gray-4 hover:bg-transparent">
+                <div className="mb-6 text-left font-semibold text-[24px] leading-[30px] text-dark-2 dark:text-gray-4 hover:bg-transparent">
                     Xác nhận giao dịch
                 </div>
                 <div className="flex flex-col items-start justify-between gap-2">
@@ -467,24 +547,68 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                 </div>
 
                 <div className="flex flex-col mt-4 items-start justify-between gap-2">
-                    <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">Người nhận:</span>
-                    <div className="w-full rounded-md bg-gray-10 dark:bg-dark-2 px-3 py-2 flex flex-col gap-y-4 text-base items-center leading-6">
-                        <InforTransfer
-                            label="Avatar"
-                            content={
-                                state.toUser?.avatar ? (
-                                    <img src={state.toUser.avatar} alt="avatar_user" className="rounded-full w-8 h-8 bg-cover" />
-                                ) : (
-                                    <BxsUserCircle size={32} />
-                                )
-                            }
-                        />
-                        <InforTransfer label="UID" content={state.toUser?.id ?? '--'} />
-                        <InforTransfer label="Nami ID" content={state.toUser?.code ?? '--'} />
-                        <InforTransfer label="Email" content={state.toUser?.email ?? '--'} />
-                        <InforTransfer label="Name" content={state.toUser?.name ?? '--'} />
-                        <InforTransfer label="Username" content={state.toUser?.username ?? '--'} />
-                    </div>
+                    <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">Người nhận ({listUserMultiple.length}):</span>
+                    {selectedTab === 'personal' ? (
+                        <div className="w-full rounded-md bg-gray-10 dark:bg-dark-2 px-3 py-2 flex flex-col gap-y-4 text-base items-center leading-6">
+                            <InforTransfer
+                                label="Avatar"
+                                content={
+                                    state.toUser?.avatar ? (
+                                        <img src={state.toUser.avatar} alt="avatar_user" className="rounded-full w-8 h-8 bg-cover" />
+                                    ) : (
+                                        <BxsUserCircle size={32} />
+                                    )
+                                }
+                            />
+                            <InforTransfer label="UID" content={state.toUser?.id ?? '--'} />
+                            <InforTransfer label="Nami ID" content={state.toUser?.code ?? '--'} />
+                            <InforTransfer label="Email" content={state.toUser?.email ?? '--'} />
+                            <InforTransfer label="Name" content={state.toUser?.name ?? '--'} />
+                            <InforTransfer label="Username" content={state.toUser?.username ?? '--'} />
+                        </div>
+                    ) : (
+                        <div className="w-full py-2">
+                            <div className="max-h-[250px] h-[250px] overflow-y-scroll">
+                                {listUserMultiple.map((item) => {
+                                    const { avatar, code, code_refer, email, id, kyc_status, name, phone, rank_id, status, username } = item;
+                                    return (
+                                        <MCard key={'convert_small_ballance_' + id} addClass={'!px-0 !py-0 first:!mt-0 !mt-2'}>
+                                            <div className="w-full border p-4 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
+                                                {avatar ? (
+                                                    <img src={avatar} alt="avatar_user" className="rounded-full w-16 h-16 bg-cover" />
+                                                ) : (
+                                                    <BxsUserCircle size={64} />
+                                                )}
+                                                <div className="w-full">
+                                                    <div className="txtPri-1 pl-[1px] flex items-center justify-between w-full">
+                                                        <span className="txtSecond-1 !text-base">Email: </span>
+                                                        {email ?? '???'}
+                                                    </div>
+                                                    <div className="mt-1 txtPri-1 items-center flex justify-between w-full">
+                                                        <span className="txtSecond-1 !text-base">Nami ID: </span>
+                                                        {code ?? '???'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </MCard>
+                                    );
+                                })}
+                            </div>
+                            {(listUserMultiple.length > MAX_TRANSFER_MULTI || listUserMultiple.length === 0) && (
+                                <div className="mt-2 text-red-2 font-semibold text-base">{`Số lượng User không hợp lệ (0 < total <= ${MAX_TRANSFER_MULTI})`}</div>
+                            )}
+                            {listUserIdErrors.length > 0 && (
+                                <div>
+                                    <div className="mt-4 text-sm leading-5 text-red-2">Not found ({listUserIdErrors.length}):</div>
+                                    <div>
+                                        {listUserIdErrors.map((idErr) => (
+                                            <div className="mt-1">{idErr}</div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {state?.contentNotiVi && (
@@ -504,7 +628,11 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                     </div>
                 )}
                 <div className="mt-10 w-full flex flex-row items-center justify-between">
-                    <ButtonV2 loading={state.loadingTransfer} onClick={handleConfirmTransfer}>
+                    <ButtonV2
+                        disabled={selectedTab === 'multiple' && (listUserMultiple.length > MAX_TRANSFER_MULTI || listUserMultiple.length === 0)}
+                        loading={state.loadingTransfer}
+                        onClick={handleConfirmTransfer}
+                    >
                         {t('common:confirm')}
                     </ButtonV2>
                 </div>
@@ -517,7 +645,28 @@ const TransferInternalModule = ({ width, pair, setNewOrder }) => {
                 title={state.resultTransfer?.msg}
                 buttonClassName="hidden"
                 // message={state.resultErr}
-            />
+            >
+                {state.resultTransfer?.listUserError && state.resultTransfer.listUserError.length > 0 && (
+                    <div className="w-full mt-4 pt-4 border-t border-divider dark:border-divider-dark">
+                        <div className="text-xl text-center font-semibold">Danh sách User chuyển lỗi ({state.resultTransfer.listUserError?.length} user):</div>
+                        <div className="text-base text-red-2 text-center py-4 font-semibold">Lưu ý: Danh sách lỗi chỉ hiện 1 lần duy nhất</div>
+                        {state.resultTransfer.listUserError.map((userErr) => {
+                            return (
+                                <div className="border-t border-divider dark:border-divider-dark py-4">
+                                    <div className="flex items-center justify-between">
+                                        Nami ID:
+                                        <TextCopyable text={userErr?.toUserId} />
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        Reason:
+                                        <div className="text-red-2">{userErr?.reason?.status}</div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </AlertModalV2>
         </>
     );
 };

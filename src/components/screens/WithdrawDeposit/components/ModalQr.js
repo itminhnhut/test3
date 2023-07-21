@@ -36,7 +36,7 @@ const ModalQr = ({ isVisible, onClose, bank, className, t, orderId }) => {
         }
     };
     return (
-        <ModalDownLoadImg onDownload={onDownload} isVisible={isVisible} onClose={onClose} className={className} t={t}>
+        <ModalDownLoadImg loading={loadingRate} onDownload={onDownload} isVisible={isVisible} onClose={onClose} className={className} t={t}>
             <div className="text-center mb-6">
                 <div className="text-xs leading-4 text-txtSecondary dark:text-txtSecondary-dark mb-1">{t('dw_partner:beneficiary')}</div>
                 <div className="txtPri-3 mb-8">{bank?.accountName}</div>
@@ -52,7 +52,7 @@ const ModalQr = ({ isVisible, onClose, bank, className, t, orderId }) => {
                 className="h-[180px] w-full flex justify-center items-center rounded-xl"
             >
                 <div className="p-1 rounded-md bg-white relative">
-                    <QRCode id={`react-qrcode-logo-${orderId}`} value={bank?.QR} size={140} eyeRadius={6} quietZone={2} enableCORS={true} />
+                    <QRCode id={`react-qrcode-logo-${orderId}`} value={bank?.QR ?? ''} size={140} eyeRadius={6} quietZone={2} enableCORS={true} />
                     {bankLogo && (
                         <img
                             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"

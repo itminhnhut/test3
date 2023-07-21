@@ -100,6 +100,12 @@ export const API_CLOSE_ALL_ORDERS_BY_CONDTION = API_V3_PREFIX + 'futures/vndc/cl
 export const API_DCA_ORDER = API_V3_PREFIX + 'futures/vndc/dca-order';
 export const API_PARTIAL_CLOSE_ORDER = API_V3_PREFIX + 'futures/vndc/partialcloseorderv2';
 
+//fees
+export const API_GET_FEE_ASSET = API_PREFIX + 'futures/fee_asset';
+
+export const API_FEE_SETTING_NAMI_FUTURE = API_PREFIX + 'futures/fee_asset';
+export const API_FEE_SETTING_NAO_FUTURE = API_PREFIX + 'nao/fee_asset';
+
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price';
 export const API_GET_SWAP_HISTORY = API_V3_PREFIX + 'swap/history';
@@ -123,6 +129,7 @@ export const API_SET_USER_AVATAR = API_PREFIX + 'user/set_avatar';
 export const API_MARK_NOTIFICATIONS_READ = API_V3_PREFIX + 'notifications/mark-read';
 export const API_GET_NOTIFICATIONS = API_V3_PREFIX + 'notifications/';
 export const API_GET_NOTIFICATIONS_UNREAD_COUNT = API_PREFIX + 'notifications/count_unread';
+export const API_GET_NOTI_SETTING = API_V3_PREFIX + 'notifications/setting';
 
 export const API_WATCH_LIST = API_PREFIX + 'market/watch_list';
 export const API_METRIC_VIEW = API_V3_PREFIX + 'spot/view';
@@ -212,7 +219,10 @@ export const API_FUTURES_CAMPAIGN_WITHDRAW_STATUS = API_PREFIX + 'futures_campai
 export const API_FUTURES_CAMPAIGN_TRANSFER_STATUS = API_PREFIX + 'futures_campaign/onboarding/transferStatus';
 
 //NAO token
-export const API_NAO_DASHBOARD_STATISTIC = API_V3_PREFIX + 'nao-dashboard/statistic';
+export const API_NAO_DASHBOARD_STATISTIC = API_V3_PREFIX + 'nao-dashboard/statistic-v2';
+export const API_NAO_DASHBOARD_STATISTIC_CHART = API_V3_PREFIX + 'nao-dashboard/statistic/chart';
+export const API_NAO_DASHBOARD_FEE_REVENUE = API_V3_PREFIX + 'pool/fee-revenue-statistic';
+export const API_NAO_DASHBOARD_POOL_STATISTIC = API_V3_PREFIX + 'pool/statistic';
 //POOL
 export const API_POOL_INFO = API_V3_PREFIX + 'pool/info';
 export const API_POOL_AMM = API_V3_PREFIX + 'pool/amm-analytic';
@@ -307,6 +317,7 @@ export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends-v2';
 export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + 'users/referral/commission-history';
 export const API_GET_REFERRAL_FRIENDS_BY_CODE = API_V3_PREFIX + 'users/referral/:code/friends-detail';
 export const API_GET_CONTEST_REFERRAL = API_V3_PREFIX + 'users/referral/getTopReferral';
+export const API_SET_NICKNAME = API_PREFIX + 'user/nickname';
 
 // convert small balance to Nami
 export const API_GET_NAMI_RATE = API_V3_PREFIX + 'convert/nami_asset_value';
@@ -346,9 +357,10 @@ export const API_SET_PHONE_REQUEST = API_PREFIX + 'user/set_phone_request';
 export const API_SET_PHONE_VERIFY = API_PREFIX + 'user/set_phone_verify';
 
 // Deposit withdraw Partner 22/06:
-export const API_PROCESS_AUTO_SUGGEST_ORDER = API_V3_PREFIX + 'dw_partner_new/process_auto_suggest_order';
-export const API_CANCEL_AUTO_SUGGEST_ORDER = API_V3_PREFIX + 'dw_partner_new/cancel_auto_suggest_order';
-export const API_CONTINUE_AUTO_SUGGEST_ORDER = API_V3_PREFIX + 'dw_partner_new/continue_auto_suggest_order';
+export const API_PROCESS_AUTO_SUGGEST_ORDER = API_V3_PREFIX + "dw_partner_new/process_auto_suggest_order"
+export const API_CANCEL_AUTO_SUGGEST_ORDER = API_V3_PREFIX + "dw_partner_new/cancel_auto_suggest_order"
+export const API_CONTINUE_AUTO_SUGGEST_ORDER = API_V3_PREFIX + "dw_partner_new/continue_auto_suggest_order"
+export const API_CONFIG_AUTO_SUGGEST_PARTNER = API_V3_PREFIX + "dw_partner_new/partner_auto_order_config"
 
 // internal
 export const API_INTERNAL_FIND_USER = API_V3_PREFIX + 'spot/internal-find-user';

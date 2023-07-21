@@ -59,6 +59,7 @@
     "download": "Tải xuống",
     "save_img": "Lưu ảnh",
     "payment_infor": "Thông tin thanh toán",
+    "partner_infor": "Thông tin đối tác",
     "bank": "Ngân hàng",
     "no_bank": "Không tìm thấy ngân hàng",
     "transfer_description": "Nội dung chuyển khoản",
@@ -171,7 +172,7 @@
         "invalid_smart_otp": "Mã xác thực không chính xác {{timesErr}}/5, vui lòng nhập lại.",
         "invalid_amount": "Giá trị không hợp lệ",
         "order_has_been_canceled": "Người dùng đã hủy giao dịch",
-        "order_has_been_expired": "Đã hết thời gian xác nhận giao dịch",
+        "order_has_expired": "Đã hết thời gian xác nhận giao dịch",
         "order_has_been_accepted_by_another_partner": "Giao dịch đã được xử lý bởi đối tác khác",
         "not_found_auto_partner": "Rất tiếc, hiện không có đối tác nào phù hợp cho giao dịch của bạn, vui lòng thử lại.",
         "invalid_max_fee": "Phí giao dịch không được vượt quá số lượng bạn muốn bán."
@@ -215,7 +216,13 @@
     "transaction_info": "Thông tin giao dịch",
     "transaction_type": "Loại giao dịch",
     "alert_suggest_not_found_order": "Không tìm thấy lệnh {{displayingId}} hoặc lệnh đang được xử lý, vui lòng tải lại dữ liệu hoặc liên hệ hỗ trợ.",
-    "alert_suggest_not_found_partner": "Rất tiếc, hiện không có đối tác nào phù hợp cho giao dịch của bạn, vui lòng thử lại.",
+    "alert_suggest_not_found_auto_partner": "Rất tiếc, hiện không có đối tác nào phù hợp cho giao dịch của bạn, vui lòng thử lại.",
     "toast_user_place_suggest_order_success": "Bạn đã đặt thành công lệnh {{side}} {{orderId}}",
-    "alert_suggest_invalid_max_fee": "Phí giao dịch không được vượt quá số lượng bạn muốn bán."
+    "alert_suggest_invalid_max_fee": "Phí giao dịch không được vượt quá số lượng bạn muốn bán.",
+    "btn_accept": "Nhận lệnh",
+    "partner_suggest_order_title": "Tìm kiếm đối tác cho giao dịch nạp/rút",
+    "partner_suggest_order_subtitle": "Người dùng đang tìm kiếm đối tác cho giao dịch sau, vui lòng xác nhận nhanh nhất có thể để bắt đầu giao dịch",
+    "fee_received": "Phí nhận được",
+    "auto_suggestion_mode": "Chế độ tự động gợi ý",
+    "auto_suggestion_mode_tooltip": "Cho phép hệ thống tự động gợi ý tới người dùng để xử lý lệnh"
 }

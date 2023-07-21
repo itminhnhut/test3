@@ -12,10 +12,16 @@ import { find, isArray } from 'lodash';
 import Skeletor from 'components/common/Skeletor';
 import OrderStatusTag from 'components/common/OrderStatusTag';
 import Tooltip from 'components/common/Tooltip';
+import TextCopyable from '../Account/TextCopyable';
 
-const addNewRecord = (arr = [], newItem = {}) => {
-    arr.pop(); // Remove last item
-    arr.unshift({ ...newItem, _id: 0 });
+const addNewRecord = (arr = [], newItems = []) => {
+    if (newItems.length >= LIMIT_ROW) return newItems.slice(0, LIMIT_ROW);
+
+    newItems.forEach((newTrans, idx) => {
+        if (arr.length >= LIMIT_ROW) arr.pop();
+        arr.unshift({ ...newTrans, _id: idx });
+    });
+
     return arr;
 };
 
@@ -43,7 +49,7 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
 
     useAsync(async () => {
         if (!auth) return;
-        setNewOrder(null);
+        setNewOrder([]);
         setState({ loading: true, histories: null });
         try {
             const {
@@ -77,14 +83,14 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                 title: 'ID',
                 align: 'left',
                 width: 203,
-                render: (row) => (row === 0 ? <Skeletor width={150} /> : <div title={row}>{shortHashAddress(row, 8, 6)}</div>)
+                render: (row) => (typeof row === 'number' ? <Skeletor width={150} /> : <div title={row}>{shortHashAddress(row, 8, 6)}</div>)
             },
             {
                 key: 'asset',
                 dataIndex: 'currency',
                 title: t('transaction-history:asset'),
                 align: 'left',
-                width: 180,
+                width: 150,
                 render: (row) => {
                     const assetCode = find(assetConfig, { id: +row })?.assetCode;
                     return (
@@ -99,7 +105,7 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                 key: 'created_at',
                 title: t('transaction-history:time'),
                 align: 'left',
-                width: 230,
+                width: 200,
                 render: (_row, item) => <div>{formatTime(item?.created_at || item?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
             },
             {
@@ -113,6 +119,20 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                         <div>
                             {formatPrice(item?.amount || item?.money_use || item?.value, config?.assetDigit ?? 0)}
                             {/* {config?.assetCode ?? 'VNDC'} */}
+                        </div>
+                    );
+                }
+            },
+            {
+                key: 'toUser',
+                title: t('common:to'),
+                align: 'right',
+                width: 200,
+                render: (v, item) => {
+                    return (
+                        <div className='flex flex-col justify-end items-end'>
+                            <TextCopyable text={item?.metadata?.toUser?.code} />
+                            <div className="mt-1 txtSecond-5">{item?.metadata?.toUser?.email}</div>
                         </div>
                     );
                 }
@@ -136,15 +156,11 @@ const TransferInternalHistory = ({ width, newOrder, setNewOrder }) => {
                             {shortHashAddress(language === 'vi' ? v?.vi : v?.en, 18, 0)}
                             <Tooltip offset={{ top: 18 }} id={'tooltip-' + item._id} place="top" effect="solid" className={`max-w-[400px]`} isV3>
                                 <div className="w-full">
-                                    <div className="mb-2 text-white dark:text-txtSecondary-dark text-left text-xs">
-                                        Thông báo tiếng Việt:
-                                    </div>
-                                    <div className='text-left mb-6'>{v?.vi}</div>
+                                    <div className="mb-2 text-white dark:text-txtSecondary-dark text-left text-xs">Thông báo tiếng Việt:</div>
+                                    <div className="text-left mb-6">{v?.vi}</div>
 
-                                    <div className="mb-2 text-white dark:text-txtSecondary-dark text-left text-xs">
-                                        Content noti English:
-                                    </div>
-                                    <div className='text-left'>{v?.en}</div>
+                                    <div className="mb-2 text-white dark:text-txtSecondary-dark text-left text-xs">Content noti English:</div>
+                                    <div className="text-left">{v?.en}</div>
                                 </div>
                             </Tooltip>
                         </div>

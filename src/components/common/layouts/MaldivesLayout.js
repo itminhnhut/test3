@@ -73,7 +73,7 @@ const MadivesLayout = ({
 
     const router = useRouter();
 
-    const { t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const userSocket = useSelector((state) => state.socket.userSocket);
     useEffect(() => {
@@ -84,30 +84,33 @@ const MadivesLayout = ({
                 // make sure the socket displayingId is the current page
                 if (!data || data?.status !== 0 || data.partnerAcceptStatus !== 0) return;
 
-                const { displayingId, quoteQty, baseAssetId, userMetadata, side } = data;
+                const { displayingId, baseQty, baseAssetId, side } = data;
 
                 if (router?.query?.id === PARTNER_WD_TABS.OPEN_ORDER) return;
 
-                dispatch(getNotifications({ lang: i18n.language }));
+                setTimeout(() => {
+                    dispatch(getNotifications({ lang: i18n.language }));
+                }, 3000);
+
                 toast({
                     key: `suggest_order_${displayingId}`,
                     text: t('common:partner_toast_suggest_order', {
                         side: t(`common:${side.toLowerCase()}`),
                         displayingID: displayingId,
-                        amount: quoteQty,
+                        amount: baseQty,
                         asset: baseAssetId === 72 ? 'VNDC' : 'USDT'
                     }),
                     type: 'info',
                     duration: 5000,
                     customActionClose: (closeToast) => (
                         <span
-                            className="ml-6 text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4 cursor-pointer"
+                            className="ml-6 font-semibold text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4 cursor-pointer"
                             onClick={() => {
                                 closeToast();
                                 router.push({ pathname: PATHS.PARTNER_WITHDRAW_DEPOSIT.OPEN_ORDER, query: { suggest: displayingId } });
                             }}
                         >
-                            Xem
+                            {i18n.language === 'en' ? 'Detail' : 'Chi tiết'}
                         </span>
                     )
                 });
@@ -116,6 +119,7 @@ const MadivesLayout = ({
 
         return () => {
             if (userSocket) {
+                userSocket.off(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST)
                 userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                     console.log('socket removeListener PARTNER_UPDATE_ORDER_AUTO_SUGGEST:', data);
                 });

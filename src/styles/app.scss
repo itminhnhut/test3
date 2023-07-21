@@ -167,6 +167,10 @@ body {
         // @apply container;
         // padding:0 16px;
         margin: auto;
+        &.mal-footer__wrapper {
+            @apply px-4;
+            max-width: unset;
+        }
 
         @media (min-width: 1024px) {
             max-width: 900px;
@@ -174,6 +178,10 @@ body {
 
         @media (min-width: 1280px) {
             max-width: 1164px;
+            &.mal-footer__wrapper {
+                @apply px-0;
+                max-width: 1216px;
+            }
         }
 
         @media (min-width: 1920px) {
@@ -234,6 +242,12 @@ body {
     .txtPri-6 {
         // [size, leading]: [32px, 38px],
         @apply font-semibold text-[32px] leading-[38px]
+        text-gray-15 dark:text-gray-4 tracking-normal;
+    }
+
+    .txtPri-7 {
+        // [size, leading]: [18px, 26px]
+        @apply font-semibold text-[18px] leading-[26px]
         text-gray-15 dark:text-gray-4 tracking-normal;
     }
 
@@ -597,7 +611,7 @@ input[type='number'] {
 [id^='nami-tv-'] {
     iframe {
         @apply flex flex-grow;
-        min-height: 365px;
+        // min-height: 365px;
     }
 }
 
