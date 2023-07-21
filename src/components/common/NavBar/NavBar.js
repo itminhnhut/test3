@@ -14,7 +14,7 @@ import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
 import { API_GET_VIP } from 'redux/actions/apis';
 import { getMarketWatch } from 'redux/actions/market';
-import { getInsuranceLoginLink, getS3Url } from 'redux/actions/utils';
+import {  getS3Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import { buildLogoutUrl } from 'src/utils';
 import { useWindowSize } from 'utils/customHooks';

@@ -2,8 +2,7 @@ import Button from 'components/common/V2/ButtonV2/Button';
 import { BxChevronDown, FutureInsurance } from 'components/svg/SvgIcon';
 import useInsuranceLoginLink from 'hooks/useInsuranceLoginLink';
 import { useTranslation } from 'next-i18next';
-import React, { useState } from 'react';
-import { getInsuranceLoginLink } from 'redux/actions/utils';
+import React from 'react';
 
 const InsuranceButton = () => {
     const { t } = useTranslation(['wallet']);

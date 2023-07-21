@@ -19,7 +19,7 @@ import {
     rateCurrency
 } from './const';
 import { SET_BOTTOM_NAVIGATION, SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types';
-import { API_GET_REFERENCE_CURRENCY, API_GET_FEE_ASSET,API_AUTH_INSURANCE } from 'redux/actions/apis';
+import { API_GET_REFERENCE_CURRENCY, API_GET_FEE_ASSET, API_AUTH_INSURANCE } from 'redux/actions/apis';
 import fetchAPI from 'utils/fetch-api';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
@@ -1439,22 +1439,25 @@ export const getDayInterestPercent = (apy) =>
         4
     );
 
-export const getInsuranceLoginLink = async (pair = 'BNBUSDT') => {
+export const getInsuranceLoginLink = async ({ params = 'BNBUSDT', targetType = null, redirectTo = null }) => {
     try {
         const data = await fetchAPI({
             url: API_AUTH_INSURANCE,
             params: {
                 redirectDomain: INSURANCE_URL,
-                redirectTo: `${INSURANCE_URL}/buy-covered/${pair}`
+                redirectTo: redirectTo || `${INSURANCE_URL}/buy-covered/${params}`
             }
         });
         const link = document.createElement('a');
         link.href = data.data;
+        if (targetType === '_blank') {
+            link.target = targetType;
+        }
         link.click();
     } catch (error) {
         console.error('getInsuranceLoginLink error:', error);
     }
-}
+};
 
 export const getFuturesFees = async (quotes) => {
     const { data } = await axios.get(API_GET_FEE_ASSET, { params: { marginAsset: quotes } }).then((data) => {

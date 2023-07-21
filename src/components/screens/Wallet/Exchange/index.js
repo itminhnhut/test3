@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { dwLinkBuilder, formatNumber as formatWallet, getInsuranceLoginLink, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber as formatWallet, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { BxChevronDown, FutureInsurance, MoreHorizIcon } from 'components/svg/SvgIcon';
 
 import { EXCHANGE_ACTION } from 'pages/wallet';
