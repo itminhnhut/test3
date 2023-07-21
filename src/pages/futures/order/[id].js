@@ -97,7 +97,7 @@ const OrderDetail = ({ id }) => {
                 router.back();
             } else {
                 const mainOrder = order?.metadata?.dca_order_metadata?.is_main_order || order?.metadata?.partial_close_metadata?.is_main_order;
-                if (Number(order?.order_value) !== Number(orderDetail?.order_value) && mainOrder && !checking.current) {
+                if (mainOrder && !checking.current) {
                     checking.current = true;
                     getDetail(id);
                 }
@@ -366,7 +366,9 @@ const OrderDetail = ({ id }) => {
                                                 {general.pending ? (
                                                     <div
                                                         className={`bg-gray-12 dark:bg-dark-2 px-4 py-1 rounded-full text-xs ${
-                                                            general?.cancelled ? 'text-txtSecondary dark:text-txtSecondary-dark' : 'text-yellow-2 bg-yellow-2/[0.15]'
+                                                            general?.cancelled
+                                                                ? 'text-txtSecondary dark:text-txtSecondary-dark'
+                                                                : 'text-yellow-2 bg-yellow-2/[0.15]'
                                                         }`}
                                                     >
                                                         {t(`futures:mobile:${general?.cancelled ? 'cancelled_order' : 'pending_order'}`)}
