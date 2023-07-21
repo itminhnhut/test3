@@ -16,6 +16,7 @@ import { ArrowRight, Copy } from 'react-feather';
 import colors from 'styles/colors';
 import { ChevronUp, ChevronDown } from 'react-feather';
 import { useRouter } from 'next/router';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const getAllAssets = createSelector([(state) => state.utils, (utils, params) => params], (utils, params) => {
     const assets = {};
@@ -68,8 +69,13 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
         const prefix = negative ? (data < 0 ? '-' : '+') : '';
         return data ? prefix + formatNumber(Math.abs(data), decimal) + ' ' + assetCode : '-';
     };
+
+    const onCloseCb = useCallback(() => {
+        onClose();
+    }, []);
+
     return (
-        <ModalV2 className="!max-w-[884px]" isVisible={isVisible} onBackdropCb={onClose} wrapClassName="pb-4">
+        <ModalV2 className="!max-w-[884px]" isVisible={isVisible} onBackdropCb={onCloseCb} wrapClassName="pb-4">
             <Tooltip id={'funding_fee'} place="top" effect="solid" isV3 className="max-w-[300px]" />
             <Tooltip
                 id={'liquidate_fee'}
@@ -176,12 +182,7 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
                     </div>
                 </div>
             </div>
-            <AdjustmentHistory
-                id={order?.displaying_id}
-                onClose={useCallback(() => {
-                    onClose();
-                }, [])}
-            />
+            <AdjustmentHistory id={order?.displaying_id} onClose={onCloseCb} />
         </ModalV2>
     );
 };
@@ -788,17 +789,22 @@ const FeeMeta = React.memo(({ orderDetail, mode = 'open_fee', allAssets, t }) =>
     }, [orderDetail]);
 
     const decimal = fee_metadata[0]?.asset === 72 ? allAssets[fee_metadata[0]?.asset]?.assetDigit : allAssets[fee_metadata[0]?.asset]?.assetDigit + 2;
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
 
     return (
         <>
             <div className="flex items-center justify-between w-full">
                 <Label className="font-normal">{t(`futures:mobile:${mode}`)}</Label>
-                <Span className={fee_metadata.length > 1 ? 'cursor-pointer' : 'text-gray-4'} onClick={() => fee_metadata.length > 1 && setVisible(!visible)}>
+                <Span
+                    className={fee_metadata.length > 1 ? 'cursor-pointer' : 'dark:text-gray-4 text-darkBlue'}
+                    onClick={() => fee_metadata.length > 1 && setVisible(!visible)}
+                >
                     {fee_metadata.length > 1 ? (
                         visible ? (
-                            <ChevronUp size={24} color="#8694b2" />
+                            <ChevronUp size={24} color={isDark ? '#8694b2' : '#768394'} />
                         ) : (
-                            <ChevronDown size={24} color="#8694b2" />
+                            <ChevronDown size={24} color={isDark ? '#8694b2' : '#768394'} />
                         )
                     ) : !fee_metadata[0]?.value ? (
                         '-'
@@ -810,7 +816,7 @@ const FeeMeta = React.memo(({ orderDetail, mode = 'open_fee', allAssets, t }) =>
             {visible && (
                 <div className="mt-2 rounded-md w-full grid grid-cols-2 gap-2 border dark:border-divider-dark p-3">
                     {fee_metadata.map((rs, idx) => (
-                        <div className={`text-base font-semibold text-gray-4 ${idx % 2 === 0 ? 'text-left' : 'text-right'}`} key={idx}>
+                        <div className={`text-base font-semibold text-darkBlue dark:text-gray-4 ${idx % 2 === 0 ? 'text-left' : 'text-right'}`} key={idx}>
                             {formatNumber(rs.value, rs.asset === 72 ? allAssets[rs.asset].assetDigit : allAssets[rs.asset].assetDigit + 2)}{' '}
                             {allAssets[rs.asset].assetCode}
                         </div>
