@@ -932,7 +932,7 @@ const CalendarFillIcon = ({ size = 24, color = 'currentColor', className = '' })
     </svg>
 );
 
-const ContactIcon = ({ size = 24, color = 'currentColor' , className}) => (
+const ContactIcon = ({ size = 24, color = 'currentColor', className }) => (
     <svg className={className} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
         <g clipPath="url(#2ocmtc1tna)">
             <path
@@ -1358,83 +1358,109 @@ const ProfitStats = ({ className, color, size = 24 }) => {
     );
 };
 
+const NFTIcon = ({ width = 19.5, height = 19.5 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#o3yhtnhsda)">
+                <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M12 3.75a8.25 8.25 0 1 0 0 16.5 8.25 8.25 0 0 0 0-16.5zM2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12z"
+                    fill="#6FC98B"
+                />
+                <path
+                    d="M6.488 16c-.053 0-.08-.023-.08-.069l-.01-6.768c0-.053.027-.079.08-.079h.894l1.68 3.915-.05-3.836c0-.053.03-.079.09-.079h.983c.04 0 .06.026.06.08l.01 6.777c0 .04-.017.06-.05.06h-.874L7.5 12.342l.07 3.578c0 .053-.03.08-.09.08h-.993zM11.058 16c-.033 0-.05-.016-.05-.05l.02-6.826c0-.027.013-.04.04-.04h3.18c.033 0 .05.013.05.04v1.123c0 .026-.014.04-.04.04H12.22v1.54h2.037c.026 0 .04.016.04.05l.01 1.122c0 .027-.017.04-.05.04H12.22v2.912c0 .033-.017.05-.05.05h-1.113zM16.185 16c-.027 0-.04-.016-.04-.05v-5.664h-1.292c-.033 0-.05-.016-.05-.05l.01-1.112c0-.027.013-.04.04-.04h3.776c.033 0 .05.013.05.04v1.113c0 .033-.013.05-.04.05h-1.302l.01 5.664c0 .033-.013.05-.04.05h-1.122z"
+                    fill={defaultColor}
+                />
+            </g>
+            <defs>
+                <clipPath id="o3yhtnhsda">
+                    <path fill={defaultColor} transform="translate(2 2)" d="M0 0h20v20H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
 export {
-    FutureInsurance,
-    ArrowDownIcon,
-    TrendIcon,
-    SeeIcon,
-    HideIcon,
-    CheckCircleIcon,
-    SwapIcon,
-    CloseIcon,
-    ArrowDropDownIcon,
-    BxsUserIcon,
-    BxsBellIcon,
-    FutureWalletIcon,
-    FutureTransferIcon,
-    FutureExchangeIcon,
-    FutureSwapIcon,
-    FutureReferralIcon,
-    FutureIcon,
-    FutureLaunchpadIcon,
-    FuturePortfolioIcon,
-    SuccessfulTransactionIcon,
-    AddCircleIcon,
     AddCircleColorIcon,
-    FutureSimpleIcon,
-    FutureAdvanceIcon,
-    AppleIcon,
-    GooglePlayIcon,
+    AddCircleIcon,
     AndroidIcon,
-    LogoIcon,
-    BxChevronDown,
-    SyncAltIcon,
+    AppleIcon,
+    ArrowCompareIcon,
+    ArrowDownIcon,
+    ArrowDropDownIcon,
+    ArrowForwardIcon,
     ArrowRightIcon,
-    CheckedDoubleIcon,
+    BxChevronDown,
+    BxsBellIcon,
     BxsBookIcon,
+    BxsDonateHeart,
+    BxsErrorAltIcon,
+    BxsErrorIcon,
+    BxsGift,
+    BxsImage,
+    BxsInfoCircle,
+    BxsLogoutCircle,
     BxsStarIcon,
-    TuneIcon,
+    BxsTimeIcon,
+    BxsUserCircle,
+    BxsUserIcon,
+    CalendarFillIcon,
+    CancelCircleFillIcon,
+    CancelIcon,
+    CheckCircleIcon,
+    CheckedDoubleIcon,
+    CheckedIcon,
+    CloseIcon,
+    ContactIcon,
+    CopyIcon,
+    FacebookIcon,
+    FireIcon,
+    FutureAdvanceIcon,
+    FutureExchangeIcon,
+    FutureIcon,
+    FutureInsurance,
+    FutureLaunchpadIcon,
+    FutureNaoIcon,
+    FuturePortfolioIcon,
+    FutureReferralIcon,
+    FutureSimpleIcon,
+    FutureSupportIcon,
+    FutureSwapIcon,
+    FutureTransferIcon,
+    FutureWalletIcon,
+    GooglePlayIcon,
+    HideIcon,
+    LogoIcon,
+    MoneyIcon,
+    MoreHorizIcon,
+    NFTIcon,
+    NavbarSettingIcon,
+    NotInterestedIcon,
+    OrderIcon,
+    PartnerIcon,
     PartnersIcon,
     PortfolioIcon,
-    MoreHorizIcon,
-    BxsDonateHeart,
-    BxsGift,
-    BxsLogoutCircle,
-    CopyIcon,
-    CheckedIcon,
-    BxsInfoCircle,
-    ShareIcon,
-    FireIcon,
-    SettingIcon,
-    NavbarSettingIcon,
-    ArrowCompareIcon,
-    BxsUserCircle,
-    TimeLapseIcon,
-    BxsErrorIcon,
-    CancelIcon,
-    FutureSupportIcon,
-    QrCodeScannIcon,
-    CancelCircleFillIcon,
-    BxsErrorAltIcon,
-    ArrowForwardIcon,
-    CalendarFillIcon,
-    ContactIcon,
-    PartnerIcon,
-    OrderIcon,
-    BxsTimeIcon,
-    StarPurpleIcon,
-    TimerIcon,
-    MoneyIcon,
-    BxsImage,
-    SaveAlt,
-    USAFlagIcon,
-    VietnamFlagIcon,
-    NotInterestedIcon,
-    SaveAltIcon,
-    FacebookIcon,
-    TwitterIcon,
-    TelegramIcon,
-    FutureNaoIcon,
     PortfolioIconNoColor,
-    ProfitStats
+    ProfitStats,
+    QrCodeScannIcon,
+    SaveAlt,
+    SaveAltIcon,
+    SeeIcon,
+    SettingIcon,
+    ShareIcon,
+    StarPurpleIcon,
+    SuccessfulTransactionIcon,
+    SwapIcon,
+    SyncAltIcon,
+    TelegramIcon,
+    TimeLapseIcon,
+    TimerIcon,
+    TrendIcon,
+    TuneIcon,
+    TwitterIcon,
+    USAFlagIcon,
+    VietnamFlagIcon
 };

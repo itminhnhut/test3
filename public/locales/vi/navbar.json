@@ -65,6 +65,8 @@
         "copytrade_description": "Sao chép lệnh giao dịch Futures từ những nhà giao dịch hàng đầu",
         "staking": "Nhận lãi ngày",
         "staking_description": "Tối ưu lợi nhuận với chương trình nhận lãi ngày không kỳ hạn, không khóa số dư, lãi suất năm 12.79% với VNDC và 6% với USDT",
+        "nft": "Nami NFT Infinity",
+        "nft_description": "Bộ sưu tập NFT mới nhất của Nami Exchange",
         "farming": "Farming",
         "farming_description": "Farm NAMI và nhận nhiều token tiềm năng",
         "referral": "Báo cáo hoa hồng",
