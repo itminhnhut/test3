@@ -9,6 +9,7 @@ import { API_USER_INSURANCE_HISTORY } from 'redux/actions/apis';
 import InsuranceRuleModal from './InsuranceRuleModal';
 import InsuranceListModal from './InsuranceListModal';
 import { getInsuranceLoginLink, roundByExactDigit } from 'redux/actions/utils';
+import Tooltip from 'components/common/Tooltip';
 
 const initialState = {
     showRules: false,
@@ -56,6 +57,24 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice, onClo
 
     return (
         <>
+           
+               {!isPurchaseAble && <Tooltip
+                    effect="solid"
+                    isV3
+                    place="top"
+                    id="insurance_purchase_button"
+                    className="max-w-[240px] after:!left-[unset] after:!right-8"
+                    overridePosition={({ top, left }) => {
+                        return {
+                            top,
+                            left: left - 52
+                        };
+                    }}
+                >
+                    <div className="max-w-[300px] text-sm z-50">{t('futures:insurance:condition_buy_cover')}</div>
+                </Tooltip>}
+         
+
             <div className="mb-8 p-4 bg-white dark:bg-dark-4 border dark:border-none rounded-xl">
                 <div className="flex justify-between items-center">
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:insurance:title')}</div>
@@ -74,17 +93,31 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice, onClo
                         <FutureInsurance size={32} />
                     </div>
                     <div className="flex space-x-2">
-                        <Button className="px-4 py-3" disabled={loading || error} variants="secondary" onClick={() => setState({ showList: true })}>
+                        <Button
+                            className="px-4 py-3 !text-sm !h-9"
+                            disabled={loading || error || !data?.data?.count}
+                            variants="secondary"
+                            onClick={() => setState({ showList: true })}
+                        >
                             {t('common:view_all')}
                         </Button>
-                        <Button className="w-fit px-4 py-3 whitespace-nowrap" disabled={!isPurchaseAble} onClick={onBuyInsuranceHandler}>
-                            {t('wallet:buy_insurance')}
-                        </Button>
+                        <div data-tip="" data-for="insurance_purchase_button">
+                            <Button className="w-fit !text-sm !h-9 px-4 py-3 whitespace-nowrap" disabled={!isPurchaseAble} onClick={onBuyInsuranceHandler}>
+                                {t('futures:insurance.buy_insurance')}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
             {state.showRules && <InsuranceRuleModal insuranceRules={insuranceRules} visible={state.showRules} onClose={() => setState({ showRules: false })} />}
-            {state.showList && <InsuranceListModal symbol={order?.symbol} insurances={data.data.insurance} visible={state.showList} onClose={() => setState({ showList: false })} />}
+            {state.showList && (
+                <InsuranceListModal
+                    symbol={order?.symbol}
+                    insurances={data.data.insurance}
+                    visible={state.showList}
+                    onClose={() => setState({ showList: false })}
+                />
+            )}
         </>
     );
 });
