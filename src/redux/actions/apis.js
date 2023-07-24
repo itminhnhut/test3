@@ -380,4 +380,4 @@ export const API_HISTORY_STAKING_DAILY_OVERVIEW = API_V3_PREFIX + 'wallet/histor
 // Insurance
 export const API_AUTH_INSURANCE = API_V3_PREFIX + 'auth/oauth-insurance';
 export const API_USER_INSURANCE_HISTORY = API_PREFIX + 'user/insurance'
-export const API_CONFIG_INSURANCE_RULE = `${INSURANCE_API_URL}/insurance/v1/insurance/get-insurance-rule`
+export const API_CONFIG_INSURANCE_RULE = `${INSURANCE_API_URL}/insurance/v1/get-insurance-rule`
