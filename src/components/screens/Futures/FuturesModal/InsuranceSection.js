@@ -84,7 +84,7 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice, onClo
                 </div>
             </div>
             {state.showRules && <InsuranceRuleModal insuranceRules={insuranceRules} visible={state.showRules} onClose={() => setState({ showRules: false })} />}
-            {state.showList && <InsuranceListModal symbol={order?.symbol} insurances={data.data.insurance} visible={state.showList} onClose={() => setState({ showList: false })} />}
+            {state.showList && <InsuranceListModal symbol={order?.symbol} insurances={data?.data?.insurance} visible={state.showList} onClose={() => setState({ showList: false })} />}
         </>
     );
 });

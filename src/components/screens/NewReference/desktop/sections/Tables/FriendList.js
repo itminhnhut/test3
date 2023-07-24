@@ -454,14 +454,14 @@ const FriendList = ({ language, t, id }) => {
                     <div className="flex justify-between gap-4">
                         <TableFilter config={filters} filter={filter} setFilter={setFilter} resetParentCode={handleResetParentCode} />
                     </div>
-                    <ButtonV2
-                        className="!hidden w-fit whitespace-nowrap rounded-md px-4 py-3 font-semibold h-12"
+                    {/* <ButtonV2
+                        className="w-fit whitespace-nowrap rounded-md px-4 py-3 font-semibold h-12"
                         onClick={() => setShowExportFriends(true)}
                         variants="secondary"
                     >
                         <ExportIcon color="currentColor" />
                         <span className="ml-2">{t('reference:friend_list.filter.export')}</span>
-                    </ButtonV2>
+                    </ButtonV2> */}
                 </div>
                 {renderTable()}
             </div>

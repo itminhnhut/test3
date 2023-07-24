@@ -287,7 +287,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                             >
                                 {t('common:transfer')}
                             </ButtonV2>
-                            <Link href={'/statistics/commission'} passHref>
+                            {/* <Link href={'/statistics/commission'} passHref>
                                 <a className="block">
                                     <ButtonV2 variants="secondary" className="px-6 py-3 !space-x-2 !font-semibold !text-base !w-auto">
                                         <PortfolioIcon size={16} />
@@ -295,7 +295,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                                         <span>{t('wallet:statistics')}</span>
                                     </ButtonV2>
                                 </a>
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
                 </div>
