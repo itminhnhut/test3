@@ -11,7 +11,7 @@ const useInsuranceLoginLink = () => {
         clearTimeout(timer.current);
         timer.current = setTimeout(async () => {
             e.preventDefault();
-            await getInsuranceLoginLink();
+            await getInsuranceLoginLink({ params: 'BNBUSDT' });
             setLoading(false);
         }, DELAY_TIME);
     };

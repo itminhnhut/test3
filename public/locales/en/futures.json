@@ -14,10 +14,22 @@
     "fee_level": "Fee level",
     "insurance": {
         "rules": "Insurance rules",
-        "title": "Insurances",
+        "title": "Insurance",
         "contract": "Contract",
         "contracts": "Contracts",
-        "difference": "Difference of the last insurance"
+        "difference": "Average changing",
+        "condition_buy_cover": "The position does not meet conditions to buy cover. View more insurance rules",
+        "buy_insurance": "Buy Cover",
+        "status": {
+            "available": "Available",
+            "expired": "Expired",
+            "liquidated": "Liquidated",
+            "claimed": "Claimed",
+            "refunded": "Refunded",
+            "claim_waiting": "Claim waiting",
+            "invalid": "Invalid",
+            "canceled": "Cancelled"
+        }
     },
     "order_table": {
         "opening_volume": "Opening Volume",
