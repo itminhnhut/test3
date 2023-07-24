@@ -74,11 +74,11 @@ export default CommissionStatistics;
 //         ]))
 //     }
 // });
-export const getStaticProps = () => {
+export const getServerSideProps = () => {
     return {
         redirect: {
             destination: '/404',
             permanent: true
         }
     };
-}
+};
