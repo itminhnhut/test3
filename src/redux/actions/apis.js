@@ -2,7 +2,7 @@
 const API_PREFIX = `/api/v1/`;
 const API_V2_PREFIX = `/api/v2/`;
 const API_V3_PREFIX = `/api/v3/`;
-export const INSURANCE_API_URL =  'https://api-testnet.namiinsurance.io/api' 
+export const INSURANCE_API_URL = process.env.NEXT_PUBLIC_INSURANCE_API_URL || 'https://api.namiinsurance.io/api';
 
 const BLOG_API_PREFIX = `${process.env.NEXT_PUBLIC_BLOG_API_URL}/ghost/api/v3/content`;
 
