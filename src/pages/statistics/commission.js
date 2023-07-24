@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { getLoginUrl, getS3Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+// import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import dynamic from 'next/dist/shared/lib/dynamic';
 
 const Component = dynamic(() => import('components/screens/Wallet/Commission/statistics'))
@@ -56,21 +56,29 @@ const CommissionStatistics = () => {
 export default CommissionStatistics;
 
 
-export const getStaticProps = async ({ locale }) => ({
-    props: {
-        ...(await serverSideTranslations(locale, [
-            'common',
-            'portfolio',
-            'navbar',
-            'home',
-            'modal',
-            'input',
-            'table',
-            'futures',
-            'dw_partner',
-            // 'signals',
-            // 'transaction-history',
-            'commission'
-        ]))
-    }
-});
+// export const getStaticProps = async ({ locale }) => ({
+//     props: {
+//         ...(await serverSideTranslations(locale, [
+//             'common',
+//             'portfolio',
+//             'navbar',
+//             'home',
+//             'modal',
+//             'input',
+//             'table',
+//             'futures',
+//             'dw_partner',
+//             // 'signals',
+//             // 'transaction-history',
+//             'commission'
+//         ]))
+//     }
+// });
+export const getStaticProps = () => {
+    return {
+        redirect: {
+            destination: '/404',
+            permanent: true
+        }
+    };
+}
