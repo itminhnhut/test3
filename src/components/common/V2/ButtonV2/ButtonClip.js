@@ -1,8 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
+
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+
 import classNames from 'classnames';
 import { ExchangeOrderEnum } from 'src/redux/actions/const';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import styled from 'styled-components';
 
 const ButtonClip = ({ mode, active, children, isFuture = false, ...props }) => {
     const buy = isFuture ? VndcFutureOrderType.Side.BUY : ExchangeOrderEnum.Side.BUY;
@@ -30,5 +32,5 @@ const ClipPath = styled.div.attrs(({ mode, active, buy, sell }) => ({
         }
     )
 }))`
-    clip-path: ${({ mode, buy }) => `polygon(0% 0%, calc(100% - ${mode === buy ? '16px' : '0px'}) 0%, 100% 100%, ${mode === buy ? '0' : '16px'} 100%);`}
+    clip-path: ${({ mode, buy }) => `polygon(0% 0%, calc(100% - ${mode === buy ? '16px' : '0px'}) 0%, 100% 100%, ${mode === buy ? '0' : '16px'} 100%);`};
 `;

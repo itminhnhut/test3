@@ -1,7 +1,9 @@
-import classNames from 'classnames';
-import ChevronDown from 'components/svg/ChevronDown';
-import { isFunction } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
+
+import ChevronDown from 'components/svg/ChevronDown';
+
+import classNames from 'classnames';
+import { isFunction } from 'lodash';
 import styled from 'styled-components';
 
 const index = ({
@@ -25,6 +27,13 @@ const index = ({
 
     const [flag, setFlag] = useState(false);
     const timer = useRef(null);
+
+    useEffect(() => {
+        if (active) {
+            setOpen(active);
+            setFlag(active, flag);
+        }
+    }, []);
 
     useEffect(() => {
         if (isCustom) {

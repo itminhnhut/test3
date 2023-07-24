@@ -476,7 +476,7 @@ const GooglePlayIcon = ({ size = 24, ...props }) => (
 
 const AndroidIcon = ({ size = 24, color = 'currentColor', ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
-        <g clip-path="url(#vtok890oea)">
+        <g clipPath="url(#vtok890oea)">
             <path
                 d="m17.6 9.482 1.84-3.18c.16-.31.04-.69-.26-.85a.637.637 0 0 0-.83.22l-1.88 3.24a11.463 11.463 0 0 0-8.94 0l-1.88-3.24a.643.643 0 0 0-.87-.2c-.28.18-.37.54-.22.83l1.84 3.18a10.78 10.78 0 0 0-5.4 8.52h22a10.78 10.78 0 0 0-5.4-8.52zM7 15.252a1.25 1.25 0 1 1 0-2.501 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.501 1.25 1.25 0 0 1 0 2.5z"
                 fill={color}
@@ -1188,8 +1188,8 @@ export const LinkedInIcon = ({ size = 28, ...props }) => (
     <svg {...props} width={size} height={size} viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0 14C0 6.268 6.268 0 14 0s14 6.268 14 14-6.268 14-14 14S0 21.732 0 14z" fill="#1877F2" />
         <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M10.102 8.647c0 .915-.688 1.647-1.795 1.647h-.02c-1.065 0-1.754-.732-1.754-1.647 0-.935.71-1.647 1.795-1.647 1.086 0 1.754.712 1.774 1.647zm-.208 2.948v9.533H6.72v-9.533h3.173zm11.441 9.533v-5.466c0-2.928-1.565-4.29-3.652-4.29-1.685 0-2.44.925-2.86 1.574v-1.35H11.65c.041.894 0 9.532 0 9.532h3.173v-5.323c0-.285.02-.57.104-.774.23-.569.752-1.158 1.628-1.158 1.149 0 1.608.874 1.608 2.155v5.1h3.172z"
             fill="#fff"
         />
@@ -1301,7 +1301,7 @@ export const MonetizationOnIcon = ({ size = 24, color = '#47CC85', className = '
 export const DwPartnerIconMulti = ({ size = 16 }) => {
     return (
         <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#h8pv48o2za)">
+            <g clipPath="url(#h8pv48o2za)">
                 <path
                     d="M15.998 12.138a3.53 3.53 0 0 1-3.52 3.543h-1.715a3.516 3.516 0 0 1-3.52-3.476h1.534V8.617h3.7c1.941 0 3.521 1.58 3.521 3.52z"
                     fill="#0D994E"
@@ -1326,8 +1326,8 @@ export const DwPartnerIconSingle = ({ size = 16 }) => {
     return (
         <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M8.753 8.616h.003c0-1.918-1.58-3.475-3.52-3.475H3.52C1.58 5.14 0 6.72 0 8.66v.023c0 1.94 1.58 3.52 3.52 3.52H8.753V8.615z"
                 fill="#5BD891"
             />
@@ -1363,10 +1363,10 @@ const NFTIcon = ({ width = 19.5, height = 19.5 }) => {
     const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
     return (
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#o3yhtnhsda)">
+            <g clipPath="url(#o3yhtnhsda)">
                 <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M12 3.75a8.25 8.25 0 1 0 0 16.5 8.25 8.25 0 0 0 0-16.5zM2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12z"
                     fill="#6FC98B"
                 />
@@ -1383,6 +1383,56 @@ const NFTIcon = ({ width = 19.5, height = 19.5 }) => {
         </svg>
     );
 };
+
+const GridAltIcon = ({ width = 16, height = 16 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
+    return (
+        <svg width={width} height={height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M2.667 7.333h4a.667.667 0 0 0 .666-.666v-4A.667.667 0 0 0 6.667 2h-4A.667.667 0 0 0 2 2.667v4c0 .368.299.666.667.666zm6.666 0h4A.666.666 0 0 0 14 6.667v-4A.666.666 0 0 0 13.333 2h-4a.666.666 0 0 0-.666.667v4c0 .368.298.666.666.666zM2.667 14h4a.667.667 0 0 0 .666-.667v-4a.667.667 0 0 0-.666-.666h-4A.667.667 0 0 0 2 9.333v4c0 .368.299.667.667.667zm6.666 0h4a.667.667 0 0 0 .667-.667v-4a.666.666 0 0 0-.667-.666h-4a.666.666 0 0 0-.666.666v4c0 .368.298.667.666.667z"
+                fill={defaultColor}
+            />
+        </svg>
+    );
+};
+
+const GridIcon = ({ width = 16, height = 16 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#8694B3';
+    return (
+        <svg width={width} height={height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M2.668 2.666h2.667v2.667H2.668V2.666zm4 0h2.667v2.667H6.668V2.666zm4 0h2.667v2.667h-2.667V2.666zm-8 4h2.667v2.667H2.668V6.666zm4 0h2.667v2.667H6.668V6.666zm4 0h2.667v2.667h-2.667V6.666zm-8 4h2.667v2.667H2.668v-2.667zm4 0h2.667v2.667H6.668v-2.667zm4 0h2.667v2.667h-2.667v-2.667z"
+                fill={defaultColor}
+            />
+        </svg>
+    );
+};
+
+const FilterSharpIcon = ({ width = 24, height = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#8694B3';
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M.75 5.625h22.5v2.25H.75v-2.25zm3.75 5.25h15v2.25h-15v-2.25zm4.5 5.25h6v2.25H9v-2.25z" fill={defaultColor} />
+        </svg>
+    );
+};
+
+const RadioButtonUncheckIcon = ({ width = 24, height = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#3E4351' : '#8694B3';
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                fill={defaultColor}
+            />
+        </svg>
+    );
+};
+
 export {
     AddCircleColorIcon,
     AddCircleIcon,
@@ -1437,6 +1487,8 @@ export {
     MoneyIcon,
     MoreHorizIcon,
     NFTIcon,
+    GridAltIcon,
+    GridIcon,
     NavbarSettingIcon,
     NotInterestedIcon,
     OrderIcon,
@@ -1462,5 +1514,6 @@ export {
     TuneIcon,
     TwitterIcon,
     USAFlagIcon,
-    VietnamFlagIcon
+    VietnamFlagIcon,
+    FilterSharpIcon
 };
