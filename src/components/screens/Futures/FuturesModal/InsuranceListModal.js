@@ -66,7 +66,7 @@ const ContractItem = ({ insurance, p_market }) => {
             </div>
             <div className="mt-1 flex items-center justify-between">
                 <CopyText text={insurance?._id} />
-                <span className="text-teal">{insurance?.state === 'Available' ? 'Còn hiệu lực' : 'Không còn hiệu lực'}</span>
+                <span className="text-teal">{t(`futures:insurance.status.${insurance?.state?.toLowerCase() || 'invalid'}`)}</span>
             </div>
             <hr className="border-divider dark:border-divider-dark my-4" />
             <div className="mt-2 flex items-center justify-between">
