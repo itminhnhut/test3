@@ -6,7 +6,7 @@ import React from 'react';
 
 const InsuranceButton = () => {
     const { t } = useTranslation(['wallet']);
-    const { loading, onCreatInsuranceLink } = useInsuranceLoginLink();
+    const { loading, onCreatInsuranceLink } = useInsuranceLoginLink({ params: 'BNBUSDT' });
 
     return (
         <Button disabled={loading} variants="secondary" className="w-fit px-4 py-3" onClick={onCreatInsuranceLink}>
