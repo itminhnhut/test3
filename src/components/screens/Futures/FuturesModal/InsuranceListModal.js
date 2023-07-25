@@ -22,7 +22,7 @@ const InsuranceListModal = ({ visible, onClose = () => {}, insurances, symbol })
                 <ArrowLeft className="cursor-pointer" color="currentColor" size={24} onClick={onClose} />
                 <X className="cursor-pointer" color="currentColor" size={24} onClick={onClose} />
             </div>
-            <div className="my-6 font-semibold text-2xl">{t('futures:insurance:title')}</div>
+            <div className="my-6 font-semibold text-2xl">{t('futures:insurance:insurance_contract_title')}</div>
             <div className="max-h-[calc(90vh-168px)] overflow-y-auto -mx-8 px-8">
                 <div className="grid grid-cols-2 gap-4">
                     {insurances?.length &&

@@ -17,7 +17,7 @@ const KIND = {
     Futures: { vi: 'KL Nami Futures', en: 'Nami Futures Vol' },
     Staking: { vi: 'KL Nami Daily Staking', en: 'Nami Daily Staking Vol' },
     nao_futures: { vi: 'KL NAO Futures', en: 'NAO Futures Vol' },
-    insurance: { vi: 'Kí quỹ bảo hiểm', en: 'Insurace margin' }
+    insurance: { vi: 'Ký quỹ bảo hiểm', en: 'Margin insurance contract' }
 };
 
 const ModalFriendDetail = ({

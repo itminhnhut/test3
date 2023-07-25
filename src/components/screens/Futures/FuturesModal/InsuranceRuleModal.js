@@ -27,11 +27,8 @@ const InsuranceRuleModal = ({ insuranceRules, visible, onClose = () => {} }) => 
                 <ArrowLeft className="cursor-pointer" color="currentColor" size={24} onClick={onClose} />
                 <X className="cursor-pointer" color="currentColor" size={24} onClick={onClose} />
             </div>
-            <div className="my-6 font-semibold text-2xl">{t('futures:insurance:rules')}</div>
-            {/* <div className="overflow-x-auto flex space-x-3">
-                <Chip selected>VNDC</Chip>
-                <Chip>USDT</Chip>
-            </div> */}
+            <div className="my-6 font-semibold text-2xl">{t('futures:insurance:rules_modal_title')}</div>
+            
             <div className="mt-6">
                 <InputV2
                     prefix={<Search color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" size={16} />}

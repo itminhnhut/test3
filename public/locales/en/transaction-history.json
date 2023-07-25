@@ -59,7 +59,7 @@
         "wallet_type": "Wallet Type",
         "volume": "Volume",
         "fee": "Fee",
-        "expect": "Expectation",
+        "expect": "Expect",
         "expect_sell": "Bear",
         "expect_buy": "Bull"
     }

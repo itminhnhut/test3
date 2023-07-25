@@ -13,13 +13,15 @@
     "last_price_tooltip": "Fill in the current last price",
     "fee_level": "Fee level",
     "insurance": {
-        "rules": "Insurance rules",
+        "rules": "Insurance Rules",
         "title": "Insurance",
         "contract": "Contract",
         "contracts": "Contracts",
         "difference": "Average changing",
         "condition_buy_cover": "The position does not meet conditions to buy cover. View more insurance rules",
         "buy_insurance": "Buy Cover",
+        "insurance_contract_title": "Insurance contract",
+        "rules_modal_title":"Insurance Rules",
         "status": {
             "available": "Available",
             "expired": "Expired",

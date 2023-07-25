@@ -91,7 +91,7 @@ export const TransactionTabs = [
     {
         key: TRANSACTION_TYPES.INSURANCE,
         localized: null,
-        title: 'Insurance',
+        title: 'Nami Insurance',
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.INSURANCE)
     }
 ];

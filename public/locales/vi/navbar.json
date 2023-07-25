@@ -49,7 +49,7 @@
     "submenu": {
         "convert": "Nami Swap",
         "nami_insurance": "Nami Insurance",
-        "nami_insurance_description": "Sở hữu hợp đồng bảo hiểm ngay hôm nay",
+        "nami_insurance_description": "Bảo hiểm đa dạng tài sản của bạn, thích ứng với mọi biến động của thị trường. Giá trị bảo hiểm cao, rủi ro thấp",
         "convert_description": "Giao dịch crypto chỉ với một lần click",
         "spot": "Giao dịch Giao ngay",
         "spot_description": "Lựa chọn tài sản số phù hợp trong {{pairsLength}} cặp giao dịch được niêm yết với thanh khoản cao",

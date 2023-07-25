@@ -15,14 +15,15 @@
     "close_order_failed": "Đóng lệnh #{{orderId}} thất bại.",
     "fee_level": "Mức phí",
     "insurance": {
-        "rules": "Quy định giao dịch",
+        "rules": "Quy định bảo hiểm",
         "title": "Bảo hiểm",
         "contract": "Hợp đồng",
         "contracts": "Hợp đồng",
         "difference": "Khoảng cách bảo hiểm gần nhất",
         "condition_buy_cover": "Vị thế không đủ điều kiện được hỗ trợ bảo hiểm. Xem thêm quy định giao dịch",
         "buy_insurance": "Hỗ trợ bảo hiểm",
-        "insurance_contract": "Hợp đồng bảo hiểm",
+        "insurance_contract_title": "Hợp đồng bảo hiểm",
+        "rules_modal_title":"Quy định giao dịch",
         "status": {
             "available": "Còn hiệu lực",
             "expired": "Hết hạn",

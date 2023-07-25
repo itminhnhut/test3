@@ -89,7 +89,7 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice, onClo
                 <div className="mt-4 flex justify-between items-center">
                     <div className="flex space-x-1 text-2xl font-semibold">
                         <span>{loading ? <IconLoading color="currentColor" /> : error ? '-' : data?.data?.count}</span>
-                        <span>{t('futures:insurance:contracts')}</span>
+                        <span className="lowercase">{t('futures:insurance:contracts')}</span>
                         <FutureInsurance size={32} />
                     </div>
                     <div className="flex space-x-2">
