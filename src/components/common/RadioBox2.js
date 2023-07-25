@@ -18,20 +18,15 @@ const RadioBox = ({ id, label, description, checked, onusMode = false, onChange,
                     className={classNames('absolute -z-[1px] opacity-0 cursor-pointer', { '!bg-dominant': checked })}
                 />
                 <span
-                    className={classNames('w-5 h-5 rounded-[50%] inline-block relative border-[2px]  border-solid cursor-pointer', {
-                        'hover:!border-dominant ': !onusMode,
-                        'border-[#B5C0C9]': !checked,
-                        'border-green-3 bg-green-3': checked
-                    })}
-                >
-                    <Check
-                        size={16}
-                        className={classNames('absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] text-white', {
-                            hidden: !checked,
-                            'text-black': isDark
-                        })}
-                    />
-                </span>
+                    className={classNames(
+                        'w-5 h-5 rounded-[50%] dark:border-divider-dark border-divider inline-block relative border-[0.5px] bg-dark-12 dark:bg-dark-2  border-solid cursor-pointer',
+                        {
+                            'hover:!border-dominant ': !onusMode,
+                            'after:bg-green-3 dark:after:bg-green-2 after:content-[""] after:w-[15px] after:h-[15px] after:rounded-full after:absolute after:top-[50%] after:left-[50%] after:translate-x-[-50%] after:translate-y-[-50%]':
+                                checked
+                        }
+                    )}
+                ></span>
             </label>
             <div className="pl-2.5">
                 <label htmlFor={id} className="font-medium text-sm cursor-pointer select-none">

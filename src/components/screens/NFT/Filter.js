@@ -126,7 +126,7 @@ const Filter = ({ isDark }) => {
     };
 
     const handleChangeCollection = (collection) => {
-        setFilter((prev) => ({ ...prev, rarity: [...prev.collection, collection] }));
+        setFilter((prev) => ({ ...prev, collection: [...prev.collection, collection] }));
     };
 
     const handleToggle = () => {
