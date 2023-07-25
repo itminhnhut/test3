@@ -60,7 +60,6 @@ body {
 //  height: 100%;
 //}
 
-
 @layer components {
     .container {
         @apply max-w-screen-v3 2xl:max-w-screen-xxl m-auto;
@@ -71,7 +70,6 @@ body {
         }
     }
 }
-
 
 body {
     @apply text-txtPrimary dark:text-txtPrimary-dark;
@@ -453,6 +451,10 @@ body {
     cursor: grabbing;
 }
 
+.react-grid-item.react-grid-placeholder {
+    pointer-events: none;
+}
+
 .clickable:hover {
     cursor: pointer;
 }
@@ -728,7 +730,6 @@ input[type='number'] {
 
 @layer utilities {
     @variants responsive {
-
         /* Hide scrollbar for Chrome, Safari and Opera */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
@@ -893,7 +894,7 @@ input[type='number'] {
 
     /* Track */
     &::-webkit-scrollbar-track {
-       @apply bg-gray-11 dark:bg-darkBlue-6 rounded-md;
+        @apply bg-gray-11 dark:bg-darkBlue-6 rounded-md;
     }
 
     /* Handle */
