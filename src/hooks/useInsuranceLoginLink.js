@@ -1,5 +1,4 @@
-import { useTranslation } from 'next-i18next';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { getInsuranceLoginLink } from 'redux/actions/utils';
 
 const DELAY_TIME = 200;
