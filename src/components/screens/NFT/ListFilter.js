@@ -1,13 +1,9 @@
 import { useState } from 'react';
 
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
 import classNames from 'classnames';
 import styled from 'styled-components';
-
-// ** dynamic
-const Detail = dynamic(() => import('./Detail'), { ssr: false });
 
 const ListFilter = ({ isOpen, grid }) => {
     const [isModal, setIsModal] = useState(false);
@@ -20,12 +16,12 @@ const ListFilter = ({ isOpen, grid }) => {
             .map((i) => {
                 return (
                     <Items
-                        className={classNames('max-w-[394px] h-full bg-dark-13 dark:bg-dark-4 rounded-md', {
+                        className={classNames('max-w-[394px] h-full bg-dark-13 dark:bg-dark-4 rounded-xl', {
                             'max-w-[189px]': grid === 6
                         })}
                         onClick={handleModal}
                     >
-                        <section className={classNames('h-[394px]', { 'h-[189px]': grid === 6 })}>
+                        <section className={classNames('max-h-[394px]', { 'max-h-[189px]': grid === 6 })}>
                             <Image width={394} height={394} src="/images/nft/Banner-2.png" sizes="100vw" />
                         </section>
                         <section className="h-auto mx-4 my-4">
@@ -52,7 +48,6 @@ const ListFilter = ({ isOpen, grid }) => {
             >
                 {renderItems()}
             </WrapperItems>
-            <Detail isModal={isModal} onCloseModal={handleModal} />
         </>
     );
 };

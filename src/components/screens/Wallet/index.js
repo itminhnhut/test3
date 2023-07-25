@@ -1,35 +1,48 @@
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { useAsync, useLocalStorage } from 'react-use';
+
+import Axios from 'axios';
+
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { find, orderBy, sumBy } from 'lodash';
-import { WALLET_SCREENS } from 'pages/wallet';
+
+import { useTranslation } from 'next-i18next';
 
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import OverviewWallet from 'components/screens/Wallet/Overview';
-import ExchangeWallet from 'components/screens/Wallet/Exchange';
-import FuturesWallet from 'components/screens/Wallet/Futures';
-import StakingWallet from 'components/screens/Wallet/Staking';
-import FarmingWallet from 'components/screens/Wallet/Farming';
-import TransactionHistory from 'components/screens/Wallet/Transaction';
-import Axios from 'axios';
-import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
-import { useTranslation } from 'next-i18next';
-import colors from 'styles/colors';
-import styled from 'styled-components';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import useWindowFocus from 'hooks/useWindowFocus';
+import useWindowSize from 'hooks/useWindowSize';
+
 import { API_FARMING_SUMMARY, API_STAKING_SUMMARY } from 'redux/actions/apis';
 import { ApiStatus, LOCAL_STORAGE_KEY, WalletType } from 'redux/actions/const';
-import { useAsync, useLocalStorage } from 'react-use';
 import { getFuturesMarketWatch, getMarketWatch, getUsdRate } from 'redux/actions/market';
-import useWindowFocus from 'hooks/useWindowFocus';
-import { PATHS } from 'constants/paths';
+
 import NeedLoginV2 from 'components/common/NeedLoginV2';
-import { MIN_WALLET } from 'constants/constants';
-import PartnersWallet from './Partners';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
-import useWindowSize from 'hooks/useWindowSize';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+
+import ExchangeWallet from 'components/screens/Wallet/Exchange';
+import FarmingWallet from 'components/screens/Wallet/Farming';
+import FuturesWallet from 'components/screens/Wallet/Futures';
+import OverviewWallet from 'components/screens/Wallet/Overview';
+import StakingWallet from 'components/screens/Wallet/Staking';
+import TransactionHistory from 'components/screens/Wallet/Transaction';
+
+import { MIN_WALLET } from 'constants/constants';
+import { PATHS } from 'constants/paths';
+import { find, orderBy, sumBy } from 'lodash';
+import { WALLET_SCREENS } from 'pages/wallet';
+import styled from 'styled-components';
+import colors from 'styles/colors';
+
 import NAOFuturesWallet from './NaoFutures';
-import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import PartnersWallet from './Partners';
+
+// ** Dynamic
+const NFTWallet = dynamic(() => import('./NFT'), { ssr: false });
+
 export const WIDTH_MD = 768;
 
 const INITIAL_STATE = {
@@ -574,6 +587,8 @@ const Wallet = () => {
                         {state.screen === WALLET_SCREENS.STAKING && <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary} />}
                         {/* {state.screen === WALLET_SCREENS.FARMING && <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary} />}
                         {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory />} */}
+
+                        {state.screen === WALLET_SCREENS.NFT && <NFTWallet />}
                     </div>
                 </CustomContainer>
             ) : (
@@ -615,6 +630,12 @@ const SCREEN_TAB_SERIES = [
         code: WALLET_SCREENS.PARTNERS,
         title: 'Partners',
         localized: 'wallet:commission'
+    },
+    {
+        key: 5,
+        code: WALLET_SCREENS.NFT,
+        title: 'Partners',
+        localized: 'wallet:nft'
     }
     // {
     //     key: 3,

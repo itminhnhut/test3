@@ -1433,6 +1433,51 @@ const RadioButtonUncheckIcon = ({ width = 24, height = 24 }) => {
     );
 };
 
+const NoResultIcon = () => {
+    return (
+        <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M53.632 60.49c0 8.972-5.271 16.71-12.87 20.265-7.652-2.78-13.13-10.136-13.13-18.752 0-9.903 7.246-18.144 16.703-19.683a22.348 22.348 0 0 1 9.297 18.17z"
+                fill="url(#vyatd4lfga)"
+            />
+            <path
+                d="M33.943 82.692a20.88 20.88 0 0 1-2.639.162c-12.328 0-22.322-10.013-22.322-22.365 0-12.353 9.994-22.372 22.329-22.372 2.322 0 4.56.356 6.67 1.015-8.916 3.762-15.186 12.592-15.186 22.863 0 8.642 4.432 16.256 11.148 20.697z"
+                fill="url(#v3lkvxk6pb)"
+            />
+            <path
+                d="M40.762 80.747a21.483 21.483 0 0 1-6.82 1.946c-6.715-4.44-11.147-12.055-11.147-20.697 0-10.272 6.27-19.108 15.186-22.863a22.17 22.17 0 0 1 6.349 3.18c-9.452 1.532-16.703 9.78-16.703 19.683.006 8.616 5.484 15.978 13.135 18.751z"
+                fill="#C2C7CF"
+            />
+            <path
+                d="m65.749 70.063 4.6 1.577c-3.762 8.888-12.568 15.151-22.8 15.151-5.032 0-9.703-1.5-13.606-4.092a21.481 21.481 0 0 0 6.82-1.945 19.726 19.726 0 0 0 6.786 1.196c8.11-.007 15.103-4.894 18.2-11.888zM72.29 61.996c0 1.713-.18 3.394-.51 5.01l-4.625-1.578c.193-1.111.297-2.262.297-3.432.006-10.995-8.923-19.941-19.903-19.941-1.096 0-2.167.09-3.213.265a22.005 22.005 0 0 0-6.348-3.18 24.386 24.386 0 0 1 9.561-1.933c13.645 0 24.741 11.118 24.741 24.79z"
+                fill="#C2C7CF"
+            />
+            <path d="M71.788 67.007a24.916 24.916 0 0 1-1.432 4.634l-4.6-1.577a19.698 19.698 0 0 0 1.413-4.634l4.619 1.577z" fill="#C2C7CF" />
+            <path d="m115.017 81.742-1.555 4.589-43.114-14.693a24.924 24.924 0 0 0 1.432-4.634l43.237 14.738z" fill="#C2C7CF" />
+            <defs>
+                <linearGradient id="vyatd4lfga" x1="7.345" y1="61.535" x2="57.322" y2="61.535" gradientUnits="userSpaceOnUse">
+                    <stop offset=".056" stop-color="#E2E8F0" />
+                    <stop offset=".135" stop-color="#D8DEE5" stop-opacity=".91" />
+                    <stop offset=".272" stop-color="#BDC2C9" stop-opacity=".753" />
+                    <stop offset=".451" stop-color="#91959A" stop-opacity=".548" />
+                    <stop offset=".666" stop-color="#545659" stop-opacity=".303" />
+                    <stop offset=".908" stop-color="#080808" stop-opacity=".026" />
+                    <stop offset=".931" stop-opacity="0" />
+                </linearGradient>
+                <linearGradient id="v3lkvxk6pb" x1=".989" y1="60.487" x2="47.931" y2="60.487" gradientUnits="userSpaceOnUse">
+                    <stop offset=".056" stop-color="#E2E8F0" />
+                    <stop offset=".138" stop-color="#D9DFE7" stop-opacity=".911" />
+                    <stop offset=".273" stop-color="#C1C6CD" stop-opacity=".764" />
+                    <stop offset=".447" stop-color="#9A9EA4" stop-opacity=".576" />
+                    <stop offset=".65" stop-color="#64676A" stop-opacity=".354" />
+                    <stop offset=".877" stop-color="#202122" stop-opacity=".108" />
+                    <stop offset=".977" stop-opacity="0" />
+                </linearGradient>
+            </defs>
+        </svg>
+    );
+};
+
 export {
     AddCircleColorIcon,
     AddCircleIcon,
@@ -1515,5 +1560,6 @@ export {
     TwitterIcon,
     USAFlagIcon,
     VietnamFlagIcon,
-    FilterSharpIcon
+    FilterSharpIcon,
+    NoResultIcon
 };

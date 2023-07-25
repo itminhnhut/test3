@@ -8,6 +8,7 @@ import { useTranslation } from 'next-i18next';
 
 import CheckBox from 'components/common/CheckBox';
 import RadioBox2 from 'components/common/RadioBox2';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import InputV2 from 'components/common/V2/InputV2';
 
@@ -21,15 +22,22 @@ import colors from 'styles/colors';
 const NotAuth = dynamic(() => import('./NoAuth'), { ssr: false });
 const ListFilter = dynamic(() => import('./ListFilter'), { ssr: false });
 
+const tabs = [
+    { label: 'NFT', value: 'NFT' },
+    { label: 'Voucher', value: 'Voucher' }
+];
+
 const iniData = {
+    infinity: 0,
+    tab: 'NFT',
     search: '',
     isOpen: true,
     grid: 4,
-    rarity: 0,
+    rarity: [],
     collection: 0
 };
 
-const listCollection = [
+const listInfinity = [
     {
         name: { vi: 'Tất cả', en: 'All' },
         active: 0
@@ -37,6 +45,13 @@ const listCollection = [
     {
         name: { vi: 'Bộ sưu tập của tôi', en: 'My collection' },
         active: 1
+    }
+];
+
+const listCollection = [
+    {
+        name: { vi: 'Infinity', en: 'Infinity' },
+        active: 0
     }
 ];
 
@@ -94,12 +109,16 @@ const Filter = ({ isDark }) => {
         handleAPI();
     }, []);
 
+    const handleTab = (tab) => {
+        setFilter((prev) => ({ ...prev, tab }));
+    };
+
     const handleSelectGrid = (grid) => {
         setFilter((prev) => ({ ...prev, grid }));
     };
 
     const handleChangeCheckBox = (rarity) => {
-        setFilter((prev) => ({ ...prev, rarity }));
+        setFilter((prev) => ({ ...prev, rarity: [...prev.rarity, rarity] }));
     };
 
     const handleChangeRadio = (collection) => {
@@ -112,6 +131,27 @@ const Filter = ({ isDark }) => {
 
     const handleChangInput = (search) => {
         setFilter((prev) => ({ ...prev, search }));
+    };
+
+    const renderInfinity = () => {
+        return (
+            <>
+                {listInfinity?.map((item) => {
+                    return (
+                        <RadioBox2
+                            isDark={isDark}
+                            classNameInput="w-6 h-6"
+                            key={item.name?.[language]}
+                            id={item.name?.[language]}
+                            label={item.name?.[language]}
+                            checked={item?.active === filter?.collection}
+                            onChange={() => handleChangeRadio(item?.active)}
+                        />
+                    );
+                })}
+                <div className="my-6 h-[1px] bg-divider dark:bg-divider-dark" />
+            </>
+        );
     };
 
     const renderCollections = () => {
@@ -128,14 +168,14 @@ const Filter = ({ isDark }) => {
                 >
                     {listCollection?.map((item) => {
                         return (
-                            <RadioBox2
-                                isDark={isDark}
-                                classNameInput="w-6 h-6"
+                            <CheckBox
                                 key={item.name?.[language]}
-                                id={item.name?.[language]}
+                                className="mr-6 mb-4"
+                                boxContainerClassName="w-6 h-6"
                                 label={item.name?.[language]}
-                                checked={item?.active === filter?.collection}
-                                onChange={() => handleChangeRadio(item?.active)}
+                                active={item?.active === filter?.infinity}
+                                labelClassName="text-gray-1 dark:text-gray-7 text-base"
+                                onChange={() => handleChangeCheckBox(item.active)}
                             />
                         );
                     })}
@@ -163,7 +203,7 @@ const Filter = ({ isDark }) => {
                             className="mr-6 mb-4"
                             boxContainerClassName="w-6 h-6"
                             label={rarity.name?.[language]}
-                            active={rarity?.active === filter?.rarity}
+                            active={filter?.rarity.includes(rarity?.active)}
                             labelClassName="text-gray-1 dark:text-gray-7 text-base"
                             onChange={() => handleChangeCheckBox(rarity.active)}
                         />
@@ -189,6 +229,13 @@ const Filter = ({ isDark }) => {
 
     return (
         <>
+            <Tabs isDark tab={filter.tab} className="mt-8 gap-6 border-b border-divider dark:border-divider-dark">
+                {tabs?.map((item, idx) => (
+                    <TabItem key={idx} V2 className="!text-left !px-0 !text-base" value={item.value} onClick={(isClick) => isClick && handleTab(item.value)}>
+                        {item.label}
+                    </TabItem>
+                ))}
+            </Tabs>
             <section className="mt-8 flex flex-row gap-3">
                 <section className="flex flex-row h-12 dark:bg-dark-2 bg-dark-12 rounded-md" onClick={handleToggle}>
                     {renderFilter}
@@ -221,6 +268,7 @@ const Filter = ({ isDark }) => {
             </section>
             <section className="mt-8 flex flex-row gap-6">
                 <section className={classNames('w-[388px]', { hidden: !filter.isOpen })}>
+                    {renderInfinity()}
                     {renderCollections()}
                     {renderRarity()}
                 </section>
