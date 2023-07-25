@@ -2,7 +2,7 @@ export const EMPTY_VALUE = '--';
 
 export const ONE_DAY = 86400000;
 
-export const INSURANCE_URL =  process.env.NEXT_PUBLIC_INSURANCE_URL || 'https://namiinsurance.io/';
+export const INSURANCE_URL = process.env.NEXT_PUBLIC_INSURANCE_URL || 'https://namiinsurance.io/';
 export const NAMI_FUTURES_EARNED_SHARE = 'NamiFutures_TakeProfit_';
 
 export const ROOT_TOKEN = 'NAMI';
@@ -41,7 +41,7 @@ export const BREAK_POINTS = {
     mb: 820,
     xl: 1280,
     '2xl': 1536,
-    footer: 1200,
+    footer: 1200
 };
 
 export const FEE_STRUCTURES = {
@@ -246,9 +246,9 @@ export const MODE_OTP = {
 };
 
 export const FUTURES_PRODUCT = {
-    NAMI: { id: 0, name: 'Nami Futures'},
-    NAO: { id: 2, name: 'NAO Futures'}
-}
+    NAMI: { id: 0, name: 'Nami Futures' },
+    NAO: { id: 2, name: 'NAO Futures' }
+};
 
 export const CHART_JS_RANGE = {
     millisecond: 'millisecond',
@@ -260,4 +260,14 @@ export const CHART_JS_RANGE = {
     month: 'month',
     quarter: 'quarter',
     year: 'year'
+};
+
+export const INSURANCE_STATE = {
+    AVAILABLE: 'Available',
+    CLAIM_WAITING: 'Claim_waiting',
+    CLAIMED: 'Claimed',
+    REFUNDED: 'Refunded',
+    LIQUIDATED: 'Liquidated',
+    EXPIRED: 'Expired',
+    CANCELED: 'Canceled'
 };

@@ -1,14 +1,37 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import Button from 'components/common/V2/ButtonV2/Button';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { ArrowLeft, Search, X } from 'react-feather';
 import { useTranslation } from 'next-i18next';
-import { CopyText, formatNumber, getInsuranceLoginLink, roundByExactDigit } from 'redux/actions/utils';
+import { CopyText, formatNumber, getInsuranceLoginLink } from 'redux/actions/utils';
 import classNames from 'classnames';
-import { INSURANCE_URL } from 'constants/constants';
+import { INSURANCE_STATE, INSURANCE_URL } from 'constants/constants';
 import { useSelector } from 'react-redux';
-import usePrevious from 'hooks/usePrevious';
-import CountUp from 'react-countup';
+
+const StateColorMapping = (state) => {
+    let color = '';
+    switch (state) {
+        case INSURANCE_STATE.AVAILABLE:
+        case INSURANCE_STATE.REFUNDED:
+        case INSURANCE_STATE.CLAIMED:
+            color = 'text-green-3 dark:text-green-2';
+            break;
+        case INSURANCE_STATE.CLAIM_WAITING:
+            color = 'text-yellow-2';
+            break;
+        case INSURANCE_STATE.EXPIRED:
+        case INSURANCE_STATE.LIQUIDATED:
+            color = 'text-txtSecondary dark:text-txtSecondary-dark';
+            break;
+        case INSURANCE_STATE.CANCELED:
+            color = 'text-red-2';
+            break;
+        default:
+            color = 'text-red-2';
+            break;
+    }
+    return color;
+};
 
 const InsuranceListModal = ({ visible, onClose = () => {}, insurances, symbol }) => {
     const { t } = useTranslation();
@@ -66,7 +89,9 @@ const ContractItem = ({ insurance, p_market }) => {
             </div>
             <div className="mt-1 flex items-center justify-between">
                 <CopyText text={insurance?._id} />
-                <span className="text-teal">{t(`futures:insurance.status.${insurance?.state?.toLowerCase() || 'invalid'}`)}</span>
+                <span className={classNames(StateColorMapping(insurance?.state))}>
+                    {t(`futures:insurance.status.${insurance?.state?.toLowerCase() || 'invalid'}`)}
+                </span>
             </div>
             <hr className="border-divider dark:border-divider-dark my-4" />
             <div className="mt-2 flex items-center justify-between">
