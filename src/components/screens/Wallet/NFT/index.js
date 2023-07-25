@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Search } from 'react-feather';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { useTranslation } from 'next-i18next';
 
@@ -36,6 +37,10 @@ const NFTWallet = () => {
         setFilter((prev) => ({ ...prev, search }));
     };
 
+    const handleCategory = () => {
+        ret;
+    };
+
     const renderItems = () => {
         return Array(10)
             .fill(0)
@@ -47,7 +52,9 @@ const NFTWallet = () => {
                         </section>
                         <section className="h-auto mx-5 my-5">
                             <div className="flex flex-row justify-between font-semibold text-base">
-                                <p className="text-green-2">Ocean Eye</p>
+                                <Link href="/nft?collection=22222">
+                                    <p className="text-green-2">Ocean Eye</p>
+                                </Link>
                                 <WrapperStatus status="expired" className="h-7 py-1 px-4 rounded-[80px]  text-sm">
                                     Đã kích hoạt
                                 </WrapperStatus>
@@ -87,8 +94,8 @@ const NFTWallet = () => {
                     />
                 </section>
             </section>
-            {/* <section className="mt-8 gap-4 grid grid-cols-3 cursor-pointer">{renderItems()}</section> */}
-            <div className="flex items-center justify-center flex-col m-auto pt-20">
+            <section className="mt-8 gap-4 grid grid-cols-3 cursor-pointer">{renderItems()}</section>
+            {/* <div className="flex items-center justify-center flex-col m-auto pt-20">
                 <div className="block dark:hidden">
                     <NoDataLightIcon />
                 </div>
@@ -100,12 +107,12 @@ const NFTWallet = () => {
             <div className="flex items-center justify-center flex-col m-auto pt-20">
                 <NoResultIcon />
                 <div className="text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark mt-1">Không tìm thấy kết quả</div>
-            </div>
+            </div> */}
         </>
     );
 };
 
-const WrapperStatus = styled.div.attrs(({ status }) => ({
+export const WrapperStatus = styled.div.attrs(({ status }) => ({
     className: `${classNames(
         { 'text-green-3 dark:text-green-2 active': status === 'active' },
         { 'text-yellow-2 active': status === 'not_active' },

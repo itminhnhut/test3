@@ -28,16 +28,16 @@ const tabs = [
 ];
 
 const iniData = {
-    infinity: 0,
+    category: 0,
     tab: 'NFT',
     search: '',
     isOpen: true,
     grid: 4,
     rarity: [],
-    collection: 0
+    collection: []
 };
 
-const listInfinity = [
+const listCategory = [
     {
         name: { vi: 'Tất cả', en: 'All' },
         active: 0
@@ -121,8 +121,12 @@ const Filter = ({ isDark }) => {
         setFilter((prev) => ({ ...prev, rarity: [...prev.rarity, rarity] }));
     };
 
-    const handleChangeRadio = (collection) => {
-        setFilter((prev) => ({ ...prev, collection }));
+    const handleChangeCategory = (category) => {
+        setFilter((prev) => ({ ...prev, category }));
+    };
+
+    const handleChangeCollection = (collection) => {
+        setFilter((prev) => ({ ...prev, rarity: [...prev.collection, collection] }));
     };
 
     const handleToggle = () => {
@@ -133,10 +137,10 @@ const Filter = ({ isDark }) => {
         setFilter((prev) => ({ ...prev, search }));
     };
 
-    const renderInfinity = () => {
+    const renderCategory = () => {
         return (
             <>
-                {listInfinity?.map((item) => {
+                {listCategory?.map((item) => {
                     return (
                         <RadioBox2
                             isDark={isDark}
@@ -144,8 +148,8 @@ const Filter = ({ isDark }) => {
                             key={item.name?.[language]}
                             id={item.name?.[language]}
                             label={item.name?.[language]}
-                            checked={item?.active === filter?.collection}
-                            onChange={() => handleChangeRadio(item?.active)}
+                            checked={item?.active === filter?.category}
+                            onChange={() => handleChangeCategory(item?.active)}
                         />
                     );
                 })}
@@ -173,9 +177,9 @@ const Filter = ({ isDark }) => {
                                 className="mr-6 mb-4"
                                 boxContainerClassName="w-6 h-6"
                                 label={item.name?.[language]}
-                                active={item?.active === filter?.infinity}
+                                active={filter?.collection.includes(item?.active)}
                                 labelClassName="text-gray-1 dark:text-gray-7 text-base"
-                                onChange={() => handleChangeCheckBox(item.active)}
+                                onChange={() => handleChangeCollection(item.active)}
                             />
                         );
                     })}
@@ -268,7 +272,7 @@ const Filter = ({ isDark }) => {
             </section>
             <section className="mt-8 flex flex-row gap-6">
                 <section className={classNames('w-[388px]', { hidden: !filter.isOpen })}>
-                    {renderInfinity()}
+                    {renderCategory()}
                     {renderCollections()}
                     {renderRarity()}
                 </section>

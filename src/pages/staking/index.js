@@ -9,6 +9,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { getS3Url } from 'redux/actions/utils';
 
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+
 import StakingSEO from 'components/staking/SEO';
 import Skeleton from 'components/staking/skeleton';
 import styled from 'styled-components';
