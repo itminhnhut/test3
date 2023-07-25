@@ -54,7 +54,7 @@ const layoutDefault = {
         i: futuresGridKey.chart,
         x: 0,
         y: 6,
-        h: 23,
+        h: 24,
         moved: false,
         static: false,
         isDraggable: true,
@@ -73,7 +73,7 @@ const layoutDefault = {
     [futuresGridKey.placeOrder]: {
         i: futuresGridKey.placeOrder,
         y: 0,
-        h: 29,
+        h: 30,
         minH: 5,
         moved: false,
         static: false,
