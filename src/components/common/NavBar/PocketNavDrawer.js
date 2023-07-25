@@ -23,6 +23,7 @@ import TagV2 from '../V2/TagV2';
 import { buildLogoutUrl } from 'src/utils';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import InsuranceRedirectLink from './InsuranceRedirectLink';
 
 const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, page, spotState, resetDefault, onChangeSpotState }) => {
     const [state, set] = useState({
@@ -74,22 +75,37 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     const { localized, notSameOrigin } = item;
                     const Icon = NavbarIcons?.[localized];
                     if (localized === 'partner' && !isPartner) return;
-                    itemsLevel1.push(
-                        <Link href={handleURLHref(item)} key={`${item.key}_${item.title}`}>
-                            <a
-                                className={classNames('mal-pocket-navbar__drawer__navlink__group___item__lv1__item mal-pocket-nabar__item___hover !px-12', {
-                                    '!hidden': item.hide
-                                })}
-                                onClick={() => onClose()}
-                                target={notSameOrigin ? '_blank' : '_self'}
+                    if (localized === 'nami_insurance') {
+                        itemsLevel1.push(
+                            <InsuranceRedirectLink
+                                targetType="_blank"
+                                key={`${item.key}_${item.title}`}
+                                className={classNames('relative mal-pocket-navbar__drawer__navlink__group___item__lv1__item mal-pocket-nabar__item___hover !px-12')}
                             >
                                 <div className="text-txtSecondary dark:text-txtSecondary-dark h-6">{Icon ? <Icon size={24} /> : getIcon(localized)}</div>
                                 <span className="ml-3 font-medium text-sm text-txtPrimary  dark:text-txtPrimary-dark">
                                     {t(`navbar:submenu.${item.localized}`)}
                                 </span>
-                            </a>
-                        </Link>
-                    );
+                            </InsuranceRedirectLink>
+                        );
+                    } else {
+                        itemsLevel1.push(
+                            <Link href={handleURLHref(item)} key={`${item.key}_${item.title}`}>
+                                <a
+                                    className={classNames('mal-pocket-navbar__drawer__navlink__group___item__lv1__item mal-pocket-nabar__item___hover !px-12', {
+                                        '!hidden': item.hide
+                                    })}
+                                    onClick={() => onClose()}
+                                    target={notSameOrigin ? '_blank' : '_self'}
+                                >
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark h-6">{Icon ? <Icon size={24} /> : getIcon(localized)}</div>
+                                    <span className="ml-3 font-medium text-sm text-txtPrimary  dark:text-txtPrimary-dark">
+                                        {t(`navbar:submenu.${item.localized}`)}
+                                    </span>
+                                </a>
+                            </Link>
+                        );
+                    }
                 });
 
                 return (
@@ -102,8 +118,6 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     'bg-hover dark:bg-hover-dark': state.navActiveLv1[`${title}_${key}`],
                                     '!hidden': hide
                                 })}
-                                // className={`relative mal-pocket-navbar__drawer__navlink__group___item ${spaceLine ? '!mb-0 ' : ' '}
-                                //     ${!state.navActiveLv1[`${title}_${key}`] ? 'mal-pocket-nabar__item___hover ' : 'bg-hover dark:bg-hover-dark'}`}
                                 onClick={() =>
                                     setState({
                                         navActiveLv1: {
@@ -115,19 +129,19 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                 <div className="flex flex-row items-center">
                                     {t(`navbar:menu.${localized}`)} {isNew && <span className="mal-dot__newest" />}
                                 </div>
-                                <div className={`transition duration-200 ease-in-out ${state.navActiveLv1[`${title}_${key}`] ? 'rotate-180' : ''}`}>
+                                <div className={classNames('transition duration-200 ease-in-out', { 'rotate-180': state.navActiveLv1[`${title}_${key}`] })}>
                                     <SvgIcon
                                         name="chevron_down"
                                         size={16}
                                         className="group-hover:rotate-[360deg]"
                                         color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.darkBlue}
                                     />
-                                    {/* <ChevronDown size={16} color={currentTheme !== THEME_MODE.LIGHT ? colors.gray[4] : colors.darkBlue} /> */}
                                 </div>
                             </div>
                             <div
-                                className={`mal-pocket-navbar__drawer__navlink__group___item__lv1
-                                            ${state.navActiveLv1[`${title}_${key}`] ? 'mal-pocket-navbar__drawer__navlink__group___item__lv1__active' : ''}`}
+                                className={classNames(`mal-pocket-navbar__drawer__navlink__group___item__lv1`, {
+                                    'mal-pocket-navbar__drawer__navlink__group___item__lv1__active': state.navActiveLv1[`${title}_${key}`]
+                                })}
                             >
                                 {itemsLevel1}
                             </div>

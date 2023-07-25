@@ -14,7 +14,7 @@ import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
 import { API_GET_VIP } from 'redux/actions/apis';
 import { getMarketWatch } from 'redux/actions/market';
-import {  getS3Url } from 'redux/actions/utils';
+import { getS3Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import { buildLogoutUrl } from 'src/utils';
 import { useWindowSize } from 'utils/customHooks';
@@ -224,7 +224,13 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
                     const WrapperLink = ({ children }) =>
                         isNamiInsurance && auth ? (
-                            <InsuranceRedirectLink key={`${child.title}_${child.key}`} isVertical={isVertical}>
+                            <InsuranceRedirectLink
+                                className={classNames('relative !pt-0 !pr-0 mal-navbar__link__group___item___childen__lv1___col2 w-1/2 flex', {
+                                    '!w-full': isVertical,
+                                    'w-[48%]': !isVertical
+                                })}
+                                key={`${child.title}_${child.key}`}
+                            >
                                 {children}
                             </InsuranceRedirectLink>
                         ) : (

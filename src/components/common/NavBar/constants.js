@@ -401,16 +401,16 @@ export const MOBILE_NAV_DATA = [
                 isNew: false,
                 url: '/staking',
                 child_lv1: []
+            },
+            {
+                key: 8,
+                title: 'Nami Insurance',
+                localized: 'nami_insurance',
+                isNew: false,
+                notSameOrigin: true,
+                url: INSURANCE_URL,
+                child_lv2: []
             }
-            // {
-            //     key: 7,
-            //     title: 'Nami Insurance',
-            //     localized: 'nami_insurance',
-            //     isNew: false,
-            //     notSameOrigin: true,
-            //     url: 'https://namiinsurance.io/',
-            //     child_lv2: []
-            // }
         ]
     },
     {

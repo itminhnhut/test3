@@ -1439,7 +1439,8 @@ export const getDayInterestPercent = (apy) =>
         4
     );
 
-export const getInsuranceLoginLink = async ({ params = 'BNBUSDT', targetType = null, redirectTo = null }) => {
+export const getInsuranceLoginLink = async ({ params = 'BNBUSDT', targetType = null, redirectTo = null}) => {
+
     try {
         const data = await fetchAPI({
             url: API_AUTH_INSURANCE,
