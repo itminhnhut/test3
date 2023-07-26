@@ -1,18 +1,20 @@
 /* eslint-disable no-alert, no-console, import/no-extraneous-dependencies */
 import { useMemo } from 'react';
+
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk';
+import { SET_MULTI_FUTURES_MARKET_WATCH } from 'redux/actions/types';
+
 // import apiMiddleware from 'src/redux/thunk/middleware';
 import reducers from './reducers';
-import { SET_MULTI_FUTURES_MARKET_WATCH } from 'redux/actions/types';
 
 let store;
 
 const DEV = process.browser && process.env.NODE_ENV !== 'production';
 // const DEV = false;
 
-const bindMiddleware = middleware => {
+const bindMiddleware = (middleware) => {
     if (DEV) {
         const { createLogger } = require('redux-logger');
 
@@ -20,10 +22,11 @@ const bindMiddleware = middleware => {
             predicate: (getState, action) => {
                 return action.type !== SET_MULTI_FUTURES_MARKET_WATCH;
             },
-            collapsed: (getState, action, logEntry) => !logEntry.error,
+            collapsed: (getState, action, logEntry) => !logEntry.error
         });
 
-        return applyMiddleware(...middleware, logger);
+        // return applyMiddleware(...middleware, logger);
+        return applyMiddleware(...middleware);
     }
 
     return applyMiddleware(...middleware);
@@ -33,9 +36,12 @@ function initStore(initialState) {
     return createStore(
         reducers,
         initialState,
-        composeWithDevTools(bindMiddleware([thunkMiddleware,
-            // , apiMiddleware
-        ])),
+        composeWithDevTools(
+            bindMiddleware([
+                thunkMiddleware
+                // , apiMiddleware
+            ])
+        )
     );
 }
 
@@ -47,7 +53,7 @@ export const initializeStore = (preloadedState) => {
     if (preloadedState && store) {
         _store = initStore({
             ...store.getState(),
-            ...preloadedState,
+            ...preloadedState
         });
         // Reset the current store
         store = undefined;

@@ -5,8 +5,8 @@ import { useTranslation } from 'next-i18next';
 import { formatTime } from 'redux/actions/utils';
 
 import { WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
+import { WrapperStatus } from 'components/screens/NFT/Components/Lists/CardItems';
 import { LIST_TIER, TABS, STATUS } from 'components/screens/NFT/Constants';
-import { WrapperStatus } from 'components/screens/Wallet/NFT/index';
 
 import classNames from 'classnames';
 import styled from 'styled-components';

@@ -211,5 +211,5 @@
         "volume": "Current Volume: {{volume}} {{asset}}"
     },
     "staking": "Staking Daily",
-    "nft": "Ví WNFT/Voucher"
+    "nft": "WNFT/Voucher"
 }

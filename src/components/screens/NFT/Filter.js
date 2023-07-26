@@ -12,18 +12,19 @@ import FetchApi from 'utils/fetch-api';
 import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_DETAIL_COLLECTION } from 'redux/actions/apis';
 
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
-import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 
-import { TABS } from 'components/screens/NFT/Constants';
-
-import { NoResultIcon } from 'components/svg/SvgIcon';
+import { TABS, LIST_CATEGORY } from 'components/screens/NFT/Constants';
 
 import classNames from 'classnames';
 import styled from 'styled-components';
 
 // ** Dynamic
-const NotAuth = dynamic(() => import('./NoAuth'), { ssr: false });
+const NotAuth = dynamic(() => import('./Components/Page/NoAuth'), { ssr: false });
+const NoResult = dynamic(() => import('./Components/Page/NoResult'), { ssr: false });
+const NoData = dynamic(() => import('./Components/Page/NoData'), { ssr: false });
+
 const CardItems = dynamic(() => import('./Components/Lists/CardItems'), { ssr: false });
+
 const AllFilters = dynamic(() => import('./Components/Lists/AllFilters'), { ssr: false });
 const CategoryFilter = dynamic(() => import('./Components/Lists/CategoryFilter'), { ssr: false });
 const CollectionFilter = dynamic(() => import('./Components/Lists/CollectionFilter'), { ssr: false });
@@ -37,7 +38,7 @@ const iniData = {
     isOpen: true,
     collection: [],
     category: 'all',
-    isShowCollection: true
+    isShowCollection: true // hien thi collection name
 };
 
 const Filter = ({ isDark }) => {
@@ -174,26 +175,11 @@ const Filter = ({ isDark }) => {
 
     const renderData = () => {
         if (!isAuth && filter.category === 'me') return <NotAuth />;
-        if (data?.length > 0) return <CardItems listNFT={data} isOpen={filter.isOpen} grid={filter.grid} showCollection={filter.isShowCollection} />;
 
-        if (data?.length === 0 && filter.search.length > 0)
-            return (
-                <div className="flex items-center justify-center flex-col m-auto pt-20">
-                    <NoResultIcon />
-                    <div className="text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark mt-1">Không tìm thấy kết quả</div>
-                </div>
-            );
-        return (
-            <div className="flex items-center justify-center flex-col m-auto">
-                <div className="block dark:hidden">
-                    <NoDataLightIcon />
-                </div>
-                <div className="hidden dark:block">
-                    <NoDataDarkIcon />
-                </div>
-                <div className="text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark mt-1">Bạn hiện không có NFT</div>
-            </div>
-        );
+        if (data?.length > 0) return <CardItems listNFT={data} isOpen={filter.isOpen} grid={filter.grid} showCollection={filter.isShowCollection} />;
+        // ** page no search
+        if (data?.length === 0 && filter.search.length > 0) return <NoResult />;
+        return <NoData />;
     };
 
     const renderHeader = useCallback(() => {
@@ -239,7 +225,12 @@ const Filter = ({ isDark }) => {
             <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px]">
                 <Tabs isDark tab={filter.tab} className="mt-8 gap-6 border-b border-divider dark:border-divider-dark">
                     {TABS?.map((item, idx) => (
-                        <TabItem key={idx} className="!text-left !px-0 !text-base" value={item.value} onClick={(isClick) => isClick && handleTab(item.value)}>
+                        <TabItem
+                            key={item.label}
+                            className="!text-left !px-0 !text-base"
+                            value={item.value}
+                            onClick={(isClick) => isClick && handleTab(item.value)}
+                        >
                             {item.label}
                         </TabItem>
                     ))}
@@ -250,13 +241,7 @@ const Filter = ({ isDark }) => {
                 <section className="mt-8 flex flex-row gap-6">
                     <section className={classNames('w-[388px]', { hidden: !filter.isOpen })}>
                         <CategoryFilter onChangeCategory={handleChangeCategory} isDark={isDark} category={filter.category} />
-                        <CollectionFilter
-                            isDark={isDark}
-                            collections={dataCollection}
-                            filterCollection={filter.collection}
-                            isShowCollection={filter.isShowCollection}
-                            onChangeCollection={handleChangeCollection}
-                        />
+                        <CollectionFilter isDark={isDark} collections={dataCollection} filter={filter} onChangeCollection={handleChangeCollection} />
                         <TierFilter isDark={isDark} filterTier={filter.tier} onChangeTier={handleChangeCheckBox} />
                     </section>
                     {renderData()}

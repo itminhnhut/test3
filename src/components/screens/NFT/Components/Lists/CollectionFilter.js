@@ -7,11 +7,11 @@ import CollapseV2 from 'components/common/V2/CollapseV2';
 
 import colors from 'styles/colors';
 
-const CategoryFilter = ({ collections, isShowCollection, filterCollection, onChangeCollection, isDark }) => {
+const CategoryFilter = ({ collections, onChangeCollection, isDark, filter }) => {
     const { t } = useTranslation();
 
     const renderCollections = useCallback(() => {
-        if (!Array.isArray(collections) || !isShowCollection) return;
+        if (!Array.isArray(collections) || !filter.isShowCollection) return;
         return (
             <>
                 <CollapseV2
@@ -19,7 +19,7 @@ const CategoryFilter = ({ collections, isShowCollection, filterCollection, onCha
                     label="Bộ sưu tập"
                     key={`NFT_Collections`}
                     className="w-full last:pb-4"
-                    reload={collections?.length > 0}
+                    reload={filter.isOpen}
                     divLabelClassname="w-full justify-between"
                     labelClassname="text-base font-semibold text-gray-15 dark:text-gray-4 w-10/12"
                     chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
@@ -32,7 +32,7 @@ const CategoryFilter = ({ collections, isShowCollection, filterCollection, onCha
                                     className="mr-6 mb-4"
                                     boxContainerClassName="w-6 h-6"
                                     label={item.name}
-                                    active={filterCollection.includes(item?._id)}
+                                    active={filter.collection.includes(item?._id)}
                                     labelClassName="text-gray-1 dark:text-gray-7 text-base"
                                     onChange={() => onChangeCollection(item._id)}
                                 />
@@ -42,7 +42,7 @@ const CategoryFilter = ({ collections, isShowCollection, filterCollection, onCha
                 <div className="my-6 h-[1px] bg-divider dark:bg-divider-dark" />
             </>
         );
-    }, [collections, isShowCollection, filterCollection]);
+    }, [collections, filter.isShowCollection, filter.collection, filter.isOpen]);
 
     return <>{renderCollections()}</>;
 };

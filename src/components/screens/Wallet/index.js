@@ -634,7 +634,7 @@ const SCREEN_TAB_SERIES = [
     {
         key: 5,
         code: WALLET_SCREENS.NFT,
-        title: 'Partners',
+        title: 'NFT',
         localized: 'wallet:nft'
     }
     // {
