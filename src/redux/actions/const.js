@@ -482,7 +482,7 @@ export const WalletType = {
     EARN: 'EARN',
     ONUS: 'ONUS',
     INSURANCE: 'INSURANCE',
-    NAO_FUTURES: 'NAO_FUTURES',
+    NAO_FUTURES: 'NAO_FUTURES'
 };
 
 export const EarnWalletType = {
@@ -861,7 +861,9 @@ export const UserSocketEvent = {
     PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER',
     SMART_OTP: 'SMART_OTP',
     USER_CREATE_ORDER: 'USER_CREATE_ORDER',
-    PARTNER_UPDATE_ORDER_AUTO_SUGGEST: 'PARTNER_UPDATE_ORDER_AUTO_SUGGEST'
+    PARTNER_UPDATE_ORDER_AUTO_SUGGEST: 'PARTNER_UPDATE_ORDER_AUTO_SUGGEST',
+
+    INSURANCE_CONTRACTS: 'insurance:update:insurance'
 };
 
 export const EarnOrder_Status = {

@@ -1,5 +1,5 @@
 import { IconLoading } from 'components/common/Icons';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Button from 'components/common/V2/ButtonV2/Button';
 import { FutureInsurance } from 'components/svg/SvgIcon';
 import { useTranslation } from 'next-i18next';
@@ -8,26 +8,51 @@ import useFetchApi from 'hooks/useFetchApi';
 import { API_USER_INSURANCE_HISTORY } from 'redux/actions/apis';
 import InsuranceRuleModal from './InsuranceRuleModal';
 import InsuranceListModal from './InsuranceListModal';
-import { getInsuranceLoginLink, roundByExactDigit } from 'redux/actions/utils';
+import { getInsuranceLoginLink, getSymbolObject, roundByExactDigit } from 'redux/actions/utils';
 import Tooltip from 'components/common/Tooltip';
+import { ApiStatus, UserSocketEvent } from 'redux/actions/const';
+import { useSelector } from 'react-redux';
+import FetchApi from 'utils/fetch-api';
+import useToggle from 'hooks/useToggle';
 
 const initialState = {
     showRules: false,
     showList: false
 };
 
-const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice, onCloseOrderDetailModal }) => {
-    const { t } = useTranslation(['common', 'futures']);
+const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice }) => {
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation(['common', 'futures']);
     const [state, set] = useState(initialState);
+    const userSocket = useSelector((state) => state.socket.userSocket);
+    const [refetch, toggleRefetch] = useToggle();
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
-    const { data, loading, error } = useFetchApi(
+    useEffect(() => {
+        if (userSocket) {
+            userSocket.on(UserSocketEvent.INSURANCE_CONTRACTS, (contractBaseAsset) => {
+                const symbolObject = getSymbolObject(order?.symbol);
+                if (symbolObject?.baseAsset === contractBaseAsset) {
+                    toggleRefetch();
+                }
+            });
+        }
+
+        return () =>
+            userSocket.removeListener(UserSocketEvent.INSURANCE_CONTRACTS, (data) => {
+                console.log('socket removeListener INSURANCE_CONTRACTS:', data);
+            });
+    }, [userSocket, order?.symbol]);
+
+    const { data, loading } = useFetchApi(
         {
             url: API_USER_INSURANCE_HISTORY + `/${order?.symbol}`
         },
         order?.symbol,
-        [order?.symbol]
+        [order?.symbol, refetch]
     );
 
     const isPurchaseAble = useMemo(() => {
@@ -46,19 +71,17 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice, onClo
 
     const onBuyInsuranceHandler = async () => {
         if (!isPurchaseAble) return;
-        onCloseOrderDetailModal();
         await getInsuranceLoginLink({
             params: `${order?.symbol}?${encodeURIComponent(
-                `integrate=nami_futures&type=${order?.type}&vol=${order?.order_value}&liq=${formatLiquidPrice}&side=${order?.side}&order=${order?.displaying_id}`
+                `integrate=nami_futures&language=${language}&type=${order?.type}&vol=${order?.order_value}&liq=${formatLiquidPrice}&side=${order?.side}&order=${order?.displaying_id}`
             )}`,
             targetType: '_blank'
         });
     };
-
     return (
         <>
-           
-               {!isPurchaseAble && <Tooltip
+            {!isPurchaseAble && (
+                <Tooltip
                     effect="solid"
                     isV3
                     place="top"
@@ -72,8 +95,8 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice, onClo
                     }}
                 >
                     <div className="max-w-[300px] text-sm z-50">{t('futures:insurance:condition_buy_cover')}</div>
-                </Tooltip>}
-         
+                </Tooltip>
+            )}
 
             <div className="mb-8 p-4 bg-white dark:bg-dark-4 border dark:border-none rounded-xl">
                 <div className="flex justify-between items-center">
@@ -88,14 +111,14 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice, onClo
                 </div>
                 <div className="mt-4 flex justify-between items-center">
                     <div className="flex space-x-1 text-2xl font-semibold">
-                        <span>{loading ? <IconLoading color="currentColor" /> : error ? '-' : data?.data?.count}</span>
+                        <span>{loading ? <IconLoading color="currentColor" /> : Number(data?.data.count)}</span>
                         <span className="lowercase">{t('futures:insurance:contracts')}</span>
                         <FutureInsurance size={32} />
                     </div>
                     <div className="flex space-x-2">
                         <Button
                             className="px-4 py-3 !text-sm !h-9"
-                            disabled={loading || error || !data?.data?.count}
+                            disabled={loading || !data?.data?.count}
                             variants="secondary"
                             onClick={() => setState({ showList: true })}
                         >
