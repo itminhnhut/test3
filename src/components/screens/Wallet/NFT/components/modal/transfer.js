@@ -10,7 +10,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import ModalV2 from 'components/common/V2/ModalV2';
 
-import { WrapperLevelItems } from 'components/screens/NFT/ListFilter';
+import { WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
 import { WrapperStatus } from 'components/screens/Wallet/NFT/index';
 
 import classNames from 'classnames';

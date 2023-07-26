@@ -18,7 +18,7 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
-import { WrapperLevelItems } from 'components/screens/NFT/ListFilter';
+import { WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
 
 import styled from 'styled-components';
 

@@ -3,10 +3,10 @@ import Link from 'next/link';
 
 import { useTranslation } from 'next-i18next';
 
+import { LIST_TIER } from 'components/screens/NFT/Constants';
+
 import classNames from 'classnames';
 import styled from 'styled-components';
-
-import { LIST_TIER } from './Filter';
 
 const ListFilter = ({ listNFT, isOpen, grid, showCollection }) => {
     const {

@@ -10,7 +10,7 @@ import Chip from 'components/common/V2/Chip';
 import InputV2 from 'components/common/V2/InputV2';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 
-import { WrapperLevelItems } from 'components/screens/NFT/ListFilter';
+import { WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
 
 import { NoResultIcon } from 'components/svg/SvgIcon';
 

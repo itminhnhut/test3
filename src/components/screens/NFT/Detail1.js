@@ -4,7 +4,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import ModalV2 from 'components/common/V2/ModalV2';
 
-import { WrapperLevelItems } from './ListFilter';
+import { WrapperLevelItems } from './Components/Lists/CardItems';
 
 const DarkCheckCircle = ({ color = '#47CC85', size = '16' }) => (
     <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

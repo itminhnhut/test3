@@ -4,18 +4,13 @@ import { useTranslation } from 'next-i18next';
 
 import { formatTime } from 'redux/actions/utils';
 
-import { LIST_TIER, TABS } from 'components/screens/NFT/Filter';
-import { WrapperLevelItems } from 'components/screens/NFT/ListFilter';
+import { WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
+import { LIST_TIER, TABS, STATUS } from 'components/screens/NFT/Constants';
 import { WrapperStatus } from 'components/screens/Wallet/NFT/index';
 
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-const STATUS = {
-    0: { key: 'not_active', vi: 'Chưa kích hoạt', en: 'Not activated' },
-    1: { key: 'active', vi: 'Đã kích hoạt', en: 'activated' },
-    2: { key: 'used', vi: 'Đã sử dụng', en: 'used' }
-};
 const Contents = ({ detail, wallet }) => {
     const {
         t,
