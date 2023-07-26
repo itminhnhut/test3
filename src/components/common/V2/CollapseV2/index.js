@@ -51,7 +51,7 @@ const index = ({
     useEffect(() => {
         if (!wrapper.current) return;
         setTimeout(() => {
-            wrapper.current.style.height = active ? list.current.clientHeight + 'px' : 0;
+            wrapper.current?.style.height = active ? list.current.clientHeight + 'px' : 0;
         }, 100);
     }, [reload]);
 

@@ -53,7 +53,7 @@ const NFTWallet = () => {
                         <section className="h-auto mx-5 my-5">
                             <div className="flex flex-row justify-between font-semibold text-base">
                                 <Link href="/nft?collection=22222">
-                                    <p className="text-green-2">Ocean Eye</p>
+                                    <p className="text-green-3 dark:text-green-2">Ocean Eye</p>
                                 </Link>
                                 <WrapperStatus status="expired" className="h-7 py-1 px-4 rounded-[80px]  text-sm">
                                     Đã kích hoạt

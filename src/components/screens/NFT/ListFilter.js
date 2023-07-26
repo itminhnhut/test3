@@ -1,39 +1,59 @@
-import { useState } from 'react';
-
 import Image from 'next/image';
+import Link from 'next/link';
+
+import { useTranslation } from 'next-i18next';
 
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-const ListFilter = ({ isOpen, grid }) => {
-    const [isModal, setIsModal] = useState(false);
+import { LIST_TIER } from './Filter';
 
-    const handleModal = () => setIsModal((prev) => !prev);
-
+const ListFilter = ({ listNFT, isOpen, grid, showCollection }) => {
+    const {
+        i18n: { language }
+    } = useTranslation();
     const renderItems = () => {
-        return Array(10)
-            .fill(0)
-            .map((i) => {
+        return (
+            listNFT?.length > 0 &&
+            listNFT?.map((item) => {
+                const getTier = LIST_TIER.find((f) => f.active === item.tier);
                 return (
-                    <Items
-                        className={classNames('max-w-[394px] h-full bg-dark-13 dark:bg-dark-4 rounded-xl', {
-                            'max-w-[189px]': grid === 6
-                        })}
-                        onClick={handleModal}
-                    >
-                        <section className={classNames('max-h-[394px]', { 'max-h-[189px]': grid === 6 })}>
-                            <Image width={394} height={394} src="/images/nft/Banner-2.png" sizes="100vw" />
+                    <Link href={`nft/${item._id}`}>
+                        <section
+                            className={classNames('max-w-[394px] h-full bg-dark-13 dark:bg-dark-4 rounded-xl max-h-fit', {
+                                'max-w-[189px]': grid === 6
+                            })}
+                        >
+                            <section className={classNames('max-h-[394px]', { 'max-h-[189px]': grid === 6 })}>
+                                <Image width={394} height={394} src={item.image} sizes="100vw" />
+                            </section>
+                            <section className={classNames('h-auto mx-5 my-5', { '!mx-4 !my-4': grid === 6 })}>
+                                <p className={classNames('text-green-3 dark:text-green-2 font-semibold', { '!text-sm': grid === 6, hidden: !showCollection })}>
+                                    <Link
+                                        href={{
+                                            pathname: '/nft',
+                                            query: { collection: item?.nft_collection, category: 'all' }
+                                        }}
+                                    >
+                                        {item.nft_collection_name}
+                                    </Link>
+                                </p>
+
+                                <p className={classNames('text-gray-15 dark:text-gray-4 font-semibold text-2xl mt-4', { '!text-base !mt-3': grid === 6 })}>
+                                    {item.name}
+                                </p>
+                                <WrapperLevelItems
+                                    className={classNames('dark:text-gray-7 text-gray-1 flex flex-row gap-2  mt-1 text-base', { '!text-sm': grid === 6 })}
+                                >
+                                    <p>Cấp độ:</p>
+                                    <p className={getTier.key}>{getTier?.name?.[language]}</p>
+                                </WrapperLevelItems>
+                            </section>
                         </section>
-                        <section className="h-auto mx-4 my-4">
-                            <p className="text-gray-15 dark:text-gray-4 font-semibold text-2xl">Whale</p>
-                            <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-2  mt-1 text-base">
-                                <p>Cấp độ:</p>
-                                <p className="rate">Siêu hiếm</p>
-                            </WrapperLevelItems>
-                        </section>
-                    </Items>
+                    </Link>
                 );
-            });
+            })
+        );
     };
 
     return (
@@ -54,6 +74,7 @@ const ListFilter = ({ isOpen, grid }) => {
 
 const WrapperItems = styled.section`
     width: calc(100% - ${(props) => (props.isOpen ? '388px' : '0px')});
+    height: fit-content;
 `;
 
 export const WrapperLevelItems = styled.div`
@@ -66,16 +87,12 @@ export const WrapperLevelItems = styled.div`
     .super {
         color: rgb(226, 167, 51);
     }
-    .extremely: {
-        color: rgb (64, 152, 255);
+    .extremely {
+        color: rgb(64, 152, 255);
     }
-    .supreme: {
-        color: rgb (144, 125, 255);
+    .supreme {
+        color: rgb(144, 125, 255);
     }
-`;
-
-const Items = styled.section`
-    // width: calc(50% - 8px);
 `;
 
 export default ListFilter;
