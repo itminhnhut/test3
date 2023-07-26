@@ -3,7 +3,7 @@ import React from 'react';
 import { IconLoading } from '../Icons';
 import useInsuranceLoginLink from 'hooks/useInsuranceLoginLink';
 
-const InsuranceRedirectLink = ({ children, className, params = '', targetType, useLoading = true, ...props }) => {
+const InsuranceRedirectLink = ({ children, className, params, targetType, useLoading = true, ...props }) => {
     const { loading, onCreatInsuranceLink } = useInsuranceLoginLink({ params, targetType });
 
     return (

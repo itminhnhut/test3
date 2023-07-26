@@ -93,7 +93,7 @@ export const MinTransferFromBroker = {
 
 const ALLOWED_ASSET = ['VNDC', 'NAMI', 'USDT', 'NAC', 'NAO'];
 const ALLOWED_ASSET_FUTURES = ['VNDC', 'NAMI', 'USDT', 'NAC'];
-const ALLOWED_ASSET_INSURANCE = ['VNDC', 'USDT'];
+const ALLOWED_ASSET_INSURANCE = ['USDT'];
 
 const INITIAL_STATE = {
     fromWallet: null,
@@ -198,7 +198,6 @@ const TransferModal = ({ isMobile, alert }) => {
                 }
             })
     );
-    // const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
     // Rdx
     const { isVisible, fromWallet, toWallet, asset } = useSelector((state) => state.utils.transferModal) || {};
     const auth = useSelector((state) => state.auth?.user);
@@ -572,16 +571,17 @@ const TransferModal = ({ isMobile, alert }) => {
                     return (
                         <div
                             key={`transfer_asset__list_${wallet?.assetCode}_${state.asset}`}
-                            className={`px-4 py-3 flex items-center justify-between cursor-pointer first:mt-0 mt-3
-                                hover:bg-hover-1 dark:hover:bg-hover-dark
-                                ${state.asset === wallet?.assetCode ? 'bg-hover-1 dark:bg-hover-dark' : ''}`}
-                            onClick={() =>
-                                state.asset !== wallet?.assetCode &&
+                            className={classNames(
+                                'px-4 py-3 flex items-center justify-between cursor-pointer first:mt-0 mt-3 hover:bg-hover-1 dark:hover:bg-hover-dark',
+                                { 'bg-hover-1 dark:bg-hover-dark': state.asset === wallet?.assetCode }
+                            )}
+                            onClick={() => {
+                                if (state.asset === wallet?.assetCode) return;
                                 setState({
                                     asset: wallet?.assetCode,
                                     openList: {}
-                                })
-                            }
+                                });
+                            }}
                         >
                             <div className="flex justify-center">
                                 <AssetLogo assetCode={wallet?.assetCode} size={24} />
@@ -718,7 +718,9 @@ const TransferModal = ({ isMobile, alert }) => {
     }, [fromWallet, toWallet]);
 
     useEffect(() => {
-        asset ? setState({ asset }) : setState({ asset: DEFAULT_STATE.asset });
+        if (asset) {
+            setState({ asset });
+        }
     }, [asset]);
 
     useEffect(() => {
@@ -757,11 +759,10 @@ const TransferModal = ({ isMobile, alert }) => {
                 }));
             allWallets = orderBy(allWallets, (o) => o?.wallet?.value - o?.wallet?.locked_value, 'desc');
 
-            // RESET asset to VNDC
-            // if current asset is NAO && one of the wallet is FUTURES.
-            const asset = isFuturesWalletSelected && state.asset === 'NAO' ? allowAssets[0] : state.asset;
+            // RESET asset to first allow asset list
+            const selectAsset = !allowAssets.includes(state.asset) ? allowAssets[0] : state.asset;
 
-            setState({ allWallets, asset });
+            setState({ allWallets, asset: selectAsset });
         }
     }, [state.asset, state.fromWallet, state.toWallet, allFuturesWallet, allPartnersWallet, allExchangeWallet, allNAOsWallet, assetConfig]);
 
@@ -780,13 +781,6 @@ const TransferModal = ({ isMobile, alert }) => {
                 _errors.insufficient = t('wallet:errors.invalid_insufficient_balance');
             } else {
                 _errors.insufficient = null;
-                // setState({
-                //     errors: {
-                //         ...state.errors,
-                //         insufficient: null
-                //     }
-                // });
-                // return;
             }
         } else {
             _errors.insufficient = null;
@@ -863,11 +857,7 @@ const TransferModal = ({ isMobile, alert }) => {
                         <div onClick={onSetMax} className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">
                             {renderAvailableWallet()}
                         </div>
-                        <AddCircleColorIcon
-                            className="cursor-pointer"
-                            // onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
-                            onClick={() => handleKycRequest(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))}
-                        />
+                        <AddCircleColorIcon className="cursor-pointer" onClick={() => handleKycRequest(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))} />
                     </div>
                 </div>
 
