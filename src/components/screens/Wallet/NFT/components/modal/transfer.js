@@ -37,7 +37,7 @@ const Transfer = ({ isModal, onCloseModal }) => {
 
     return (
         <ModalV2
-            isVisible={!isModal}
+            isVisible={isModal}
             onBackdropCb={onCloseModal}
             className="!max-w-[488px] bg-[#ffffff] dark:bg-dark-dark border-divider dark:border-divider-dark"
             wrapClassName="p-8 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"

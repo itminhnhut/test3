@@ -97,13 +97,11 @@ const WalletDetail = ({ idNFT }) => {
 
     // ** handle call api detail NFT
     useEffect(() => {
-        if (!idNFT) return;
         handleDetailNFT();
     }, [idNFT]);
 
     // ** handle call api history NFT
     useEffect(() => {
-        if (!idNFT) return;
         handleHistoryNFT();
     }, [idNFT]);
 
@@ -195,6 +193,71 @@ const WalletDetail = ({ idNFT }) => {
     }, [dataHistory?.data, loading]);
 
     //** render */
+
+    const renderFeature = () => {
+        return (
+            <WrapperContent className="mt-4">
+                <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4 mt-[18px]">Tính năng</h3>
+                <div className="w-full rounded-xl mt-3 flex flex-col gap-3 h-[72px] overflow-y-auto">
+                    <div className="flex flex-row items-center">
+                        {isDark ? <DarkCheckCircle /> : <CheckCircle />}
+                        <p className="ml-2 dark:text-gray-4 text-gray-15">1,5% phí giao dịch NAO Futures trong tuần 55</p>
+                    </div>
+                    <div className="flex flex-row items-center">
+                        {isDark ? <DarkCheckCircle /> : <CheckCircle />}
+                        <p className="ml-2 dark:text-gray-4 text-gray-15">Giảm 50% phí giao dịch trong vòng 3 ngày</p>
+                    </div>
+                    <div className="flex flex-row items-center">
+                        {isDark ? <DarkCheckCircle /> : <CheckCircle />}
+                        <p className="ml-2 dark:text-gray-4 text-gray-15">APY Booster 100% trong 3 ngày</p>
+                    </div>
+                </div>
+            </WrapperContent>
+        );
+    };
+
+    const renderDescription = () => {
+        return (
+            <WrapperContent className="mt-4">
+                <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4 mt-[18px]">Mô tả</h3>
+                <section className="mt-3 h-[72px] overflow-y-auto dark:text-gray-4 text-gray-15">
+                    Một định nghĩa quen thuộc trong ngành Blockchain, bên cạnh đó, cá voi còn đại diện cho sự kiên định và khát khao chinh phục những thử thách
+                    mới, một phẩm chất cần có trong mọi nhà đầu tư khi tham gia vào thị trường,có trong mọi nhà đầu tư khi tham gia vào thị trường
+                </section>
+            </WrapperContent>
+        );
+    };
+
+    const renderDetail = () => {
+        return (
+            <WrapperContent>
+                <section className="flex flex-row justify-between">
+                    <h2 className="text-green-3 dark:text-green-2 font-semibold">Ocean Eye</h2>
+                    <WrapperStatus status="active" className="h-7 py-1 px-4 rounded-[80px] text-sm">
+                        Đã kích hoạt
+                    </WrapperStatus>
+                </section>
+                <h3 className="font-semibold text-4xl text-gray-15 dark:text-gray-4 mt-[18px]">Whale</h3>
+                <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-2  mt-1 text-base">
+                    <p>Cấp độ:</p>
+                    <p className="rate">Siêu hiếm</p>
+                </WrapperLevelItems>
+                <div className="h-[1px] bg-divider dark:bg-divider-dark my-4" />
+                <div className="flex flex-row">
+                    <ul className="flex flex-row">
+                        <li className="text-gray-1 dark:text-gray-7 mr-1">Loại:</li>
+                        <li className="font-semibold text-gray-15 dark:text-gray-4">Voucher</li>
+                    </ul>
+                    <div className="flex mx-3 my-3 items-center w-1 h-1 rounded-full bg-gray-1 dark:bg-gray-7"></div>
+                    <ul className="flex flex-row">
+                        <li className="text-gray-1 dark:text-gray-7 mr-1">Thời hạn sử dụng:</li>
+                        <li className="font-semibold text-gray-15 dark:text-gray-4">07:00:00 20/07/2023</li>
+                    </ul>
+                </div>
+            </WrapperContent>
+        );
+    };
+
     const renderStatus = () => {
         return (
             <section className="flex flex-row gap-3 mt-4">
@@ -218,7 +281,7 @@ const WalletDetail = ({ idNFT }) => {
                             <Image width={614} height={614} src="/images/nft/Banner-2.png" sizes="100vw" />
                         </section>
                         <section className="w-full">
-                            <Contents detail={detail} wallet={true} />
+                            <Contents detail={detail} />
                             <Description detail={detail} />
                             <Effective effective={detail?.effective} dark={isDark} />
                             {renderStatus()}

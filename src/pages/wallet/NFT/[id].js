@@ -4,8 +4,8 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const WalletDetail = dynamic(() => import('components/screens/Wallet/NFT/details'), { ssr: false });
 
-const index = () => {
-    return <WalletDetail />;
+const index = ({ idNFT }) => {
+    return <WalletDetail idNFT={idNFT} />;
 };
 
 export const getStaticPaths = async () => {
@@ -15,9 +15,10 @@ export const getStaticPaths = async () => {
     };
 };
 
-export const getStaticProps = async ({ locale }) => ({
+export const getStaticProps = async ({ locale, params }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'navbar', 'staking', 'profile']))
+        idNFT: params.id,
+        ...(await serverSideTranslations(locale, ['common', 'navbar', 'staking', 'profile', 'nft']))
     }
 });
 

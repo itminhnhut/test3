@@ -116,7 +116,7 @@ export const WrapperStatus = styled.div.attrs(({ status }) => ({
     className: `${classNames(
         { 'text-green-3 dark:text-green-2 active': status === 'active' },
         { 'text-yellow-2 active': status === 'not_active' },
-        { 'text-green-1 dark:text-gray-7 bg-divider dark:bg-divider-dark': status === 'expired' }
+        { 'text-green-1 dark:text-gray-7 bg-divider dark:bg-divider-dark': status === 'used' }
     )}`
 }))`
     &.active {

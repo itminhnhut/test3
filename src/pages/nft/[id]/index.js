@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useWindowSize } from 'react-use';
 
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { useTranslation, Trans } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
@@ -12,17 +13,26 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import FetchApi from 'utils/fetch-api';
 
 import { API_GET_DETAIL_NFT, API_GET_HISTORY_NFT } from 'redux/actions/apis';
-import { formatNumber, formatTime } from 'redux/actions/utils';
+import { formatTime } from 'redux/actions/utils';
 
 import TableV2 from 'components/common/V2/TableV2';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
-import { LIST_TIER, TABS } from 'components/screens/NFT/Filter';
-import { WrapperLevelItems } from 'components/screens/NFT/ListFilter';
-
 import styled from 'styled-components';
 
 const LIMIT = 10;
+
+const Effective = dynamic(() => import('components/screens/NFT/Components/Detail/Effective'), {
+    ssr: false
+});
+
+const Description = dynamic(() => import('components/screens/NFT/Components/Detail/Description'), {
+    ssr: false
+});
+
+const Contents = dynamic(() => import('components/screens/NFT/Components/Detail/Contents'), {
+    ssr: false
+});
 
 const initState = {
     loading: false,
@@ -43,7 +53,7 @@ const index = ({ idNFT }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
-    const [detail, setDetail] = useState({});
+    const [detail, setDetail] = useState();
 
     const { width } = useWindowSize();
     const isMobile = width < 830;
@@ -160,102 +170,6 @@ const index = ({ idNFT }) => {
         );
     }, [dataHistory?.data, loading]);
 
-    const renderContent = () => {
-        if (!detail?._id) return;
-
-        const tier = LIST_TIER.find((item) => item.active === detail?.tier);
-        const category = TABS.find((item) => item.value === detail?.category);
-        const expired_time = detail?.expired_time ? formatTime(new Date(detail?.expired_time), 'HH:mm:ss dd/MM/yyyy') : '-';
-
-        return (
-            <WrapperContent>
-                <h2 className="text-green-3 dark:text-green-2 font-semibold">
-                    <Link
-                        href={{
-                            pathname: '/nft',
-                            query: { collection: detail?.nft_collection, category: 'all' }
-                        }}
-                    >
-                        {detail?.nft_collection_name}
-                    </Link>
-                </h2>
-                <h3 className="font-semibold text-4xl text-gray-15 dark:text-gray-4 mt-[18px]">{detail?.name}</h3>
-                <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-2  mt-1 text-base">
-                    <p>Cấp độ:</p>
-                    <p className="rate">{tier?.name?.[language]}</p>
-                </WrapperLevelItems>
-                <div className="h-[1px] bg-divider dark:bg-divider-dark my-4" />
-                <div className="flex flex-row">
-                    <ul className="flex flex-row">
-                        <li className="text-gray-1 dark:text-gray-7 mr-1">Loại:</li>
-                        <li className="font-semibold text-gray-15 dark:text-gray-4">{category?.label}</li>
-                    </ul>
-                    <div className="flex mx-3 my-3 items-center w-1 h-1 rounded-full bg-gray-1 dark:bg-gray-7"></div>
-                    <ul className="flex flex-row">
-                        <li className="text-gray-1 dark:text-gray-7 mr-1">Thời hạn sử dụng:</li>
-                        <li className="font-semibold text-gray-15 dark:text-gray-4">{expired_time}</li>
-                    </ul>
-                </div>
-            </WrapperContent>
-        );
-    };
-
-    const renderEffective = () => {
-        if (!detail?.effective) return;
-
-        const { FEE, CASHBACK, APY_BOOSTER } = detail?.effective;
-        return (
-            <WrapperContent className="mt-4">
-                <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4 mt-[18px]">Tính năng</h3>
-                <div className="w-full rounded-xl mt-3 flex flex-col gap-3 h-[72px] overflow-y-auto">
-                    <div className="flex flex-row items-center">
-                        {isDark ? <DarkCheckCircle /> : <CheckCircle />}
-                        <Trans
-                            i18nKey="nft:detail:effective:FEE"
-                            values={{
-                                value: FEE?.value,
-                                day: FEE?.day
-                            }}
-                            components={[<p className="ml-2 dark:text-gray-4 text-gray-15" />]}
-                        />
-                    </div>
-                    <div className="flex flex-row items-center">
-                        {isDark ? <DarkCheckCircle /> : <CheckCircle />}
-                        <Trans
-                            i18nKey="nft:detail:effective:CASHBACK"
-                            values={{
-                                value: CASHBACK?.value,
-                                week: CASHBACK?.week
-                            }}
-                            components={[<p className="ml-2 dark:text-gray-4 text-gray-15" />]}
-                        />
-                    </div>
-                    <div className="flex flex-row items-center">
-                        {isDark ? <DarkCheckCircle /> : <CheckCircle />}
-                        <Trans
-                            i18nKey="nft:detail:effective:APY_BOOSTER"
-                            values={{
-                                value: APY_BOOSTER?.value,
-                                day: APY_BOOSTER?.day,
-                                max: APY_BOOSTER?.max
-                            }}
-                            components={[<p className="ml-2 dark:text-gray-4 text-gray-15" />]}
-                        />
-                    </div>
-                </div>
-            </WrapperContent>
-        );
-    };
-
-    const renderDescription = () => {
-        return (
-            <WrapperContent className="mt-4">
-                <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4 mt-[18px]">Mô tả</h3>
-                <section className="mt-3 h-[72px] overflow-y-auto dark:text-gray-4 text-gray-15">{detail?.[`description_${language}`] || '-'}</section>
-            </WrapperContent>
-        );
-    };
-
     return (
         <MaldivesLayout>
             <main className="bg-white dark:bg-shadow">
@@ -268,9 +182,9 @@ const index = ({ idNFT }) => {
                             {detail?.image ? <Image width={550} height={550} src={detail?.image} sizes="100vw" /> : null}
                         </section>
                         <section className="w-full">
-                            {renderContent()}
-                            {renderDescription()}
-                            {renderEffective()}
+                            <Contents detail={detail} />
+                            <Description detail={detail} />
+                            <Effective effective={detail?.effective} dark={isDark} />
                         </section>
                     </section>
                     <section className="mt-[60px]">
@@ -309,21 +223,4 @@ const WrapperTable = styled(TableV2)`
     }
 `;
 
-const DarkCheckCircle = ({ color = '#47CC85', size = '16' }) => (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="M7.999 1.332a6.674 6.674 0 0 0-6.667 6.667 6.674 6.674 0 0 0 6.667 6.666A6.674 6.674 0 0 0 14.665 8 6.674 6.674 0 0 0 8 1.332zm-1.333 9.609L4.191 8.47l.941-.944 1.533 1.53 3.529-3.53.943.943-4.471 4.47z"
-            fill={color}
-        />
-    </svg>
-);
-
-const CheckCircle = ({ color = '#30BF73', size = '16' }) => (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="M7.999 1.332a6.674 6.674 0 0 0-6.667 6.667 6.674 6.674 0 0 0 6.667 6.666A6.674 6.674 0 0 0 14.665 8 6.674 6.674 0 0 0 8 1.332zm-1.333 9.609L4.191 8.47l.941-.944 1.533 1.53 3.529-3.53.943.943-4.471 4.47z"
-            fill={color}
-        />
-    </svg>
-);
 export default index;

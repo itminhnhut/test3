@@ -36,13 +36,13 @@ export const TABS = [
 ];
 
 const iniData = {
-    category: 'all',
     tab: 2,
-    search: '',
-    isOpen: true,
     grid: 4,
     tier: [],
+    search: '',
+    isOpen: true,
     collection: [],
+    category: 'all',
     isShowCollection: true
 };
 
