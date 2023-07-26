@@ -230,6 +230,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                     'w-[48%]': !isVertical
                                 })}
                                 key={`${child.title}_${child.key}`}
+                                targetType="_blank"
                             >
                                 {children}
                             </InsuranceRedirectLink>
