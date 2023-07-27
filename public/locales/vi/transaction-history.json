@@ -49,7 +49,7 @@
         "time": "Thời gian",
         "network": "Mạng lưới",
         "rate": "Tỷ giá",
-        "order_id":"ID lệnh",
+        "order_id": "ID lệnh",
         "txhash": "TxHash",
         "pair": "Cặp giao dịch",
         "open_price": "Giá mở",
@@ -60,7 +60,10 @@
         "volume": "Khối lượng giao dịch",
         "fee": "Phí giao dịch",
         "expect": "Kỳ vọng",
+        "hash_id": "HashID",
         "expect_sell": "Bear",
-        "expect_buy": "Bull"
+        "expect_buy": "Bull",
+        "expect_bear": "Bear",
+        "expect_bull": "Bull"
     }
 }

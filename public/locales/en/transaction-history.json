@@ -60,7 +60,11 @@
         "volume": "Volume",
         "fee": "Fee",
         "expect": "Expect",
+        "hash_id": "HashID",
+
         "expect_sell": "Bear",
-        "expect_buy": "Bull"
+        "expect_buy": "Bull",
+        "expect_bear": "Bear",
+        "expect_bull": "Bull"
     }
 }
