@@ -33,9 +33,8 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice }) => 
 
     useEffect(() => {
         if (userSocket) {
-            userSocket.on(UserSocketEvent.INSURANCE_CONTRACTS, (contractBaseAsset) => {
-                const symbolObject = getSymbolObject(order?.symbol);
-                if (symbolObject?.baseAsset === contractBaseAsset) {
+            userSocket.on(UserSocketEvent.INSURANCE_CONTRACTS, (displayingId) => {
+                if (order?.displaying_id === +displayingId) {
                     toggleRefetch();
                 }
             });
@@ -48,14 +47,14 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice }) => 
                 });
             }
         };
-    }, [userSocket, order?.symbol]);
+    }, [userSocket, order?.displaying_id]);
 
     const { data, loading } = useFetchApi(
         {
-            url: API_USER_INSURANCE_HISTORY + `/${order?.symbol}`
+            url: API_USER_INSURANCE_HISTORY + `/${order?.displaying_id}`
         },
-        order?.symbol,
-        [order?.symbol, refetch]
+        order?.displaying_id,
+        [order?.displaying_id, refetch]
     );
 
     const isPurchaseAble = useMemo(() => {
@@ -76,8 +75,9 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice }) => 
         if (!isPurchaseAble) return;
         await getInsuranceLoginLink({
             params: `${order?.symbol}?${encodeURIComponent(
-                `integrate=nami_futures&language=${language}&type=${order?.type}&vol=${order?.order_value}&liq=${formatLiquidPrice}&side=${order?.side}&order=${order?.displaying_id}`
+                `integrate=nami_futures&type=${order?.type}&vol=${order?.order_value}&liq=${formatLiquidPrice}&side=${order?.side}&order=${order?.displaying_id}`
             )}`,
+            language,
             targetType: '_blank'
         });
     };
