@@ -176,7 +176,8 @@ const Filter = ({ isDark }) => {
     const renderData = () => {
         if (!isAuth && filter.category === 'me') return <NotAuth />;
 
-        if (data?.length > 0) return <CardItems listNFT={data} isOpen={filter.isOpen} grid={filter.grid} showCollection={filter.isShowCollection} />;
+        if (data?.length > 0)
+            return <CardItems isDark={isDark} listNFT={data} isOpen={filter.isOpen} grid={filter.grid} showCollection={filter.isShowCollection} />;
         // ** page no search
         if (data?.length === 0 && filter.search.length > 0) return <NoResult />;
         return <NoData />;

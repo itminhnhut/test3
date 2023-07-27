@@ -1,31 +1,39 @@
+import { useRef } from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { useTranslation } from 'next-i18next';
+
+import { useIsOverflow } from 'hooks/useIsOverflow';
+
+import Tooltip from 'components/common/Tooltip';
 
 import { LIST_TIER, STATUS } from 'components/screens/NFT/Constants';
 
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-const ListFilter = ({ listNFT, isOpen, grid, showCollection, wallet = false }) => {
+const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDark }) => {
     const {
         i18n: { language }
     } = useTranslation();
 
+    const refText = useRef({});
+
     const renderTitle = (item) => {
         if (wallet) {
             return (
-                <div className="flex flex-row justify-between font-semibold text-base">
+                <div className="flex flex-row justify-between font-semibold text-base flex-wrap">
                     <Link
                         href={{
                             pathname: '/nft',
                             query: { collection: item?.nft_collection, category: 'me' }
                         }}
                     >
-                        <p className="text-green-3 dark:text-green-2">Ocean Eye</p>
+                        <p className="text-green-3 dark:text-green-2"> {item.nft_collection_name}</p>
                     </Link>
-                    <WrapperStatus status={STATUS?.[item.status]?.key} className="h-7 py-1 px-4 rounded-[80px]  text-sm">
+                    <WrapperStatus status={STATUS?.[item.status]?.key} className="h-7 py-1 px-4 rounded-[80px] text-sm">
                         {STATUS?.[item.status]?.[language]}
                     </WrapperStatus>
                 </div>
@@ -48,7 +56,7 @@ const ListFilter = ({ listNFT, isOpen, grid, showCollection, wallet = false }) =
     const renderItems = () => {
         return (
             listNFT?.length > 0 &&
-            listNFT?.map((item) => {
+            listNFT?.map((item, key) => {
                 const getTier = LIST_TIER.find((f) => f.active === item.tier);
                 return (
                     <Link href={wallet ? `NFT/${item._id}` : `nft/${item._id}`} key={`card_item_${item._id}_${item.name}`}>
@@ -62,11 +70,24 @@ const ListFilter = ({ listNFT, isOpen, grid, showCollection, wallet = false }) =
                             </section>
                             <section className={classNames('h-auto mx-5 my-5', { '!mx-4 !my-4': grid === 6 })}>
                                 {renderTitle(item)}
-                                <p className={classNames('text-gray-15 dark:text-gray-4 font-semibold text-2xl mt-4', { '!text-base !mt-3': grid === 6 })}>
+                                <Tooltip id={item?.name} place="top" effect="solid" isV3 className="max-w-[394px]" />
+                                <p
+                                    ref={(element) => (refText.current[key] = element)}
+                                    data-tip={useIsOverflow(refText, key) ? item?.name : ''}
+                                    data-for={item.name}
+                                    className={classNames(
+                                        'text-gray-15 overflow-hidden whitespace-nowrap overflow-ellipsis dark:text-gray-4 font-semibold text-2xl mt-4',
+                                        {
+                                            '!text-base !mt-3': grid === 6
+                                        }
+                                    )}
+                                >
                                     {item.name}
                                 </p>
                                 <WrapperLevelItems
-                                    className={classNames('dark:text-gray-7 text-gray-1 flex flex-row gap-2  mt-1 text-base', { '!text-sm': grid === 6 })}
+                                    className={classNames('dark:text-gray-7 text-gray-1 flex flex-row gap-2 mt-1 text-base', {
+                                        '!text-sm': grid === 6
+                                    })}
                                 >
                                     <p>Cấp độ:</p>
                                     <p className={getTier.key}>{getTier?.name?.[language]}</p>
@@ -133,4 +154,4 @@ export const WrapperLevelItems = styled.div`
     }
 `;
 
-export default ListFilter;
+export default CardItems;

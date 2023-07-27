@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import { useTranslation } from 'next-i18next';
 
 import CheckBox from 'components/common/CheckBox';
@@ -13,16 +15,17 @@ const TierFilter = ({ onChangeTier, isDark, filterTier }) => {
         i18n: { language }
     } = useTranslation();
 
-    const renderTier = () => {
+    const renderTier = useCallback(() => {
         return (
             <CollapseV2
                 key={`NFT_tier`}
+                active={true}
+                label="Độ hiếm"
+                reload={filterTier}
                 className="w-full last:pb-4"
                 divLabelClassname="w-full justify-between"
-                chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
-                label="Độ hiếm"
                 labelClassname="text-base font-semibold text-gray-15 dark:text-gray-4 w-10/12"
-                active={true}
+                chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
             >
                 {LIST_TIER?.map((tier) => {
                     return (
@@ -39,7 +42,7 @@ const TierFilter = ({ onChangeTier, isDark, filterTier }) => {
                 })}
             </CollapseV2>
         );
-    };
+    }, [isDark, filterTier]);
 
     return <>{renderTier()}</>;
 };

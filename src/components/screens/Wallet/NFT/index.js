@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import dynamic from 'next/dynamic';
 
@@ -8,7 +8,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import FetchApi from 'utils/fetch-api';
 
-import { API_GET_COLLECTION, API_GET_LIST_NFT } from 'redux/actions/apis';
+import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_SUMMARY_NFT } from 'redux/actions/apis';
 
 import Chip from 'components/common/V2/Chip';
 
@@ -36,6 +36,8 @@ const iniData = {
     isShowCollection: true
 };
 
+const TAB_STATUS = { WNFT: 2, Voucher: 1 };
+
 const NFTWallet = () => {
     const {
         t,
@@ -48,7 +50,19 @@ const NFTWallet = () => {
     const [filter, setFilter] = useState(iniData);
 
     const [dataCollection, setDataCollection] = useState();
+    const [summary, setSummary] = useState([]);
+
     const [data, setData] = useState([]);
+
+    // ** call api get summary
+    const handleGetSummary = async () => {
+        try {
+            const resCollection = await FetchApi({ url: API_GET_SUMMARY_NFT });
+            setSummary(resCollection?.data || []);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     // ** call api get collection
     const handleGetCollection = async () => {
@@ -66,7 +80,7 @@ const NFTWallet = () => {
             const resData = await FetchApi({
                 url: API_GET_LIST_NFT,
                 params: {
-                    category: filter.tab,
+                    category: TAB_STATUS?.[filter.wallet],
                     ...(filter?.tier.length > 0 && { tier: filter?.tier.join(', ') }),
                     ...(filter?.collection.length > 0 && { nft_collection: filter?.collection.join(', ') }),
                     is_all: false,
@@ -82,13 +96,20 @@ const NFTWallet = () => {
     // ** handle get data Collection
     useEffect(() => {
         handleGetCollection();
+        handleGetSummary();
     }, []);
 
     // ** handle get data list NFT
     useEffect(() => {
         const id = setTimeout(() => handleGetListNFT(), 400);
         return () => clearTimeout(id);
-    }, [filter.tab, filter.collection, filter.tier, filter.search]);
+    }, [filter.wallet, filter.collection, filter.tier, filter.search]);
+
+    const totalSummary = useMemo(() => {
+        const totalVoucher = summary?.find((f) => f?._id === TAB_STATUS.Voucher)?.total || 0;
+        const totalNft = summary?.find((f) => f?._id === TAB_STATUS.WNFT)?.total || 0;
+        return { voucher: totalVoucher, nft: totalNft };
+    }, [summary]);
 
     const handleChangeWallet = (wallet) => {
         setFilter((prev) => ({ ...prev, wallet }));
@@ -128,7 +149,9 @@ const NFTWallet = () => {
 
     const renderData = () => {
         if (data?.length > 0)
-            return <CardItems wallet={true} listNFT={data} isOpen={filter.isOpen} grid={filter.grid} showCollection={filter.isShowCollection} />;
+            return (
+                <CardItems isDark={isDark} wallet={true} listNFT={data} isOpen={filter.isOpen} grid={filter.grid} showCollection={filter.isShowCollection} />
+            );
         // ** page no search
         if (data?.length === 0 && filter.search.length > 0) return <NoResult />;
         return <NoData />;
@@ -139,10 +162,10 @@ const NFTWallet = () => {
             <section className="flex flex-row justify-between">
                 <section className="flex flex-row gap-3  text-gray-1 dark:text-gray-7 text-sm">
                     <WrapperChip className="h-9" onClick={() => handleChangeWallet('WNFT')} active={filter.wallet === 'WNFT'}>
-                        WNFT (3)
+                        WNFT ({totalSummary.nft})
                     </WrapperChip>
                     <WrapperChip className="h-9" onClick={() => handleChangeWallet('Voucher')} active={filter.wallet === 'Voucher'}>
-                        Voucher (3)
+                        Voucher ({totalSummary.voucher})
                     </WrapperChip>
                 </section>
             </section>
