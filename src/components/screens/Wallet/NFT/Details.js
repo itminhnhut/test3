@@ -132,7 +132,7 @@ const WalletDetail = ({ idNFT }) => {
     const renderVoucher = (detail) => {
         return detail.status === 0 ? (
             <section className="mt-4">
-                <ButtonV2 onClick={handleModalUse} onClick={handleCheckNFT} disabled={isLoading}>
+                <ButtonV2 onClick={handleCheckNFT} disabled={isLoading}>
                     Sử dụng
                 </ButtonV2>
             </section>
@@ -145,7 +145,7 @@ const WalletDetail = ({ idNFT }) => {
                 <ButtonV2 variants="secondary" onClick={handleModalTransfer}>
                     Chuyển
                 </ButtonV2>
-                {detail?.status === 0 ? <ButtonV2 onClick={handleModalUse}>Sử dụng</ButtonV2> : null}
+                {detail?.status === 0 ? <ButtonV2 onClick={handleCheckNFT}>Sử dụng</ButtonV2> : null}
             </section>
         );
     };
@@ -176,7 +176,7 @@ const WalletDetail = ({ idNFT }) => {
                     </section>
                 </article>
                 <Use isModal={isUse} category={detail?.category} onCloseModal={handleModalUse} statusCodeNFT={statusCodeNFT} onUseSubmit={handleUseSubmit} />
-                <Transfer isModal={isTransfer} onCloseModal={handleModalTransfer} />
+                <Transfer isModal={isTransfer} onCloseModal={handleModalTransfer} detail={detail} idNFT={idNFT} />
             </main>
         </MaldivesLayout>
     );

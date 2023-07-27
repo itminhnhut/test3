@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useDebounce } from 'react-use';
-import { IconSearch } from 'src/components/common/Icons';
 import { X } from 'react-feather';
-import colors from 'styles/colors';
+import { useDebounce } from 'react-use';
+
+import { IconSearch } from 'src/components/common/Icons';
+
 import classNames from 'classnames';
+import colors from 'styles/colors';
 
 const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handleFilterAssetsList, customWrapperStyle, parentState }) => {
     const [debouncedValue, setDebouncedValue] = useState('');

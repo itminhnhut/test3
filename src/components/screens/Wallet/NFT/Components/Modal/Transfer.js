@@ -1,39 +1,111 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'react-feather';
+import { useDebounce } from 'react-use';
 
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
-import { useTranslation } from 'next-i18next';
+import { Trans, useTranslation } from 'next-i18next';
 
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
+import FetchApi from 'utils/fetch-api';
+import toast from 'utils/toast';
+
+import { API_GET_CHECK_NAMI_CODE_NFT, API_POST_TRANSFER_NFT } from 'redux/actions/apis';
+
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import InputV2 from 'components/common/V2/InputV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 
 import { WrapperStatus, WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
+import { LIST_TIER, STATUS } from 'components/screens/NFT/Constants';
 
 import classNames from 'classnames';
 
-const Transfer = ({ isModal, onCloseModal }) => {
-    const { t } = useTranslation();
-    const [currentTheme] = useDarkMode();
+const MAX_LENGTH = 14;
 
-    const [refCode, setRefCode] = useState('');
+const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+    const router = useRouter();
+
+    const [code, setCode] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(true);
+    const [isSubmit, setIsSubmit] = useState(true);
+    const [error, setError] = useState();
+    const [debouncedValue, setDebouncedValue] = useState('');
 
-    const isDark = currentTheme === THEME_MODE.DARK;
+    useDebounce(
+        () => {
+            setDebouncedValue(code);
+        },
+        600,
+        [code]
+    );
+
+    // ** submit transfer
+    const handleTransferSubmit = async () => {
+        try {
+            setLoading(true);
+            const { statusCode } = await FetchApi({
+                url: API_POST_TRANSFER_NFT,
+                options: {
+                    method: 'POST'
+                },
+                params: { id: idNFT, code }
+            });
+            if (statusCode === 201) {
+                toast({ text: 'Sử dụng WNFT thành công', type: 'success', duration: 1500 });
+                setTimeout(() => router.push('/wallet/NFT'), 3000);
+            }
+        } catch (err) {
+            throw new Error('call api submit transfer failed', { cause: err });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // ** handle check nami code
+    const handleCheckNamiCode = async () => {
+        try {
+            setLoading(true);
+            const { statusCode } = await FetchApi({ url: API_GET_CHECK_NAMI_CODE_NFT, params: { code } });
+            if (statusCode !== 200) {
+                setError(statusCode);
+            } else {
+                setIsSubmit(false);
+            }
+        } catch (err) {
+            throw new Error('call api check nami code failed', { cause: err });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        console.log(debouncedValue);
+        if (debouncedValue.length === MAX_LENGTH) {
+            error && setError('');
+            handleCheckNamiCode();
+            return;
+        }
+        if (debouncedValue.length > 0 && debouncedValue.length < MAX_LENGTH) {
+            setError('code_error_format');
+        }
+    }, [debouncedValue]);
 
     const onChange = (e) => {
-        setError(false);
-        setRefCode(String(e.target.value).trim().toUpperCase());
+        setCode(String(e.target.value).trim());
     };
 
     const onPaste = async () => {
         const pasteCode = await navigator.clipboard.readText();
-        setRefCode(pasteCode);
+        setCode(pasteCode);
     };
+
+    const tier = LIST_TIER.find((item) => item.active === detail?.tier);
 
     return (
         <ModalV2
@@ -56,16 +128,16 @@ const Transfer = ({ isModal, onCloseModal }) => {
                 <section className="text-gray-15 dark:text-gray-4 text-2xl font-semibold ">Chuyển WNFT</section>
                 <section className="mt-8 dark:bg-dark-4 bg-white border-[1px] border-divider dark:border-dark-4 rounded-xl px-3 py-3 w-full flex flex-row gap-4">
                     <section className="w-full max-w-[148px] max-h-[148px]">
-                        <Image width={148} height={148} src="/images/nft/Banner-2.png" sizes="100vw" />
+                        <Image width={148} height={148} src={detail?.image} sizes="100vw" />
                     </section>
                     <section className="my-[21px]">
-                        <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Whale</p>
+                        <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{detail?.name}</p>
                         <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-2  mt-1 text-base">
                             <p>Cấp độ:</p>
-                            <p className="rate">Siêu hiếm</p>
+                            <p className="rate">{tier?.name?.[language]}</p>
                         </WrapperLevelItems>
-                        <WrapperStatus status="active" className="h-7 py-1 px-4 mt-5 rounded-[80px] text-sm">
-                            Đã kích hoạt
+                        <WrapperStatus status={STATUS?.[detail?.status]?.key} className={classNames('h-7 mt-5 py-1 px-4 rounded-[80px] text-sm')}>
+                            {STATUS?.[detail?.status]?.[language]}
                         </WrapperStatus>
                     </section>
                 </section>
@@ -81,10 +153,10 @@ const Transfer = ({ isModal, onCloseModal }) => {
                                 }
                             )}
                         >
-                            <InputV2
-                                value={refCode}
+                            <input
+                                value={code}
                                 onChange={onChange}
-                                maxLength={8}
+                                maxLength={MAX_LENGTH}
                                 placeholder="Nhập NamiID"
                                 className="w-full text-gray-1 dark:text-gray-4"
                             />
@@ -93,12 +165,14 @@ const Transfer = ({ isModal, onCloseModal }) => {
                             </span>
                         </div>
                         {error && (
-                            <div className="text-red text-xs absolute bottom-0">
-                                {refCode.length < 6 ? t('profile:ref_error_format') : t('profile:ref_error')}
-                            </div>
+                            <Trans
+                                values={{ category: 'NFT' }}
+                                i18nKey={`nft:status_code:${error}`}
+                                components={[<div className="text-red text-xs absolute bottom-0" />]}
+                            />
                         )}
                     </div>
-                    <ButtonV2 disabled={refCode.length < 6 || error || loading} type="primary" className="mt-10">
+                    <ButtonV2 disabled={isSubmit || loading} type="primary" className="mt-10" onClick={handleTransferSubmit}>
                         Chuyển
                     </ButtonV2>
                 </form>

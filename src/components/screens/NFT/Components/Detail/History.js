@@ -49,7 +49,7 @@ const History = ({ idNFT }) => {
 
     // ** handle call api history NFT
     useEffect(() => {
-        handleHistoryNFT();
+        idNFT && handleHistoryNFT();
     }, [idNFT]);
 
     const renderFrom = (row) => {

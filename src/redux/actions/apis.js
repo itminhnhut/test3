@@ -381,4 +381,6 @@ export const API_GET_DETAIL_NFT = API_V3_PREFIX + 'nft/detail';
 export const API_GET_HISTORY_NFT = API_V3_PREFIX + 'nft/history';
 export const API_GET_SUMMARY_NFT = API_V3_PREFIX + 'nft/summary';
 export const API_POST_ACTIVE_NFT = API_V3_PREFIX + 'nft/active';
+export const API_POST_TRANSFER_NFT = API_V3_PREFIX + 'nft/transfer';
 export const API_GET_CHECK_NFT = API_V3_PREFIX + 'nft/check-nft';
+export const API_GET_CHECK_NAMI_CODE_NFT = API_V3_PREFIX + 'nft/check-nami-code';

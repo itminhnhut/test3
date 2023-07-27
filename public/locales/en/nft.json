@@ -11,6 +11,10 @@
         "1001": "<0>{{- category}} is activated<0>",
         "1002": "<0>{{- category}} is expired<0>",
         "1003": "<0>{{- category}} expired<0>",
-        "1004": "<0>Have {{- category}} the same type is being used, if you continue using {{- category}} này thì {{- category}} The same type being used will be deactivated.<0>"
+        "1004": "<0>Have {{- category}} the same type is being used, if you continue using {{- category}} này thì {{- category}} The same type being used will be deactivated.<0>",
+        "1005": "<0>{{- category}} cant transfer<0>",
+        "9001": "<0>Nami Code not existed<0>",
+        "9000": "<0>Nami Code not valid<0>",
+        "code_error_format": "<0>Nami Code is incorrectly formatted<0>"
     }
 }
