@@ -1,6 +1,5 @@
-import dynamic from 'next/dynamic';
-
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import dynamic from 'next/dynamic';
 
 const WalletDetail = dynamic(() => import('components/screens/Wallet/NFT/Details'), { ssr: false });
 
@@ -10,7 +9,7 @@ const index = ({ idNFT }) => {
 
 export const getStaticPaths = async () => {
     return {
-        paths: [{ params: { id: '' } }],
+        paths: [],
         fallback: true
     };
 };
