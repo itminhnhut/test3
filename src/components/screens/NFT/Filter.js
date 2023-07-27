@@ -189,7 +189,7 @@ const Filter = ({ isDark }) => {
     const renderHeader = useCallback(() => {
         if (filter.isShowCollection) {
             return (
-                <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px]">
+                <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
                     <header className="mt-10">
                         <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">Nami NFT Infinity</h1>
                     </header>

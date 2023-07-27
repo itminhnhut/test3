@@ -1,11 +1,9 @@
-import { useRef } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { useTranslation } from 'next-i18next';
-
-import useIsOverflow from 'hooks/useIsOverflow';
 
 import Tooltip from 'components/common/Tooltip';
 
@@ -19,7 +17,17 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
         i18n: { language }
     } = useTranslation();
 
-    const refText = useRef({});
+    const [listTooltip, setListTooltip] = useState([]);
+
+    useEffect(() => {
+        const arr = [];
+        [...document.querySelectorAll('#listNFT p')].map((element, key) => {
+            if (element?.clientWidth < element?.scrollWidth) {
+                arr.push(key);
+            }
+        });
+        setListTooltip(arr);
+    }, [listNFT, grid]);
 
     const renderTitle = (item) => {
         if (wallet) {
@@ -31,7 +39,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                             query: { collection: item?.nft_collection, category: 'me' }
                         }}
                     >
-                        <p className="text-green-3 dark:text-green-2"> {item.nft_collection_name}</p>
+                        <div className="text-green-3 dark:text-green-2"> {item.nft_collection_name}</div>
                     </Link>
                     <WrapperStatus status={STATUS?.[item.status]?.key} className="h-7 py-1 px-4 rounded-[80px] text-sm">
                         {STATUS?.[item.status]?.[language]}
@@ -40,7 +48,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
             );
         }
         return (
-            <p className={classNames('text-green-3 dark:text-green-2 font-semibold', { '!text-sm': grid === 6, hidden: !showCollection })}>
+            <div className={classNames('text-green-3 dark:text-green-2 font-semibold', { '!text-sm': grid === 6, hidden: !showCollection })}>
                 <Link
                     href={{
                         pathname: '/nft',
@@ -49,11 +57,11 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                 >
                     {item.nft_collection_name}
                 </Link>
-            </p>
+            </div>
         );
     };
 
-    const renderItems = () => {
+    const renderItems = useCallback(() => {
         return (
             listNFT?.length > 0 &&
             listNFT?.map((item, key) => {
@@ -61,9 +69,10 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                 return (
                     <Link href={wallet ? `NFT/${item._id}` : `nft/${item._id}`} key={`card_item_${item._id}_${item.name}`}>
                         <section
-                            className={classNames('max-w-[394px] h-full bg-dark-13 dark:bg-dark-4 rounded-xl max-h-fit', {
+                            className={classNames('tc2 max-w-[394px] h-full bg-dark-13 dark:bg-dark-4 rounded-xl max-h-fit', {
                                 'max-w-[189px]': grid === 6
                             })}
+                            id={item._id}
                         >
                             <section className={classNames('max-h-[394px]', { 'max-h-[189px]': grid === 6 })}>
                                 <Image width={394} height={394} src={item.image} sizes="100vw" />
@@ -71,32 +80,32 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                             <section className={classNames('h-auto mx-5 my-5', { '!mx-4 !my-4': grid === 6 })}>
                                 {renderTitle(item)}
                                 <Tooltip
-                                    id={item?.name}
+                                    isV3
                                     place="top"
                                     effect="solid"
-                                    isV3
+                                    id={item?.name}
                                     className={classNames('max-w-[394px]', { 'max-w-[189px]': grid === 6 })}
                                 />
                                 <p
-                                    ref={(element) => (refText.current[key] = element)}
-                                    // data-tip={useIsOverflow(refText, key) ? item?.name : item?.name}
-                                    data-for={item.name}
+                                    data-tip={listTooltip?.includes(key) ? item?.name : ''}
+                                    data-for={item?.name}
                                     className={classNames(
-                                        'text-gray-15 overflow-hidden whitespace-nowrap overflow-ellipsis dark:text-gray-4 font-semibold text-2xl mt-4',
+                                        ' text-gray-15 overflow-hidden whitespace-nowrap overflow-ellipsis dark:text-gray-4 font-semibold text-2xl mt-4',
                                         {
                                             '!text-base !mt-3': grid === 6
                                         }
                                     )}
                                 >
-                                    {item.name}
+                                    {item?.name}
                                 </p>
+
                                 <WrapperLevelItems
                                     className={classNames('dark:text-gray-7 text-gray-1 flex flex-row gap-2 mt-1 text-base', {
                                         '!text-sm': grid === 6
                                     })}
                                 >
-                                    <p>Cấp độ:</p>
-                                    <p className={getTier.key}>{getTier?.name?.[language]}</p>
+                                    <div>Cấp độ:</div>
+                                    <div className={getTier.key}>{getTier?.name?.[language]}</div>
                                 </WrapperLevelItems>
                             </section>
                         </section>
@@ -104,7 +113,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                 );
             })
         );
-    };
+    }, [grid, listTooltip, listNFT]);
 
     return (
         <>
@@ -115,6 +124,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                     'grid-cols-3': grid === 4 && !isOpen
                 })}
                 isOpen={isOpen}
+                id="listNFT"
             >
                 {renderItems()}
             </WrapperItems>
