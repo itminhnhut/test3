@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-const WalletDetail = dynamic(() => import('components/screens/Wallet/NFT/details'), { ssr: false });
+const WalletDetail = dynamic(() => import('components/screens/Wallet/NFT/Details'), { ssr: false });
 
 const index = ({ idNFT }) => {
     return <WalletDetail idNFT={idNFT} />;

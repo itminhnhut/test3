@@ -8,10 +8,10 @@ import { useTranslation } from 'next-i18next';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import InputV2 from 'components/common/V2/InputV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 
-import { WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
-import { WrapperStatus } from 'components/screens/Wallet/NFT/index';
+import { WrapperStatus, WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
 
 import classNames from 'classnames';
 
@@ -52,7 +52,7 @@ const Transfer = ({ isModal, onCloseModal }) => {
                 </div>
             )}
         >
-            <main className="flex flex-col">
+            <section className="flex flex-col">
                 <section className="text-gray-15 dark:text-gray-4 text-2xl font-semibold ">Chuyển WNFT</section>
                 <section className="mt-8 dark:bg-dark-4 bg-white border-[1px] border-divider dark:border-dark-4 rounded-xl px-3 py-3 w-full flex flex-row gap-4">
                     <section className="w-full max-w-[148px] max-h-[148px]">
@@ -81,7 +81,7 @@ const Transfer = ({ isModal, onCloseModal }) => {
                                 }
                             )}
                         >
-                            <input
+                            <InputV2
                                 value={refCode}
                                 onChange={onChange}
                                 maxLength={8}
@@ -102,7 +102,7 @@ const Transfer = ({ isModal, onCloseModal }) => {
                         Chuyển
                     </ButtonV2>
                 </form>
-            </main>
+            </section>
         </ModalV2>
     );
 };

@@ -5,5 +5,12 @@
             "CASHBACK": "<0>Giảm {{- value}}% phí giao dịch trong vòng {{- week}} ngày<0>",
             "APY_BOOSTER": "<0>APY Booster {{- value}}% trong {{- day}} ngày<0>"
         }
+    },
+    "status_code": {
+        "1000": "<0>{{- category}} không tồn tại<0>",
+        "1001": "<0>{{- category}} đã được kích hoạt<0>",
+        "1002": "<0>{{- category}} hết hạn sử dụng<0>",
+        "1003": "<0>{{- category}} hết hiệu lực sử dụng<0>",
+        "1004": "<0>Có {{- category}} cùng loại đang được sử dụng, nếu bạn tiếp tục sử dụng {{- category}} này thì {{- category}} cùng loại đang sử dụng sẽ bị huỷ tác dụng.<0>"
     }
 }

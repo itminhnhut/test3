@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { useTranslation } from 'next-i18next';
 
-import { useIsOverflow } from 'hooks/useIsOverflow';
+import useIsOverflow from 'hooks/useIsOverflow';
 
 import Tooltip from 'components/common/Tooltip';
 
@@ -70,10 +70,16 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                             </section>
                             <section className={classNames('h-auto mx-5 my-5', { '!mx-4 !my-4': grid === 6 })}>
                                 {renderTitle(item)}
-                                <Tooltip id={item?.name} place="top" effect="solid" isV3 className="max-w-[394px]" />
+                                <Tooltip
+                                    id={item?.name}
+                                    place="top"
+                                    effect="solid"
+                                    isV3
+                                    className={classNames('max-w-[394px]', { 'max-w-[189px]': grid === 6 })}
+                                />
                                 <p
                                     ref={(element) => (refText.current[key] = element)}
-                                    data-tip={useIsOverflow(refText, key) ? item?.name : ''}
+                                    // data-tip={useIsOverflow(refText, key) ? item?.name : item?.name}
                                     data-for={item.name}
                                     className={classNames(
                                         'text-gray-15 overflow-hidden whitespace-nowrap overflow-ellipsis dark:text-gray-4 font-semibold text-2xl mt-4',

@@ -11,13 +11,13 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import FetchApi from 'utils/fetch-api';
 import toast from 'utils/toast';
 
-import { API_GET_DETAIL_NFT } from 'redux/actions/apis';
+import { API_GET_DETAIL_NFT, API_POST_ACTIVE_NFT, API_GET_CHECK_NFT } from 'redux/actions/apis';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
-const Use = dynamic(() => import('./components/modal/use'), { ssr: false });
-const Transfer = dynamic(() => import('./components/modal/transfer'), { ssr: false });
+const Use = dynamic(() => import('./Components/Modal/Use'), { ssr: false });
+const Transfer = dynamic(() => import('./Components/Modal/Transfer'), { ssr: false });
 const Effective = dynamic(() => import('components/screens/NFT/Components/Detail/Effective'), {
     ssr: false
 });
@@ -64,6 +64,9 @@ const WalletDetail = ({ idNFT }) => {
     const [isUse, setIsUse] = useState(initState.isUse);
     const [isTransfer, setIsTransfer] = useState(initState.isTransfer);
 
+    const [isLoading, setIsLoading] = useState(initState.loading);
+    const [statusCodeNFT, setStatusCodeNFT] = useState();
+
     const handleModalUse = () => setIsUse((prev) => !prev);
     const handleModalTransfer = () => setIsTransfer((prev) => !prev);
 
@@ -79,26 +82,70 @@ const WalletDetail = ({ idNFT }) => {
 
     // ** handle call api detail NFT
     useEffect(() => {
-        handleDetailNFT();
+        idNFT && handleDetailNFT();
     }, [idNFT]);
 
-    const handleUseSubmit = () => {
+    // ** handle submit  use active
+    const handleUseSubmit = async () => {
         try {
-            toast({ text: 'Sử dụng WNFT thành công', type: 'success', duration: 1500 });
-            handleModalUse();
+            const { statusCode } = await FetchApi({
+                url: API_POST_ACTIVE_NFT,
+                options: {
+                    method: 'POST'
+                },
+                params: { id: idNFT }
+            });
+            if (statusCode !== 200) {
+                // update detail
+                handleDetailNFT();
+
+                // close modal
+                if (isUse) {
+                    handleModalUse();
+                }
+                toast({ text: 'Sử dụng WNFT thành công', type: 'success', duration: 1500 });
+            }
         } catch (error) {
             console.error(error);
         }
     };
 
+    // ** handle check nft before call api update
+    const handleCheckNFT = async () => {
+        try {
+            setIsLoading(true);
+            const { statusCode } = await FetchApi({ url: API_GET_CHECK_NFT, params: { id: idNFT } });
+            if (statusCode === 200) {
+                handleUseSubmit();
+            } else {
+                handleModalUse();
+                setStatusCodeNFT(statusCode);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     //** render */
-    const renderStatus = () => {
+    const renderVoucher = (detail) => {
+        return detail.status === 0 ? (
+            <section className="mt-4">
+                <ButtonV2 onClick={handleModalUse} onClick={handleCheckNFT} disabled={isLoading}>
+                    Sử dụng
+                </ButtonV2>
+            </section>
+        ) : null;
+    };
+
+    const renderNFT = (detail) => {
         return (
-            <section className="flex flex-row gap-3 mt-4">
+            <section className="flex flex-row gap-3 mt-4 cursor-pointer">
                 <ButtonV2 variants="secondary" onClick={handleModalTransfer}>
                     Chuyển
                 </ButtonV2>
-                <ButtonV2 onClick={handleModalUse}>Sử dụng</ButtonV2>
+                {detail?.status === 0 ? <ButtonV2 onClick={handleModalUse}>Sử dụng</ButtonV2> : null}
             </section>
         );
     };
@@ -118,7 +165,7 @@ const WalletDetail = ({ idNFT }) => {
                             <Contents detail={detail} wallet={true} />
                             <Description detail={detail} />
                             <Effective effective={detail?.effective} dark={isDark} />
-                            {renderStatus()}
+                            {detail?.category === 1 ? renderVoucher(detail) : renderNFT(detail)}
                         </section>
                     </section>
                     <section className="mt-[60px]">
@@ -128,7 +175,7 @@ const WalletDetail = ({ idNFT }) => {
                         </section>
                     </section>
                 </article>
-                <Use isModal={isUse} onCloseModal={handleModalUse} onUseSubmit={handleUseSubmit} />
+                <Use isModal={isUse} category={detail?.category} onCloseModal={handleModalUse} statusCodeNFT={statusCodeNFT} onUseSubmit={handleUseSubmit} />
                 <Transfer isModal={isTransfer} onCloseModal={handleModalTransfer} />
             </main>
         </MaldivesLayout>

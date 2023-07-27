@@ -77,7 +77,7 @@ const NFTWallet = () => {
     // ** call api get list NFT
     const handleGetListNFT = async () => {
         try {
-            const resData = await FetchApi({
+            const { data } = await FetchApi({
                 url: API_GET_LIST_NFT,
                 params: {
                     category: TAB_STATUS?.[filter.wallet],
@@ -87,7 +87,10 @@ const NFTWallet = () => {
                     search: filter.search
                 }
             });
-            setData(resData?.data || []);
+            console.log('data', data);
+            if (data) {
+                setData(data);
+            }
         } catch (error) {
             console.error(error);
         }

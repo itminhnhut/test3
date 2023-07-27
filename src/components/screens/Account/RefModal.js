@@ -1,15 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
-import Modal from 'components/common/ReModal';
-import { useTranslation } from 'next-i18next';
 import { X } from 'react-feather';
-import Button from 'components/common/Button';
-import classNames from 'classnames';
-import showNotification from 'utils/notificationService';
-import { API_NEW_REFERRAL_CREATE_INVITE, API_CHECK_REFERRAL } from 'redux/actions/apis';
-import fetchApi from 'utils/fetch-api';
-import { ApiStatus } from 'redux/actions/const';
 import { useDispatch } from 'react-redux';
+
+import { useTranslation } from 'next-i18next';
+
+import fetchApi from 'utils/fetch-api';
+import showNotification from 'utils/notificationService';
+
+import { API_NEW_REFERRAL_CREATE_INVITE, API_CHECK_REFERRAL } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
 import { getMe } from 'redux/actions/user';
+
+import Button from 'components/common/Button';
+import Modal from 'components/common/ReModal';
+
+import classNames from 'classnames';
 
 const RefModal = ({ onClose }) => {
     const { t } = useTranslation();

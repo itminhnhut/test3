@@ -1,12 +1,14 @@
 import * as React from 'react';
 
-export const useIsOverflow = (ref, key, callback) => {
+const useIsOverflow = (ref, key, callback) => {
     const [isOverflow, setIsOverflow] = React.useState(undefined);
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         const { current } = ref;
 
         const trigger = () => {
+            console.log('isOverflow', current?.[key].offsetHeight, current?.[key].scrollHeight);
+
             const hasOverflow = current?.[key].offsetHeight < current?.[key].scrollHeight || current?.[key].offsetWidth < current?.[key].scrollWidth;
 
             setIsOverflow(hasOverflow);
@@ -19,5 +21,8 @@ export const useIsOverflow = (ref, key, callback) => {
         }
     }, [callback, ref, key]);
 
+    console.log('isOverflow', isOverflow);
     return isOverflow;
 };
+
+export default useIsOverflow;
