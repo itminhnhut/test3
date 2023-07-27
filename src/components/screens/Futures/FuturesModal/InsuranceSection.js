@@ -41,10 +41,13 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice }) => 
             });
         }
 
-        return () =>
-            userSocket.removeListener(UserSocketEvent.INSURANCE_CONTRACTS, (data) => {
-                console.log('socket removeListener INSURANCE_CONTRACTS:', data);
-            });
+        return () => {
+            if (userSocket) {
+                userSocket.removeListener(UserSocketEvent.INSURANCE_CONTRACTS, (data) => {
+                    console.log('socket removeListener INSURANCE_CONTRACTS:', data);
+                });
+            }
+        };
     }, [userSocket, order?.symbol]);
 
     const { data, loading } = useFetchApi(
@@ -111,14 +114,14 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice }) => 
                 </div>
                 <div className="mt-4 flex justify-between items-center">
                     <div className="flex space-x-1 text-2xl font-semibold">
-                        <span>{loading ? <IconLoading color="currentColor" /> : Number(data?.data.count)}</span>
+                        <span>{loading ? <IconLoading color="currentColor" /> : isNaN(data?.data?.count) ? '0' : data?.data?.count}</span>
                         <span className="lowercase">{t('futures:insurance:contracts')}</span>
                         <FutureInsurance size={32} />
                     </div>
                     <div className="flex space-x-2">
                         <Button
                             className="px-4 py-3 !text-sm !h-9"
-                            disabled={loading || !data?.data?.count}
+                            disabled={loading || isNaN(data?.data?.count) || !data?.data?.count}
                             variants="secondary"
                             onClick={() => setState({ showList: true })}
                         >
