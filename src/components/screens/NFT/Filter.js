@@ -89,7 +89,6 @@ const Filter = ({ isDark }) => {
                     search: filter.search
                 }
             });
-            console.log(data);
             if (data) {
                 setData(data);
             }
