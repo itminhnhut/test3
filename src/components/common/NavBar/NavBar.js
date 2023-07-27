@@ -23,7 +23,7 @@ import { Router, useRouter } from 'next/router';
 import classNames from 'classnames';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import LanguageSetting from './LanguageSetting';
-import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
+import { KYC_STATUS, DefaultAvatar, AUTHORIZE_STATUS } from 'redux/actions/const';
 import styled from 'styled-components';
 
 import TagV2 from '../V2/TagV2';
@@ -43,6 +43,10 @@ import Button from '../V2/ButtonV2/Button';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import { useGoogleOneTapLogin } from '@react-oauth/google';
+import FetchApi from 'utils/fetch-api';
+import qs from 'qs';
+
 const DailyLuckydraw = dynamic(() => import('components/screens/DailyLuckydraw'));
 // ** Dynamic
 const NotificationList = dynamic(() => import('src/components/notification/NotificationList'), { ssr: false });
@@ -59,6 +63,7 @@ export const NAVBAR_USE_TYPE = {
 const ALLOW_DROPDOWN = ['product', 'trade', 'commission', 'nao'];
 
 const NAV_HIDE_THEME_BUTTON = ['maldives_landingpage'];
+const AUTH_URL = process.env.NEXT_PUBLIC_AUTH_URL;
 
 const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, spotState, resetDefault, onChangeSpotState }) => {
     // * Initial State
@@ -82,6 +87,81 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     } = useTranslation(['navbar', 'common', 'profile']);
     const [isFromFrame, setIsFromFrame] = useState(false);
     const [showDailyLucky, setShowDailyLucky] = useState(false);
+    const [loginState, setLoginState] = useState();
+
+    const getLoginState = async () => {
+        try {
+            const currentUrl = window.location.href;
+            const res = await FetchApi({
+                url: '/login/nami',
+                params: {
+                    redirect: currentUrl,
+                    noRedirect: true
+                }
+            });
+            if (res.data) {
+                setLoginState(res.data);
+            }
+        } catch (error) {
+            console.log('Unable to fetch login state', error);
+        }
+    };
+
+    useEffect(() => {
+        getLoginState();
+    }, []);
+
+    useGoogleOneTapLogin({
+        onSuccess: async ({ credential }) => {
+            if (!credential) return;
+            try {
+                const data = await FetchApi({
+                    url: `/authenticated/google`,
+                    options: {
+                        method: 'POST',
+                        baseURL: AUTH_URL,
+                        withCredentials: false
+                    },
+                    params: {
+                        idToken: credential,
+                        client_state: loginState,
+                        theme: currentTheme,
+                        language,
+                    }
+                });
+                switch (data.status) {
+                    case AUTHORIZE_STATUS.MISSING_OTP: {
+                        const redirect = `${AUTH_URL}/verify_oauth_device?${qs.stringify({
+                            token: data.continueToken,
+                            service: 'google',
+                            state: loginState,
+                            theme: currentTheme,
+                            language
+                        })}`;
+                        console.log({ redirect });
+                        router.push(redirect);
+                        return;
+                    }
+                    case AUTHORIZE_STATUS.OK: {
+                        const redirect = data.data;
+                        router.push(redirect);
+                        return;
+                    }
+                    default: {
+                        console.log('Login Failed');
+                    }
+                }
+            } catch (error) {
+                console.log('Login Failed', error);
+            }
+        },
+        onError: () => {
+            console.log('Login Failed');
+        },
+        disabled: !!auth || !loginState,
+        cancel_on_tap_outside: false
+    });
+
 
     // * Memmoized Variable
     const navTheme = useMemo(() => {
