@@ -1,8 +1,6 @@
-import { Check } from 'react-feather';
-
 import classNames from 'classnames';
 
-const RadioBox = ({ id, label, description, checked, onusMode = false, onChange, isDark }) => {
+const RadioBox2 = ({ id, label, description, checked, onusMode = false, onChange, isDark }) => {
     if (!id) return null;
 
     return (
@@ -29,7 +27,7 @@ const RadioBox = ({ id, label, description, checked, onusMode = false, onChange,
                 ></span>
             </label>
             <div className="pl-2.5">
-                <label htmlFor={id} className="font-medium text-sm cursor-pointer select-none">
+                <label htmlFor={id} className="font-medium cursor-pointer select-none text-gray-1 dark:text-gray-7">
                     {label}
                 </label>
                 {description && <div className="mt-0.5 text-xs text-txtSecondary dark:text-txtSecondary-dark">{description}</div>}
@@ -38,4 +36,4 @@ const RadioBox = ({ id, label, description, checked, onusMode = false, onChange,
     );
 };
 
-export default RadioBox;
+export default RadioBox2;

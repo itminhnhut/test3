@@ -1,44 +1,3 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { PulseLoader } from 'react-spinners';
-import { useAsync } from 'react-use';
-
-import Axios from 'axios';
-
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-
-import { useTranslation } from 'next-i18next';
-
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-
-import { useWindowSize } from 'utils/customHooks';
-
-import { API_GET_VIP } from 'redux/actions/apis';
-import { DefaultAvatar, KYC_STATUS } from 'redux/actions/const';
-import { getMarketWatch } from 'redux/actions/market';
-import { getS3Url } from 'redux/actions/utils';
-
-import SvgIcon from 'src/components/svg';
-import SvgMenu from 'src/components/svg/Menu';
-import SvgMoon from 'src/components/svg/Moon';
-import SvgSun from 'src/components/svg/Sun';
-
-import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
-
-import TextCopyable from 'components/screens/Account/TextCopyable';
-
-import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
-import SpotSetting from 'src/components/trade/SpotSetting';
-
-import classNames from 'classnames';
-import { PATHS } from 'constants/paths';
-import { buildLogoutUrl } from 'src/utils';
-import styled from 'styled-components';
-import colors from 'styles/colors';
-
 import {
     BxChevronDown,
     BxsUserIcon,
@@ -47,13 +6,43 @@ import {
     FuturePortfolioIcon,
     FutureWalletIcon,
     SuccessfulTransactionIcon,
-    NFTIcon
+    NFTIcon,
+    FutureNFTIcon
 } from '../../svg/SvgIcon';
 import Button from '../V2/ButtonV2/Button';
 import TagV2 from '../V2/TagV2';
 import AuthButton from './AuthButton';
 import NavbarIcons from './Icons';
 import LanguageSetting from './LanguageSetting';
+import Axios from 'axios';
+import classNames from 'classnames';
+import TextCopyable from 'components/screens/Account/TextCopyable';
+import { PATHS } from 'constants/paths';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { useTranslation } from 'next-i18next';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { PulseLoader } from 'react-spinners';
+import { useAsync } from 'react-use';
+import { API_GET_VIP } from 'redux/actions/apis';
+import { DefaultAvatar, KYC_STATUS } from 'redux/actions/const';
+import { getMarketWatch } from 'redux/actions/market';
+import { getS3Url } from 'redux/actions/utils';
+import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
+import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
+import SvgIcon from 'src/components/svg';
+import SvgMenu from 'src/components/svg/Menu';
+import SvgMoon from 'src/components/svg/Moon';
+import SvgSun from 'src/components/svg/Sun';
+import SpotSetting from 'src/components/trade/SpotSetting';
+import { buildLogoutUrl } from 'src/utils';
+import styled from 'styled-components';
+import colors from 'styles/colors';
+import { useWindowSize } from 'utils/customHooks';
 
 const DailyLuckydraw = dynamic(() => import('components/screens/DailyLuckydraw'));
 // ** Dynamic
@@ -507,7 +496,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                 <div className="mal-navbar__dropdown__wrapper flex flex-col gap-3">
                     <Link href={PATHS.WALLET.DEFAULT}>
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
-                            <FuturePortfolioIcon size={24} />
+                            <FutureWalletIcon size={24} />
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('common:overview')}</span>
                         </a>
                     </Link>
@@ -523,6 +512,12 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:submenu.futures_wallet')}</span>
                         </a>
+                    </Link>
+                    <Link href={PATHS.WALLET.NFT}>
+                        <div className="mal-navbar__dropdown___item">
+                            <FutureNFTIcon />
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:submenu.nft_wallet')}</span>
+                        </div>
                     </Link>
                 </div>
             </div>

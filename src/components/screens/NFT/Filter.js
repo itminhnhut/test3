@@ -1,22 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-
+import classNames from 'classnames';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import { TABS, LIST_CATEGORY } from 'components/screens/NFT/Constants';
+import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-
-import { useTranslation } from 'next-i18next';
-
-import FetchApi from 'utils/fetch-api';
-
+import { useState, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_DETAIL_COLLECTION } from 'redux/actions/apis';
-
-import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
-
-import { TABS, LIST_CATEGORY } from 'components/screens/NFT/Constants';
-
-import classNames from 'classnames';
 import styled from 'styled-components';
+import FetchApi from 'utils/fetch-api';
 
 // ** Dynamic
 const NotAuth = dynamic(() => import('./Components/Page/NoAuth'), { ssr: false });
@@ -35,7 +28,7 @@ const iniData = {
     grid: 4,
     tier: [],
     search: '',
-    isOpen: true,
+    isOpen: false,
     collection: [],
     category: 'all',
     isShowCollection: true // hien thi collection name
@@ -203,20 +196,24 @@ const Filter = ({ isDark }) => {
                     <section>
                         <div className="relative h-[180px] w-full bg-white">
                             <Image src={banner} layout="fill" objectFit="cover" />
-                            <section className="absolute bottom-[-92px] left-[112px]">
-                                <section className="flex flex-row">
-                                    <section className="rounded-full">
-                                        <WrapperThumbnail src={thumbnail} width="140" height="140" objectFit="cover" />
+                            <article className="max-w-screen-v3 2xl:max-w-screen-xxl px-4 m-auto">
+                                <section className="absolute bottom-[-92px]">
+                                    <section className="flex flex-row">
+                                        <section className="rounded-full">
+                                            <WrapperThumbnail src={thumbnail} width="140" height="140" objectFit="cover" />
+                                        </section>
+                                        <div className="ml-4 gap-2 flex flex-col justify-end">
+                                            <p className="text-gray-15 dark:text-gray-4 text-4xl font-semibold">{name}</p>
+                                            <p className="dark:text-gray-7 text-gray-1">Số lượng: {total_nft} vật phẩm</p>
+                                        </div>
                                     </section>
-                                    <div className="ml-4 gap-2 flex flex-col justify-end">
-                                        <p className="text-gray-15 dark:text-gray-4 text-4xl font-semibold">{name}</p>
-                                        <p className="dark:text-gray-7 text-gray-1">Số lượng: {total_nft} vật phẩm</p>
-                                    </div>
                                 </section>
-                            </section>
+                            </article>
                         </div>
                     </section>
-                    <section className="ml-[112px] mt-[124px] text-gray-15 dark:text-gray-4">{detailCollection?.[`description_${language}`]}</section>
+                    <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
+                        <section className="px-4 mt-[124px] text-gray-15 dark:text-gray-4">{detailCollection?.[`description_${language}`]}</section>
+                    </article>
                 </section>
             );
         }
@@ -238,7 +235,7 @@ const Filter = ({ isDark }) => {
                         </TabItem>
                     ))}
                 </Tabs>
-                <section className="mt-8 flex flex-row gap-3">
+                <section className="mt-8 flex flex-row gap-x-3">
                     <AllFilters filter={filter} onChangeToggle={handleToggle} onChangeGird={handleSelectGrid} onChangeSearch={handleChangInput} />
                 </section>
                 <section className="mt-8 flex flex-row gap-6">
@@ -254,16 +251,8 @@ const Filter = ({ isDark }) => {
     );
 };
 
-const WrapperGird = styled.div.attrs(({ active }) => ({
-    className: `${classNames({ 'bg-gray-12 dark:bg-dark-2': active })}`
-}))``;
-
 const WrapperThumbnail = styled(Image)`
     border-radius: 100%;
 `;
-
-const WrapperBtnFilter = styled.button.attrs({
-    className: 'flex flex-row items-center gap-2 mx-4'
-})``;
 
 export default Filter;

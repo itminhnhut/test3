@@ -100,7 +100,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                                 </p>
 
                                 <WrapperLevelItems
-                                    className={classNames('dark:text-gray-7 text-gray-1 flex flex-row gap-2 mt-1 text-base', {
+                                    className={classNames('dark:text-gray-7 text-gray-1 flex flex-row gap-1 mt-1 text-base', {
                                         '!text-sm': grid === 6
                                     })}
                                 >

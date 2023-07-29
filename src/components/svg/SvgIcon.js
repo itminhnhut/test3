@@ -106,7 +106,7 @@ const SwapIcon = ({ className = '', color, size = 16 }) => {
 
 const CloseIcon = ({ className, onClick, color, size }) => {
     const [currentTheme] = useDarkMode();
-    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#1f2633';
 
     return (
         <svg
@@ -290,7 +290,6 @@ const FutureReferralIcon = ({ size = 36, ...props }) => (
 const FutureIcon = ({ size = 36, ...props }) => {
     return (
         <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-            {' '}
             <path d="M3.2 28.796h25.595V10.361l-10.459 9.434-8.643-2.211-6.494 6.139v5.073z" fill="#9FF2C5" />
             <path d="M28.799 9.772h-2.594v9.603H28.8V9.772z" fill="#0D994E" />
             <path d="M20.059 9.754v2.854h8.74V9.754h-8.74z" fill="#5BD891" />
@@ -300,6 +299,34 @@ const FutureIcon = ({ size = 36, ...props }) => {
                 d="M17.825 8.639a5.44 5.44 0 0 1-5.44 5.438 5.44 5.44 0 1 1 0-10.877 5.44 5.44 0 0 1 5.44 5.439zm-5.605 2.673v-.57a1.41 1.41 0 0 1-.685-.172 1.807 1.807 0 0 1-.606-.515l.452-.451c.11.156.248.29.407.397.131.082.28.131.434.145h.117a.903.903 0 0 0 .362-.055.389.389 0 0 0 .19-.099.47.47 0 0 0 .207-.406.56.56 0 0 0-.108-.353.842.842 0 0 0-.28-.208 2.775 2.775 0 0 0-.38-.153h-.1l-.316-.118a2.796 2.796 0 0 1-.397-.216 1.175 1.175 0 0 1-.271-.344 1.074 1.074 0 0 1-.109-.524c-.004-.22.06-.438.181-.623.124-.172.293-.306.488-.388.13-.069.27-.114.414-.136v-.542h.48v.542c.385.053.734.25.977.551l-.443.46a1.87 1.87 0 0 0-.37-.315.38.38 0 0 0-.163-.073.66.66 0 0 0-.226 0l-.253.01a.579.579 0 0 0-.262.108.416.416 0 0 0-.172.38.497.497 0 0 0 .1.306c.082.083.18.147.289.19l.343.127.136.054.289.1c.143.06.277.143.397.243a.902.902 0 0 1 .28.352c.102.165.164.35.181.542a1.11 1.11 0 0 1-.388.904 1.31 1.31 0 0 1-.687.28l-.029.003v.567h-.479z"
                 fill="#5BD891"
             />
+        </svg>
+    );
+};
+
+const FutureNFTIcon = ({ size = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
+
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#xx78pzbdva)">
+                <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M5.516 3.25h12.702v3.38h-1.5V4.75H6.127l-2.63 2.565v5.999h-1.5V6.683l3.52-3.433z"
+                    fill="#6FC98B"
+                />
+                <path d="M7.415 6.75H21.25v12.5H2.75v-7.835L7.415 6.75z" stroke="#6FC98B" stroke-width="1.5" stroke-linejoin="bevel" />
+                <path
+                    d="M7.09 16.916c-.054 0-.08-.023-.08-.069L7 10.079c0-.053.027-.079.08-.079h.894l1.68 3.915-.05-3.835c0-.053.03-.08.09-.08h.983c.04 0 .06.027.06.08l.01 6.777c0 .04-.017.06-.05.06h-.875l-1.719-3.658.07 3.578c0 .053-.03.08-.09.08H7.09zM11.66 16.916c-.034 0-.05-.016-.05-.05l.02-6.826c0-.027.013-.04.04-.04h3.18c.033 0 .049.013.049.04v1.123c0 .026-.013.04-.04.04h-2.037v1.54h2.037c.027 0 .04.016.04.05l.01 1.122c0 .027-.017.04-.05.04h-2.037v2.912c0 .033-.016.05-.05.05H11.66zM16.786 16.916c-.026 0-.04-.016-.04-.05v-5.664h-1.291c-.034 0-.05-.016-.05-.05l.01-1.112c0-.027.013-.04.04-.04h3.776c.033 0 .05.013.05.04v1.113c0 .033-.014.05-.04.05h-1.302l.01 5.664c0 .033-.013.05-.04.05h-1.123z"
+                    fill={defaultColor}
+                />
+            </g>
+            <defs>
+                <clipPath id="xx78pzbdva">
+                    <path fill="#fff" transform="translate(2 2)" d="M0 0h20v20H0z" />
+                </clipPath>
+            </defs>
         </svg>
     );
 };
@@ -1358,7 +1385,7 @@ const ProfitStats = ({ className, color, size = 24 }) => {
     );
 };
 
-const NFTIcon = ({ width = 19.5, height = 19.5 }) => {
+const NFTIcon = ({ width = 24, height = 24 }) => {
     const [currentTheme] = useDarkMode();
     const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
     return (
@@ -1384,27 +1411,37 @@ const NFTIcon = ({ width = 19.5, height = 19.5 }) => {
     );
 };
 
-const GridAltIcon = ({ width = 16, height = 16 }) => {
+const GridAltIcon = ({ width = 16, height = 16, isActive = false }) => {
     const [currentTheme] = useDarkMode();
-    const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+
+    const active = '#';
+    if (isActive) {
+        active = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
+    }
+
     return (
         <svg width={width} height={height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M2.667 7.333h4a.667.667 0 0 0 .666-.666v-4A.667.667 0 0 0 6.667 2h-4A.667.667 0 0 0 2 2.667v4c0 .368.299.666.667.666zm6.666 0h4A.666.666 0 0 0 14 6.667v-4A.666.666 0 0 0 13.333 2h-4a.666.666 0 0 0-.666.667v4c0 .368.298.666.666.666zM2.667 14h4a.667.667 0 0 0 .666-.667v-4a.667.667 0 0 0-.666-.666h-4A.667.667 0 0 0 2 9.333v4c0 .368.299.667.667.667zm6.666 0h4a.667.667 0 0 0 .667-.667v-4a.666.666 0 0 0-.667-.666h-4a.666.666 0 0 0-.666.666v4c0 .368.298.667.666.667z"
-                fill={defaultColor}
+                fill={isActive ? active : defaultColor}
             />
         </svg>
     );
 };
 
-const GridIcon = ({ width = 16, height = 16 }) => {
+const GridIcon = ({ width = 16, height = 16, isActive = false }) => {
     const [currentTheme] = useDarkMode();
-    const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#8694B3';
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394'; // not DARK
+    const active = '#';
+    if (isActive) {
+        active = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
+    }
     return (
         <svg width={width} height={height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M2.668 2.666h2.667v2.667H2.668V2.666zm4 0h2.667v2.667H6.668V2.666zm4 0h2.667v2.667h-2.667V2.666zm-8 4h2.667v2.667H2.668V6.666zm4 0h2.667v2.667H6.668V6.666zm4 0h2.667v2.667h-2.667V6.666zm-8 4h2.667v2.667H2.668v-2.667zm4 0h2.667v2.667H6.668v-2.667zm4 0h2.667v2.667h-2.667v-2.667z"
-                fill={defaultColor}
+                fill={isActive ? active : defaultColor}
             />
         </svg>
     );
@@ -1412,7 +1449,7 @@ const GridIcon = ({ width = 16, height = 16 }) => {
 
 const FilterSharpIcon = ({ width = 24, height = 24 }) => {
     const [currentTheme] = useDarkMode();
-    const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#8694B3';
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#1f2633';
     return (
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M.75 5.625h22.5v2.25H.75v-2.25zm3.75 5.25h15v2.25h-15v-2.25zm4.5 5.25h6v2.25H9v-2.25z" fill={defaultColor} />
@@ -1526,6 +1563,7 @@ export {
     FutureSwapIcon,
     FutureTransferIcon,
     FutureWalletIcon,
+    FutureNFTIcon,
     GooglePlayIcon,
     HideIcon,
     LogoIcon,

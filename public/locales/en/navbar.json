@@ -79,6 +79,7 @@
         "futures_wallet": "Futures",
         "staking_wallet": "Staking Wallet",
         "farming_wallet": "Farming Wallet",
+        "nft_wallet": "NTF/Voucher Wallet",
         "classic": "Classic",
         "classic_description": "Simple and easy-to-use interface",
         "advance": "Advance",

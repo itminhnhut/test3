@@ -1,14 +1,10 @@
-import Link from 'next/link';
-
-import { useTranslation } from 'next-i18next';
-
-import { formatTime } from 'redux/actions/utils';
-
+import classNames from 'classnames';
 import { WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
 import { WrapperStatus } from 'components/screens/NFT/Components/Lists/CardItems';
 import { LIST_TIER, TABS, STATUS } from 'components/screens/NFT/Constants';
-
-import classNames from 'classnames';
+import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+import { formatTime } from 'redux/actions/utils';
 import styled from 'styled-components';
 
 const Contents = ({ detail, wallet }) => {
@@ -41,8 +37,8 @@ const Contents = ({ detail, wallet }) => {
                         {STATUS?.[detail.status]?.[language]}
                     </WrapperStatus>
                 </section>
-                <h3 className="font-semibold text-4xl text-gray-15 dark:text-gray-4 mt-[18px]">{detail?.name}</h3>
-                <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-2  mt-1 text-base">
+                <h3 className={classNames('font-semibold text-4xl text-gray-15 dark:text-gray-4 mt-[18px]', { '!mt-4': wallet })}>{detail?.name}</h3>
+                <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
                     <p>Cấp độ:</p>
                     <p className="rate">{tier?.name?.[language]}</p>
                 </WrapperLevelItems>

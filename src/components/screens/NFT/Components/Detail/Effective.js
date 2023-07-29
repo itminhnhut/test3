@@ -1,7 +1,5 @@
-import { useMemo } from 'react';
-
 import { useTranslation, Trans } from 'next-i18next';
-
+import { useMemo } from 'react';
 import styled from 'styled-components';
 
 const Effective = ({ effective, dark }) => {
@@ -14,8 +12,8 @@ const Effective = ({ effective, dark }) => {
         const { FEE, CASHBACK, APY_BOOSTER } = effective || {};
         return (
             <WrapperContent className="mt-4">
-                <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4 mt-[18px]">Tính năng</h3>
-                <div className="w-full rounded-xl mt-3 flex flex-col gap-3 h-[72px] overflow-y-auto">
+                <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4">Tính năng</h3>
+                <div className="w-full rounded-xl mt-3 flex flex-col gap-3 h-[96px] overflow-y-auto">
                     {FEE ? (
                         <div className="flex flex-row items-center">
                             {dark ? <DarkCheckCircle /> : <CheckCircle />}

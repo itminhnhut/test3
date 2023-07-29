@@ -1,5 +1,4 @@
 import { useTranslation } from 'next-i18next';
-
 import styled from 'styled-components';
 
 const Description = ({ detail }) => {
@@ -10,8 +9,8 @@ const Description = ({ detail }) => {
 
     return (
         <WrapperContent className="mt-4">
-            <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4 mt-[18px]">Mô tả</h3>
-            <section className="mt-3 h-[72px] overflow-y-auto dark:text-gray-4 text-gray-15">{detail?.[`description_${language}`] || '-'}</section>
+            <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4">Mô tả</h3>
+            <section className="mt-3 h-[84px] overflow-y-auto dark:text-gray-4 text-gray-15">{detail?.[`description_${language}`] || '-'}</section>
         </WrapperContent>
     );
 };

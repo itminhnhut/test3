@@ -132,7 +132,7 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                     </section>
                     <section className="my-[21px]">
                         <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{detail?.name}</p>
-                        <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-2  mt-1 text-base">
+                        <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
                             <p>Cấp độ:</p>
                             <p className="rate">{tier?.name?.[language]}</p>
                         </WrapperLevelItems>
