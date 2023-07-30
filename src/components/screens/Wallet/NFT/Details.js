@@ -1,14 +1,22 @@
-import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import { useTranslation } from 'next-i18next';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { useWindowSize } from 'react-use';
-import { API_GET_DETAIL_NFT, API_POST_ACTIVE_NFT, API_GET_CHECK_NFT } from 'redux/actions/apis';
+
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
+import { useTranslation } from 'next-i18next';
+
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+
 import FetchApi from 'utils/fetch-api';
 import toast from 'utils/toast';
+
+import { API_GET_DETAIL_NFT, API_POST_ACTIVE_NFT, API_GET_CHECK_NFT } from 'redux/actions/apis';
+
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+
+import styled from 'styled-components';
 
 const Use = dynamic(() => import('./Components/Modal/Use'), { ssr: false });
 const Transfer = dynamic(() => import('./Components/Modal/Transfer'), { ssr: false });
@@ -152,9 +160,9 @@ const WalletDetail = ({ idNFT }) => {
                         <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">Chi tiết {detail?.name}</h1>
                     </header>
                     <section className="mt-8 flex flex-row gap-4">
-                        <section className="w-[100vw] max-w-[614px] max-h-[614px] rounded-xl">
-                            {detail?.image ? <Image width={614} height={614} src={src.image} sizes="100vw" /> : null}
-                        </section>
+                        <WrapperImage className="w-[100vw] max-w-[614px] max-h-[614px]">
+                            {detail?.image ? <Image width={614} height={614} src={detail?.image} sizes="100vw" /> : null}
+                        </WrapperImage>
                         <section className="w-full">
                             <Contents detail={detail} wallet={true} />
                             <Description detail={detail} />
@@ -175,5 +183,11 @@ const WalletDetail = ({ idNFT }) => {
         </MaldivesLayout>
     );
 };
+
+const WrapperImage = styled.section`
+    img {
+        border-radius: 12px !important;
+    }
+`;
 
 export default WalletDetail;

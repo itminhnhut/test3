@@ -15,12 +15,14 @@ import toast from 'utils/toast';
 import { API_GET_CHECK_NAMI_CODE_NFT, API_POST_TRANSFER_NFT } from 'redux/actions/apis';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import InputV2 from 'components/common/V2/InputV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 
 import { WrapperStatus, WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
 import { LIST_TIER, STATUS } from 'components/screens/NFT/Constants';
 
 import classNames from 'classnames';
+import styled from 'styled-components';
 
 const MAX_LENGTH = 14;
 
@@ -96,8 +98,8 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
         }
     }, [debouncedValue]);
 
-    const onChange = (e) => {
-        setCode(String(e.target.value).trim());
+    const onChange = (value) => {
+        setCode(String(value).trim());
     };
 
     const onPaste = async () => {
@@ -127,24 +129,24 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
             <section className="flex flex-col">
                 <section className="text-gray-15 dark:text-gray-4 text-2xl font-semibold ">Chuyển WNFT</section>
                 <section className="mt-8 dark:bg-dark-4 bg-white border-[1px] border-divider dark:border-dark-4 rounded-xl px-3 py-3 w-full flex flex-row gap-4">
-                    <section className="w-full max-w-[148px] max-h-[148px]">
+                    <WrapperImage className="w-full max-w-[148px] max-h-[148px]">
                         <Image width={148} height={148} src={detail?.image} sizes="100vw" />
-                    </section>
+                    </WrapperImage>
                     <section className="my-[21px]">
                         <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{detail?.name}</p>
                         <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
                             <p>Cấp độ:</p>
                             <p className="rate">{tier?.name?.[language]}</p>
                         </WrapperLevelItems>
-                        <WrapperStatus status={STATUS?.[detail?.status]?.key} className={classNames('h-7 mt-5 py-1 px-4 rounded-[80px] text-sm')}>
+                        <WrapperStatus status={STATUS?.[detail?.status]?.key} className={classNames('h-7 w-max mt-5 py-1 px-4 rounded-[80px] text-sm')}>
                             {STATUS?.[detail?.status]?.[language]}
                         </WrapperStatus>
                     </section>
                 </section>
                 <form className="mt-6">
                     <label className="dark:text-gray-7 text-gray-1 text-sm">NamiID</label>
-                    <div className="space-y-2 flex flex-col relative pb-6">
-                        <div
+                    <div className="space-y-2 flex flex-col relative pb-10">
+                        {/* <div
                             className={classNames(
                                 'px-3 py-2 bg-gray-5 dark:bg-darkBlue-3 rounded-md hover:ring-teal hover:ring-1 flex items-center space-x-3',
                                 'text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap mt-2',
@@ -153,7 +155,7 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                                 }
                             )}
                         >
-                            <input
+                            <InputV2
                                 value={code}
                                 onChange={onChange}
                                 maxLength={MAX_LENGTH}
@@ -163,16 +165,22 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                             <span onClick={onPaste} className="text-teal font-semibold cursor-pointer select-none">
                                 paste
                             </span>
-                        </div>
-                        {error && (
-                            <Trans
-                                values={{ category: 'NFT' }}
-                                i18nKey={`nft:status_code:${error}`}
-                                components={[<div className="text-red text-xs absolute bottom-0" />]}
-                            />
-                        )}
+                        </div> */}
+                        <InputV2
+                            value={code}
+                            onChange={onChange}
+                            maxLength={MAX_LENGTH}
+                            placeholder="Nhập NamiID"
+                            className="w-full text-gray-1 dark:text-gray-4 h-12"
+                            suffix={
+                                <span onClick={onPaste} className="text-teal font-semibold cursor-pointer select-none">
+                                    paste
+                                </span>
+                            }
+                            error={error && t(`nft:status_code:${error}`)}
+                        />
                     </div>
-                    <ButtonV2 disabled={isSubmit || loading} type="primary" className="mt-10" onClick={handleTransferSubmit}>
+                    <ButtonV2 disabled={isSubmit || loading} type="primary" onClick={handleTransferSubmit}>
                         Chuyển
                     </ButtonV2>
                 </form>
@@ -180,4 +188,11 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
         </ModalV2>
     );
 };
+
+const WrapperImage = styled.section`
+    img {
+        border-radius: 6px !important;
+    }
+`;
+
 export default Transfer;

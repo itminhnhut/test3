@@ -1,17 +1,24 @@
-import TableV2 from 'components/common/V2/TableV2';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { useWindowSize } from 'react-use';
+
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { useWindowSize } from 'react-use';
+
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+
+import FetchApi from 'utils/fetch-api';
+
 import { API_GET_DETAIL_NFT, API_GET_HISTORY_NFT } from 'redux/actions/apis';
 import { formatTime } from 'redux/actions/utils';
+
+import TableV2 from 'components/common/V2/TableV2';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+
 import styled from 'styled-components';
-import FetchApi from 'utils/fetch-api';
 
 const LIMIT = 10;
 
@@ -171,9 +178,9 @@ const index = ({ idNFT }) => {
                         <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">Chi tiết {detail?.name}</h1>
                     </header>
                     <section className="mt-8 flex flex-row gap-4">
-                        <section className="w-full max-w-[550px] max-h-[550px] rounded-xl">
+                        <WrapperImage className="w-full max-w-[550px] max-h-[550px]">
                             {detail?.image ? <Image width={550} height={550} src={detail?.image} sizes="100vw" /> : null}
-                        </section>
+                        </WrapperImage>
                         <section className="w-full">
                             <Contents detail={detail} />
                             <Description detail={detail} />
@@ -209,6 +216,12 @@ const WrapperTable = styled(TableV2)`
         .rc-table-content {
             min-height: auto;
         }
+    }
+`;
+
+const WrapperImage = styled.section`
+    img {
+        border-radius: 12px !important;
     }
 `;
 

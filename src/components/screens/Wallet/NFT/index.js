@@ -1,12 +1,19 @@
-import classNames from 'classnames';
-import Chip from 'components/common/V2/Chip';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import { useTranslation } from 'next-i18next';
-import dynamic from 'next/dynamic';
 import { useState, useEffect, useMemo } from 'react';
-import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_SUMMARY_NFT } from 'redux/actions/apis';
-import styled from 'styled-components';
+
+import dynamic from 'next/dynamic';
+
+import { useTranslation } from 'next-i18next';
+
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+
 import FetchApi from 'utils/fetch-api';
+
+import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_SUMMARY_NFT } from 'redux/actions/apis';
+
+import Chip from 'components/common/V2/Chip';
+
+import classNames from 'classnames';
+import styled from 'styled-components';
 
 const AllFilters = dynamic(() => import('components/screens/NFT/Components/Lists/AllFilters'), { ssr: false });
 
@@ -156,10 +163,10 @@ const NFTWallet = () => {
         <>
             <section className="flex flex-row justify-between">
                 <section className="flex flex-row gap-3  text-gray-1 dark:text-gray-7 text-sm">
-                    <WrapperChip className="h-9" onClick={() => handleChangeWallet('WNFT')} active={filter.wallet === 'WNFT'}>
+                    <WrapperChip onClick={() => handleChangeWallet('WNFT')} active={filter.wallet === 'WNFT'}>
                         WNFT ({totalSummary.nft})
                     </WrapperChip>
-                    <WrapperChip className="h-9" onClick={() => handleChangeWallet('Voucher')} active={filter.wallet === 'Voucher'}>
+                    <WrapperChip onClick={() => handleChangeWallet('Voucher')} active={filter.wallet === 'Voucher'}>
                         Voucher ({totalSummary.voucher})
                     </WrapperChip>
                 </section>
@@ -179,7 +186,7 @@ const NFTWallet = () => {
 };
 
 const WrapperChip = styled(Chip).attrs(({ active }) => ({
-    className: `${classNames({ 'dark:!text-green-2 !text-green-3 font-semibold active': active })}`
+    className: `${classNames({ 'h-9 bg-dark-13 dark:bg-dark-4 dark:!text-green-2 !text-green-3 font-semibold active': active })}`
 }))`
     &.active {
         background-color: rgba(71, 204, 133, 0.1) !important;
