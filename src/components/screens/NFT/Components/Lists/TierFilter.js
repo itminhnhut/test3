@@ -1,15 +1,11 @@
-import { useCallback } from 'react';
-
-import { useTranslation } from 'next-i18next';
-
 import CheckBox from 'components/common/CheckBox';
 import CollapseV2 from 'components/common/V2/CollapseV2';
-
 import { LIST_TIER } from 'components/screens/NFT/Constants';
-
+import { useTranslation } from 'next-i18next';
+import { useCallback } from 'react';
 import colors from 'styles/colors';
 
-const TierFilter = ({ onChangeTier, isDark, filterTier }) => {
+const TierFilter = ({ onChangeTier, isDark, filter }) => {
     const {
         t,
         i18n: { language }
@@ -21,7 +17,7 @@ const TierFilter = ({ onChangeTier, isDark, filterTier }) => {
                 key={`NFT_tier`}
                 active={true}
                 label="Độ hiếm"
-                reload={filterTier}
+                reload={filter.isOpen}
                 className="w-full last:pb-4"
                 divLabelClassname="w-full justify-between"
                 labelClassname="text-base font-semibold text-gray-15 dark:text-gray-4 w-10/12"
@@ -34,7 +30,7 @@ const TierFilter = ({ onChangeTier, isDark, filterTier }) => {
                             className="mr-6 mb-4"
                             boxContainerClassName="w-6 h-6"
                             label={tier.name?.[language]}
-                            active={filterTier?.includes(tier?.active)}
+                            active={filter?.tier?.includes(tier?.active)}
                             labelClassName="text-gray-1 dark:text-gray-7 text-base"
                             onChange={() => onChangeTier(tier.active)}
                         />
@@ -42,7 +38,7 @@ const TierFilter = ({ onChangeTier, isDark, filterTier }) => {
                 })}
             </CollapseV2>
         );
-    }, [isDark, filterTier]);
+    }, [isDark, filter?.tier]);
 
     return <>{renderTier()}</>;
 };

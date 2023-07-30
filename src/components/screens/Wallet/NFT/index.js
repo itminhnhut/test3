@@ -80,7 +80,6 @@ const NFTWallet = () => {
                     search: filter.search
                 }
             });
-            console.log('data', data);
             if (data) {
                 setData(data);
             }
@@ -171,7 +170,7 @@ const NFTWallet = () => {
             <section className="mt-8 flex flex-row gap-6">
                 <section className={classNames('w-[388px]', { hidden: !filter.isOpen })}>
                     <CollectionFilter isDark={isDark} collections={dataCollection} filter={filter} onChangeCollection={handleChangeCollection} />
-                    <TierFilter isDark={isDark} filterTier={filter.tier} onChangeTier={handleChangeCheckBox} />
+                    <TierFilter isDark={isDark} filter={filter} onChangeTier={handleChangeCheckBox} />
                 </section>
                 {renderData()}
             </section>

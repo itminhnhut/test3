@@ -242,7 +242,7 @@ const Filter = ({ isDark }) => {
                     <section className={classNames('w-[388px]', { hidden: !filter.isOpen })}>
                         <CategoryFilter onChangeCategory={handleChangeCategory} isDark={isDark} category={filter.category} />
                         <CollectionFilter isDark={isDark} collections={dataCollection} filter={filter} onChangeCollection={handleChangeCollection} />
-                        <TierFilter isDark={isDark} filterTier={filter.tier} onChangeTier={handleChangeCheckBox} />
+                        <TierFilter isDark={isDark} filter={filter} onChangeTier={handleChangeCheckBox} />
                     </section>
                     {renderData()}
                 </section>

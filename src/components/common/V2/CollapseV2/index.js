@@ -51,7 +51,13 @@ const index = ({
     useEffect(() => {
         if (!wrapper.current) return;
         setTimeout(() => {
-            wrapper.current?.style.height = active ? list.current.clientHeight + 'px' : 0;
+            if(active){
+                const clientHeight = list.current.clientHeight;
+                wrapper.current?.style.height = clientHeight === 0 ? 'auto':  list.current.clientHeight + 'px';
+            }else{
+                wrapper.current?.style.height = 0;
+            }
+          //  wrapper.current?.style.height = active ? list.current.clientHeight + 'px' : 0;
         }, 100);
     }, [reload]);
 
