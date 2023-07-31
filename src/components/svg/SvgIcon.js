@@ -667,6 +667,22 @@ const CopyIcon = ({ color = '#8694B3', ...props }) => (
     </svg>
 );
 
+const ContentCopyIcon = ({ color = 'currentColor', size = 12 }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 12 12" fill="none">
+        <g clipPath="url(#63l1ohfwla)">
+            <path
+                d="M8 .5H2c-.55 0-1 .45-1 1v7h1v-7h6v-1zm1.5 2H4c-.55 0-1 .45-1 1v7c0 .55.45 1 1 1h5.5c.55 0 1-.45 1-1v-7c0-.55-.45-1-1-1zm0 8H4v-7h5.5v7z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="63l1ohfwla">
+                <path fill="#fff" d="M0 0h12v12H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 const CheckedIcon = ({ size = 24, color = '#8694B3', ...props }) => {
     return (
         <svg {...props} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -932,7 +948,7 @@ const CalendarFillIcon = ({ size = 24, color = 'currentColor', className = '' })
     </svg>
 );
 
-const ContactIcon = ({ size = 24, color = 'currentColor' , className}) => (
+const ContactIcon = ({ size = 24, color = 'currentColor', className }) => (
     <svg className={className} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
         <g clipPath="url(#2ocmtc1tna)">
             <path
@@ -1436,5 +1452,6 @@ export {
     TelegramIcon,
     FutureNaoIcon,
     PortfolioIconNoColor,
-    ProfitStats
+    ProfitStats,
+    ContentCopyIcon
 };

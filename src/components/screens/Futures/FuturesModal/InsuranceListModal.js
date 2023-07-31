@@ -7,6 +7,7 @@ import { CopyText, formatNumber, getInsuranceLoginLink } from 'redux/actions/uti
 import classNames from 'classnames';
 import { INSURANCE_STATE, INSURANCE_URL } from 'constants/constants';
 import { useSelector } from 'react-redux';
+import { ContentCopyIcon } from 'components/svg/SvgIcon';
 
 const StateColorMapping = (state) => {
     let color = '';
@@ -37,7 +38,7 @@ const InsuranceListModal = ({ visible, onClose = () => {}, insurances, symbol })
     const { t } = useTranslation();
 
     const marketWatch = useSelector((state) => state.futures.marketWatch);
-    const p_market = marketWatch[symbol];
+    const p_market = marketWatch?.[symbol]?.lastPrice || 0;
 
     return (
         <ModalV2 canBlur={false} closeButton={false} className="!max-w-[800px]" isVisible={visible} onBackdropCb={onClose}>
@@ -50,7 +51,7 @@ const InsuranceListModal = ({ visible, onClose = () => {}, insurances, symbol })
                 <div className="grid grid-cols-2 gap-4">
                     {insurances?.length &&
                         insurances.map((insurance) => {
-                            return <ContractItem p_market={p_market.lastPrice} key={insurance?._id} insurance={insurance} />;
+                            return <ContractItem p_market={p_market} key={insurance?._id} insurance={insurance} />;
                         })}
                 </div>
             </div>
@@ -85,10 +86,12 @@ const ContractItem = ({ insurance, p_market }) => {
                     <span className={classNames('font-semibold', sideColor)}>{insurance?.side}</span>
                 </div>
 
-                <span className="font-semibold">{formatNumber(p_market, q_AssetDigit)}</span>
+                <span className="font-semibold">{formatNumber(insurance?.margin, q_AssetDigit)}</span>
             </div>
             <div className="mt-1 flex items-center justify-between">
-                <CopyText text={insurance?._id} />
+                <div className="text-sm  text-txtSecondary dark:text-txtSecondary-dark">
+                    <CopyText text={insurance?._id} className="!space-x-1" CustomCopyIcon={() => <ContentCopyIcon size={12} />} />
+                </div>
                 <span className={classNames(StateColorMapping(insurance?.state))}>
                     {t(`futures:insurance.status.${insurance?.state?.toLowerCase() || 'invalid'}`)}
                 </span>
