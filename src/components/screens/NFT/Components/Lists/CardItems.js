@@ -70,7 +70,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                 return (
                     <Link href={wallet ? `NFT/${item._id}` : `nft/${item._id}`} key={`card_item_${item._id}_${item.name}`}>
                         <section
-                            className={classNames('max-w-[394px] h-full bg-dark-13 dark:bg-dark-4 rounded-xl max-h-fit', {
+                            className={classNames('max-w-[394px] h-full shadow-card_light dark:shadow-popover bg-white dark:bg-dark-4 rounded-xl max-h-fit', {
                                 'max-w-[189px]': grid === 6
                             })}
                             id={item._id}
