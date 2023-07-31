@@ -460,5 +460,6 @@
     "account_locking": "Account is temporarily locked",
     "account_locking_content": "Your account has been temporarily locked due to AML-CFT compliance terms. Please contact our support for more details.",
     "partner_toast_suggest_order": "Looking partner: {{side}} {{displayingID}} value {{amount}} {{asset}}",
-    "no_auth": "<0>Sign In</0> or <1>Sign Up</1> now to experience our product"
+    "no_auth": "<0>Sign In</0> or <1>Sign Up</1> to start using Nami Exchange product",
+    "no_search": "No records found"
 }

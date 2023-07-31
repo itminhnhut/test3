@@ -14,6 +14,7 @@ import styled from 'styled-components';
 
 const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDark }) => {
     const {
+        t,
         i18n: { language }
     } = useTranslation();
 
@@ -69,7 +70,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                 return (
                     <Link href={wallet ? `NFT/${item._id}` : `nft/${item._id}`} key={`card_item_${item._id}_${item.name}`}>
                         <section
-                            className={classNames('tc2 max-w-[394px] h-full bg-dark-13 dark:bg-dark-4 rounded-xl max-h-fit', {
+                            className={classNames('max-w-[394px] h-full bg-dark-13 dark:bg-dark-4 rounded-xl max-h-fit', {
                                 'max-w-[189px]': grid === 6
                             })}
                             id={item._id}
@@ -104,8 +105,8 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                                         '!text-sm': grid === 6
                                     })}
                                 >
-                                    <div>Cấp độ:</div>
-                                    <div className={getTier.key}>{getTier?.name?.[language]}</div>
+                                    <div>{t('nft:tier')}:</div>
+                                    <div className={getTier?.key}>{getTier?.name?.[language]}</div>
                                 </WrapperLevelItems>
                             </section>
                         </section>

@@ -30,7 +30,7 @@ const index = () => {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'navbar', 'staking']))
+        ...(await serverSideTranslations(locale, ['common', 'navbar', 'staking', 'nft']))
     }
 });
 

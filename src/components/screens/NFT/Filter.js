@@ -1,20 +1,28 @@
-import classNames from 'classnames';
-import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
-import { TABS, LIST_CATEGORY } from 'components/screens/NFT/Constants';
-import { useTranslation } from 'next-i18next';
+import { useState, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
+
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_DETAIL_COLLECTION } from 'redux/actions/apis';
-import styled from 'styled-components';
+
+import { useTranslation } from 'next-i18next';
+
 import FetchApi from 'utils/fetch-api';
+
+import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_DETAIL_COLLECTION } from 'redux/actions/apis';
+
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+
+import { TABS, LIST_CATEGORY } from 'components/screens/NFT/Constants';
+
+import classNames from 'classnames';
+import styled from 'styled-components';
 
 // ** Dynamic
 const NotAuth = dynamic(() => import('./Components/Page/NoAuth'), { ssr: false });
 const NoResult = dynamic(() => import('./Components/Page/NoResult'), { ssr: false });
 const NoData = dynamic(() => import('./Components/Page/NoData'), { ssr: false });
+const SkeletonCard = dynamic(() => import('./Components/Page/SkeletonCard'), { ssr: false });
 
 const CardItems = dynamic(() => import('./Components/Lists/CardItems'), { ssr: false });
 
@@ -42,7 +50,7 @@ const Filter = ({ isDark }) => {
     const [filter, setFilter] = useState(iniData);
     const [dataCollection, setDataCollection] = useState();
     const [detailCollection, setDetailCollection] = useState();
-
+    const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState([]);
 
     const {
@@ -72,6 +80,7 @@ const Filter = ({ isDark }) => {
     // ** call api get list NFT
     const handleGetListNFT = async () => {
         try {
+            setIsLoading(true);
             const { data } = await FetchApi({
                 url: API_GET_LIST_NFT,
                 params: {
@@ -87,6 +96,8 @@ const Filter = ({ isDark }) => {
             }
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -170,7 +181,7 @@ const Filter = ({ isDark }) => {
 
     const renderData = () => {
         if (!isAuth && filter.category === 'me') return <NotAuth />;
-
+        if (isLoading) return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} />;
         if (data?.length > 0)
             return <CardItems isDark={isDark} listNFT={data} isOpen={filter.isOpen} grid={filter.grid} showCollection={filter.isShowCollection} />;
         // ** page no search

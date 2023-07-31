@@ -1,8 +1,12 @@
+import { useCallback } from 'react';
+
+import { useTranslation } from 'next-i18next';
+
 import CheckBox from 'components/common/CheckBox';
 import CollapseV2 from 'components/common/V2/CollapseV2';
+
 import { LIST_TIER } from 'components/screens/NFT/Constants';
-import { useTranslation } from 'next-i18next';
-import { useCallback } from 'react';
+
 import colors from 'styles/colors';
 
 const TierFilter = ({ onChangeTier, isDark, filter }) => {
@@ -16,7 +20,7 @@ const TierFilter = ({ onChangeTier, isDark, filter }) => {
             <CollapseV2
                 key={`NFT_tier`}
                 active={true}
-                label="Độ hiếm"
+                label={t('nft:tier')}
                 reload={filter.isOpen}
                 className="w-full last:pb-4"
                 divLabelClassname="w-full justify-between"

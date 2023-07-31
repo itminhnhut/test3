@@ -1,4 +1,12 @@
 {
+    "filter": {
+        "filter": "Filter",
+        "close": "Reset filter",
+        "search": "Search",
+        "collection": "Collection"
+    },
+    "tier": "Tier",
+    "list": {},
     "detail": {
         "effective": {
             "FEE": "<0>{{- value}}% phí giao dịch NAO Futures trong tuần {{- day}}<0>",

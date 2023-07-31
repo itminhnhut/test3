@@ -4,7 +4,7 @@ const LIST_CATEGORY = [
         active: 'all'
     },
     {
-        name: { vi: 'Bộ sưu tập của tôi', en: 'My collection' },
+        name: { vi: 'Đã sở hữu', en: 'Owned' },
         active: 'me'
     }
 ];
@@ -16,30 +16,30 @@ const LIST_TIER = [
         key: 'normal'
     },
     {
-        name: { vi: 'Hiếm', en: 'Rate' },
-        active: 'R',
+        name: { vi: 'Đặc biệt', en: 'Special' },
+        active: 'S',
         key: 'rate'
     },
     {
-        name: { vi: 'Siêu hiếm', en: 'Epic' },
-        active: 'SR',
+        name: { vi: 'Hiếm', en: 'Rare' },
+        active: 'R',
         key: 'super'
     },
     {
-        name: { vi: 'Cực hiếm', en: 'Legendary' },
-        active: 'UR',
+        name: { vi: 'Siêu hiếm', en: 'Super Rare' },
+        active: 'SR',
         key: 'extremely'
     },
     {
-        name: { vi: 'Tối thượng', en: 'Mythic' },
-        active: 'UL',
+        name: { vi: 'Cực hiếm', en: 'Ultra Rare' },
+        active: 'UR',
         key: 'supreme'
     }
 ];
 
 const TABS = [
-    { label: 'NFT', value: 2 },
-    { label: 'Voucher', value: 1 }
+    { label: 'WNFT', value: 2 },
+    { label: 'SB', value: 1 }
 ];
 
 const STATUS = {

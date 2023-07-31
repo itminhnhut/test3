@@ -1,27 +1,34 @@
-import classNames from 'classnames';
-import InputV2 from 'components/common/V2/InputV2';
-import { GridAltIcon, GridIcon, FilterSharpIcon, CloseIcon } from 'components/svg/SvgIcon';
 import { useMemo } from 'react';
 import { Search } from 'react-feather';
+
+import { useTranslation } from 'next-i18next';
+
+import InputV2 from 'components/common/V2/InputV2';
+
+import { GridAltIcon, GridIcon, FilterSharpIcon, CloseIcon } from 'components/svg/SvgIcon';
+
+import classNames from 'classnames';
 import styled from 'styled-components';
 
 const AllFilters = ({ filter, onChangeToggle, onChangeGird, onChangeSearch }) => {
+    const { t } = useTranslation();
+
     const renderFilter = useMemo(() => {
         return filter.isOpen ? (
             <WrapperBtnFilter>
                 <CloseIcon size={16} />
-                <span className="font-semibold text-gray-15 dark:text-gray-7">Đóng</span>
+                <span className="font-semibold text-gray-15 dark:text-gray-7">{t('nft:filter:close')}</span>
             </WrapperBtnFilter>
         ) : (
             <WrapperBtnFilter>
                 <FilterSharpIcon />
-                <span className="font-semibold text-gray-15 dark:text-gray-7">Lọc</span>
+                <span className="font-semibold text-gray-15 dark:text-gray-7">{t('nft:filter:filter')}</span>
             </WrapperBtnFilter>
         );
     }, [filter.isOpen]);
     return (
         <>
-            <section className="flex flex-row h-12 dark:bg-dark-2 bg-dark-12 rounded-md" onClick={onChangeToggle}>
+            <section className="w-full max-w-max flex flex-row h-12 dark:bg-dark-2 bg-dark-12 rounded-md" onClick={onChangeToggle}>
                 {renderFilter}
             </section>
             <section className="w-full">
@@ -29,7 +36,7 @@ const AllFilters = ({ filter, onChangeToggle, onChangeGird, onChangeSearch }) =>
                     className="pb-0"
                     allowClear
                     value={filter.search}
-                    placeholder="Tìm kiếm Token"
+                    placeholder={t('nft:filter:search')}
                     onChange={(value) => onChangeSearch(value)}
                     prefix={<Search strokeWidth={2} className="text-gray-1 w-4 h-4" />}
                 />

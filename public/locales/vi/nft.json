@@ -1,4 +1,11 @@
 {
+    "filter": {
+        "filter": "Lọc",
+        "close": "Bỏ lọc",
+        "search": "Tìm kiếm",
+        "collection": "Bộ sưu tập"
+    },
+    "tier": "Độ hiếm",
     "detail": {
         "effective": {
             "FEE": "<0>{{- value}}% phí giao dịch NAO Futures trong tuần {{- day}}<0>",

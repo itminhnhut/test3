@@ -1,7 +1,10 @@
+import { useCallback } from 'react';
+
+import { useTranslation } from 'next-i18next';
+
 import CheckBox from 'components/common/CheckBox';
 import CollapseV2 from 'components/common/V2/CollapseV2';
-import { useTranslation } from 'next-i18next';
-import { useCallback } from 'react';
+
 import colors from 'styles/colors';
 
 const CategoryFilter = ({ collections, onChangeCollection, isDark, filter }) => {
@@ -13,7 +16,7 @@ const CategoryFilter = ({ collections, onChangeCollection, isDark, filter }) => 
             <>
                 <CollapseV2
                     active={true}
-                    label="Bộ sưu tập"
+                    label={t('nft:filter:collection')}
                     key={`NFT_Collections`}
                     className="w-full last:pb-4"
                     reload={filter.isOpen}
