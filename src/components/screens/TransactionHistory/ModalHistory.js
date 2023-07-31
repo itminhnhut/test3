@@ -318,7 +318,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                                 className={classNames(
                                                     'uppercase',
                                                     { 'text-red': ['bear', 'sell'].includes(sideInsurance) },
-                                                    { 'text-dominant': ['bull', 'buy'].includes(sideInsurance) }
+                                                    { 'text-green-3 dark:text-green-2': ['bull', 'buy'].includes(sideInsurance) }
                                                 )}
                                             >
                                                 {['buy', 'sell', 'bull', 'bear'].includes(sideInsurance)
