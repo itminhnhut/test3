@@ -25,7 +25,7 @@ const CollectionFilter = dynamic(() => import('./Components/Lists/CollectionFilt
 const TierFilter = dynamic(() => import('./Components/Lists/TierFilter'), { ssr: false });
 
 const iniData = {
-    tab: 2,
+    tab: 1,
     grid: 4,
     tier: [],
     search: '',
@@ -200,7 +200,7 @@ const Filter = ({ isDark }) => {
                 <section className="m-auto px-4 mb-[60px]">
                     <section>
                         <div className="relative h-[180px] w-full bg-white">
-                            <Image src={banner} layout="fill" objectFit="cover" />
+                            <img src={banner} layout="fill" objectFit="cover" />
                             <article className="max-w-screen-v3 2xl:max-w-screen-xxl px-4 m-auto">
                                 <section className="absolute bottom-[-92px]">
                                     <section className="flex flex-row">
@@ -258,7 +258,7 @@ const Filter = ({ isDark }) => {
     );
 };
 
-const WrapperThumbnail = styled(Image)`
+const WrapperThumbnail = styled.img`
     border-radius: 100%;
 `;
 
