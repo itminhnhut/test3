@@ -1,13 +1,9 @@
+import classNames from 'classnames';
+import InputV2 from 'components/common/V2/InputV2';
+import { GridAltIcon, GridIcon, FilterSharpIcon, CloseIcon } from 'components/svg/SvgIcon';
+import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 import { Search } from 'react-feather';
-
-import { useTranslation } from 'next-i18next';
-
-import InputV2 from 'components/common/V2/InputV2';
-
-import { GridAltIcon, GridIcon, FilterSharpIcon, CloseIcon } from 'components/svg/SvgIcon';
-
-import classNames from 'classnames';
 import styled from 'styled-components';
 
 const AllFilters = ({ filter, onChangeToggle, onChangeGird, onChangeSearch }) => {
@@ -36,7 +32,7 @@ const AllFilters = ({ filter, onChangeToggle, onChangeGird, onChangeSearch }) =>
                     allowClear
                     className="pb-0"
                     classNameDivInner="bg-gray-12 dark:bg-dark-2"
-                    classNameInput="dark:bg-dark-7 text-gray-1"
+                    classNameInput="dark:text-dark-7 text-gray-1"
                     value={filter.search}
                     placeholder={t('nft:filter:search')}
                     onChange={(value) => onChangeSearch(value)}
