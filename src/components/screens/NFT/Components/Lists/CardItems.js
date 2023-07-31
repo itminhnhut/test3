@@ -76,7 +76,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                             id={item._id}
                         >
                             <section className={classNames('max-h-[394px]', { 'max-h-[189px]': grid === 6 })}>
-                                <Image width={394} height={394} src={item.image} sizes="100vw" />
+                                <img width={394} height={394} src={item.image} />
                             </section>
                             <section className={classNames('h-auto mx-5 my-5', { '!mx-4 !my-4': grid === 6 })}>
                                 {renderTitle(item)}

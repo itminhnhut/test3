@@ -43,9 +43,9 @@ const TABS = [
 ];
 
 const STATUS = {
-    0: { key: 'not_active', vi: 'Chưa kích hoạt', en: 'Not activated' },
-    1: { key: 'active', vi: 'Đã kích hoạt', en: 'activated' },
-    2: { key: 'used', vi: 'Đã sử dụng', en: 'used' }
+    0: { key: 'not_active', vi: 'Còn hiệu lực', en: 'Available' },
+    1: { key: 'active', vi: 'Đã kích hoạt', en: 'Activated' },
+    2: { key: 'used', vi: 'Hết hạn', en: 'Expired' }
 };
 
 export { LIST_CATEGORY, LIST_TIER, TABS, STATUS };

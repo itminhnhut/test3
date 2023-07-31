@@ -52,7 +52,7 @@ const index = ({
         if (!wrapper.current) return;
         setTimeout(() => {
             if(active){
-                const clientHeight = list.current.clientHeight;
+                const clientHeight = list?.current?.clientHeight;
                 wrapper.current?.style.height = clientHeight === 0 ? 'auto':  list.current.clientHeight + 'px';
             }else{
                 wrapper.current?.style.height = 0;

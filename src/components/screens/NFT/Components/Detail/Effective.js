@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useTranslation, Trans } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 
 import styled from 'styled-components';
 
@@ -11,52 +11,27 @@ const Effective = ({ effective, dark }) => {
     } = useTranslation();
 
     const renderEffective = useMemo(() => {
-        const { FEE, CASHBACK, APY_BOOSTER } = effective || {};
+        const [FEE, CASHBACK, APY_BOOSTER] = effective;
         return (
             <WrapperContent className="mt-4">
-                <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4">Tính năng</h3>
+                <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4">{t('nft:detail:features')}</h3>
                 <div className="w-full rounded-xl mt-3 flex flex-col gap-3 h-[96px] overflow-y-auto">
                     {FEE ? (
                         <div className="flex flex-row items-center">
-                            {dark ? <DarkCheckCircle /> : <CheckCircle />}
-
-                            <Trans
-                                i18nKey="nft:detail:effective:FEE"
-                                values={{
-                                    value: FEE?.value,
-                                    day: FEE?.day
-                                }}
-                                components={[<p className="ml-2 dark:text-gray-4 text-gray-15" />]}
-                            />
+                            <div>{dark ? <DarkCheckCircle /> : <CheckCircle />}</div>
+                            <p className="ml-2 dark:text-gray-4 text-gray-15">{FEE}</p>
                         </div>
                     ) : null}
                     {CASHBACK ? (
                         <div className="flex flex-row items-center">
-                            {dark ? <DarkCheckCircle /> : <CheckCircle />}
-
-                            <Trans
-                                i18nKey="nft:detail:effective:CASHBACK"
-                                values={{
-                                    value: CASHBACK?.value,
-                                    week: CASHBACK?.week
-                                }}
-                                components={[<p className="ml-2 dark:text-gray-4 text-gray-15" />]}
-                            />
+                            <div>{dark ? <DarkCheckCircle /> : <CheckCircle />}</div>
+                            <p className="ml-2 dark:text-gray-4 text-gray-15">{CASHBACK}</p>
                         </div>
                     ) : null}
                     {APY_BOOSTER ? (
                         <div className="flex flex-row items-center">
-                            {dark ? <DarkCheckCircle /> : <CheckCircle />}
-
-                            <Trans
-                                i18nKey="nft:detail:effective:APY_BOOSTER"
-                                values={{
-                                    value: APY_BOOSTER?.value,
-                                    day: APY_BOOSTER?.day,
-                                    max: APY_BOOSTER?.max
-                                }}
-                                components={[<p className="ml-2 dark:text-gray-4 text-gray-15" />]}
-                            />
+                            <div>{dark ? <DarkCheckCircle /> : <CheckCircle />}</div>
+                            <p className="ml-2 dark:text-gray-4 text-gray-15">{APY_BOOSTER}</p>
                         </div>
                     ) : null}
                 </div>

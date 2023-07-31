@@ -16,7 +16,7 @@ const SkeletonCard = ({ grid, isOpen }) => {
                     className={classNames('max-w-[394px] border border-gray-2 rounded shadow animate-pulse md:p-1 dark:border-gray-7', {
                         'max-w-[189px]': grid === 6
                     })}
-                    key={`skeleton-${isOpen}-${grid}-card-${i}`}
+                    key={`skeleton-${grid}-card-${i}`}
                 >
                     <div class="flex items-center justify-center h-48 mb-4 bg-gray-3 rounded dark:bg-gray-7">
                         <svg
@@ -30,7 +30,7 @@ const SkeletonCard = ({ grid, isOpen }) => {
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
                         </svg>
                     </div>
-                    <div class="h-2.5 bg-gray-2 rounded-full dark:bg-gray-7 w-full mb-4"></div>
+                    <div className="h-2.5 bg-gray-2 rounded-full dark:bg-gray-7 w-full mb-4"></div>
                     <div className="h-2.5 bg-gray-2 rounded-full dark:bg-gray-7 w-3/12 mb-4 "></div>
                     <div className="h-2 bg-gray-2 rounded-full dark:bg-gray-7 w-5/12 mb-2.5"></div>
                     <div className="h-2 bg-gray-2 rounded-full dark:bg-gray-7 w-full mb-2.5"></div>

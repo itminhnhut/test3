@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useWindowSize } from 'react-use';
 
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 
 import { useTranslation } from 'next-i18next';
 
@@ -15,6 +14,8 @@ import { API_GET_DETAIL_NFT, API_POST_ACTIVE_NFT, API_GET_CHECK_NFT } from 'redu
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+
+import { TABS } from 'components/screens/NFT/Constants';
 
 import styled from 'styled-components';
 
@@ -106,7 +107,8 @@ const WalletDetail = ({ idNFT }) => {
                 if (isUse) {
                     handleModalUse();
                 }
-                toast({ text: 'Sử dụng WNFT thành công', type: 'success', duration: 1500 });
+                const category = TABS.find((item) => item.value === detail?.category);
+                toast({ text: t('nft:active:toast_success', { type: category?.label }), type: 'success', duration: 1500 });
             }
         } catch (error) {
             console.error(error);
@@ -136,7 +138,7 @@ const WalletDetail = ({ idNFT }) => {
         return detail.status === 0 ? (
             <section className="mt-4">
                 <ButtonV2 onClick={handleCheckNFT} disabled={isLoading}>
-                    Sử dụng
+                    {t('nft:history:active')}
                 </ButtonV2>
             </section>
         ) : null;
@@ -146,7 +148,7 @@ const WalletDetail = ({ idNFT }) => {
         return (
             <section className="flex flex-row gap-3 mt-4 cursor-pointer">
                 <ButtonV2 variants="secondary" onClick={handleModalTransfer}>
-                    Chuyển
+                    {t('nft:history:transfer')}
                 </ButtonV2>
                 {detail?.status === 0 ? <ButtonV2 onClick={handleCheckNFT}>Sử dụng</ButtonV2> : null}
             </section>
@@ -162,17 +164,17 @@ const WalletDetail = ({ idNFT }) => {
                     </header>
                     <section className="mt-8 flex flex-row gap-4">
                         <WrapperImage className="w-[100vw] max-w-[614px] max-h-[614px]">
-                            {detail?.image ? <Image width={614} height={614} src={detail?.image} sizes="100vw" /> : null}
+                            {detail?.image ? <img width={614} height={614} src={detail?.image} /> : null}
                         </WrapperImage>
                         <section className="w-full">
                             <Contents detail={detail} wallet={true} />
                             <Description detail={detail} />
-                            <Effective effective={detail?.effective} dark={isDark} />
+                            <Effective effective={detail?.[`effective_${language}`] || []} dark={isDark} />
                             {detail?.category === 1 ? renderVoucher(detail) : renderNFT(detail)}
                         </section>
                     </section>
                     <section className="mt-[60px]">
-                        <h3 className="text-2xl font-semibold text-gray-15 dark:text-gray-4">Lịch sử Mint/Chuyển</h3>
+                        <h3 className="text-2xl font-semibold text-gray-15 dark:text-gray-4">{t('nft:history:title')}</h3>
                         <section className="mt-4">
                             <History idNFT={idNFT} />
                         </section>

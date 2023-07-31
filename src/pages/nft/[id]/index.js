@@ -1,9 +1,7 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useWindowSize } from 'react-use';
 
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import Link from 'next/link';
 
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -84,7 +82,7 @@ const index = ({ idNFT }) => {
 
     // ** handle call api detail NFT
     useEffect(() => {
-        handleDetailNFT();
+        idNFT && handleDetailNFT();
     }, [idNFT]);
 
     // ** handle call api history NFT
@@ -95,13 +93,13 @@ const index = ({ idNFT }) => {
     const renderFrom = (row) => {
         if (row.type === 'Create') return '-';
         if (row.type === 'Give') return '-';
-        return row?.old_status?.owner || '-';
+        return row?.old_status?.owner || 'Infinity';
     };
 
     const renderTo = (row) => {
         if (row.type === 'Create') return '-';
-        if (row.type === 'Give') return row?.new_status?.owner || '-';
-        return row?.new_status?.owner || '-';
+        if (row.type === 'Give') return row?.new_status?.owner || 'Infinity';
+        return row?.new_status?.owner || 'Infinity';
     };
 
     const renderTable = useCallback(() => {
@@ -109,16 +107,16 @@ const index = ({ idNFT }) => {
             {
                 key: 'type',
                 dataIndex: 'type',
-                // title: t('staking:statics:history:columns.type'),
+                title: t('nft:history:event'),
                 title: 'event',
                 align: 'left',
                 maxWidth: 302,
-                render: (value) => <div>{value === 'Create' ? 'Mint NFT' : 'Chuyển'}</div>
+                render: (value) => <div>{value === 'Create' ? 'Mint' : t('nft:history:transfer')}</div>
             },
             {
                 key: 'from',
                 dataIndex: 'from',
-                title: 'From',
+                title: t('nft:history:from'),
                 align: 'left',
                 maxWidth: 302,
                 render: (row, value) => renderFrom(value)
@@ -126,7 +124,7 @@ const index = ({ idNFT }) => {
             {
                 key: 'to',
                 dataIndex: 'to',
-                title: 'To',
+                title: t('nft:history:to'),
                 align: 'left',
                 maxWidth: 302,
                 render: (row, value) => renderTo(value)
@@ -134,7 +132,7 @@ const index = ({ idNFT }) => {
             {
                 key: 'createdAt',
                 dataIndex: 'createdAt',
-                title: t('staking:statics:history:columns.time'),
+                title: t('nft:history:date'),
                 align: 'right',
                 maxWidth: 302,
                 render: (value) => <div className="font-normal">{formatTime(new Date(value), 'HH:mm:ss dd/MM/yyyy') || '-'}</div>
@@ -155,14 +153,14 @@ const index = ({ idNFT }) => {
                 data={dataHistory?.data || []}
                 rowKey={(item) => `${item?.key}`}
                 pagingClassName="!border-0 !py-8"
-                pagingPrevNext={{
-                    page: page - 1,
-                    hasNext: dataHistory?.hasNext,
-                    onChangeNextPrev: (delta) => {
-                        setPage(page + delta);
-                    },
-                    language: language
-                }}
+                // pagingPrevNext={{
+                //     page: page - 1,
+                //     hasNext: dataHistory?.hasNext,
+                //     onChangeNextPrev: (delta) => {
+                //         setPage(page + delta);
+                //     },
+                //     language: language
+                // }}
                 tableStyle={{
                     rowHeight: '64px'
                 }}
@@ -175,20 +173,20 @@ const index = ({ idNFT }) => {
             <main className="bg-white dark:bg-shadow">
                 <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px]">
                     <header className="mt-10">
-                        <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">Chi tiết {detail?.name}</h1>
+                        <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">{t('nft:detail:title')}</h1>
                     </header>
                     <section className="mt-8 flex flex-row gap-4">
                         <WrapperImage className="w-full max-w-[550px] max-h-[550px]">
-                            {detail?.image ? <Image width={550} height={550} src={detail?.image} sizes="100vw" /> : null}
+                            {detail?.image ? <img width={550} height={550} src={detail?.image} /> : null}
                         </WrapperImage>
                         <section className="w-full">
                             <Contents detail={detail} />
                             <Description detail={detail} />
-                            <Effective effective={detail?.effective} dark={isDark} />
+                            <Effective effective={detail?.[`effective_${language}`] || []} dark={isDark} />
                         </section>
                     </section>
                     <section className="mt-[60px]">
-                        <h3 className="text-2xl font-semibold text-gray-15 dark:text-gray-4">Lịch sử Mint/Chuyển</h3>
+                        <h3 className="text-2xl font-semibold text-gray-15 dark:text-gray-4">{t('nft:history:title')}</h3>
                         <section className="mt-4">{renderTable()}</section>
                     </section>
                 </article>

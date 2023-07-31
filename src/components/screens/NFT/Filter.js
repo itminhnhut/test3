@@ -1,22 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-
+import classNames from 'classnames';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import { TABS, LIST_CATEGORY } from 'components/screens/NFT/Constants';
+import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-
-import { useTranslation } from 'next-i18next';
-
-import FetchApi from 'utils/fetch-api';
-
+import { useState, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_DETAIL_COLLECTION } from 'redux/actions/apis';
-
-import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
-
-import { TABS, LIST_CATEGORY } from 'components/screens/NFT/Constants';
-
-import classNames from 'classnames';
 import styled from 'styled-components';
+import FetchApi from 'utils/fetch-api';
 
 // ** Dynamic
 const NotAuth = dynamic(() => import('./Components/Page/NoAuth'), { ssr: false });
@@ -54,6 +47,7 @@ const Filter = ({ isDark }) => {
     const [data, setData] = useState([]);
 
     const {
+        t,
         i18n: { language }
     } = useTranslation();
 
@@ -85,8 +79,8 @@ const Filter = ({ isDark }) => {
                 url: API_GET_LIST_NFT,
                 params: {
                     category: filter.tab,
-                    ...(filter?.tier.length > 0 && { tier: filter?.tier.join(', ') }),
-                    ...(filter?.collection.length > 0 && { nft_collection: filter?.collection.join(', ') }),
+                    ...(filter?.tier.length > 0 && { tier: filter?.tier.join(',') }),
+                    ...(filter?.collection.length > 0 && { nft_collection: filter?.collection.join(',') }),
                     is_all: filter.category === 'all',
                     search: filter.search
                 }
@@ -215,7 +209,9 @@ const Filter = ({ isDark }) => {
                                         </section>
                                         <div className="ml-4 gap-2 flex flex-col justify-end">
                                             <p className="text-gray-15 dark:text-gray-4 text-4xl font-semibold">{name}</p>
-                                            <p className="dark:text-gray-7 text-gray-1">Số lượng: {total_nft} vật phẩm</p>
+                                            <p className="dark:text-gray-7 text-gray-1">
+                                                {t('nft:quantity')}: {total_nft} {t('nft:items')}
+                                            </p>
                                         </div>
                                     </section>
                                 </section>

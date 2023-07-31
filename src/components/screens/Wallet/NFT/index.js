@@ -37,7 +37,7 @@ const iniData = {
     isShowCollection: true
 };
 
-const TAB_STATUS = { WNFT: 2, Voucher: 1 };
+const TAB_STATUS = { WNFT: 2, SB: 1 };
 
 const NFTWallet = () => {
     const {
@@ -84,8 +84,8 @@ const NFTWallet = () => {
                 url: API_GET_LIST_NFT,
                 params: {
                     category: TAB_STATUS?.[filter.wallet],
-                    ...(filter?.tier.length > 0 && { tier: filter?.tier.join(', ') }),
-                    ...(filter?.collection.length > 0 && { nft_collection: filter?.collection.join(', ') }),
+                    ...(filter?.tier.length > 0 && { tier: filter?.tier.join(',') }),
+                    ...(filter?.collection.length > 0 && { nft_collection: filter?.collection.join(',') }),
                     is_all: false,
                     search: filter.search
                 }
@@ -113,7 +113,7 @@ const NFTWallet = () => {
     }, [filter.wallet, filter.collection, filter.tier, filter.search]);
 
     const totalSummary = useMemo(() => {
-        const totalVoucher = summary?.find((f) => f?._id === TAB_STATUS.Voucher)?.total || 0;
+        const totalVoucher = summary?.find((f) => f?._id === TAB_STATUS.SB)?.total || 0;
         const totalNft = summary?.find((f) => f?._id === TAB_STATUS.WNFT)?.total || 0;
         return { voucher: totalVoucher, nft: totalNft };
     }, [summary]);
@@ -173,8 +173,8 @@ const NFTWallet = () => {
                     <WrapperChip onClick={() => handleChangeWallet('WNFT')} active={filter.wallet === 'WNFT'}>
                         WNFT ({totalSummary.nft})
                     </WrapperChip>
-                    <WrapperChip onClick={() => handleChangeWallet('Voucher')} active={filter.wallet === 'Voucher'}>
-                        Voucher ({totalSummary.voucher})
+                    <WrapperChip onClick={() => handleChangeWallet('SB')} active={filter.wallet === 'SB'}>
+                        SB ({totalSummary.voucher})
                     </WrapperChip>
                 </section>
             </section>

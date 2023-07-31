@@ -9,8 +9,8 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import ModalV2 from 'components/common/V2/ModalV2';
 
 const CATEGORY = {
-    1: 'Voucher',
-    2: 'NFT'
+    1: 'SB',
+    2: 'WNFT'
 };
 
 const Use = ({ isModal, onCloseModal, statusCodeNFT, onUseSubmit, category }) => {
@@ -30,17 +30,17 @@ const Use = ({ isModal, onCloseModal, statusCodeNFT, onUseSubmit, category }) =>
         return (
             <>
                 {renderIcon}
-                <section className="dark:text-gray-4 text-gray-15 text-2xl font-semibold mt-6">Lưu ý</section>
+                <section className="dark:text-gray-4 text-gray-15 text-2xl font-semibold mt-6">{t('nft:warning')}</section>
                 {category && (
                     <Trans
                         i18nKey={`nft:status_code:${statusCodeNFT}`}
-                        components={[<section className="mt-4 text-gray-1 dark:text-gray-7" />]}
-                        values={{ category: CATEGORY[category] }}
+                        components={[<section className="mt-4 text-center text-gray-1 dark:text-gray-7" />]}
+                        values={{ type: CATEGORY[category], text: `"${t('nft:active:title')}"` }}
                     />
                 )}
                 {statusCodeNFT === 1004 ? (
                     <ButtonV2 className="mt-10" onClick={onUseSubmit}>
-                        Tiếp tục sử dụng
+                        {t('nft:active:title')}
                     </ButtonV2>
                 ) : null}
             </>

@@ -2,12 +2,9 @@ import { useState, useEffect } from 'react';
 import { X } from 'react-feather';
 import { useDebounce } from 'react-use';
 
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-import { Trans, useTranslation } from 'next-i18next';
-
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { useTranslation } from 'next-i18next';
 
 import FetchApi from 'utils/fetch-api';
 import toast from 'utils/toast';
@@ -19,6 +16,7 @@ import InputV2 from 'components/common/V2/InputV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 
 import { WrapperStatus, WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
+import { TABS } from 'components/screens/NFT/Constants';
 import { LIST_TIER, STATUS } from 'components/screens/NFT/Constants';
 
 import classNames from 'classnames';
@@ -59,7 +57,9 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                 params: { id: idNFT, code }
             });
             if (statusCode === 201) {
-                toast({ text: 'Sử dụng WNFT thành công', type: 'success', duration: 1500 });
+                const category = TABS.find((item) => item.value === detail?.category);
+
+                toast({ text: t('nft:transfer:toast_success', { type: category.label, NamiID: idNFT }), type: 'success', duration: 1500 });
                 setTimeout(() => router.push('/wallet/NFT'), 3000);
             }
         } catch (err) {
@@ -87,7 +87,6 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
     };
 
     useEffect(() => {
-        console.log(debouncedValue);
         if (debouncedValue.length === MAX_LENGTH) {
             error && setError('');
             handleCheckNamiCode();
@@ -127,15 +126,15 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
             )}
         >
             <section className="flex flex-col">
-                <section className="text-gray-15 dark:text-gray-4 text-2xl font-semibold ">Chuyển WNFT</section>
+                <section className="text-gray-15 dark:text-gray-4 text-2xl font-semibold ">{t('nft:history:transfer')}</section>
                 <section className="mt-8 dark:bg-dark-4 bg-white border-[1px] border-divider dark:border-dark-4 rounded-xl px-3 py-3 w-full flex flex-row gap-4">
                     <WrapperImage className="w-full max-w-[148px] max-h-[148px]">
-                        <Image width={148} height={148} src={detail?.image} sizes="100vw" />
+                        <img width={148} height={148} src={detail?.image} />
                     </WrapperImage>
                     <section className="my-[21px]">
                         <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{detail?.name}</p>
                         <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
-                            <p>Cấp độ:</p>
+                            <p>{t('nft:tier')}:</p>
                             <p className="rate">{tier?.name?.[language]}</p>
                         </WrapperLevelItems>
                         <WrapperStatus status={STATUS?.[detail?.status]?.key} className={classNames('h-7 w-max mt-5 py-1 px-4 rounded-[80px] text-sm')}>
@@ -144,44 +143,24 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                     </section>
                 </section>
                 <form className="mt-6">
-                    <label className="dark:text-gray-7 text-gray-1 text-sm">NamiID</label>
+                    <label className="dark:text-gray-7 text-gray-1 text-sm">NamiID:</label>
                     <div className="space-y-2 flex flex-col relative pb-10">
-                        {/* <div
-                            className={classNames(
-                                'px-3 py-2 bg-gray-5 dark:bg-darkBlue-3 rounded-md hover:ring-teal hover:ring-1 flex items-center space-x-3',
-                                'text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap mt-2',
-                                {
-                                    '!ring-red ring-1': error
-                                }
-                            )}
-                        >
-                            <InputV2
-                                value={code}
-                                onChange={onChange}
-                                maxLength={MAX_LENGTH}
-                                placeholder="Nhập NamiID"
-                                className="w-full text-gray-1 dark:text-gray-4"
-                            />
-                            <span onClick={onPaste} className="text-teal font-semibold cursor-pointer select-none">
-                                paste
-                            </span>
-                        </div> */}
                         <InputV2
                             value={code}
                             onChange={onChange}
                             maxLength={MAX_LENGTH}
-                            placeholder="Nhập NamiID"
+                            placeholder={t('nft:transfer:placeholder')}
                             className="w-full text-gray-1 dark:text-gray-4 h-12"
                             suffix={
                                 <span onClick={onPaste} className="text-teal font-semibold cursor-pointer select-none">
-                                    paste
+                                    {t('nft:transfer:paste')}
                                 </span>
                             }
                             error={error && t(`nft:status_code:${error}`)}
                         />
                     </div>
                     <ButtonV2 disabled={isSubmit || loading} type="primary" onClick={handleTransferSubmit}>
-                        Chuyển
+                        {t('nft:history:transfer')}
                     </ButtonV2>
                 </form>
             </section>

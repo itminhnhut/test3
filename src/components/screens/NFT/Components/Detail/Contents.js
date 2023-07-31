@@ -43,18 +43,18 @@ const Contents = ({ detail, wallet }) => {
                 </section>
                 <h3 className={classNames('font-semibold text-4xl text-gray-15 dark:text-gray-4 mt-[18px]', { '!mt-4': wallet })}>{detail?.name}</h3>
                 <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
-                    <p>Cấp độ:</p>
+                    <p>{t('nft:tier')}:</p>
                     <p className="rate">{tier?.name?.[language]}</p>
                 </WrapperLevelItems>
                 <div className="h-[1px] bg-divider dark:bg-divider-dark my-4" />
                 <div className="flex flex-row">
                     <ul className="flex flex-row">
-                        <li className="text-gray-1 dark:text-gray-7 mr-1">Loại:</li>
+                        <li className="text-gray-1 dark:text-gray-7 mr-1">{t('nft:detail:type')}:</li>
                         <li className="font-semibold text-gray-15 dark:text-gray-4">{category?.label}</li>
                     </ul>
                     <div className="flex mx-3 my-3 items-center w-1 h-1 rounded-full bg-gray-1 dark:bg-gray-7"></div>
                     <ul className="flex flex-row">
-                        <li className="text-gray-1 dark:text-gray-7 mr-1">Thời hạn sử dụng:</li>
+                        <li className="text-gray-1 dark:text-gray-7 mr-1">{t('nft:detail:exp')}:</li>
                         <li className="font-semibold text-gray-15 dark:text-gray-4">{expired_time}</li>
                     </ul>
                 </div>

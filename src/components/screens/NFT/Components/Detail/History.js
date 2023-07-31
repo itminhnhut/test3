@@ -55,13 +55,13 @@ const History = ({ idNFT }) => {
     const renderFrom = (row) => {
         if (row.type === 'Create') return '-';
         if (row.type === 'Give') return '-';
-        return row?.old_status?.owner || '-';
+        return row?.old_status?.owner || 'Infinity';
     };
 
     const renderTo = (row) => {
         if (row.type === 'Create') return '-';
-        if (row.type === 'Give') return row?.new_status?.owner || '-';
-        return row?.new_status?.owner || '-';
+        if (row.type === 'Give') return row?.new_status?.owner || 'Infinity';
+        return row?.new_status?.owner || 'Infinity';
     };
 
     const renderTable = useCallback(() => {
@@ -69,16 +69,16 @@ const History = ({ idNFT }) => {
             {
                 key: 'type',
                 dataIndex: 'type',
-                // title: t('staking:statics:history:columns.type'),
+                title: t('nft:history:event'),
                 title: 'event',
                 align: 'left',
                 maxWidth: 302,
-                render: (value) => <div>{value === 'Create' ? 'Mint NFT' : 'Chuyển'}</div>
+                render: (value) => <div>{value === 'Create' ? 'Mint' : t('nft:history:transfer')}</div>
             },
             {
                 key: 'from',
                 dataIndex: 'from',
-                title: 'From',
+                title: t('nft:history:from'),
                 align: 'left',
                 maxWidth: 302,
                 render: (row, value) => renderFrom(value)
@@ -86,7 +86,7 @@ const History = ({ idNFT }) => {
             {
                 key: 'to',
                 dataIndex: 'to',
-                title: 'To',
+                title: t('nft:history:to'),
                 align: 'left',
                 maxWidth: 302,
                 render: (row, value) => renderTo(value)
@@ -94,7 +94,7 @@ const History = ({ idNFT }) => {
             {
                 key: 'createdAt',
                 dataIndex: 'createdAt',
-                title: t('staking:statics:history:columns.time'),
+                title: t('nft:history:date'),
                 align: 'right',
                 maxWidth: 302,
                 render: (value) => <div className="font-normal">{formatTime(new Date(value), 'HH:mm:ss dd/MM/yyyy') || '-'}</div>
@@ -115,14 +115,14 @@ const History = ({ idNFT }) => {
                 data={dataHistory?.data || []}
                 rowKey={(item) => `${item?.key}`}
                 pagingClassName="!border-0 !py-8"
-                pagingPrevNext={{
-                    page: page - 1,
-                    hasNext: dataHistory?.hasNext,
-                    onChangeNextPrev: (delta) => {
-                        setPage(page + delta);
-                    },
-                    language: language
-                }}
+                // pagingPrevNext={{
+                //     page: page - 1,
+                //     hasNext: dataHistory?.hasNext,
+                //     onChangeNextPrev: (delta) => {
+                //         setPage(page + delta);
+                //     },
+                //     language: language
+                // }}
                 tableStyle={{
                     rowHeight: '64px'
                 }}

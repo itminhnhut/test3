@@ -10,7 +10,7 @@ const Description = ({ detail }) => {
 
     return (
         <WrapperContent className="mt-4">
-            <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4">Mô tả</h3>
+            <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4">{t('nft:detail:des')}</h3>
             <section className="mt-3 h-[84px] overflow-y-auto dark:text-gray-4 text-gray-15">{detail?.[`description_${language}`] || '-'}</section>
         </WrapperContent>
     );
