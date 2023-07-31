@@ -1,6 +1,5 @@
-import { useTranslation } from 'next-i18next';
-
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
+import { useTranslation } from 'next-i18next';
 
 const NoData = () => {
     const { t } = useTranslation();
@@ -13,7 +12,7 @@ const NoData = () => {
             <div className="hidden dark:block">
                 <NoDataDarkIcon />
             </div>
-            <div className="text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark mt-1">Bạn hiện không có NFT</div>
+            <div className="text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark mt-1">{t('common:no_data')}</div>
         </div>
     );
 };
