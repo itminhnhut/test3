@@ -38,8 +38,8 @@ const LIST_TIER = [
 ];
 
 const TABS = [
-    { label: 'WNFT', value: 2 },
-    { label: 'SB', value: 1 }
+    { label: 'SB', value: 1 },
+    { label: 'WNFT', value: 2 }
 ];
 
 const STATUS = {

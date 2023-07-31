@@ -1,15 +1,22 @@
-import classNames from 'classnames';
-import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
-import { TABS, LIST_CATEGORY } from 'components/screens/NFT/Constants';
-import { useTranslation } from 'next-i18next';
+import { useState, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
+
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_DETAIL_COLLECTION } from 'redux/actions/apis';
-import styled from 'styled-components';
+
+import { useTranslation } from 'next-i18next';
+
 import FetchApi from 'utils/fetch-api';
+
+import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_DETAIL_COLLECTION } from 'redux/actions/apis';
+
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+
+import { TABS } from 'components/screens/NFT/Constants';
+
+import classNames from 'classnames';
+import styled from 'styled-components';
 
 // ** Dynamic
 const NotAuth = dynamic(() => import('./Components/Page/NoAuth'), { ssr: false });
@@ -111,15 +118,14 @@ const Filter = ({ isDark }) => {
     useEffect(() => {
         // ** check data collection by call api
         if (Array.isArray(dataCollection)) {
-            const { collection: nft_collection, category } = router?.query;
-            if (nft_collection && category) {
+            const { collection: nft_collection } = router?.query;
+            if (nft_collection) {
                 //** check nft_collection && category
                 const isCheckCollection = dataCollection?.find((f) => f._id === nft_collection);
-                const isCheckCategory = LIST_CATEGORY?.find((f) => f.active === category);
 
-                if (!isCheckCollection || !isCheckCategory) return router.push('/nft');
+                if (!isCheckCollection) return router.push('/nft');
 
-                setFilter((prev) => ({ ...prev, category, collection: [nft_collection], isShowCollection: false }));
+                setFilter((prev) => ({ ...prev, collection: [nft_collection], isShowCollection: false }));
             } else {
                 setFilter(iniData);
             }

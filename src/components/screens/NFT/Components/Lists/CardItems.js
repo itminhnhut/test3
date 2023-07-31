@@ -37,7 +37,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                     <Link
                         href={{
                             pathname: '/nft',
-                            query: { collection: item?.nft_collection, category: 'me' }
+                            query: { collection: item?.nft_collection }
                         }}
                     >
                         <div className="text-green-3 dark:text-green-2"> {item.nft_collection_name}</div>
@@ -53,7 +53,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                 <Link
                     href={{
                         pathname: '/nft',
-                        query: { collection: item?.nft_collection, category: 'all' }
+                        query: { collection: item?.nft_collection }
                     }}
                 >
                     {item.nft_collection_name}

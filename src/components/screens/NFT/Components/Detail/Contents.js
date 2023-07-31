@@ -31,7 +31,7 @@ const Contents = ({ detail, wallet }) => {
                         <Link
                             href={{
                                 pathname: '/nft',
-                                query: { collection: detail?.nft_collection, category: 'me' }
+                                query: { collection: detail?.nft_collection }
                             }}
                         >
                             {detail?.nft_collection_name}
