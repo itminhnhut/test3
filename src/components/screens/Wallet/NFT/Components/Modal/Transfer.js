@@ -135,7 +135,7 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                         <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{detail?.name}</p>
                         <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
                             <p>{t('nft:tier')}:</p>
-                            <p className="rate">{tier?.name?.[language]}</p>
+                            <p className={tier?.key}>{tier?.name?.[language]}</p>
                         </WrapperLevelItems>
                         <WrapperStatus status={STATUS?.[detail?.status]?.key} className={classNames('h-7 w-max mt-5 py-1 px-4 rounded-[80px] text-sm')}>
                             {STATUS?.[detail?.status]?.[language]}

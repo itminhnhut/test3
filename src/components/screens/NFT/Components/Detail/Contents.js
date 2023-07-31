@@ -44,7 +44,7 @@ const Contents = ({ detail, wallet }) => {
                 <h3 className={classNames('font-semibold text-4xl text-gray-15 dark:text-gray-4 mt-[18px]', { '!mt-4': wallet })}>{detail?.name}</h3>
                 <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
                     <p>{t('nft:tier')}:</p>
-                    <p className="rate">{tier?.name?.[language]}</p>
+                    <p className={tier?.key}>{tier?.name?.[language]}</p>
                 </WrapperLevelItems>
                 <div className="h-[1px] bg-divider dark:bg-divider-dark my-4" />
                 <div className="flex flex-row">
