@@ -38,7 +38,7 @@
     "transfer": {
         "placeholder": "Enter the recipient's NamiID",
         "paste": "Paste",
-        "toast_success": "Transfering {{type}} to {{NamiID}} successfully"
+        "toast_success": "Transfer {{type}} to {{NamiID}} successfully"
     },
     "status_code": {
         "1000": "<0>not exists<0>",
