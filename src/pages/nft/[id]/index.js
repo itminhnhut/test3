@@ -108,7 +108,6 @@ const index = ({ idNFT }) => {
                 key: 'type',
                 dataIndex: 'type',
                 title: t('nft:history:event'),
-                title: 'event',
                 align: 'left',
                 maxWidth: 302,
                 render: (value) => <div>{value === 'Create' ? 'Mint' : t('nft:history:transfer')}</div>
