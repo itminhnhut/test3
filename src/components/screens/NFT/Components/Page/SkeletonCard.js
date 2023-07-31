@@ -16,6 +16,7 @@ const SkeletonCard = ({ grid, isOpen }) => {
                     className={classNames('max-w-[394px] border border-gray-2 rounded shadow animate-pulse md:p-1 dark:border-gray-7', {
                         'max-w-[189px]': grid === 6
                     })}
+                    key={`skeleton-${isOpen}-${grid}-card-${i}`}
                 >
                     <div class="flex items-center justify-center h-48 mb-4 bg-gray-3 rounded dark:bg-gray-7">
                         <svg
