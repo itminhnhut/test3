@@ -15,6 +15,8 @@ import RePagination from 'components/common/ReTable/RePagination';
 import classNames from 'classnames';
 import AssetName from 'components/wallet/AssetName';
 import AssetCode from 'components/wallet/AssetCode';
+import { ONE_DAY } from 'constants/constants';
+import { startOfDay } from 'date-fns';
 const title = {
     vi: 'Lịch sử hoàn phí hoa hồng',
     en: 'Commission history'
@@ -33,7 +35,6 @@ const CommissionHistory = () => {
         { title: '02', value: 2 },
         { title: '03', value: 3 },
         { title: '04', value: 4 },
-        { title: '05', value: 5 }
     ];
     const typeTabs = [
         { title: t('common:all'), value: null },
@@ -64,7 +65,7 @@ const CommissionHistory = () => {
         currency: assetTabs[0].value,
         range: {
             startDate: null,
-            endDate: new Date(''),
+            endDate: startOfDay(new Date()),
             key: 'selection'
         }
     });
@@ -73,7 +74,7 @@ const CommissionHistory = () => {
         const params = { ...filter };
         if (params.range.startDate) {
             params.from = new Date(params.range.startDate).getTime();
-            params.to = new Date(params.range.endDate).getTime();
+            params.to = new Date(params.range.endDate).getTime() + ONE_DAY;
         }
         delete params.range;
         try {

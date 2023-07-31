@@ -12,7 +12,8 @@ const SelectV2 = ({
     popoverPanelClassName = '',
     popoverClassName = '',
     position = 'bottom',
-    optionClassName
+    optionClassName,
+    activeIcon
 }) => {
     const title = useMemo(() => {
         return options.find((rs) => rs?.[keyExpr] === value)?.[displayExpr] ?? '';
@@ -63,9 +64,10 @@ const SelectV2 = ({
                                             <div
                                                 key={index}
                                                 className={classNames(
-                                                    'px-4 py-2 hover:bg-hover dark:hover:bg-hover-dark text-txtSecondary dark:text-txtSecondary-dark cursor-pointer',
+                                                    'px-4 py-2 hover:bg-hover dark:hover:bg-hover-dark cursor-pointer',
                                                     {
-                                                        '!text-txtPrimary dark:!text-white font-semibold': value === item?.[keyExpr]
+                                                        'text-txtPrimary dark:text-txtPrimary-dark font-semibold': value === item?.[keyExpr],
+                                                        'text-txtSecondary dark:text-txtSecondary-dark': value !== item?.[keyExpr]
                                                     },
                                                     optionClassName
                                                 )}
@@ -74,7 +76,8 @@ const SelectV2 = ({
                                                     close();
                                                 }}
                                             >
-                                                {item?.[displayExpr] ?? ''}
+                                                <span>{item?.[displayExpr] ?? ''}</span>
+                                                {value === item?.[keyExpr] ? activeIcon : undefined}
                                             </div>
                                         );
                                     })}
