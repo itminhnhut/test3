@@ -24,7 +24,7 @@ const TierFilter = ({ onChangeTier, isDark, filter }) => {
                 reload={filter.isOpen}
                 className="w-full last:pb-4"
                 divLabelClassname="w-full justify-between"
-                labelClassname="text-base font-semibold text-gray-15 dark:text-gray-4 w-10/12"
+                labelClassname="text-base font-semibold text-gray-15 dark:text-gray-4 w-10/12 text-[18px]"
                 chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
             >
                 {LIST_TIER?.map((tier) => {

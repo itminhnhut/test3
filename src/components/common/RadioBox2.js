@@ -27,7 +27,7 @@ const RadioBox2 = ({ id, label, description, checked, onusMode = false, onChange
                 ></span>
             </label>
             <div className="pl-2.5">
-                <label htmlFor={id} className="font-medium cursor-pointer select-none text-gray-1 dark:text-gray-7">
+                <label htmlFor={id} className="cursor-pointer select-none text-gray-1 dark:text-gray-7">
                     {label}
                 </label>
                 {description && <div className="mt-0.5 text-xs text-txtSecondary dark:text-txtSecondary-dark">{description}</div>}

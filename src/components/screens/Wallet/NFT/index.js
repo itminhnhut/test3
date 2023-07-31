@@ -1,12 +1,19 @@
-import classNames from 'classnames';
-import Chip from 'components/common/V2/Chip';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import { useTranslation } from 'next-i18next';
-import dynamic from 'next/dynamic';
 import { useState, useEffect, useMemo } from 'react';
-import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_SUMMARY_NFT } from 'redux/actions/apis';
-import styled from 'styled-components';
+
+import dynamic from 'next/dynamic';
+
+import { useTranslation } from 'next-i18next';
+
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+
 import FetchApi from 'utils/fetch-api';
+
+import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_SUMMARY_NFT } from 'redux/actions/apis';
+
+import Chip from 'components/common/V2/Chip';
+
+import classNames from 'classnames';
+import styled from 'styled-components';
 
 const AllFilters = dynamic(() => import('components/screens/NFT/Components/Lists/AllFilters'), { ssr: false });
 

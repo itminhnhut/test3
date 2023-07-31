@@ -205,14 +205,12 @@ const Filter = ({ isDark }) => {
             return (
                 <section className="m-auto px-4 mb-[60px]">
                     <section>
-                        <div className="relative h-[180px] w-full bg-white">
-                            <img src={banner} layout="fill" objectFit="cover" />
+                        <div className="relative bg-white">
+                            <img src={banner} layout="fill" className="h-[180px] w-[100vw] object-cover" />
                             <article className="max-w-screen-v3 2xl:max-w-screen-xxl px-4 m-auto">
                                 <section className="absolute bottom-[-92px]">
                                     <section className="flex flex-row">
-                                        <section className="rounded-full">
-                                            <WrapperThumbnail src={thumbnail} width="140" height="140" objectFit="cover" />
-                                        </section>
+                                        <WrapperThumbnail src={thumbnail} width="140" height="140" className="rounded-full object-cover" />
                                         <div className="ml-4 gap-2 flex flex-col justify-end">
                                             <p className="text-gray-15 dark:text-gray-4 text-4xl font-semibold">{name}</p>
                                             <p className="dark:text-gray-7 text-gray-1">

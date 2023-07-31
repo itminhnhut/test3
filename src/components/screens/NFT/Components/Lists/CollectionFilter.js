@@ -21,7 +21,7 @@ const CategoryFilter = ({ collections, onChangeCollection, isDark, filter }) => 
                     className="w-full last:pb-4"
                     reload={filter.isOpen}
                     divLabelClassname="w-full justify-between"
-                    labelClassname="text-base font-semibold text-gray-15 dark:text-gray-4 w-10/12"
+                    labelClassname="text-base font-semibold text-gray-15 dark:text-gray-4 w-10/12 text-[18px]"
                     chrevronStyled={{ size: 24, color: isDark ? colors.gray['4'] : colors.gray['15'] }}
                 >
                     {collections?.length > 0 &&
