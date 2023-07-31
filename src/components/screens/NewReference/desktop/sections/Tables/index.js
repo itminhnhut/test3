@@ -13,6 +13,7 @@ import { Search } from 'react-feather';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import SelectV2 from 'components/common/V2/SelectV2';
+import CheckCircle from 'components/svg/CheckCircle';
 
 const Tables = ({ language, t, commisionConfig, id1, id2 }) => {
     return (
@@ -57,7 +58,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
         return (
             <button
                 onClick={() => setFilter(config)}
-                className="whitespace-nowrap !bg-dark-12 dark:!bg-dark-2 hover:bg-gray-6 text-gray-1 dark:hover:bg-dark-5 dark:text-gray-7
+                className="whitespace-nowrap bg-dark-12 dark:bg-dark-2 hover:bg-gray-6 text-gray-1 dark:hover:bg-dark-5 dark:text-gray-7
                         px-4 rounded-md px-auto py-auto font-semibold h-12"
             >
                 {item.title}
@@ -68,10 +69,13 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
     const Select = ({ item, filter, key }) => {
         const data = filter?.[key] || {};
         return (
-            <SelectV2 
-                options={item?.values || []} 
-                value={data?.value || null} 
-                onChange={(e) => onChange(e, key)} 
+            <SelectV2
+                className="text-txtSecondary dark:text-txtSecondary-dark"
+                options={item?.values || []}
+                value={data?.value || null}
+                onChange={(e) => onChange(e, key)}
+                optionClassName="!font-normal !text-txtPrimary dark:!text-txtPrimary-dark flex justify-between items-center first:mt-2 mb-2"
+                activeIcon={<CheckCircle color="currentColor" size={16} />}
             />
         );
     };
