@@ -38,7 +38,7 @@ const LIST_TIER = [
 ];
 
 const TABS = [
-    { label: 'SB', value: 1 },
+    { label: 'Skynamia Badges', value: 1 },
     { label: 'WNFT', value: 2 }
 ];
 

@@ -13,14 +13,18 @@ const SkeletonCard = ({ grid, isOpen }) => {
             return (
                 <WrapperSkeletonCard
                     role="status"
-                    className={classNames('max-w-[394px] border border-gray-2 rounded shadow animate-pulse md:p-1 dark:border-gray-7', {
+                    className={classNames('max-w-[394px] h-full shadow-card_light dark:shadow-popover bg-white dark:bg-dark-4 rounded-xl max-h-fit', {
                         'max-w-[189px]': grid === 6
                     })}
                     key={`skeleton-${grid}-card-${i}`}
                 >
-                    <div class="flex items-center justify-center h-48 mb-4 bg-gray-3 rounded dark:bg-gray-7">
+                    <div
+                        className={classNames('flex items-center justify-center h-[394px] mb-4 bg-gray-3 rounded dark:bg-gray-7', {
+                            'h-[189px]': grid === 6
+                        })}
+                    >
                         <svg
-                            class="w-10 h-10 text-gray-200 dark:text-gray-600"
+                            className="w-20 h-20 text-gray-2 dark:text-gray-6"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="currentColor"
@@ -30,10 +34,12 @@ const SkeletonCard = ({ grid, isOpen }) => {
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
                         </svg>
                     </div>
-                    <div className="h-2.5 bg-gray-2 rounded-full dark:bg-gray-7 w-full mb-4"></div>
-                    <div className="h-2.5 bg-gray-2 rounded-full dark:bg-gray-7 w-3/12 mb-4 "></div>
-                    <div className="h-2 bg-gray-2 rounded-full dark:bg-gray-7 w-5/12 mb-2.5"></div>
-                    <div className="h-2 bg-gray-2 rounded-full dark:bg-gray-7 w-full mb-2.5"></div>
+                    <section className={classNames('h-auto mx-5 my-5', { '!mx-4 !my-4': grid === 6 })}>
+                        <div className="h-2.5 bg-gray-2 rounded-full dark:bg-gray-7 w-full mb-4"></div>
+                        <div className="h-2.5 bg-gray-2 rounded-full dark:bg-gray-7 w-3/12 mb-4 "></div>
+                        <div className="h-2 bg-gray-2 rounded-full dark:bg-gray-7 w-5/12 mb-2.5"></div>
+                        <div className="h-2 bg-gray-2 rounded-full dark:bg-gray-7 w-full mb-2.5"></div>
+                    </section>
                 </WrapperSkeletonCard>
             );
         });

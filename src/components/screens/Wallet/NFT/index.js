@@ -171,7 +171,7 @@ const NFTWallet = () => {
             <section className="flex flex-row justify-between">
                 <section className="flex flex-row gap-3  text-gray-1 dark:text-gray-7 text-sm">
                     <WrapperChip onClick={() => handleChangeWallet('SB')} active={filter.wallet === 'SB'}>
-                        SB ({totalSummary.voucher})
+                        Skynamia Badges ({totalSummary.voucher})
                     </WrapperChip>
                     <WrapperChip onClick={() => handleChangeWallet('WNFT')} active={filter.wallet === 'WNFT'}>
                         WNFT ({totalSummary.nft})

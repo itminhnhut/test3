@@ -33,7 +33,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
     const renderTitle = (item) => {
         if (wallet) {
             return (
-                <div className="flex flex-row justify-between font-semibold text-base flex-wrap">
+                <div className="flex flex-row justify-between font-semibold text-base flex-wrap items-center">
                     <Link
                         href={{
                             pathname: '/nft',
@@ -42,9 +42,11 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                     >
                         <div className="text-green-3 dark:text-green-2"> {item.nft_collection_name}</div>
                     </Link>
-                    <WrapperStatus status={STATUS?.[item.status]?.key} className="h-7 py-1 px-4 rounded-[80px] text-sm">
-                        {STATUS?.[item.status]?.[language]}
-                    </WrapperStatus>
+                    {grid === 4 && (
+                        <WrapperStatus status={STATUS?.[item.status]?.key} className="h-7 py-1 px-4 rounded-[80px] text-sm">
+                            {STATUS?.[item.status]?.[language]}
+                        </WrapperStatus>
+                    )}
                 </div>
             );
         }
@@ -108,6 +110,11 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                                     <div>{t('nft:tier')}:</div>
                                     <div className={getTier?.key}>{getTier?.name?.[language]}</div>
                                 </WrapperLevelItems>
+                                {grid === 6 && (
+                                    <WrapperStatus status={STATUS?.[item.status]?.key} className="h-7 w-max px-3 py-1 mt-3 rounded-[80px] text-sm">
+                                        {STATUS?.[item.status]?.[language]}
+                                    </WrapperStatus>
+                                )}
                             </section>
                         </section>
                     </Link>

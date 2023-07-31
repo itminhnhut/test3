@@ -309,14 +309,14 @@ const FutureNFTIcon = ({ size = 24 }) => {
 
     return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#xx78pzbdva)">
+            <g clipPath="url(#xx78pzbdva)">
                 <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M5.516 3.25h12.702v3.38h-1.5V4.75H6.127l-2.63 2.565v5.999h-1.5V6.683l3.52-3.433z"
                     fill="#6FC98B"
                 />
-                <path d="M7.415 6.75H21.25v12.5H2.75v-7.835L7.415 6.75z" stroke="#6FC98B" stroke-width="1.5" stroke-linejoin="bevel" />
+                <path d="M7.415 6.75H21.25v12.5H2.75v-7.835L7.415 6.75z" stroke="#6FC98B" strokeWidth="1.5" strokeLinejoin="bevel" />
                 <path
                     d="M7.09 16.916c-.054 0-.08-.023-.08-.069L7 10.079c0-.053.027-.079.08-.079h.894l1.68 3.915-.05-3.835c0-.053.03-.08.09-.08h.983c.04 0 .06.027.06.08l.01 6.777c0 .04-.017.06-.05.06h-.875l-1.719-3.658.07 3.578c0 .053-.03.08-.09.08H7.09zM11.66 16.916c-.034 0-.05-.016-.05-.05l.02-6.826c0-.027.013-.04.04-.04h3.18c.033 0 .049.013.049.04v1.123c0 .026-.013.04-.04.04h-2.037v1.54h2.037c.027 0 .04.016.04.05l.01 1.122c0 .027-.017.04-.05.04h-2.037v2.912c0 .033-.016.05-.05.05H11.66zM16.786 16.916c-.026 0-.04-.016-.04-.05v-5.664h-1.291c-.034 0-.05-.016-.05-.05l.01-1.112c0-.027.013-.04.04-.04h3.776c.033 0 .05.013.05.04v1.113c0 .033-.014.05-.04.05h-1.302l.01 5.664c0 .033-.013.05-.04.05h-1.123z"
                     fill={defaultColor}
@@ -438,9 +438,9 @@ const SuccessfulTransactionIcon = ({ size = 36, ...props }) => {
             />
             <defs>
                 <linearGradient id="6xmltrwi7a" x1="4.649" y1="8.7" x2="25.199" y2="13.5" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#BDFEE7" />
-                    <stop offset=".891" stop-color="#60F1A6" stopOpacity=".93" />
-                    <stop offset="1" stop-color="#47ED95" />
+                    <stop stopColor="#BDFEE7" />
+                    <stop offset=".891" stopColor="#60F1A6" stopOpacity=".93" />
+                    <stop offset="1" stopColor="#47ED95" />
                 </linearGradient>
             </defs>
         </svg>
@@ -1493,21 +1493,21 @@ const NoResultIcon = () => {
             <path d="m115.017 81.742-1.555 4.589-43.114-14.693a24.924 24.924 0 0 0 1.432-4.634l43.237 14.738z" fill="#C2C7CF" />
             <defs>
                 <linearGradient id="vyatd4lfga" x1="7.345" y1="61.535" x2="57.322" y2="61.535" gradientUnits="userSpaceOnUse">
-                    <stop offset=".056" stop-color="#E2E8F0" />
-                    <stop offset=".135" stop-color="#D8DEE5" stopOpacity=".91" />
-                    <stop offset=".272" stop-color="#BDC2C9" stopOpacity=".753" />
-                    <stop offset=".451" stop-color="#91959A" stopOpacity=".548" />
-                    <stop offset=".666" stop-color="#545659" stopOpacity=".303" />
-                    <stop offset=".908" stop-color="#080808" stopOpacity=".026" />
+                    <stop offset=".056" stopColor="#E2E8F0" />
+                    <stop offset=".135" stopColor="#D8DEE5" stopOpacity=".91" />
+                    <stop offset=".272" stopColor="#BDC2C9" stopOpacity=".753" />
+                    <stop offset=".451" stopColor="#91959A" stopOpacity=".548" />
+                    <stop offset=".666" stopColor="#545659" stopOpacity=".303" />
+                    <stop offset=".908" stopColor="#080808" stopOpacity=".026" />
                     <stop offset=".931" stopOpacity="0" />
                 </linearGradient>
                 <linearGradient id="v3lkvxk6pb" x1=".989" y1="60.487" x2="47.931" y2="60.487" gradientUnits="userSpaceOnUse">
-                    <stop offset=".056" stop-color="#E2E8F0" />
-                    <stop offset=".138" stop-color="#D9DFE7" stopOpacity=".911" />
-                    <stop offset=".273" stop-color="#C1C6CD" stopOpacity=".764" />
-                    <stop offset=".447" stop-color="#9A9EA4" stopOpacity=".576" />
-                    <stop offset=".65" stop-color="#64676A" stopOpacity=".354" />
-                    <stop offset=".877" stop-color="#202122" stopOpacity=".108" />
+                    <stop offset=".056" stopColor="#E2E8F0" />
+                    <stop offset=".138" stopColor="#D9DFE7" stopOpacity=".911" />
+                    <stop offset=".273" stopColor="#C1C6CD" stopOpacity=".764" />
+                    <stop offset=".447" stopColor="#9A9EA4" stopOpacity=".576" />
+                    <stop offset=".65" stopColor="#64676A" stopOpacity=".354" />
+                    <stop offset=".877" stopColor="#202122" stopOpacity=".108" />
                     <stop offset=".977" stopOpacity="0" />
                 </linearGradient>
             </defs>

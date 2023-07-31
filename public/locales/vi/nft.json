@@ -40,14 +40,14 @@
         "toast_success": "Chuyển {{type}} đến {{NamiID}} thành công"
     },
     "status_code": {
-        "1000": "<0>không tồn tại<0>",
-        "1001": "<0>đã được kích hoạt<0>",
-        "1002": "<0>hết hạn sử dụng<0>",
-        "1003": "<0>hết hiệu lực sử dụng<0>",
-        "1004": "<0>Đã tồn tại một {{- type}} cùng thuộc tính được kích hoạt. Bằng việc ấn {{- text}}, {{- type}} trước đó sẽ hết hiệu lực.<0>",
-        "1005": "<0>không thể chuyển<0>",
-        "9001": "<0>Nami ID không tồn tại <0>",
-        "9000": "<0>Nami ID không hợp lệ<0>",
-        "code_error_format": "<0>Nami ID chưa đúng định dạng<0>"
+        "1000": "<0>{{- type}} không tồn tại<0>",
+        "1001": "<0>{{- type}} đã được kích hoạt<0>",
+        "1002": "<0>{{- type}} hết hạn sử dụng<0>",
+        "1003": "<0>{{- type}} hết hiệu lực sử dụng<0>",
+        "1004": "<0>{{- type}} đã được kích hoạt trước đó<0>",
+        "1005": "<0>{{- type}} không thể chuyển<0>",
+        "9001": "Nami ID không tồn tại",
+        "9000": "Nami ID không hợp lệ",
+        "code_error_format": "Nami ID chưa đúng định dạng"
     }
 }

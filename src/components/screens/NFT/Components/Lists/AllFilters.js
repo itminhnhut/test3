@@ -33,8 +33,10 @@ const AllFilters = ({ filter, onChangeToggle, onChangeGird, onChangeSearch }) =>
             </section>
             <section className="w-full">
                 <InputV2
-                    className="pb-0"
                     allowClear
+                    className="pb-0"
+                    classNameDivInner="bg-gray-12 dark:bg-dark-2"
+                    classNameInput="dark:bg-dark-7 text-gray-1"
                     value={filter.search}
                     placeholder={t('nft:filter:search')}
                     onChange={(value) => onChangeSearch(value)}

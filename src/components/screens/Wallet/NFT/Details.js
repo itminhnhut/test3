@@ -150,7 +150,7 @@ const WalletDetail = ({ idNFT }) => {
                 <ButtonV2 variants="secondary" onClick={handleModalTransfer}>
                     {t('nft:history:transfer')}
                 </ButtonV2>
-                {detail?.status === 0 ? <ButtonV2 onClick={handleCheckNFT}>Sử dụng</ButtonV2> : null}
+                {detail?.status === 0 ? <ButtonV2 onClick={handleCheckNFT}>{t('nft:history:active')}</ButtonV2> : null}
             </section>
         );
     };
@@ -160,7 +160,7 @@ const WalletDetail = ({ idNFT }) => {
             <main className="bg-white dark:bg-shadow">
                 <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px]">
                     <header className="mt-20">
-                        <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">Chi tiết {detail?.name}</h1>
+                        <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">{t('nft:detail.title')}</h1>
                     </header>
                     <section className="mt-8 flex flex-row gap-4">
                         <WrapperImage className="w-[100vw] max-w-[614px] max-h-[614px]">

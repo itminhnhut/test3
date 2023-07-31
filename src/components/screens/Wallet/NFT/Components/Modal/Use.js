@@ -9,15 +9,12 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import ModalV2 from 'components/common/V2/ModalV2';
 
 const CATEGORY = {
-    1: 'SB',
+    1: 'Skynamia Badges',
     2: 'WNFT'
 };
 
 const Use = ({ isModal, onCloseModal, statusCodeNFT, onUseSubmit, category }) => {
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation();
+    const { t } = useTranslation();
 
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -35,7 +32,7 @@ const Use = ({ isModal, onCloseModal, statusCodeNFT, onUseSubmit, category }) =>
                     <Trans
                         i18nKey={`nft:status_code:${statusCodeNFT}`}
                         components={[<section className="mt-4 text-center text-gray-1 dark:text-gray-7" />]}
-                        values={{ type: CATEGORY[category], text: `"${t('nft:active:title')}"` }}
+                        values={{ type: CATEGORY[category] }}
                     />
                 )}
                 {statusCodeNFT === 1004 ? (
