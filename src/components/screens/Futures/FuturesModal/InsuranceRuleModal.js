@@ -10,9 +10,9 @@ import { filterSearch, formatNumber, getSymbolObject } from 'redux/actions/utils
 import NoData from 'components/common/V2/TableV2/NoData';
 import useDebounce from 'hooks/useDebounce';
 
-const DEBOUNCE_TIME = 300
+const DEBOUNCE_TIME = 300;
 
-const InsuranceRuleModal = ({ insuranceRules, visible, onClose = () => {} }) => {
+const InsuranceRuleModal = ({ insuranceRules, visible, onCloseAll = () => {}, onClose = () => {} }) => {
     const { t } = useTranslation();
     const [search, setSearch] = useState();
     const debounceSearch = useDebounce(search, DEBOUNCE_TIME);
@@ -25,10 +25,10 @@ const InsuranceRuleModal = ({ insuranceRules, visible, onClose = () => {} }) => 
         <ModalV2 canBlur={false} closeButton={false} className="!max-w-[800px]" isVisible={visible} onBackdropCb={onClose}>
             <div className="flex items-center justify-between">
                 <ArrowLeft className="cursor-pointer" color="currentColor" size={24} onClick={onClose} />
-                <X className="cursor-pointer" color="currentColor" size={24} onClick={onClose} />
+                <X className="cursor-pointer" color="currentColor" size={24} onClick={onCloseAll} />
             </div>
             <div className="my-6 font-semibold text-2xl">{t('futures:insurance:rules_modal_title')}</div>
-            
+
             <div className="mt-6">
                 <InputV2
                     prefix={<Search color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" size={16} />}
@@ -61,7 +61,7 @@ const RuleItem = ({ rule }) => {
     return (
         <div className="bg-bgContainer dark:bg-bgContainer-dark border dark:border-none border-divider rounded-xl p-4">
             <div className="flex space-x-2 items-center mb-2">
-                <AssetLogo assetCode={symbolObject?.baseAsset} useNextImg />
+                <AssetLogo assetCode={symbolObject?.baseAsset} size={24} useNextImg />
                 <span className="font-semibold">{rule?.symbol}</span>
             </div>
             <div className="mt-2 flex items-center justify-between">

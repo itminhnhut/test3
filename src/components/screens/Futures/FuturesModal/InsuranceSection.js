@@ -19,8 +19,7 @@ const initialState = {
     showList: false
 };
 
-const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice }) => {
-
+const InsuranceSection = React.memo(({ onCloseOrderDetailModal, insuranceRules, order, liquidPrice }) => {
     const {
         t,
         i18n: { language }
@@ -137,13 +136,27 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice }) => 
                     </div>
                 </div>
             </div>
-            {state.showRules && <InsuranceRuleModal insuranceRules={insuranceRules} visible={state.showRules} onClose={() => setState({ showRules: false })} />}
+            {state.showRules && (
+                <InsuranceRuleModal
+                    insuranceRules={insuranceRules}
+                    visible={state.showRules}
+                    onCloseAll={() => {
+                        setState({ showRules: false });
+                        onCloseOrderDetailModal();
+                    }}
+                    onClose={() => setState({ showRules: false })}
+                />
+            )}
             {state.showList && (
                 <InsuranceListModal
                     symbol={order?.symbol}
                     insurances={data.data.insurance}
                     visible={state.showList}
                     onClose={() => setState({ showList: false })}
+                    onCloseAll={() => {
+                        setState({ showList: false });
+                        onCloseOrderDetailModal();
+                    }}
                 />
             )}
         </>

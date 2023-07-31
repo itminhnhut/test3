@@ -34,7 +34,7 @@ const StateColorMapping = (state) => {
     return color;
 };
 
-const InsuranceListModal = ({ visible, onClose = () => {}, insurances, symbol }) => {
+const InsuranceListModal = ({ visible, onCloseAll = () => {}, onClose = () => {}, insurances, symbol }) => {
     const { t } = useTranslation();
 
     const marketWatch = useSelector((state) => state.futures.marketWatch);
@@ -44,7 +44,7 @@ const InsuranceListModal = ({ visible, onClose = () => {}, insurances, symbol })
         <ModalV2 canBlur={false} closeButton={false} className="!max-w-[800px]" isVisible={visible} onBackdropCb={onClose}>
             <div className="flex items-center justify-between">
                 <ArrowLeft className="cursor-pointer" color="currentColor" size={24} onClick={onClose} />
-                <X className="cursor-pointer" color="currentColor" size={24} onClick={onClose} />
+                <X className="cursor-pointer" color="currentColor" size={24} onClick={onCloseAll} />
             </div>
             <div className="mt-6 mb-8 font-semibold text-2xl">{t('futures:insurance:insurance_contract_title')}</div>
             <div className="max-h-[calc(90vh-168px)] overflow-y-auto -mx-8 px-8">

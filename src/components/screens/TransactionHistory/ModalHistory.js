@@ -312,7 +312,6 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             get(detailTx, col.keys[0])?.toLowerCase() ||
                                             get(detailTx, 'result.metadata.payload.side')?.toLowerCase() ||
                                             NULL_ASSET;
-                                        console.log('sideInsurance:', sideInsurance);
                                         formatKeyData = (
                                             <div
                                                 className={classNames(
