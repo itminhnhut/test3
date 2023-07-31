@@ -46,7 +46,7 @@ const InsuranceListModal = ({ visible, onClose = () => {}, insurances, symbol })
                 <ArrowLeft className="cursor-pointer" color="currentColor" size={24} onClick={onClose} />
                 <X className="cursor-pointer" color="currentColor" size={24} onClick={onClose} />
             </div>
-            <div className="my-6 font-semibold text-2xl">{t('futures:insurance:insurance_contract_title')}</div>
+            <div className="mt-6 mb-8 font-semibold text-2xl">{t('futures:insurance:insurance_contract_title')}</div>
             <div className="max-h-[calc(90vh-168px)] overflow-y-auto -mx-8 px-8">
                 <div className="grid grid-cols-2 gap-4">
                     {insurances?.length &&
@@ -88,10 +88,9 @@ const ContractItem = ({ insurance, p_market }) => {
 
                 <span className="font-semibold">{formatNumber(insurance?.margin, q_AssetDigit)}</span>
             </div>
-            <div className="mt-1 flex items-center justify-between">
-                <div className="text-sm  text-txtSecondary dark:text-txtSecondary-dark">
-                    <CopyText text={insurance?._id} className="!space-x-1" CustomCopyIcon={() => <ContentCopyIcon size={12} />} />
-                </div>
+            <div className="mt-1 text-sm  text-txtSecondary dark:text-txtSecondary-dark flex items-center justify-between">
+                <CopyText text={insurance?._id} className="!space-x-1" CustomCopyIcon={() => <ContentCopyIcon size={12} />} />
+
                 <span className={classNames(StateColorMapping(insurance?.state))}>
                     {t(`futures:insurance.status.${insurance?.state?.toLowerCase() || 'invalid'}`)}
                 </span>
@@ -111,7 +110,7 @@ const ContractItem = ({ insurance, p_market }) => {
                     <span className={classNames('', sideColor)}>({formatNumber((Math.abs(insurance?.p_claim - p_market) / p_market) * 100, 2)}%)</span>
                 </span>
             </div>
-            <Button variants="secondary" disabled={loading} onClick={getInsuranceDetailLink} className="mt-4">
+            <Button variants="secondary" disabled={loading} onClick={getInsuranceDetailLink} className="mt-4 !py-2 !text-sm">
                 {t('common:details')}
             </Button>
         </div>
