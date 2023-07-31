@@ -66,7 +66,7 @@ const Contents = ({ detail, wallet }) => {
 };
 
 const WrapperContent = styled.section.attrs(() => ({
-    className: 'bg-divider dark:bg-dark-4 px-4 py-4 rounded-xl'
+    className: 'bg-white border-[1px] border-divider border-solid dark:border-0  dark:bg-dark-4 px-4 py-4 rounded-xl'
 }))``;
 
 Contents.defaultProps = {

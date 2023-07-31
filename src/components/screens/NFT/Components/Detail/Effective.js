@@ -1,5 +1,7 @@
-import { useTranslation, Trans } from 'next-i18next';
 import { useMemo } from 'react';
+
+import { useTranslation, Trans } from 'next-i18next';
+
 import styled from 'styled-components';
 
 const Effective = ({ effective, dark }) => {
@@ -66,7 +68,7 @@ const Effective = ({ effective, dark }) => {
 };
 
 const WrapperContent = styled.section.attrs(() => ({
-    className: 'bg-divider dark:bg-dark-4 px-4 py-4 rounded-xl'
+    className: 'bg-white border-[1px] border-divider border-solid dark:border-0 dark:bg-dark-4 px-4 py-4 rounded-xl'
 }))``;
 
 const DarkCheckCircle = ({ color = '#47CC85', size = '16' }) => (

@@ -19,6 +19,7 @@ const AllFilters = dynamic(() => import('components/screens/NFT/Components/Lists
 
 const NoResult = dynamic(() => import('components/screens/NFT/Components/Page/NoResult'), { ssr: false });
 const NoData = dynamic(() => import('components/screens/NFT/Components/Page/NoData'), { ssr: false });
+const SkeletonCard = dynamic(() => import('components/screens/NFT/Components/Page/SkeletonCard'), { ssr: false });
 
 const CardItems = dynamic(() => import('components/screens/NFT/Components/Lists/CardItems'), { ssr: false });
 
@@ -48,6 +49,7 @@ const NFTWallet = () => {
     const isDark = currentTheme === THEME_MODE.DARK;
 
     const [filter, setFilter] = useState(iniData);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [dataCollection, setDataCollection] = useState();
     const [summary, setSummary] = useState([]);
@@ -77,6 +79,7 @@ const NFTWallet = () => {
     // ** call api get list NFT
     const handleGetListNFT = async () => {
         try {
+            setIsLoading(true);
             const { data } = await FetchApi({
                 url: API_GET_LIST_NFT,
                 params: {
@@ -92,6 +95,8 @@ const NFTWallet = () => {
             }
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -150,6 +155,8 @@ const NFTWallet = () => {
     };
 
     const renderData = () => {
+        if (isLoading) return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} />;
+
         if (data?.length > 0)
             return (
                 <CardItems isDark={isDark} wallet={true} listNFT={data} isOpen={filter.isOpen} grid={filter.grid} showCollection={filter.isShowCollection} />

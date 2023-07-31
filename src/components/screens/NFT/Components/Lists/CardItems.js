@@ -155,10 +155,10 @@ const WrapperItems = styled.section`
 
 export const WrapperLevelItems = styled.div`
     .normal {
-        color: rgb(226, 232, 240);
+        color: ${(props) => (props.isDark ? 'rgb(226, 232, 240)' : 'rgb(30, 30, 30)')};
     }
     .rate {
-        color: rgb(71, 204, 133);
+        color: ${(props) => (props.isDark ? 'rgb(71, 204, 133)' : 'rgb(48, 191, 115)')};
     }
     .super {
         color: rgb(226, 167, 51);

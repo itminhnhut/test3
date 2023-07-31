@@ -67,6 +67,7 @@ const WalletDetail = ({ idNFT }) => {
     const [isTransfer, setIsTransfer] = useState(initState.isTransfer);
 
     const [isLoading, setIsLoading] = useState(initState.loading);
+
     const [statusCodeNFT, setStatusCodeNFT] = useState();
 
     const handleModalUse = () => setIsUse((prev) => !prev);
