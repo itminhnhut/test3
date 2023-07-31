@@ -35,7 +35,6 @@ const InsuranceRuleModal = ({ insuranceRules, visible, onClose = () => {} }) => 
                     placeholder={t('common:search')}
                     value={search}
                     onChange={setSearch}
-                    classNameDivInner="!border-none"
                 />
             </div>
             <div className="h-[calc(90vh-324px)] overflow-y-auto -mx-8 px-8">

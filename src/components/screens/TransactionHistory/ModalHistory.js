@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import TagV2 from 'components/common/V2/TagV2';
-import { formatSwapRate, formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
+import { formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
 import { X } from 'react-feather';
 import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
 import axios from 'axios';
@@ -9,7 +9,9 @@ import { ApiStatus } from 'redux/actions/const';
 import AssetLogo from '../../wallet/AssetLogo';
 import Skeletor from 'components/common/Skeletor';
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import { find, get, isNumber, isString } from 'lodash';
+import get from 'lodash/get';
+import isNumber from 'lodash/isNumber';
+import isString from 'lodash/isString';
 import classNames from 'classnames';
 import { TRANSACTION_TYPES, modalDetailColumn, COLUMNS_TYPE } from './constant';
 import { WalletTypeById, WalletType } from 'redux/actions/const';
@@ -307,10 +309,10 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         break;
                                     case COLUMNS_TYPE.INSURANCE_EXPECT:
                                         const sideInsurance =
-                                        get(detailTx, col.keys[0])?.toLowerCase() ||
-                                        get(detailTx, 'result.metadata.payload.side')?.toLowerCase() ||
-                                        NULL_ASSET;
-                                        console.log('sideInsurance:', sideInsurance)
+                                            get(detailTx, col.keys[0])?.toLowerCase() ||
+                                            get(detailTx, 'result.metadata.payload.side')?.toLowerCase() ||
+                                            NULL_ASSET;
+                                        console.log('sideInsurance:', sideInsurance);
                                         formatKeyData = (
                                             <div
                                                 className={classNames(

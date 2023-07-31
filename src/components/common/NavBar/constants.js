@@ -97,7 +97,7 @@ export const NAV_DATA = [
                 localized: 'nami_insurance',
                 isNew: false,
                 notSameOrigin: true,
-                url: INSURANCE_URL,
+                url: INSURANCE_URL + '/buy-covered',
                 child_lv2: []
             }
         ]
@@ -408,7 +408,7 @@ export const MOBILE_NAV_DATA = [
                 localized: 'nami_insurance',
                 isNew: false,
                 notSameOrigin: true,
-                url: INSURANCE_URL,
+                url: INSURANCE_URL + '/buy-covered',
                 child_lv2: []
             }
         ]

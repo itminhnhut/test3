@@ -1,19 +1,18 @@
 import { IconLoading } from 'components/common/Icons';
-import React, { useEffect, useMemo, useState } from 'react';
+import Tooltip from 'components/common/Tooltip';
 import Button from 'components/common/V2/ButtonV2/Button';
 import { FutureInsurance } from 'components/svg/SvgIcon';
-import { useTranslation } from 'next-i18next';
-import { ChevronRight } from 'react-feather';
 import useFetchApi from 'hooks/useFetchApi';
-import { API_USER_INSURANCE_HISTORY } from 'redux/actions/apis';
-import InsuranceRuleModal from './InsuranceRuleModal';
-import InsuranceListModal from './InsuranceListModal';
-import { getInsuranceLoginLink, getSymbolObject, roundByExactDigit } from 'redux/actions/utils';
-import Tooltip from 'components/common/Tooltip';
-import { ApiStatus, UserSocketEvent } from 'redux/actions/const';
-import { useSelector } from 'react-redux';
-import FetchApi from 'utils/fetch-api';
 import useToggle from 'hooks/useToggle';
+import { useTranslation } from 'next-i18next';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ChevronRight } from 'react-feather';
+import { useSelector } from 'react-redux';
+import { API_USER_INSURANCE_HISTORY } from 'redux/actions/apis';
+import { FuturesOrderEnum, UserSocketEvent } from 'redux/actions/const';
+import { getInsuranceLoginLink, roundByExactDigit } from 'redux/actions/utils';
+import InsuranceListModal from './InsuranceListModal';
+import InsuranceRuleModal from './InsuranceRuleModal';
 
 const initialState = {
     showRules: false,
@@ -21,6 +20,7 @@ const initialState = {
 };
 
 const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice }) => {
+
     const {
         t,
         i18n: { language }
@@ -127,11 +127,13 @@ const InsuranceSection = React.memo(({ insuranceRules, order, liquidPrice }) => 
                         >
                             {t('common:view_all')}
                         </Button>
-                        <div data-tip="" data-for="insurance_purchase_button">
-                            <Button className="w-fit !text-sm !h-9 px-4 py-3 whitespace-nowrap" disabled={!isPurchaseAble} onClick={onBuyInsuranceHandler}>
-                                {t('futures:insurance.buy_insurance')}
-                            </Button>
-                        </div>
+                        {order?.status === FuturesOrderEnum.Status.ACTIVE && (
+                            <div data-tip="" data-for="insurance_purchase_button">
+                                <Button className="w-fit !text-sm !h-9 px-4 py-3 whitespace-nowrap" disabled={!isPurchaseAble} onClick={onBuyInsuranceHandler}>
+                                    {t('futures:insurance.buy_insurance')}
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
