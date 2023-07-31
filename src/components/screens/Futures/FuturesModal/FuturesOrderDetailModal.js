@@ -17,6 +17,7 @@ import colors from 'styles/colors';
 import { ChevronUp, ChevronDown } from 'react-feather';
 import { useRouter } from 'next/router';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { FuturesMarginMode } from 'redux/reducers/futures';
 
 const getAllAssets = createSelector([(state) => state.utils, (utils, params) => params], (utils, params) => {
     const assets = {};
@@ -356,7 +357,7 @@ const AdjustmentHistory = React.memo(({ id, onClose }) => {
                         <Span>{renderCellTable('type', item.metadata, t, language)}</Span>
                     </Item>
                 </Row>
-                {item?.metadata?.modify_liq_price && (
+                {item?.metadata?.modify_liq_price && orderDetail?.margin_type !== FuturesMarginMode?.Cross && (
                     <Row>
                         <Label>{t('futures:mobile:liq_price')}</Label>
                         <Span>{renderModify(item?.metadata, 'liq_price')}</Span>
