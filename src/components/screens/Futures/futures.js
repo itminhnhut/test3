@@ -1,36 +1,36 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { BREAK_POINTS } from 'constants/constants';
-import { ApiStatus, LOCAL_STORAGE_KEY, NON_LOGIN_KEY, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
-import { Responsive, WidthProvider } from 'react-grid-layout';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
-import FuturesChart from 'components/screens/Futures/FuturesChart';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import FuturesPairDetail from 'components/screens/Futures/PairDetail';
-import FuturesTradeRecord from 'components/screens/Futures/TradeRecord';
-import FuturesFavoritePairs from 'components/screens/Futures/FavoritePairs';
-import FuturesPlaceOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc';
-import futuresGridConfig, { futuresGridKey, futuresLayoutKey } from 'components/screens/Futures/_futuresGrid';
-import useWindowSize from 'hooks/useWindowSize';
-import DynamicNoSsr from 'components/DynamicNoSsr';
-import dynamic from 'next/dynamic';
-import Emitter from 'redux/actions/emitter';
-import 'react-grid-layout/css/styles.css';
-import { getOrdersList, fetchFuturesSetting } from 'redux/actions/futures';
-import FuturesMarketWatch from 'models/FuturesMarketWatch';
-import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
-import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
-import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTermsModal';
 import classNames from 'classnames';
-import DefaultMobileView from 'src/components/common/DefaultMobileView';
-import { useLocalStorage } from 'react-use';
-import styled from 'styled-components';
+import DynamicNoSsr from 'components/DynamicNoSsr';
 import { DragHandleArea, RemoveItemArea, ResizeHandleArea } from 'components/common/ReactGridItem';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
+import futuresGridConfig, { futuresGridKey, futuresLayoutKey } from 'components/screens/Futures/_futuresGrid';
+import { BREAK_POINTS } from 'constants/constants';
+import useWindowSize from 'hooks/useWindowSize';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Responsive, WidthProvider } from 'react-grid-layout';
+import 'react-grid-layout/css/styles.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocalStorage } from 'react-use';
+import { LOCAL_STORAGE_KEY, NON_LOGIN_KEY, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
+import Emitter from 'redux/actions/emitter';
+import { fetchFuturesSetting, getOrdersList } from 'redux/actions/futures';
+import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
+import DefaultMobileView from 'src/components/common/DefaultMobileView';
+import styled from 'styled-components';
 
 const GridLayout = WidthProvider(Responsive);
 
 const FuturesProfitEarned = dynamic(() => import('components/screens/Futures/TakedProfit'), { ssr: false });
+const FuturesFavoritePairs = dynamic(() => import('components/screens/Futures/FavoritePairs'), { ssr: false });
+const FuturesChart = dynamic(() => import('components/screens/Futures/FuturesChart'), { ssr: false });
+const FuturesPairDetail = dynamic(() => import('components/screens/Futures/PairDetail'), { ssr: false });
+const FuturesTradeRecord = dynamic(() => import('components/screens/Futures/TradeRecord'), { ssr: false });
+const FuturesMarginRatioVndc = dynamic(() => import('./PlaceOrder/Vndc/MarginRatioVndc'), { ssr: false });
+const FuturesTermsModal = dynamic(() => import('components/screens/Futures/FuturesModal/FuturesTermsModal'), { ssr: false });
+const FuturesPlaceOrderVndc = dynamic(() => import('components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc'), { ssr: false });
 
 const INITIAL_STATE = {
     layouts: futuresGridConfig.layoutsVndc,
@@ -240,7 +240,7 @@ const Futures = () => {
                                 rowHeight={24}
                                 draggableHandle=".dragHandleArea"
                                 resizeHandles={['se']}
-                                resizeHandle={<ResizeHandleArea />}
+                                resizeHandle={<ResizeHandleArea className="!z-[21]" />}
                                 onLayoutChange={(_currentLayout, allNewLayouts) => {
                                     const flatLayout = [...allNewLayouts[state.breakpoint], ...state.prevLayouts].filter((layout, index, originLayouts) => {
                                         const firstIndex = originLayouts.findIndex((l) => l.i === layout.i);
@@ -307,6 +307,7 @@ const Futures = () => {
                                 {componentLayoutFutures?.isShowOpenOrders && (
                                     <GridItem data-grid={getDataGrid(futuresGridKey.tradeRecord)} key={futuresGridKey.tradeRecord} className={classNames('')}>
                                         <RemoveItemArea
+                                            className="!z-[21]"
                                             onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.tradeRecord]: false })}
                                         />
                                         <DragHandleArea />
@@ -364,6 +365,5 @@ const Futures = () => {
     );
 };
 
-const GridItem = styled.div.attrs({ className: 'group border border-divider dark:bg-dark-dark bg-white dark:border-divider-dark' })``;
-
+const GridItem = styled.div.attrs({ className: 'group border border-divider dark:border-divider-dark dark:bg-dark-dark bg-white ' })``;
 export default Futures;
