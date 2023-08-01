@@ -24,6 +24,7 @@
         "buy_insurance": "Hỗ trợ bảo hiểm",
         "insurance_contract_title": "Hợp đồng bảo hiểm",
         "rules_modal_title":"Quy định giao dịch",
+        "max_leverage":"Đòn bẩy tối đa",
         "status": {
             "available": "Còn hiệu lực",
             "expired": "Hết hạn",

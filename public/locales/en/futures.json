@@ -21,7 +21,8 @@
         "condition_buy_cover": "The position does not meet conditions to buy cover. View more insurance rules",
         "buy_insurance": "Buy Cover",
         "insurance_contract_title": "Insurance contract",
-        "rules_modal_title":"Insurance Rules",
+        "rules_modal_title":"Insurance rules",
+        "max_leverage":"Max leverage",
         "status": {
             "available": "Available",
             "expired": "Expired",

@@ -205,6 +205,7 @@
     "support_type": "Support {{ types }}",
     "description": "Description",
     "details": "Details",
+    "detail":"Detail",
     "view_rules": "View Rules",
     "notes": "Notes",
     "completed": "Completed",

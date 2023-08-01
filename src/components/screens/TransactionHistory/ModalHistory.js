@@ -26,7 +26,7 @@ const renderWallet = ({ t, key, language }) => {
         [WalletType.FUTURES]: t('common:wallet', { wallet: 'Nami Futures' }),
         [WalletType.BROKER]: t('common:wallet', { wallet: language === 'vi' ? 'hoa hồng Nami' : 'Nami Commission' }),
         [WalletType.NAO_FUTURES]: t('common:wallet', { wallet: 'NAO Futures' }),
-        [WalletType.INSURANCE]: t('common:wallet', { wallet: 'Insurance' })
+        [WalletType.INSURANCE]: 'Insurance' // t('common:wallet', { wallet: 'Insurance' })
     };
 
     const walletType = WalletTypeById[key];
@@ -128,7 +128,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                             <div className="flex w-full mb-6 justify-end rounded-md hover:opacity-50 transition-opacity cursor-pointer" onClick={onClose}>
                                 <X size={24} />
                             </div>
-                            <div className="mb-6 flex w-full items-start capitalize">
+                            <div className="mb-6 flex w-full items-start">
                                 {detailTx?.categoryContent?.[language] ?? t('transaction-history:default_category')}
                             </div>
                             <div className="mb-6">
@@ -315,7 +315,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         formatKeyData = (
                                             <div
                                                 className={classNames(
-                                                    'uppercase',
+                                                    'capitalize',
                                                     { 'text-red': ['bear', 'sell'].includes(sideInsurance) },
                                                     { 'text-green-3 dark:text-green-2': ['bull', 'buy'].includes(sideInsurance) }
                                                 )}

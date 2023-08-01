@@ -83,7 +83,7 @@ const ContractItem = ({ insurance, p_market }) => {
                 <div className="flex items-center space-x-2">
                     <span className="font-semibold">{insurance?.asset_covered}</span>
                     <div className="w-0.5 h-0.5 bg-gray-1 dark:bg-gray-7 rounded-full"></div>
-                    <span className={classNames('font-semibold', sideColor)}>{insurance?.side}</span>
+                    <span className={classNames('font-semibold capitalize', sideColor)}>{insurance?.side?.toLowerCase()}</span>
                 </div>
 
                 <span className="font-semibold">{formatNumber(insurance?.margin, q_AssetDigit)}</span>
@@ -111,7 +111,7 @@ const ContractItem = ({ insurance, p_market }) => {
                 </span>
             </div>
             <Button variants="secondary" disabled={loading} onClick={getInsuranceDetailLink} className="mt-4 !py-2 !text-sm">
-                {t('common:details')}
+                {t('common:detail')}
             </Button>
         </div>
     );
