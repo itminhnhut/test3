@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 
 import dynamic from 'next/dynamic';
 
@@ -17,8 +17,6 @@ import styled from 'styled-components';
 
 const AllFilters = dynamic(() => import('components/screens/NFT/Components/Lists/AllFilters'), { ssr: false });
 
-const NoResult = dynamic(() => import('components/screens/NFT/Components/Page/NoResult'), { ssr: false });
-const NoData = dynamic(() => import('components/screens/NFT/Components/Page/NoData'), { ssr: false });
 const SkeletonCard = dynamic(() => import('components/screens/NFT/Components/Page/SkeletonCard'), { ssr: false });
 
 const CardItems = dynamic(() => import('components/screens/NFT/Components/Lists/CardItems'), { ssr: false });
@@ -54,7 +52,7 @@ const NFTWallet = () => {
     const [dataCollection, setDataCollection] = useState();
     const [summary, setSummary] = useState([]);
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState();
 
     // ** call api get summary
     const handleGetSummary = async () => {
@@ -154,17 +152,24 @@ const NFTWallet = () => {
         }
     };
 
-    const renderData = () => {
-        if (isLoading) return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} />;
-
-        if (data?.length > 0)
+    const renderData = useCallback(() => {
+        if (isLoading || !Array.isArray(data)) {
+            return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} />;
+        }
+        if (Array.isArray(data)) {
             return (
-                <CardItems isDark={isDark} wallet={true} listNFT={data} isOpen={filter.isOpen} grid={filter.grid} showCollection={filter.isShowCollection} />
+                <CardItems
+                    wallet={true}
+                    listNFT={data}
+                    isDark={isDark}
+                    grid={filter.grid}
+                    isOpen={filter.isOpen}
+                    noResult={filter.search.length > 0}
+                    showCollection={filter.isShowCollection}
+                />
             );
-        // ** page no search
-        if (data?.length === 0 && filter.search.length > 0) return <NoResult />;
-        return <NoData />;
-    };
+        }
+    }, [data, isLoading, filter.isShowCollection, filter.grid, filter.isOpen, filter.category]);
 
     return (
         <>

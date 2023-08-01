@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 import { useTranslation } from 'next-i18next';
@@ -12,7 +12,10 @@ import { LIST_TIER, STATUS } from 'components/screens/NFT/Constants';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDark }) => {
+const NoData = dynamic(() => import('components/screens/NFT/Components/Page/NoData'), { ssr: false });
+const NoResult = dynamic(() => import('components/screens/NFT/Components/Page/NoResult'), { ssr: false });
+
+const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDark, noResult }) => {
     const {
         t,
         i18n: { language }
@@ -65,80 +68,75 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
     };
 
     const renderItems = useCallback(() => {
-        return (
-            listNFT?.length > 0 &&
-            listNFT?.map((item, key) => {
-                const getTier = LIST_TIER.find((f) => f.active === item.tier);
-                return (
-                    <Link href={wallet ? `NFT/${item._id}` : `nft/${item._id}`} key={`card_item_${item._id}_${item.name}`}>
-                        <section
-                            className={classNames('max-w-[394px] h-full shadow-card_light dark:shadow-popover bg-white dark:bg-dark-4 rounded-xl max-h-fit', {
-                                'max-w-[189px]': grid === 6
-                            })}
-                            id={item._id}
-                        >
-                            <section className={classNames('max-h-[394px]', { 'max-h-[189px]': grid === 6 })}>
-                                <img width={394} height={394} src={item.image} className="rounded-t-xl" />
-                            </section>
-                            <section className={classNames('h-auto mx-5 my-5', { '!mx-4 !my-4': grid === 6 })}>
-                                {renderTitle(item)}
-                                <Tooltip
-                                    isV3
-                                    place="top"
-                                    effect="solid"
-                                    id={item?.name}
-                                    className={classNames('max-w-[394px]', { 'max-w-[189px]': grid === 6 })}
-                                />
-                                <p
-                                    data-tip={listTooltip?.includes(key) ? item?.name : ''}
-                                    data-for={item?.name}
-                                    className={classNames(
-                                        ' text-gray-15 overflow-hidden whitespace-nowrap overflow-ellipsis dark:text-gray-4 font-semibold text-2xl mt-4',
-                                        {
-                                            '!text-base !mt-3': grid === 6
-                                        }
-                                    )}
-                                >
-                                    {item?.name}
-                                </p>
-
-                                <WrapperLevelItems
-                                    className={classNames('dark:text-gray-7 text-gray-1 flex flex-row gap-1 mt-1 text-base', {
-                                        '!text-sm': grid === 6
-                                    })}
-                                    isDark={isDark}
-                                >
-                                    <div>{t('nft:tier')}:</div>
-                                    <div className={getTier?.key}>{getTier?.name?.[language]}</div>
-                                </WrapperLevelItems>
-                                {grid === 6 && wallet && (
-                                    <WrapperStatus status={STATUS?.[item.status]?.key} className="h-7 w-max px-3 py-1 mt-3 rounded-[80px] text-sm">
-                                        {STATUS?.[item.status]?.[language]}
-                                    </WrapperStatus>
-                                )}
-                            </section>
+        return listNFT?.map((item, key) => {
+            const getTier = LIST_TIER.find((f) => f.active === item.tier);
+            return (
+                <Link href={wallet ? `NFT/${item._id}` : `nft/${item._id}`} key={`card_item_${item._id}_${item.name}`}>
+                    <section
+                        className={classNames('max-w-[394px] h-full shadow-card_light dark:shadow-popover bg-white dark:bg-dark-4 rounded-xl max-h-fit', {
+                            'max-w-[189px]': grid === 6
+                        })}
+                        id={item._id}
+                    >
+                        <section className={classNames('max-h-[394px]', { 'max-h-[189px]': grid === 6 })}>
+                            <img width={394} height={394} src={item.image} className="rounded-t-xl" />
                         </section>
-                    </Link>
-                );
-            })
-        );
+                        <section className={classNames('h-auto mx-5 my-5', { '!mx-4 !my-4': grid === 6 })}>
+                            {renderTitle(item)}
+                            <Tooltip isV3 place="top" effect="solid" id={item?.name} className={classNames('max-w-[394px]', { 'max-w-[189px]': grid === 6 })} />
+                            <p
+                                data-tip={listTooltip?.includes(key) ? item?.name : ''}
+                                data-for={item?.name}
+                                className={classNames(
+                                    ' text-gray-15 overflow-hidden whitespace-nowrap overflow-ellipsis dark:text-gray-4 font-semibold text-2xl mt-4',
+                                    {
+                                        '!text-base !mt-3': grid === 6
+                                    }
+                                )}
+                            >
+                                {item?.name}
+                            </p>
+
+                            <WrapperLevelItems
+                                className={classNames('dark:text-gray-7 text-gray-1 flex flex-row gap-1 mt-1 text-base', {
+                                    '!text-sm': grid === 6
+                                })}
+                                isDark={isDark}
+                            >
+                                <div>{t('nft:tier')}:</div>
+                                <div className={getTier?.key}>{getTier?.name?.[language]}</div>
+                            </WrapperLevelItems>
+                            {grid === 6 && wallet && (
+                                <WrapperStatus status={STATUS?.[item.status]?.key} className="h-7 w-max px-3 py-1 mt-3 rounded-[80px] text-sm">
+                                    {STATUS?.[item.status]?.[language]}
+                                </WrapperStatus>
+                            )}
+                        </section>
+                    </section>
+                </Link>
+            );
+        });
     }, [grid, listTooltip, listNFT, isDark]);
 
-    return (
-        <>
-            <WrapperItems
-                className={classNames('flex-row flex-wrap gap-4 grid grid-cols-2 cursor-pointer', {
-                    'grid-cols-4': grid === 6,
-                    'grid-cols-6': grid === 6 && !isOpen,
-                    'grid-cols-3': grid === 4 && !isOpen
-                })}
-                isOpen={isOpen}
-                id="listNFT"
-            >
-                {renderItems()}
-            </WrapperItems>
-        </>
-    );
+    const renderCard = () => {
+        if (listNFT?.length > 0) {
+            return (
+                <WrapperItems
+                    className={classNames('flex-row flex-wrap gap-4 grid grid-cols-2 cursor-pointer', {
+                        'grid-cols-4': grid === 6,
+                        'grid-cols-6': grid === 6 && !isOpen,
+                        'grid-cols-3': grid === 4 && !isOpen
+                    })}
+                    isOpen={isOpen}
+                    id="listNFT"
+                >
+                    {renderItems()}
+                </WrapperItems>
+            );
+        }
+        return noResult ? <NoResult /> : <NoData />;
+    };
+    return <>{renderCard()}</>;
 };
 
 export const WrapperStatus = styled.div.attrs(({ status }) => ({

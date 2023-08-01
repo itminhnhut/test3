@@ -20,8 +20,6 @@ import styled from 'styled-components';
 
 // ** Dynamic
 const NotAuth = dynamic(() => import('./Components/Page/NoAuth'), { ssr: false });
-const NoResult = dynamic(() => import('./Components/Page/NoResult'), { ssr: false });
-const NoData = dynamic(() => import('./Components/Page/NoData'), { ssr: false });
 const SkeletonCard = dynamic(() => import('./Components/Page/SkeletonCard'), { ssr: false });
 
 const CardItems = dynamic(() => import('./Components/Lists/CardItems'), { ssr: false });
@@ -51,7 +49,7 @@ const Filter = ({ isDark }) => {
     const [dataCollection, setDataCollection] = useState();
     const [detailCollection, setDetailCollection] = useState();
     const [isLoading, setIsLoading] = useState(false);
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(null);
 
     const {
         t,
@@ -179,16 +177,24 @@ const Filter = ({ isDark }) => {
         setFilter((prev) => ({ ...prev, search }));
     };
 
-    const renderData = () => {
+    const renderData = useCallback(() => {
         if (!isAuth && filter.category === 'me') return <NotAuth />;
-        if (isLoading) return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} />;
-        if (data?.length > 0) {
-            return <CardItems isDark={isDark} listNFT={data} isOpen={filter.isOpen} grid={filter.grid} showCollection={filter.isShowCollection} />;
+        if (isLoading || !Array.isArray(data)) {
+            return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} />;
         }
-        // ** page no search
-        if (data?.length === 0 && filter.search.length > 0) return <NoResult />;
-        return <NoData />;
-    };
+        if (Array.isArray(data)) {
+            return (
+                <CardItems
+                    listNFT={data}
+                    isDark={isDark}
+                    grid={filter.grid}
+                    isOpen={filter.isOpen}
+                    noResult={filter.search.length > 0}
+                    showCollection={filter.isShowCollection}
+                />
+            );
+        }
+    }, [isLoading, data, filter.isShowCollection, filter.grid, filter.isOpen, filter.category]);
 
     const renderHeader = useCallback(() => {
         if (filter.isShowCollection) {
