@@ -65,7 +65,7 @@ const RuleItem = ({ rule }) => {
                 <span className="font-semibold">{rule?.symbol}</span>
             </div>
             <div className="mt-2 flex items-center justify-between">
-                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:max_leverage')} </span>
+                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:insurance.max_leverage')} </span>
                 <span className="font-semibold">{rule?.max_leverage}x</span>
             </div>
             <div className="mt-2 flex items-center justify-between">
