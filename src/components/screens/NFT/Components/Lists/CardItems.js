@@ -106,11 +106,12 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                                     className={classNames('dark:text-gray-7 text-gray-1 flex flex-row gap-1 mt-1 text-base', {
                                         '!text-sm': grid === 6
                                     })}
+                                    isDark={isDark}
                                 >
                                     <div>{t('nft:tier')}:</div>
                                     <div className={getTier?.key}>{getTier?.name?.[language]}</div>
                                 </WrapperLevelItems>
-                                {grid === 6 && (
+                                {grid === 6 && wallet && (
                                     <WrapperStatus status={STATUS?.[item.status]?.key} className="h-7 w-max px-3 py-1 mt-3 rounded-[80px] text-sm">
                                         {STATUS?.[item.status]?.[language]}
                                     </WrapperStatus>
@@ -121,7 +122,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                 );
             })
         );
-    }, [grid, listTooltip, listNFT]);
+    }, [grid, listTooltip, listNFT, isDark]);
 
     return (
         <>
@@ -156,7 +157,7 @@ export const WrapperStatus = styled.div.attrs(({ status }) => ({
 `;
 
 const WrapperItems = styled.section`
-    width: calc(100% - ${(props) => (props.isOpen ? '388px' : '0px')});
+    // width: calc(100% - ${(props) => (props.isOpen ? '388px' : '0px')});
     height: fit-content;
 `;
 

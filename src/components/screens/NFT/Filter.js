@@ -239,9 +239,10 @@ const Filter = ({ isDark }) => {
                     {TABS?.map((item, idx) => (
                         <TabItem
                             key={item.label}
-                            className="!text-left !px-0 !text-base"
-                            value={item.value}
+                            className="!text-left !px-0 !text-base "
+                            value={item.label}
                             onClick={(isClick) => isClick && handleTab(item.value)}
+                            isActive={item.value === filter.tab}
                         >
                             {item.label}
                         </TabItem>

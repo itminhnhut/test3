@@ -169,7 +169,7 @@ const NFTWallet = () => {
     return (
         <>
             <section className="flex flex-row justify-between">
-                <section className="flex flex-row gap-3  text-gray-1 dark:text-gray-7 text-sm">
+                <section className="flex flex-row gap-3 text-gray-1 dark:text-gray-7 text-sm">
                     <WrapperChip onClick={() => handleChangeWallet('SB')} active={filter.wallet === 'SB'}>
                         Skynamia Badges ({totalSummary.voucher})
                     </WrapperChip>
@@ -193,7 +193,7 @@ const NFTWallet = () => {
 };
 
 const WrapperChip = styled(Chip).attrs(({ active }) => ({
-    className: `${classNames({ 'h-9 bg-dark-13 dark:bg-dark-4 dark:!text-green-2 !text-green-3 font-semibold active': active })}`
+    className: `${classNames('bg-dark-13 dark:bg-dark-4', { 'h-9 dark:!text-green-2 !text-green-3 font-semibold active': active })}`
 }))`
     &.active {
         background-color: rgba(71, 204, 133, 0.1) !important;

@@ -144,13 +144,15 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                 </section>
                 <form className="mt-6">
                     <label className="dark:text-gray-7 text-gray-1 text-sm">NamiID:</label>
-                    <div className="space-y-2 flex flex-col relative pb-10">
+                    <div className="space-y-2 flex flex-col relative pb-10 mt-2">
                         <InputV2
                             value={code}
                             onChange={onChange}
                             maxLength={MAX_LENGTH}
                             placeholder={t('nft:transfer:placeholder')}
-                            className="w-full text-gray-1 dark:text-gray-4 h-12"
+                            className="w-full h-12"
+                            classNameDivInner="bg-dark-12 dark:bg-dark-2"
+                            classNameInput="dark:text-gray-7 text-gray-1 placeholder-red"
                             suffix={
                                 <span onClick={onPaste} className="text-teal font-semibold cursor-pointer select-none">
                                     {t('nft:transfer:paste')}
