@@ -156,7 +156,7 @@ const ModalFriendDetail = ({
                 </div>
                 <div className="flex flex-row justify-between mb-3 last:mb-0">
                     <div className="text-gray-1 dark:text-gray-7">{KIND['insurance']?.[language]}</div>
-                    <div className="font-semibold">{handleTotal(valueOrderVol, totalOrderVol?.nao_futures)}</div>
+                    <div className="font-semibold">{handleTotal(valueOrderVol, totalOrderVol?.insurance)}</div>
                 </div>
             </div>
 

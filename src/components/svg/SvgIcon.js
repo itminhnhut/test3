@@ -436,10 +436,10 @@ const AddCircleIcon = ({ color = '#768394', ...props }) => (
     </svg>
 );
 
-const AddCircleColorIcon = (props) => (
-    <svg {...props} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+const AddCircleColorIcon = ({ size = 12, color = '#47CC85', ...rest }) => (
+    <svg {...rest} width={size} height={size} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#zfktez410a)">
-            <path d="M6 1C3.24 1 1 3.24 1 6s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm2.5 5.5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1z" fill="#47CC85" />
+            <path d="M6 1C3.24 1 1 3.24 1 6s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm2.5 5.5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1z" fill={color} />
         </g>
         <defs>
             <clipPath id="zfktez410a">
