@@ -58,7 +58,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
         return (
             <button
                 onClick={() => setFilter(config)}
-                className="whitespace-nowrap bg-dark-12 dark:bg-dark-2 hover:bg-gray-6 text-gray-1 dark:hover:bg-dark-5 dark:text-gray-7
+                className="whitespace-nowrap bg-gray-10 hover:bg-gray-6 text-gray-15 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7
                         px-4 rounded-md px-auto py-auto font-semibold h-12"
             >
                 {item.title}
@@ -70,7 +70,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
         const data = filter?.[key] || {};
         return (
             <SelectV2
-                className="text-txtSecondary dark:text-txtSecondary-dark"
+                // className="text-txtSecondary dark:text-txtSecondary-dark"
                 options={item?.values || []}
                 value={data?.value || null}
                 onChange={(e) => onChange(e, key)}
