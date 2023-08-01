@@ -395,15 +395,15 @@ const TransferModal = ({ isMobile, alert }) => {
             }
 
             const WALLET = {
-                [WalletType.SPOT]: { icon: <SvgWalletExchange size={20} mode={iconMode} />, type: t('wallet:spot_short') },
-                [WalletType.FUTURES]: { icon: <SvgWalletFutures size={20} mode={iconMode} />, type: t('wallet:nami_futures_short') },
-                [WalletType.BROKER]: { icon: <PartnersIcon size={20} mode={iconMode} />, type: t('wallet:commission') },
+                [WalletType.SPOT]: { icon: <SvgWalletExchange size={24} mode={iconMode} />, type: t('wallet:spot_short') },
+                [WalletType.FUTURES]: { icon: <SvgWalletFutures size={24} mode={iconMode} />, type: t('wallet:nami_futures_short') },
+                [WalletType.BROKER]: { icon: <PartnersIcon size={24} mode={iconMode} />, type: t('wallet:commission') },
                 [WalletType.NAO_FUTURES]: {
-                    icon: <Image width={20} height={20} src={getS3Url('/images/nao/ic_nao.png')} />,
+                    icon: <Image width={24} height={24} src={getS3Url('/images/nao/ic_nao.png')} />,
                     type: 'NAO Futures'
                 },
                 [WalletType.INSURANCE]: {
-                    icon: <FutureInsurance size={20} />,
+                    icon: <FutureInsurance size={24} />,
                     type: 'Insurance'
                 }
             };
@@ -416,9 +416,9 @@ const TransferModal = ({ isMobile, alert }) => {
             return (
                 <div className="flex w-full space-x-3 items-center ">
                     <div className="flex items-center ">{renderWallet().icon}</div>
-                    {side && <div className="txtSecond-3 w-10 ">{side}</div>}
+                    {side && <div className="text-sm md:text-base w-10 ">{side}</div>}
 
-                    <div className="relative flex-grow text-sm font-semibold flex items-center">
+                    <div className="relative flex-grow text-sm md:text-base font-semibold flex items-center">
                         <span className={`${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{renderWallet().type}</span>
 
                         {isDropdown && (
@@ -482,13 +482,13 @@ const TransferModal = ({ isMobile, alert }) => {
                     </div>
                     <button
                         disabled={isNotAllowToRevert}
-                        className={classNames('rounded-full transition  select-none', {
+                        className={classNames('rounded-full transition select-none text-green-3 dark:text-teal', {
                             'cursor-not-allowed opacity-60': isNotAllowToRevert,
                             'hover:opacity-75 cursor-pointer': !isNotAllowToRevert
                         })}
                         onClick={revertWallet}
                     >
-                        <SyncAltIcon size={24} />
+                        <SyncAltIcon size={24} color="currentColor" />
                     </button>
                 </div>
 
@@ -857,7 +857,12 @@ const TransferModal = ({ isMobile, alert }) => {
                         <div onClick={onSetMax} className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">
                             {renderAvailableWallet()}
                         </div>
-                        <AddCircleColorIcon className="cursor-pointer" onClick={() => handleKycRequest(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))} />
+                        <AddCircleColorIcon 
+                            className="cursor-pointer text-green-3 dark:text-teal" 
+                            onClick={() => handleKycRequest(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))}
+                            size={16}
+                            color="currentColor"
+                        />
                     </div>
                 </div>
 
