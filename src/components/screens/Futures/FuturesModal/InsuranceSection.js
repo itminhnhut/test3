@@ -104,7 +104,7 @@ const InsuranceSection = React.memo(({ onCloseOrderDetailModal, insuranceRules, 
                 <div className="flex justify-between items-center">
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:insurance:title')}</div>
                     <div
-                        className="text-teal hover:text-green-4 font-semibold flex items-center space-x-2 cursor-pointer"
+                        className="text-green-3 dark:text-green-2 hover:text-green-4 font-semibold flex items-center space-x-2 cursor-pointer"
                         onClick={() => setState({ showRules: true })}
                     >
                         <span>{t('futures:insurance:rules')}</span>
