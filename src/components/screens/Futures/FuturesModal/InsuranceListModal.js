@@ -41,7 +41,7 @@ const InsuranceListModal = ({ visible, onCloseAll = () => {}, onClose = () => {}
     const p_market = marketWatch?.[symbol]?.lastPrice || 0;
 
     return (
-        <ModalV2 canBlur={false} closeButton={false} className="!max-w-[800px]" isVisible={visible} onBackdropCb={onClose}>
+        <ModalV2 canBlur={false} closeButton={false} className="!max-w-[800px] !max-h-[95%]" isVisible={visible} onBackdropCb={onClose}>
             <div className="flex items-center justify-between">
                 <ArrowLeft className="cursor-pointer" color="currentColor" size={24} onClick={onClose} />
                 <X className="cursor-pointer" color="currentColor" size={24} onClick={onCloseAll} />
