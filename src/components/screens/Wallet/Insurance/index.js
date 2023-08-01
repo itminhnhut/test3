@@ -215,7 +215,7 @@ const InsuranceWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, 
     const renderEstWallet = useCallback(() => {
         return (
             <div className="mt-[24px] md:mt-12 flex items-center justify-between">
-                <div className="hidden md:flex rounded-full dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
+                <div className="hidden md:flex rounded-full bg-gray-13 dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
                     <FutureInsurance size={32} />
                     {/* <SvgWalletFutures size={32} /> */}
                 </div>

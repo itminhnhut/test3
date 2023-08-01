@@ -183,7 +183,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 render: (data, item) => {
                     const value = data < 0 ? 0 : `+ ${formatNumber(data, 4)}`;
                     return (
-                        <span className="text-teal">
+                        <span className="text-teal font-semibold">
                             {value} {assetTabs.find((e) => e.value === item.currency)?.title}
                         </span>
                     );
