@@ -150,7 +150,7 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
                 <div>
                     <Row>
                         <Item>{t('futures:leverage:leverage')}</Item>
-                        <Item className="text-teal">{order?.leverage}x</Item>
+                        <Item className="text-green-3 dark:text-green-2">{order?.leverage}x</Item>
                     </Row>
                     <Row>
                         <Item>{t('futures:margin')}</Item>
@@ -176,7 +176,7 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
                     </Row>
                     <Row>
                         <Item>{t('futures:take_profit')}</Item>
-                        <Item className="text-teal">{order?.tp ? formatNumber(order?.tp, decimals.price) : '-'}</Item>
+                        <Item className="text-green-3 dark:text-green-2">{order?.tp ? formatNumber(order?.tp, decimals.price) : '-'}</Item>
                     </Row>
                     <Row>
                         <Item>{t('futures:mobile:close_fee')}</Item>
@@ -188,7 +188,7 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
                         <Item data-tip={t('futures:funding_rate_des')} data-for="funding_fee" tooltip>
                             {t('futures:funding_fee')}
                         </Item>
-                        <Item className={order?.funding_fee?.total && (order?.funding_fee?.total > 0 ? 'text-teal' : 'text-red')}>
+                        <Item className={order?.funding_fee?.total && (order?.funding_fee?.total > 0 ? 'text-green-3 dark:text-green-2' : 'text-red')}>
                             {renderFeeOther(order, 'funding_fee.total', true)}
                         </Item>
                     </Row>

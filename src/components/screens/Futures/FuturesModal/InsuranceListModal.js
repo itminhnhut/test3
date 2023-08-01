@@ -107,10 +107,18 @@ const ContractItem = ({ insurance, p_market }) => {
                 <span className="text-txtSecondary dark:text-txtSecondary-dark">P-Claim </span>
                 <span className="font-semibold">
                     {formatNumber(insurance?.p_claim, q_AssetDigit)}{' '}
-                    <span className={classNames('', sideColor)}>({formatNumber((Math.abs(insurance?.p_claim - p_market) / p_market) * 100, 2)}%)</span>
+                    {insurance?.state === INSURANCE_STATE.AVAILABLE && (
+                        <span className={classNames('', sideColor)}>({formatNumber((Math.abs(insurance?.p_claim - p_market) / p_market) * 100, 2)}%)</span>
+                    )}
                 </span>
             </div>
-            <Button variants="secondary" disabled={loading} onClick={getInsuranceDetailLink} className="mt-4 !py-2 !text-sm">
+            <Button
+                variants="secondary"
+                disabled={loading}
+                onClick={getInsuranceDetailLink}
+                className="mt-4 !bg-gray-12 dark:!bg-dark-2 hover:!bg-gray-6
+                dark:hover:!bg-dark-5 !h-9 !py-2 !text-sm"
+            >
                 {t('common:detail')}
             </Button>
         </div>
