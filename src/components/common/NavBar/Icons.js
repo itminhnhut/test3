@@ -21,7 +21,7 @@ import {
     PortfolioIconNoColor as futures_portfolio,
     ProfitStats as profit_stats,
     FutureNFTIcon as nft_wallet,
-    FutureNFTIcon as nft
+    NFTIcon as nft
 } from '../../svg/SvgIcon';
 
 export default {

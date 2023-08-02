@@ -74,6 +74,10 @@ const index = ({ idNFT }) => {
         idNFT && handleDetailNFT();
     }, [idNFT]);
 
+    const renderHistory = useCallback(() => {
+        return <History idNFT={idNFT} />;
+    }, [idNFT]);
+
     return (
         <MaldivesLayout>
             <main className="bg-white dark:bg-shadow">
@@ -93,7 +97,7 @@ const index = ({ idNFT }) => {
                     </section>
                     <section className="mt-[60px]">
                         <h3 className="text-2xl font-semibold text-gray-15 dark:text-gray-4">{t('nft:history:title')}</h3>
-                        <section className="mt-4">{idNFT ? <History status={detail?.status} idNFT={idNFT} /> : null}</section>
+                        <section className="mt-4">{renderHistory()}</section>
                     </section>
                 </article>
             </main>
@@ -109,7 +113,7 @@ export async function getStaticPaths() {
 }
 export const getStaticProps = async ({ locale, params }) => ({
     props: {
-        idNFT: params.id,
+        idNFT: params?.id,
         ...(await serverSideTranslations(locale, ['common', 'navbar', 'staking', 'nft']))
     }
 });

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, memo } from 'react';
 import { useWindowSize } from 'react-use';
 
 import { useTranslation } from 'next-i18next';
@@ -30,7 +30,7 @@ const EVENT = {
     TRANSFER: { vi: 'Chuyển', en: 'Transfer' }
 };
 
-const History = ({ idNFT, status }) => {
+const History = memo(({ idNFT }) => {
     const {
         t,
         i18n: { language }
@@ -59,7 +59,7 @@ const History = ({ idNFT, status }) => {
     // ** handle call api history NFT
     useEffect(() => {
         handleHistoryNFT();
-    }, [idNFT, status]);
+    }, []);
 
     const renderFrom = (row) => {
         if (row.type === 'CREATE') return '-';
@@ -145,10 +145,10 @@ const History = ({ idNFT, status }) => {
                 }}
             />
         );
-    }, [dataHistory?.data, loading, status]);
+    }, [dataHistory?.data, loading]);
 
     return <>{renderTable()}</>;
-};
+});
 
 const WrapperTable = styled(TableV2)`
     .rc-table-container {

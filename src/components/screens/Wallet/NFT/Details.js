@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useWindowSize } from 'react-use';
 
 import dynamic from 'next/dynamic';
@@ -36,8 +36,6 @@ const Contents = dynamic(() => import('components/screens/NFT/Components/Detail/
 const History = dynamic(() => import('components/screens/NFT/Components/Detail/History'), {
     ssr: false
 });
-
-const LIMIT = 10;
 
 const initState = {
     loading: false,
@@ -162,6 +160,10 @@ const WalletDetail = ({ idNFT }) => {
         return detail?.image ? <img width={614} height={614} src={detail?.image} /> : null;
     };
 
+    const renderHistory = useCallback(() => {
+        return <History idNFT={idNFT} />;
+    }, [idNFT, detail?.status]);
+
     return (
         <MaldivesLayout>
             <main className="bg-white dark:bg-shadow">
@@ -180,7 +182,7 @@ const WalletDetail = ({ idNFT }) => {
                     </section>
                     <section className="mt-[60px]">
                         <h3 className="text-2xl font-semibold text-gray-15 dark:text-gray-4">{t('nft:history:title')}</h3>
-                        <section className="mt-4">{detail?.status ? <History status={detail?.status} idNFT={idNFT} /> : null}</section>
+                        <section className="mt-4">{renderHistory()}</section>
                     </section>
                 </article>
                 <Use isModal={isUse} category={detail?.category} onCloseModal={handleModalUse} statusCodeNFT={statusCodeNFT} onUseSubmit={handleUseSubmit} />
