@@ -1,9 +1,11 @@
 import classNames from 'classnames';
 import DynamicNoSsr from 'components/DynamicNoSsr';
 import { DragHandleArea, RemoveItemArea, ResizeHandleArea } from 'components/common/ReactGridItem';
+import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
 import futuresGridConfig, { futuresGridKey, futuresLayoutKey } from 'components/screens/Futures/_futuresGrid';
+import Spinner from 'components/svg/Spinner';
 import { BREAK_POINTS } from 'constants/constants';
 import useWindowSize from 'hooks/useWindowSize';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
@@ -27,14 +29,20 @@ const FuturesProfitEarned = dynamic(() => import('components/screens/Futures/Tak
 const FuturesFavoritePairs = dynamic(() => import('components/screens/Futures/FavoritePairs'), { ssr: false });
 const FuturesChart = dynamic(() => import('components/screens/Futures/FuturesChart'), { ssr: false });
 const FuturesPairDetail = dynamic(() => import('components/screens/Futures/PairDetail'), { ssr: false });
-const FuturesTradeRecord = dynamic(() => import('components/screens/Futures/TradeRecord'), { ssr: false });
+const FuturesTradeRecord = dynamic(() => import('components/screens/Futures/TradeRecord'), {
+    ssr: false,
+    loading: () => (
+        <div className="h-full flex justify-center items-center">
+            <Spiner />
+        </div>
+    )
+});
 const FuturesMarginRatioVndc = dynamic(() => import('./PlaceOrder/Vndc/MarginRatioVndc'), { ssr: false });
 const FuturesTermsModal = dynamic(() => import('components/screens/Futures/FuturesModal/FuturesTermsModal'), { ssr: false });
 const FuturesPlaceOrderVndc = dynamic(() => import('components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc'), { ssr: false });
 
 const INITIAL_STATE = {
     layouts: futuresGridConfig.layoutsVndc,
-    prevLayouts: futuresGridConfig.layoutsVndc['2xl'],
     breakpoint: '2xl',
     loading: false,
     pair: null,
@@ -210,7 +218,7 @@ const Futures = () => {
         };
     }, [unitConfig, pairConfig]);
 
-    const getDataGrid = useCallback((key) => state.prevLayouts?.find((layout) => layout.i === key), [state.prevLayouts]);
+    const getDataGrid = useCallback((key) => state.layouts[state.breakpoint]?.find((layout) => layout.i === key), [state.layouts, state.breakpoint]);
 
     return (
         <>
@@ -218,7 +226,6 @@ const Futures = () => {
             <FuturesPageTitle pair={state.pair} price={state.pairPrice?.lastPrice} pricePrecision={pairConfig?.pricePrecision} />
             <DynamicNoSsr>
                 <MaldivesLayout
-                    // useGridSettings
                     navStyle={{
                         boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)'
                     }}
@@ -241,29 +248,33 @@ const Futures = () => {
                                 draggableHandle=".dragHandleArea"
                                 resizeHandles={['se']}
                                 resizeHandle={<ResizeHandleArea className="!z-[21]" />}
-                                onLayoutChange={(_currentLayout, allNewLayouts) => {
-                                    const flatLayout = [...allNewLayouts[state.breakpoint], ...state.prevLayouts].filter((layout, index, originLayouts) => {
-                                        const firstIndex = originLayouts.findIndex((l) => l.i === layout.i);
-                                        return firstIndex === index;
-                                    });
+                                onLayoutChange={(currentBreakPointLayout, allBreakPointLayouts) => {
+                                    const flatLayout = [...currentBreakPointLayout, ...futuresGridConfig.layoutsVndc[state.breakpoint]].filter(
+                                        (layout, index, originLayouts) => {
+                                            const firstIndex = originLayouts.findIndex((l) => l.i === layout.i);
+                                            return firstIndex === index;
+                                        }
+                                    );
 
                                     setLocalGridLayout({
                                         ...localGridLayouts,
-                                        [auth?.code || NON_LOGIN_KEY]: { ...allNewLayouts, [state.breakpoint]: flatLayout }
+                                        [auth?.code || NON_LOGIN_KEY]: { ...allBreakPointLayouts, [state.breakpoint]: flatLayout }
                                     });
 
-                                    setState({ prevLayouts: flatLayout, layouts: { ...allNewLayouts, [state.breakpoint]: flatLayout } });
+                                    setState({ layouts: { ...allBreakPointLayouts, [state.breakpoint]: flatLayout } });
                                 }}
                                 onBreakpointChange={(breakpoint) => setState({ breakpoint })}
-                                onResize={(e) =>
-                                    setState({
-                                        forceUpdateState: state.forceUpdateState + 1
-                                    })
-                                }
+                                // onResize={(e) =>
+                                //     setState({
+                                //         forceUpdateState: state.forceUpdateState + 1
+                                //     })
+                                // }
                             >
                                 {componentLayoutFutures?.isShowFavorites && (
                                     <GridItem
-                                        className="overflow-x-auto"
+                                        className={classNames({
+                                            '!border-t-transparent': getDataGrid(futuresGridKey.favoritePair).y === 0
+                                        })}
                                         data-grid={getDataGrid(futuresGridKey.favoritePair)}
                                         key={futuresGridKey.favoritePair}
                                     >
@@ -278,7 +289,9 @@ const Futures = () => {
                                     <GridItem
                                         data-grid={getDataGrid(futuresGridKey.pairDetail)}
                                         key={futuresGridKey.pairDetail}
-                                        className={classNames('relative z-20')}
+                                        className={classNames('relative z-20', {
+                                            '!border-t-transparent': getDataGrid(futuresGridKey.pairDetail).y === 0
+                                        })}
                                     >
                                         <RemoveItemArea onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.pairDetail]: false })} />
                                         <DragHandleArea />
@@ -292,7 +305,14 @@ const Futures = () => {
                                     </GridItem>
                                 )}
                                 {componentLayoutFutures?.isShowChart && (
-                                    <GridItem id="futures_containter_chart" key={futuresGridKey.chart} data-grid={getDataGrid(futuresGridKey.chart)}>
+                                    <GridItem
+                                        id="futures_containter_chart"
+                                        key={futuresGridKey.chart}
+                                        className={classNames({
+                                            '!border-t-transparent': getDataGrid(futuresGridKey.chart).y === 0
+                                        })}
+                                        data-grid={getDataGrid(futuresGridKey.chart)}
+                                    >
                                         <RemoveItemArea onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.chart]: false })} />
                                         <DragHandleArea />
                                         <FuturesChart
@@ -305,12 +325,19 @@ const Futures = () => {
                                     </GridItem>
                                 )}
                                 {componentLayoutFutures?.isShowOpenOrders && (
-                                    <GridItem data-grid={getDataGrid(futuresGridKey.tradeRecord)} key={futuresGridKey.tradeRecord} className={classNames('')}>
+                                    <GridItem
+                                        data-grid={getDataGrid(futuresGridKey.tradeRecord)}
+                                        key={futuresGridKey.tradeRecord}
+                                        className={classNames({
+                                            '!border-t-transparent': getDataGrid(futuresGridKey.chart).y === 0
+                                        })}
+                                    >
                                         <RemoveItemArea
                                             className="!z-[21]"
                                             onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.tradeRecord]: false })}
                                         />
                                         <DragHandleArea />
+
                                         <FuturesTradeRecord
                                             isVndcFutures={true}
                                             layoutConfig={state.tradeRecordLayout}
@@ -319,11 +346,16 @@ const Futures = () => {
                                             isAuth={!!auth}
                                             pair={state.pair}
                                         />
-                                        {/* <div className="" /> */}
                                     </GridItem>
                                 )}
                                 {componentLayoutFutures?.isShowPlaceOrder && (
-                                    <GridItem data-grid={getDataGrid(futuresGridKey.placeOrder)} key={futuresGridKey.placeOrder}>
+                                    <GridItem
+                                        data-grid={getDataGrid(futuresGridKey.placeOrder)}
+                                        key={futuresGridKey.placeOrder}
+                                        className={classNames({
+                                            '!border-t-transparent': getDataGrid(futuresGridKey.placeOrder).y === 0
+                                        })}
+                                    >
                                         <RemoveItemArea onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.placeOrder]: false })} />
                                         <DragHandleArea height={24} />
                                         <FuturesPlaceOrderVndc
@@ -339,7 +371,13 @@ const Futures = () => {
                                     </GridItem>
                                 )}
                                 {componentLayoutFutures?.isShowAssets && auth && (
-                                    <GridItem data-grid={getDataGrid(futuresGridKey.marginRatio)} key={futuresGridKey.marginRatio}>
+                                    <GridItem
+                                        data-grid={getDataGrid(futuresGridKey.marginRatio)}
+                                        key={futuresGridKey.marginRatio}
+                                        className={classNames({
+                                            '!border-t-transparent': getDataGrid(futuresGridKey.marginRatio).y === 0
+                                        })}
+                                    >
                                         <RemoveItemArea
                                             onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.marginRatio]: false })}
                                         />

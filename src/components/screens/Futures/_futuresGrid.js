@@ -4,23 +4,9 @@ export const futuresGridKey = {
     favoritePair: 'favoritePair',
     pairDetail: 'pairDetail',
     chart: 'chart',
-    orderBook: 'orderBook',
-    recentTrades: 'recentTrades',
     tradeRecord: 'tradeRecord',
     placeOrder: 'placeOrder',
     marginRatio: 'marginRatio',
-    title: 'title',
-    orderDetail: 'orderDetail',
-    logs: 'logs'
-};
-
-export const futuresLayoutKey = {
-    favoritePair: 'isShowFavorites',
-    pairDetail: 'isShowPairDetail',
-    chart: 'isShowChart',
-    tradeRecord: 'isShowOpenOrders',
-    placeOrder: 'isShowPlaceOrder',
-    marginRatio: 'isShowAssets'
 };
 
 const layoutDefault = {
