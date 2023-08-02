@@ -271,6 +271,38 @@ export const seasons = [
         top_ranks_week: 20,
         top_ranks_team: 10,
         lastUpdated: true
+    },
+    {
+        season: 12,
+        start: '2023-08-06T17:00:00.000Z',
+        end: '2023-09-03T17:00:00.000Z',
+        time_to_create: { start: '2023-08-01T17:00:00.000Z', end: '2023-08-18T17:00:00.000Z' },
+        contest_id: 15,
+        title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 9', en: 'NAO Futures VNDC – Nami Championship Season 9' },
+        title: { vi: 'NAO Futures VNDC', en: 'NAO Futures VNDC' },
+        title_champion: { vi: 'Nami Championship mùa 9', en: 'Nami Championship Season 9' },
+        minVolumeInd: {
+            vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để được xếp hạng',
+            en: 'Traders need to meet the Basic Conditions to be ranked. For details',
+            isHtml: false
+        },
+        rules: {
+            vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-8-t7-2023',
+            en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-8-july-2023'
+        },
+        weekly_contest_time: {
+            start: '2023-08-06T17:00:00.000Z',
+            end: '2023-09-03T17:00:00.000Z'
+        },
+        total_rewards: '600,000,000 VNDC',
+        total_weekly_rewards: '50,000,000 VNDC',
+        quoteAsset: 'VNDC',
+        // time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
+        active: false,
+        top_ranks_per: 20,
+        top_ranks_week: 20,
+        top_ranks_team: 10,
+        lastUpdated: true
     }
 ];
 
