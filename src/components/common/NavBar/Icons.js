@@ -1,11 +1,12 @@
 import payment_method from 'components/svg/CreditCard';
+
 import {
     FutureExchangeIcon as spot,
     FutureIcon as futures,
     FutureSwapIcon as swap,
     FutureLaunchpadIcon as launchpad,
     FutureReferralIcon as referral,
-    FuturePortfolioIcon as overview_wallet,
+    FutureWalletIcon as overview_wallet,
     FutureIcon as futures_wallet,
     FutureExchangeIcon as spot_wallet,
     FutureTransferIcon as transfer,
@@ -18,7 +19,9 @@ import {
     PartnerIcon as partner,
     FutureInsurance as nami_insurance,
     PortfolioIconNoColor as futures_portfolio,
-    ProfitStats as profit_stats
+    ProfitStats as profit_stats,
+    FutureNFTIcon as nft_wallet,
+    FutureNFTIcon as nft
 } from '../../svg/SvgIcon';
 
 export default {
@@ -41,5 +44,7 @@ export default {
     payment_method,
     nami_insurance,
     futures_portfolio,
-    profit_stats
+    profit_stats,
+    nft_wallet,
+    nft
 };

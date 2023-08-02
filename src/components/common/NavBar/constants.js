@@ -347,6 +347,14 @@ export const MOBILE_NAV_DATA = [
                 isNew: false,
                 url: PATHS.WALLET.FUTURES,
                 child_lv2: []
+            },
+            {
+                key: 'nft_wallet',
+                title: 'NFT Wallet',
+                localized: 'nft_wallet',
+                isNew: false,
+                url: PATHS.WALLET.NFT,
+                child_lv2: []
             }
         ]
     },
@@ -405,6 +413,14 @@ export const MOBILE_NAV_DATA = [
                 localized: 'staking',
                 isNew: false,
                 url: '/staking',
+                child_lv1: []
+            },
+            {
+                key: 'nft',
+                title: 'nft',
+                localized: 'nft',
+                isNew: false,
+                url: '/nft',
                 child_lv1: []
             }
             // {
