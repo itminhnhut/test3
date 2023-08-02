@@ -58,7 +58,9 @@ const History = memo(({ idNFT }) => {
 
     // ** handle call api history NFT
     useEffect(() => {
-        handleHistoryNFT();
+        if (idNFT) {
+            handleHistoryNFT();
+        }
     }, []);
 
     const renderFrom = (row) => {

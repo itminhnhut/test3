@@ -11,35 +11,35 @@ const LIST_CATEGORY = [
 
 const LIST_TIER = [
     {
-        name: { vi: 'Bình thường', en: 'Common' },
+        name: { vi: 'Bình thường (C)', en: 'Common (C)' },
         active: 'C',
         key: 'normal'
     },
     {
-        name: { vi: 'Đặc biệt', en: 'Special' },
+        name: { vi: 'Đặc biệt (S)', en: 'Special (S)' },
         active: 'S',
         key: 'rate'
     },
     {
-        name: { vi: 'Hiếm', en: 'Rare' },
+        name: { vi: 'Hiếm (R)', en: 'Rare (R)' },
         active: 'R',
         key: 'super'
     },
     {
-        name: { vi: 'Siêu hiếm', en: 'Super Rare' },
+        name: { vi: 'Siêu hiếm (SR)', en: 'Super Rare (SR)' },
         active: 'SR',
         key: 'extremely'
     },
     {
-        name: { vi: 'Cực hiếm', en: 'Ultra Rare' },
+        name: { vi: 'Cực hiếm (UR)', en: 'Ultra Rare (UR)' },
         active: 'UR',
         key: 'supreme'
     }
 ];
 
 const TABS = [
-    { label: 'Skynamia Badges', value: 1 },
-    { label: 'WNFT', value: 2 }
+    { label: 'WNFT', value: 2 },
+    { label: 'Skynamia Badges', value: 1 }
 ];
 
 const STATUS = {

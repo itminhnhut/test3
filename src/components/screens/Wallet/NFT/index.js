@@ -25,8 +25,8 @@ const CollectionFilter = dynamic(() => import('components/screens/NFT/Components
 const TierFilter = dynamic(() => import('components/screens/NFT/Components/Lists/TierFilter'), { ssr: false });
 
 const iniData = {
-    wallet: 'SB',
-    tab: 1,
+    wallet: 'WNFT',
+    tab: 2,
     grid: 4,
     tier: [],
     search: '',
@@ -175,11 +175,11 @@ const NFTWallet = () => {
         <>
             <section className="flex flex-row justify-between">
                 <section className="flex flex-row gap-3 text-gray-1 dark:text-gray-7 text-sm">
-                    <WrapperChip onClick={() => handleChangeWallet('SB')} active={filter.wallet === 'SB'}>
-                        Skynamia Badges ({totalSummary.voucher})
-                    </WrapperChip>
                     <WrapperChip onClick={() => handleChangeWallet('WNFT')} active={filter.wallet === 'WNFT'}>
                         WNFT ({totalSummary.nft})
+                    </WrapperChip>
+                    <WrapperChip onClick={() => handleChangeWallet('SB')} active={filter.wallet === 'SB'}>
+                        Skynamia Badges ({totalSummary.voucher})
                     </WrapperChip>
                 </section>
             </section>

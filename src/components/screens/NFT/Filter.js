@@ -30,7 +30,7 @@ const CollectionFilter = dynamic(() => import('./Components/Lists/CollectionFilt
 const TierFilter = dynamic(() => import('./Components/Lists/TierFilter'), { ssr: false });
 
 const iniData = {
-    tab: 1,
+    tab: 2,
     grid: 4,
     tier: [],
     search: '',

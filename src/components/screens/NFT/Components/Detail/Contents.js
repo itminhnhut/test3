@@ -55,7 +55,7 @@ const Contents = ({ detail, wallet }) => {
                     <div className="flex mx-3 items-center w-1 h-1 rounded-full bg-gray-1 dark:bg-gray-7"></div>
                     <ul className="flex flex-row">
                         <li className="text-gray-1 dark:text-gray-7 mr-1">{t('nft:detail:exp')}:</li>
-                        <li className="font-semibold text-gray-15 dark:text-gray-4">{expired_time}</li>
+                        <li className="font-semibold text-gray-15 dark:text-gray-4">{expired_time} (UTC+7)</li>
                     </ul>
                 </div>
             </WrapperContent>

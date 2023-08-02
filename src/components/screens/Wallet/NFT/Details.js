@@ -155,9 +155,17 @@ const WalletDetail = ({ idNFT }) => {
 
     const renderImage = () => {
         if (detail?.category === 1 && detail?.status !== 0) {
-            return <img width={550} height={550} src={detail?.image} />;
+            return (
+                <WrapperImage className="w-[100vw] max-w-[550px] max-h-[550px]">
+                    <img width={550} height={550} src={detail?.image} />
+                </WrapperImage>
+            );
         }
-        return detail?.image ? <img width={614} height={614} src={detail?.image} /> : null;
+        return detail?.image ? (
+            <WrapperImage className="w-[100vw] max-w-[614px] max-h-[614px]">
+                <img width={614} height={614} src={detail?.image} />
+            </WrapperImage>
+        ) : null;
     };
 
     const renderHistory = useCallback(() => {
@@ -172,7 +180,7 @@ const WalletDetail = ({ idNFT }) => {
                         <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">{t('nft:detail.title')}</h1>
                     </header>
                     <section className="mt-8 flex flex-row gap-4">
-                        <WrapperImage className="w-[100vw] max-w-[614px] max-h-[614px]">{renderImage()}</WrapperImage>
+                        {renderImage()}
                         <section className="w-full">
                             <Contents detail={detail} wallet={true} />
                             <Description detail={detail} />
