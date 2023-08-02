@@ -1471,7 +1471,9 @@ const RadioButtonUncheckIcon = ({ width = 24, height = 24 }) => {
 };
 
 const NoResultIcon = () => {
-    return (
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK;
+    return defaultColor ? (
         <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M53.632 60.49c0 8.972-5.271 16.71-12.87 20.265-7.652-2.78-13.13-10.136-13.13-18.752 0-9.903 7.246-18.144 16.703-19.683a22.348 22.348 0 0 1 9.297 18.17z"
@@ -1509,6 +1511,38 @@ const NoResultIcon = () => {
                     <stop offset=".65" stopColor="#64676A" stopOpacity=".354" />
                     <stop offset=".877" stopColor="#202122" stopOpacity=".108" />
                     <stop offset=".977" stopOpacity="0" />
+                </linearGradient>
+            </defs>
+        </svg>
+    ) : (
+        <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M54.559 61.674c0 8.567-5.044 15.953-12.318 19.345-7.317-2.65-12.563-9.68-12.563-17.904 0-9.456 6.932-17.324 15.976-18.793 5.393 3.882 8.905 10.204 8.905 17.352z"
+                fill="url(#y413son5ja)"
+            />
+            <path
+                d="M25.054 63.116c0-9.805 6.002-18.24 14.529-21.828a21.43 21.43 0 0 0-6.386-.972c-11.8 0-21.363 9.561-21.363 21.36 0 11.798 9.562 21.359 21.363 21.359.853 0 1.7-.05 2.525-.154-6.429-4.245-10.668-11.512-10.668-19.765z"
+                fill="url(#fd0c64skgb)"
+            />
+            <path
+                d="M71.928 67.906c.293-1.567.49-3.161.49-4.79 0-13.072-10.626-23.66-23.693-23.66-3.224 0-6.323.65-9.163 1.825-8.506 3.58-14.5 12.022-14.5 21.834 0 8.246 4.238 15.513 10.66 19.75a23.42 23.42 0 0 0 13.003 3.91c9.814 0 18.222-5.965 21.839-14.47l41.228 14.044 1.497-4.4-41.361-14.043zM67.5 66.409a18.226 18.226 0 0 1-1.336 4.4c-2.966 6.679-9.681 11.344-17.439 11.344-2.245 0-4.462-.392-6.484-1.14-7.303-2.637-12.549-9.68-12.549-17.89 0-9.45 6.911-17.338 15.97-18.807 1.007-.161 2.021-.231 3.063-.231 10.528 0 19.069 8.532 19.069 19.03 0 1.105-.098 2.217-.294 3.294z"
+                fill="#C2C7CF"
+            />
+            <defs>
+                <linearGradient id="y413son5ja" x1="22.261" y1="65.079" x2="53.663" y2="61.591" gradientUnits="userSpaceOnUse">
+                    <stop offset=".008" stop-color="#C6CEDE" />
+                    <stop offset=".209" stop-color="#D1D8E4" />
+                    <stop offset=".299" stop-color="#D8DEE8" />
+                    <stop offset=".505" stop-color="#DEE3EC" stop-opacity=".816" />
+                    <stop offset=".787" stop-color="#F0F2F6" stop-opacity=".562" />
+                    <stop offset=".967" stop-color="#fff" stop-opacity=".4" />
+                </linearGradient>
+                <linearGradient id="fd0c64skgb" x1="51.232" y1="62.741" x2="2.649" y2="59.866" gradientUnits="userSpaceOnUse">
+                    <stop offset=".385" stop-color="#C6CEDE" />
+                    <stop offset=".525" stop-color="#CCD3E2" stop-opacity=".759" />
+                    <stop offset=".719" stop-color="#DEE3EC" stop-opacity=".427" />
+                    <stop offset=".943" stop-color="#FBFCFD" stop-opacity=".041" />
+                    <stop offset=".967" stop-color="#fff" stop-opacity="0" />
                 </linearGradient>
             </defs>
         </svg>

@@ -36,7 +36,7 @@ const AllFilters = ({ filter, onChangeToggle, onChangeGird, onChangeSearch }) =>
                     allowClear
                     className="pb-0 "
                     classNameDivInner="bg-gray-12 dark:bg-dark-2"
-                    classNameInput="dark:text-gray-7 text-gray-1"
+                    classNameInput="dark:text-gray-4 text-gray-15"
                     value={filter.search}
                     placeholder={t('nft:filter:search')}
                     onChange={(value) => onChangeSearch(value)}

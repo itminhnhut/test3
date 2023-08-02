@@ -152,7 +152,7 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                             placeholder={t('nft:transfer:placeholder')}
                             className="w-full h-12"
                             classNameDivInner="bg-dark-12 dark:bg-dark-2"
-                            classNameInput="dark:text-gray-7 text-gray-1 placeholder-red"
+                            classNameInput="dark:text-gray-4 text-gray-15"
                             suffix={
                                 <span onClick={onPaste} className="text-teal font-semibold cursor-pointer select-none">
                                     {t('nft:transfer:paste')}
