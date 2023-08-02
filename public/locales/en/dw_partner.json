@@ -224,5 +224,6 @@
     "partner_suggest_order_subtitle": "Users who are looking for a partner for the following transaction, please confirm as soon as possible to start processing the transaction",
     "fee_received": "Fee received",
     "auto_suggestion_mode": "Auto-suggestion mode",
-    "auto_suggestion_mode_tooltip": "Allow system automatically suggests to the users to execute orders"
+    "auto_suggestion_mode_tooltip": "Allow system automatically suggests to the users to execute orders",
+    "receive_addresses": "Receive addresses continuous updates from time to time, please always get the latest wallet address when making transactions"
 }

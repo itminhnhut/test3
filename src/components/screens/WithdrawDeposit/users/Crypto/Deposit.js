@@ -567,8 +567,9 @@ const CryptoDeposit = ({ assetId }) => {
                     </div>
                 </div>
                 <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                    <div className="flex">
+                    <div className="flex flex-col space-y-2">
                         <div>{noteObj?.common}</div>
+                        <span>{t('dw_partner:receive_addresses')}</span>
                     </div>
                     {isPushOrder && (
                         <div className="flex mt-1.5">
