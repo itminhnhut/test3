@@ -30,7 +30,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         { title: 'Spot', value: 'SPOT' },
         { title: 'Futures', value: 'FUTURES' },
         { title: 'Stake', value: 'STAKING' },
-        { title: 'Insurance', value: 'INSURANCE' }
+        { title: 'Nami Insurance', value: 'INSURANCE' }
     ];
     const assetTabs = [
         { title: t('common:all'), value: null },
