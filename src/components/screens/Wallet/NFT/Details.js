@@ -155,6 +155,13 @@ const WalletDetail = ({ idNFT }) => {
         );
     };
 
+    const renderImage = () => {
+        if (detail?.category === 1 && detail?.status !== 0) {
+            return <img width={550} height={550} src={detail?.image} />;
+        }
+        return detail?.image ? <img width={614} height={614} src={detail?.image} /> : null;
+    };
+
     return (
         <MaldivesLayout>
             <main className="bg-white dark:bg-shadow">
@@ -163,9 +170,7 @@ const WalletDetail = ({ idNFT }) => {
                         <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">{t('nft:detail.title')}</h1>
                     </header>
                     <section className="mt-8 flex flex-row gap-4">
-                        <WrapperImage className="w-[100vw] max-w-[614px] max-h-[614px]">
-                            {detail?.image ? <img width={614} height={614} src={detail?.image} /> : null}
-                        </WrapperImage>
+                        <WrapperImage className="w-[100vw] max-w-[614px] max-h-[614px]">{renderImage()}</WrapperImage>
                         <section className="w-full">
                             <Contents detail={detail} wallet={true} />
                             <Description detail={detail} />
@@ -175,9 +180,7 @@ const WalletDetail = ({ idNFT }) => {
                     </section>
                     <section className="mt-[60px]">
                         <h3 className="text-2xl font-semibold text-gray-15 dark:text-gray-4">{t('nft:history:title')}</h3>
-                        <section className="mt-4">
-                            <History idNFT={idNFT} />
-                        </section>
+                        <section className="mt-4">{detail?.status ? <History status={detail?.status} idNFT={idNFT} /> : null}</section>
                     </section>
                 </article>
                 <Use isModal={isUse} category={detail?.category} onCloseModal={handleModalUse} statusCodeNFT={statusCodeNFT} onUseSubmit={handleUseSubmit} />

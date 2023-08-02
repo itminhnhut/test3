@@ -11,7 +11,6 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import FetchApi from 'utils/fetch-api';
 
 import { API_GET_DETAIL_NFT, API_GET_HISTORY_NFT } from 'redux/actions/apis';
-import { formatTime } from 'redux/actions/utils';
 
 import TableV2 from 'components/common/V2/TableV2';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
@@ -29,6 +28,10 @@ const Description = dynamic(() => import('components/screens/NFT/Components/Deta
 });
 
 const Contents = dynamic(() => import('components/screens/NFT/Components/Detail/Contents'), {
+    ssr: false
+});
+
+const History = dynamic(() => import('components/screens/NFT/Components/Detail/History'), {
     ssr: false
 });
 
@@ -56,20 +59,6 @@ const index = ({ idNFT }) => {
     const { width } = useWindowSize();
     const isMobile = width < 830;
 
-    const [page, setPage] = useState(initState.page);
-    const [loading, setLoading] = useState(initState.loading);
-    const [dataHistory, setDataHistory] = useState(initState.dataHistory);
-
-    //** call api history NFT
-    const handleHistoryNFT = async () => {
-        try {
-            const data = await FetchApi({ url: API_GET_HISTORY_NFT, params: { id: idNFT, limit: LIMIT } });
-            setDataHistory(data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     //** call api detail NFT
     const handleDetailNFT = async () => {
         try {
@@ -84,88 +73,6 @@ const index = ({ idNFT }) => {
     useEffect(() => {
         idNFT && handleDetailNFT();
     }, [idNFT]);
-
-    // ** handle call api history NFT
-    useEffect(() => {
-        handleHistoryNFT();
-    }, [idNFT]);
-
-    const renderFrom = (row) => {
-        if (row.type === 'Create') return '-';
-        if (row.type === 'Give') return '-';
-        return row?.old_status?.owner || 'Infinity';
-    };
-
-    const renderTo = (row) => {
-        if (row.type === 'Create') return '-';
-        if (row.type === 'Give') return row?.new_status?.owner || 'Infinity';
-        return row?.new_status?.owner || 'Infinity';
-    };
-
-    const renderTable = useCallback(() => {
-        const columns = [
-            {
-                key: 'type',
-                dataIndex: 'type',
-                title: t('nft:history:event'),
-                align: 'left',
-                maxWidth: 302,
-                render: (value) => <div>{value === 'Create' ? 'Mint' : t('nft:history:transfer')}</div>
-            },
-            {
-                key: 'from',
-                dataIndex: 'from',
-                title: t('nft:history:from'),
-                align: 'left',
-                maxWidth: 302,
-                render: (row, value) => renderFrom(value)
-            },
-            {
-                key: 'to',
-                dataIndex: 'to',
-                title: t('nft:history:to'),
-                align: 'left',
-                maxWidth: 302,
-                render: (row, value) => renderTo(value)
-            },
-            {
-                key: 'createdAt',
-                dataIndex: 'createdAt',
-                title: t('nft:history:date'),
-                align: 'right',
-                maxWidth: 302,
-                render: (value) => <div className="font-normal">{formatTime(new Date(value), 'HH:mm:ss dd/MM/yyyy') || '-'}</div>
-            }
-        ];
-
-        return (
-            <WrapperTable
-                isMobile={isMobile}
-                skip={0}
-                useRowHover
-                height={350}
-                limit={LIMIT}
-                loading={loading}
-                columns={columns}
-                scroll={{ x: true }}
-                className="border-[1px] rounded-xl border-divider dark:border-divider-dark"
-                data={dataHistory?.data || []}
-                rowKey={(item) => `${item?.key}`}
-                pagingClassName="!border-0 !py-8"
-                // pagingPrevNext={{
-                //     page: page - 1,
-                //     hasNext: dataHistory?.hasNext,
-                //     onChangeNextPrev: (delta) => {
-                //         setPage(page + delta);
-                //     },
-                //     language: language
-                // }}
-                tableStyle={{
-                    rowHeight: '64px'
-                }}
-            />
-        );
-    }, [dataHistory?.data, loading]);
 
     return (
         <MaldivesLayout>
@@ -186,7 +93,7 @@ const index = ({ idNFT }) => {
                     </section>
                     <section className="mt-[60px]">
                         <h3 className="text-2xl font-semibold text-gray-15 dark:text-gray-4">{t('nft:history:title')}</h3>
-                        <section className="mt-4">{renderTable()}</section>
+                        <section className="mt-4">{idNFT ? <History status={detail?.status} idNFT={idNFT} /> : null}</section>
                     </section>
                 </article>
             </main>

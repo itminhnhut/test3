@@ -22,9 +22,15 @@ const initState = {
     }
 };
 
-const LIMIT = 10;
+const LIMIT = 50;
 
-const History = ({ idNFT }) => {
+const EVENT = {
+    CREATE: { vi: 'Mint', en: 'Mint' },
+    GIVE: { vi: 'Chuyển', en: 'Transfer' },
+    TRANSFER: { vi: 'Chuyển', en: 'Transfer' }
+};
+
+const History = ({ idNFT, status }) => {
     const {
         t,
         i18n: { language }
@@ -40,27 +46,38 @@ const History = ({ idNFT }) => {
     //** call api history NFT
     const handleHistoryNFT = async () => {
         try {
+            setLoading(true);
             const data = await FetchApi({ url: API_GET_HISTORY_NFT, params: { id: idNFT, limit: LIMIT } });
             setDataHistory(data);
         } catch (error) {
             console.error(error);
+        } finally {
+            setLoading(false);
         }
     };
 
     // ** handle call api history NFT
     useEffect(() => {
-        idNFT && handleHistoryNFT();
-    }, [idNFT]);
+        handleHistoryNFT();
+    }, [idNFT, status]);
 
     const renderFrom = (row) => {
-        if (row.type === 'Create') return '-';
-        if (row.type === 'Give') return '-';
+        if (row.type === 'CREATE') return '-';
+        if (row.type === 'GIVE') {
+            if (!row?.old_status) return '-';
+            return row?.old_status?.owner || 'Infinity';
+        }
+        if (!row?.old_status) return '-';
         return row?.old_status?.owner || 'Infinity';
     };
 
     const renderTo = (row) => {
-        if (row.type === 'Create') return '-';
-        if (row.type === 'Give') return row?.new_status?.owner || 'Infinity';
+        if (row.type === 'CREATE') return '-';
+        if (row.type === 'GIVE') {
+            if (!row?.new_status) return '-';
+            return row?.new_status?.owner || 'Infinity';
+        }
+        if (!row?.new_status) return '-';
         return row?.new_status?.owner || 'Infinity';
     };
 
@@ -73,7 +90,7 @@ const History = ({ idNFT }) => {
                 title: 'event',
                 align: 'left',
                 maxWidth: 302,
-                render: (value) => <div>{value === 'Create' ? 'Mint' : t('nft:history:transfer')}</div>
+                render: (value) => <div>{EVENT?.[value]?.[language] || ''}</div>
             },
             {
                 key: 'from',
@@ -97,7 +114,7 @@ const History = ({ idNFT }) => {
                 title: t('nft:history:date'),
                 align: 'right',
                 maxWidth: 302,
-                render: (value) => <div className="font-normal">{formatTime(new Date(value), 'HH:mm:ss dd/MM/yyyy') || '-'}</div>
+                render: (value) => <div className="font-normal">{value ? formatTime(new Date(value), 'HH:mm:ss dd/MM/yyyy') : '-'}</div>
             }
         ];
 
@@ -128,7 +145,7 @@ const History = ({ idNFT }) => {
                 }}
             />
         );
-    }, [dataHistory?.data, loading]);
+    }, [dataHistory?.data, loading, status]);
 
     return <>{renderTable()}</>;
 };

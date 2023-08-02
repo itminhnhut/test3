@@ -194,7 +194,7 @@ const Filter = ({ isDark }) => {
                 />
             );
         }
-    }, [isLoading, data, filter.isShowCollection, filter.grid, filter.isOpen, filter.category]);
+    }, [isLoading, isDark, data, filter.isShowCollection, filter.grid, filter.isOpen, filter.category]);
 
     const renderHeader = useCallback(() => {
         if (filter.isShowCollection) {
@@ -246,7 +246,7 @@ const Filter = ({ isDark }) => {
                         <TabItem
                             key={item.label}
                             className="!text-left !px-0 !text-base "
-                            value={item.label}
+                            value={item.value}
                             onClick={(isClick) => isClick && handleTab(item.value)}
                             isActive={item.value === filter.tab}
                         >

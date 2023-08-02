@@ -36,14 +36,14 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
     const renderTitle = (item) => {
         if (wallet) {
             return (
-                <div className="flex flex-row justify-between font-semibold text-base flex-wrap items-center">
+                <div className="flex flex-row justify-between text-base flex-wrap items-center">
                     <Link
                         href={{
                             pathname: '/nft',
                             query: { collection: item?.nft_collection }
                         }}
                     >
-                        <div className="text-green-3 dark:text-green-2"> {item.nft_collection_name}</div>
+                        <div className="text-green-3 dark:text-green-2 font-semibold"> {item.nft_collection_name}</div>
                     </Link>
                     {grid === 4 && (
                         <WrapperStatus status={STATUS?.[item.status]?.key} className="h-7 py-1 px-4 rounded-[80px] text-sm">
