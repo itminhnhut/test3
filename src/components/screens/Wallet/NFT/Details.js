@@ -15,8 +15,6 @@ import { API_GET_DETAIL_NFT, API_POST_ACTIVE_NFT, API_GET_CHECK_NFT } from 'redu
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
-import { TABS } from 'components/screens/NFT/Constants';
-
 import styled from 'styled-components';
 
 const Use = dynamic(() => import('./Components/Modal/Use'), { ssr: false });
@@ -105,8 +103,7 @@ const WalletDetail = ({ idNFT }) => {
                 if (isUse) {
                     handleModalUse();
                 }
-                const category = TABS.find((item) => item.value === detail?.category);
-                toast({ text: t('nft:active:toast_success', { type: category?.label }), type: 'success', duration: 1500 });
+                toast({ text: t('nft:active:toast_success', { type: detail?.name }), type: 'success', duration: 1500 });
             }
         } catch (error) {
             console.error(error);

@@ -16,7 +16,6 @@ import InputV2 from 'components/common/V2/InputV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 
 import { WrapperStatus, WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
-import { TABS } from 'components/screens/NFT/Constants';
 import { LIST_TIER, STATUS } from 'components/screens/NFT/Constants';
 
 import classNames from 'classnames';
@@ -57,9 +56,7 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                 params: { id: idNFT, code }
             });
             if (statusCode === 201) {
-                const category = TABS.find((item) => item.value === detail?.category);
-
-                toast({ text: t('nft:transfer:toast_success', { type: category.label, NamiID: idNFT }), type: 'success', duration: 1500 });
+                toast({ text: t('nft:transfer:toast_success', { type: detail?.name, NamiID: code }), type: 'success', duration: 1500 });
                 setTimeout(() => router.push('/wallet/NFT'), 3000);
             }
         } catch (err) {
