@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import { useTranslation } from 'next-i18next';
@@ -29,9 +28,14 @@ const CategoryFilter = dynamic(() => import('./Components/Lists/CategoryFilter')
 const CollectionFilter = dynamic(() => import('./Components/Lists/CollectionFilter'), { ssr: false });
 const TierFilter = dynamic(() => import('./Components/Lists/TierFilter'), { ssr: false });
 
-const iniData = {
+const DEFAULT_PATH_NAME = '/nft';
+
+const DEFAULT_FILTER = {
     tab: 2,
-    grid: 4,
+    grid: 4
+};
+
+const iniData = {
     tier: [],
     search: '',
     isOpen: false,
@@ -125,7 +129,7 @@ const Filter = ({ isDark }) => {
 
                 setFilter((prev) => ({ ...prev, collection: [nft_collection], isShowCollection: false }));
             } else {
-                setFilter(iniData);
+                setFilter((prev) => ({ ...prev, ...iniData }));
             }
         }
     }, [router.query, dataCollection]);
@@ -137,12 +141,33 @@ const Filter = ({ isDark }) => {
         }
     }, [filter.isShowCollection]);
 
+    useEffect(() => {
+        const { tab = DEFAULT_FILTER.tab, grid = DEFAULT_FILTER.grid } = router.query;
+
+        setFilter((prev) => ({ ...prev, tab: +tab, grid: +grid }));
+    }, [router.query]);
+
     const handleTab = (tab) => {
-        setFilter((prev) => ({ ...prev, tab }));
+        const grid = tab !== filter?.tab ? DEFAULT_FILTER.grid : filter.grid;
+        if (tab === filter?.tab) return;
+        router.push(
+            {
+                pathname: DEFAULT_PATH_NAME,
+                query: { ...router.query, tab, grid }
+            },
+            DEFAULT_PATH_NAME
+        );
     };
 
     const handleSelectGrid = (grid) => {
-        setFilter((prev) => ({ ...prev, grid }));
+        if (grid === filter?.grid) return;
+        router.push(
+            {
+                pathname: DEFAULT_PATH_NAME,
+                query: { ...router.query, grid }
+            },
+            DEFAULT_PATH_NAME
+        );
     };
 
     const handleChangeCheckBox = (tier) => {

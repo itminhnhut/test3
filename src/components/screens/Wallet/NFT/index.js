@@ -1,8 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 
 import dynamic from 'next/dynamic';
-
-import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
@@ -24,9 +23,16 @@ const CardItems = dynamic(() => import('components/screens/NFT/Components/Lists/
 const CollectionFilter = dynamic(() => import('components/screens/NFT/Components/Lists/CollectionFilter'), { ssr: false });
 const TierFilter = dynamic(() => import('components/screens/NFT/Components/Lists/TierFilter'), { ssr: false });
 
-const iniData = {
+const DEFAULT_PATH_NAME = '/wallet/NFT';
+
+const DEFAULT_FILTER = {
     wallet: 'WNFT',
-    tab: 2,
+    grid: 4
+};
+
+const iniData = {
+    // wallet: 'WNFT',
+    // tab: 2,
     grid: 4,
     tier: [],
     search: '',
@@ -38,10 +44,7 @@ const iniData = {
 const TAB_STATUS = { WNFT: 2, SB: 1 };
 
 const NFTWallet = () => {
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation();
+    const router = useRouter();
 
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -110,6 +113,12 @@ const NFTWallet = () => {
         return () => clearTimeout(id);
     }, [filter.wallet, filter.collection, filter.tier, filter.search]);
 
+    useEffect(() => {
+        const { wallet = DEFAULT_FILTER.wallet, grid = DEFAULT_FILTER.grid } = router.query;
+
+        setFilter((prev) => ({ ...prev, wallet, grid: +grid }));
+    }, [router.query]);
+
     const totalSummary = useMemo(() => {
         const totalVoucher = summary?.find((f) => f?._id === TAB_STATUS.SB)?.total || 0;
         const totalNft = summary?.find((f) => f?._id === TAB_STATUS.WNFT)?.total || 0;
@@ -117,7 +126,15 @@ const NFTWallet = () => {
     }, [summary]);
 
     const handleChangeWallet = (wallet) => {
-        setFilter((prev) => ({ ...prev, wallet }));
+        const grid = wallet !== filter?.wallet ? DEFAULT_FILTER.grid : filter.grid;
+        if (wallet === filter?.wallet) return;
+        router.push(
+            {
+                pathname: DEFAULT_PATH_NAME,
+                query: { ...router.query, wallet, grid }
+            },
+            DEFAULT_PATH_NAME
+        );
     };
 
     const handleChangInput = (search) => {
@@ -129,7 +146,15 @@ const NFTWallet = () => {
     };
 
     const handleSelectGrid = (grid) => {
-        setFilter((prev) => ({ ...prev, grid }));
+        if (grid === filter?.grid) return;
+        router.push(
+            {
+                pathname: DEFAULT_PATH_NAME,
+                query: { ...router.query, grid }
+            },
+            DEFAULT_PATH_NAME
+        );
+        // setFilter((prev) => ({ ...prev, grid }));
     };
 
     const handleChangeCollection = (collection) => {

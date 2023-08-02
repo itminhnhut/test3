@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useWindowSize } from 'react-use';
 
 import dynamic from 'next/dynamic';
 
@@ -56,8 +55,6 @@ const WalletDetail = ({ idNFT }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
-    const { width } = useWindowSize();
-    const isMobile = width < 830;
     const [detail, setDetail] = useState();
 
     const [isUse, setIsUse] = useState(initState.isUse);
