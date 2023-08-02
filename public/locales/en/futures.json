@@ -31,7 +31,7 @@
             "refunded": "Refunded",
             "claim_waiting": "Claim waiting",
             "invalid": "Invalid",
-            "canceled": "Cancelled"
+            "canceled": "Canceled"
         }
     },
     "order_table": {
