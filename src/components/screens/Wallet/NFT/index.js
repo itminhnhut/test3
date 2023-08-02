@@ -154,7 +154,7 @@ const NFTWallet = () => {
 
     const renderData = useCallback(() => {
         if (isLoading || !Array.isArray(data)) {
-            return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} />;
+            return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} isDark={isDark} />;
         }
         if (Array.isArray(data)) {
             return (
@@ -169,7 +169,7 @@ const NFTWallet = () => {
                 />
             );
         }
-    }, [data, isLoading, filter.isShowCollection, filter.grid, filter.isOpen, filter.category]);
+    }, [data, isLoading, filter.isShowCollection, filter.grid, filter.isOpen, filter.category, isDark]);
 
     return (
         <>

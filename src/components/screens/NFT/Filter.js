@@ -180,7 +180,7 @@ const Filter = ({ isDark }) => {
     const renderData = useCallback(() => {
         if (!isAuth && filter.category === 'me') return <NotAuth />;
         if (isLoading || !Array.isArray(data)) {
-            return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} />;
+            return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} isDark={isDark} />;
         }
         if (Array.isArray(data)) {
             return (
