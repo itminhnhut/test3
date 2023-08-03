@@ -45,7 +45,7 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRef } from 'react';
-import { useGoogleOneTapLogin } from '@react-oauth/google';
+// import { useGoogleOneTapLogin } from '@react-oauth/google';
 import FetchApi from 'utils/fetch-api';
 import qs from 'qs';
 
@@ -115,56 +115,56 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
         getLoginState();
     }, []);
 
-    useGoogleOneTapLogin({
-        onSuccess: async ({ credential }) => {
-            if (!credential) return;
-            try {
-                const data = await FetchApi({
-                    url: `/authenticated/google`,
-                    options: {
-                        method: 'POST',
-                        baseURL: AUTH_URL,
-                        withCredentials: false
-                    },
-                    params: {
-                        idToken: credential,
-                        client_state: loginState,
-                        theme: currentTheme,
-                        language,
-                    }
-                });
-                switch (data.status) {
-                    case AUTHORIZE_STATUS.MISSING_OTP: {
-                        const redirect = `${AUTH_URL}/verify_oauth_device?${qs.stringify({
-                            token: data.continueToken,
-                            service: 'google',
-                            state: loginState,
-                            theme: currentTheme,
-                            language
-                        })}`;
-                        console.log({ redirect });
-                        router.push(redirect);
-                        return;
-                    }
-                    case AUTHORIZE_STATUS.OK: {
-                        const redirect = data.data;
-                        router.push(redirect);
-                        return;
-                    }
-                    default: {
-                        console.log('Login Failed');
-                    }
-                }
-            } catch (error) {
-                console.log('Login Failed', error);
-            }
-        },
-        onError: () => {
-            console.log('Login Failed');
-        },
-        disabled: !!auth || !loginState,
-        cancel_on_tap_outside: false
-    });
+    // useGoogleOneTapLogin({
+    //     onSuccess: async ({ credential }) => {
+    //         if (!credential) return;
+    //         try {
+    //             const data = await FetchApi({
+    //                 url: `/authenticated/google`,
+    //                 options: {
+    //                     method: 'POST',
+    //                     baseURL: AUTH_URL,
+    //                     withCredentials: false
+    //                 },
+    //                 params: {
+    //                     idToken: credential,
+    //                     client_state: loginState,
+    //                     theme: currentTheme,
+    //                     language,
+    //                 }
+    //             });
+    //             switch (data.status) {
+    //                 case AUTHORIZE_STATUS.MISSING_OTP: {
+    //                     const redirect = `${AUTH_URL}/verify_oauth_device?${qs.stringify({
+    //                         token: data.continueToken,
+    //                         service: 'google',
+    //                         state: loginState,
+    //                         theme: currentTheme,
+    //                         language
+    //                     })}`;
+    //                     console.log({ redirect });
+    //                     router.push(redirect);
+    //                     return;
+    //                 }
+    //                 case AUTHORIZE_STATUS.OK: {
+    //                     const redirect = data.data;
+    //                     router.push(redirect);
+    //                     return;
+    //                 }
+    //                 default: {
+    //                     console.log('Login Failed');
+    //                 }
+    //             }
+    //         } catch (error) {
+    //             console.log('Login Failed', error);
+    //         }
+    //     },
+    //     onError: () => {
+    //         console.log('Login Failed');
+    //     },
+    //     disabled: !!auth || !loginState,
+    //     cancel_on_tap_outside: false
+    // });
 
 
     // * Memmoized Variable
