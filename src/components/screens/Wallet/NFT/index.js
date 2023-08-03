@@ -3,6 +3,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
+import { useTranslation } from 'next-i18next';
+
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import FetchApi from 'utils/fetch-api';
@@ -22,6 +24,7 @@ const CardItems = dynamic(() => import('components/screens/NFT/Components/Lists/
 
 const CollectionFilter = dynamic(() => import('components/screens/NFT/Components/Lists/CollectionFilter'), { ssr: false });
 const TierFilter = dynamic(() => import('components/screens/NFT/Components/Lists/TierFilter'), { ssr: false });
+const ModalInfoInfinity = dynamic(() => import('components/screens/Wallet/NFT/Components/Modal/InfoInfinity'), { ssr: false });
 
 const DEFAULT_PATH_NAME = '/wallet/NFT';
 
@@ -45,17 +48,19 @@ const TAB_STATUS = { WNFT: 2, SB: 1 };
 
 const NFTWallet = () => {
     const router = useRouter();
+    const { t } = useTranslation();
 
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
+    const [data, setData] = useState();
+    const [summary, setSummary] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
     const [filter, setFilter] = useState(iniData);
     const [isLoading, setIsLoading] = useState(false);
-
     const [dataCollection, setDataCollection] = useState();
-    const [summary, setSummary] = useState([]);
 
-    const [data, setData] = useState();
+    const handleToggleModal = () => setIsOpen((prev) => !prev);
 
     // ** call api get summary
     const handleGetSummary = async () => {
@@ -198,7 +203,7 @@ const NFTWallet = () => {
 
     return (
         <>
-            <section className="flex flex-row justify-between">
+            <section className="flex flex-row justify-between items-center">
                 <section className="flex flex-row gap-3 text-gray-1 dark:text-gray-7 text-sm">
                     <WrapperChip onClick={() => handleChangeWallet('WNFT')} active={filter.wallet === 'WNFT'}>
                         WNFT ({totalSummary.nft})
@@ -207,6 +212,9 @@ const NFTWallet = () => {
                         Skynamia Badges ({totalSummary.voucher})
                     </WrapperChip>
                 </section>
+                <p className="cursor-pointer font-semibold dark:text-green-2 text-green-3" onClick={handleToggleModal}>
+                    {t('nft:read_more')}
+                </p>
             </section>
             <section className="mt-5 flex flex-row gap-x-3">
                 <AllFilters filter={filter} onChangeToggle={handleToggle} onChangeGird={handleSelectGrid} onChangeSearch={handleChangInput} />
@@ -218,6 +226,7 @@ const NFTWallet = () => {
                 </section>
                 {renderData()}
             </section>
+            <ModalInfoInfinity open={isOpen} onClose={handleToggleModal} />
         </>
     );
 };

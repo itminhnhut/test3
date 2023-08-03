@@ -14,6 +14,8 @@ import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
 import { TABS } from 'components/screens/NFT/Constants';
 
+import { HelpIcon } from 'components/svg/SvgIcon';
+
 import classNames from 'classnames';
 import styled from 'styled-components';
 
@@ -27,6 +29,8 @@ const AllFilters = dynamic(() => import('./Components/Lists/AllFilters'), { ssr:
 const CategoryFilter = dynamic(() => import('./Components/Lists/CategoryFilter'), { ssr: false });
 const CollectionFilter = dynamic(() => import('./Components/Lists/CollectionFilter'), { ssr: false });
 const TierFilter = dynamic(() => import('./Components/Lists/TierFilter'), { ssr: false });
+
+const ModalInfoInfinity = dynamic(() => import('components/screens/Wallet/NFT/Components/Modal/InfoInfinity'), { ssr: false });
 
 const DEFAULT_PATH_NAME = '/nft';
 
@@ -46,14 +50,16 @@ const iniData = {
 
 const Filter = ({ isDark }) => {
     const router = useRouter();
-
     const { user: isAuth } = useSelector((state) => state.auth);
 
+    const [data, setData] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
     const [filter, setFilter] = useState(iniData);
+    const [isLoading, setIsLoading] = useState(false);
     const [dataCollection, setDataCollection] = useState();
     const [detailCollection, setDetailCollection] = useState();
-    const [isLoading, setIsLoading] = useState(false);
-    const [data, setData] = useState(null);
+
+    const handleToggleModal = () => setIsOpen((prev) => !prev);
 
     const {
         t,
@@ -224,9 +230,12 @@ const Filter = ({ isDark }) => {
     const renderHeader = useCallback(() => {
         if (filter.isShowCollection) {
             return (
-                <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
-                    <header className="mt-10">
+                <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 `">
+                    <header className="mt-10 flex flex-row items-center gap-x-2">
                         <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">Nami Infinity</h1>
+                        <div className="cursor-pointer" onClick={handleToggleModal}>
+                            <HelpIcon size={24} color="currentColor" />
+                        </div>
                     </header>
                 </section>
             );
@@ -291,6 +300,7 @@ const Filter = ({ isDark }) => {
                     {renderData()}
                 </section>
             </section>
+            <ModalInfoInfinity open={isOpen} onClose={handleToggleModal} />
         </>
     );
 };
