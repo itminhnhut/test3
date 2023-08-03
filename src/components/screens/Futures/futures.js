@@ -264,11 +264,6 @@ const Futures = () => {
                                     setState({ layouts: { ...allBreakPointLayouts, [state.breakpoint]: flatLayout } });
                                 }}
                                 onBreakpointChange={(breakpoint) => setState({ breakpoint })}
-                                // onResize={(e) =>
-                                //     setState({
-                                //         forceUpdateState: state.forceUpdateState + 1
-                                //     })
-                                // }
                             >
                                 {componentLayoutFutures?.isShowFavorites && (
                                     <GridItem

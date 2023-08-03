@@ -9,6 +9,15 @@ export const futuresGridKey = {
     marginRatio: 'marginRatio',
 };
 
+export const futuresLayoutKey = {
+    favoritePair: 'isShowFavorites',
+    pairDetail: 'isShowPairDetail',
+    chart: 'isShowChart',
+    tradeRecord: 'isShowOpenOrders',
+    placeOrder: 'isShowPlaceOrder',
+    marginRatio: 'isShowAssets'
+};
+
 const layoutDefault = {
     [futuresGridKey.favoritePair]: {
         i: futuresGridKey.favoritePair,
