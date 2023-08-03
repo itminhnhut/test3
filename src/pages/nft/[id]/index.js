@@ -74,7 +74,7 @@ const index = ({ idNFT }) => {
                             {detail?.image ? <img width={550} height={550} src={detail?.image} /> : null}
                         </WrapperImage>
                         <section className="w-full">
-                            <Contents detail={detail} />
+                            <Contents detail={detail} isDark={isDark} />
                             <Description detail={detail} />
                             <Effective effective={detail?.[`effective_${language}`] || []} dark={isDark} />
                         </section>

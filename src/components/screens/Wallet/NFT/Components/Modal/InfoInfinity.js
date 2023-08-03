@@ -1,11 +1,11 @@
-import { X } from 'react-feather';
-
 import Link from 'next/link';
 
 import { useTranslation } from 'next-i18next';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import ModalV2 from 'components/common/V2/ModalV2';
+
+import { IconClose } from 'components/svg/SvgIcon';
 
 const POST_INFINITY_EN = 'https://nami.exchange/support/announcement/nami-news/officially-launching-nami-infinity-digital-asset-collection-site';
 const POST_INFINITY_VI =
@@ -46,7 +46,7 @@ const ModalInfoInfinity = ({ open, onClose }) => {
                         className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
                         onClick={onClose}
                     >
-                        <X size={24} />
+                        <IconClose />
                     </div>
                 </div>
             )}

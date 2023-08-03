@@ -176,7 +176,7 @@ const WalletDetail = ({ idNFT }) => {
                     <section className="mt-8 flex flex-row gap-4">
                         {renderImage()}
                         <section className="w-full">
-                            <Contents detail={detail} wallet={true} />
+                            <Contents detail={detail} wallet={true} isDark={isDark} />
                             <Description detail={detail} />
                             <Effective effective={detail?.[`effective_${language}`] || []} dark={isDark} />
                             {detail?.category === 1 ? renderVoucher(detail) : renderNFT(detail)}
@@ -188,7 +188,7 @@ const WalletDetail = ({ idNFT }) => {
                     </section>
                 </article>
                 <Use isModal={isUse} category={detail?.category} onCloseModal={handleModalUse} statusCodeNFT={statusCodeNFT} onUseSubmit={handleUseSubmit} />
-                <Transfer isModal={isTransfer} onCloseModal={handleModalTransfer} detail={detail} idNFT={idNFT} />
+                <Transfer isModal={isTransfer} isDark={isDark} onCloseModal={handleModalTransfer} detail={detail} idNFT={idNFT} />
             </main>
         </MaldivesLayout>
     );

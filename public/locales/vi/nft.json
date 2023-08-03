@@ -18,7 +18,8 @@
             "FEE": "<0>{{- value}}% phí giao dịch NAO Futures trong tuần {{- day}}<0>",
             "CASHBACK": "<0>Giảm {{- value}}% phí giao dịch trong vòng {{- week}} ngày<0>",
             "APY_BOOSTER": "<0>APY Booster {{- value}}% trong {{- day}} ngày<0>"
-        }
+        },
+        "tooltip_exp": "Sau khi NFT hết hạn, bạn sẽ không thể kích hoạt các lợi ích đi kèm"
     },
     "history": {
         "title": "Lịch sử",

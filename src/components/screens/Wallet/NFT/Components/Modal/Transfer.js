@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { X } from 'react-feather';
 import { useDebounce } from 'react-use';
 
 import { useRouter } from 'next/router';
@@ -18,12 +17,14 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import { WrapperStatus, WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
 import { LIST_TIER, STATUS } from 'components/screens/NFT/Constants';
 
+import { IconClose } from 'components/svg/SvgIcon';
+
 import classNames from 'classnames';
 import styled from 'styled-components';
 
 const MAX_LENGTH = 14;
 
-const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
+const Transfer = ({ isModal, onCloseModal, detail, idNFT, isDark }) => {
     const {
         t,
         i18n: { language }
@@ -117,7 +118,7 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                         className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
                         onClick={onCloseModal}
                     >
-                        <X size={24} />
+                        <IconClose />
                     </div>
                 </div>
             )}
@@ -130,7 +131,7 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                     </WrapperImage>
                     <section className="my-[21px]">
                         <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{detail?.name}</p>
-                        <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
+                        <WrapperLevelItems isDark={isDark} className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
                             <p>{t('nft:tier')}:</p>
                             <p className={tier?.key}>{tier?.name?.[language]}</p>
                         </WrapperLevelItems>
