@@ -1,7 +1,9 @@
+import Spinner from 'components/svg/Spinner';
+
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-const SkeletonCard = ({ grid, isOpen }) => {
+const SkeletonCard = ({ grid, isOpen, isDark }) => {
     let total;
     if (isOpen) {
         total = grid === 6 ? 8 : 4;
@@ -13,32 +15,29 @@ const SkeletonCard = ({ grid, isOpen }) => {
             return (
                 <WrapperSkeletonCard
                     role="status"
-                    className={classNames('max-w-[394px] h-full shadow-card_light dark:shadow-popover bg-white dark:bg-dark-4 rounded-xl max-h-fit', {
+                    className={classNames('max-w-[394px] h-full bg-gray-13 dark:bg-dark-4 rounded-xl max-h-fit', {
                         'max-w-[189px]': grid === 6
                     })}
                     key={`skeleton-${grid}-card-${i}`}
                 >
                     <div
-                        className={classNames('flex items-center justify-center h-[394px] mb-4 bg-gray-3 rounded dark:bg-gray-7', {
-                            'h-[189px]': grid === 6
-                        })}
+                        className={classNames(
+                            'flex items-center justify-center text-txtPrimary dark:text-txtPrimary-dark h-[394px] bg-dark-12 rounded dark:bg-dark-2',
+                            {
+                                'h-[189px]': grid === 6
+                            }
+                        )}
                     >
-                        <svg
-                            className="w-20 h-20 text-gray-2 dark:text-gray-6"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 16 20"
-                        >
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM10.5 6a1.5 1.5 0 1 1 0 2.999A1.5 1.5 0 0 1 10.5 6Zm2.221 10.515a1 1 0 0 1-.858.485h-8a1 1 0 0 1-.9-1.43L5.6 10.039a.978.978 0 0 1 .936-.57 1 1 0 0 1 .9.632l1.181 2.981.541-1a.945.945 0 0 1 .883-.522 1 1 0 0 1 .879.529l1.832 3.438a1 1 0 0 1-.031.988Z" />
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                        </svg>
+                        <Spinner color="currentColor" />
                     </div>
                     <section className={classNames('h-auto mx-5 my-5', { '!mx-4 !my-4': grid === 6 })}>
-                        <div className="h-2.5 bg-gray-2 rounded-full dark:bg-gray-7 w-full mb-4"></div>
-                        <div className="h-2.5 bg-gray-2 rounded-full dark:bg-gray-7 w-3/12 mb-4 "></div>
-                        <div className="h-2 bg-gray-2 rounded-full dark:bg-gray-7 w-5/12 mb-2.5"></div>
-                        <div className="h-2 bg-gray-2 rounded-full dark:bg-gray-7 w-full mb-2.5"></div>
+                        <WrapperRectangle className={classNames('line1', { isDark: isDark })} />
+                        <WrapperRectangle className={classNames('line2 mt-5', { isDark: isDark })} />
+                        <div className="flex flex-row !mt-[14px]">
+                            <WrapperRectangle className={classNames('line3', { isDark: isDark })} />
+                            <WrapperRectangle className={classNames('line4', { isDark: isDark })} />
+                        </div>
+                        <WrapperRectangle className={classNames('line5 mt-6 ml-3', { isDark: isDark })} />
                     </section>
                 </WrapperSkeletonCard>
             );
@@ -68,6 +67,55 @@ const WrapperItems = styled.section`
 
 const WrapperSkeletonCard = styled.div`
     height: fit-content;
+`;
+
+const WrapperRectangle = styled.section`
+    &.line1 {
+        width: 60px;
+        height: 12.3px;
+        border-radius: 17.5px;
+        background-image: linear-gradient(to right, #dfdfdf 3%, rgba(255, 255, 255, 0) 100%);
+        &.isDark {
+            background-image: linear-gradient(to right, #1c232e 7%, rgba(28, 35, 46, 0) 107%);
+        }
+    }
+    &.line2 {
+        width: 148px;
+        height: 14px;
+        border-radius: 20px;
+        background-image: linear-gradient(to right, #dfdfdf 0%, rgba(255, 255, 255, 0) 100%);
+        &.isDark {
+            background-image: linear-gradient(to right, #1c232e 0%, rgba(28, 35, 46, 0) 100%);
+        }
+    }
+    &.line3 {
+        width: 39px;
+        height: 12.3px;
+        border-radius: 17.5px;
+        background-image: linear-gradient(to right, #dfdfdf 3%, rgba(255, 255, 255, 0) 100%);
+        &.isDark {
+            background-image: linear-gradient(to right, #1c232e 3%, rgba(28, 35, 46, 0) 100%);
+        }
+    }
+    &.line4 {
+        width: 59px;
+        height: 12.3px;
+        margin: 0 0 0 17px;
+        border-radius: 17.5px;
+        background-image: linear-gradient(to right, #dfdfdf 0%, rgba(255, 255, 255, 0) 96%);
+        &.isDark {
+            background-image: linear-gradient(to right, #1c232e 0%, rgba(28, 35, 46, 0) 96%);
+        }
+    }
+    &.line5 {
+        width: 59px;
+        height: 10.5px;
+        border-radius: 15px;
+        background-image: linear-gradient(to right, #dfdfdf 3%, rgba(255, 255, 255, 0) 97%);
+        &.isDark {
+            background-image: linear-gradient(to right, #1c232e 3%, rgba(28, 35, 46, 0) 97%);
+        }
+    }
 `;
 
 export default SkeletonCard;

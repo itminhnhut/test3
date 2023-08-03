@@ -4,6 +4,8 @@ import { useTranslation } from 'next-i18next';
 
 import { formatTime } from 'redux/actions/utils';
 
+import Tooltip from 'components/common/Tooltip';
+
 import { WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
 import { WrapperStatus } from 'components/screens/NFT/Components/Lists/CardItems';
 import { LIST_TIER, TABS, STATUS } from 'components/screens/NFT/Constants';
@@ -11,7 +13,7 @@ import { LIST_TIER, TABS, STATUS } from 'components/screens/NFT/Constants';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-const Contents = ({ detail, wallet }) => {
+const Contents = ({ detail, wallet, isDark }) => {
     const {
         t,
         i18n: { language }
@@ -26,6 +28,7 @@ const Contents = ({ detail, wallet }) => {
 
         return (
             <WrapperContent>
+                <Tooltip id={'exp'} place="top" effect="solid" isV3 className="max-w-[300px]" />
                 <section className="flex flex-row justify-between items-center">
                     <h2 className="text-green-3 dark:text-green-2 font-semibold">
                         <Link
@@ -42,7 +45,7 @@ const Contents = ({ detail, wallet }) => {
                     </WrapperStatus>
                 </section>
                 <h3 className="font-semibold text-4xl text-gray-15 dark:text-gray-4 mt-4">{detail?.name}</h3>
-                <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
+                <WrapperLevelItems isDark={isDark} className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
                     <p>{t('nft:tier')}:</p>
                     <p className={tier?.key}>{tier?.name?.[language]}</p>
                 </WrapperLevelItems>
@@ -54,7 +57,13 @@ const Contents = ({ detail, wallet }) => {
                     </ul>
                     <div className="flex mx-3 items-center w-1 h-1 rounded-full bg-gray-1 dark:bg-gray-7"></div>
                     <ul className="flex flex-row">
-                        <li className="text-gray-1 dark:text-gray-7 mr-1">{t('nft:detail:exp')}:</li>
+                        <li
+                            data-tip={t('nft:detail:tooltip_exp')}
+                            data-for={'exp'}
+                            className=" text-gray-1 dark:text-gray-7 mr-1 border-b border-darkBlue-5 border-dashed cursor-pointer"
+                        >
+                            {t('nft:detail:exp')}:
+                        </li>
                         <li className="font-semibold text-gray-15 dark:text-gray-4">{expired_time} (UTC+7)</li>
                     </ul>
                 </div>

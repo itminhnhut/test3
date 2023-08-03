@@ -1,5 +1,4 @@
 import React from 'react';
-import { useWindowSize } from 'react-use';
 
 import dynamic from 'next/dynamic';
 
@@ -15,9 +14,6 @@ const Filter = dynamic(() => import('components/screens/NFT/Filter'), { ssr: fal
 const index = () => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
-
-    const { width } = useWindowSize();
-    const isMobile = width < 830;
 
     return (
         <MaldivesLayout>

@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useWindowSize } from 'react-use';
 
 import dynamic from 'next/dynamic';
 
@@ -10,14 +9,12 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import FetchApi from 'utils/fetch-api';
 
-import { API_GET_DETAIL_NFT, API_GET_HISTORY_NFT } from 'redux/actions/apis';
+import { API_GET_DETAIL_NFT } from 'redux/actions/apis';
 
 import TableV2 from 'components/common/V2/TableV2';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
 import styled from 'styled-components';
-
-const LIMIT = 10;
 
 const Effective = dynamic(() => import('components/screens/NFT/Components/Detail/Effective'), {
     ssr: false
@@ -35,16 +32,6 @@ const History = dynamic(() => import('components/screens/NFT/Components/Detail/H
     ssr: false
 });
 
-const initState = {
-    loading: false,
-    page: 1,
-    dataHistory: {
-        data: [],
-        hasNext: false,
-        go_next: true
-    }
-};
-
 const index = ({ idNFT }) => {
     const {
         t,
@@ -55,9 +42,6 @@ const index = ({ idNFT }) => {
     const isDark = currentTheme === THEME_MODE.DARK;
 
     const [detail, setDetail] = useState();
-
-    const { width } = useWindowSize();
-    const isMobile = width < 830;
 
     //** call api detail NFT
     const handleDetailNFT = async () => {
@@ -90,7 +74,7 @@ const index = ({ idNFT }) => {
                             {detail?.image ? <img width={550} height={550} src={detail?.image} /> : null}
                         </WrapperImage>
                         <section className="w-full">
-                            <Contents detail={detail} />
+                            <Contents detail={detail} isDark={isDark} />
                             <Description detail={detail} />
                             <Effective effective={detail?.[`effective_${language}`] || []} dark={isDark} />
                         </section>

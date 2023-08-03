@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { X } from 'react-feather';
 import { useDebounce } from 'react-use';
 
 import { useRouter } from 'next/router';
@@ -16,15 +15,16 @@ import InputV2 from 'components/common/V2/InputV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 
 import { WrapperStatus, WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
-import { TABS } from 'components/screens/NFT/Constants';
 import { LIST_TIER, STATUS } from 'components/screens/NFT/Constants';
+
+import { IconClose } from 'components/svg/SvgIcon';
 
 import classNames from 'classnames';
 import styled from 'styled-components';
 
 const MAX_LENGTH = 14;
 
-const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
+const Transfer = ({ isModal, onCloseModal, detail, idNFT, isDark }) => {
     const {
         t,
         i18n: { language }
@@ -57,9 +57,7 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                 params: { id: idNFT, code }
             });
             if (statusCode === 201) {
-                const category = TABS.find((item) => item.value === detail?.category);
-
-                toast({ text: t('nft:transfer:toast_success', { type: category.label, NamiID: idNFT }), type: 'success', duration: 1500 });
+                toast({ text: t('nft:transfer:toast_success', { type: detail?.name, NamiID: code }), type: 'success', duration: 1500 });
                 setTimeout(() => router.push('/wallet/NFT'), 3000);
             }
         } catch (err) {
@@ -120,7 +118,7 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                         className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
                         onClick={onCloseModal}
                     >
-                        <X size={24} />
+                        <IconClose />
                     </div>
                 </div>
             )}
@@ -133,7 +131,7 @@ const Transfer = ({ isModal, onCloseModal, detail, idNFT }) => {
                     </WrapperImage>
                     <section className="my-[21px]">
                         <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{detail?.name}</p>
-                        <WrapperLevelItems className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
+                        <WrapperLevelItems isDark={isDark} className="dark:text-gray-7 text-gray-1 flex flex-row gap-1  mt-1 text-base">
                             <p>{t('nft:tier')}:</p>
                             <p className={tier?.key}>{tier?.name?.[language]}</p>
                         </WrapperLevelItems>

@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { X } from 'react-feather';
 
 import { useTranslation, Trans } from 'next-i18next';
 
@@ -7,6 +6,8 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import ModalV2 from 'components/common/V2/ModalV2';
+
+import { IconClose } from 'components/svg/SvgIcon';
 
 const CATEGORY = {
     1: 'Skynamia Badges',
@@ -56,7 +57,7 @@ const Use = ({ isModal, onCloseModal, statusCodeNFT, onUseSubmit, category }) =>
                         className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
                         onClick={onCloseModal}
                     >
-                        <X size={24} />
+                        <IconClose />
                     </div>
                 </div>
             )}
