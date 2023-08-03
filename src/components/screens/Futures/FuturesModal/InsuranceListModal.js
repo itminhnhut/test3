@@ -22,10 +22,8 @@ const StateColorMapping = (state) => {
             break;
         case INSURANCE_STATE.EXPIRED:
         case INSURANCE_STATE.LIQUIDATED:
-            color = 'text-txtSecondary dark:text-txtSecondary-dark';
-            break;
         case INSURANCE_STATE.CANCELED:
-            color = 'text-red-2';
+            color = 'text-txtSecondary dark:text-txtSecondary-dark';
             break;
         default:
             color = 'text-red-2';
