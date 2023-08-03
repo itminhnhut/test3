@@ -106,7 +106,7 @@ const SwapIcon = ({ className = '', color, size = 16 }) => {
 
 const CloseIcon = ({ className, onClick, color, size }) => {
     const [currentTheme] = useDarkMode();
-    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#1f2633';
 
     return (
         <svg
@@ -290,7 +290,6 @@ const FutureReferralIcon = ({ size = 36, ...props }) => (
 const FutureIcon = ({ size = 36, ...props }) => {
     return (
         <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-            {' '}
             <path d="M3.2 28.796h25.595V10.361l-10.459 9.434-8.643-2.211-6.494 6.139v5.073z" fill="#9FF2C5" />
             <path d="M28.799 9.772h-2.594v9.603H28.8V9.772z" fill="#0D994E" />
             <path d="M20.059 9.754v2.854h8.74V9.754h-8.74z" fill="#5BD891" />
@@ -300,6 +299,34 @@ const FutureIcon = ({ size = 36, ...props }) => {
                 d="M17.825 8.639a5.44 5.44 0 0 1-5.44 5.438 5.44 5.44 0 1 1 0-10.877 5.44 5.44 0 0 1 5.44 5.439zm-5.605 2.673v-.57a1.41 1.41 0 0 1-.685-.172 1.807 1.807 0 0 1-.606-.515l.452-.451c.11.156.248.29.407.397.131.082.28.131.434.145h.117a.903.903 0 0 0 .362-.055.389.389 0 0 0 .19-.099.47.47 0 0 0 .207-.406.56.56 0 0 0-.108-.353.842.842 0 0 0-.28-.208 2.775 2.775 0 0 0-.38-.153h-.1l-.316-.118a2.796 2.796 0 0 1-.397-.216 1.175 1.175 0 0 1-.271-.344 1.074 1.074 0 0 1-.109-.524c-.004-.22.06-.438.181-.623.124-.172.293-.306.488-.388.13-.069.27-.114.414-.136v-.542h.48v.542c.385.053.734.25.977.551l-.443.46a1.87 1.87 0 0 0-.37-.315.38.38 0 0 0-.163-.073.66.66 0 0 0-.226 0l-.253.01a.579.579 0 0 0-.262.108.416.416 0 0 0-.172.38.497.497 0 0 0 .1.306c.082.083.18.147.289.19l.343.127.136.054.289.1c.143.06.277.143.397.243a.902.902 0 0 1 .28.352c.102.165.164.35.181.542a1.11 1.11 0 0 1-.388.904 1.31 1.31 0 0 1-.687.28l-.029.003v.567h-.479z"
                 fill="#5BD891"
             />
+        </svg>
+    );
+};
+
+const FutureNFTIcon = ({ size = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
+
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#xx78pzbdva)">
+                <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M5.516 3.25h12.702v3.38h-1.5V4.75H6.127l-2.63 2.565v5.999h-1.5V6.683l3.52-3.433z"
+                    fill="#6FC98B"
+                />
+                <path d="M7.415 6.75H21.25v12.5H2.75v-7.835L7.415 6.75z" stroke="#6FC98B" strokeWidth="1.5" strokeLinejoin="bevel" />
+                <path
+                    d="M7.09 16.916c-.054 0-.08-.023-.08-.069L7 10.079c0-.053.027-.079.08-.079h.894l1.68 3.915-.05-3.835c0-.053.03-.08.09-.08h.983c.04 0 .06.027.06.08l.01 6.777c0 .04-.017.06-.05.06h-.875l-1.719-3.658.07 3.578c0 .053-.03.08-.09.08H7.09zM11.66 16.916c-.034 0-.05-.016-.05-.05l.02-6.826c0-.027.013-.04.04-.04h3.18c.033 0 .049.013.049.04v1.123c0 .026-.013.04-.04.04h-2.037v1.54h2.037c.027 0 .04.016.04.05l.01 1.122c0 .027-.017.04-.05.04h-2.037v2.912c0 .033-.016.05-.05.05H11.66zM16.786 16.916c-.026 0-.04-.016-.04-.05v-5.664h-1.291c-.034 0-.05-.016-.05-.05l.01-1.112c0-.027.013-.04.04-.04h3.776c.033 0 .05.013.05.04v1.113c0 .033-.014.05-.04.05h-1.302l.01 5.664c0 .033-.013.05-.04.05h-1.123z"
+                    fill={defaultColor}
+                />
+            </g>
+            <defs>
+                <clipPath id="xx78pzbdva">
+                    <path fill="#fff" transform="translate(2 2)" d="M0 0h20v20H0z" />
+                </clipPath>
+            </defs>
         </svg>
     );
 };
@@ -411,9 +438,9 @@ const SuccessfulTransactionIcon = ({ size = 36, ...props }) => {
             />
             <defs>
                 <linearGradient id="6xmltrwi7a" x1="4.649" y1="8.7" x2="25.199" y2="13.5" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#BDFEE7" />
-                    <stop offset=".891" stop-color="#60F1A6" stopOpacity=".93" />
-                    <stop offset="1" stop-color="#47ED95" />
+                    <stop stopColor="#BDFEE7" />
+                    <stop offset=".891" stopColor="#60F1A6" stopOpacity=".93" />
+                    <stop offset="1" stopColor="#47ED95" />
                 </linearGradient>
             </defs>
         </svg>
@@ -476,7 +503,7 @@ const GooglePlayIcon = ({ size = 24, ...props }) => (
 
 const AndroidIcon = ({ size = 24, color = 'currentColor', ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
-        <g clip-path="url(#vtok890oea)">
+        <g clipPath="url(#vtok890oea)">
             <path
                 d="m17.6 9.482 1.84-3.18c.16-.31.04-.69-.26-.85a.637.637 0 0 0-.83.22l-1.88 3.24a11.463 11.463 0 0 0-8.94 0l-1.88-3.24a.643.643 0 0 0-.87-.2c-.28.18-.37.54-.22.83l1.84 3.18a10.78 10.78 0 0 0-5.4 8.52h22a10.78 10.78 0 0 0-5.4-8.52zM7 15.252a1.25 1.25 0 1 1 0-2.501 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.501 1.25 1.25 0 0 1 0 2.5z"
                 fill={color}
@@ -1204,8 +1231,8 @@ export const LinkedInIcon = ({ size = 28, ...props }) => (
     <svg {...props} width={size} height={size} viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0 14C0 6.268 6.268 0 14 0s14 6.268 14 14-6.268 14-14 14S0 21.732 0 14z" fill="#1877F2" />
         <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M10.102 8.647c0 .915-.688 1.647-1.795 1.647h-.02c-1.065 0-1.754-.732-1.754-1.647 0-.935.71-1.647 1.795-1.647 1.086 0 1.754.712 1.774 1.647zm-.208 2.948v9.533H6.72v-9.533h3.173zm11.441 9.533v-5.466c0-2.928-1.565-4.29-3.652-4.29-1.685 0-2.44.925-2.86 1.574v-1.35H11.65c.041.894 0 9.532 0 9.532h3.173v-5.323c0-.285.02-.57.104-.774.23-.569.752-1.158 1.628-1.158 1.149 0 1.608.874 1.608 2.155v5.1h3.172z"
             fill="#fff"
         />
@@ -1317,7 +1344,7 @@ export const MonetizationOnIcon = ({ size = 24, color = '#47CC85', className = '
 export const DwPartnerIconMulti = ({ size = 16 }) => {
     return (
         <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#h8pv48o2za)">
+            <g clipPath="url(#h8pv48o2za)">
                 <path
                     d="M15.998 12.138a3.53 3.53 0 0 1-3.52 3.543h-1.715a3.516 3.516 0 0 1-3.52-3.476h1.534V8.617h3.7c1.941 0 3.521 1.58 3.521 3.52z"
                     fill="#0D994E"
@@ -1342,8 +1369,8 @@ export const DwPartnerIconSingle = ({ size = 16 }) => {
     return (
         <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M8.753 8.616h.003c0-1.918-1.58-3.475-3.52-3.475H3.52C1.58 5.14 0 6.72 0 8.66v.023c0 1.94 1.58 3.52 3.52 3.52H8.753V8.615z"
                 fill="#5BD891"
             />
@@ -1374,84 +1401,254 @@ const ProfitStats = ({ className, color, size = 24 }) => {
     );
 };
 
+const NFTIcon = ({ width = 24, height = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#o3yhtnhsda)">
+                <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M12 3.75a8.25 8.25 0 1 0 0 16.5 8.25 8.25 0 0 0 0-16.5zM2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12z"
+                    fill="#6FC98B"
+                />
+                <path
+                    d="M6.488 16c-.053 0-.08-.023-.08-.069l-.01-6.768c0-.053.027-.079.08-.079h.894l1.68 3.915-.05-3.836c0-.053.03-.079.09-.079h.983c.04 0 .06.026.06.08l.01 6.777c0 .04-.017.06-.05.06h-.874L7.5 12.342l.07 3.578c0 .053-.03.08-.09.08h-.993zM11.058 16c-.033 0-.05-.016-.05-.05l.02-6.826c0-.027.013-.04.04-.04h3.18c.033 0 .05.013.05.04v1.123c0 .026-.014.04-.04.04H12.22v1.54h2.037c.026 0 .04.016.04.05l.01 1.122c0 .027-.017.04-.05.04H12.22v2.912c0 .033-.017.05-.05.05h-1.113zM16.185 16c-.027 0-.04-.016-.04-.05v-5.664h-1.292c-.033 0-.05-.016-.05-.05l.01-1.112c0-.027.013-.04.04-.04h3.776c.033 0 .05.013.05.04v1.113c0 .033-.013.05-.04.05h-1.302l.01 5.664c0 .033-.013.05-.04.05h-1.122z"
+                    fill={defaultColor}
+                />
+            </g>
+            <defs>
+                <clipPath id="o3yhtnhsda">
+                    <path fill={defaultColor} transform="translate(2 2)" d="M0 0h20v20H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
+
+const GridAltIcon = ({ width = 16, height = 16, isActive = false }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+
+    const active = '#';
+    if (isActive) {
+        active = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
+    }
+
+    return (
+        <svg width={width} height={height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M2.667 7.333h4a.667.667 0 0 0 .666-.666v-4A.667.667 0 0 0 6.667 2h-4A.667.667 0 0 0 2 2.667v4c0 .368.299.666.667.666zm6.666 0h4A.666.666 0 0 0 14 6.667v-4A.666.666 0 0 0 13.333 2h-4a.666.666 0 0 0-.666.667v4c0 .368.298.666.666.666zM2.667 14h4a.667.667 0 0 0 .666-.667v-4a.667.667 0 0 0-.666-.666h-4A.667.667 0 0 0 2 9.333v4c0 .368.299.667.667.667zm6.666 0h4a.667.667 0 0 0 .667-.667v-4a.666.666 0 0 0-.667-.666h-4a.666.666 0 0 0-.666.666v4c0 .368.298.667.666.667z"
+                fill={isActive ? active : defaultColor}
+            />
+        </svg>
+    );
+};
+
+const GridIcon = ({ width = 16, height = 16, isActive = false }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394'; // not DARK
+    const active = '#';
+    if (isActive) {
+        active = currentTheme === THEME_MODE.DARK ? '#e2e8f0' : '#1e1e1e';
+    }
+    return (
+        <svg width={width} height={height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M2.668 2.666h2.667v2.667H2.668V2.666zm4 0h2.667v2.667H6.668V2.666zm4 0h2.667v2.667h-2.667V2.666zm-8 4h2.667v2.667H2.668V6.666zm4 0h2.667v2.667H6.668V6.666zm4 0h2.667v2.667h-2.667V6.666zm-8 4h2.667v2.667H2.668v-2.667zm4 0h2.667v2.667H6.668v-2.667zm4 0h2.667v2.667h-2.667v-2.667z"
+                fill={isActive ? active : defaultColor}
+            />
+        </svg>
+    );
+};
+
+const FilterSharpIcon = ({ width = 24, height = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#1f2633';
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M.75 5.625h22.5v2.25H.75v-2.25zm3.75 5.25h15v2.25h-15v-2.25zm4.5 5.25h6v2.25H9v-2.25z" fill={defaultColor} />
+        </svg>
+    );
+};
+
+const RadioButtonUncheckIcon = ({ width = 24, height = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#3E4351' : '#8694B3';
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                fill={defaultColor}
+            />
+        </svg>
+    );
+};
+
+const NoResultIcon = () => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK;
+    return defaultColor ? (
+        <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M53.632 60.49c0 8.972-5.271 16.71-12.87 20.265-7.652-2.78-13.13-10.136-13.13-18.752 0-9.903 7.246-18.144 16.703-19.683a22.348 22.348 0 0 1 9.297 18.17z"
+                fill="url(#vyatd4lfga)"
+            />
+            <path
+                d="M33.943 82.692a20.88 20.88 0 0 1-2.639.162c-12.328 0-22.322-10.013-22.322-22.365 0-12.353 9.994-22.372 22.329-22.372 2.322 0 4.56.356 6.67 1.015-8.916 3.762-15.186 12.592-15.186 22.863 0 8.642 4.432 16.256 11.148 20.697z"
+                fill="url(#v3lkvxk6pb)"
+            />
+            <path
+                d="M40.762 80.747a21.483 21.483 0 0 1-6.82 1.946c-6.715-4.44-11.147-12.055-11.147-20.697 0-10.272 6.27-19.108 15.186-22.863a22.17 22.17 0 0 1 6.349 3.18c-9.452 1.532-16.703 9.78-16.703 19.683.006 8.616 5.484 15.978 13.135 18.751z"
+                fill="#C2C7CF"
+            />
+            <path
+                d="m65.749 70.063 4.6 1.577c-3.762 8.888-12.568 15.151-22.8 15.151-5.032 0-9.703-1.5-13.606-4.092a21.481 21.481 0 0 0 6.82-1.945 19.726 19.726 0 0 0 6.786 1.196c8.11-.007 15.103-4.894 18.2-11.888zM72.29 61.996c0 1.713-.18 3.394-.51 5.01l-4.625-1.578c.193-1.111.297-2.262.297-3.432.006-10.995-8.923-19.941-19.903-19.941-1.096 0-2.167.09-3.213.265a22.005 22.005 0 0 0-6.348-3.18 24.386 24.386 0 0 1 9.561-1.933c13.645 0 24.741 11.118 24.741 24.79z"
+                fill="#C2C7CF"
+            />
+            <path d="M71.788 67.007a24.916 24.916 0 0 1-1.432 4.634l-4.6-1.577a19.698 19.698 0 0 0 1.413-4.634l4.619 1.577z" fill="#C2C7CF" />
+            <path d="m115.017 81.742-1.555 4.589-43.114-14.693a24.924 24.924 0 0 0 1.432-4.634l43.237 14.738z" fill="#C2C7CF" />
+            <defs>
+                <linearGradient id="vyatd4lfga" x1="7.345" y1="61.535" x2="57.322" y2="61.535" gradientUnits="userSpaceOnUse">
+                    <stop offset=".056" stopColor="#E2E8F0" />
+                    <stop offset=".135" stopColor="#D8DEE5" stopOpacity=".91" />
+                    <stop offset=".272" stopColor="#BDC2C9" stopOpacity=".753" />
+                    <stop offset=".451" stopColor="#91959A" stopOpacity=".548" />
+                    <stop offset=".666" stopColor="#545659" stopOpacity=".303" />
+                    <stop offset=".908" stopColor="#080808" stopOpacity=".026" />
+                    <stop offset=".931" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="v3lkvxk6pb" x1=".989" y1="60.487" x2="47.931" y2="60.487" gradientUnits="userSpaceOnUse">
+                    <stop offset=".056" stopColor="#E2E8F0" />
+                    <stop offset=".138" stopColor="#D9DFE7" stopOpacity=".911" />
+                    <stop offset=".273" stopColor="#C1C6CD" stopOpacity=".764" />
+                    <stop offset=".447" stopColor="#9A9EA4" stopOpacity=".576" />
+                    <stop offset=".65" stopColor="#64676A" stopOpacity=".354" />
+                    <stop offset=".877" stopColor="#202122" stopOpacity=".108" />
+                    <stop offset=".977" stopOpacity="0" />
+                </linearGradient>
+            </defs>
+        </svg>
+    ) : (
+        <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M54.559 61.674c0 8.567-5.044 15.953-12.318 19.345-7.317-2.65-12.563-9.68-12.563-17.904 0-9.456 6.932-17.324 15.976-18.793 5.393 3.882 8.905 10.204 8.905 17.352z"
+                fill="url(#y413son5ja)"
+            />
+            <path
+                d="M25.054 63.116c0-9.805 6.002-18.24 14.529-21.828a21.43 21.43 0 0 0-6.386-.972c-11.8 0-21.363 9.561-21.363 21.36 0 11.798 9.562 21.359 21.363 21.359.853 0 1.7-.05 2.525-.154-6.429-4.245-10.668-11.512-10.668-19.765z"
+                fill="url(#fd0c64skgb)"
+            />
+            <path
+                d="M71.928 67.906c.293-1.567.49-3.161.49-4.79 0-13.072-10.626-23.66-23.693-23.66-3.224 0-6.323.65-9.163 1.825-8.506 3.58-14.5 12.022-14.5 21.834 0 8.246 4.238 15.513 10.66 19.75a23.42 23.42 0 0 0 13.003 3.91c9.814 0 18.222-5.965 21.839-14.47l41.228 14.044 1.497-4.4-41.361-14.043zM67.5 66.409a18.226 18.226 0 0 1-1.336 4.4c-2.966 6.679-9.681 11.344-17.439 11.344-2.245 0-4.462-.392-6.484-1.14-7.303-2.637-12.549-9.68-12.549-17.89 0-9.45 6.911-17.338 15.97-18.807 1.007-.161 2.021-.231 3.063-.231 10.528 0 19.069 8.532 19.069 19.03 0 1.105-.098 2.217-.294 3.294z"
+                fill="#C2C7CF"
+            />
+            <defs>
+                <linearGradient id="y413son5ja" x1="22.261" y1="65.079" x2="53.663" y2="61.591" gradientUnits="userSpaceOnUse">
+                    <stop offset=".008" stop-color="#C6CEDE" />
+                    <stop offset=".209" stop-color="#D1D8E4" />
+                    <stop offset=".299" stop-color="#D8DEE8" />
+                    <stop offset=".505" stop-color="#DEE3EC" stop-opacity=".816" />
+                    <stop offset=".787" stop-color="#F0F2F6" stop-opacity=".562" />
+                    <stop offset=".967" stop-color="#fff" stop-opacity=".4" />
+                </linearGradient>
+                <linearGradient id="fd0c64skgb" x1="51.232" y1="62.741" x2="2.649" y2="59.866" gradientUnits="userSpaceOnUse">
+                    <stop offset=".385" stop-color="#C6CEDE" />
+                    <stop offset=".525" stop-color="#CCD3E2" stop-opacity=".759" />
+                    <stop offset=".719" stop-color="#DEE3EC" stop-opacity=".427" />
+                    <stop offset=".943" stop-color="#FBFCFD" stop-opacity=".041" />
+                    <stop offset=".967" stop-color="#fff" stop-opacity="0" />
+                </linearGradient>
+            </defs>
+        </svg>
+    );
+};
+
 export {
-    FutureInsurance,
-    ArrowDownIcon,
-    TrendIcon,
-    SeeIcon,
-    HideIcon,
-    CheckCircleIcon,
-    SwapIcon,
-    CloseIcon,
-    ArrowDropDownIcon,
-    BxsUserIcon,
-    BxsBellIcon,
-    FutureWalletIcon,
-    FutureTransferIcon,
-    FutureExchangeIcon,
-    FutureSwapIcon,
-    FutureReferralIcon,
-    FutureIcon,
-    FutureLaunchpadIcon,
-    FuturePortfolioIcon,
-    SuccessfulTransactionIcon,
-    AddCircleIcon,
     AddCircleColorIcon,
-    FutureSimpleIcon,
-    FutureAdvanceIcon,
-    AppleIcon,
-    GooglePlayIcon,
+    AddCircleIcon,
     AndroidIcon,
-    LogoIcon,
-    BxChevronDown,
-    SyncAltIcon,
+    AppleIcon,
+    ArrowCompareIcon,
+    ArrowDownIcon,
+    ArrowDropDownIcon,
+    ArrowForwardIcon,
     ArrowRightIcon,
-    CheckedDoubleIcon,
+    BxChevronDown,
+    BxsBellIcon,
     BxsBookIcon,
+    BxsDonateHeart,
+    BxsErrorAltIcon,
+    BxsErrorIcon,
+    BxsGift,
+    BxsImage,
+    BxsInfoCircle,
+    BxsLogoutCircle,
     BxsStarIcon,
-    TuneIcon,
+    BxsTimeIcon,
+    BxsUserCircle,
+    BxsUserIcon,
+    CalendarFillIcon,
+    CancelCircleFillIcon,
+    CancelIcon,
+    CheckCircleIcon,
+    CheckedDoubleIcon,
+    CheckedIcon,
+    CloseIcon,
+    ContactIcon,
+    CopyIcon,
+    FacebookIcon,
+    FireIcon,
+    FutureAdvanceIcon,
+    FutureExchangeIcon,
+    FutureIcon,
+    FutureInsurance,
+    FutureLaunchpadIcon,
+    FutureNaoIcon,
+    FuturePortfolioIcon,
+    FutureReferralIcon,
+    FutureSimpleIcon,
+    FutureSupportIcon,
+    FutureSwapIcon,
+    FutureTransferIcon,
+    FutureWalletIcon,
+    FutureNFTIcon,
+    GooglePlayIcon,
+    HideIcon,
+    LogoIcon,
+    MoneyIcon,
+    MoreHorizIcon,
+    NFTIcon,
+    GridAltIcon,
+    GridIcon,
+    NavbarSettingIcon,
+    NotInterestedIcon,
+    OrderIcon,
+    PartnerIcon,
     PartnersIcon,
     PortfolioIcon,
-    MoreHorizIcon,
-    BxsDonateHeart,
-    BxsGift,
-    BxsLogoutCircle,
-    CopyIcon,
-    CheckedIcon,
-    BxsInfoCircle,
-    ShareIcon,
-    FireIcon,
-    SettingIcon,
-    NavbarSettingIcon,
-    ArrowCompareIcon,
-    BxsUserCircle,
-    TimeLapseIcon,
-    BxsErrorIcon,
-    CancelIcon,
-    FutureSupportIcon,
-    QrCodeScannIcon,
-    CancelCircleFillIcon,
-    BxsErrorAltIcon,
-    ArrowForwardIcon,
-    CalendarFillIcon,
-    ContactIcon,
-    PartnerIcon,
-    OrderIcon,
-    BxsTimeIcon,
-    StarPurpleIcon,
-    TimerIcon,
-    MoneyIcon,
-    BxsImage,
-    SaveAlt,
-    USAFlagIcon,
-    VietnamFlagIcon,
-    NotInterestedIcon,
-    SaveAltIcon,
-    FacebookIcon,
-    TwitterIcon,
-    TelegramIcon,
-    FutureNaoIcon,
     PortfolioIconNoColor,
     ProfitStats,
+    QrCodeScannIcon,
+    SaveAlt,
+    SaveAltIcon,
+    SeeIcon,
+    SettingIcon,
+    ShareIcon,
+    StarPurpleIcon,
+    SuccessfulTransactionIcon,
+    SwapIcon,
+    SyncAltIcon,
+    TelegramIcon,
+    TimeLapseIcon,
+    TimerIcon,
+    TrendIcon,
+    TuneIcon,
+    TwitterIcon,
+    USAFlagIcon,
+    VietnamFlagIcon,
+    FilterSharpIcon,
+    NoResultIcon,
     ContentCopyIcon
 };

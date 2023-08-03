@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+
 import { PATHS } from 'constants/paths';
 
 const WalletDefault = ({ token }) => {
@@ -18,7 +19,8 @@ export const WALLET_SCREENS = {
     NAO_FUTURES: 'nao-futures',
     INSURANCE: 'insurance',
     // FARMING: 'farming',
-    TRANSACTION_HISTORY: 'transaction-history/all'
+    TRANSACTION_HISTORY: 'transaction-history/all',
+    NFT: 'NFT'
 };
 
 export const EXCHANGE_ACTION = {

@@ -1,0 +1,54 @@
+{
+    "filter": {
+        "filter": "Filter",
+        "close": "Reset filter",
+        "search": "Search",
+        "collection": "Collection"
+    },
+    "tier": "Tier",
+    "quantity": "Quantity",
+    "items": "items",
+    "list": {},
+    "detail": {
+        "title": "Detail",
+        "type": "Type",
+        "exp": "Expiration time",
+        "des": "Description",
+        "features": "Features",
+        "effective": {
+            "FEE": "<0>{{- value}}% phí giao dịch NAO Futures trong tuần {{- day}}<0>",
+            "CASHBACK": "<0>Giảm {{- value}}% phí giao dịch trong vòng {{- week}} ngày<0>",
+            "APY_BOOSTER": "<0>APY Booster {{- value}}% trong {{- day}} ngày<0>"
+        }
+    },
+    "history": {
+        "title": "History",
+        "event": "Event",
+        "from": "From",
+        "to": "To",
+        "date": "Date",
+        "transfer": "Transfer",
+        "active": "Active"
+    },
+    "warning": "Warning",
+    "active": {
+        "title": "Activate Now",
+        "toast_success": "Activating {{type}} successfully"
+    },
+    "transfer": {
+        "placeholder": "Enter the recipient's NamiID",
+        "paste": "Paste",
+        "toast_success": "Transfer {{type}} to {{NamiID}} successfully"
+    },
+    "status_code": {
+        "1000": "<0>{{- type}} not exists<0>",
+        "1001": "<0>{{- type}} is activated<0>",
+        "1002": "<0>{{- type}} is expired<0>",
+        "1003": "<0>{{- type}} expired<0>",
+        "1004": "<0>{{- type}} is activated before<0>",
+        "1005": "<0>{{- type}} cant transfer<0>",
+        "9001": "Nami ID doesn't exist",
+        "9000": "Nami ID not valid",
+        "code_error_format": "Nami ID is incorrectly formatted"
+    }
+}

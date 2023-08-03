@@ -1,4 +1,3 @@
-import { getV1Url } from 'redux/actions/utils';
 import { PATHS } from 'constants/paths';
 import { KYC_STATUS } from 'redux/actions/const';
 import { INSURANCE_URL } from 'constants/constants';
@@ -66,22 +65,25 @@ export const NAV_DATA = [
                 url: '/staking',
                 child_lv1: []
             },
-            // {
-            //     key: 2,
-            //     title: 'Launchpad',
-            //     localized: 'launchpad',
-            //     isNew: false,
-            //     url: 'https://launchpad.nami.exchange/',
-            //     child_lv1: []
-            // },
-            // {
-            //     key: 3,
-            //     title: 'Copy Trade',
-            //     localized: 'copytrade',
-            //     isNew: false,
-            //     url: '/',
-            //     child_lv2: [],
-            // },
+            {
+                key: 5,
+                title: 'Nami Insurance',
+                localized: 'nami_insurance',
+                isNew: false,
+                notSameOrigin: true,
+                isTarget:true,
+                url: INSURANCE_URL + '/buy-covered',
+                child_lv2: []
+            },
+            {
+                key: 6,
+                title: 'NFT',
+                localized: 'nft',
+                isNew: false,
+                url: '/nft',
+                child_lv1: []
+            },
+
             {
                 key: 3,
                 title: 'Referral',
@@ -89,16 +91,6 @@ export const NAV_DATA = [
                 isNew: false,
                 hide: true,
                 url: '/reference',
-                child_lv2: []
-            },
-            {
-                key: 4,
-                title: 'Nami Insurance',
-                localized: 'nami_insurance',
-                isNew: false,
-                notSameOrigin: true,
-                isTarget: true,
-                url: INSURANCE_URL + '/buy-covered',
                 child_lv2: []
             }
         ]
@@ -343,6 +335,14 @@ export const MOBILE_NAV_DATA = [
                 isNew: false,
                 url: PATHS.WALLET.FUTURES,
                 child_lv2: []
+            },
+            {
+                key: 'nft_wallet',
+                title: 'NFT Wallet',
+                localized: 'nft_wallet',
+                isNew: false,
+                url: PATHS.WALLET.NFT,
+                child_lv2: []
             }
         ]
     },
@@ -370,6 +370,7 @@ export const MOBILE_NAV_DATA = [
                 url: '/swap',
                 child_lv2: []
             },
+
             {
                 key: 1,
                 title: 'Spot',
@@ -412,6 +413,14 @@ export const MOBILE_NAV_DATA = [
                 isTarget: true,
                 url: INSURANCE_URL + '/buy-covered',
                 child_lv2: []
+            },
+            {
+                key: 'nft',
+                title: 'nft',
+                localized: 'nft',
+                isNew: false,
+                url: '/nft',
+                child_lv1: []
             }
         ]
     },

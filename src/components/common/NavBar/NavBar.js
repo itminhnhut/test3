@@ -1,9 +1,9 @@
 import Axios from 'axios';
-import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
 import SvgIcon from 'src/components/svg';
 import SvgMenu from 'src/components/svg/Menu';
 import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
+import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
 import SpotSetting from 'src/components/trade/SpotSetting';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
@@ -23,11 +23,10 @@ import { Router, useRouter } from 'next/router';
 import classNames from 'classnames';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import LanguageSetting from './LanguageSetting';
-import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
+import { KYC_STATUS, DefaultAvatar, AUTHORIZE_STATUS } from 'redux/actions/const';
 import styled from 'styled-components';
 import InsuranceRedirectLink from './InsuranceRedirectLink';
 
-import TagV2 from '../V2/TagV2';
 import {
     BxChevronDown,
     BxsUserIcon,
@@ -35,15 +34,23 @@ import {
     FutureIcon,
     FuturePortfolioIcon,
     FutureWalletIcon,
-    SuccessfulTransactionIcon
+    SuccessfulTransactionIcon,
+    NFTIcon,
+    FutureNFTIcon
 } from '../../svg/SvgIcon';
-import NavbarIcons from './Icons';
+import TagV2 from '../V2/TagV2';
 import AuthButton from './AuthButton';
 import Button from '../V2/ButtonV2/Button';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRef } from 'react';
+import { useGoogleOneTapLogin } from '@react-oauth/google';
+import FetchApi from 'utils/fetch-api';
+import qs from 'qs';
+
+import NavbarIcons from './Icons';
+
 const DailyLuckydraw = dynamic(() => import('components/screens/DailyLuckydraw'));
 // ** Dynamic
 const NotificationList = dynamic(() => import('src/components/notification/NotificationList'), { ssr: false });
@@ -60,6 +67,7 @@ export const NAVBAR_USE_TYPE = {
 const ALLOW_DROPDOWN = ['product', 'trade', 'commission', 'nao'];
 
 const NAV_HIDE_THEME_BUTTON = ['maldives_landingpage'];
+const AUTH_URL = process.env.NEXT_PUBLIC_AUTH_URL;
 
 const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, spotState, resetDefault, onChangeSpotState }) => {
     // * Initial State
@@ -83,6 +91,81 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     } = useTranslation(['navbar', 'common', 'profile']);
     const [isFromFrame, setIsFromFrame] = useState(false);
     const [showDailyLucky, setShowDailyLucky] = useState(false);
+    const [loginState, setLoginState] = useState();
+
+    const getLoginState = async () => {
+        try {
+            const currentUrl = window.location.href;
+            const res = await FetchApi({
+                url: '/login/nami',
+                params: {
+                    redirect: currentUrl,
+                    noRedirect: true
+                }
+            });
+            if (res.data) {
+                setLoginState(res.data);
+            }
+        } catch (error) {
+            console.log('Unable to fetch login state', error);
+        }
+    };
+
+    useEffect(() => {
+        getLoginState();
+    }, []);
+
+    useGoogleOneTapLogin({
+        onSuccess: async ({ credential }) => {
+            if (!credential) return;
+            try {
+                const data = await FetchApi({
+                    url: `/authenticated/google`,
+                    options: {
+                        method: 'POST',
+                        baseURL: AUTH_URL,
+                        withCredentials: false
+                    },
+                    params: {
+                        idToken: credential,
+                        client_state: loginState,
+                        theme: currentTheme,
+                        language,
+                    }
+                });
+                switch (data.status) {
+                    case AUTHORIZE_STATUS.MISSING_OTP: {
+                        const redirect = `${AUTH_URL}/verify_oauth_device?${qs.stringify({
+                            token: data.continueToken,
+                            service: 'google',
+                            state: loginState,
+                            theme: currentTheme,
+                            language
+                        })}`;
+                        console.log({ redirect });
+                        router.push(redirect);
+                        return;
+                    }
+                    case AUTHORIZE_STATUS.OK: {
+                        const redirect = data.data;
+                        router.push(redirect);
+                        return;
+                    }
+                    default: {
+                        console.log('Login Failed');
+                    }
+                }
+            } catch (error) {
+                console.log('Login Failed', error);
+            }
+        },
+        onError: () => {
+            console.log('Login Failed');
+        },
+        disabled: !!auth || !loginState,
+        cancel_on_tap_outside: false
+    });
+
 
     // * Memmoized Variable
     const navTheme = useMemo(() => {
@@ -140,6 +223,13 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
         return !data?.listUrl ? data.url : data.listUrl?.[language] || '#';
     };
 
+    const renderImageSubMenu = ({ child }) => {
+        return child?.title === 'NFT' ? (
+            <NFTIcon />
+        ) : (
+            <Image src={getS3Url(getIcon(child.localized))} width={width >= 2560 ? '38' : '24'} height={width >= 2560 ? '38' : '24'} alt={child.title} />
+        );
+    };
     // * Render Handler
     const renderDesktopNavItem = useCallback(() => {
         const feeNavObj = NAV_DATA.find((o) => o.localized === 'fee');
@@ -259,16 +349,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         <WrapperLink>
                             <div className={'mal-navbar__link__group___item___childen__lv1___item2'}>
                                 <WrapperItemChild className="mal-navbar__link__group___item___childen__lv1___item2__icon">
-                                    {Icon ? (
-                                        <Icon size={24} />
-                                    ) : (
-                                        <Image
-                                            src={getS3Url(getIcon(child.localized))}
-                                            width={width >= 2560 ? '38' : '24'}
-                                            height={width >= 2560 ? '38' : '24'}
-                                            alt={child.title}
-                                        />
-                                    )}
+                                    {Icon ? <Icon size={24} /> : renderImageSubMenu({ child })}
                                 </WrapperItemChild>
                                 <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
                                     <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
@@ -427,7 +508,6 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
         USER_CP.map((item) => {
             if (item.hide) return null;
             if (item.isPartner && partner_type !== 2) return null;
-            const Icon = NavbarIcons?.[item.localized === 'referral' ? 'profile_referral' : item.localized];
             items.push(
                 item.url ? (
                     <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
@@ -501,7 +581,10 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         <a className="mal-navbar__dropdown___item rounded-xl justify-between  !text-base">
                             <div className="flex items-center font-normal ">
                                 <div className="dark:text-txtSecondary-dark text-txtSecondary">
-                                    {NavbarIcons?.['logout']({ size: 24, color: 'currentColor' })}
+                                    {NavbarIcons?.['logout']({
+                                        size: 24,
+                                        color: 'currentColor'
+                                    })}
                                 </div>
                                 {t('navbar:menu.user.logout')}
                             </div>
@@ -518,7 +601,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                 <div className="mal-navbar__dropdown__wrapper flex flex-col gap-3">
                     <Link href={PATHS.WALLET.DEFAULT}>
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
-                            <FuturePortfolioIcon size={24} />
+                            <FutureWalletIcon size={24} />
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('common:overview')}</span>
                         </a>
                     </Link>
@@ -534,6 +617,12 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:submenu.futures_wallet')}</span>
                         </a>
+                    </Link>
+                    <Link href={PATHS.WALLET.NFT}>
+                        <div className="mal-navbar__dropdown___item">
+                            <FutureNFTIcon />
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:submenu.nft_wallet')}</span>
+                        </div>
                     </Link>
                 </div>
             </div>

@@ -224,5 +224,6 @@
     "partner_suggest_order_subtitle": "Người dùng đang tìm kiếm đối tác cho giao dịch sau, vui lòng xác nhận nhanh nhất có thể để bắt đầu giao dịch",
     "fee_received": "Phí nhận được",
     "auto_suggestion_mode": "Chế độ tự động gợi ý",
-    "auto_suggestion_mode_tooltip": "Cho phép hệ thống tự động gợi ý tới người dùng để xử lý lệnh"
+    "auto_suggestion_mode_tooltip": "Cho phép hệ thống tự động gợi ý tới người dùng để xử lý lệnh",
+    "receive_addresses": "Địa chỉ ví nhận cập nhật liên tục theo thời gian, vui lòng luôn lấy địa chỉ ví mới nhất khi thực hiện giao dịch"
 }
