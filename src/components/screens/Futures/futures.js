@@ -248,8 +248,8 @@ const Futures = () => {
                                 draggableHandle=".dragHandleArea"
                                 resizeHandles={['se']}
                                 resizeHandle={<ResizeHandleArea className="!z-[21]" />}
-                                onLayoutChange={(currentBreakPointLayout, allBreakPointLayouts) => {
-                                    const flatLayout = [...currentBreakPointLayout, ...futuresGridConfig.layoutsVndc[state.breakpoint]].filter(
+                                onLayoutChange={(_currentBPLayout, allBreakPointLayouts) => {
+                                    const flatLayout = [...allBreakPointLayouts?.[state.breakpoint], ...futuresGridConfig.layoutsVndc[state.breakpoint]].filter(
                                         (layout, index, originLayouts) => {
                                             const firstIndex = originLayouts.findIndex((l) => l.i === layout.i);
                                             return firstIndex === index;
