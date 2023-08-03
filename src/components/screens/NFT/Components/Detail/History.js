@@ -89,7 +89,6 @@ const History = memo(({ idNFT }) => {
                 key: 'type',
                 dataIndex: 'type',
                 title: t('nft:history:event'),
-                title: 'event',
                 align: 'left',
                 maxWidth: 302,
                 render: (value) => <div>{EVENT?.[value]?.[language] || ''}</div>
