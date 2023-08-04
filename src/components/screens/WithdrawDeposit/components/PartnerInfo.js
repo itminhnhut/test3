@@ -91,22 +91,21 @@ const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimu
             case 1:
                 filteredPartner =
                     searchPartner &&
-                    orderBy(searchPartner, [`orderConfig.${side.toLowerCase()}${+assetId === 22 ? 'Usdt' : ''}.max`, 'name'], ['desc', 'desc']);
+                    orderBy(searchPartner, [`orderConfig.${side.toLowerCase()}${+assetId === 22 ? 'Usdt' : ''}.max`, 'name'], ['desc', 'asc']);
                 break;
             case 2:
                 filteredPartner =
                     searchPartner &&
-                    orderBy(searchPartner, [(a) => (a?.analyticMetadata?.avgTime ? a.analyticMetadata.avgTime : undefined), 'name'], ['asc', 'desc']);
+                    orderBy(searchPartner, [(a) => (a?.analyticMetadata?.avgTime ? a.analyticMetadata.avgTime : undefined), 'name'], ['asc', 'asc']);
                 break;
             case 3:
-                filteredPartner = searchPartner && orderBy(searchPartner, ['analyticMetadata.count', 'name'], ['desc', 'desc']);
+                filteredPartner = searchPartner && orderBy(searchPartner, ['analyticMetadata.count', 'name'], ['desc', 'asc']);
                 break;
             default:
                 break;
         }
         filteredPartner = filteredPartner.slice(0, MAX_PARTNER_DISPLAY)
     }
-
 
     return (
         <DropdownCard
