@@ -64,8 +64,6 @@ const ALLOWED_WALLET_TO = {
     INSURANCE: WalletType.INSURANCE
 };
 
-const NOT_ALLOWED_WALLET_TO = Object.values(ALLOWED_WALLET_FROM).filter((wallet) => !Object.values(ALLOWED_WALLET_TO).includes(wallet));
-
 const TransferWalletResult = {
     INVALID_AMOUNT: 'INVALID_AMOUNT',
     INVALID_WALLET_TYPE: 'INVALID_WALLET_TYPE',
@@ -134,9 +132,9 @@ const getTitleWallet = (wallet, t, language) => {
             _strTitleWallet = wallet;
             break;
     }
-    // _strTitleWallet = _strTitleWallet.charAt(0).toUpperCase() + _strTitleWallet.slice(1).toLowerCase();
 
     return _strTitleWallet;
+    s;
 };
 
 const TransferModal = ({ isMobile, alert }) => {
@@ -335,32 +333,26 @@ const TransferModal = ({ isMobile, alert }) => {
         });
     };
 
-    const onFocus = () =>
-        setState({
-            focus: { amount: true },
-            openList: {}
-        });
-
-    const onBlur = () => setState({ focus: {} });
-
-    const isNotAllowToRevert = NOT_ALLOWED_WALLET_TO.includes(state.fromWallet);
+    const isFromWalletSwitchable = Boolean(ALLOWED_WALLET_TO?.[state.fromWallet]);
 
     const onSetWallet = (targetWallet, walletType) => {
         let otherWallet = targetWallet === 'fromWallet' ? 'toWallet' : 'fromWallet';
 
         // thực hiện hoán đổi fromWallet và toWallet nếu như targetWallet === otherWallet
         if (state?.[otherWallet] === walletType) {
-            // If not allow to revert
-            if (isNotAllowToRevert) {
+            // If fromWallet not able to switch
+            // toWallet will be the first wallet in the allow_wallet_to list
+            if (!isFromWalletSwitchable) {
                 setState({
                     fromWallet: state.toWallet,
-                    toWallet: Object.values(ALLOWED_WALLET_TO).filter((allowWallet) => allowWallet !== state.toWallet)[0]
+                    toWallet: Object.values(ALLOWED_WALLET_TO).find((allowWallet) => allowWallet !== state.toWallet)
                 });
                 return;
             }
             revertWallet();
             return;
         }
+
         setState({
             [targetWallet]: walletType,
             openList: {}
@@ -368,7 +360,7 @@ const TransferModal = ({ isMobile, alert }) => {
     };
 
     const revertWallet = () => {
-        if (isNotAllowToRevert) return;
+        if (!isFromWalletSwitchable) return;
         if (state.fromWallet && state.toWallet) {
             const _newState = {
                 fromWallet: state.toWallet,
@@ -481,10 +473,10 @@ const TransferModal = ({ isMobile, alert }) => {
                         <ArrowForwardIcon color="currentColor" size={16} />
                     </div>
                     <button
-                        disabled={isNotAllowToRevert}
+                        disabled={!isFromWalletSwitchable}
                         className={classNames('rounded-full transition select-none text-green-3 dark:text-teal', {
-                            'cursor-not-allowed opacity-60': isNotAllowToRevert,
-                            'hover:opacity-75 cursor-pointer': !isNotAllowToRevert
+                            'cursor-not-allowed opacity-60': !isFromWalletSwitchable,
+                            'hover:opacity-75 cursor-pointer': isFromWalletSwitchable
                         })}
                         onClick={revertWallet}
                     >
@@ -507,7 +499,6 @@ const TransferModal = ({ isMobile, alert }) => {
                                     {Object.keys(ALLOWED_WALLET_TO)
                                         .filter((wallet) => wallet !== state.fromWallet)
                                         .map((walletType) => {
-                                            // const isDisable = state.fromWallet === walletType;
                                             return (
                                                 <div
                                                     key={`wallet_type_to__${walletType}`}
@@ -597,22 +588,6 @@ const TransferModal = ({ isMobile, alert }) => {
         );
     }, [state.allWallets, state.openList, state.asset, assetConfig]);
 
-    const renderAmountInput = useCallback(() => {
-        return (
-            <NumberFormat
-                thousandSeparator
-                allowNegative={false}
-                placeholder={Number(0).toPrecision(assetDigit + 1)}
-                className="w-full text-left"
-                value={state.amount}
-                onValueChange={({ value }) => setState({ amount: value })}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                decimalScale={assetDigit}
-            />
-        );
-    }, [state.amount, state.focus, state.asset, assetDigit]);
-
     const renderAvailableWallet = useCallback(() => {
         const available = currentWallet?.available;
 
@@ -634,7 +609,9 @@ const TransferModal = ({ isMobile, alert }) => {
             );
         }
 
-        let shouldDisable = isErrors || isAmountEmpty || isInsufficient || state.isPlacingOrder;
+        const isInsuranceWalletSelected = [state.fromWallet, state.toWallet].includes(WalletType.INSURANCE);
+        const isSpotWalletSelected = [state.fromWallet, state.toWallet].includes(WalletType.SPOT);
+        let shouldDisable = (isInsuranceWalletSelected && !isSpotWalletSelected) || isErrors || isAmountEmpty || isInsufficient || state.isPlacingOrder;
 
         return (
             <ButtonV2
@@ -700,7 +677,7 @@ const TransferModal = ({ isMobile, alert }) => {
     }, [state.errors]);
 
     useEffect(() => {
-        if (!!!isVisible) {
+        if (!Boolean(isVisible)) {
             dispatch(
                 setTransferModal({
                     isVisible: false,
@@ -857,8 +834,8 @@ const TransferModal = ({ isMobile, alert }) => {
                         <div onClick={onSetMax} className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">
                             {renderAvailableWallet()}
                         </div>
-                        <AddCircleColorIcon 
-                            className="cursor-pointer text-green-3 dark:text-teal" 
+                        <AddCircleColorIcon
+                            className="cursor-pointer text-green-3 dark:text-teal"
                             onClick={() => handleKycRequest(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))}
                             size={16}
                             color="currentColor"
