@@ -127,6 +127,13 @@ const ContestWeekRanks = ({
         );
     };
 
+    useEffect(() => {
+        if (previous) {
+            checked.current = false;
+            setTab(0);
+        }
+    }, [previous]);
+
     const weeks = useMemo(() => {
         return getWeeksInRange(new Date(start), new Date(end));
     }, [start]);
@@ -137,7 +144,7 @@ const ContestWeekRanks = ({
         for (let i = 0; i < weeks.numWeeks; i++) {
             const start = new Date(weeks.weeks[i].start).getTime();
             const end = new Date(weeks.weeks[i].end).getTime();
-            if (now > start && now < end && !checked.current) {
+            if (now > start && now < end && !checked.current && !previous) {
                 checked.current = true;
                 onFilter(i);
             }
@@ -149,7 +156,7 @@ const ContestWeekRanks = ({
             );
         }
         return rs;
-    }, [weeks, tab]);
+    }, [weeks, tab, previous]);
 
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
