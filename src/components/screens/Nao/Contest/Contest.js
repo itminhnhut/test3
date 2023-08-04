@@ -336,7 +336,7 @@ const Contest = (props) => {
     const [tab, setTab] = useState(initState.tab);
     const [data, setData] = useState([]);
     const [loadingSpecial, setLoadingSpecial] = useState(initState.loadingSpecial);
-    const showPnl = ![9, 10, 11, 12, 13, 14].includes(props?.contest_id);
+    const showPnl = ![9, 10, 11, 12, 13, 14, 15].includes(props?.contest_id);
     const user = useSelector((state) => state.auth.user) || null;
     // const userID = props?.contest_id >= 13 ? 'code' : 'onus_user_id';
     const userID = user?.onus_user_id ? 'onus_user_id' : 'code';
