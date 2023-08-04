@@ -337,8 +337,8 @@ const AdjustmentHistory = React.memo(({ id, onClose }) => {
                     </Item>
                     <Item>
                         <Span
-                            className="text-teal cursor-pointer"
-                            onClick={() => redirect(`/futures/order/${item?.metadata?.child_id}`)}
+                            className="text-teal"
+                            // onClick={() => redirect(`/futures/order/${item?.metadata?.child_id}`)}
                         >{`#${item?.metadata?.child_id}`}</Span>
                     </Item>
                 </Row>
@@ -669,8 +669,8 @@ const AdjustmentHistory = React.memo(({ id, onClose }) => {
                         </Item>
                         <Item>
                             <Span
-                                className="text-teal cursor-pointer"
-                                onClick={() => redirect(`/futures/order/${item?.metadata?.child_id}`)}
+                                className="text-teal"
+                                // onClick={() => redirect(`/futures/order/${item?.metadata?.child_id}`)}
                             >{`#${item?.metadata?.child_id}`}</Span>
                         </Item>
                     </Row>
