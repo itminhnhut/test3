@@ -27,7 +27,12 @@ const Effective = ({ effective, dark }) => {
                                       <p className="ml-2 dark:text-gray-4 text-gray-15">{value}</p>
                                   </selection>
                               ) : (
-                                  <div dangerouslySetInnerHTML={{ __html: value }} />
+                                  <selection className="flex flex-row items-center">
+                                      <div>
+                                          <CheckCircle2Icon />
+                                      </div>
+                                      <div className="ml-2 dark:text-gray-4 text-gray-15" dangerouslySetInnerHTML={{ __html: value }} />
+                                  </selection>
                               );
                           })
                         : null}
