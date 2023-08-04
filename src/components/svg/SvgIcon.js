@@ -1566,6 +1566,20 @@ const IconClose = ({ size = 24 }) => {
     );
 };
 
+const CheckCircle2Icon = ({ size = '16' }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#47CC85' : '#30BF73';
+
+    return (
+        <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M7.999 1.332a6.674 6.674 0 0 0-6.667 6.667 6.674 6.674 0 0 0 6.667 6.666A6.674 6.674 0 0 0 14.665 8 6.674 6.674 0 0 0 8 1.332zm-1.333 9.609L4.191 8.47l.941-.944 1.533 1.53 3.529-3.53.943.943-4.471 4.47z"
+                fill={defaultColor}
+            />
+        </svg>
+    );
+};
+
 export {
     AddCircleColorIcon,
     AddCircleIcon,
@@ -1651,5 +1665,6 @@ export {
     VietnamFlagIcon,
     FilterSharpIcon,
     NoResultIcon,
-    IconClose
+    IconClose,
+    CheckCircle2Icon
 };
