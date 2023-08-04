@@ -18,6 +18,7 @@ import { ChevronUp, ChevronDown } from 'react-feather';
 import { useRouter } from 'next/router';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { FuturesMarginMode } from 'redux/reducers/futures';
+import { X } from 'react-feather';
 
 const getAllAssets = createSelector([(state) => state.utils, (utils, params) => params], (utils, params) => {
     const assets = {};
@@ -75,8 +76,26 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
         onClose();
     }, []);
 
+    const customHeader = () => (
+        <div className="flex justify-end mb-6">
+            <div className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer" onClick={onClose}>
+                <X size={24} />
+            </div>
+        </div>
+    );
+
     return (
-        <ModalV2 className="!max-w-[884px]" isVisible={isVisible} onBackdropCb={onCloseCb} wrapClassName="pb-4">
+        <ModalV2
+            className="!max-w-[884px]"
+            isVisible={isVisible}
+            onBackdropCb={onCloseCb}
+            wrapClassName="pb-4"
+            customHeader={() => (
+                <div className="sticky top-0 flex justify-end content-center py-6 bg-white dark:bg-dark">
+                    <X onClick={onClose} size={24} />
+                </div>
+            )}
+        >
             <Tooltip id={'funding_fee'} place="top" effect="solid" isV3 className="max-w-[300px]" />
             <Tooltip
                 id={'liquidate_fee'}
