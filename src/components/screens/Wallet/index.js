@@ -2,10 +2,7 @@ import Axios from 'axios';
 import NeedLoginV2 from 'components/common/NeedLoginV2';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
-import ExchangeWallet from 'components/screens/Wallet/Exchange';
-import FuturesWallet from 'components/screens/Wallet/Futures';
-import OverviewWallet from 'components/screens/Wallet/Overview';
-import StakingWallet from 'components/screens/Wallet/Staking';
+
 import { MIN_WALLET } from 'constants/constants';
 import { PATHS } from 'constants/paths';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
@@ -25,11 +22,16 @@ import { ApiStatus, LOCAL_STORAGE_KEY, WalletType } from 'redux/actions/const';
 import { getFuturesMarketWatch, getMarketWatch, getUsdRate } from 'redux/actions/market';
 import styled from 'styled-components';
 import colors from 'styles/colors';
-import NAOFuturesWallet from './NaoFutures';
-import PartnersWallet from './Partners';
 
 // ** Dynamic
 const NFTWallet = dynamic(() => import('./NFT'), { ssr: false });
+const NAOFuturesWallet = dynamic(() => import('./NaoFutures'), { ssr: false });
+const PartnersWallet = dynamic(() => import('./Partners'), { ssr: false });
+const InsuranceWallet = dynamic(() => import('./Insurance'), { ssr: false });
+const ExchangeWallet = dynamic(() => import('./Exchange'), { ssr: false });
+const FuturesWallet = dynamic(() => import('./Futures'), { ssr: false });
+const OverviewWallet = dynamic(() => import('./Overview'), { ssr: false });
+const StakingWallet = dynamic(() => import('./Staking'), { ssr: false });
 
 export const WIDTH_MD = 768;
 
@@ -92,7 +94,6 @@ const Wallet = () => {
     const auth = useSelector((state) => state.auth?.user) || null;
     const allWallet = useSelector((state) => state.wallet?.SPOT) || null;
     const allInsuranceWallet = useSelector((state) => state.wallet?.INSURANCE) || null;
-    console.log('allInsuranceWallet:', allInsuranceWallet);
     const allFuturesWallet = useSelector((state) => state.wallet?.FUTURES) || null;
     const allNAOFuturesWallet = useSelector((state) => state.wallet?.NAO_FUTURES) || null;
     const allPartnersWallet = useSelector((state) => state.wallet?.PARTNERS) || null;
@@ -282,7 +283,7 @@ const Wallet = () => {
             futures: 'allFuturesAsset',
             naoFutures: 'allNAOFuturesAsset',
             insurance: 'allInsuranceAsset',
-            partners: 'allPartnersAsset',
+            partners: 'allPartnersAsset'
         };
         const walletList = walletTypes.reduce((accu, walletType) => ({ ...accu, [walletType]: [] }), {});
 
