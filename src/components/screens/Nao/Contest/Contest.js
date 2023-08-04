@@ -276,7 +276,7 @@ export const seasons = [
         season: 12,
         start: '2023-08-06T17:00:00.000Z',
         end: '2023-09-03T17:00:00.000Z',
-        time_to_create: { start: '2023-08-01T17:00:00.000Z', end: '2023-08-18T17:00:00.000Z' },
+        time_to_create: { start: '2023-08-04T17:00:00.000Z', end: '2023-08-18T17:00:00.000Z' },
         contest_id: 15,
         title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 9', en: 'NAO Futures VNDC – Nami Championship Season 9' },
         title: { vi: 'NAO Futures VNDC', en: 'NAO Futures VNDC' },
@@ -287,8 +287,8 @@ export const seasons = [
             isHtml: false
         },
         rules: {
-            vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-8-t7-2023',
-            en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-8-july-2023'
+            vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-9-t8-2023',
+            en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-9-august-2023'
         },
         weekly_contest_time: {
             start: '2023-08-06T17:00:00.000Z',
