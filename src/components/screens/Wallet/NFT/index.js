@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 
 import { useTranslation } from 'next-i18next';
 
@@ -23,10 +24,18 @@ const CardItems = dynamic(() => import('components/screens/NFT/Components/Lists/
 
 const CollectionFilter = dynamic(() => import('components/screens/NFT/Components/Lists/CollectionFilter'), { ssr: false });
 const TierFilter = dynamic(() => import('components/screens/NFT/Components/Lists/TierFilter'), { ssr: false });
+const ModalInfoInfinity = dynamic(() => import('components/screens/Wallet/NFT/Components/Modal/InfoInfinity'), { ssr: false });
+
+const DEFAULT_PATH_NAME = '/wallet/NFT';
+
+const DEFAULT_FILTER = {
+    wallet: 'WNFT',
+    grid: 4
+};
 
 const iniData = {
-    wallet: 'WNFT',
-    tab: 2,
+    // wallet: 'WNFT',
+    // tab: 2,
     grid: 4,
     tier: [],
     search: '',
@@ -38,21 +47,20 @@ const iniData = {
 const TAB_STATUS = { WNFT: 2, SB: 1 };
 
 const NFTWallet = () => {
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation();
+    const router = useRouter();
+    const { t } = useTranslation();
 
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
+    const [data, setData] = useState();
+    const [summary, setSummary] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
     const [filter, setFilter] = useState(iniData);
     const [isLoading, setIsLoading] = useState(false);
-
     const [dataCollection, setDataCollection] = useState();
-    const [summary, setSummary] = useState([]);
 
-    const [data, setData] = useState();
+    const handleToggleModal = () => setIsOpen((prev) => !prev);
 
     // ** call api get summary
     const handleGetSummary = async () => {
@@ -110,6 +118,12 @@ const NFTWallet = () => {
         return () => clearTimeout(id);
     }, [filter.wallet, filter.collection, filter.tier, filter.search]);
 
+    useEffect(() => {
+        const { wallet = DEFAULT_FILTER.wallet, grid = DEFAULT_FILTER.grid } = router.query;
+
+        setFilter((prev) => ({ ...prev, wallet, grid: +grid }));
+    }, [router.query]);
+
     const totalSummary = useMemo(() => {
         const totalVoucher = summary?.find((f) => f?._id === TAB_STATUS.SB)?.total || 0;
         const totalNft = summary?.find((f) => f?._id === TAB_STATUS.WNFT)?.total || 0;
@@ -117,7 +131,15 @@ const NFTWallet = () => {
     }, [summary]);
 
     const handleChangeWallet = (wallet) => {
-        setFilter((prev) => ({ ...prev, wallet }));
+        const grid = wallet !== filter?.wallet ? DEFAULT_FILTER.grid : filter.grid;
+        if (wallet === filter?.wallet) return;
+        router.push(
+            {
+                pathname: DEFAULT_PATH_NAME,
+                query: { ...router.query, wallet, grid }
+            },
+            DEFAULT_PATH_NAME
+        );
     };
 
     const handleChangInput = (search) => {
@@ -129,7 +151,15 @@ const NFTWallet = () => {
     };
 
     const handleSelectGrid = (grid) => {
-        setFilter((prev) => ({ ...prev, grid }));
+        if (grid === filter?.grid) return;
+        router.push(
+            {
+                pathname: DEFAULT_PATH_NAME,
+                query: { ...router.query, grid }
+            },
+            DEFAULT_PATH_NAME
+        );
+        // setFilter((prev) => ({ ...prev, grid }));
     };
 
     const handleChangeCollection = (collection) => {
@@ -154,7 +184,7 @@ const NFTWallet = () => {
 
     const renderData = useCallback(() => {
         if (isLoading || !Array.isArray(data)) {
-            return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} />;
+            return <SkeletonCard grid={filter.grid} isOpen={filter.isOpen} isDark={isDark} />;
         }
         if (Array.isArray(data)) {
             return (
@@ -169,11 +199,11 @@ const NFTWallet = () => {
                 />
             );
         }
-    }, [data, isLoading, filter.isShowCollection, filter.grid, filter.isOpen, filter.category]);
+    }, [data, isLoading, filter.isShowCollection, filter.grid, filter.isOpen, filter.category, isDark]);
 
     return (
         <>
-            <section className="flex flex-row justify-between">
+            <section className="flex flex-row justify-between items-center">
                 <section className="flex flex-row gap-3 text-gray-1 dark:text-gray-7 text-sm">
                     <WrapperChip onClick={() => handleChangeWallet('WNFT')} active={filter.wallet === 'WNFT'}>
                         WNFT ({totalSummary.nft})
@@ -182,6 +212,9 @@ const NFTWallet = () => {
                         Skynamia Badges ({totalSummary.voucher})
                     </WrapperChip>
                 </section>
+                <p className="cursor-pointer font-semibold dark:text-green-2 text-green-3" onClick={handleToggleModal}>
+                    {t('nft:read_more')}
+                </p>
             </section>
             <section className="mt-5 flex flex-row gap-x-3">
                 <AllFilters filter={filter} onChangeToggle={handleToggle} onChangeGird={handleSelectGrid} onChangeSearch={handleChangInput} />
@@ -193,6 +226,7 @@ const NFTWallet = () => {
                 </section>
                 {renderData()}
             </section>
+            <ModalInfoInfinity open={isOpen} onClose={handleToggleModal} />
         </>
     );
 };

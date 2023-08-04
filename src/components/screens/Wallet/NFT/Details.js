@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useWindowSize } from 'react-use';
 
 import dynamic from 'next/dynamic';
 
@@ -14,8 +13,6 @@ import { API_GET_DETAIL_NFT, API_POST_ACTIVE_NFT, API_GET_CHECK_NFT } from 'redu
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-
-import { TABS } from 'components/screens/NFT/Constants';
 
 import styled from 'styled-components';
 
@@ -58,8 +55,6 @@ const WalletDetail = ({ idNFT }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
-    const { width } = useWindowSize();
-    const isMobile = width < 830;
     const [detail, setDetail] = useState();
 
     const [isUse, setIsUse] = useState(initState.isUse);
@@ -105,8 +100,7 @@ const WalletDetail = ({ idNFT }) => {
                 if (isUse) {
                     handleModalUse();
                 }
-                const category = TABS.find((item) => item.value === detail?.category);
-                toast({ text: t('nft:active:toast_success', { type: category?.label }), type: 'success', duration: 1500 });
+                toast({ text: t('nft:active:toast_success', { type: detail?.name }), type: 'success', duration: 1500 });
             }
         } catch (error) {
             console.error(error);
@@ -182,7 +176,7 @@ const WalletDetail = ({ idNFT }) => {
                     <section className="mt-8 flex flex-row gap-4">
                         {renderImage()}
                         <section className="w-full">
-                            <Contents detail={detail} wallet={true} />
+                            <Contents detail={detail} wallet={true} isDark={isDark} />
                             <Description detail={detail} />
                             <Effective effective={detail?.[`effective_${language}`] || []} dark={isDark} />
                             {detail?.category === 1 ? renderVoucher(detail) : renderNFT(detail)}
@@ -194,7 +188,7 @@ const WalletDetail = ({ idNFT }) => {
                     </section>
                 </article>
                 <Use isModal={isUse} category={detail?.category} onCloseModal={handleModalUse} statusCodeNFT={statusCodeNFT} onUseSubmit={handleUseSubmit} />
-                <Transfer isModal={isTransfer} onCloseModal={handleModalTransfer} detail={detail} idNFT={idNFT} />
+                <Transfer isModal={isTransfer} isDark={isDark} onCloseModal={handleModalTransfer} detail={detail} idNFT={idNFT} />
             </main>
         </MaldivesLayout>
     );
