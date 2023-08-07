@@ -556,7 +556,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <Column
                                 minWidth={150}
                                 align="right"
-                                visible={!previous && !isPending.group}
+                                visible={!isPending.group}
                                 className="font-semibold"
                                 title={t('common:ext_gate:time')}
                                 decimal={2}
