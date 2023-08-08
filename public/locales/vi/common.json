@@ -297,7 +297,8 @@
             "3month": "3 tháng"
         },
         "push_order": "Đẩy lệnh",
-        "your_portfolio": "Danh mục đầu tư"
+        "your_portfolio": "Danh mục đầu tư",
+        "login_failed": "Đăng nhập thất bại"
     },
     "ext_gate": {
         "hi_user": "Xin chào, {{who}}",

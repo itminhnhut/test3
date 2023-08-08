@@ -12,7 +12,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
-import { API_GET_VIP } from 'redux/actions/apis';
+import { API_GET_VIP, GOOGLE_OAUTH_CALLBACK } from 'redux/actions/apis';
 import { getMarketWatch } from 'redux/actions/market';
 import { getLoginUrl, getS3Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
@@ -46,6 +46,7 @@ import Image from 'next/image';
 import { useGoogleOneTapLogin } from '@react-oauth/google';
 import FetchApi from 'utils/fetch-api';
 import qs from 'qs';
+import toast from 'utils/toast';
 
 const DailyLuckydraw = dynamic(() => import('components/screens/DailyLuckydraw'));
 // ** Dynamic
@@ -116,17 +117,16 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
             if (!credential) return;
             try {
                 const data = await FetchApi({
-                    url: `/authenticated/google`,
+                    url: GOOGLE_OAUTH_CALLBACK,
                     options: {
-                        method: 'POST',
-                        baseURL: AUTH_URL,
-                        withCredentials: false
+                        method: 'POST'
+                        // baseURL: AUTH_URL,
                     },
                     params: {
                         idToken: credential,
                         client_state: loginState,
                         theme: currentTheme,
-                        language,
+                        language
                     }
                 });
                 switch (data.status) {
@@ -138,25 +138,40 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                             theme: currentTheme,
                             language
                         })}`;
-                        console.log({ redirect });
                         router.push(redirect);
                         return;
                     }
                     case AUTHORIZE_STATUS.OK: {
                         const redirect = data.data;
-                        router.push(redirect);
+                        if (window) {
+                            window.location.href = redirect;
+                        } else {
+                            router.push(redirect);
+                        }
                         return;
                     }
                     default: {
                         console.log('Login Failed');
+                        toast({
+                            type: 'error',
+                            text: t('common:global_label:login_failed')
+                        })
                     }
                 }
             } catch (error) {
                 console.log('Login Failed', error);
+                toast({
+                    type: 'error',
+                    text: t('common:global_label:login_failed')
+                });
             }
         },
         onError: () => {
             console.log('Login Failed');
+            toast({
+                type: 'error',
+                text: t('common:global_label:login_failed')
+            });
         },
         disabled: !!auth || !loginState,
         cancel_on_tap_outside: false

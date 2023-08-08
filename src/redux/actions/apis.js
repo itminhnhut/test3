@@ -372,3 +372,6 @@ export const API_MARKETING_EVENT = API_PREFIX + 'marketing/event';
 
 // Staking statics
 export const API_HISTORY_STAKING_DAILY_OVERVIEW = API_V3_PREFIX + 'wallet/history/staking-daily/overview';
+
+// auth
+export const GOOGLE_OAUTH_CALLBACK = API_V3_PREFIX + '/auth/callback/google';
