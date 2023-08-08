@@ -384,3 +384,6 @@ export const API_POST_ACTIVE_NFT = API_V3_PREFIX + 'nft/active';
 export const API_POST_TRANSFER_NFT = API_V3_PREFIX + 'nft/transfer';
 export const API_GET_CHECK_NFT = API_V3_PREFIX + 'nft/check-nft';
 export const API_GET_CHECK_NAMI_CODE_NFT = API_V3_PREFIX + 'nft/check-nami-code';
+
+//** spot
+export const API_GET_SPOT_ASSET_INFO = API_V3_PREFIX + 'spot/asset_info';
