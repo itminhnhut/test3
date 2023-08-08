@@ -40,8 +40,8 @@ const InsuranceRuleModal = ({ insuranceRules, visible, onCloseAll = () => {}, on
             <div className="h-[calc(90vh-324px)] overflow-y-auto -mx-8 px-8">
                 {searchRules.length ? (
                     <div className="grid grid-cols-2 gap-4">
-                        {searchRules.map((rule) => {
-                            return <RuleItem key={rule?.symbol} rule={rule} />;
+                        {searchRules.map((rule, index) => {
+                            return <RuleItem key={rule?.symbol + index} rule={rule} />;
                         })}
                     </div>
                 ) : (

@@ -19,7 +19,7 @@ import Emitter from 'redux/actions/emitter';
 import 'react-grid-layout/css/styles.css';
 import { getOrdersList, fetchFuturesSetting } from 'redux/actions/futures';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
-import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
+import { countDecimals, getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
 import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
 import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTermsModal';
 import classNames from 'classnames';
@@ -27,6 +27,10 @@ import DefaultMobileView from 'src/components/common/DefaultMobileView';
 import { useLocalStorage } from 'react-use';
 import styled from 'styled-components';
 import { DragHandleArea, RemoveItemArea, ResizeHandleArea } from 'components/common/ReactGridItem';
+import FuturesOrderDetailModal from './FuturesModal/FuturesOrderDetailModal';
+import FetchApi from 'utils/fetch-api';
+import { API_ORDER_DETAIL } from 'redux/actions/apis';
+import useFetchApi from 'hooks/useFetchApi';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -46,7 +50,8 @@ const INITIAL_STATE = {
     orderBookLayout: null,
     tradeRecordLayout: null,
     isVndcFutures: true,
-    assumingPrice: null
+    assumingPrice: null,
+    isShowOrderIntegrateFromInsurance: false
 };
 
 const initFuturesComponent = {
@@ -60,7 +65,9 @@ const initFuturesComponent = {
     // [FuturesSettings.show_sl_tp_order_line]: true
 };
 
-const Futures = () => {
+const Futures = ({ integrate, orderId }) => {
+    const isIntegrateFromInsurance = integrate === 'nami_insurance';
+
     const [state, set] = useState(INITIAL_STATE);
 
     const [localGridLayouts, setLocalGridLayout] = useLocalStorage(LOCAL_STORAGE_KEY.FUTURE_GRID_LAYOUT);
@@ -72,6 +79,7 @@ const Futures = () => {
     const userSocket = useSelector((state) => state.socket.userSocket);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const auth = useSelector((state) => state.auth?.user);
     const userSettings = useSelector((state) => state.futures?.userSettings);
@@ -83,6 +91,43 @@ const Futures = () => {
     // Memmoized Variable
     const pairConfig = useMemo(() => allPairConfigs?.find((o) => o.pair === state.pair), [allPairConfigs, state.pair]);
     const unitConfig = useSelector((state) => getUnit(state, pairConfig?.quoteAsset));
+
+    /* INSURANCE INTEGRATE ORDER ID  */
+    const {
+        data: orderIntegrateFromInsurance,
+        error
+    } = useFetchApi(
+        {
+            url: API_ORDER_DETAIL,
+            params: {
+                orderId
+            }
+        },
+        isIntegrateFromInsurance,
+        [isIntegrateFromInsurance, orderId]
+    );
+
+    useEffect(() => {
+        if (Boolean(orderIntegrateFromInsurance) && !error) {
+            setState({ isShowOrderIntegrateFromInsurance: true });
+        }
+    }, [orderIntegrateFromInsurance, error]);
+
+    const insuranceIntegrateDecimals = useMemo(() => {
+        const getDecimalPrice = (symbol) => {
+            const decimalScalePrice = symbol?.filters.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
+            return countDecimals(decimalScalePrice?.tickSize);
+        };
+
+        const symbol = allPairConfigs.find((rs) => rs.symbol === orderIntegrateFromInsurance?.symbol);
+        const decimalSymbol = assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
+        const decimalScalePrice = getDecimalPrice(symbol);
+        return {
+            price: decimalScalePrice || 0,
+            symbol: decimalSymbol || 0
+        };
+    }, [orderIntegrateFromInsurance, allPairConfigs, assetConfig]);
+    /* INSURANCE INTEGRATE ORDER ID  */
 
     const subscribeFuturesSocket = (pair) => {
         if (!publicSocket) {
@@ -358,6 +403,12 @@ const Futures = () => {
                     </div>
                 </MaldivesLayout>
             </DynamicNoSsr>
+            <FuturesOrderDetailModal
+                order={orderIntegrateFromInsurance}
+                isVisible={state.isShowOrderIntegrateFromInsurance}
+                onClose={() => setState({ isShowOrderIntegrateFromInsurance: false })}
+                decimals={insuranceIntegrateDecimals}
+            />
 
             <FuturesProfitEarned isVisible={false} />
         </>
