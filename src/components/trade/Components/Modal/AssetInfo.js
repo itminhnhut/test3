@@ -50,7 +50,7 @@ const ModalAssetInfo = ({ open, onCloseModal, id }) => {
             )}
         >
             <section className="flex flex-col">
-                <div className="text-2xl font-semibold text-gray-15 dark:text-gray-4">{t('spot:asset_info:info')}</div>
+                <div className="text-2xl font-semibold text-gray-15 dark:text-gray-4">{t('spot:asset_info:title')}</div>
                 <section className="flex flex-row items-center gap-x-4 mt-6">
                     {data?.asset_id && <AssetLogo assetId={data.asset_id} size={32} />}
                     <div className="font-semibold dark:text-gray-4 text-gray-15">{getAssetName(data?.asset_id)}</div>
