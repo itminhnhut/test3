@@ -10,6 +10,26 @@ import { getAssetName, formatNumber } from 'redux/actions/utils';
 import styled from 'styled-components';
 import FetchApi from 'utils/fetch-api';
 
+const SOCIAL = [
+    { key: 'telegram', icon: <TelegramIconV2 /> },
+    { key: 'twitter', icon: <TwitterIconV2 /> },
+    { key: 'medium', icon: <MediumIconV2 /> },
+    { key: 'discord', icon: <DiscordIconV2 /> },
+    { key: 'facebook', icon: <FbIconV2 /> },
+    { key: 'reddit', icon: <RedditIconV2 /> }
+];
+
+const TOTAL = [
+    { title: 'spot:asset_info:circulating_supply', key: 'circulating_supply' },
+    { title: 'spot:asset_info:max_supply', key: 'max_supply' },
+    { title: 'spot:asset_info:total_supply', key: 'total_supply' }
+];
+
+const LINK = [
+    { title: 'spot:asset_info:website', key: 'website' },
+    { title: 'spot:asset_info:explorer', key: 'explorer' }
+];
+
 const ModalAssetInfo = ({ open, onCloseModal, id }) => {
     const {
         t,
@@ -31,6 +51,44 @@ const ModalAssetInfo = ({ open, onCloseModal, id }) => {
         if (!open || !id) return;
         handleAssetInfo();
     }, [id, open]);
+
+    const renderSocial = () => {
+        return SOCIAL?.map((item) => {
+            return (
+                <Link href={data?.urls?.[item.key]?.[0] || '#'}>
+                    <a target="_blank">{item.icon}</a>
+                </Link>
+            );
+        });
+    };
+
+    const renderTotal = () => {
+        return TOTAL?.map((item) => {
+            return (
+                <WrapperItem>
+                    <div>{t(item.title)}</div>
+                    <div className="text-gray-15 dark:text-gray-4 font-semibold">{formatNumber(data?.[item.key] || 0)}</div>
+                </WrapperItem>
+            );
+        });
+    };
+
+    const renderLink = () => {
+        return LINK?.map((item) => {
+            return (
+                <WrapperItem>
+                    <div>{t(item.title)}</div>
+                    <WrapperURl
+                        href={data?.urls?.[item.key]?.[0] || '#'}
+                        target="_blank"
+                        className="text-green-3 dark:text-green-2 font-semibold max-w-[159px]"
+                    >
+                        {data?.urls?.[item.key]?.[0] || '-'}
+                    </WrapperURl>
+                </WrapperItem>
+            );
+        });
+    };
 
     return (
         <ModalV2
@@ -56,76 +114,19 @@ const ModalAssetInfo = ({ open, onCloseModal, id }) => {
                     <div className="font-semibold dark:text-gray-4 text-gray-15">{getAssetName(data?.asset_id)}</div>
                 </section>
                 <section className="mt-6 bg-gray-13 dark:bg-dark-4 !border-divider dark:!border-divider-dark rounded-xl px-4 py-4 flex flex-col gap-3">
-                    <section className="flex flex-row justify-between dark:text-gray-7 text-gray-1">
+                    <WrapperItem>
                         <div>{t('spot:asset_info:rank')}</div>
                         <div className="text-gray-15 dark:text-gray-4 font-semibold">#{data?.cmc_rank || '-'}</div>
-                    </section>
-                    <section className="flex flex-row justify-between dark:text-gray-7 text-gray-1">
-                        <div>{t('spot:asset_info:circulating_supply')}</div>
-                        <div className="text-gray-15 dark:text-gray-4 font-semibold">{formatNumber(data?.circulating_supply || 0)}</div>
-                    </section>
-                    <section className="flex flex-row justify-between dark:text-gray-7 text-gray-1">
-                        <div>{t('spot:asset_info:max_supply')}</div>
-                        <div className="text-gray-15 dark:text-gray-4 font-semibold">{formatNumber(data?.max_supply || 0)}</div>
-                    </section>
-                    <section className="flex flex-row justify-between dark:text-gray-7 text-gray-1">
-                        <div>{t('spot:asset_info:total_supply')}</div>
-                        <div className="text-gray-15 dark:text-gray-4 font-semibold">{formatNumber(data?.total_supply || 0)}</div>
-                    </section>
-                    <section className="flex flex-row justify-between dark:text-gray-7 text-gray-1">
-                        <div>{t('spot:asset_info:website')}</div>
-                        <Link href={data?.urls?.website?.[0] || '#'}>
-                            <WrapperURl target="_blank" className="text-green-3 dark:text-green-2 font-semibold max-w-[159px]">
-                                {data?.urls?.website?.[0] || '-'}
-                            </WrapperURl>
-                        </Link>
-                    </section>
-                    <section className="flex flex-row justify-between dark:text-gray-7 text-gray-1">
-                        <div>{t('spot:asset_info:explorer')}</div>
-                        <Link href={data?.urls?.explorer?.[0] || '#'}>
-                            <WrapperURl target="_blank" className="text-green-3 dark:text-green-2 font-semibold max-w-[159px]">
-                                {data?.urls?.explorer?.[0] || '-'}
-                            </WrapperURl>
-                        </Link>
-                    </section>
+                    </WrapperItem>
+                    {renderTotal()}
+                    {renderLink()}
                 </section>
                 <section className="mt-6 bg-gray-13 dark:bg-dark-4 !border-divider dark:!border-divider-dark rounded-xl px-4 py-4 text-gray-15 dark:text-gray-4">
                     {data?.description?.[language] || data?.description}
                 </section>
                 <section className="flex flex-row justify-between mt-6 bg-gray-13 dark:bg-dark-4 !border-divider dark:!border-divider-dark rounded-xl px-4 py-4 text-gray-15 dark:text-gray-4">
                     <div className="text-gray-1 dark:text-gray-7">{t('spot:asset_info:social')}</div>
-                    <div className="flex flex-row gap-4">
-                        <Link href={data?.urls?.telegram?.[0] || '#'}>
-                            <a target="_blank">
-                                <TelegramIconV2 />
-                            </a>
-                        </Link>
-                        <Link href={data?.urls?.twitter?.[0] || '#'}>
-                            <a target="_blank">
-                                <TwitterIconV2 />
-                            </a>
-                        </Link>
-                        <Link href={data?.urls?.medium?.[0] || '#'}>
-                            <a target="_blank">
-                                <MediumIconV2 />
-                            </a>
-                        </Link>
-                        <Link href={data?.urls?.website?.[0] || '#'}>
-                            <a target="_blank">
-                                <DiscordIconV2 />
-                            </a>
-                        </Link>
-                        <Link href={data?.urls?.facebook?.[0] || '#'}>
-                            <a target="_blank">
-                                <FbIconV2 />
-                            </a>
-                        </Link>
-                        <Link href={data?.urls?.reddit?.[0] || '#'}>
-                            <a target="_blank">
-                                <RedditIconV2 />
-                            </a>
-                        </Link>
-                    </div>
+                    <div className="flex flex-row gap-4">{renderSocial()}</div>
                 </section>
             </section>
         </ModalV2>
@@ -138,5 +139,9 @@ const WrapperURl = styled.a`
     white-space: nowrap;
     cursor: pointer;
 `;
+
+const WrapperItem = styled.section.attrs(() => ({
+    className: 'flex flex-row justify-between dark:text-gray-7 text-gray-1'
+}))``;
 
 export default ModalAssetInfo;
