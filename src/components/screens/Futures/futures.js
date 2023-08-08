@@ -5,12 +5,7 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
-import FuturesChart from 'components/screens/Futures/FuturesChart';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import FuturesPairDetail from 'components/screens/Futures/PairDetail';
-import FuturesTradeRecord from 'components/screens/Futures/TradeRecord';
-import FuturesFavoritePairs from 'components/screens/Futures/FavoritePairs';
-import FuturesPlaceOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc';
 import futuresGridConfig, { futuresGridKey, futuresLayoutKey } from 'components/screens/Futures/_futuresGrid';
 import useWindowSize from 'hooks/useWindowSize';
 import DynamicNoSsr from 'components/DynamicNoSsr';
@@ -20,8 +15,6 @@ import 'react-grid-layout/css/styles.css';
 import { getOrdersList, fetchFuturesSetting } from 'redux/actions/futures';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { countDecimals, getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
-import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
-import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTermsModal';
 import classNames from 'classnames';
 import DefaultMobileView from 'src/components/common/DefaultMobileView';
 import { useLocalStorage } from 'react-use';
@@ -31,10 +24,30 @@ import FuturesOrderDetailModal from './FuturesModal/FuturesOrderDetailModal';
 import FetchApi from 'utils/fetch-api';
 import { API_ORDER_DETAIL } from 'redux/actions/apis';
 import useFetchApi from 'hooks/useFetchApi';
+import Spiner from 'components/common/V2/LoaderV2/Spiner';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const GridLayout = WidthProvider(Responsive);
 
 const FuturesProfitEarned = dynamic(() => import('components/screens/Futures/TakedProfit'), { ssr: false });
+const FuturesFavoritePairs = dynamic(() => import('components/screens/Futures/FavoritePairs'), { ssr: false });
+const FuturesChart = dynamic(() => import('components/screens/Futures/FuturesChart'), { ssr: false });
+const FuturesPairDetail = dynamic(() => import('components/screens/Futures/PairDetail'), { ssr: false });
+const FuturesTradeRecord = dynamic(() => import('components/screens/Futures/TradeRecord'), {
+    ssr: false,
+    loading: () => {
+        const [currentTheme] = useDarkMode();
+
+        return (
+            <div className="h-full flex justify-center items-center">
+                <Spiner isDark={currentTheme === THEME_MODE.DARK} />
+            </div>
+        );
+    }
+});
+const FuturesMarginRatioVndc = dynamic(() => import('./PlaceOrder/Vndc/MarginRatioVndc'), { ssr: false });
+const FuturesTermsModal = dynamic(() => import('components/screens/Futures/FuturesModal/FuturesTermsModal'), { ssr: false });
+const FuturesPlaceOrderVndc = dynamic(() => import('components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc'), { ssr: false });
 
 const INITIAL_STATE = {
     layouts: futuresGridConfig.layoutsVndc,
