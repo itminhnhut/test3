@@ -97,6 +97,9 @@ const SymbolDetail = (props) => {
                             {symbolTicker?.b}/{symbolTicker?.q}
                         </span>
                         <ChevronDown size={16} className="ml-1" />
+                        <div className="cursor-pointer ml-2" onClick={handleToggleModal}>
+                            <BxsInfoCircleV2 size={16} color="currentColor" />
+                        </div>
                         <div
                             className={`${isPro ? 'w-[400px] max-h-[386px] border border-divider-dark' : 'w-80 h-72'} ${
                                 showSymbolList ? '' : 'hidden'
