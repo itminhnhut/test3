@@ -83,7 +83,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     const { localized, notSameOrigin } = item;
                     const Icon = NavbarIcons?.[localized];
                     if (localized === 'partner' && !isPartner) return;
-                    if (localized === 'nami_insurance') {
+                    if (localized === 'nami_insurance' && auth) {
                         itemsLevel1.push(
                             <InsuranceRedirectLink
                                 targetType="_blank"
