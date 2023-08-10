@@ -1,24 +1,29 @@
-import ChevronDown from 'src/components/svg/ChevronDown';
+import { IconLoading } from '../common/Icons';
+import SymbolList from './SymbolList';
+import InfoSlider from 'components/markets/InfoSlider';
+import { BxsInfoCircleV2 } from 'components/svg/SvgIcon';
+import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
+import dynamic from 'next/dynamic';
 import * as React from 'react';
 import { useRef, useEffect, useState, useMemo } from 'react';
+import { ChevronLeft } from 'react-feather';
 import { useSelector } from 'react-redux';
 import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
+import { formatNumber } from 'redux/actions/utils';
+import ChevronDown from 'src/components/svg/ChevronDown';
 import { PublicSocketEvent } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
 import { setUserSymbolList } from 'src/redux/actions/market';
 import { formatPrice, render24hChange, RefCurrency, getDecimalPrice } from 'src/redux/actions/utils';
-import { IconLoading } from '../common/Icons';
-import SymbolList from './SymbolList';
-import { ChevronLeft } from 'react-feather';
-import useWindowSize from 'hooks/useWindowSize';
-import { formatNumber } from 'redux/actions/utils';
-import InfoSlider from 'components/markets/InfoSlider';
+
+const ModalAssetInfo = dynamic(() => import('./Components/Modal/AssetInfo'), { ssr: false });
 
 const SymbolDetail = (props) => {
     const { symbol, favorite, changeSymbolList, watchList, fullScreen, layoutConfig, publicSocket, layoutMode, isPro, decimals } = props;
     const { t } = useTranslation('common');
     const [symbolTicker, setSymbolTicker] = useState(null);
+    const [isInfoAsset, setIsInfoAsset] = useState(false);
     const [favoriteId, setFavoriteId] = useState('');
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     const [showSymbolList, setShowSymbolList] = useState(false);
@@ -66,12 +71,19 @@ const SymbolDetail = (props) => {
         );
     }
 
+    const handleToggleModal = () => setIsInfoAsset((prev) => !prev);
+
     const _renderSymbolList = () => {
         if (layoutMode === SPOT_LAYOUT_MODE.SIMPLE) {
             return (
-                <span className="text-txtPrimary dark:text-txtPrimary-dark font-medium text-xl">
-                    {symbolTicker?.b}/{symbolTicker?.q}
-                </span>
+                <>
+                    <span className="text-txtPrimary dark:text-txtPrimary-dark font-medium text-xl">
+                        {symbolTicker?.b}/{symbolTicker?.q}
+                    </span>
+                    <div className="cursor-pointer ml-2" onClick={handleToggleModal}>
+                        <BxsInfoCircleV2 size={16} color="currentColor" />
+                    </div>
+                </>
             );
         } else if (layoutMode === SPOT_LAYOUT_MODE.PRO) {
             return (
@@ -85,6 +97,9 @@ const SymbolDetail = (props) => {
                             {symbolTicker?.b}/{symbolTicker?.q}
                         </span>
                         <ChevronDown size={16} className="ml-1" />
+                        <div className="cursor-pointer ml-2" onClick={handleToggleModal}>
+                            <BxsInfoCircleV2 size={16} color="currentColor" />
+                        </div>
                         <div
                             className={`${isPro ? 'w-[400px] max-h-[386px] border dark:border-divider-dark border-divider' : 'w-80 h-72'} ${
                                 showSymbolList ? '' : 'hidden'
@@ -117,6 +132,7 @@ const SymbolDetail = (props) => {
                     <Detail symbolTicker={symbolTicker} exchangeConfig={exchangeConfig} symbol={symbol} t={t} decimals={decimals} />
                 </div>
             </div>
+            <ModalAssetInfo id={symbolTicker?.['bi']} open={isInfoAsset} onCloseModal={handleToggleModal} />
         </>
     );
 };
@@ -125,34 +141,30 @@ const Detail = ({ symbolTicker, t, decimals }) => {
     return (
         <InfoSlider gutter={16} containerClassName="gap-6">
             {/* <div className="flex items-center w-full h-full gap-6 relative no-scrollbar"> */}
-                <div className="flex flex-col min-w-max space-y-1">
-                    <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('24h_change')}</div>
-                    <div className="block text-xs font-semibold">{render24hChange(symbolTicker, true)}</div>
+            <div className="flex flex-col min-w-max space-y-1">
+                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('24h_change')}</div>
+                <div className="block text-xs font-semibold">{render24hChange(symbolTicker, true)}</div>
+            </div>
+            <div className="flex flex-col min-w-max space-y-1">
+                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('high')} 24h</div>
+                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.h, decimals?.price)}</div>
+            </div>
+            <div className="flex flex-col min-w-max space-y-1">
+                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('low')} 24h</div>
+                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.l, decimals?.price)}</div>
+            </div>
+            <div className="flex flex-col min-w-max space-y-1">
+                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
+                    {t('volume')} 24h ({symbolTicker?.b})
                 </div>
-                <div className="flex flex-col min-w-max space-y-1">
-                    <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('high')} 24h</div>
-                    <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">
-                        {formatNumber(symbolTicker?.h, decimals?.price)}
-                    </div>
+                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vb, 2)}</div>
+            </div>
+            <div className="2xl:flex flex-col min-w-max space-y-1">
+                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
+                    {t('volume')} 24h ({symbolTicker?.q})
                 </div>
-                <div className="flex flex-col min-w-max space-y-1">
-                    <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('low')} 24h</div>
-                    <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">
-                        {formatNumber(symbolTicker?.l, decimals?.price)}
-                    </div>
-                </div>
-                <div className="flex flex-col min-w-max space-y-1">
-                    <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
-                        {t('volume')} 24h ({symbolTicker?.b})
-                    </div>
-                    <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vb, 2)}</div>
-                </div>
-                <div className="2xl:flex flex-col min-w-max space-y-1">
-                    <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
-                        {t('volume')} 24h ({symbolTicker?.q})
-                    </div>
-                    <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vq, 2)}</div>
-                </div>
+                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vq, 2)}</div>
+            </div>
             {/* </div> */}
         </InfoSlider>
     );
