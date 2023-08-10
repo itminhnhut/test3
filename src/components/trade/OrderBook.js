@@ -164,45 +164,44 @@ const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
 
             const percentage = (q / maxQuote) * 100;
             const isSameSide = side === hoverData?.side;
-            const isHover = isPro && isSameSide && (side === 'buy' ? index >= hoverData?.index : index <= hoverData?.index);
+            const isHover = isSameSide && (side === 'buy' ? index >= hoverData?.index : index <= hoverData?.index);
             return (
                 <>
-                    {isPro && (
-                        <Tooltip
-                            overridePosition={({ top, left }) => {
-                                return {
-                                    top,
-                                    left: left + 11
-                                };
-                            }}
-                            place="left"
-                            className={`max-w-[400px] !px-4 !py-3`}
-                            effect="solid"
-                            isV3
-                            id={`${index}-${side}`}
-                        >
-                            <div className="max-w-[400px] text-sm z-50 space-y-1">
-                                <div className="flex gap-6 justify-between items-center">
-                                    <span>{t('spot:orderbook_tooltip.avg_price')} </span>
-                                    <span>≈ {formatNumber(+hoveringDataCalculate.priceAvg, decimals.price)}</span>
-                                </div>
-                                <div className="flex gap-6 justify-between items-center">
-                                    <span>
-                                        {' '}
-                                        {t('common:total')} {base?.toUpperCase()}:{' '}
-                                    </span>
-                                    <span>{formatNumber(+hoveringDataCalculate.totalQuantity, decimals.qty)}</span>
-                                </div>
-                                <div className="flex gap-6 justify-between items-center">
-                                    <span>
-                                        {' '}
-                                        {t('common:total')} {quote?.toUpperCase()}:{' '}
-                                    </span>
-                                    <span>{formatNumber(+hoveringDataCalculate.totalQuote, quoteAsset === 'VNDC' ? 0 : 2)}</span>
-                                </div>
+                    <Tooltip
+                        overridePosition={({ top, left }) => {
+                            const gap = isPro ? 11 : -10;
+                            return {
+                                top,
+                                left: left + gap
+                            };
+                        }}
+                        place={isPro ? 'left' : 'right'}
+                        className={`max-w-[400px] !px-4 !py-3`}
+                        effect="solid"
+                        isV3
+                        id={`${index}-${side}`}
+                    >
+                        <div className="w-[200px] text-sm z-50 space-y-1">
+                            <div className="flex gap-6 justify-between items-center">
+                                <span>{t('spot:orderbook_tooltip.avg_price')} </span>
+                                <span>≈ {formatNumber(+hoveringDataCalculate.priceAvg, decimals.price)}</span>
                             </div>
-                        </Tooltip>
-                    )}
+                            <div className="flex gap-6 justify-between items-center">
+                                <span>
+                                    {' '}
+                                    {t('common:total')} {base?.toUpperCase()}:{' '}
+                                </span>
+                                <span>{formatNumber(+hoveringDataCalculate.totalQuantity, decimals.qty)}</span>
+                            </div>
+                            <div className="flex gap-6 justify-between items-center">
+                                <span>
+                                    {' '}
+                                    {t('common:total')} {quote?.toUpperCase()}:{' '}
+                                </span>
+                                <span>{formatNumber(+hoveringDataCalculate.totalQuote, quoteAsset === 'VNDC' ? 0 : 2)}</span>
+                            </div>
+                        </div>
+                    </Tooltip>
 
                     <div
                         data-tip=""
@@ -212,7 +211,7 @@ const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
                             'pr-3': !isPro,
                             'bg-teal-lightTeal dark:bg-darkBlue-3': isHover,
                             [`${side === 'buy' ? 'border-t' : 'border-b'} border-hover-dark dark:border-hover border-dashed`]:
-                                hoverData?.index === index && isSameSide && isPro
+                                hoverData?.index === index && isSameSide
                         })}
                         onMouseOver={() => {
                             setHoverData({ index, side });
