@@ -21,6 +21,9 @@
     "assets_list": "Danh mục",
     "search": "Tìm kiếm",
     "orderbook": "Sổ lệnh",
+    "orderbook_tooltip": {
+        "avg_price": "Giá trung bình"
+    },
     "place_success_market": "Bạn vừa đặt lệnh {{side}} {{type}} {{token}} thành công. OrderID: #{{displayingId}}.",
     "place_success_limit": "Bạn vừa đặt lệnh {{side}} {{type}} {{token}} thành công. OrderID: #{{displayingId}}.",
     "balance": "Số dư",

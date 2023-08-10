@@ -21,6 +21,9 @@
     "assets_list": "Assets List",
     "search": "Search",
     "orderbook": "Orderbook",
+    "orderbook_tooltip": {
+        "avg_price": "Avg.Price"
+    },
     "place_success_market": "You have just successfully created an order #{{displayingId}} {{side}} {{type}} {{token}}.",
     "place_success_limit": "You have just successfully created an order #{{displayingId}} {{side}} {{type}} {{token}}.",
     "balance": "Balance",

@@ -183,15 +183,21 @@ const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
                         >
                             <div className="max-w-[400px] text-sm z-50 space-y-1">
                                 <div className="flex gap-6 justify-between items-center">
-                                    <span>Avg.Price: </span>
+                                    <span>{t('spot:orderbook_tooltip.avg_price')} </span>
                                     <span>≈ {formatNumber(+hoveringDataCalculate.priceAvg, decimals.price)}</span>
                                 </div>
                                 <div className="flex gap-6 justify-between items-center">
-                                    <span> Sum {base?.toUpperCase()}: </span>
+                                    <span>
+                                        {' '}
+                                        {t('common:total')} {base?.toUpperCase()}:{' '}
+                                    </span>
                                     <span>{formatNumber(+hoveringDataCalculate.totalQuantity, decimals.qty)}</span>
                                 </div>
                                 <div className="flex gap-6 justify-between items-center">
-                                    <span> Sum {quote?.toUpperCase()}: </span>
+                                    <span>
+                                        {' '}
+                                        {t('common:total')} {quote?.toUpperCase()}:{' '}
+                                    </span>
                                     <span>{formatNumber(+hoveringDataCalculate.totalQuote, quoteAsset === 'VNDC' ? 0 : 2)}</span>
                                 </div>
                             </div>
