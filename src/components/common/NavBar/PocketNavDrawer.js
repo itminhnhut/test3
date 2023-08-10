@@ -1,28 +1,36 @@
-import { MOBILE_NAV_DATA } from 'src/components/common/NavBar/constants';
-import SvgIcon from 'src/components/svg';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
-import { useTranslation } from 'next-i18next';
-import Link from 'next/link';
 import { memo, useCallback, useEffect, useState } from 'react';
 import Div100vh from 'react-div-100vh';
 import { X } from 'react-feather';
 import { useSelector } from 'react-redux';
-import { getS3Url, getLoginUrl } from 'redux/actions/utils';
-import colors from 'styles/colors';
-import { useWindowSize } from 'utils/customHooks';
 import { PulseLoader } from 'react-spinners';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import { useTranslation } from 'next-i18next';
+
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
+
+import { useWindowSize } from 'utils/customHooks';
+
+import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
+import { getS3Url, getLoginUrl } from 'redux/actions/utils';
+
+import { MOBILE_NAV_DATA } from 'src/components/common/NavBar/constants';
+import SvgIcon from 'src/components/svg';
+
+import classNames from 'classnames';
 import { PATHS } from 'constants/paths';
+import { buildLogoutUrl } from 'src/utils';
+import colors from 'styles/colors';
+
 import FuturesSetting from '../../screens/Futures/FuturesSetting';
 import { AppleIcon, GooglePlayIcon, SuccessfulTransactionIcon, USAFlagIcon, VietnamFlagIcon } from '../../svg/SvgIcon';
-import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
-import NavbarIcons from './Icons';
-import Image from 'next/image';
 import ButtonV2 from '../V2/ButtonV2/Button';
 import TagV2 from '../V2/TagV2';
-import { buildLogoutUrl } from 'src/utils';
-import { useRouter } from 'next/router';
-import classNames from 'classnames';
+import NavbarIcons from './Icons';
 
 const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, page, spotState, resetDefault, onChangeSpotState }) => {
     const [state, set] = useState({
@@ -233,7 +241,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
 
                                 <div className="ml-3 mr-8">
                                     <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2 whitespace-pre-wrap break-words">
-                                        {auth?.username || auth?.name || auth?.email}
+                                        {auth?.name || auth?.email || auth?.code}
                                     </div>
 
                                     <div className="text-txtSecondary text-xs items-center flex">

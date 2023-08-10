@@ -1,33 +1,43 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { PulseLoader } from 'react-spinners';
+import { useAsync } from 'react-use';
+
 import Axios from 'axios';
+
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import { useTranslation } from 'next-i18next';
+
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+
+import { useWindowSize } from 'utils/customHooks';
+
+import { API_GET_VIP } from 'redux/actions/apis';
+import { DefaultAvatar, KYC_STATUS } from 'redux/actions/const';
+import { getMarketWatch } from 'redux/actions/market';
+import { getS3Url } from 'redux/actions/utils';
+
+import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
+
+import TextCopyable from 'components/screens/Account/TextCopyable';
+
 import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
 import SvgIcon from 'src/components/svg';
 import SvgMenu from 'src/components/svg/Menu';
 import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
 import SpotSetting from 'src/components/trade/SpotSetting';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import { useTranslation } from 'next-i18next';
-import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { PulseLoader } from 'react-spinners';
-import { useAsync } from 'react-use';
-import { API_GET_VIP } from 'redux/actions/apis';
-import { getMarketWatch } from 'redux/actions/market';
-import { getLoginUrl, getS3Url } from 'redux/actions/utils';
-import colors from 'styles/colors';
-import { buildLogoutUrl } from 'src/utils';
-import { useWindowSize } from 'utils/customHooks';
-import { PATHS } from 'constants/paths';
-import { Router, useRouter } from 'next/router';
-import classNames from 'classnames';
-import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
-import LanguageSetting from './LanguageSetting';
-import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
-import styled from 'styled-components';
 
-import TagV2 from '../V2/TagV2';
-import { ChevronRight } from 'react-feather';
+import classNames from 'classnames';
+import { PATHS } from 'constants/paths';
+import { buildLogoutUrl } from 'src/utils';
+import styled from 'styled-components';
+import colors from 'styles/colors';
+
 import {
     BxChevronDown,
     BxsUserIcon,
@@ -35,14 +45,16 @@ import {
     FutureIcon,
     FuturePortfolioIcon,
     FutureWalletIcon,
-    SuccessfulTransactionIcon
+    SuccessfulTransactionIcon,
+    NFTIcon,
+    FutureNFTIcon
 } from '../../svg/SvgIcon';
-import NavbarIcons from './Icons';
-import AuthButton from './AuthButton';
 import Button from '../V2/ButtonV2/Button';
-import TextCopyable from 'components/screens/Account/TextCopyable';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
+import TagV2 from '../V2/TagV2';
+import AuthButton from './AuthButton';
+import NavbarIcons from './Icons';
+import LanguageSetting from './LanguageSetting';
+
 const DailyLuckydraw = dynamic(() => import('components/screens/DailyLuckydraw'));
 // ** Dynamic
 const NotificationList = dynamic(() => import('src/components/notification/NotificationList'), { ssr: false });
@@ -139,6 +151,13 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
         return !data?.listUrl ? data.url : data.listUrl?.[language] || '#';
     };
 
+    const renderImageSubMenu = ({ child }) => {
+        return child?.title === 'NFT' ? (
+            <NFTIcon />
+        ) : (
+            <Image src={getS3Url(getIcon(child.localized))} width={width >= 2560 ? '38' : '24'} height={width >= 2560 ? '38' : '24'} alt={child.title} />
+        );
+    };
     // * Render Handler
     const renderDesktopNavItem = useCallback(() => {
         const feeNavObj = NAV_DATA.find((o) => o.localized === 'fee');
@@ -280,16 +299,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                 >
                                     <div className={'mal-navbar__link__group___item___childen__lv1___item2'}>
                                         <WrapperItemChild className="mal-navbar__link__group___item___childen__lv1___item2__icon">
-                                            {Icon ? (
-                                                <Icon size={24} />
-                                            ) : (
-                                                <Image
-                                                    src={getS3Url(getIcon(child.localized))}
-                                                    width={width >= 2560 ? '38' : '24'}
-                                                    height={width >= 2560 ? '38' : '24'}
-                                                    alt={child.title}
-                                                />
-                                            )}
+                                            {Icon ? <Icon size={24} /> : renderImageSubMenu({ child })}
                                         </WrapperItemChild>
                                         <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
                                             <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
@@ -430,7 +440,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                 />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
-                                <div className="mal-navbar__dropdown__user__info__username"> {auth?.username || auth?.name || auth?.email}</div>
+                                <div className="mal-navbar__dropdown__user__info__username whitespace-normal"> {auth?.name || auth?.email || auth?.code}</div>
                                 <div className="text-txtSecondary items-center font-normal flex">
                                     <TextCopyable text={code} />
                                 </div>
@@ -477,7 +487,10 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         <a className="mal-navbar__dropdown___item rounded-xl justify-between  !text-base">
                             <div className="flex items-center font-normal ">
                                 <div className="dark:text-txtSecondary-dark text-txtSecondary">
-                                    {NavbarIcons?.['logout']({ size: 24, color: 'currentColor' })}
+                                    {NavbarIcons?.['logout']({
+                                        size: 24,
+                                        color: 'currentColor'
+                                    })}
                                 </div>
                                 {t('navbar:menu.user.logout')}
                             </div>
@@ -494,7 +507,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                 <div className="mal-navbar__dropdown__wrapper flex flex-col gap-3">
                     <Link href={PATHS.WALLET.DEFAULT}>
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
-                            <FuturePortfolioIcon size={24} />
+                            <FutureWalletIcon size={24} />
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('common:overview')}</span>
                         </a>
                     </Link>
@@ -510,6 +523,12 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:submenu.futures_wallet')}</span>
                         </a>
+                    </Link>
+                    <Link href={PATHS.WALLET.NFT}>
+                        <div className="mal-navbar__dropdown___item">
+                            <FutureNFTIcon />
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:submenu.nft_wallet')}</span>
+                        </div>
                     </Link>
                 </div>
             </div>

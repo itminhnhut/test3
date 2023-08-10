@@ -106,7 +106,7 @@ const Tabs = memo(
                     }
                 });
             }
-        }, [tab]);
+        }, [tab,children]);
 
         useEffect(() => {
             clearTimeout(timer.current);

@@ -12,6 +12,9 @@ import { API_GET_ORDER_DETAILS, API_PROCESS_AUTO_SUGGEST_ORDER } from 'redux/act
 import { formatNumber } from 'utils/reference-utils';
 import { isString } from 'lodash';
 import toast from 'utils/toast';
+import { isEmpty } from 'lodash';
+import classNames from 'classnames';
+import { PATHS } from 'constants/paths';
 
 const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdropCb }) => {
     const router = useRouter();
@@ -76,6 +79,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                 if (status === ApiStatus.SUCCESS) {
                     setState(data);
                 } else {
+                    setState({});
                     toastError(status);
                 }
             });
@@ -109,7 +113,12 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                 <div className="flex flex-col gap-y-3 w-full txtPri-2 !font-semibold">
                     <div className="flex justify-between">
                         <span className="txtSecond-4">{t('dw_partner:transaction_type')}</span>
-                        <span className={state.side === SIDE.BUY ? 'text-green-3 dark:text-green-2' : 'text-red'}>
+                        <span
+                            className={classNames({
+                                'text-green-3 dark:text-green-2': state.side === SIDE.BUY,
+                                'text-red': state.side === SIDE.SELL
+                            })}
+                        >
                             {state.side ? t(`common:${state.side?.toLowerCase()}`) : '_'}
                         </span>
                     </div>
@@ -141,7 +150,12 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                         </div>
                     </div>
                 </div>
-                <ButtonV2 loading={loadingProcessOrder} disabled={loadingProcessOrder} className="mt-10" onClick={handleAcceptOrder}>
+                <ButtonV2
+                    loading={loadingProcessOrder}
+                    disabled={loadingProcessOrder || !state || isEmpty(state)}
+                    className="mt-10"
+                    onClick={handleAcceptOrder}
+                >
                     {t('dw_partner:btn_accept')}
                 </ButtonV2>
             </ModalV2>

@@ -356,10 +356,10 @@ export const API_SET_PHONE_REQUEST = API_PREFIX + 'user/set_phone_request';
 export const API_SET_PHONE_VERIFY = API_PREFIX + 'user/set_phone_verify';
 
 // Deposit withdraw Partner 22/06:
-export const API_PROCESS_AUTO_SUGGEST_ORDER = API_V3_PREFIX + "dw_partner_new/process_auto_suggest_order"
-export const API_CANCEL_AUTO_SUGGEST_ORDER = API_V3_PREFIX + "dw_partner_new/cancel_auto_suggest_order"
-export const API_CONTINUE_AUTO_SUGGEST_ORDER = API_V3_PREFIX + "dw_partner_new/continue_auto_suggest_order"
-export const API_CONFIG_AUTO_SUGGEST_PARTNER = API_V3_PREFIX + "dw_partner_new/partner_auto_order_config"
+export const API_PROCESS_AUTO_SUGGEST_ORDER = API_V3_PREFIX + 'dw_partner_new/process_auto_suggest_order';
+export const API_CANCEL_AUTO_SUGGEST_ORDER = API_V3_PREFIX + 'dw_partner_new/cancel_auto_suggest_order';
+export const API_CONTINUE_AUTO_SUGGEST_ORDER = API_V3_PREFIX + 'dw_partner_new/continue_auto_suggest_order';
+export const API_CONFIG_AUTO_SUGGEST_PARTNER = API_V3_PREFIX + 'dw_partner_new/partner_auto_order_config';
 
 // internal
 export const API_INTERNAL_FIND_USER = API_V3_PREFIX + 'spot/internal-find-user';
@@ -372,3 +372,15 @@ export const API_MARKETING_EVENT = API_PREFIX + 'marketing/event';
 
 // Staking statics
 export const API_HISTORY_STAKING_DAILY_OVERVIEW = API_V3_PREFIX + 'wallet/history/staking-daily/overview';
+
+// ** NFT
+export const API_GET_LIST_NFT = API_V3_PREFIX + 'nft';
+export const API_GET_COLLECTION = API_V3_PREFIX + 'nft/collection';
+export const API_GET_DETAIL_COLLECTION = API_V3_PREFIX + 'nft/collection_detail';
+export const API_GET_DETAIL_NFT = API_V3_PREFIX + 'nft/detail';
+export const API_GET_HISTORY_NFT = API_V3_PREFIX + 'nft/history';
+export const API_GET_SUMMARY_NFT = API_V3_PREFIX + 'nft/summary';
+export const API_POST_ACTIVE_NFT = API_V3_PREFIX + 'nft/active';
+export const API_POST_TRANSFER_NFT = API_V3_PREFIX + 'nft/transfer';
+export const API_GET_CHECK_NFT = API_V3_PREFIX + 'nft/check-nft';
+export const API_GET_CHECK_NAMI_CODE_NFT = API_V3_PREFIX + 'nft/check-nami-code';

@@ -9,7 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import FetchApi from 'utils/fetch-api';
-import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
+import { API_GET_HISTORY_DW_PARTNERS, API_GET_ORDER_DETAILS } from 'redux/actions/apis';
 import { ApiStatus, PartnerAcceptStatus, PartnerOrderStatus, UserSocketEvent } from 'redux/actions/const';
 import { DisputedType, MODE } from '../constants';
 import useMarkOrder from '../hooks/useMarkOrder';
@@ -27,10 +27,11 @@ import Skeletor from 'components/common/Skeletor';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import classNames from 'classnames';
-import {  MonetizationOnIcon } from 'components/svg/SvgIcon';
+import { MonetizationOnIcon } from 'components/svg/SvgIcon';
 import DWRelationIcon from 'components/common/DWRelationIcon';
 import PartnerModalDetailsOrderSuggest from '../PartnerModalDetailsOrderSuggest';
 import { isBoolean } from 'lodash';
+import toast from 'utils/toast';
 
 const LIMIT_ROW = 5;
 
@@ -206,8 +207,8 @@ const OpenOrderTable = () => {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                 // make sure the socket displayingId is the current page
                 if (!data || data?.status !== 0 || data.partnerAcceptStatus !== 0) return;
-                router.query.suggest = data?.displayingId
-                router.push(router)
+                router.query.suggest = data?.displayingId;
+                router.push(router);
                 // setShowPartnerSuggest(data);
             });
         }
@@ -217,7 +218,7 @@ const OpenOrderTable = () => {
                     console.log('socket removeListener PARTNER_UPDATE_ORDER:', data);
                 });
 
-                userSocket.off(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST)
+                userSocket.off(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST);
                 userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                     console.log('socket removeListener PARTNER_UPDATE_ORDER_AUTO_SUGGEST:', data);
                 });
@@ -265,8 +266,44 @@ const OpenOrderTable = () => {
 
     const [showPartnerSuggest, setShowPartnerSuggest] = useState(null);
     useEffect(() => {
-        if (router?.query?.suggest) setShowPartnerSuggest(router?.query?.suggest);
+        setShowPartnerSuggest(null)
+        if (!router?.query?.suggest) return;
+        FetchApi({
+            url: API_GET_ORDER_DETAILS,
+            options: { method: 'GET' },
+            params: {
+                displayingId: router?.query?.suggest
+            }
+        }).then(({ data, status }) => {
+            if (status === ApiStatus.SUCCESS) {
+                if (+data?.partnerAcceptStatus === 1)
+                    return router.replace(
+                        {
+                            pathname: router.pathname,
+                            query: { id: router.query.id }
+                        },
+                        undefined,
+                        {
+                            shallow: true
+                        }
+                    );
+
+                setShowPartnerSuggest(data);
+            } else {
+                toastError(status);
+                setShowPartnerSuggest(router?.query?.suggest);
+            }
+        });
     }, [router.query]);
+
+    const toastError = (statusError = '') => {
+        return toast({
+            key: `accept_err_suggest_order_${router?.query?.suggest}`,
+            text: t(`dw_partner:error.${statusError.toLowerCase().trim()}`, { displayingId: router?.query?.suggest }),
+            type: 'error',
+            duration: 5000
+        });
+    };
 
     return (
         <>

@@ -385,7 +385,7 @@ const Profile = () => {
 
     return (
         <AccountLayout type="identify_tab">
-            <div className="rounded-xl md:p-6 md:bg-white md:dark:bg-darkBlue-3 mt-12">
+            <div className="rounded-xl md:p-6 md:bg-white md:dark:bg-darkBlue-3 mt-6 md:mt-12">
                 <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:divide-x md:divide-divider md:dark:divide-divider-dark">
                     <div className="flex-1 p-6 md:p-0 md:pr-10 rounded-md md:rounded-none space-y-6 md:space-y-4 bg-white dark:bg-darkBlue-3 md:bg-transparent">
                         <UserInformation user={user} t={t} />
@@ -495,7 +495,7 @@ const Profile = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-14">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-14">
                 <Activity t={t} />
                 <Announcement />
             </div>

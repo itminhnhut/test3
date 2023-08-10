@@ -19,7 +19,7 @@ const PopoverSelect = (props, ref) => {
             >
                 <div className="py-4">
                     {!props.hideSearch && (
-                        <div className="px-4 mb-6">
+                        <div className={`px-4 ${!!props.filterChildren ? 'mb-0' : 'mb-6'}`}>
                             <SearchBox
                                 isValueTrim={false}
                                 inputClassname="text-base"
@@ -28,6 +28,7 @@ const PopoverSelect = (props, ref) => {
                                 value={props.value}
                                 placeholder={props.placeholder}
                             />
+                            {props.filterChildren}
                         </div>
                     )}
 

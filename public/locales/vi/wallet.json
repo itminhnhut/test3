@@ -212,5 +212,6 @@
         "description": "Bạn cần giao dịch tối thiểu {{volume}} {{asset}} để rút phần thưởng từ {{campaign}}.",
         "volume": "Khối lượng hiện tại: {{volume}} {{asset}}"
     },
-    "staking": "Nhận lãi hàng ngày"
+    "staking": "Nhận lãi hàng ngày",
+    "nft": "Infinity"
 }

@@ -1,10 +1,10 @@
-import { formatNumber } from 'src/redux/actions/utils';
 // import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import Emitter from 'src/redux/actions/emitter';
-import { PublicSocketEvent } from 'src/redux/actions/const';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { PublicSocketEvent } from 'src/redux/actions/const';
+import Emitter from 'src/redux/actions/emitter';
+import { formatNumber } from 'src/redux/actions/utils';
 
 const SpotHead = (props) => {
     const [symbolTicker, setSymbolTicker] = useState(null);
@@ -18,7 +18,6 @@ const SpotHead = (props) => {
 
     useEffect(() => {
         Emitter.on(PublicSocketEvent.SPOT_TICKER_UPDATE, async (data) => {
-            console.log('data:', data)
             if (data?.s === `${symbol.base}${symbol.quote}`) {
                 setLoading(false);
                 setSymbolTicker(data);
@@ -36,7 +35,9 @@ const SpotHead = (props) => {
     // const { t } = useTranslation(['common', 'spot']);
     return (
         <Head>
-            <title>{loading ? `${symbol?.base}${symbol?.quote}` : `${formatNumber(symbolTicker?.p, decimals?.price)} | ${symbolTicker?.s}`} | Nami Exchange</title>
+            <title>
+                {loading ? `${symbol?.base}${symbol?.quote}` : `${formatNumber(symbolTicker?.p, decimals?.price)} | ${symbolTicker?.s}`} | Nami Exchange
+            </title>
             <meta property="og:title" content="Nami Exchange" key="title" />
         </Head>
     );

@@ -265,10 +265,10 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     lines: {
                         show: !isMobile
                     }
+                },
+                padding: {
+                    right: 32
                 }
-                // padding: {
-                //     left: 2
-                // }
             },
             xaxis: {
                 type: 'datetime',
@@ -342,11 +342,11 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     return `
                         <div class="bg-gray-15 dark:bg-dark-2 p-2 mb:p-3 rounded-md border-none outline-none">
                             <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">${x ? showTimeRange(x, _chartInterval) : ''}</div>
-                            <div class="text-white dark:text-txtPrimary-dark mt-3 font-semibold text-xs mb:text-base">${formatNumber(
+                            <div class="text-white dark:text-txtPrimary-dark mt-2 mb:mt-3 font-semibold text-xs mb:text-base">${formatNumber(
                                 y / (_referencePrice['VNDC'] ?? 1 / 23400),
                                 0
                             )} VNDC</div>
-                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm">$ ${formatNumber(y, 4)}</div>
+                            <div class="text-txtSecondary dark:text-txtSecondary-dark text-xxs mb:text-sm mt-1">$${formatNumber(y, 4)}</div>
                         </div>
                     `;
                 }
@@ -548,7 +548,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
 
             setChartInterval((old) => ({
                 ...old,
-                [CHART_TYPES.pool_info]: _data?.interval || 'day',
+                [CHART_TYPES.pool_info]: _data?.interval || 'day'
             }));
             const length = _data?.result.length || 0;
             if (!length) {
@@ -725,24 +725,24 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 </div>
             </div>
             <div className="mt-6 grid grid-cols-12 gap-4 sm:gap-6">
-                <CardNao className="sm:!min-w-[50%] sm:!px-8 sm:!py-8 flex flex-col col-span-12 lg:col-span-4" customHeight="sm:max-h-[514px]">
-                    <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg font-semibold">{t('nao:pool:nao_staked')}</label>
+                <CardNao className="sm:!min-w-[50%] sm:!px-8 sm:!py-8 flex flex-col col-span-12 lg:col-span-4 !justify-start" customHeight="sm:max-h-[514px]">
+                    <label className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base">{t('nao:pool:nao_staked')}</label>
                     <div className="flex flex-col mt-4">
-                        <div className="text-xl sm:text-2xl font-semibold flex items-center space-x-2">
+                        <div className="text-base sm:text-lg font-semibold flex items-center space-x-2">
                             {loading ? (
                                 <Spinner color="currentColor" size={24} className="text-teal" />
                             ) : (
                                 <span className="leading-8">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
                             )}
                         </div>
-                        <span className="text-sm text-transparent mt-2">a</span>
+                        {/* <span className="text-sm text-transparent mt-2">a</span> */}
                     </div>
 
                     <hr className="border-divider dark:border-divider-dark my-5 sm:my-8" />
 
                     <Tooltip id="tooltip-pool-value" />
                     <label
-                        className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg font-semibold border-b border-dashed border-gray-1 dark:border-gray-7 w-[fit-content]"
+                        className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base border-b border-dashed border-gray-1 dark:border-gray-7 w-[fit-content]"
                         data-tip={t('nao:pool:pool_value_tooltip')}
                         data-for="tooltip-pool-value"
                     >
@@ -756,10 +756,10 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             </>
                         ) : (
                             <>
-                                <div className="text-xl sm:text-2xl font-semibold flex items-center space-x-2">
+                                <div className="text-base sm:text-lg font-semibold flex items-center space-x-2">
                                     <span className="leading-8">{formatNumber(data.totalStakedVNDC, 0)} VNDC</span>
                                 </div>
-                                <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2">
+                                <span className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark mt-2">
                                     ${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 4)}
                                 </span>
                             </>
@@ -768,7 +768,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
 
                     <hr className="border-divider dark:border-divider-dark my-5 sm:my-8" />
 
-                    <label className="text-txtSecondary dark:text-txtSecondary-dark text-base sm:text-lg font-semibold">{t('nao:pool:participants')}</label>
+                    <label className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base">{t('nao:pool:participants')}</label>
                     <div className="flex flex-col mt-4">
                         {loading ? (
                             <>
@@ -777,9 +777,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             </>
                         ) : (
                             <>
-                                <div className="text-xl sm:text-2xl font-semibold">{data.totalUsers}</div>
+                                <div className="text-base sm:text-lg font-semibold">{data.totalUsers}</div>
                                 <div
-                                    className="text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2"
+                                    className="text-sm sm:text-base text-txtSecondary dark:text-txtSecondary-dark mt-2"
                                     dangerouslySetInnerHTML={{ __html: t('nao:pool:participants_today', { value: dataSource?.totalUserToday ?? 0 }) }}
                                 ></div>
                             </>

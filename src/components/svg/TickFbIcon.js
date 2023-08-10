@@ -10,7 +10,7 @@ const TickFbIcon = ({ size = 16, color = '#0068FF' }) => (
         viewBox="0 0 16 16"
         fill="none"
     >
-        <g clip-path="url(#rbw97vp9aa)">
+        <g clipPath="url(#rbw97vp9aa)">
             <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" fill="#19A65B" />
             <g mask="url(#5kh0v69a7b)">
                 <path

@@ -36,14 +36,24 @@ const DatePickerWrapper = styled.div`
         background-color: transparent;
     }
 
-    .rdrMonth{
+    .rdrMonth {
         max-width: calc(100% - 3rem);
         padding-left: 0;
         padding-right: 0;
     }
 `;
 
-const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange, popoverClassName = '', range = { startDate: undefined, endDate: new Date() }, setRange }) => {
+const RangePopover = ({
+    days,
+    fallbackDay = 'd',
+    language,
+    active = {},
+    onChange,
+    popoverClassName = '',
+    range = { startDate: undefined, endDate: new Date() },
+    setRange,
+    textPopoverClassName = ''
+}) => {
     const popOverClasses = classNames('relative flex', popoverClassName);
     const { t } = useTranslation();
     const [internalRange, setInternalRange] = useState({ ...range, endDate: new Date() });
@@ -85,7 +95,7 @@ const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange
         if (!isValid(internalRange.startDate)) {
             internalRange.startDate = internalRange.endDate;
         } else if (!isValid(internalRange.endDate)) {
-            internalRange.endDate = internalRange.startDate
+            internalRange.endDate = internalRange.startDate;
         }
         if (range?.startDate !== internalRange.startDate || range?.endDate !== internalRange.endDate) {
             setRange?.({ ...internalRange, endDate: addDays(internalRange.endDate, 1) });
@@ -125,7 +135,9 @@ const RangePopover = ({ days, fallbackDay = 'd', language, active = {}, onChange
                             <div className="sm:hidden ml-auto">
                                 <SvgFilter size={24} color="currentColor" className="text-txtPrimary dark:text-txtPrimary-dark" />
                             </div>
-                            <div className="hidden sm:flex px-4 py-2 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtSecondary dark:text-txtSecondary-dark rounded-md !font-SF-Pro !text-base whitespace-nowrap">
+                            <div
+                                className={`hidden sm:flex px-4 py-2 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtSecondary dark:text-txtSecondary-dark rounded-md !font-SF-Pro whitespace-nowrap ${textPopoverClassName}`}
+                            >
                                 {showActive()}
                                 <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
                             </div>

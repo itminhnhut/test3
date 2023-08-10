@@ -355,7 +355,6 @@ const TradingRules = () => {
                                 shadowWithFixedCol={false}
                                 unsetLeft={true}
                                 rowClassName={'!h-[64px]'}
-                                showPaging={false}
                                 total={dataSource?.length ?? 0}
                             />
                         </Wrapper>
