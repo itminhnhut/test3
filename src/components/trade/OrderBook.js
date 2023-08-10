@@ -206,13 +206,18 @@ const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
                     <div
                         data-tip=""
                         data-for={`${index}-${side}`}
-                        className={classNames('progress-container my-[1px] cursor-pointer hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3', {
-                            [`px-4 border-transparent ${side === 'buy' ? 'border-t' : 'border-b'}`]: isPro,
-                            'pr-3': !isPro,
-                            'bg-teal-lightTeal dark:bg-darkBlue-3': isHover,
-                            [`${side === 'buy' ? 'border-t' : 'border-b'} border-hover-dark dark:border-hover border-dashed`]:
-                                hoverData?.index === index && isSameSide
-                        })}
+                        className={classNames(
+                            `progress-container my-[1px] cursor-pointer hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3 border-transparent`,
+                            {
+                                'border-t': side === 'buy',
+                                'border-b': side === 'sell',
+                                [`px-4  `]: isPro,
+                                'pr-3': !isPro,
+                                'bg-teal-lightTeal dark:bg-darkBlue-3': isHover,
+                                [`${side === 'buy' ? 'border-t' : 'border-b'} border-hover-dark dark:border-hover border-dashed`]:
+                                    hoverData?.index === index && isSameSide
+                            }
+                        )}
                         onMouseOver={() => {
                             setHoverData({ index, side });
                         }}
