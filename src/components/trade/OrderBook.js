@@ -28,16 +28,12 @@ const OrderBookAsks = dynamic(() => import('components/svg/OrderBookAsks'), { ss
 
 const initHoverData = {
     index: null,
-    side: null,
-    totalQuote: 0,
-    totalQuantity: 0,
-    priceAvg: 0
+    side: null
 };
 
-const OrderBook = (props) => {
+const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
     const { t } = useTranslation(['common', 'spot']);
-    const { symbol, layoutConfig, parentState, isPro, decimals } = props;
-    const { base, quote } = props.symbol;
+    const { base, quote } = symbol;
     const dispatch = useDispatch();
     const setSelectedOrder = (order) => {
         dispatch({
@@ -124,7 +120,7 @@ const OrderBook = (props) => {
 
     const divide = orderBook.mode === ORDER_BOOK_MODE.ALL ? 2 : 1;
 
-    const MAX_LENGTH = Math.floor((height - 145) / divide / 20);
+    const MAX_LENGTH = Math.floor((height - 165) / divide / 20);
 
     const asks = useMemo(() => {
         const originAsks = orderBook?.asks?.length > 0 ? orderBy(orderBook?.asks, [(e) => +e[0]]) : [];
@@ -139,25 +135,24 @@ const OrderBook = (props) => {
 
     const [hoverData, setHoverData] = useState(initHoverData);
 
-    useEffect(() => {
-        const setHoverCalculate = () => {
-            const { index, side } = hoverData;
-            if (isNaN(index) || !side) return;
-            const rows = side === 'buy' ? asks : bids;
-            const startSlice = side === 'buy' ? index : 0;
-            const endSlice = side === 'buy' ? rows.length : index + 1;
-            const newRows = [...rows].slice(startSlice, endSlice);
-            setHoverData((prevData) => {
-                return {
-                    ...prevData,
-                    totalQuantity: newRows.reduce((quantity, [_, curQuantity]) => quantity + curQuantity, 0),
-                    totalQuote: newRows.reduce((quote, [curPrice, curQuantity]) => quote + curQuantity * curPrice, 0),
-                    priceAvg: newRows.reduce((price, [curPrice, _]) => +price + +curPrice, 0) / newRows.length
-                };
-            });
+    const hoveringDataCalculate = useMemo(() => {
+        const { index, side } = hoverData;
+        if (isNaN(index) || !side)
+            return {
+                totalQuantity: 0,
+                totalQuote: 0,
+                priceAvg: 0
+            };
+        const rows = side === 'buy' ? asks : bids;
+        const startSlice = side === 'buy' ? index : 0;
+        const endSlice = side === 'buy' ? rows.length : index + 1;
+        const newRows = [...rows].slice(startSlice, endSlice);
+        return {
+            totalQuantity: newRows.reduce((quantity, [_, curQuantity]) => quantity + curQuantity, 0) ?? 0,
+            totalQuote: newRows.reduce((quote, [curPrice, curQuantity]) => quote + curQuantity * curPrice, 0) ?? 0,
+            priceAvg: newRows.reduce((price, [curPrice, _]) => +price + +curPrice, 0) / newRows.length ?? 0
         };
-        setHoverCalculate();
-    }, [hoverData.index, asks, bids]);
+    }, [asks, bids, hoverData.index]);
 
     const renderOrderRow = useCallback(
         (order, index, side) => {
@@ -169,37 +164,39 @@ const OrderBook = (props) => {
 
             const percentage = (q / maxQuote) * 100;
             const isSameSide = side === hoverData?.side;
-            const isHover = isSameSide && (side === 'buy' ? index >= hoverData?.index : index <= hoverData?.index);
+            const isHover = isPro && isSameSide && (side === 'buy' ? index >= hoverData?.index : index <= hoverData?.index);
             return (
                 <>
-                    <Tooltip
-                        overridePosition={({ top, left }) => {
-                            return {
-                                top,
-                                left: left + 11
-                            };
-                        }}
-                        place="left"
-                        className={`max-w-[400px] !px-4 !py-3`}
-                        effect="solid"
-                        isV3
-                        id={`${index}-${side}`}
-                    >
-                        <div className="max-w-[400px] text-sm z-50 space-y-1">
-                            <div className="flex gap-6 justify-between items-center">
-                                <span>Avg.Price: </span>
-                                <span>≈ {formatNumber(+hoverData.priceAvg, decimals.price)}</span>
+                    {isPro && (
+                        <Tooltip
+                            overridePosition={({ top, left }) => {
+                                return {
+                                    top,
+                                    left: left + 11
+                                };
+                            }}
+                            place="left"
+                            className={`max-w-[400px] !px-4 !py-3`}
+                            effect="solid"
+                            isV3
+                            id={`${index}-${side}`}
+                        >
+                            <div className="max-w-[400px] text-sm z-50 space-y-1">
+                                <div className="flex gap-6 justify-between items-center">
+                                    <span>Avg.Price: </span>
+                                    <span>≈ {formatNumber(+hoveringDataCalculate.priceAvg, decimals.price)}</span>
+                                </div>
+                                <div className="flex gap-6 justify-between items-center">
+                                    <span> Sum {base?.toUpperCase()}: </span>
+                                    <span>{formatNumber(+hoveringDataCalculate.totalQuantity, decimals.qty)}</span>
+                                </div>
+                                <div className="flex gap-6 justify-between items-center">
+                                    <span> Sum {quote?.toUpperCase()}: </span>
+                                    <span>{formatNumber(+hoveringDataCalculate.totalQuote, quoteAsset === 'VNDC' ? 0 : 2)}</span>
+                                </div>
                             </div>
-                            <div className="flex gap-6 justify-between items-center">
-                                <span> Sum {base?.toUpperCase()}: </span>
-                                <span>{formatNumber(+hoverData.totalQuantity, decimals.qty)}</span>
-                            </div>
-                            <div className="flex gap-6 justify-between items-center">
-                                <span> Sum {quote?.toUpperCase()}: </span>
-                                <span>{formatNumber(+hoverData.totalQuote, quoteAsset === 'VNDC' ? 0 : 2)}</span>
-                            </div>
-                        </div>
-                    </Tooltip>
+                        </Tooltip>
+                    )}
 
                     <div
                         data-tip=""
@@ -209,14 +206,10 @@ const OrderBook = (props) => {
                             'pr-3': !isPro,
                             'bg-teal-lightTeal dark:bg-darkBlue-3': isHover,
                             [`${side === 'buy' ? 'border-t' : 'border-b'} border-hover-dark dark:border-hover border-dashed`]:
-                                hoverData?.index === index && isSameSide
+                                hoverData?.index === index && isSameSide && isPro
                         })}
                         onMouseOver={() => {
-                            setHoverData((prev) => ({
-                                ...prev,
-                                index,
-                                side
-                            }));
+                            setHoverData({ index, side });
                         }}
                         key={index}
                         onClick={() => setSelectedOrder({ price: +p, quantity: +q })}
@@ -237,7 +230,7 @@ const OrderBook = (props) => {
                 </>
             );
         },
-        [decimals, quoteAsset, isPro, asks, bids, hoverData]
+        [decimals, quoteAsset, isPro, asks, bids, hoverData, hoveringDataCalculate]
     );
 
     const renderOrderBook = (side) => {
@@ -253,7 +246,7 @@ const OrderBook = (props) => {
                     onMouseLeave={() => {
                         setHoverData(initHoverData);
                     }}
-                    className="mt-6"
+                    className=""
                 >
                     {asks.map((order, index) => {
                         return renderOrderRow(order, index, 'buy');
@@ -355,7 +348,11 @@ const OrderBook = (props) => {
                 </div>
                 <div className="flex flex-col flex-1 over">
                     <div className="">
-                        <div className="px-4 flex justify-between items-center">
+                        <div
+                            className={classNames('flex justify-between items-center  mb-6', {
+                                'px-4': isPro
+                            })}
+                        >
                             <div className="flex flex-1 justify-start text-txtSecondary dark:text-txtSecondary-dark text-xs">
                                 {t('price')} ({quote})
                             </div>
@@ -374,7 +371,15 @@ const OrderBook = (props) => {
                     </div>
                     <div className=" flex flex-col">
                         {renderOrderBook('buy')}
-                        <div className=" dark:border-divider-dark py-2 my-3 flex justify-center items-center px-4">
+                        <div
+                            className={classNames(
+                                'dark:border-divider-dark py-2 my-3 flex justify-center items-center',
+
+                                {
+                                    'px-4': isPro
+                                }
+                            )}
+                        >
                             <div className="w-full flex items-center space-x-2">
                                 <div className="font-semibold">
                                     <LastPrice symbol={symbol} colored exchangeConfig={exchangeConfig} />
