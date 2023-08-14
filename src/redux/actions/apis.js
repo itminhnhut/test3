@@ -387,3 +387,6 @@ export const API_GET_CHECK_NAMI_CODE_NFT = API_V3_PREFIX + 'nft/check-nami-code'
 
 //** spot
 export const API_GET_SPOT_ASSET_INFO = API_V3_PREFIX + 'spot/asset_info';
+
+// auth
+export const GOOGLE_OAUTH_CALLBACK = API_V3_PREFIX + 'auth/callback/google';

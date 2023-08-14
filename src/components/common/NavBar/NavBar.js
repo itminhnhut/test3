@@ -31,10 +31,28 @@ import SvgMenu from 'src/components/svg/Menu';
 import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
 import SpotSetting from 'src/components/trade/SpotSetting';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { PulseLoader } from 'react-spinners';
+import { useAsync } from 'react-use';
+import { API_GET_VIP, GOOGLE_OAUTH_CALLBACK } from 'redux/actions/apis';
+import { getMarketWatch } from 'redux/actions/market';
+import { getLoginUrl, getS3Url } from 'redux/actions/utils';
+import colors from 'styles/colors';
 
 import classNames from 'classnames';
 import { PATHS } from 'constants/paths';
 import { buildLogoutUrl } from 'src/utils';
+import { useWindowSize } from 'utils/customHooks';
+import { PATHS } from 'constants/paths';
+import { Router, useRouter } from 'next/router';
+import classNames from 'classnames';
+import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
+import LanguageSetting from './LanguageSetting';
+import { KYC_STATUS, DefaultAvatar, AUTHORIZE_STATUS } from 'redux/actions/const';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 
@@ -53,6 +71,16 @@ import Button from '../V2/ButtonV2/Button';
 import TagV2 from '../V2/TagV2';
 import AuthButton from './AuthButton';
 import NavbarIcons from './Icons';
+import AuthButton from './AuthButton';
+import Button from '../V2/ButtonV2/Button';
+import TextCopyable from 'components/screens/Account/TextCopyable';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import { useGoogleOneTapLogin } from '@react-oauth/google';
+import FetchApi from 'utils/fetch-api';
+import qs from 'qs';
+import toast from 'utils/toast';
+
 import LanguageSetting from './LanguageSetting';
 
 const DailyLuckydraw = dynamic(() => import('components/screens/DailyLuckydraw'));
@@ -71,6 +99,7 @@ export const NAVBAR_USE_TYPE = {
 const ALLOW_DROPDOWN = ['product', 'trade', 'commission', 'nao'];
 
 const NAV_HIDE_THEME_BUTTON = ['maldives_landingpage'];
+const AUTH_URL = process.env.NEXT_PUBLIC_AUTH_URL;
 
 const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, spotState, resetDefault, onChangeSpotState }) => {
     // * Initial State
@@ -94,6 +123,95 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     } = useTranslation(['navbar', 'common', 'profile']);
     const [isFromFrame, setIsFromFrame] = useState(false);
     const [showDailyLucky, setShowDailyLucky] = useState(false);
+    const [loginState, setLoginState] = useState();
+
+    const getLoginState = async () => {
+        try {
+            const currentUrl = window.location.href;
+            const res = await FetchApi({
+                url: '/login/nami',
+                params: {
+                    redirect: currentUrl,
+                    noRedirect: true
+                }
+            });
+            if (res.data) {
+                setLoginState(res.data);
+            }
+        } catch (error) {
+            console.log('Unable to fetch login state', error);
+        }
+    };
+
+    useEffect(() => {
+        getLoginState();
+    }, []);
+
+    useGoogleOneTapLogin({
+        onSuccess: async ({ credential }) => {
+            if (!credential) return;
+            try {
+                const data = await FetchApi({
+                    url: GOOGLE_OAUTH_CALLBACK,
+                    options: {
+                        method: 'POST'
+                        // baseURL: AUTH_URL,
+                    },
+                    params: {
+                        idToken: credential,
+                        client_state: loginState,
+                        theme: currentTheme,
+                        language
+                    }
+                });
+                switch (data.status) {
+                    case AUTHORIZE_STATUS.MISSING_OTP: {
+                        const redirect = `${AUTH_URL}/verify_oauth_device?${qs.stringify({
+                            token: data.continueToken,
+                            service: 'google',
+                            state: loginState,
+                            theme: currentTheme,
+                            language
+                        })}`;
+                        router.push(redirect);
+                        return;
+                    }
+                    case AUTHORIZE_STATUS.OK: {
+                        const redirect = data.data;
+                        if (window) {
+                            window.location.href = redirect;
+                        } else {
+                            router.push(redirect);
+                        }
+                        return;
+                    }
+                    default: {
+                        console.log('Login Failed');
+                        toast({
+                            type: 'error',
+                            text: t('common:global_label:login_failed')
+                        })
+                    }
+                }
+            } catch (error) {
+                console.log('Login Failed', error);
+                toast({
+                    type: 'error',
+                    text: t('common:global_label:login_failed')
+                });
+            }
+        },
+        onError: () => {
+            console.log('Login Failed');
+            toast({
+                type: 'error',
+                text: t('common:global_label:login_failed')
+            });
+        },
+        disabled: !!auth || !loginState,
+        cancel_on_tap_outside: false
+    });
+
 
     // * Memmoized Variable
     const navTheme = useMemo(() => {

@@ -297,7 +297,8 @@
             "3month": "3 Month"
         },
         "push_order": "Push Order",
-        "your_portfolio": "Your Portfolio"
+        "your_portfolio": "Your Portfolio",
+        "login_failed": "Login Failed"
     },
     "global_pagination": {
         "pages": "Pages",
