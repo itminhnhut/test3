@@ -23,7 +23,7 @@ const WithdrawDeposit = dynamic(() => import('components/screens/WithdrawDeposit
     ssr: false
 });
 
-const DepositToIDEmail = dynamic(() => import('components/screens/DepositToIDEmail'), {
+const DepositToIDEmail = dynamic(() => import('components/screens/WithdrawDeposit/users/DepositToIDEmail'), {
     ssr: false
 });
 
