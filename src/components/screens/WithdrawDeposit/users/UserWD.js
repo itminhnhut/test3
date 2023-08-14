@@ -35,6 +35,12 @@ const TABS = [
         key: 2,
         href: PATHS.WITHDRAW_DEPOSIT.PARTNER,
         value: TYPE_DW.PARTNER
+    },
+    {
+        localized: 'Nami ID/Email',
+        key: 3,
+        href: PATHS.WITHDRAW_DEPOSIT.ID_EMAIL,
+        value: TYPE_DW.ID_EMAIL
     }
 ];
 
@@ -45,41 +51,38 @@ const UserWD = ({ type, children, side }) => {
     } = useTranslation();
     const router = useRouter();
     const auth = useSelector((state) => state.auth.user) || null;
-    const isOpenModalKyc = auth && auth?.kyc_status !== 2
+    const isOpenModalKyc = auth && auth?.kyc_status !== 2;
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
     const [loadingListUserBank, setLoadingListUserBank] = useState(false);
     const [isMustHaveBank, setIsMustHaveBank] = useState(false);
-    const fetchListUserBank = () => {
-        setLoadingListUserBank(true);
-
-        // Fetch list bank accounts
-        FetchApi({
-            url: API_GET_USER_BANK_LIST,
-            options: {
-                method: 'GET'
-            }
-        })
-            .then(({ status, data }) => {
-                if (status === ApiStatus.SUCCESS) setIsMustHaveBank(!data || data?.length === 0);
-            })
-            .finally(() => setLoadingListUserBank(false));
-    };
 
     useEffect(() => {
-        if (type === TYPE_DW.CRYPTO) return;
-        fetchListUserBank();
+        const fetchListUserBank = () => {
+            setLoadingListUserBank(true);
+
+            // Fetch list bank accounts
+            FetchApi({
+                url: API_GET_USER_BANK_LIST,
+                options: {
+                    method: 'GET'
+                }
+            })
+                .then(({ status, data }) => {
+                    if (status === ApiStatus.SUCCESS) setIsMustHaveBank(!data || data?.length === 0);
+                })
+                .finally(() => setLoadingListUserBank(false));
+        };
+        if (type === TYPE_DW.PARTNER) {
+            fetchListUserBank();
+        }
     }, [type]);
 
     return (
         // Set up Container styled: max-w, text, background
         <div className="px-4 pt-20 pb-[120px] bg-gray-13 dark:bg-dark font-normal text-base text-gray-15 dark:text-gray-4 tracking-normal">
-            {loadingListUserBank ? (
-                <div className="min-h-[50vh] flex w-full justify-center items-center">
-                    <Spinner size={50} color={isDark ? colors.darkBlue5 : colors.gray['1']} />
-                </div>
-            ) : auth && auth?.kyc_status === 2 ? (
+            {auth && auth?.kyc_status === 2 ? (
                 <div className="max-w-screen-v3 mx-auto 2xl:max-w-screen-xxl">
                     <h1 className="mb-8 font-semibold text-[32px] leading-[38px]">{side === SIDE.BUY ? t('common:deposit') : t('common:withdraw')}</h1>
 
@@ -87,6 +90,7 @@ const UserWD = ({ type, children, side }) => {
                         <Tabs tab={type} className="gap-8 border-b border-divider dark:border-divider-dark">
                             {TABS?.map((item) => (
                                 <TabItem
+                                    key={item.key}
                                     V2
                                     className="md:!text-left !px-0 !text-base select-none"
                                     value={item.value}
@@ -100,14 +104,16 @@ const UserWD = ({ type, children, side }) => {
                             <HrefButton variants="blank" target="_blank" className="!w-auto !py-4 !text-base" href={getLinkSupport(language === 'vi')}>
                                 <BxsBookIcon size={16} isButton={true} className="mr-2" />
                                 {t(`dw_partner:deposit_withdraw_guide.crypto`)}
-                                {/* {
-                                type === 'partner'
-                                    ? t(`dw_partner:deposit_withdraw_guide.partner_${side?.toLowerCase()}`)
-                                    : t(`dw_partner:deposit_withdraw_guide.crypto`)} */}
                             </HrefButton>
                         </div>
                     </div>
-                    {children}
+                    {loadingListUserBank ? (
+                        <div className="min-h-[400px] flex w-full justify-center items-center">
+                            <Spinner size={50} color={isDark ? colors.darkBlue5 : colors.gray['1']} />
+                        </div>
+                    ) : (
+                        children
+                    )}
                 </div>
             ) : isOpenModalKyc ? (
                 <></>

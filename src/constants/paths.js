@@ -91,6 +91,7 @@ const TRANSACTION_HISTORY = {
 const WITHDRAW_DEPOSIT = {
     DEFAULT: '/withdraw-deposit/crypto',
     PARTNER: '/withdraw-deposit/partner',
+    ID_EMAIL: '/withdraw-deposit/namiid-email',
     DETAIL: '/withdraw-deposit/partner/details'
 };
 

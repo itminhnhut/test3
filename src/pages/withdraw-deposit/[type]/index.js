@@ -23,10 +23,15 @@ const WithdrawDeposit = dynamic(() => import('components/screens/WithdrawDeposit
     ssr: false
 });
 
+const DepositToIDEmail = dynamic(() => import('components/screens/DepositToIDEmail'), {
+    ssr: false
+});
+
 const PartnerDepositWithdraw = ({ type, side, assetId }) => {
     return (
         <MaldivesLayout>
             <UserWD type={type} side={side}>
+                {type === TYPE_DW.ID_EMAIL && <DepositToIDEmail assetId={assetId} />}
                 {type === TYPE_DW.CRYPTO && (side === SIDE.BUY ? <CryptoDeposit assetId={assetId} /> : <CryptoWithdraw assetId={assetId} />)}
                 {type === TYPE_DW.PARTNER && <WithdrawDeposit />}
             </UserWD>
@@ -64,11 +69,15 @@ export const getServerSideProps = async (context) => {
 };
 
 const redirectFormatting = (side = 'BUY', assetId, type) => {
+
     if (SIDE[side]) {
         if (type === TYPE_DW.PARTNER && ALLOWED_ASSET[+assetId]) {
             return null;
         }
         if (type === TYPE_DW.CRYPTO && WalletCurrency[assetId]) {
+            return null;
+        }
+        if (type === TYPE_DW.ID_EMAIL && WalletCurrency[assetId]) {
             return null;
         }
     }
@@ -88,5 +97,5 @@ const redirectFormatting = (side = 'BUY', assetId, type) => {
 
     const baseUrl = type === TYPE_DW.CRYPTO ? PATHS.WITHDRAW_DEPOSIT.DEFAULT : PATHS.WITHDRAW_DEPOSIT.PARTNER;
 
-    return `${baseUrl}?side=${sideFormat}&assetId=${assetIdFormat}`;
+    return type === TYPE_DW.ID_EMAIL ? `${PATHS.WITHDRAW_DEPOSIT.ID_EMAIL}?side=SELL&assetId=${assetIdFormat}` : `${baseUrl}?side=${sideFormat}&assetId=${assetIdFormat}`;
 };

@@ -905,6 +905,8 @@ export function dwLinkBuilder(type, side, assetId) {
             return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
         case TYPE_DW.PARTNER:
             return `${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId || 'USDT'}`;
+        case TYPE_DW.ID_EMAIL:
+            return `${PATHS.WITHDRAW_DEPOSIT.ID_EMAIL}?side=SELL&assetId=${assetId || 'USDT'}`;
         default:
             return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
     }
@@ -1425,10 +1427,10 @@ export const convertDateToMs = (date = 0, type = 'startOf') => {
     return moment.utc(moment(+date).endOf('day')).unix() * 1000;
 };
 
-const md5 = require('md5')
-export const getSignature = (userId, timestamp)=> {
-    return md5(userId.slice(0, 10)+timestamp)
-}
+const md5 = require('md5');
+export const getSignature = (userId, timestamp) => {
+    return md5(userId.slice(0, 10) + timestamp);
+};
 
 export const isBrowser = () => typeof window !== 'undefined';
 export const formatPair = (pair = 'BTCVNDC', t) => {
