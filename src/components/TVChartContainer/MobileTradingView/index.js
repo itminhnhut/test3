@@ -33,6 +33,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useContext } from 'react';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
+import filter from 'lodash/filter';
 
 export class MobileTradingView extends React.PureComponent {
     state = {
@@ -41,8 +42,8 @@ export class MobileTradingView extends React.PureComponent {
         interval: this.props.initTimeFrame,
         studies: [],
         priceChartType: 1,
-        mainIndicator: null,
-        subIndicator: null
+        mainIndicator: [],
+        subIndicator: []
     };
 
     tvWidget = null;
@@ -161,36 +162,38 @@ export class MobileTradingView extends React.PureComponent {
         }
     };
 
+    getKeyStore = (key) => {
+        return `${this.getChartKey}_${key}`;
+    };
+
     handleChangeIndicator = (type) => (value, item) => {
         const indicatorStateKey = type === 'main' ? 'mainIndicator' : 'subIndicator';
-        const studyName = this.state[indicatorStateKey]?.name;
-        if (studyName) {
-            const currentStudies = this.widget.activeChart().getAllStudies();
-            const dataFilter = currentStudies.filter((rs) => rs.name === studyName);
-            if (Array.isArray(dataFilter) && dataFilter.length > 1) {
-                dataFilter.forEach((item) => {
-                    this.widget.activeChart().removeEntity(item.id);
-                });
-            } else {
-                this.widget.activeChart().removeEntity(this.state[indicatorStateKey]?.id);
+        const indicators = [...this.state[indicatorStateKey]];
+        if (value > -1) {
+            const remove = indicators.splice(value, 1)?.[0];
+            if (remove) {
+                if (Array.isArray(remove?.id) && remove?.id?.length > 1) {
+                    remove.id.forEach((i) => {
+                        this.widget.activeChart().removeEntity(i);
+                    });
+                } else {
+                    this.widget.activeChart().removeEntity(remove.id);
+                }
             }
-        }
-        if (value) {
-            this.createIndicator(value, item?.input, (id) => {
-                this.setState({
-                    ...this.state,
-                    [indicatorStateKey]: {
-                        name: value,
-                        id
-                    }
-                });
-            });
-        } else {
             this.setState({
                 ...this.state,
-                [indicatorStateKey]: null
+                [indicatorStateKey]: indicators
+            });
+        } else {
+            this.createIndicator(value, item?.input, (id) => {
+                indicators.push({ name: item.value, id });
+                this.setState({
+                    ...this.state,
+                    [indicatorStateKey]: indicators
+                });
             });
         }
+        localStorage.setItem(this.getKeyStore(indicatorStateKey), JSON.stringify(indicators));
     };
 
     // eslint-disable-next-line class-methods-use-this
@@ -618,11 +621,13 @@ export class MobileTradingView extends React.PureComponent {
     }
 
     syncIndicators = () => {
-        const currentStudies = this.widget.activeChart().getAllStudies();
+        // const currentStudies = this.widget.activeChart().getAllStudies();
+        const _mainIndicator = localStorage.getItem(this.getKeyStore('mainIndicator'));
+        const _subIndicator = localStorage.getItem(this.getKeyStore('subIndicator'));
         this.setState({
             ...this.state,
-            mainIndicator: find(currentStudies, (s) => !!find(mainIndicators, { value: s.name })),
-            subIndicator: find(currentStudies, (s) => !!find(subIndicators, { value: s.name }))
+            mainIndicator: _mainIndicator ? JSON.parse(_mainIndicator) : [],
+            subIndicator: _subIndicator ? JSON.parse(_subIndicator) : []
         });
     };
 
@@ -634,6 +639,8 @@ export class MobileTradingView extends React.PureComponent {
 
     resetComponent = () => {
         localStorage.removeItem(this.getChartKey);
+        localStorage.removeItem(this.getChartKey('mainIndicator'));
+        localStorage.removeItem(this.getChartKey('subIndicator'));
         if (this.props.reNewComponentKey) this.props.reNewComponentKey();
     };
 
@@ -679,8 +686,8 @@ export class MobileTradingView extends React.PureComponent {
                                 handleOpenIndicatorModal={this.handleOpenIndicatorModal}
                                 setMainIndicator={this.handleChangeIndicator('main')}
                                 setSubIndicator={this.handleChangeIndicator('sub')}
-                                mainIndicator={this.state.mainIndicator?.name}
-                                subIndicator={this.state.subIndicator?.name}
+                                mainIndicator={this.state.mainIndicator}
+                                subIndicator={this.state.subIndicator}
                                 resetComponent={this.resetComponent}
                                 fullChart={this.props.fullChart}
                                 setFullChart={this.setFullChart}
