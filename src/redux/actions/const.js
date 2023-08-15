@@ -9,7 +9,8 @@ export const LOCAL_STORAGE_KEY = {
     SPOT_GRID_LAYOUT: 'gridLayoutSpot',
     SPOT_SETTING_LAYOUT: 'settingLayoutSpot',
     FUTURE_GRID_LAYOUT: 'gridLayoutFutures',
-    FUTURE_SETTING_LAYOUT: 'settingLayoutFutures'
+    FUTURE_SETTING_LAYOUT: 'settingLayoutFutures',
+    PURCHASE_INSURANCE_ALERT:'purchaseFutureInsuranceAlert'
 };
 
 const TokenConfigNetwork = {

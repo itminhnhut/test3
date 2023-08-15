@@ -13,10 +13,15 @@ import { FuturesOrderEnum, UserSocketEvent } from 'redux/actions/const';
 import { getInsuranceLoginLink, roundByExactDigit } from 'redux/actions/utils';
 import InsuranceListModal from './InsuranceListModal';
 import InsuranceRuleModal from './InsuranceRuleModal';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import CheckBox from 'components/common/CheckBox';
+import { useLocalStorage } from 'react-use';
+import InsurancePurchaseButton from './InsurancePurchaseButton';
 
 const initialState = {
     showRules: false,
-    showList: false
+    showList: false,
+    checked: false
 };
 
 const InsuranceSection = React.memo(({ onCloseOrderDetailModal, insuranceRules, order, liquidPrice }) => {
@@ -70,8 +75,7 @@ const InsuranceSection = React.memo(({ onCloseOrderDetailModal, insuranceRules, 
 
     const formatLiquidPrice = roundByExactDigit(liquidPrice, order?.fee_currency === 72 ? 0 : 6);
 
-    const onBuyInsuranceHandler = async () => {
-        if (!isPurchaseAble) return;
+    const onBuyInsurance = async () => {
         await getInsuranceLoginLink({
             params: `${order?.symbol}?${encodeURIComponent(
                 `integrate=nami_futures&type=${order?.type}&vol=${order?.order_value}&liq=${formatLiquidPrice}&side=${order?.side}&order=${order?.displaying_id}`
@@ -80,6 +84,7 @@ const InsuranceSection = React.memo(({ onCloseOrderDetailModal, insuranceRules, 
             targetType: '_blank'
         });
     };
+
     return (
         <>
             {!isPurchaseAble && (
@@ -128,9 +133,7 @@ const InsuranceSection = React.memo(({ onCloseOrderDetailModal, insuranceRules, 
                         </Button>
                         {order?.status === FuturesOrderEnum.Status.ACTIVE && (
                             <div data-tip="" data-for="insurance_purchase_button">
-                                <Button className="w-fit !text-sm !h-9 px-4 py-3 whitespace-nowrap" disabled={!isPurchaseAble} onClick={onBuyInsuranceHandler}>
-                                    {t('futures:insurance.buy_insurance')}
-                                </Button>
+                                <InsurancePurchaseButton onBuyInsurance={onBuyInsurance} isPurchaseAble={isPurchaseAble} />
                             </div>
                         )}
                     </div>
