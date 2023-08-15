@@ -60,7 +60,7 @@
         "volume": "Khối lượng giao dịch",
         "fee": "Phí giao dịch",
         "expect": "Kỳ vọng",
-        "hash_id": "HashID",
+        "contract_id": "Contract ID",
         "expect_sell": "Bear",
         "expect_buy": "Bull",
         "expect_bear": "Bear",

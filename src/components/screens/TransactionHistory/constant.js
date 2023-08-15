@@ -162,7 +162,7 @@ export const modalDetailColumn = {
         { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
         { keys: ['assets'], localized: 'modal_detail.pair', type: COLUMNS_TYPE.INSURANCE_PAIR },
         { keys: ['additionalData.payload.side'], localized: 'modal_detail.expect', type: COLUMNS_TYPE.INSURANCE_EXPECT },
-        { keys: ['additionalData.payload._id'], localized: 'modal_detail.hash_id', type: COLUMNS_TYPE.COPIEDABLE }
+        { keys: ['additionalData.payload._id'], localized: 'modal_detail.contract_id', type: COLUMNS_TYPE.COPIEDABLE }
     ],
     [TRANSACTION_TYPES.FUTURES]: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },

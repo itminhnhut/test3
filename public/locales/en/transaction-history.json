@@ -60,8 +60,7 @@
         "volume": "Volume",
         "fee": "Fee",
         "expect": "Expect",
-        "hash_id": "HashID",
-
+        "contract_id": "Contract ID",
         "expect_sell": "Bear",
         "expect_buy": "Bull",
         "expect_bear": "Bear",
