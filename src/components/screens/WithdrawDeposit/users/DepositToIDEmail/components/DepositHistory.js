@@ -8,6 +8,7 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import { TABS } from 'components/screens/WithdrawDeposit/constants';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { PATHS } from 'constants/paths';
+import useFetchApi from 'hooks/useFetchApi';
 import { find } from 'lodash';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -104,58 +105,34 @@ const DepositHistory = () => {
         t,
         i18n: { language }
     } = useTranslation();
+    
     const router = useRouter();
-
-    const configs = useSelector((state) => state.utils?.assetConfig);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [activeTab, setActiveTab] = useState(TABS[0].key);
-    const [dataTable, setDataTable] = useState([]);
-    const [hasNext, setHasNext] = useState(false);
-    const [curSort, setCurSort] = useState({});
-    const user = useSelector((state) => state.auth.user) || null;
     const { side } = router.query;
 
-    const [loadingDataTable, setLoadingDataTable] = useState(false);
+    const user = useSelector((state) => state.auth.user) || null;
+    const configs = useSelector((state) => state.utils?.assetConfig);
 
-    useEffect(() => {
-        const fetchData = () => {
-            setLoadingDataTable(true);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [activeTab, setActiveTab] = useState(TABS[0].key);
+    const [curSort, setCurSort] = useState({});
 
-            Axios.get(API_GET_HISTORY_DW_PARTNERS, {
-                params: {
-                    page: currentPage,
-                    pageSize: LIMIT_ROW,
-                    lastId: dataTable[dataTable.length - 1]?._id ?? null,
-                    mode: 'user',
-                    side,
-                    status: activeTab === 0 ? null : TABS[activeTab]?.status,
-                    partnerAcceptStatus: TABS[activeTab]?.partnerAcceptStatus,
-                    ...curSort
-                }
-            })
-                .then(({ data: res }) => {
-                    setHasNext(res.data?.hasNext);
-
-                    if (res.status === ApiStatus.SUCCESS && res.data?.orders) {
-                        setDataTable(res.data.orders);
-                    } else {
-                        setDataTable([]);
-                    }
-                })
-                .catch((err) => {
-                    setDataTable([]);
-                })
-                .finally(() => {
-                    setLoadingDataTable(false);
-                });
-        };
-
-        fetchData();
-    }, [activeTab, currentPage, curSort]);
-
-    useEffect(() => {
-        setCurrentPage(0);
-    }, [curSort]);
+    const { data, loading, error } = useFetchApi(
+        {
+            url: API_GET_HISTORY_DW_PARTNERS,
+            params: {
+                page: currentPage,
+                pageSize: LIMIT_ROW,
+                lastId: null,
+                mode: 'user',
+                side,
+                status: activeTab === 0 ? null : TABS[activeTab]?.status,
+                partnerAcceptStatus: TABS[activeTab]?.partnerAcceptStatus,
+                ...curSort
+            }
+        },
+        true,
+        [activeTab, currentPage, curSort, side]
+    );
 
     const customSort = (tableSorted) => {
         const output = {};
@@ -168,6 +145,7 @@ const DepositHistory = () => {
 
             setCurSort(output);
         }
+        setCurrentPage(0);
     };
 
     return (
@@ -192,11 +170,11 @@ const DepositHistory = () => {
                 limit={LIMIT_ROW}
                 skip={0}
                 useRowHover
-                data={dataTable}
+                data={data?.orders || []}
                 columns={getColumns(t, user, side, configs)}
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
-                loading={loadingDataTable}
+                loading={loading}
                 onRowClick={(transaction) => router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + transaction.displayingId)}
                 height={404}
                 className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg pt-4"
@@ -207,7 +185,7 @@ const DepositHistory = () => {
                 }}
                 pagingPrevNext={{
                     page: currentPage,
-                    hasNext: hasNext,
+                    hasNext: data?.hasNext || false,
                     onChangeNextPrev: (e) => setCurrentPage((prevPage) => prevPage + e),
                     language
                 }}
