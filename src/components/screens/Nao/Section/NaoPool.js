@@ -408,14 +408,14 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 <CardHistoryPrice key={index}>
                                     <div className="w-full">
                                         <div className="flex flex-col lg:flex-row justify-between w-full lg:space-x-8 lg:w-auto">
-                                            <div className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark">
-                                                <span className="mr-1 lg:block">{t('nao:pool:week', { value: weekNumber })}</span>
+                                            <div className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark lg:space-y-1 lg:space-x-0 space-x-1">
+                                                <span className="lg:block">{t('nao:pool:week', { value: weekNumber })}</span>
                                                 <span>
                                                     {formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}
                                                 </span>
                                             </div>
-                                            <div className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark lg:text-right">
-                                                <span className="mr-1 lg:block">{t('nao:pool:equivalent')}:</span>
+                                            <div className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark lg:space-y-1 lg:space-x-0 space-x-1 lg:text-right">
+                                                <span className="lg:block">{t('nao:pool:equivalent')}:</span>
                                                 <span>
                                                     {formatNumber(sumVNDC, 0)} VNDC (${formatNumber(sumUSDT, assetConfig[22]?.assetDigit ?? 3)})
                                                 </span>
@@ -849,15 +849,15 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 </div>
                 <CardNao className="sm:!min-w-[50%] !p-4 mb:!p-6 sm:min-h-[344px] !justify-start !mt-2 sm:!mt-0 col-span-12 mb:col-span-6">
                     <Tooltip id="tooltip-revenue-history" />
-                    <div className="flex-col flex">
+                    <div className="flex-col flex mb-2">
                         <div className="space-x-3 flex items-center ">
                             <span className="text-base sm:text-lg font-semibold">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</span>
                             <div data-tip={t('nao:pool:tooltip_revenue_history')} data-for="tooltip-revenue-history">
                                 <QuestionMarkIcon isFilled size={16} color={'currentColor'} />
                             </div>
                         </div>
-                        <span className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark mb:min-h-[3rem]">
-                            <span className="mr-1 lg:block">{t('nao:pool:equivalent')}:</span>
+                        <span className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark lg:space-y-1 lg:space-x-0 space-x-1 mb:min-h-[3rem]">
+                            <span className="lg:block">{t('nao:pool:equivalent')}:</span>
                             <span>
                                 {formatNumber(thisWeekVNDC, 0)} VNDC (${formatNumber(thisWeekUSD, assetConfig[22]?.assetDigit ?? 3)})
                             </span>
@@ -923,7 +923,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     </div>
                 </CardNao>
                 <CardNao className="sm:!min-w-[50%] !p-4 mb:!p-6 sm:min-h-[344px] !justify-start col-span-12 mb:col-span-6">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-2">
                         <label className="text-txtPrimary dark:text-txtPrimary-dark text-base sm:text-lg font-semibold">{t('nao:pool:revenue_history')}</label>
                         {listHitory.length > 0 && (
                             <div className="flex space-x-2">
