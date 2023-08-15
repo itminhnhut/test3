@@ -37,9 +37,7 @@
         },
         "buy_insurance_alert": {
             "title": "Điều khoản sử dụng",
-            "message": "Điều khoản sử dụng của Nami Insurance",
-            "insurance_term_of_use": "<0>Đồng ý thỏa thuận sử dụng Nami Insurance.</0> <1>Chi tiết</1>",
-            "insurance_privacy_policy": "<0>Đồng ý thỏa thuận chính sách quyền riêng tư tại Nami Insurance.</0> <1>Chi tiết</1>",
+            "message": "<0>Điều khoản sử dụng của Nami Insurance</0> <1>1. Đồng ý thỏa thuận sử dụng Nami Insurance.</1> <2>Chi tiết</2> <3>2. Đồng ý thỏa thuận chính sách quyền riêng tư tại Nami Insurance.</3> <4>Chi tiết</4>",
             "not_show_again": "Không hiển thị lại thông tin này",
             "buy_now": "Tạo hợp đồng ngay"
         }

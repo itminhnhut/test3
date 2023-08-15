@@ -35,9 +35,7 @@
         },
         "buy_insurance_alert": {
             "title": "Terms and Agreements",
-            "message": "Nami Insurance's Terms and Agreements:",
-            "insurance_term_of_use":"<0>I accept Nami Insurance's Term Of Services.</0> <1>Details</1>",
-            "insurance_privacy_policy":"<0>I accept Nami Insurance's private policy.</0> <1>Details</1>",
+            "message": "<0>Nami Insurance's Terms and Agreements:</0> <1>1. I accept Nami Insurance's Term Of Services.</1> <2>Details</2> <3>2. I accept Nami Insurance's private policy.</3> <4>Details</4>",
             "not_show_again": "Do not show this again",
             "buy_now": "Buy Cover Now"
         }
