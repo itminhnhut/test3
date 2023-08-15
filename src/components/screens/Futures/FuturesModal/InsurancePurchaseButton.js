@@ -2,10 +2,11 @@ import CheckBox from 'components/common/CheckBox';
 import Button from 'components/common/V2/ButtonV2/Button';
 import Spinner from 'components/svg/Spinner';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
-import { useTranslation } from 'next-i18next';
+import { Trans, useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import { useLocalStorage } from 'react-use';
 import { LOCAL_STORAGE_KEY } from 'redux/actions/const';
+import Link from 'next/link';
 
 const INITIAL_CHECKED_STATUS = false;
 
@@ -47,8 +48,15 @@ const InsurancePurchaseButton = ({ isPurchaseAble, onBuyInsurance }) => {
                 isVisible={showAlert}
                 onClose={() => setShowAlert(false)}
                 type="info"
-                title="Mua hợp đồng bảo hiểm vị thế"
-                message="Là gợi ý chiến lược quản trị rủi ro cho các vị thế Futures đang được kích hoạt tại Nami Exchange. Ở chế độ này không cho phép bạn chọn cặp giao dịch khác để mua hợp đồng bảo hiểm, và không cho chọn mua hợp đồng Bull hoặc Bear Xem thêm"
+                title={t('futures:insurance.buy_insurance_alert.title')}
+                message={
+                    <Trans i18nKey="futures:insurance.buy_insurance_alert.message">
+                        <div className="text-left"></div>
+                        <div className="text-left"></div>
+                        <div className="text-left"></div>
+                        <a target="_blank" href="/" className="text-teal font-semibold duration-75 hover:text-teal/75" />
+                    </Trans>
+                }
             >
                 <div className="mt-10 w-full">
                     <CheckBox
@@ -59,7 +67,7 @@ const InsurancePurchaseButton = ({ isPurchaseAble, onBuyInsurance }) => {
                         }}
                         boxContainerClassName="!w-6 !h-6"
                         labelClassName="text-base text-txtPrimary dark:text-txtPrimary-dark"
-                        label="Không hiện lại thông tin này"
+                        label={t('futures:insurance.buy_insurance_alert.not_show_again')}
                     />
                     <Button
                         disabled={loadingBuyInsurance}
@@ -69,7 +77,7 @@ const InsurancePurchaseButton = ({ isPurchaseAble, onBuyInsurance }) => {
                         }}
                         className="mt-6"
                     >
-                        {t('futures:insurance.buy_insurance')} {loadingBuyInsurance && <Spinner />}
+                        {t('futures:insurance.buy_insurance_alert.buy_now')} {loadingBuyInsurance && <Spinner />}
                     </Button>
                 </div>
             </AlertModalV2>
