@@ -36,8 +36,10 @@
             "canceled": "Dừng hợp đồng"
         },
         "buy_insurance_alert": {
-            "title": "Hợp đồng bảo hiểm Vị thế",
-            "message": "<0>1. Hợp đồng bảo hiểm Vị thế là phương thức bảo hiểm giúp bạn quản trị và đảm bảo giá trị vị thế của bạn một cách an toàn và tối ưu nhất bằng các hợp đồng bảo hiểm</0> <1>2. Bằng cách nhấn vào \"Mua HĐBH Vị thế\", bạn đã hiểu sản phẩm Bảo hiểm vị thế và chúng tôi miễn trừ trách nhiệm cho những thiệt hại phát sinh từ bạn trong quá trình sử dụng sản phẩm </1> <2> 3. Mua một hay nhiều hợp đồng bảo hiểm cho cùng một vị thế cũng sẽ không ảnh hưởng đến vị thế hiện tại của bạn</2> <3>Xem Thêm</3>",
+            "title": "Điều khoản sử dụng",
+            "message": "Điều khoản sử dụng của Nami Insurance",
+            "insurance_term_of_use": "<0>Đồng ý thỏa thuận sử dụng Nami Insurance.</0> <1>Chi tiết</1>",
+            "insurance_privacy_policy": "<0>Đồng ý thỏa thuận chính sách quyền riêng tư tại Nami Insurance.</0> <1>Chi tiết</1>",
             "not_show_again": "Không hiển thị lại thông tin này",
             "buy_now": "Tạo hợp đồng ngay"
         }

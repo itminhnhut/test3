@@ -4,6 +4,7 @@ import Button from 'components/common/V2/ButtonV2/Button';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import { useTranslation } from 'next-i18next';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
+import classNames from 'classnames';
 
 const AlertModalV2 = ({
     isVisible,
@@ -18,7 +19,8 @@ const AlertModalV2 = ({
     notes,
     loading = false,
     buttonClassName = '',
-    isButton = true
+    isButton = true,
+    messageClassName = ''
 }) => {
     const { t } = useTranslation();
     const getIcon = () => {
@@ -45,7 +47,7 @@ const AlertModalV2 = ({
             <div className="flex flex-col items-center">
                 {getIcon()}
                 <div className="mt-6 mb-4 font-semibold text-2xl text-txtPrimary dark:text-gray-4 text-center">{title}</div>
-                {message && <span className="text-gray-1 dark:text-gray-7 text-center">{message}</span>}
+                {message && <span className={classNames('text-gray-1 dark:text-gray-7 text-center', messageClassName)}>{message}</span>}
                 {children}
                 {notes && <span className="mt-2 dark:text-gray-1 text-center text-xs">{notes}</span>}
                 {isButton && (

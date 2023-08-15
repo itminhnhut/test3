@@ -13,9 +13,6 @@ import { FuturesOrderEnum, UserSocketEvent } from 'redux/actions/const';
 import { getInsuranceLoginLink, roundByExactDigit } from 'redux/actions/utils';
 import InsuranceListModal from './InsuranceListModal';
 import InsuranceRuleModal from './InsuranceRuleModal';
-import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
-import CheckBox from 'components/common/CheckBox';
-import { useLocalStorage } from 'react-use';
 import InsurancePurchaseButton from './InsurancePurchaseButton';
 
 const initialState = {

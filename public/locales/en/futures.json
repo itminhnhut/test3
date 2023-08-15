@@ -34,8 +34,10 @@
             "canceled": "Canceled"
         },
         "buy_insurance_alert": {
-            "title": "Position Insurance Contract",
-            "message": "<0>1. Position Insurance Contract is an insurance method that support you in managing and ensuring the value of your position in the safest and most optimal way with Insurance contracts for each positions. </0>  <1> 2. By clicking on \"Buy Position Insurance Contract\", you understand What is Position Insurance Contract and we release you from liability for damages arising from your use of the product.</1> <2> 3. Buying one or more position insurance contract for the same position will not affect your current position </2> <3>View more</3>",
+            "title": "Terms and Agreements",
+            "message": "Nami Insurance's Terms and Agreements:",
+            "insurance_term_of_use":"<0>I accept Nami Insurance's Term Of Services.</0> <1>Details</1>",
+            "insurance_privacy_policy":"<0>I accept Nami Insurance's private policy.</0> <1>Details</1>",
             "not_show_again": "Do not show this again",
             "buy_now": "Buy Cover Now"
         }
