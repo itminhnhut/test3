@@ -10,13 +10,15 @@ import orderBy from 'lodash/orderBy';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React, { useMemo, useRef, useState } from 'react';
-import { ChevronDown } from 'react-feather';
+// import { ChevronDown } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
 import { formatNumber, roundByExactDigit } from 'redux/actions/utils';
 import AssetsDropdown from './AssetsDropdown';
 import ReceiverInput from './ReceiverInput';
 import ModalOtp from 'components/screens/WithdrawDeposit/components/ModalOtp';
+import { BxChevronDown } from 'components/svg/SvgIcon';
+import SvgChevronDown from 'components/svg/ChevronDown';
 
 export const MAX_NOTE_LENGTH = 70;
 
@@ -130,12 +132,12 @@ const DepositInputCard = () => {
                             <AssetLogo assetCode={currentAsset?.assetCode} size={24} />
                             <span className="font-semibold">{currentAsset?.assetCode}</span>
 
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                                <ChevronDown
-                                    className={classNames({
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark">
+                                <SvgChevronDown
+                                    className={classNames('transition-transform',{
                                         '!rotate-0': openSelectAsset
                                     })}
-                                    size={16}
+                                    size={24}
                                     color={'currentColor'}
                                 />
                             </div>

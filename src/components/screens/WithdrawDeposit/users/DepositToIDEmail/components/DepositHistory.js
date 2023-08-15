@@ -105,12 +105,12 @@ const DepositHistory = () => {
         t,
         i18n: { language }
     } = useTranslation();
-    
+
     const router = useRouter();
     const { side } = router.query;
 
     const user = useSelector((state) => state.auth.user) || null;
-    const configs = useSelector((state) => state.utils?.assetConfig);
+    const configs = useSelector((state) => state.utils?.assetConfig) || [];
 
     const [currentPage, setCurrentPage] = useState(0);
     const [activeTab, setActiveTab] = useState(TABS[0].key);
