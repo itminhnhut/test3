@@ -64,7 +64,7 @@ const InsurancePurchaseButton = ({ isPurchaseAble, onBuyInsurance }) => {
                 onClose={() => setShowAlert(false)}
                 type="info"
                 title={t('futures:insurance.buy_insurance_alert.title')}
-                messageClassName='w-full'
+                messageClassName="w-full"
                 message={
                     <div className="text-left">
                         <Trans i18nKey="futures:insurance.buy_insurance_alert.message">
@@ -86,7 +86,6 @@ const InsurancePurchaseButton = ({ isPurchaseAble, onBuyInsurance }) => {
                         active={checked}
                         onChange={() => {
                             setChecked(!checked);
-                            setBuyInsuranceAlertChecked(!checked);
                         }}
                         boxContainerClassName="!w-6 !h-6"
                         labelClassName="text-base text-txtPrimary dark:text-txtPrimary-dark"
@@ -95,6 +94,9 @@ const InsurancePurchaseButton = ({ isPurchaseAble, onBuyInsurance }) => {
                     <Button
                         disabled={loadingBuyInsurance}
                         onClick={async () => {
+                            if (checked) {
+                                setBuyInsuranceAlertChecked(true);
+                            }
                             await onBuyInsuranceHandler();
                             setShowAlert(false);
                         }}
