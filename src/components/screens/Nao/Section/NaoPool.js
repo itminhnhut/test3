@@ -407,7 +407,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             return (
                                 <CardHistoryPrice key={index}>
                                     <div className="w-full">
-                                        <div className="flex flex-col lg:flex-row justify-between w-full lg:space-x-8 lg:w-auto">
+                                        <div className="flex flex-col lg:flex-row justify-between w-full lg:space-x-3 lg:w-auto">
                                             <div className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark lg:space-y-1 lg:space-x-0 space-x-1">
                                                 <span className="lg:block">{t('nao:pool:week', { value: weekNumber })}</span>
                                                 <span>
@@ -850,7 +850,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 <CardNao className="sm:!min-w-[50%] !p-4 mb:!p-6 sm:min-h-[344px] !justify-start !mt-2 sm:!mt-0 col-span-12 mb:col-span-6">
                     <Tooltip id="tooltip-revenue-history" />
                     <div className="flex-col flex mb-2">
-                        <div className="space-x-3 flex items-center ">
+                        <div className="space-x-3 flex items-center mb-2">
                             <span className="text-base sm:text-lg font-semibold">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</span>
                             <div data-tip={t('nao:pool:tooltip_revenue_history')} data-for="tooltip-revenue-history">
                                 <QuestionMarkIcon isFilled size={16} color={'currentColor'} />
