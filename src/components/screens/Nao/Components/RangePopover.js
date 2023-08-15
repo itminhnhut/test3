@@ -56,9 +56,10 @@ const RangePopover = ({
 }) => {
     const popOverClasses = classNames('relative flex', popoverClassName);
     const { t } = useTranslation();
+    const invalidRange = !isValid(range.startDate) || !isValid(range.endDate);
     const [internalRange, setInternalRange] = useState({ ...range, endDate: new Date() });
-    const [showPicker, setShowPicker] = useState(false);
-    const shouldShowPicker = showPicker || (active.value === 'custom' && (!range.startDate || !range.endDate));
+    const shouldShowPicker = active.value === 'custom' && invalidRange;
+    const [showPicker, setShowPicker] = useState(shouldShowPicker);
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
     const wrapperRef = useRef(null);
@@ -66,9 +67,12 @@ const RangePopover = ({
     const isMobile = width < 820;
     const isCustom = active.value === 'custom';
     const handleOutside = () => {
-        if (shouldShowPicker && (!isValid(range.startDate) || !isValid(range.endDate))) {
+        if (showPicker) {
+            if (invalidRange) {
+                onChange(fallbackDay);
+            }
+
             setShowPicker(false);
-            onChange(fallbackDay);
             // uncomment this code block to clear previous input
 
             // setInternalRange({
@@ -129,9 +133,9 @@ const RangePopover = ({
     return (
         <Popover className={popOverClasses}>
             {({ open, close }) => (
-                <>
+                <div className="wrapper" ref={wrapperRef}>
                     <Popover.Button>
-                        <div className="h-10 flex justify-center items-center">
+                        <div className="flex justify-center items-center">
                             <div className="sm:hidden ml-auto">
                                 <SvgFilter size={24} color="currentColor" className="text-txtPrimary dark:text-txtPrimary-dark" />
                             </div>
@@ -144,7 +148,7 @@ const RangePopover = ({
                         </div>
                     </Popover.Button>
                     <Transition
-                        show={open && !shouldShowPicker}
+                        show={open && !showPicker}
                         as={Fragment}
                         enter="transition ease-out duration-200"
                         enterFrom="opacity-0 translate-y-1"
@@ -182,8 +186,8 @@ const RangePopover = ({
                             </div>
                         </Popover.Panel>
                     </Transition>
-                    <div className="wrapper" ref={wrapperRef}>
-                        {shouldShowPicker && (
+                    <div>
+                        {showPicker && (
                             <>
                                 <div className="hidden mb:block">
                                     <Transition
@@ -278,7 +282,7 @@ const RangePopover = ({
                             </>
                         )}
                     </div>
-                </>
+                </div>
             )}
         </Popover>
     );
