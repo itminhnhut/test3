@@ -639,8 +639,8 @@ export class MobileTradingView extends React.PureComponent {
 
     resetComponent = () => {
         localStorage.removeItem(this.getChartKey);
-        localStorage.removeItem(this.getChartKey('mainIndicator'));
-        localStorage.removeItem(this.getChartKey('subIndicator'));
+        localStorage.removeItem(this.getKeyStore('mainIndicator'));
+        localStorage.removeItem(this.getKeyStore('subIndicator'));
         if (this.props.reNewComponentKey) this.props.reNewComponentKey();
     };
 
