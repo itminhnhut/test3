@@ -101,7 +101,6 @@ const NavBar = ({
     const [currentTheme, onThemeSwitch] = useDarkMode();
     const router = useRouter();
     const { user: auth, loadingUser } = useSelector((state) => state.auth) || null;
-    console.log('loadingUser:', loadingUser)
     const { width } = useWindowSize();
     const {
         t,
