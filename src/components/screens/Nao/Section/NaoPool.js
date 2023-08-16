@@ -408,13 +408,13 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 <CardHistoryPrice key={index}>
                                     <div className="w-full">
                                         <div className="flex flex-col lg:flex-row justify-between w-full lg:space-x-2 lg:w-auto">
-                                            <div className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark lg:space-y-1 lg:space-x-0 space-x-1">
+                                            <div className="text-sm xl:text-base text-txtSecondary dark:text-txtSecondary-dark lg:space-y-1 lg:space-x-0 space-x-1">
                                                 <span className="lg:block">{t('nao:pool:week', { value: weekNumber })}</span>
                                                 <span>
                                                     {formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}
                                                 </span>
                                             </div>
-                                            <div className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark lg:space-y-1 lg:space-x-0 space-x-1 lg:text-right">
+                                            <div className="text-sm xl:text-base text-txtSecondary dark:text-txtSecondary-dark lg:space-y-1 lg:space-x-0 space-x-1 lg:text-right">
                                                 <span className="lg:block">{t('nao:pool:equivalent')}:</span>
                                                 <span>
                                                     {formatNumber(sumVNDC, 0)} VNDC (${formatNumber(sumUSDT, assetConfig[22]?.assetDigit ?? 3)})
@@ -856,7 +856,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 <QuestionMarkIcon isFilled size={16} color={'currentColor'} />
                             </div>
                         </div>
-                        <span className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark lg:space-y-1 lg:space-x-0 space-x-1 mb:min-h-[3rem]">
+                        <span className="text-sm xl:text-base text-txtSecondary dark:text-txtSecondary-dark lg:space-y-1 lg:space-x-0 space-x-1 mb:min-h-[2.5rem] xl:min-h-[3rem]">
                             <span className="lg:block">{t('nao:pool:equivalent')}:</span>
                             <span>
                                 {formatNumber(thisWeekVNDC, 0)} VNDC (${formatNumber(thisWeekUSD, assetConfig[22]?.assetDigit ?? 3)})
