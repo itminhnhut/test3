@@ -1,14 +1,74 @@
 import InputV2 from 'components/common/V2/InputV2';
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useMemo, Fragment } from 'react';
 import { MAX_NOTE_LENGTH } from './DepositInputCard';
-const ReceiverInput = React.memo(({ receiver, setReceiver }) => {
-    const [receiverInput, setReceiverInput] = useState(receiver?.value || '');
+import TextArea from 'components/common/V2/InputV2/TextArea';
+import ReceiverInfor from './ReceiverInfor';
+import useFetchApi from 'hooks/useFetchApi';
+import { API_DEPOSIT_CRYPTO, API_SEARCH_USER } from 'redux/actions/apis';
+import Spinner from 'components/svg/Spinner';
+import Button from 'components/common/V2/ButtonV2/Button';
+import axios from 'axios';
+import ModalOtp from 'components/screens/WithdrawDeposit/components/ModalOtp';
+import { ApiResultCreateOrder } from 'redux/actions/const';
+import toast from 'utils/toast';
+import { useTranslation } from 'next-i18next';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+
+const ReceiverInput = React.memo(({ assetId, amount, isDepositAble }) => {
+    const {
+        t,
+        i18n: { language: lang }
+    } = useTranslation();
+    // DEBOUNCE Value
+    const [debounceReceiverInput, setDebounceReceiverInput] = useState('');
+
+    const [state, _setState] = useState({
+        showOtp: false,
+        otpExpireTime: null,
+        loadingConfirm: false,
+        showAlert: false,
+        needSmartOtp: false
+    });
+
+    const setState = (_state) => _setState((prev) => ({ ...prev, ..._state }));
+
+    const [receiver, _setReceiver] = useState({
+        input: '',
+        isTypingInput: false,
+        noteValue: ''
+    });
+
+    const setReceiver = (receiverState) => _setReceiver((prev) => ({ ...prev, ...receiverState }));
 
     useEffect(() => {
-        let timeout = setTimeout(() => setReceiver((prev) => ({ ...prev, value: receiverInput })), 200);
+        if (receiver.input) {
+            setReceiver({ isTypingInput: true });
+        } else {
+            setReceiver({ isTypingInput: false });
+        }
+        let timeout = setTimeout(() => {
+            setDebounceReceiverInput(receiver.input);
+        }, 500);
         return () => clearTimeout(timeout);
-    }, [receiverInput]);
+    }, [receiver.input]);
+
+    const { data: user, loading } = useFetchApi(
+        {
+            url: API_SEARCH_USER,
+            params: {
+                searchUser: debounceReceiverInput
+            },
+            successCallBack: () => setReceiver({ isTypingInput: false })
+        },
+        Boolean(debounceReceiverInput),
+        [debounceReceiverInput]
+    );
+
+    const error = useMemo(() => {
+        return !receiver.input ? '' : !receiver.isTypingInput && !loading && !user ? 'User not found' : '';
+    }, [user, receiver.input, receiver.isTypingInput, loading]);
+
+    const isUserFound = !loading && user && Boolean(debounceReceiverInput);
 
     const onChangeNoteHandler = (value) => {
         let noteValue = value;
@@ -16,70 +76,145 @@ const ReceiverInput = React.memo(({ receiver, setReceiver }) => {
         if (value.length > MAX_NOTE_LENGTH) {
             noteValue = noteValue.slice(0, MAX_NOTE_LENGTH);
         }
-        setReceiver((prev) => ({ ...prev, noteValue }));
+        setReceiver({
+            noteValue
+        });
+    };
+
+    const onDepositOffChainHandler = async (otp) => {
+        setState({ loadingConfirm: true });
+        try {
+            const response = await axios.post(API_DEPOSIT_CRYPTO, {
+                searchUser: debounceReceiverInput, // String: email | namiID
+                assetId: +assetId, // asset transfer
+                amount: +amount,
+                note: receiver.noteValue,
+                lang,
+                otp
+            });
+
+            // MISSING OTP
+            if (response.data?.data?.remaining_time) {
+                setState({
+                    otpExpireTime: response.data?.remaining_time,
+                    showOtp: true
+                });
+            }
+
+            // SMART OTP
+            if (response.data?.data?.use_smart_otp) {
+                setState({
+                    showOtp: true,
+                    needSmartOtp: true
+                });
+            }
+
+            // SUCCESS
+            if (response.data?.data?.txId) {
+                setState({
+                    showOtp: false,
+                    showAlert: true
+                });
+            }
+            const handlingResponseStatus = {
+                INVALID_OTP: () => {
+                    toast({ text: t('common:otp_verify_expired'), type: 'warning' });
+                },
+                SECRET_INVALID: () => {
+                    toast({
+                        text: t('dw_partner:error.invalid_secret', { timesErr: response.data?.data?.count ?? 1 }),
+                        type: 'warning'
+                    });
+                }
+            };
+
+            handlingResponseStatus[response.data?.status]();
+
+            setState({ loadingConfirm: false });
+            return response.data;
+        } catch (error) {
+        } finally {
+            setState({ loadingConfirm: false });
+        }
     };
 
     return (
         <div>
-            <div className="">
-                <label htmlFor="namiid-email-input" className="text-txtSecondary dark:text-txtSecondary-dark inline-block text-sm mb-4">
-                    Nami ID/Email
-                </label>
-                <Tabs tab={receiver.type === 'nami-id' ? 0 : 1} className="mb-4">
-                    <TabItem className="" onClick={() => setReceiver((prev) => ({ ...prev, type: 'nami-id' }))} active={receiver.type === 'nami-id'}>
-                        Nami ID
-                    </TabItem>
-                    <TabItem onClick={() => setReceiver((prev) => ({ ...prev, type: 'email' }))} active={receiver.type === 'email'}>
-                        Email
-                    </TabItem>
-                </Tabs>
-                <InputV2 id="namiid-email-input" placeholder="Nhập Nami ID" canPaste onChange={(value) => setReceiverInput(value)} value={receiverInput} />
-            </div>
-            <div className="">
-                <label htmlFor="note-input" className="text-txtSecondary dark:text-txtSecondary-dark text-sm mb-2 inline-block">
-                    Ghi chú
+            <div className="mb-6">
+                <label htmlFor="receiver-input" className="text-txtSecondary  dark:text-txtSecondary-dark inline-block mb-2 text-sm">
+                    Thông tin người nhận
                 </label>
 
                 <InputV2
-                    id="note-input"
-                    placeholder="Nhập ghi chú"
-                    showDividerSuffix={false}
+                    id="receiver-input"
+                    className="!pb-0"
+                    placeholder="Nhập Nami ID"
+                    canPaste
+                    onChange={(value) => setReceiver({ input: value })}
+                    value={receiver.input}
                     suffix={
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                            {receiver.noteValue.length}/{MAX_NOTE_LENGTH}
-                        </div>
+                        receiver.isTypingInput && (
+                            <div className="text-txtSecondary dark:text-TxtSecondary-dark">
+                                <Spinner color="currentColor" />
+                            </div>
+                        )
                     }
-                    onChange={onChangeNoteHandler}
+                    error={error}
+                />
+
+                {isUserFound && (
+                    <div className="mt-2 ">
+                        <ReceiverInfor user={user} />
+                    </div>
+                )}
+            </div>
+            <div className="">
+                <div className="flex justify-between items-center mb-2 ">
+                    <label htmlFor="note-input" className="text-txtSecondary  dark:text-txtSecondary-dark text-sm inline-block">
+                        Ghi chú
+                    </label>
+
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                        {receiver.noteValue.length}/{MAX_NOTE_LENGTH}
+                    </div>
+                </div>
+
+                <TextArea
                     value={receiver.noteValue}
+                    onChange={onChangeNoteHandler}
+                    placeholder="Nhập ghi chú"
+                    className="pb-0 w-full"
+                    classNameInput="h-14 resize-none"
+                    rows={2}
+                    id="note-input"
                 />
             </div>
+            <div className="mt-10">
+                <Button disabled={!isUserFound || !isDepositAble || state.loadingConfirm} onClick={() => onDepositOffChainHandler()}>
+                    Rút
+                    {state.loadingConfirm && <Spinner color="currentColor" />}
+                </Button>
+            </div>
+            <ModalOtp
+                onConfirm={(otp) => onDepositOffChainHandler(otp)}
+                isVisible={state.showOtp}
+                otpExpireTime={state.otpExpireTime}
+                onClose={() => {
+                    setState({ showOtp: false });
+                }}
+                loading={state.loadingConfirm}
+                isUseSmartOtp={state.needSmartOtp}
+            />
+            <AlertModalV2
+                isVisible={state.showAlert}
+                onClose={() => setState({ showAlert: false })}
+                type="success"
+                title="Thành công"
+                message="Lệnh rút thực hiện thành công"
+                customButton={<Button onClick={() => setState({ showAlert: false })}>Tạo lệnh rút mới</Button>}
+            />
         </div>
     );
 });
 
 export default ReceiverInput;
-
-const Tabs = styled.div.attrs({
-    className: 'relative flex items-center overflow-hidden border  dark:after:bg-dark-2 after:bg-gray-12 rounded-md border-divider dark:border-divider-dark '
-})`
-    &:after {
-        content: '';
-        position: absolute;
-
-        z-index: 0;
-        height: 100%;
-        /* border-style: solid;
-        border-width: 0 1px;
-        border-color: inherit; */
-        opacity: 50;
-        transform: ${({ tab }) => `translateX(${tab * 100}%)`};
-        width: 50%;
-        transition: all 0.2s;
-    }
-`;
-
-const TabItem = styled.div.attrs(({ active }) => ({
-    className: ` first:border-r border-divider dark:border-divider-dark py-3 z-[1] w-1/2 flex items-center justify-center text-sm mb:text-base leading-6 hover:cursor-pointer ${
-        active ? 'text-txtPrimary dark:text-txtPrimary-dark font-semibold' : 'text-txtSecondary dark:text-txtSecondary-dark'
-    }`
-}))``;

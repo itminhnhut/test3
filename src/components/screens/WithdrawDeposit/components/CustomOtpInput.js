@@ -79,7 +79,7 @@ const CustomOtpInput = ({ otpExpireTime, loading, loadingResend, onResend, onCon
             const response = await onConfirm(otp);
             // Lưu ý: Hàm onConfirm cần trả về Response
             if(response) {
-                if (response?.status === ApiResultCreateOrder.INVALID_OTP || response.status !== ApiStatus.SUCCESS) {
+                if ((typeof response?.status === 'string' && response.status.toUpperCase() === ApiResultCreateOrder.INVALID_OTP) || response.status !== ApiStatus.SUCCESS) {
                     onFocusFirstInput();
                     setState({ otp: INITAL_OTP_STATE, isError: true });
                 }

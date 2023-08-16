@@ -24,7 +24,7 @@ const INITAL_OTP_STATE = {
 
 const OTP_MODE = ['email', 'tfa'];
 
-const ModalOtp = ({isVisible, onClose, otpExpireTime, loading, onConfirm, isUseSmartOtp }) => {
+const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUseSmartOtp }) => {
     const [state, set] = useState({
         otp: INITAL_OTP_STATE,
         pasted: {
@@ -85,7 +85,7 @@ const ModalOtp = ({isVisible, onClose, otpExpireTime, loading, onConfirm, isUseS
     const onConfirmHandler = async (otp) => {
         try {
             const response = await onConfirm(otp);
-            if (response?.status === ApiResultCreateOrder.INVALID_OTP) {
+            if (typeof response?.status === 'string' && response.status.toUpperCase() === ApiResultCreateOrder.INVALID_OTP) {
                 onFocusFirstInput();
                 setState({ otp: INITAL_OTP_STATE, isError: true });
             }

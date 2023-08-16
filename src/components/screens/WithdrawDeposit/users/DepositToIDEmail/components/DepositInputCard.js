@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import Button from 'components/common/V2/ButtonV2/Button';
-import InputV2 from 'components/common/V2/InputV2';
 import Card from 'components/screens/WithdrawDeposit/components/common/Card';
 import AssetLogo from 'components/wallet/AssetLogo';
 import useOutsideClick from 'hooks/useOutsideClick';
@@ -9,21 +8,23 @@ import keyBy from 'lodash/keyBy';
 import orderBy from 'lodash/orderBy';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 // import { ChevronDown } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
 import { formatNumber, roundByExactDigit } from 'redux/actions/utils';
 import AssetsDropdown from './AssetsDropdown';
 import ReceiverInput from './ReceiverInput';
-import ModalOtp from 'components/screens/WithdrawDeposit/components/ModalOtp';
-import { BxChevronDown } from 'components/svg/SvgIcon';
 import SvgChevronDown from 'components/svg/ChevronDown';
+import { X } from 'react-feather';
 
 export const MAX_NOTE_LENGTH = 70;
 
 const DepositInputCard = () => {
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const router = useRouter();
     const { assetId: assetCode } = router.query;
 
@@ -32,28 +33,42 @@ const DepositInputCard = () => {
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
     const spotWallets = useSelector((state) => state.wallet.SPOT) || {};
     const mapAssetConfig = useMemo(() => keyBy(assetConfigs, 'id'), [assetConfigs]);
+    const publicSocket = useSelector((state) => state.socket.publicSocket);
+
+    useEffect(() => {
+        const listenerHandler = (data) => {};
+        const event = `spot:mini_ticker:update:BTCUSDT`;
+        if (publicSocket && assetCode) {
+            publicSocket.on(event, listenerHandler);
+        }
+        return function cleanup() {
+            if (publicSocket) {
+                publicSocket.removeListener(event, listenerHandler);
+            }
+        };
+    }, [publicSocket, assetCode]);
 
     // LOCAL STATE
     const assetListRef = useRef();
     const [amount, setAmount] = useState('');
     const [search, setSearch] = useState('');
-    const [receiver, setReceiver] = useState({
-        type: 'nami-id',
-        value: '',
-        noteValue: ''
-    });
     const [openSelectAsset, setOpenSelectAsset] = useState(false);
     useOutsideClick(assetListRef, () => setOpenSelectAsset(!openSelectAsset));
 
     // frequently used variable base on state, selector
     const currentAsset = useMemo(() => find(paymentConfigs, { assetCode }), [paymentConfigs, assetCode]);
+    const currentAssetConfig = useMemo(() => {
+        return mapAssetConfig[currentAsset?.assetId] || {};
+    }, [currentAsset, mapAssetConfig]);
+
     const assetBalance = useMemo(() => {
         const balance = spotWallets?.[currentAsset?.assetId];
-        return balance?.value - balance?.locked_value;
-    }, [spotWallets, currentAsset]);
+        return roundByExactDigit(balance?.value - balance?.locked_value, currentAssetConfig?.assetDigit || 0);
+    }, [spotWallets, currentAsset, currentAssetConfig?.assetDigit]);
 
     const assetOptions = useMemo(() => {
         const listAssetAvailable = paymentConfigs
+            .filter((asset) => asset?.networkList || asset?.networkList?.length)
             .filter((c) => c.assetCode?.includes(search.trim().toUpperCase()))
             .map((config) => {
                 const wallet = spotWallets[config.assetId] || {
@@ -70,21 +85,19 @@ const DepositInputCard = () => {
         return orderBy(listAssetAvailable, ['availableValue', 'assetCode'], ['desc', 'asc']);
     }, [paymentConfigs, spotWallets, search]);
 
-    const currentAssetConfig = useMemo(() => {
-        return mapAssetConfig[currentAsset?.assetId] || {};
-    }, [currentAsset, mapAssetConfig]);
-
-    const isMax = +amount === roundByExactDigit(assetBalance, currentAssetConfig?.assetDigit);
+    const isMax = +amount === assetBalance;
 
     const onSetMax = () => {
         if (isMax) return;
         setAmount(assetBalance);
     };
 
+    const isDepositAble = +amount > 0 && +amount <= assetBalance && Boolean(currentAsset);
+
     return (
         <>
             <Card className="max-w-[508px] ">
-                <div className="bg-gray-13 dark:bg-darkBlue-3 p-4 relative rounded-xl mb-6">
+                <div className="bg-dark-12 dark:bg-dark-4 p-4 relative rounded-xl mb-6">
                     {openSelectAsset && (
                         <AssetsDropdown
                             search={search}
@@ -119,9 +132,22 @@ const DepositInputCard = () => {
                                 />
                             </div>
 
+                            <div
+                                className={classNames('flex items-center pr-2 text-darkBlue-5', {
+                                    'border-r border-divider dark:border-divider-dark ': Boolean(amount)
+                                })}
+                            >
+                                <X
+                                    className={classNames('transition', Boolean(amount) ? 'opacity-1 cursor-pointer' : 'opacity-0')}
+                                    size={16}
+                                    onClick={() => setAmount('')}
+                                    color="currentColor"
+                                />
+                            </div>
+
                             <button
                                 disabled={isMax}
-                                className="font-semibold uppercase text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 disabled:cursor-default dark:active:text-green-4 disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark "
+                                className="font-semibold pl-2 uppercase text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 disabled:cursor-default dark:active:text-green-4 disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark "
                                 onClick={onSetMax}
                             >
                                 MAX
@@ -134,7 +160,7 @@ const DepositInputCard = () => {
 
                             <div className="text-txtPrimary dark:text-txtPrimary-dark">
                                 <SvgChevronDown
-                                    className={classNames('transition-transform',{
+                                    className={classNames('transition-transform', {
                                         '!rotate-0': openSelectAsset
                                     })}
                                     size={24}
@@ -145,11 +171,7 @@ const DepositInputCard = () => {
                     </div>
                 </div>
 
-                <ReceiverInput receiver={receiver} setReceiver={setReceiver} />
-
-                <div className="mt-10">
-                    <Button>Rút</Button>
-                </div>
+                <ReceiverInput language={language} assetId={currentAsset?.assetId} isDepositAble={isDepositAble} amount={amount} />
             </Card>
             {/* <ModalOtp isVisible={true} otpExpireTime={60} onClose={() => {}} isUseSmartOtp={true}/> */}
         </>

@@ -6,7 +6,7 @@ import Skeletor from 'components/common/Skeletor';
 import { BxsUserIcon } from 'components/svg/SvgIcon';
 import { useTranslation } from 'next-i18next';
 
-const CardContent = ({ contentClass, image, imageSrc, imgSize, mainContent, subContent }) => {
+export const CardContent = ({ contentClass, image, imageSrc, imgSize, mainContent, subContent }) => {
     return (
         <div className={classNames('flex items-center space-x-3', contentClass)}>
             <div style={{ minWidth: imgSize, maxWidth: imgSize, minHeight: imgSize, maxHeight: imgSize, width: '100%', height: '100%' }}>

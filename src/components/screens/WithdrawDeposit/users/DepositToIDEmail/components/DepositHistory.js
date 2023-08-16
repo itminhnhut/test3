@@ -5,7 +5,6 @@ import TabV2 from 'components/common/V2/TabV2';
 import TableV2 from 'components/common/V2/TableV2';
 import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import { TABS } from 'components/screens/WithdrawDeposit/constants';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { PATHS } from 'constants/paths';
 import useFetchApi from 'hooks/useFetchApi';
@@ -14,31 +13,41 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
-import { ApiStatus, PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
+import { API_GET_DEPWDL_HISTORY, API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
+import { ApiStatus, DepWdlStatus, PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
 import { formatNanNumber, formatTime } from 'redux/actions/utils';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const LIMIT_ROW = 10;
 
-const getColumns = (t, user, side, configs) => [
+const getColumns = (t, configs) => [
     {
-        key: 'displayingId',
-        dataIndex: 'displayingId',
-        title: t('dw_partner:order_id'),
-        align: 'left',
-        width: 150,
-        fixed: 'left',
-        render: (v) => <TextCopyable className="gap-x-1" showingText={v} text={v} />
-    },
-    {
-        key: 'baseAssetId',
-        dataIndex: 'baseAssetId',
-        title: t('common:asset'),
+        key: 'type',
+        dataIndex: 'type',
+        title: 'Loại Lệnh',
         align: 'left',
         width: 148,
-        render: (v) => {
-            const assetConfig = find(configs, { id: +v });
+        fixed: 'left',
+        render: (v) => (v === 1 ? 'Nhận Tiền' : v === 2 ? 'Gửi Tiền' : '')
+    },
+    {
+        key: 'id',
+        dataIndex: 'id',
+        title: 'ID',
+        align: 'left',
+        width: 158,
+        render: (v, item) => {
+            return <TextCopyable text={item?._id} showingText={`${item?._id?.slice(0, 4)}...${item?._id?.slice(-4)}`} />;
+        }
+    },
+    {
+        key: 'assetId',
+        dataIndex: 'assetId',
+        title: 'Loại tài sản',
+        align: 'left',
+        width: 148,
+        render: (id) => {
+            const assetConfig = find(configs, { id: +id });
 
             return assetConfig ? (
                 <div className="flex gap-2 items-center">
@@ -58,45 +67,99 @@ const getColumns = (t, user, side, configs) => [
         dataIndex: 'createdAt',
         title: t('common:time'),
         align: 'left',
-        width: 200,
-        render: (v) => formatTime(v, 'HH:mm:ss dd/MM/yyyy')
+        width: 126,
+        render: (v) => formatTime(v, 'dd/MM/yyyy')
     },
     {
-        key: 'baseQty',
-        dataIndex: 'baseQty',
+        key: 'amount',
+        dataIndex: 'amount',
         title: t('common:amount'),
-        align: 'right',
-        width: 140,
-        render: (v, item) => `${side === SIDE.BUY ? '+' : '-'}${formatNanNumber(v, item?.baseAssetId === 72 ? 0 : 4)}`
+        align: 'left',
+        width: 169,
+        render: (v, item) => {
+            const assetConfig = find(configs, { id: item?.assetId });
+            return `${formatNanNumber(v, assetConfig?.assetDigit)}`;
+        }
     },
     {
-        key: 'partnerMetadata',
-        dataIndex: 'partnerMetadata',
-        title: t('dw_partner:partner'),
+        key: 'from',
+        dataIndex: 'from',
+        title: 'Từ',
+        align: 'left',
+        width: 194,
+        render: (v, item) => {
+            const fromUserInformation = item?.metadata?.fromUser || item?.from;
+            return <TextCopyable text={fromUserInformation?.code || fromUserInformation?.email || fromUserInformation?.name} />;
+        }
+    },
+    {
+        key: 'to',
+        dataIndex: 'to',
+        title: 'Đến',
         align: 'right',
-        width: 240,
-        render: (v) => (
-            <>
-                <div className="txtPri-2 mb-1 capitalize">{v?.name?.toLowerCase()}</div>
-                <div className="txtSecond-3">{v?.code}</div>
-            </>
-        )
+        width: 194,
+        render: (v, item) => {
+            const toUserInformation = item?.metadata?.toUser || item?.to;
+            return <TextCopyable className="justify-end" text={toUserInformation?.code || toUserInformation?.email || toUserInformation?.name} />;
+        }
+    },
+    {
+        key: 'note',
+        dataIndex: 'note',
+        title: 'Ghi chú',
+        align: 'right',
+        width: 296,
+        render: (v, item) => {
+            return item?.metadata?.note;
+        }
     },
     {
         key: 'status',
         dataIndex: 'status',
-        title: <span className="mr-[10px]">{t('common:status')}</span>,
+        title: 'Trạng thái',
         align: 'right',
-        width: 207,
-        render: (v, item) => {
-            return item?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && v === PartnerOrderStatus.PENDING ? (
-                <TagV2 type={TYPES.DEFAULT} className="ml-auto !bg-transparent">
-                    <span className="text-center !text-base">{t('dw_partner:wait_confirmation')}</span>
-                </TagV2>
-            ) : (
-                <OrderStatusTag status={v} icon={false} hasBg={false} />
-            );
-        }
+        width: 168,
+        render: (status) =>
+            ({
+                [DepWdlStatus.Success]: (
+                    <TagV2 icon={false} className="ml-auto" type="success">
+                        {t('common:success')}
+                    </TagV2>
+                ),
+                [DepWdlStatus.Pending]: (
+                    <TagV2 icon={false} className="ml-auto" type="warning">
+                        {t('common:processing')}
+                    </TagV2>
+                ),
+                [DepWdlStatus.Declined]: (
+                    <TagV2 icon={false} className="ml-auto" type="failed">
+                        {t('common:declined')}
+                    </TagV2>
+                )
+            }[status])
+    }
+];
+
+export const TABS = [
+    {
+        key: 0,
+        localized: 'common:all'
+    },
+    {
+        key: 1,
+        localized: 'transaction-history:completed',
+        status: DepWdlStatus.Success
+    },
+    {
+        key: 2,
+        localized: 'common:processing',
+        status: DepWdlStatus.Pending
+    },
+
+    {
+        key: 3,
+        localized: 'common:denined',
+        status: DepWdlStatus.Declined
     }
 ];
 
@@ -106,10 +169,6 @@ const DepositHistory = () => {
         i18n: { language }
     } = useTranslation();
 
-    const router = useRouter();
-    const { side } = router.query;
-
-    const user = useSelector((state) => state.auth.user) || null;
     const configs = useSelector((state) => state.utils?.assetConfig) || [];
 
     const [currentPage, setCurrentPage] = useState(0);
@@ -118,20 +177,17 @@ const DepositHistory = () => {
 
     const { data, loading, error } = useFetchApi(
         {
-            url: API_GET_HISTORY_DW_PARTNERS,
+            url: API_GET_DEPWDL_HISTORY,
             params: {
                 page: currentPage,
                 pageSize: LIMIT_ROW,
-                lastId: null,
-                mode: 'user',
-                side,
-                status: activeTab === 0 ? null : TABS[activeTab]?.status,
-                partnerAcceptStatus: TABS[activeTab]?.partnerAcceptStatus,
+                status: TABS[activeTab]?.status,
+                // status: activeTab === 0 ? null : TABS[activeTab]?.status,
                 ...curSort
             }
         },
         true,
-        [activeTab, currentPage, curSort, side]
+        [currentPage, curSort, activeTab]
     );
 
     const customSort = (tableSorted) => {
@@ -166,16 +222,14 @@ const DepositHistory = () => {
                 }))}
             />
             <TableV2
-                sort={['baseQty']}
                 limit={LIMIT_ROW}
                 skip={0}
                 useRowHover
-                data={data?.orders || []}
-                columns={getColumns(t, user, side, configs)}
-                rowKey={(item) => item?.key}
+                data={data || []}
+                columns={getColumns(t, configs)}
+                rowKey={(item) => item?._id}
                 scroll={{ x: true }}
                 loading={loading}
-                onRowClick={(transaction) => router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + transaction.displayingId)}
                 height={404}
                 className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg pt-4"
                 tableStyle={{
