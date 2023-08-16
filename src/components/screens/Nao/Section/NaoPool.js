@@ -407,7 +407,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             return (
                                 <CardHistoryPrice key={index}>
                                     <div className="w-full">
-                                        <div className="flex flex-col lg:flex-row justify-between w-full lg:space-x-3 lg:w-auto">
+                                        <div className="flex flex-col lg:flex-row justify-between w-full lg:space-x-2 lg:w-auto">
                                             <div className="text-sm mb:text-base text-txtSecondary dark:text-txtSecondary-dark lg:space-y-1 lg:space-x-0 space-x-1">
                                                 <span className="lg:block">{t('nao:pool:week', { value: weekNumber })}</span>
                                                 <span>
@@ -890,6 +890,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 digitsPrice={assetConfig[1]?.assetDigit ?? 0}
                                 s3Url={`/images/coins/64/${1}.png`}
                                 price={data.estimate?.[1]}
+                                vndcPrice={data.estimateVNDC?.[1]}
                                 usdPrice={data.estimateUsd?.[1]}
                                 assetName={assetConfig[1]?.assetName}
                                 assetSymbol={assetConfig[1]?.assetCode}
