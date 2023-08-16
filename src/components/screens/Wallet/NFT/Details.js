@@ -139,9 +139,11 @@ const WalletDetail = ({ idNFT }) => {
     const renderNFT = (detail) => {
         return (
             <section className="flex flex-row gap-3 mt-4 cursor-pointer">
-                <ButtonV2 variants="secondary" onClick={handleModalTransfer}>
-                    {t('nft:history:transfer')}
-                </ButtonV2>
+                {detail?.transferable ? (
+                    <ButtonV2 variants="secondary" onClick={handleModalTransfer}>
+                        {t('nft:history:transfer')}
+                    </ButtonV2>
+                ) : null}
                 {detail?.status === 0 ? <ButtonV2 onClick={handleCheckNFT}>{t('nft:history:active')}</ButtonV2> : null}
             </section>
         );
@@ -155,6 +157,14 @@ const WalletDetail = ({ idNFT }) => {
                 </WrapperImage>
             );
         }
+        if (detail?.category === 2 && detail?.status !== 0 && !detail?.transferable) {
+            return (
+                <WrapperImage className="w-[100vw] max-w-[550px] max-h-[550px]">
+                    <img width={550} height={550} src={detail?.image} />
+                </WrapperImage>
+            );
+        }
+
         return detail?.image ? (
             <WrapperImage className="w-[100vw] max-w-[614px] max-h-[614px]">
                 <img width={614} height={614} src={detail?.image} />
@@ -187,7 +197,14 @@ const WalletDetail = ({ idNFT }) => {
                         <section className="mt-4">{renderHistory()}</section>
                     </section>
                 </article>
-                <Use isModal={isUse} category={detail?.category} onCloseModal={handleModalUse} statusCodeNFT={statusCodeNFT} onUseSubmit={handleUseSubmit} />
+                <Use
+                    isModal={isUse}
+                    nameNFT={detail?.name}
+                    category={detail?.category}
+                    onCloseModal={handleModalUse}
+                    statusCodeNFT={statusCodeNFT}
+                    onUseSubmit={handleUseSubmit}
+                />
                 <Transfer isModal={isTransfer} isDark={isDark} onCloseModal={handleModalTransfer} detail={detail} idNFT={idNFT} />
             </main>
         </MaldivesLayout>

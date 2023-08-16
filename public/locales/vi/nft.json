@@ -46,7 +46,7 @@
         "1002": "<0>{{- type}} hết hạn sử dụng<0>",
         "1003": "<0>{{- type}} hết hiệu lực sử dụng<0>",
         "1004": "<0>{{- type}} đã được kích hoạt trước đó<0>",
-        "1005": "<0>{{- type}} không thể chuyển<0>",
+        "1005": "<0>{{- nameNFT}} không thể thực hiện chuyển đổi<0>",
         "9001": "Nami ID không tồn tại",
         "9000": "Nami ID không hợp lệ",
         "code_error_format": "Nami ID chưa đúng định dạng"
