@@ -80,7 +80,8 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     // * Use hooks
     const [currentTheme, onThemeSwitch] = useDarkMode();
     const router = useRouter();
-    const { user: auth } = useSelector((state) => state.auth) || null;
+    const { user: auth, loadingUser } = useSelector((state) => state.auth) || null;
+    console.log('loadingUser:', loadingUser)
     const { width } = useWindowSize();
     const {
         t,
@@ -155,7 +156,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         toast({
                             type: 'error',
                             text: t('common:global_label:login_failed')
-                        })
+                        });
                     }
                 }
             } catch (error) {
@@ -173,7 +174,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                 text: t('common:global_label:login_failed')
             });
         },
-        disabled: !!auth || !loginState,
+        disabled: !!auth || !loginState || loadingUser,
         cancel_on_tap_outside: false
     });
 
