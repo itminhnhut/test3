@@ -100,7 +100,7 @@ const NavBar = ({
     // * Use hooks
     const [currentTheme, onThemeSwitch] = useDarkMode();
     const router = useRouter();
-    const { user: auth } = useSelector((state) => state.auth) || null;
+    const { user: auth, loadingUser } = useSelector((state) => state.auth) || null;
     const { width } = useWindowSize();
     const {
         t,
@@ -193,7 +193,7 @@ const NavBar = ({
                 text: t('common:global_label:login_failed')
             });
         },
-        disabled: !!auth || !loginState,
+        disabled: !!auth || !loginState || loadingUser,
         cancel_on_tap_outside: false
     });
 
