@@ -849,8 +849,8 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 </div>
                 <CardNao className="sm:!min-w-[50%] !p-4 mb:!p-6 sm:min-h-[344px] !justify-start !mt-2 sm:!mt-0 col-span-12 mb:col-span-6">
                     <Tooltip id="tooltip-revenue-history" />
-                    <div className="flex-col flex mb-2">
-                        <div className="space-x-3 flex items-center mb-2">
+                    <div className="flex-col flex">
+                        <div className="space-x-3 flex items-center mb-4 sm:mb-2">
                             <span className="text-base sm:text-lg font-semibold">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</span>
                             <div data-tip={t('nao:pool:tooltip_revenue_history')} data-for="tooltip-revenue-history">
                                 <QuestionMarkIcon isFilled size={16} color={'currentColor'} />
@@ -890,7 +890,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 digitsPrice={assetConfig[1]?.assetDigit ?? 0}
                                 s3Url={`/images/coins/64/${1}.png`}
                                 price={data.estimate?.[1]}
-                                vndcPrice={data.estimateVNDC?.[1]}
+                                usdPrice={data.estimateUsd?.[1]}
                                 assetName={assetConfig[1]?.assetName}
                                 assetSymbol={assetConfig[1]?.assetCode}
                             />
@@ -923,7 +923,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     </div>
                 </CardNao>
                 <CardNao className="sm:!min-w-[50%] !p-4 mb:!p-6 sm:min-h-[344px] !justify-start col-span-12 mb:col-span-6">
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-4 sm:mb-2">
                         <label className="text-txtPrimary dark:text-txtPrimary-dark text-base sm:text-lg font-semibold">{t('nao:pool:revenue_history')}</label>
                         {listHitory.length > 0 && (
                             <div className="flex space-x-2">
@@ -952,7 +952,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             </div>
                         )}
                     </div>
-                    <div className="pt-4 sm:pt-0">
+                    <div className="">
                         {listHitory.length > 0 ? (
                             <Swiper
                                 onSlideChange={({ activeIndex }) => setActIdx(activeIndex)}

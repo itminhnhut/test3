@@ -133,7 +133,7 @@ const RangePopover = ({
     return (
         <Popover className={popOverClasses}>
             {({ open, close }) => (
-                <div className="wrapper" ref={wrapperRef}>
+                <>
                     <Popover.Button>
                         <div className="flex justify-center items-center">
                             <div className="sm:hidden ml-auto">
@@ -147,46 +147,47 @@ const RangePopover = ({
                             </div>
                         </div>
                     </Popover.Button>
-                    <Transition
-                        show={open && !showPicker}
-                        as={Fragment}
-                        enter="transition ease-out duration-200"
-                        enterFrom="opacity-0 translate-y-1"
-                        enterTo="opacity-100 translate-y-0"
-                        leave="transition ease-in duration-150"
-                        leaveFrom="opacity-100 translate-y-0"
-                        leaveTo="opacity-0 translate-y-1"
-                    >
-                        <Popover.Panel className="absolute min-w-[8rem] sm:min-w-[10rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-bgPrimary dark:bg-dark-4 border border-divider dark:border-divider-dark rounded-md mt-3">
-                            <div className="text-sm sm:text-base flex flex-col text-txtPrimary dark:text-txtPrimary-dark sm:py-3">
-                                {days.map((day, index) => {
-                                    const isActive = active.value === day.value;
-                                    return (
-                                        <div
-                                            key={day.value}
-                                            onClick={() => {
-                                                onChange(day.value);
-                                                if (day.value === 'custom') {
-                                                    setShowPicker(true);
-                                                } else {
-                                                    setRange?.({ startDate: undefined, endDate: undefined, key: 'selection' });
-                                                }
-                                                close();
-                                            }}
-                                            className={classNames(
-                                                'flex justify-between items-center py-3 my-1 px-4 cursor-pointer space-x-1',
-                                                'first:rounded-t-md last:rounded-b-md hover:bg-hover-1 dark:hover:bg-hover-dark'
-                                            )}
-                                        >
-                                            <span className="whitespace-nowrap">{isCustom && isActive ? showActive() : day[language]}</span>
-                                            {isActive && <CheckCircle color="currentColor" size={16} />}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </Popover.Panel>
-                    </Transition>
-                    <div>
+                    <div className="wrapper" ref={wrapperRef}>
+                        <Transition
+                            show={open && !showPicker}
+                            as={Fragment}
+                            enter="transition ease-out duration-200"
+                            enterFrom="opacity-0 translate-y-1"
+                            enterTo="opacity-100 translate-y-0"
+                            leave="transition ease-in duration-150"
+                            leaveFrom="opacity-100 translate-y-0"
+                            leaveTo="opacity-0 translate-y-1"
+                        >
+                            <Popover.Panel className="absolute min-w-[8rem] sm:min-w-[10rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-bgPrimary dark:bg-dark-4 border border-divider dark:border-divider-dark rounded-md mt-3">
+                                <div className="text-sm sm:text-base flex flex-col text-txtPrimary dark:text-txtPrimary-dark sm:py-3">
+                                    {days.map((day, index) => {
+                                        const isActive = active.value === day.value;
+                                        return (
+                                            <div
+                                                key={day.value}
+                                                onClick={() => {
+                                                    onChange(day.value);
+                                                    if (day.value === 'custom') {
+                                                        setShowPicker(true);
+                                                    } else {
+                                                        setRange?.({ startDate: undefined, endDate: undefined, key: 'selection' });
+                                                    }
+                                                    close();
+                                                }}
+                                                className={classNames(
+                                                    'flex justify-between items-center py-3 my-1 px-4 cursor-pointer space-x-1',
+                                                    'first:rounded-t-md last:rounded-b-md hover:bg-hover-1 dark:hover:bg-hover-dark'
+                                                )}
+                                            >
+                                                <span className="whitespace-nowrap">{isCustom && isActive ? showActive() : day[language]}</span>
+                                                {isActive && <CheckCircle color="currentColor" size={16} />}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </Popover.Panel>
+                        </Transition>
+
                         {showPicker && (
                             <>
                                 <div className="hidden mb:block">
@@ -282,7 +283,7 @@ const RangePopover = ({
                             </>
                         )}
                     </div>
-                </div>
+                </>
             )}
         </Popover>
     );
