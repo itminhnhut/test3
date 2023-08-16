@@ -401,8 +401,8 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 <SwiperSlide key={i}>
                     <div className="flex w-full">
                         {dataFilter.map((item, index) => {
-                            const sumUSDT = Object.values(item.interestUSD).reduce((a, b) => a + b, 0);
-                            const sumVNDC = Object.values(item.interestVND).reduce((a, b) => a + b, 0);
+                            const sumUSDT = Object.values(item.interestUSD || {}).reduce((a, b) => a + b, 0);
+                            const sumVNDC = Object.values(item.interestVND || {}).reduce((a, b) => a + b, 0);
                             weekNumber--;
                             return (
                                 <CardHistoryPrice key={index}>
