@@ -22,8 +22,10 @@ const DropdownCard = ({
     additionalActions,
     showDropdownIcon = true,
     placeholder,
-    mustBeShow = false
+    mustBeShow = false,
+    filterChildren
 }) => {
+
     const cardRef = useRef(null);
     const [isVisible, setVisible] = useState(false);
     useClickAway(cardRef, () => {
@@ -39,6 +41,7 @@ const DropdownCard = ({
             open={isVisible}
             containerClassname={{ [containerClassname]: isVisible }}
             hasSearchBox
+            filterChildren={filterChildren}
             label={
                 <div className="bg-gray-12 dark:bg-dark-2 p-4 rounded-xl w-full">
                     <div className="txtSecond-2 mb-4"> {label}</div>

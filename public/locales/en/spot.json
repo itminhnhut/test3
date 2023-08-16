@@ -21,6 +21,9 @@
     "assets_list": "Assets List",
     "search": "Search",
     "orderbook": "Orderbook",
+    "orderbook_tooltip": {
+        "avg_price": "Avg.Price"
+    },
     "place_success_market": "You have just successfully created an order #{{displayingId}} {{side}} {{type}} {{token}}.",
     "place_success_limit": "You have just successfully created an order #{{displayingId}} {{side}} {{type}} {{token}}.",
     "balance": "Balance",
@@ -48,5 +51,16 @@
         "order_confirmation_tooltip": "Order Confirmation with open position orders",
         "display_price_line": "Display price lines of all opening positions",
         "display_price_line_tooltip": "Display the price lines of Open and SL-TP prices from all opening positions on candlestick chart"
+    },
+    "asset_info": {
+        "title": "Info",
+        "rank": "Rank",
+        "circulating_supply": "Circulating Supply",
+        "total_supply": "Total Supply",
+        "max_supply": "Max Supply",
+        "last_price": "Last Price",
+        "website": "Website",
+        "explorer": "Explorer",
+        "social": "Social"
     }
 }

@@ -1,17 +1,18 @@
-import { createGlobalStyle } from 'styled-components'
-import styled from 'styled-components'
-import { Col, Row, Container } from 'react-grid-system'
-import { isMobile } from 'react-device-detect'
-import Div100vh from 'react-div-100vh'
+import { isMobile } from 'react-device-detect';
+import Div100vh from 'react-div-100vh';
+import { Col, Row, Container } from 'react-grid-system';
+
+import { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
 
     ::-webkit-scrollbar-thumb {
-        background: ${props => props.theme.scrollbarBg} !important;
+        background: ${(props) => props.theme.scrollbarBg} !important;
     }
 
     ::-webkit-scrollbar-thumb:active {
-        background: ${props => props.theme.colors.mint} !important;
+        background: ${(props) => props.theme.colors.mint} !important;
     }
 
     ::-webkit-scrollbar {
@@ -28,7 +29,7 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     body.ReactModal__Body--open {
-        color: ${props => props.theme.colors.white};
+        color: ${(props) => props.theme.colors.white};
     }
 
     body {
@@ -36,8 +37,8 @@ export const GlobalStyles = createGlobalStyle`
         padding: 0;
         box-sizing: border-box;
         font-family: Source Sans Pro, sans-serif;
-        background: ${props => props.theme.body} !important;
-            //color: ${props => props.theme.textPrimary};
+        background: ${(props) => props.theme.body} !important;
+            //color: ${(props) => props.theme.textPrimary};
         overflow: hidden ${isMobile ? 'hidden' : 'auto'} !important;
         transition: all .3s linear;
         -webkit-font-smoothing: antialiased;
@@ -230,17 +231,17 @@ export const GlobalStyles = createGlobalStyle`
         }
 
         a {
-            color: ${props => props.theme.textSecondary};
+            color: ${(props) => props.theme.textSecondary};
             transition: all .2s ease;
 
             :hover {
-                color: ${props => props.theme.colors.mint};
+                color: ${(props) => props.theme.colors.mint};
             }
         }
 
 
         #fc_frame {
-            display: ${props => props.history.location.pathname === '/happy-weekend' ? 'none' : 'unset'};
+            display: ${(props) => (props.history.location.pathname === '/happy-weekend' ? 'none' : 'unset')};
         }
 
         .Toastify__toast-container--bottom-right {
@@ -253,7 +254,7 @@ export const GlobalStyles = createGlobalStyle`
 
         .ReactTable .-pagination {
             border-top: none !important;
-            font-size: ${props => props.theme.fontSize.font12};
+            font-size: ${(props) => props.theme.fontSize.font12};
         }
 
         .ReactTable .-pagination .-pageJump {
@@ -265,12 +266,12 @@ export const GlobalStyles = createGlobalStyle`
         }
 
         .ReactTable .rt-thead .rt-th.-sort-asc, .ReactTable .rt-thead .rt-td.-sort-asc {
-            box-shadow: inset 0 3px 0 0 ${props => props.theme.textSecondary} !important;
+            box-shadow: inset 0 3px 0 0 ${(props) => props.theme.textSecondary} !important;
         }
 
         .ReactTable.reactable_custom .-pagination .-btn {
-            background-color: ${props => props.theme.titleHighlight} !important;
-            color: ${props => props.theme.textPrimary} !important;
+            background-color: ${(props) => props.theme.titleHighlight} !important;
+            color: ${(props) => props.theme.textPrimary} !important;
             border: none !important;
         }
 
@@ -283,57 +284,57 @@ export const GlobalStyles = createGlobalStyle`
         }
 
         .ReactTable .-pagination .-btn:not([disabled]):hover {
-            background: ${props => props.theme.colors.mint} !important;
-            color: ${props => props.theme.textHover} !important;
+            background: ${(props) => props.theme.colors.mint} !important;
+            color: ${(props) => props.theme.textHover} !important;
             outline: none;
             border: none;
         }
 
         .ReactTable .rt-thead .rt-th, .ReactTable .rt-tbody .rt-td, .future__modify-price--value {
             text-align: left !important;
-            color: ${props => props.theme.textAbsolute};
+            color: ${(props) => props.theme.textAbsolute};
         }
 
         .ReactTable .rt-thead .rt-th, .ReactTable .rt-thead .rt-td {
             border-right: none;
-            color: ${props => props.theme.textSecondary};
-            font-size: ${props => props.theme.fontSize.font10 + 3}px;
+            color: ${(props) => props.theme.textSecondary};
+            font-size: ${(props) => props.theme.fontSize.font10 + 3}px;
         }
 
         .ReactTable .rt-thead.-header {
-            padding: ${props => props.theme.stuff.spacing - 5}px 0;
+            padding: ${(props) => props.theme.stuff.spacing - 5}px 0;
         }
 
         .ReactTable .rt-thead.-header {
             box-shadow: none !important;
-            border-bottom: 2px solid ${props => props.theme.stuff.border};
+            border-bottom: 2px solid ${(props) => props.theme.stuff.border};
         }
 
         .ReactTable .-loading.-active {
-            background: ${props => props.theme.background} !important;
+            background: ${(props) => props.theme.background} !important;
         }
 
         .ReactTable .-loading .-loading-inner, .ReactTable .-loading > div {
-            color: ${props => props.theme.textPrimary} !important;
+            color: ${(props) => props.theme.textPrimary} !important;
             top: 50% !important;
             transform: translateY(-50%) !important;
         }
 
         .ReactTable {
-            background: ${props => props.theme.background} !important;
+            background: ${(props) => props.theme.background} !important;
             border: none;
-            padding: 0 ${props => props.theme.stuff.spacing + 5}px;
+            padding: 0 ${(props) => props.theme.stuff.spacing + 5}px;
 
             span.close_order {
                 background: transparent !important;
-                color: ${props => props.theme.colors.sell};
+                color: ${(props) => props.theme.colors.sell};
                 transition: all .2s ease;
                 font-weight: 600;
                 border-radius: 3px;
 
                 :hover {
-                    background: ${props => props.theme.colors.sell} !important;
-                    color: ${props => props.theme.textHover};
+                    background: ${(props) => props.theme.colors.sell} !important;
+                    color: ${(props) => props.theme.textHover};
                 }
             }
 
@@ -348,7 +349,7 @@ export const GlobalStyles = createGlobalStyle`
                 max-height: 300px;
                 //min-height: 280px;
 
-                @media (min-width: ${props => props.theme.breakPoint.xxl}) {
+                @media (min-width: ${(props) => props.theme.breakPoint.xxl}) {
                     max-height: unset;
                     min-height: unset;
                 }
@@ -361,14 +362,14 @@ export const GlobalStyles = createGlobalStyle`
         }
 
         .ReactTable .-pageJump input, .ReactTable .-pageSizeOptions select {
-            color: ${props => props.theme.textSecondary} !important;
+            color: ${(props) => props.theme.textSecondary} !important;
         }
 
         .ReactTable .-pagination .-pageSizeOptions {
             display: block;
         }
 
-        @media (min-width: ${props => props.theme.breakPoint.xl}) and (max-width: 1366px) {
+        @media (min-width: ${(props) => props.theme.breakPoint.xl}) and (max-width: 1366px) {
             .ReactTable .-pagination .-pageSizeOptions {
                 display: none;
             }
@@ -380,58 +381,50 @@ export const GlobalStyles = createGlobalStyle`
             }
         }
     }
-`
+`;
 
 export const HR = styled.hr`
-    border-color: ${({ darkMode, theme }) => darkMode ? theme.stuff.border : 'rgba(0, 0, 0, .08)'};
-    margin-bottom: ${({ marginBott }) => marginBott ? marginBott : '1rem'};
-`
+    border-color: ${({ darkMode, theme }) => (darkMode ? theme.stuff.border : 'rgba(0, 0, 0, .08)')};
+    margin-bottom: ${({ marginBott }) => (marginBott ? marginBott : '1rem')};
+`;
 
 export const BoldSpan = styled.span`
     font-weight: 600;
-`
+`;
 
 export const A = styled.a`
-    color: ${({
-                  darkMode,
-                  theme,
-                  useSecondColor
-              }) => darkMode ? theme.textPrimary : (useSecondColor && theme.colors.dark3) || theme.colors.dark5};
+    color: ${({ darkMode, theme, useSecondColor }) => (darkMode ? theme.textPrimary : (useSecondColor && theme.colors.dark3) || theme.colors.dark5)};
 
     span {
         img {
             margin-top: -3px;
-            width: ${({ lastedNews }) => lastedNews ? '14px' : 'unset'};
-            margin-right: ${({ lastedNews }) => lastedNews ? '10px' : 'unset'};
+            width: ${({ lastedNews }) => (lastedNews ? '14px' : 'unset')};
+            margin-right: ${({ lastedNews }) => (lastedNews ? '10px' : 'unset')};
         }
     }
-`
+`;
 
 export const GlobalButton = styled.button`
     font-family: Source Sans Pro, sans-serif;
     cursor: pointer;
-    background: ${({
-                       background,
-                       theme,
-                       isDisable
-                   }) => isDisable ? theme.textDisabled : (background ? background : theme.colors.mint)};
-    width: ${({ width }) => width ? `${width} !important` : '100%'};
-    font-size: ${({ fontSize }) => fontSize ? fontSize : '12px'};
-    color: ${({ color, theme }) => color ? color : '#ffffff'};
-    border-width: ${({ borderWidth }) => borderWidth ? borderWidth : '2px'};
-    border-style: ${({ borderStyle }) => borderStyle ? borderStyle : 'solid'};
-    border-color: ${({ borderColor }) => borderColor ? borderColor : 'transparent'};
+    background: ${({ background, theme, isDisable }) => (isDisable ? theme.textDisabled : background ? background : theme.colors.mint)};
+    width: ${({ width }) => (width ? `${width} !important` : '100%')};
+    font-size: ${({ fontSize }) => (fontSize ? fontSize : '12px')};
+    color: ${({ color, theme }) => (color ? color : '#ffffff')};
+    border-width: ${({ borderWidth }) => (borderWidth ? borderWidth : '2px')};
+    border-style: ${({ borderStyle }) => (borderStyle ? borderStyle : 'solid')};
+    border-color: ${({ borderColor }) => (borderColor ? borderColor : 'transparent')};
     outline: none;
-    border-radius: ${({ moreRadius, radius }) => radius ? radius : (moreRadius ? '5px' : '3px')};
-    padding: ${({ padding }) => padding ? padding : '.45rem .8rem'};
-    font-weight: ${({ fontW }) => fontW ? fontW : 'normal'};
+    border-radius: ${({ moreRadius, radius }) => (radius ? radius : moreRadius ? '5px' : '3px')};
+    padding: ${({ padding }) => (padding ? padding : '.45rem .8rem')};
+    font-weight: ${({ fontW }) => (fontW ? fontW : 'normal')};
     position: relative;
-    box-shadow: ${({ shadow, theme, withoutDark }) => shadow ? (withoutDark ? shadow : theme.stuff.shadow) : 'unset'};
+    box-shadow: ${({ shadow, theme, withoutDark }) => (shadow ? (withoutDark ? shadow : theme.stuff.shadow) : 'unset')};
     white-space: nowrap;
-    min-width: ${({ minWidth }) => minWidth ? minWidth : 'unset'};
-    max-height: ${({ maxHeight }) => maxHeight ? maxHeight : 'unset'};
-    max-height: ${({ minHeight }) => minHeight ? minHeight : 'unset'};
-    height: ${({ height }) => height ? height : 'auto'};
+    min-width: ${({ minWidth }) => (minWidth ? minWidth : 'unset')};
+    max-height: ${({ maxHeight }) => (maxHeight ? maxHeight : 'unset')};
+    max-height: ${({ minHeight }) => (minHeight ? minHeight : 'unset')};
+    height: ${({ height }) => (height ? height : 'auto')};
 
     a.type-1 {
         display: block !important;
@@ -442,8 +435,8 @@ export const GlobalButton = styled.button`
         width: 100%;
         height: 100%;
         z-index: 3;
-        transition: all .2s ease;
-        color: ${({ darkMode, theme }) => darkMode ? theme.textPrimary : '#454545'};
+        transition: all 0.2s ease;
+        color: ${({ darkMode, theme }) => (darkMode ? theme.textPrimary : '#454545')};
     }
 
     a {
@@ -452,11 +445,11 @@ export const GlobalButton = styled.button`
         align-items: center;
         width: 100%;
         height: 100%;
-        color: ${({ darkMode, theme }) => darkMode ? theme.textPrimary : '#454545'};
-        transition: all .2s ease;
+        color: ${({ darkMode, theme }) => (darkMode ? theme.textPrimary : '#454545')};
+        transition: all 0.2s ease;
 
         i {
-            margin-left: .2rem
+            margin-left: 0.2rem;
         }
     }
 
@@ -472,26 +465,27 @@ export const GlobalButton = styled.button`
         background: white;
         opacity: 0;
         visibility: hidden;
-        transition: all .2s ease;
-        border-radius: ${({ moreRadius, radius }) => radius ? radius : (moreRadius ? '5px' : '3px')};
+        transition: all 0.2s ease;
+        border-radius: ${({ moreRadius, radius }) => (radius ? radius : moreRadius ? '5px' : '3px')};
         z-index: 2;
     }
 
     :hover {
-        border-color: ${({ borderHover }) => borderHover ? borderHover : 'transparent'};
-        color: ${({ colorHover, theme }) => colorHover ? colorHover : '#ffffff'};
+        border-color: ${({ borderHover }) => (borderHover ? borderHover : 'transparent')};
+        color: ${({ colorHover, theme }) => (colorHover ? colorHover : '#ffffff')};
 
         a {
-            color: ${({ colorHover, theme }) => colorHover ? colorHover : '#ffffff'};
+            color: ${({ colorHover, theme }) => (colorHover ? colorHover : '#ffffff')};
         }
 
         :after {
-            opacity: ${({ hoverOpacity }) => hoverOpacity ? hoverOpacity : '.5'};
+            opacity: ${({ hoverOpacity }) => (hoverOpacity ? hoverOpacity : '.5')};
             visibility: visible;
         }
     }
 
-    :focus, :active {
+    :focus,
+    :active {
         outline: none;
     }
 
@@ -500,9 +494,9 @@ export const GlobalButton = styled.button`
     }
 
     @media (min-width: 1200px) {
-        padding: ${({ padding }) => padding ? padding : '.5rem .8rem'};
+        padding: ${({ padding }) => (padding ? padding : '.5rem .8rem')};
     }
-`
+`;
 
 export const SomethingComingUp = styled.div`
     height: 100%;
@@ -518,47 +512,47 @@ export const SomethingComingUp = styled.div`
     @keyframes RocketFly {
         0% {
             visibility: visible;
-            opacity: 1
+            opacity: 1;
         }
         10% {
             visibility: hidden;
-            opacity: 0
+            opacity: 0;
         }
         20% {
             visibility: visible;
-            opacity: 1
+            opacity: 1;
         }
         30% {
             visibility: hidden;
-            opacity: 0
+            opacity: 0;
         }
         40% {
             visibility: visible;
-            opacity: 1
+            opacity: 1;
         }
         50% {
             visibility: hidden;
-            opacity: 0
+            opacity: 0;
         }
         60% {
             visibility: visible;
-            opacity: 1
+            opacity: 1;
         }
         70% {
             visibility: hidden;
-            opacity: 0
+            opacity: 0;
         }
         80% {
             visibility: visible;
-            opacity: 1
+            opacity: 1;
         }
         90% {
             visibility: hidden;
-            opacity: 0
+            opacity: 0;
         }
         100% {
             visibility: visible;
-            opacity: 1
+            opacity: 1;
         }
     }
 
@@ -607,7 +601,7 @@ export const SomethingComingUp = styled.div`
         position: relative;
         visibility: visible;
         opacity: 1;
-        transition: all .2s ease-in-out;
+        transition: all 0.2s ease-in-out;
         margin-left: 3px;
         //margin-top: 10px;
 
@@ -624,7 +618,7 @@ export const SomethingComingUp = styled.div`
             position: absolute;
             z-index: 1;
             top: 0;
-            transition: all .2s ease;
+            transition: all 0.2s ease;
         }
     }
 
@@ -637,20 +631,20 @@ export const SomethingComingUp = styled.div`
         transform: translateY(-50%);
         font-size: 9px;
         white-space: nowrap;
-        color: ${({ theme, onlyDark }) => onlyDark ? theme.colors.white : theme.textPrimary};
+        color: ${({ theme, onlyDark }) => (onlyDark ? theme.colors.white : theme.textPrimary)};
         animation: blinker 1.4s linear infinite;
     }
-`
+`;
 
-const slideDown = 'translateY(-100%)'
-const slideDownActive = 'translateY(0)'
-const slideLeft = 'translateX(-100%)'
-const slideLeftActive = 'translateX(0)'
-const slideUp = 'translateY(100%)'
-const slideUpActive = 'translateY(0)'
+const slideDown = 'translateY(-100%)';
+const slideDownActive = 'translateY(0)';
+const slideLeft = 'translateX(-100%)';
+const slideLeftActive = 'translateX(0)';
+const slideUp = 'translateY(100%)';
+const slideUpActive = 'translateY(0)';
 
 export const MobileSideNav = styled.div`
-    background: ${({ theme, withoutDark }) => withoutDark ? theme.colors.white : theme.background};
+    background: ${({ theme, withoutDark }) => (withoutDark ? theme.colors.white : theme.background)};
     min-height: 20px;
     padding: 16px 0 0 0;
     display: flex;
@@ -664,8 +658,8 @@ export const MobileSideNav = styled.div`
 
     .nav-item {
         margin-right: 25px;
-        color: ${({ theme, withoutDark }) => withoutDark ? theme.colors.dark3 : theme.textSecondary};
-        opacity: .6;
+        color: ${({ theme, withoutDark }) => (withoutDark ? theme.colors.dark3 : theme.textSecondary)};
+        opacity: 0.6;
         font-weight: 600;
         font-size: 16px;
         white-space: nowrap;
@@ -680,7 +674,7 @@ export const MobileSideNav = styled.div`
             left: 0;
             height: 3px;
             width: 100%;
-            background: ${({ theme, tab }) => tab ? theme.colors.green : theme.colors.mint};
+            background: ${({ theme, tab }) => (tab ? theme.colors.green : theme.colors.mint)};
             border-radius: 3px;
             display: none;
         }
@@ -688,28 +682,28 @@ export const MobileSideNav = styled.div`
 
     .active {
         opacity: 1;
-        color: ${({ theme, withoutDark }) => withoutDark ? theme.colors.dark6 : theme.textPrimary};
+        color: ${({ theme, withoutDark }) => (withoutDark ? theme.colors.dark6 : theme.textPrimary)};
 
         :after {
-            display: block
+            display: block;
         }
     }
-`
+`;
 
 export const SideNav = styled.div`
     width: 100%;
     min-height: 768px;
     height: 100%;
     //box-shadow: rgba(0, 0, 0, 0.08) 0 2px 4px, rgba(0, 0, 0, 0.08) 0 0 4px;
-    background: ${({ theme, background }) => background ? background : theme.background};
-    border-radius: ${({ borderRadius }) => borderRadius ? borderRadius + 'px' : 'unset'};
+    background: ${({ theme, background }) => (background ? background : theme.background)};
+    border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius + 'px' : 'unset')};
     overflow: hidden;
-    border-right: 1px solid ${({ borderRight }) => borderRight ? borderRight : 'unset'};
-    border-bottom: 1px solid ${({ borderBottom }) => borderBottom ? borderBottom : 'unset'};
+    border-right: 1px solid ${({ borderRight }) => (borderRight ? borderRight : 'unset')};
+    border-bottom: 1px solid ${({ borderBottom }) => (borderBottom ? borderBottom : 'unset')};
 
     .active {
-        color: ${({ theme, textActive }) => textActive ? textActive : theme.textAbsolute} !important;
-        background: ${({ bgActive, theme }) => bgActive ? bgActive : theme.colors.mint_opacity} !important;
+        color: ${({ theme, textActive }) => (textActive ? textActive : theme.textAbsolute)} !important;
+        background: ${({ bgActive, theme }) => (bgActive ? bgActive : theme.colors.mint_opacity)} !important;
         //font-weight: bold !important;
 
         :after {
@@ -729,8 +723,8 @@ export const SideNav = styled.div`
         height: 52px;
         display: flex;
         align-items: center;
-        transition: background .2s ease;
-        color: ${({ theme, textDeactive }) => textDeactive ? textDeactive : theme.textSecondary};
+        transition: background 0.2s ease;
+        color: ${({ theme, textDeactive }) => (textDeactive ? textDeactive : theme.textSecondary)};
         cursor: pointer;
         font-size: 15px;
         font-weight: 600;
@@ -750,7 +744,7 @@ export const SideNav = styled.div`
         }
 
         span:last-child {
-            opacity: .88;
+            opacity: 0.88;
         }
 
         :after {
@@ -766,14 +760,14 @@ export const SideNav = styled.div`
         }
 
         :hover {
-            background: ${({ theme, bgHover }) => bgHover ? bgHover : theme.colors.mint_opacity};
+            background: ${({ theme, bgHover }) => (bgHover ? bgHover : theme.colors.mint_opacity)};
 
             span:last-child {
                 opacity: 1;
             }
         }
     }
-`
+`;
 
 export const SubNav = styled.div`
     display: flex;
@@ -817,11 +811,11 @@ export const SubNav = styled.div`
             }
         }
     }
-`
+`;
 
 export const DashboardHeader = styled.div`
     width: 100%;
-    background: ${({ bg, theme }) => bg ? bg : theme.background};
+    background: ${({ bg, theme }) => (bg ? bg : theme.background)};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -845,12 +839,12 @@ export const DashboardHeader = styled.div`
     div.dashboard-title {
         font-size: 28px;
         font-weight: 600;
-        color: ${({ color, theme }) => color ? color : theme.textPrimary};
+        color: ${({ color, theme }) => (color ? color : theme.textPrimary)};
         width: 100%;
 
         span {
             //display: block;
-            color: ${({ theme, subTextColor }) => subTextColor ? subTextColor : theme.textPrimary};
+            color: ${({ theme, subTextColor }) => (subTextColor ? subTextColor : theme.textPrimary)};
             font-size: 14px;
             margin-top: 8px;
             padding-left: 0;
@@ -875,7 +869,7 @@ export const DashboardHeader = styled.div`
     div.dashboard-function {
         display: flex;
         align-items: center;
-        flex-wrap: ${({ isSpot }) => isSpot ? 'wrap' : 'nowrap'};
+        flex-wrap: ${({ isSpot }) => (isSpot ? 'wrap' : 'nowrap')};
         width: 100%;
 
         @media (min-width: 768px) {
@@ -896,7 +890,7 @@ export const DashboardHeader = styled.div`
             min-width: fit-content;
             margin: 10px 0;
             background: ${({ theme }) => theme.colors.mint};
-            padding: .45rem .8rem;
+            padding: 0.45rem 0.8rem;
             border: none;
             outline: none;
             border-radius: 4px;
@@ -904,7 +898,7 @@ export const DashboardHeader = styled.div`
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #FFF;
+            color: #fff;
             white-space: nowrap;
 
             i {
@@ -923,7 +917,7 @@ export const DashboardHeader = styled.div`
             }
 
             @media (min-width: 1200px) {
-                padding: .5rem .8rem;
+                padding: 0.5rem 0.8rem;
             }
         }
 
@@ -960,8 +954,7 @@ export const DashboardHeader = styled.div`
             }
         }
     }
-`
-
+`;
 
 export const TinyModal = styled.div`
     position: absolute;
@@ -979,13 +972,13 @@ export const TinyModal = styled.div`
 
     .tinymodal-title {
         font-weight: bold;
-        font-size: ${({ titleSize }) => titleSize ? titleSize + 'px' : '16px'};
-        text-align: ${({ align }) => align ? align : 'left'};
+        font-size: ${({ titleSize }) => (titleSize ? titleSize + 'px' : '16px')};
+        text-align: ${({ align }) => (align ? align : 'left')};
     }
 
     .tinymodal-content {
         margin: 1rem 0;
-        text-align: ${({ align }) => align ? align : 'left'};
+        text-align: ${({ align }) => (align ? align : 'left')};
         width: 100%;
     }
 
@@ -995,7 +988,7 @@ export const TinyModal = styled.div`
         background: ${({ theme }) => theme.colors.mint};
         color: ${({ theme }) => theme.textHover};
         font-size: 14px;
-        transition: background .2s ease;
+        transition: background 0.2s ease;
         width: 220px;
         max-width: 80%;
         margin: auto;
@@ -1007,7 +1000,7 @@ export const TinyModal = styled.div`
             background: ${({ theme }) => theme.colors.mint4};
         }
     }
-`
+`;
 
 export const GlobalMobileModalType1 = styled(Div100vh)`
     position: absolute;
@@ -1016,17 +1009,29 @@ export const GlobalMobileModalType1 = styled(Div100vh)`
     height: 100%;
     top: 0;
     left: 0;
-    transition: all ${({ duration }) => duration ? duration + 's' : '.2s'} ease-in-out;
-    opacity: ${({ active, effect }) => effect === 'fade' ? (active ? 1 : 0) : 1};
-    visibility: ${({ active, effect }) => effect === 'fade' ? (active ? 'visible' : 'hidden') : 'visible'};
+    transition: all ${({ duration }) => (duration ? duration + 's' : '.2s')} ease-in-out;
+    opacity: ${({ active, effect }) => (effect === 'fade' ? (active ? 1 : 0) : 1)};
+    visibility: ${({ active, effect }) => (effect === 'fade' ? (active ? 'visible' : 'hidden') : 'visible')};
     transform: ${({ active, effect, wide }) =>
-        effect === 'slideDown' ? (active ? slideDownActive : slideDown)
-            : effect === 'slideLeft' ? (active ? slideLeftActive : slideLeft)
-            : effect === 'slideUp' ? (active ? slideUpActive : slideUp) : wide ? 'translate(-50%, -50%)' : 'unset'};
-    background: ${({ withoutDark, theme }) => withoutDark ? theme.colors.white : theme.background};
+        effect === 'slideDown'
+            ? active
+                ? slideDownActive
+                : slideDown
+            : effect === 'slideLeft'
+            ? active
+                ? slideLeftActive
+                : slideLeft
+            : effect === 'slideUp'
+            ? active
+                ? slideUpActive
+                : slideUp
+            : wide
+            ? 'translate(-50%, -50%)'
+            : 'unset'};
+    background: ${({ withoutDark, theme }) => (withoutDark ? theme.colors.white : theme.background)};
     padding: 12px;
-    color: ${({ theme, withoutDark }) => withoutDark ? theme.colors.dark5 : theme.textPrimary};
-`
+    color: ${({ theme, withoutDark }) => (withoutDark ? theme.colors.dark5 : theme.textPrimary)};
+`;
 
 export const LoadingWrapper = styled.div`
     width: 100%;
@@ -1034,148 +1039,148 @@ export const LoadingWrapper = styled.div`
     justify-content: center;
     align-items: center;
     min-height: 280px;
-`
+`;
 
 export const GlobalModalWide = styled(Div100vh)`
     //overlay
     position: absolute;
     z-index: 1999;
-    background: ${({ theme, withoutDark }) => withoutDark ? theme.colors.white_opacity : theme.background_opacity};
+    background: ${({ theme, withoutDark }) => (withoutDark ? theme.colors.white_opacity : theme.background_opacity)};
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    visibility: ${({ active }) => active ? 'visible' : 'hidden'};
-    opacity: ${({ active }) => active ? 1 : 0};
-    transition: all ${({ duration }) => duration ? duration + 'ms' : '200ms'} ease;
+    visibility: ${({ active }) => (active ? 'visible' : 'hidden')};
+    opacity: ${({ active }) => (active ? 1 : 0)};
+    transition: all ${({ duration }) => (duration ? duration + 'ms' : '200ms')} ease;
     user-select: none;
-    color: ${({ theme, withoutDark }) => withoutDark ? theme.colors.dark5 : theme.textPrimary};
-`
+    color: ${({ theme, withoutDark }) => (withoutDark ? theme.colors.dark5 : theme.textPrimary)};
+`;
 
 export const ChevronDownClip = styled.div`
-    width: ${({ s }) => s ? s.w + 'px' : '10px'};
-    height: ${({ s }) => s ? s.h + 'px' : '6px'};
-    clip-path: polygon(50% 100%, 0 0, 100% 0);
+    width: ${({ s }) => (s ? s.w + 'px' : '10px')};
+    height: ${({ s }) => (s ? s.h + 'px' : '6px')};
+    clippath: polygon(50% 100%, 0 0, 100% 0);
     background: ${({ theme }) => theme.textSecondary};
-`
+`;
 
 export const PageMain = styled(Div100vh)`
     overflow: hidden;
     -webkit-overflow-scrolling: touch;
-`
+`;
 
 export const GlobalRoot = styled.div.attrs({ id: 'global-root' })`
     color: ${({ theme }) => theme.textPrimary};
     height: 100%;
-    background: ${({ theme, withoutDark }) => withoutDark ? theme.colors.grey0 : theme.body};
+    background: ${({ theme, withoutDark }) => (withoutDark ? theme.colors.grey0 : theme.body)};
     overflow: ${isMobile ? 'unset' : 'hidden auto'};
     font-family: Source Sans Pro, serif !important;
-`
+`;
 
 export const GlobalTitle = styled.div`
-    text-align: ${({ tA }) => tA ? tA : 'left'};
-    font-weight: ${({ fontWeight }) => fontWeight ? fontWeight : '600'};
-    font-size: ${({ fontSize }) => fontSize ? fontSize : '18px'};
-    margin: ${({ margin }) => margin ? margin : 'unset'};
-    margin-top: ${({ marginTop }) => marginTop ? marginTop + ' !important' : 'unset'};
-    margin-left: ${({ marginLeft }) => marginLeft ? marginLeft + ' !important' : 'unset'};
-    margin-right: ${({ marginRight }) => marginRight ? marginRight + ' !important' : 'unset'};
-    margin-bottom: ${({ marginBottom }) => marginBottom ? marginBottom + ' !important' : 'unset'};
-    color: ${({ colorType, theme }) => colorType === 1 ? theme.textPrimary : theme.textSecondary};
-`
+    text-align: ${({ tA }) => (tA ? tA : 'left')};
+    font-weight: ${({ fontWeight }) => (fontWeight ? fontWeight : '600')};
+    font-size: ${({ fontSize }) => (fontSize ? fontSize : '18px')};
+    margin: ${({ margin }) => (margin ? margin : 'unset')};
+    margin-top: ${({ marginTop }) => (marginTop ? marginTop + ' !important' : 'unset')};
+    margin-left: ${({ marginLeft }) => (marginLeft ? marginLeft + ' !important' : 'unset')};
+    margin-right: ${({ marginRight }) => (marginRight ? marginRight + ' !important' : 'unset')};
+    margin-bottom: ${({ marginBottom }) => (marginBottom ? marginBottom + ' !important' : 'unset')};
+    color: ${({ colorType, theme }) => (colorType === 1 ? theme.textPrimary : theme.textSecondary)};
+`;
 
 export const MediumBold = styled.span`
     font-weight: 600;
-`
+`;
 
 export const TextWeight = styled.span`
-    font-weight: ${({ weight }) => weight ? weight : 600};
-    color: ${({ c }) => c ? c : 'initial'};
-`
+    font-weight: ${({ weight }) => (weight ? weight : 600)};
+    color: ${({ c }) => (c ? c : 'initial')};
+`;
 
-export const navHeight = '65px'
+export const navHeight = '65px';
 
-export const pocketNavHeight = '58px'
+export const pocketNavHeight = '58px';
 
-export const pocketNavBottom = '55px'
+export const pocketNavBottom = '55px';
 
-export const mobileNavHeight = '55px'
+export const mobileNavHeight = '55px';
 
 export const FullScreenWrapper = styled(Container)`
     background: ${({ theme }) => theme.background};
-        //height: calc(100% - ${navHeight});
+    //height: calc(100% - ${navHeight});
     padding-top: 1rem;
     margin-top: 1.2px;
-    min-height: ${({ minHeight }) => minHeight ? minHeight + 'px' : '768px'};
-`
+    min-height: ${({ minHeight }) => (minHeight ? minHeight + 'px' : '768px')};
+`;
 
 export const MobileContentWrapper = styled.div`
-    height: ${({ isApp, isMixTableMode }) => isMixTableMode ? `calc(100% - ${navHeight})`
-        : isApp ? '100%' : `calc(100% - ${pocketNavHeight} - ${mobileNavHeight})`};
-    background: ${({ background, theme }) => background ? background : theme.background};
+    height: ${({ isApp, isMixTableMode }) =>
+        isMixTableMode ? `calc(100% - ${navHeight})` : isApp ? '100%' : `calc(100% - ${pocketNavHeight} - ${mobileNavHeight})`};
+    background: ${({ background, theme }) => (background ? background : theme.background)};
     overflow: hidden auto;
 
     ::-webkit-scrollbar {
         width: 3px !important;
         height: 3px !important;
     }
-`
+`;
 
-export const TopNewsHeight = '35px'
+export const TopNewsHeight = '35px';
 
-export const FutureCoinHeight = '56px'
+export const FutureCoinHeight = '56px';
 
-export const ExchangeCoinHeight = '66px'
+export const ExchangeCoinHeight = '66px';
 
 export const ModeSwitcher = styled.div`
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    color: ${props => props.theme.textPrimary};
+    color: ${(props) => props.theme.textPrimary};
     cursor: pointer;
-`
+`;
 
 export const SymbolTab = styled.div`
     flex-flow: row nowrap;
 
     button {
-        background: ${props => props.theme.background};
-        border: 1.8px solid ${props => props.theme.stuff.border};
-        border-radius: ${props => props.theme.stuff.radius} !important;
-        font-size: ${props => props.theme.fontSize.font12};
+        background: ${(props) => props.theme.background};
+        border: 1.8px solid ${(props) => props.theme.stuff.border};
+        border-radius: ${(props) => props.theme.stuff.radius} !important;
+        font-size: ${(props) => props.theme.fontSize.font12};
         outline: none;
-        margin: 0 ${props => props.theme.stuff.spacing - 7}px;
-        color: ${props => props.theme.textPrimary};
+        margin: 0 ${(props) => props.theme.stuff.spacing - 7}px;
+        color: ${(props) => props.theme.textPrimary};
     }
 
     button.selected {
-        border: 1px solid ${props => props.theme.colors.mint};
-        color: ${props => props.theme.colors.mint};
+        border: 1px solid ${(props) => props.theme.colors.mint};
+        color: ${(props) => props.theme.colors.mint};
 
         // i.fa-star {
-            //   color: ${props => props.theme.colors.mint};
+        //   color: ${(props) => props.theme.colors.mint};
         // }
     }
 
     input {
         z-index: 1;
-        border-radius: ${props => props.theme.stuff.radius} !important;
-        border: 1.8px solid ${props => props.theme.stuff.border};
-        padding-left: ${props => props.theme.stuff.spacing - 5}px;
-        padding-right: ${props => props.theme.stuff.spacing + 8}px;
+        border-radius: ${(props) => props.theme.stuff.radius} !important;
+        border: 1.8px solid ${(props) => props.theme.stuff.border};
+        padding-left: ${(props) => props.theme.stuff.spacing - 5}px;
+        padding-right: ${(props) => props.theme.stuff.spacing + 8}px;
         background: transparent;
-        color: ${props => props.theme.textPrimary};
-        font-size: ${props => props.theme.fontSize.font12};
+        color: ${(props) => props.theme.textPrimary};
+        font-size: ${(props) => props.theme.fontSize.font12};
         user-select: all;
     }
 
     input:focus {
-        border-color: ${props => props.theme.colors.mint} !important;
+        border-color: ${(props) => props.theme.colors.mint} !important;
         box-shadow: none;
         z-index: 2;
         background: transparent;
-        color: ${props => props.theme.textPrimary};
+        color: ${(props) => props.theme.textPrimary};
     }
 
     .input-group-prepend {
@@ -1187,41 +1192,40 @@ export const SymbolTab = styled.div`
     }
 
     i {
-        font-size: ${props => props.theme.fontSize.font10 + 1}px;
+        font-size: ${(props) => props.theme.fontSize.font10 + 1}px;
     }
 
     i.fa-search {
-        color: ${props => props.theme.textSecondary};
+        color: ${(props) => props.theme.textSecondary};
     }
-
-`
+`;
 
 export const SymbolListDropdown = styled.div`
     position: absolute;
     width: 300px;
     z-index: 2;
-    top: ${props => props.isExchange ? '95%' : '52%'};
+    top: ${(props) => (props.isExchange ? '95%' : '52%')};
     left: 0;
     visibility: hidden;
     opacity: 0;
-`
+`;
 
 export const I = styled.i`
     font-size: 26px;
     margin-top: 1.5px;
-    color: ${props => props.theme.textSecondary};
-`
+    color: ${(props) => props.theme.textSecondary};
+`;
 
 export const CoinDetail = styled(Row)`
-    padding: ${props => props.theme.stuff.spacing}px ${props => props.theme.stuff.spacing + 10}px;
-    margin: 0 0 ${p => p.theme.stuff.spacing - 2.5}px 0;
-    background: ${p => p.theme.mode === 'light' ? p.theme.background : '#101621'};
-    border-radius: ${({ theme, exchangeV1 }) => exchangeV1 === 'true' ? 'none' : theme.stuff.radius};
-    border: 1px solid ${({ theme, exchangeV1 }) => exchangeV1 === 'true' ? (theme.mode === 'light' ? '#e6e6e6' : 'transparent') : 'none'} !important;
+    padding: ${(props) => props.theme.stuff.spacing}px ${(props) => props.theme.stuff.spacing + 10}px;
+    margin: 0 0 ${(p) => p.theme.stuff.spacing - 2.5}px 0;
+    background: ${(p) => (p.theme.mode === 'light' ? p.theme.background : '#101621')};
+    border-radius: ${({ theme, exchangeV1 }) => (exchangeV1 === 'true' ? 'none' : theme.stuff.radius)};
+    border: 1px solid ${({ theme, exchangeV1 }) => (exchangeV1 === 'true' ? (theme.mode === 'light' ? '#e6e6e6' : 'transparent') : 'none')} !important;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    height: ${props => props.mode === 'exchange' ? ExchangeCoinHeight : FutureCoinHeight};
+    height: ${(props) => (props.mode === 'exchange' ? ExchangeCoinHeight : FutureCoinHeight)};
     position: relative;
 
     #vertical-center-symbol {
@@ -1242,22 +1246,22 @@ export const CoinDetail = styled(Row)`
         margin-right: 0 !important;
     }
 
-    @media (min-width: ${props => props.theme.breakPoint.xl}) {
-        padding: ${props => props.theme.stuff.spacing}px ${props => props.theme.stuff.spacing + 18}px;
+    @media (min-width: ${(props) => props.theme.breakPoint.xl}) {
+        padding: ${(props) => props.theme.stuff.spacing}px ${(props) => props.theme.stuff.spacing + 18}px;
     }
-`
+`;
 
 export const CoinItem = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: center;
-    color: ${props => props.theme.textPrimary};
-    margin-right: ${props => props.theme.stuff.spacing}px;
-    font-size: ${props => props.theme.fontSize.font16};
+    color: ${(props) => props.theme.textPrimary};
+    margin-right: ${(props) => props.theme.stuff.spacing}px;
+    font-size: ${(props) => props.theme.fontSize.font16};
 
     div.last-price {
         min-width: 90px;
-        font-size: ${props => props.theme.fontSize.font18};
+        font-size: ${(props) => props.theme.fontSize.font18};
         font-weight: 600;
         text-align: left;
 
@@ -1269,14 +1273,13 @@ export const CoinItem = styled.div`
     }
 
     div.exchange-symbol {
-
         div.exchange-symbol-text {
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
 
             i {
-                font-size: ${props => props.theme.fontSize.font10 + 16}px;
+                font-size: ${(props) => props.theme.fontSize.font10 + 16}px;
             }
         }
 
@@ -1286,8 +1289,8 @@ export const CoinItem = styled.div`
             align-items: center;
 
             span.coin-alias {
-                margin-left: ${props => props.theme.stuff.spacing}px;
-                font-size: ${props => props.theme.fontSize.font10 + 3}px;
+                margin-left: ${(props) => props.theme.stuff.spacing}px;
+                font-size: ${(props) => props.theme.fontSize.font10 + 3}px;
                 height: 20px;
                 padding-top: 2px;
             }
@@ -1306,28 +1309,28 @@ export const CoinItem = styled.div`
     }
 
     div.couple-symbol {
-        color: ${props => props.theme.textAbsolute};
+        color: ${(props) => props.theme.textAbsolute};
         display: flex;
         align-items: center;
         justify-content: space-around;
-        font-size: ${props => props.theme.fontSize.font20};
+        font-size: ${(props) => props.theme.fontSize.font20};
         font-weight: 600;
         cursor: pointer;
         user-select: none !important;
 
         i {
-            font-size: ${props => props.theme.fontSize.font10 + 16}px;
-            margin: 0 ${props => props.theme.stuff.spacing}px;
+            font-size: ${(props) => props.theme.fontSize.font10 + 16}px;
+            margin: 0 ${(props) => props.theme.stuff.spacing}px;
         }
     }
 
     span.symbol_leverage {
-        font-size: ${props => props.theme.fontSize.font12} !important;
-        transition: all .25s ease;
+        font-size: ${(props) => props.theme.fontSize.font12} !important;
+        transition: all 0.25s ease;
 
         :hover {
-            color: ${props => props.theme.textHover};
-            background: ${props => props.theme.colors.mint};
+            color: ${(props) => props.theme.textHover};
+            background: ${(props) => props.theme.colors.mint};
         }
     }
 
@@ -1342,28 +1345,27 @@ export const CoinItem = styled.div`
         flex-direction: column;
         width: 100%;
         min-width: 100px;
-        font-size: ${props => props.theme.fontSize.font10 + 3}px;
+        font-size: ${(props) => props.theme.fontSize.font10 + 3}px;
 
         .rows-title {
             width: 100%;
-            color: ${props => props.theme.textSecondary};
-            font-size: ${props => props.theme.fontSize.font12};
+            color: ${(props) => props.theme.textSecondary};
+            font-size: ${(props) => props.theme.fontSize.font12};
         }
 
         .rows-paragraph {
             font-size: 13px;
-            color: ${props => props.theme.textAbsolute};
+            color: ${(props) => props.theme.textAbsolute};
             width: 100%;
             font-weight: 500;
             font-family: Barlow, sans-serif;
         }
     }
 
-    @media (min-width: ${props => props.theme.breakPoint.lg}) {
-        margin-right: ${props => props.theme.stuff.spacing + 8}px;
+    @media (min-width: ${(props) => props.theme.breakPoint.lg}) {
+        margin-right: ${(props) => props.theme.stuff.spacing + 8}px;
     }
-
-`
+`;
 
 export const NeedLogin = styled(Container)`
     height: calc(100vh - ${navHeight});
@@ -1371,7 +1373,7 @@ export const NeedLogin = styled(Container)`
     justify-content: center;
     align-items: center;
     position: relative;
-    color: ${props => props.theme.textPrimary};
+    color: ${(props) => props.theme.textPrimary};
 
     section {
         position: absolute;
@@ -1383,17 +1385,18 @@ export const NeedLogin = styled(Container)`
         transform: translate(-50%, -50%);
     }
 
-    a.button:hover, button.button:hover {
-        background: ${props => props.theme.background};
+    a.button:hover,
+    button.button:hover {
+        background: ${(props) => props.theme.background};
     }
-`
+`;
 
 export const TransactionHistory = styled(Col)`
     //padding: 0;
-    background: ${props => props.theme.background};
-    border-radius: ${props => props.theme.stuff.radius};
-    margin-top: ${props => props.theme.stuff.spacing - 2.5}px;
-    color: ${props => props.theme.textPrimary} !important;
+    background: ${(props) => props.theme.background};
+    border-radius: ${(props) => props.theme.stuff.radius};
+    margin-top: ${(props) => props.theme.stuff.spacing - 2.5}px;
+    color: ${(props) => props.theme.textPrimary} !important;
     padding-right: 0 !important;
     padding-left: 0 !important;
     overflow: hidden;
@@ -1405,30 +1408,30 @@ export const TransactionHistory = styled(Col)`
         background-clip: unset !important;
 
         :hover {
-            background: ${props => props.theme.background};
+            background: ${(props) => props.theme.background};
         }
     }
 
     .block_body {
-            //padding: ${props => props.theme.stuff.spacing}px;
+        //padding: ${(props) => props.theme.stuff.spacing}px;
         padding: 0;
     }
 
     .block_header {
         box-shadow: none;
         border-bottom: none;
-        padding: ${props => props.theme.stuff.spacing + 5}px 0 0 ${props => props.theme.stuff.spacing + 15}px;
+        padding: ${(props) => props.theme.stuff.spacing + 5}px 0 0 ${(props) => props.theme.stuff.spacing + 15}px;
     }
 
     .block_header h3.block_title {
-        color: ${props => props.theme.textPrimary};
-        margin: ${props => props.theme.stuff.spacing - 4}px 0 ${props => props.theme.stuff.spacing}px 0;
+        color: ${(props) => props.theme.textPrimary};
+        margin: ${(props) => props.theme.stuff.spacing - 4}px 0 ${(props) => props.theme.stuff.spacing}px 0;
     }
 
     .tab_lst {
         //text-align: center;
-        background-color: ${props => props.theme.body} !important;
-        padding-left: ${props => props.theme.stuff.spacing}px;
+        background-color: ${(props) => props.theme.body} !important;
+        padding-left: ${(props) => props.theme.stuff.spacing}px;
         padding-right: 0 !important;
         padding-top: 0 !important;
         padding-bottom: 0 !important;
@@ -1438,9 +1441,9 @@ export const TransactionHistory = styled(Col)`
     }
 
     .tab_lst_item {
-        padding: ${props => props.theme.stuff.spacing}px ${props => props.theme.stuff.spacing + 5}px;
-        color: ${props => props.theme.textPrimary};
-        background-color: ${props => props.theme.body} !important;
+        padding: ${(props) => props.theme.stuff.spacing}px ${(props) => props.theme.stuff.spacing + 5}px;
+        color: ${(props) => props.theme.textPrimary};
+        background-color: ${(props) => props.theme.body} !important;
         cursor: pointer;
     }
 
@@ -1458,27 +1461,26 @@ export const TransactionHistory = styled(Col)`
     }
 
     .tab_lst_item.react-tabs__tab--selected {
-        background-color: ${props => props.theme.background} !important;
-        color: ${props => props.theme.colors.mint};
+        background-color: ${(props) => props.theme.background} !important;
+        color: ${(props) => props.theme.colors.mint};
         font-weight: 600;
         border-top-left-radius: 5px !important;
         border-top-right-radius: 5px !important;
         border: none !important;
-        margin: 0 !important
+        margin: 0 !important;
     }
 
     // @media(min-height: 768px) and (min-width: 1600px){
-        //   //height: calc(40% - ${7.5 + 'px'});
+    //   //height: calc(40% - ${7.5 + 'px'});
     // }
 
-    @media (min-height: ${props => props.theme.breakPoint.lg}) and (min-width: ${props => props.theme.breakPoint.xl}) {
-            //height: calc(30% - ${7.5 + 'px'});
+    @media (min-height: ${(props) => props.theme.breakPoint.lg}) and (min-width: ${(props) => props.theme.breakPoint.xl}) {
+        //height: calc(30% - ${7.5 + 'px'});
         height: calc(30% - 7.5px);
     }
-`
+`;
 
 export const MaintainMessage = styled.div`
-
     svg {
         color: ${({ theme }) => theme.colors.reminder};
         width: 38px;
@@ -1495,7 +1497,6 @@ export const MaintainMessage = styled.div`
         text-align: center;
 
         span {
-
             span {
                 font-weight: 600;
             }
@@ -1523,6 +1524,5 @@ export const MaintainMessage = styled.div`
                 }
             }
         }
-
     }
-`
+`;

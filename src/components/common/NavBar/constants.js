@@ -1,6 +1,4 @@
-import { getV1Url } from 'redux/actions/utils';
 import { PATHS } from 'constants/paths';
-import { KYC_STATUS } from 'redux/actions/const';
 
 export const DESKTOP_NAV_HEIGHT = 80;
 
@@ -63,6 +61,14 @@ export const NAV_DATA = [
                 localized: 'staking',
                 isNew: false,
                 url: '/staking',
+                child_lv1: []
+            },
+            {
+                key: 6,
+                title: 'NFT',
+                localized: 'nft',
+                isNew: false,
+                url: '/nft',
                 child_lv1: []
             },
             // {
@@ -341,6 +347,14 @@ export const MOBILE_NAV_DATA = [
                 isNew: false,
                 url: PATHS.WALLET.FUTURES,
                 child_lv2: []
+            },
+            {
+                key: 'nft_wallet',
+                title: 'NFT Wallet',
+                localized: 'nft_wallet',
+                isNew: false,
+                url: PATHS.WALLET.NFT,
+                child_lv2: []
             }
         ]
     },
@@ -399,6 +413,14 @@ export const MOBILE_NAV_DATA = [
                 localized: 'staking',
                 isNew: false,
                 url: '/staking',
+                child_lv1: []
+            },
+            {
+                key: 'nft',
+                title: 'nft',
+                localized: 'nft',
+                isNew: false,
+                url: '/nft',
                 child_lv1: []
             }
             // {

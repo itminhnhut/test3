@@ -7,8 +7,11 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from '../../styles/colors';
 import { TRADING_MODE } from 'redux/actions/const';
 import { favoriteAction } from 'redux/actions/user';
+import { useRouter } from 'next/router';
 
 const SymbolListItem = (props) => {
+    const router = useRouter();
+    const layout = router.query?.layout;
     const { symbolString, publicSocket, exchangeConfig, originTicker, currentId, favorite, watchList, pairKey, isFavoriteTab = false, reFetchFavorite } = props;
     const [symbolTicker, setSymbolTicker] = useState(null);
     const [favoriteId, setFavoriteId] = useState('');
@@ -78,7 +81,7 @@ const SymbolListItem = (props) => {
                     <IconStarFilled size={14} color={currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5} />
                 )}
             </div>
-            <Link href={`/trade/${base}-${quote}`} prefetch={false} shallow>
+            <Link href={`/trade/${base}-${quote}${layout ? `?layout=${layout}` : ''}`} prefetch={false} shallow>
                 <div className="flex items-center w-full">
                     <div className="text-txtPrimary dark:text-txtPrimary-dark flex-1 text-xs leading-table flex items-center truncate min-w-0">
                         {base}/{quote}

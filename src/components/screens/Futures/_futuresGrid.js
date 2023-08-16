@@ -4,14 +4,9 @@ export const futuresGridKey = {
     favoritePair: 'favoritePair',
     pairDetail: 'pairDetail',
     chart: 'chart',
-    orderBook: 'orderBook',
-    recentTrades: 'recentTrades',
     tradeRecord: 'tradeRecord',
     placeOrder: 'placeOrder',
     marginRatio: 'marginRatio',
-    title: 'title',
-    orderDetail: 'orderDetail',
-    logs: 'logs'
 };
 
 export const futuresLayoutKey = {
@@ -54,7 +49,7 @@ const layoutDefault = {
         i: futuresGridKey.chart,
         x: 0,
         y: 6,
-        h: 23,
+        h: 24,
         moved: false,
         static: false,
         isDraggable: true,
@@ -73,7 +68,7 @@ const layoutDefault = {
     [futuresGridKey.placeOrder]: {
         i: futuresGridKey.placeOrder,
         y: 0,
-        h: 29,
+        h: 30,
         minH: 5,
         moved: false,
         static: false,

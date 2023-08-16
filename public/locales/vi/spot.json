@@ -21,6 +21,9 @@
     "assets_list": "Danh mục",
     "search": "Tìm kiếm",
     "orderbook": "Sổ lệnh",
+    "orderbook_tooltip": {
+        "avg_price": "Giá trung bình"
+    },
     "place_success_market": "Bạn vừa đặt lệnh {{side}} {{type}} {{token}} thành công. OrderID: #{{displayingId}}.",
     "place_success_limit": "Bạn vừa đặt lệnh {{side}} {{type}} {{token}} thành công. OrderID: #{{displayingId}}.",
     "balance": "Số dư",
@@ -48,5 +51,16 @@
         "order_confirmation_tooltip": "Xác nhận đặt lệnh với các yêu cầu mở vị thế mới",
         "display_price_line": "Hiển thị đường giá tất cả các vị thế",
         "display_price_line_tooltip": "Hiển thị đường giá của giá mở và giá SL-TP của tất cả các vị thế đang mở trên biểu đồ nến"
+    },
+    "asset_info": {
+        "title": "Thông tin",
+        "rank": "Thứ hạng",
+        "circulating_supply": "Tổng lưu hành",
+        "total_supply": "Tổng cung",
+        "max_supply": "Tổng cung tối đa",
+        "last_price": "Giá gần nhất",
+        "website": "Trang chủ",
+        "explorer": "Trình khám phá",
+        "social": "Mạng xã hội"
     }
 }

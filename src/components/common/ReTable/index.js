@@ -553,7 +553,7 @@ const ReTableWrapperV2 = styled.div`
     .rc-table-cell-fix-right-first,
     .rc-table-cell-fix-right-last {
         /* box-shadow: -1px 0 0 transparent !important; */
-        /* box-shadow: none !important; */
+        box-shadow: none !important;
     }
 
     table {

@@ -1,5 +1,5 @@
-import { getV1Url } from 'redux/actions/utils';
 import { TRADING_MODE } from 'redux/actions/const';
+import { getV1Url } from 'redux/actions/utils';
 
 const DEFAULT_BASE_ASSET = 'BTC';
 const DEFAULT_QUOTE_ASSET = 'USDT';
@@ -45,7 +45,8 @@ const WALLET = {
     FUTURES: '/wallet/futures',
     STAKING: '/wallet/staking',
     FARMING: '/wallet/farming',
-    TRANSTION_HISTORY: '/wallet/transaction-history'
+    TRANSTION_HISTORY: '/wallet/transaction-history',
+    NFT: '/wallet/NFT'
 };
 
 const FEE_STRUCTURES = {

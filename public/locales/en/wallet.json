@@ -210,5 +210,6 @@
         "description": "You need to trade at least {{volume}} {{asset}}  to withdraw the rewards from {{campaign}}.",
         "volume": "Current Volume: {{volume}} {{asset}}"
     },
-    "staking": "Staking Daily"
+    "staking": "Staking Daily",
+    "nft": "Infinity"
 }
