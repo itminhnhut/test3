@@ -338,8 +338,6 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         break;
                                 }
                                 if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW || detailTx.type === TRANSACTION_TYPES.OFF_CHAIN) {
-
-
                                     // Nạp Rút on_chain:
                                     // not showing "To" on type deposit (nạp)
                                     // not showing "From" on type withdraw (rút)
@@ -354,7 +352,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         return null;
                                     }
 
-                                     //Nạp Rút off_chain:
+                                    //Nạp Rút off_chain:
                                     // category 51 (Gửi tiền) bỏ field from
                                     if (detailTx.result.category === 51 && col.localized === 'modal_detail.from') {
                                         return null;
@@ -366,6 +364,9 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             {t(`transaction-history:${col.localized}`)}
                                         </div>
                                         <div
+                                            style={{
+                                                wordBreak: 'break-word'
+                                            }}
                                             className={classNames('ml-2 text-right font-semibold text-txtPrimary  dark:text-txtPrimary-dark', {
                                                 '!text-dominant': col.primaryTeal
                                             })}
