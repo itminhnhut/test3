@@ -11,12 +11,12 @@ const LIST_CATEGORY = [
 
 const LIST_TIER = [
     {
-        name: { vi: 'Bình thường (C)', en: 'Common (C)' },
+        name: { vi: 'Phổ biến (C)', en: 'Common (C)' },
         active: 'C',
         key: 'normal'
     },
     {
-        name: { vi: 'Đặc biệt (S)', en: 'Special (S)' },
+        name: { vi: 'Độc đáo (S)', en: 'Special (S)' },
         active: 'S',
         key: 'rate'
     },
