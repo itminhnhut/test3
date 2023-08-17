@@ -12,7 +12,7 @@
         "transfer": "Transfer",
         "staking": "Staking Daily",
         "commission": "Commissions",
-        "off_chain":"Desposit/Receive"
+        "off_chain": "Desposit/Receive"
     },
     "filter": {
         "all": "All",
@@ -59,6 +59,7 @@
         "position_id": "Position ID",
         "wallet_type": "Wallet Type",
         "volume": "Volume",
-        "fee": "Fee"
+        "fee": "Fee",
+        "note": "Note"
     }
 }

@@ -12,7 +12,7 @@
         "transfer": "Chuyển ví",
         "staking": "Nhận lãi hàng ngày",
         "commission": "Hoa hồng",
-        "off_chain":"Gửi/Nhận"
+        "off_chain": "Gửi/Nhận"
     },
     "filter": {
         "all": "Tất cả",
@@ -50,7 +50,7 @@
         "time": "Thời gian",
         "network": "Mạng lưới",
         "rate": "Tỷ giá",
-        "order_id":"ID lệnh",
+        "order_id": "ID lệnh",
         "txhash": "TxHash",
         "pair": "Cặp giao dịch",
         "open_price": "Giá mở",
@@ -59,6 +59,7 @@
         "position_id": "ID vị thế",
         "wallet_type": "Loại ví",
         "volume": "Khối lượng giao dịch",
-        "fee": "Phí giao dịch"
+        "fee": "Phí giao dịch",
+        "note": "Ghi chú"
     }
 }

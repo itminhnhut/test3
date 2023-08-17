@@ -20,6 +20,11 @@ import { X } from 'react-feather';
 
 export const MAX_NOTE_LENGTH = 70;
 
+const DEPOSIT_AMOUNT = {
+    MIN: 100e3,
+    MAX: 50e6
+};
+
 const DepositInputCard = () => {
     const {
         t,
@@ -100,7 +105,7 @@ const DepositInputCard = () => {
         setAmount(assetBalance);
     };
 
-    const isDepositAble = +amount > 0 && +amount <= assetBalance && Boolean(currentAsset);
+    const isDepositAble = +amount >= DEPOSIT_AMOUNT.MIN && +amount <= DEPOSIT_AMOUNT.MAX && +amount <= assetBalance && +amount && Boolean(currentAsset);
 
     return (
         <>
