@@ -7,7 +7,8 @@ export const INITAL_FILTER = {
         key: 'selection'
     },
     category: null,
-    asset: null
+    asset: null,
+    curSort: {}
 };
 
 export const TRANSACTION_TYPES = {
