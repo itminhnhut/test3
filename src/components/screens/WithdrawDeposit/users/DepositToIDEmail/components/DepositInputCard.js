@@ -35,17 +35,25 @@ const DepositInputCard = () => {
     const mapAssetConfig = useMemo(() => keyBy(assetConfigs, 'id'), [assetConfigs]);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
 
+    // CHECK IF ASSET IS ALLOW TO DEPOSIT
     useEffect(() => {
-        const listenerHandler = (data) => {};
-        const event = `spot:mini_ticker:update:BTCUSDT`;
-        if (publicSocket && assetCode) {
-            publicSocket.on(event, listenerHandler);
+        const isAssetAllowed = paymentConfigs
+            .filter((asset) => asset?.networkList || asset?.networkList?.length)
+            .find((asset) => asset?.assetCode === assetCode);
+        if (!Boolean(isAssetAllowed)) {
+            router.query.assetId = paymentConfigs[0]?.assetCode || 'USDT';
+            router.push(router);
         }
-        return function cleanup() {
-            if (publicSocket) {
-                publicSocket.removeListener(event, listenerHandler);
-            }
-        };
+    }, [assetCode, paymentConfigs, router]);
+
+    useEffect(() => {
+        // const listenerHandler = (data) => {};
+        const event = `spot:mini_ticker:update`;
+        if (publicSocket && assetCode) {
+            publicSocket.on(event, (data) => {
+                console.log('data', data);
+            });
+        }
     }, [publicSocket, assetCode]);
 
     // LOCAL STATE
@@ -119,40 +127,35 @@ const DepositInputCard = () => {
                         </p>
                     </div>
                     <div className="flex items-center overflow-hidden select-none">
-                        <div className="flex items-center flex-1">
-                            <div className="flex-1 pr-2">
-                                <NumberFormat
-                                    thousandSeparator
-                                    decimalScale={currentAssetConfig?.assetDigit || 0}
-                                    allowNegative={false}
-                                    placeholder="0"
-                                    className="w-full font-semibold text-2xl"
-                                    value={amount}
-                                    onValueChange={({ value }) => setAmount(value)}
-                                />
-                            </div>
-
-                            <div
-                                className={classNames('flex items-center pr-2 text-darkBlue-5', {
-                                    'border-r border-divider dark:border-divider-dark ': Boolean(amount)
-                                })}
-                            >
-                                <X
-                                    className={classNames('transition', Boolean(amount) ? 'opacity-1 cursor-pointer' : 'opacity-0')}
-                                    size={16}
-                                    onClick={() => setAmount('')}
-                                    color="currentColor"
-                                />
-                            </div>
-
-                            <button
-                                disabled={isMax}
-                                className="font-semibold pl-2 uppercase text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 disabled:cursor-default dark:active:text-green-4 disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark "
-                                onClick={onSetMax}
-                            >
-                                MAX
-                            </button>
+                        <div className="flex items-center flex-1  pr-2">
+                            <NumberFormat
+                                thousandSeparator
+                                decimalScale={currentAssetConfig?.assetDigit || 0}
+                                allowNegative={false}
+                                placeholder="0"
+                                className="w-full font-semibold text-2xl"
+                                value={amount}
+                                onValueChange={({ value }) => setAmount(value)}
+                            />
                         </div>
+
+                        {Boolean(amount) && (
+                            <>
+                                <div className={classNames('flex items-center text-darkBlue-5')}>
+                                    <X className={classNames('transition cursor-pointer')} size={16} onClick={() => setAmount('')} color="currentColor" />
+                                </div>
+
+                                <div className="w-[1px] h-6 bg-divider dark:bg-divider-dark mx-2" />
+                            </>
+                        )}
+
+                        <button
+                            disabled={isMax}
+                            className="font-semibold uppercase text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 disabled:cursor-default dark:active:text-green-4 disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark "
+                            onClick={onSetMax}
+                        >
+                            MAX
+                        </button>
                         <div className="w-[1px] h-6 bg-divider dark:bg-divider-dark mx-2" />
                         <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setOpenSelectAsset((prev) => !prev)}>
                             <AssetLogo assetCode={currentAsset?.assetCode} size={24} />
@@ -171,9 +174,8 @@ const DepositInputCard = () => {
                     </div>
                 </div>
 
-                <ReceiverInput language={language} assetId={currentAsset?.assetId} isDepositAble={isDepositAble} amount={amount} />
+                <ReceiverInput setAmount={setAmount} assetId={currentAsset?.assetId} isDepositAble={isDepositAble} amount={amount} />
             </Card>
-            {/* <ModalOtp isVisible={true} otpExpireTime={60} onClose={() => {}} isUseSmartOtp={true}/> */}
         </>
     );
 };

@@ -5,6 +5,7 @@ const ReceiverInfor = ({ user }) => {
     return (
         <CardContent
             imgSize={52}
+            imageSrc={user?.avatar}
             contentClass="bg-dark-12 dark:bg-dark-4 p-4 rounded-xl"
             mainContent={user?.name || user?.username || user?.email}
             subContent={user?.code}

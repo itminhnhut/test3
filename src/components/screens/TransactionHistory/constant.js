@@ -28,7 +28,8 @@ export const TRANSACTION_TYPES = {
     REWARD: 'reward',
     FUTURESCOMMISSION: 'futurescommission',
     PARTNERCOMMISSION: 'partnercommission',
-    COMMISSION: 'commision'
+    COMMISSION: 'commision',
+    OFF_CHAIN:'off_chain'
 };
 
 export const TransactionTabs = [

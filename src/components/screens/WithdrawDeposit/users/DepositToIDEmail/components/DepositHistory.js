@@ -8,13 +8,15 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { PATHS } from 'constants/paths';
 import useFetchApi from 'hooks/useFetchApi';
+import useToggle from 'hooks/useToggle';
 import { find } from 'lodash';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { API_GET_DEPWDL_HISTORY, API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
 import { ApiStatus, DepWdlStatus, PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
+import Emitter from 'redux/actions/emitter';
 import { formatNanNumber, formatTime } from 'redux/actions/utils';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 
@@ -171,38 +173,31 @@ const DepositHistory = () => {
 
     const configs = useSelector((state) => state.utils?.assetConfig) || [];
 
-    const [currentPage, setCurrentPage] = useState(0);
     const [activeTab, setActiveTab] = useState(TABS[0].key);
-    const [curSort, setCurSort] = useState({});
+    const [refetch, toggleRefetch] = useToggle(false);
+
+    // USING Emitter to detect crypto deposit successfully then refetch history
+    useEffect(() => {
+        Emitter.on('depositSuccess', (data) => {
+            toggleRefetch();
+        });
+    }, []);
 
     const { data, loading, error } = useFetchApi(
         {
             url: API_GET_DEPWDL_HISTORY,
             params: {
-                page: currentPage,
-                pageSize: LIMIT_ROW,
-                status: TABS[activeTab]?.status,
-                // status: activeTab === 0 ? null : TABS[activeTab]?.status,
-                ...curSort
+                isOffChain: true
             }
         },
         true,
-        [currentPage, curSort, activeTab]
+        [refetch]
     );
 
-    const customSort = (tableSorted) => {
-        const output = {};
-
-        for (const key in tableSorted) {
-            if (tableSorted.hasOwnProperty(key)) {
-                output.sortBy = key;
-                output.sortType = tableSorted[key] ? 1 : -1;
-            }
-
-            setCurSort(output);
-        }
-        setCurrentPage(0);
-    };
+    const filterData = useMemo(() => {
+        const status = TABS.find((tab) => activeTab === tab.key)?.status;
+        return data?.length ? data.filter((transaction) => (!status ? true : transaction.status === status)) : [];
+    }, [activeTab, data]);
 
     return (
         <div className="space-y-6">
@@ -214,7 +209,6 @@ const DepositHistory = () => {
                 activeTabKey={activeTab}
                 onChangeTab={(key) => {
                     setActiveTab(key);
-                    setCurrentPage(0);
                 }}
                 tabs={TABS.map((tab) => ({
                     key: tab.key,
@@ -225,7 +219,7 @@ const DepositHistory = () => {
                 limit={LIMIT_ROW}
                 skip={0}
                 useRowHover
-                data={data || []}
+                data={filterData}
                 columns={getColumns(t, configs)}
                 rowKey={(item) => item?._id}
                 scroll={{ x: true }}
@@ -237,14 +231,7 @@ const DepositHistory = () => {
                     padding: '16px',
                     headerFontStyle: { 'font-size': `14px !important` }
                 }}
-                pagingPrevNext={{
-                    page: currentPage,
-                    hasNext: data?.hasNext || false,
-                    onChangeNextPrev: (e) => setCurrentPage((prevPage) => prevPage + e),
-                    language
-                }}
                 emptyTextContent={t('common:no_data')}
-                customSort={customSort}
             />
         </div>
     );

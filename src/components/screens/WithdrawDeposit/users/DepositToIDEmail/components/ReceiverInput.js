@@ -9,12 +9,20 @@ import Spinner from 'components/svg/Spinner';
 import Button from 'components/common/V2/ButtonV2/Button';
 import axios from 'axios';
 import ModalOtp from 'components/screens/WithdrawDeposit/components/ModalOtp';
-import { ApiResultCreateOrder } from 'redux/actions/const';
+import { ApiResultCreateOrder, ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
 import { useTranslation } from 'next-i18next';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import Emitter from 'redux/actions/emitter';
 
-const ReceiverInput = React.memo(({ assetId, amount, isDepositAble }) => {
+const initialReceiverState = {
+    input: '',
+    isTypingInput: false,
+    noteValue: '',
+    error: ''
+};
+
+const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble }) => {
     const {
         t,
         i18n: { language: lang }
@@ -29,14 +37,9 @@ const ReceiverInput = React.memo(({ assetId, amount, isDepositAble }) => {
         showAlert: false,
         needSmartOtp: false
     });
-
     const setState = (_state) => _setState((prev) => ({ ...prev, ..._state }));
 
-    const [receiver, _setReceiver] = useState({
-        input: '',
-        isTypingInput: false,
-        noteValue: ''
-    });
+    const [receiver, _setReceiver] = useState(initialReceiverState);
 
     const setReceiver = (receiverState) => _setReceiver((prev) => ({ ...prev, ...receiverState }));
 
@@ -58,15 +61,24 @@ const ReceiverInput = React.memo(({ assetId, amount, isDepositAble }) => {
             params: {
                 searchUser: debounceReceiverInput
             },
-            successCallBack: () => setReceiver({ isTypingInput: false })
+            successCallBack: (response) => {
+                let error = '';
+
+                if (response?.status === ApiStatus.SUCCESS) {
+                } else if (response?.status === 'TOO_MANY_REQUEST') {
+                    error = 'Bạn đã gửi quá nhiều yêu cầu!';
+                } else if (response?.status === 'user_not_found') {
+                    error = 'Không tìm thấy user!';
+                } else {
+                    error = 'Lỗi không xác định';
+                }
+
+                setReceiver({ isTypingInput: false, error });
+            }
         },
         Boolean(debounceReceiverInput),
         [debounceReceiverInput]
     );
-
-    const error = useMemo(() => {
-        return !receiver.input ? '' : !receiver.isTypingInput && !loading && !user ? 'User not found' : '';
-    }, [user, receiver.input, receiver.isTypingInput, loading]);
 
     const isUserFound = !loading && user && Boolean(debounceReceiverInput);
 
@@ -93,15 +105,15 @@ const ReceiverInput = React.memo(({ assetId, amount, isDepositAble }) => {
                 otp
             });
 
-            // MISSING OTP
+            // MISSING [EMAIL,TFA] OTP
             if (response.data?.data?.remaining_time) {
                 setState({
-                    otpExpireTime: response.data?.remaining_time,
+                    otpExpireTime: new Date().getTime() + response.data?.data?.remaining_time,
                     showOtp: true
                 });
             }
 
-            // SMART OTP
+            // NEED SMART OTP
             if (response.data?.data?.use_smart_otp) {
                 setState({
                     showOtp: true,
@@ -115,6 +127,12 @@ const ReceiverInput = React.memo(({ assetId, amount, isDepositAble }) => {
                     showOtp: false,
                     showAlert: true
                 });
+
+                setReceiver(initialReceiverState);
+                setAmount('');
+
+                // Emitter deposit successfully to handle refetch deposit history
+                Emitter.emit('depositSuccess', response.data);
             }
             const handlingResponseStatus = {
                 INVALID_OTP: () => {
@@ -128,7 +146,7 @@ const ReceiverInput = React.memo(({ assetId, amount, isDepositAble }) => {
                 }
             };
 
-            handlingResponseStatus[response.data?.status]();
+            handlingResponseStatus[response.data?.status?.toUpperCase()]?.();
 
             setState({ loadingConfirm: false });
             return response.data;
@@ -150,7 +168,7 @@ const ReceiverInput = React.memo(({ assetId, amount, isDepositAble }) => {
                     className="!pb-0"
                     placeholder="Nhập Nami ID"
                     canPaste
-                    onChange={(value) => setReceiver({ input: value })}
+                    onChange={(value) => setReceiver({ input: value, error: '' })}
                     value={receiver.input}
                     suffix={
                         receiver.isTypingInput && (
@@ -159,7 +177,7 @@ const ReceiverInput = React.memo(({ assetId, amount, isDepositAble }) => {
                             </div>
                         )
                     }
-                    error={error}
+                    error={receiver.error}
                 />
 
                 {isUserFound && (
