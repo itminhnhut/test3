@@ -11,7 +11,8 @@
         "convert": "Quy đổi",
         "transfer": "Chuyển ví",
         "staking": "Nhận lãi hàng ngày",
-        "commission": "Hoa hồng"
+        "commission": "Hoa hồng",
+        "off_chain":"Gửi/Nhận"
     },
     "filter": {
         "all": "Tất cả",

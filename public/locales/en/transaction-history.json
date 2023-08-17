@@ -11,7 +11,8 @@
         "convert": "Swap",
         "transfer": "Transfer",
         "staking": "Staking Daily",
-        "commission": "Commissions"
+        "commission": "Commissions",
+        "off_chain":"Desposit/Receive"
     },
     "filter": {
         "all": "All",

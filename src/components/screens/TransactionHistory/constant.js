@@ -29,7 +29,7 @@ export const TRANSACTION_TYPES = {
     FUTURESCOMMISSION: 'futurescommission',
     PARTNERCOMMISSION: 'partnercommission',
     COMMISSION: 'commision',
-    OFF_CHAIN:'off_chain'
+    OFF_CHAIN: 'off_chain'
 };
 
 export const TransactionTabs = [
@@ -87,6 +87,11 @@ export const TransactionTabs = [
         key: TRANSACTION_TYPES.REWARD,
         localized: 'commission',
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.REWARD)
+    },
+    {
+        key: TRANSACTION_TYPES.OFF_CHAIN,
+        localized: 'off_chain',
+        href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.OFF_CHAIN)
     }
 ];
 
@@ -219,6 +224,11 @@ export const modalDetailColumn = {
             localized: 'modal_detail.to',
             type: COLUMNS_TYPE.FIAT_USER
         }
+    ],
+    [TRANSACTION_TYPES.OFF_CHAIN]: [
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
+        { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
+        { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE }
     ],
     common: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
