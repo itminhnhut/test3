@@ -106,11 +106,15 @@ const DepositInputCard = () => {
         return orderBy(listAssetAvailable, ['availableValue', 'assetCode'], ['desc', 'asc']);
     }, [paymentConfigs, spotWallets, search]);
 
-    const isMax = +amount === assetBalance;
+    const maxAmount = Math.min(
+        assetBalance / (fetchPrice?.price || 1),
+        roundByExactDigit(DEPOSIT_AMOUNT.MAX / (fetchPrice?.price || 1), currentAssetConfig?.assetDigit || 0)
+    );
+    const isMax = +amount === maxAmount;
 
     const onSetMax = () => {
         if (isMax) return;
-        setAmount(assetBalance);
+        setAmount(maxAmount);
     };
 
     const isDepositAble = +amount >= DEPOSIT_AMOUNT.MIN && +amount <= DEPOSIT_AMOUNT.MAX && +amount <= assetBalance && +amount && Boolean(currentAsset);
