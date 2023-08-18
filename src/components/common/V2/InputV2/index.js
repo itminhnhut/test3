@@ -119,7 +119,7 @@ const InputV2 = forwardRef(
                         <span
                             onClick={paste}
                             className={classNames(
-                                'text-teal font-semibold cursor-pointer select-none',
+                                'text-green-3 dark:text-green-2 hover:!text-green-4 font-semibold cursor-pointer select-none',
                                 {
                                     ' pl-2  border-l border-divider dark:border-divider-dark': allowClear && !!value
                                 }

@@ -27,34 +27,33 @@ const AssetsDropdown = React.memo(
                 <div className="overflow-y-auto flex-1 space-y-3">
                     {!assetOptions.length && <NoData isSearch={Boolean(search)} />}
                     {assetOptions.map((asset) => {
-                        const disabled = asset?.assetCode === assetCode;
+                        const disabled = asset?.assetCode === assetCode || +availableValue <= 0;
                         return (
                             <button
                                 disabled={disabled}
                                 key={asset._id}
                                 onClick={() => {
-                                    router
-                                        .push(dwLinkBuilder(TYPE_DW.ID_EMAIL, SIDE.SELL, asset?.assetCode), null, {
-                                            scroll: false,
-                                            shallow: false
-                                        })
-                                        .finally(() => {
-                                            setOpenSelectAsset(false);
-                                        });
+                                    router.push(dwLinkBuilder(TYPE_DW.ID_EMAIL, SIDE.SELL, asset?.assetCode), null, {
+                                        scroll: false,
+                                        shallow: false
+                                    });
+                                    setOpenSelectAsset(false);
                                 }}
                                 className={classNames(
                                     'flex items-center w-full disabled:cursor-default justify-between px-4 py-3 cursor-pointer transition hover:bg-hover dark:hover:bg-hover-dark',
                                     {
-                                        'bg-hover dark:bg-hover-dark': disabled
+                                        // 'bg-hover dark:bg-hover-dark': disabled
+                                        // 'opacity-50': disabled
                                     }
                                 )}
                             >
-                                <div className="flex">
+                                <div className="flex items-center space-x-2">
                                     <AssetLogo assetCode={asset?.assetCode} size={24} />
-                                    <span className="ml-2">{asset.assetCode}</span>
+                                    <span className="">{asset?.assetCode}</span>
+                                    <span className="text-xs text-txtSecondary dark:text-txtSecondary-dark">{mapAssetConfig?.[asset?.assetId]?.assetName}</span>
                                 </div>
                                 <span className="float-right text-txtSecondary">
-                                    {formatWallet(asset.availableValue, mapAssetConfig[asset.assetId]?.assetDigit || 0)}
+                                    {formatWallet(asset.availableValue, mapAssetConfig?.[asset?.assetId]?.assetDigit || 0)}
                                 </span>
                             </button>
                         );

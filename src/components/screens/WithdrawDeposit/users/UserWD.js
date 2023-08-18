@@ -28,19 +28,22 @@ const TABS = [
         localized: 'Crypto',
         key: 1,
         href: PATHS.WITHDRAW_DEPOSIT.DEFAULT,
-        value: TYPE_DW.CRYPTO
+        value: TYPE_DW.CRYPTO,
+        side: [SIDE.BUY, SIDE.SELL]
     },
     {
         localized: 'dw_partner:partner',
         key: 2,
         href: PATHS.WITHDRAW_DEPOSIT.PARTNER,
-        value: TYPE_DW.PARTNER
+        value: TYPE_DW.PARTNER,
+        side: [SIDE.BUY, SIDE.SELL]
     },
     {
         localized: 'Nami ID/Email',
         key: 3,
         href: PATHS.WITHDRAW_DEPOSIT.ID_EMAIL,
-        value: TYPE_DW.ID_EMAIL
+        value: TYPE_DW.ID_EMAIL,
+        side: [SIDE.SELL]
     }
 ];
 
@@ -88,7 +91,7 @@ const UserWD = ({ type, children, side }) => {
 
                     <div className="relative justify-between items-center flex flex-wrap sm:flex-nowrap tracking-normal mb-8">
                         <Tabs tab={type} className="gap-8 border-b border-divider dark:border-divider-dark">
-                            {TABS?.map((item) => (
+                            {TABS?.filter((item) => item.side.includes(side))?.map((item) => (
                                 <TabItem
                                     key={item.key}
                                     V2

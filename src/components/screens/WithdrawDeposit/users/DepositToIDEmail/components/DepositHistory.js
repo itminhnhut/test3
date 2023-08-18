@@ -3,6 +3,7 @@ import OrderStatusTag from 'components/common/OrderStatusTag';
 import Skeletor from 'components/common/Skeletor';
 import TabV2 from 'components/common/V2/TabV2';
 import TableV2 from 'components/common/V2/TableV2';
+import NoData from 'components/common/V2/TableV2/NoData';
 import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import AssetLogo from 'components/wallet/AssetLogo';
@@ -27,8 +28,8 @@ const getColumns = (t, configs) => [
         key: 'type',
         dataIndex: 'type',
         title: 'Loại Lệnh',
-        align: 'left',
-        width: 148,
+        align: 'center',
+        width: 118,
         fixed: 'left',
         render: (v) => (v === 1 ? 'Nhận Tiền' : v === 2 ? 'Gửi Tiền' : '')
     },
@@ -112,29 +113,29 @@ const getColumns = (t, configs) => [
         align: 'right',
         width: 296,
         render: (v, item) => {
-            return item?.metadata?.note;
+            return <div className="whitespace-pre-wrap">{item?.metadata?.note}</div>;
         }
     },
     {
         key: 'status',
         dataIndex: 'status',
         title: 'Trạng thái',
-        align: 'right',
-        width: 168,
+        align: 'center',
+        width: 130,
         render: (status) =>
             ({
                 [DepWdlStatus.Success]: (
-                    <TagV2 icon={false} className="ml-auto" type="success">
+                    <TagV2 icon={false} className="!p-0 ml-auto !bg-transparent" type="success" labelClassname="!text-base">
                         {t('common:success')}
                     </TagV2>
                 ),
                 [DepWdlStatus.Pending]: (
-                    <TagV2 icon={false} className="ml-auto" type="warning">
+                    <TagV2 icon={false} className="ml-auto !bg-transparent" type="warning" labelClassname="!text-base">
                         {t('common:processing')}
                     </TagV2>
                 ),
                 [DepWdlStatus.Declined]: (
-                    <TagV2 icon={false} className="ml-auto" type="failed">
+                    <TagV2 icon={false} className="ml-auto !bg-transparent" type="failed" labelClassname="!text-base">
                         {t('common:declined')}
                     </TagV2>
                 )
@@ -215,24 +216,28 @@ const DepositHistory = () => {
                     children: <div>{t(tab.localized)}</div>
                 }))}
             />
-            <TableV2
-                limit={LIMIT_ROW}
-                skip={0}
-                useRowHover
-                data={filterData}
-                columns={getColumns(t, configs)}
-                rowKey={(item) => item?._id}
-                scroll={{ x: true }}
-                loading={loading}
-                height={404}
-                className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg pt-4"
-                tableStyle={{
-                    fontSize: '16px',
-                    padding: '16px',
-                    headerFontStyle: { 'font-size': `14px !important` }
-                }}
-                emptyTextContent={t('common:no_data')}
-            />
+            {!filterData?.length ? (
+                <NoData text={t('common:no_data')} loading={loading} className="!text-base" />
+            ) : (
+                <TableV2
+                    limit={LIMIT_ROW}
+                    skip={0}
+                    useRowHover
+                    data={filterData}
+                    columns={getColumns(t, configs)}
+                    rowKey={(item) => item?._id}
+                    scroll={{ x: true }}
+                    loading={loading}
+                    height={404}
+                    className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg pt-4"
+                    tableStyle={{
+                        fontSize: '16px',
+                        padding: '16px',
+                        headerFontStyle: { 'font-size': `14px !important` }
+                    }}
+                    // emptyTextContent={t('common:no_data')}
+                />
+            )}
         </div>
     );
 };

@@ -360,7 +360,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                 }
                                 return (
                                     <div key={col.localized} className="flex justify-between py-3 items-center">
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark max-w-[170px]">
+                                        <div className="text-txtSecondary w-full dark:text-txtSecondary-dark max-w-[170px]">
                                             {t(`transaction-history:${col.localized}`)}
                                         </div>
                                         <div

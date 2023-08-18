@@ -14,6 +14,8 @@ import toast from 'utils/toast';
 import { useTranslation } from 'next-i18next';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Emitter from 'redux/actions/emitter';
+import { useRouter } from 'next/router';
+import { PATHS } from 'constants/paths';
 
 const initialReceiverState = {
     input: '',
@@ -27,6 +29,7 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
         t,
         i18n: { language: lang }
     } = useTranslation();
+    const router = useRouter();
     // DEBOUNCE Value
     const [debounceReceiverInput, setDebounceReceiverInput] = useState('');
 
@@ -124,9 +127,11 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
             // SUCCESS
             if (response.data?.data?.txId) {
                 setState({
-                    showOtp: false,
-                    showAlert: true
+                    showOtp: false
                 });
+
+                // Show success modal after close ModalOTP
+                setTimeout(() => setState({ showAlert: true }), 200);
 
                 setReceiver(initialReceiverState);
                 setAmount('');
@@ -192,7 +197,7 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                         Ghi chú
                     </label>
 
-                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
                         {receiver.noteValue.length}/{MAX_NOTE_LENGTH}
                     </div>
                 </div>
@@ -202,7 +207,7 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                     onChange={onChangeNoteHandler}
                     placeholder="Nhập ghi chú"
                     className="pb-0 w-full"
-                    classNameInput="h-14 resize-none"
+                    classNameInput="h-12 resize-none"
                     rows={2}
                     id="note-input"
                 />
@@ -225,7 +230,7 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
             />
             <AlertModalV2
                 isVisible={state.showAlert}
-                onClose={() => setState({ showAlert: false })}
+                onClose={() => router.push(PATHS.WALLET.OVERVIEW)}
                 type="success"
                 title="Thành công"
                 message="Lệnh rút thực hiện thành công"
