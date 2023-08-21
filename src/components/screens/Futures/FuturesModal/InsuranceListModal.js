@@ -33,7 +33,10 @@ const StateColorMapping = (state) => {
 };
 
 const InsuranceListModal = ({ visible, onCloseAll = () => {}, onClose = () => {}, insurances, symbol }) => {
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
 
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const p_market = marketWatch?.[symbol]?.lastPrice || 0;
@@ -49,7 +52,7 @@ const InsuranceListModal = ({ visible, onCloseAll = () => {}, onClose = () => {}
                 <div className="grid grid-cols-2 gap-4">
                     {insurances?.length &&
                         insurances.map((insurance) => {
-                            return <ContractItem p_market={p_market} key={insurance?._id} insurance={insurance} />;
+                            return <ContractItem p_market={p_market} language={language} t={t} key={insurance?._id} insurance={insurance} />;
                         })}
                 </div>
             </div>
@@ -57,9 +60,7 @@ const InsuranceListModal = ({ visible, onCloseAll = () => {}, onClose = () => {}
     );
 };
 
-const ContractItem = ({ insurance, p_market }) => {
-    const { t } = useTranslation();
-
+const ContractItem = ({ insurance, p_market, t, language }) => {
     const q_AssetDigit = insurance?.quote_asset === 'USDT' ? 4 : 0;
 
     const [loading, setLoading] = useState(false);
@@ -69,7 +70,7 @@ const ContractItem = ({ insurance, p_market }) => {
     const getInsuranceDetailLink = async () => {
         setLoading(true);
         await getInsuranceLoginLink({
-            redirectTo: `${INSURANCE_URL}/tracking/${insurance?._id}`,
+            redirectTo: `${INSURANCE_URL}/${language}/tracking/${insurance?._id}`,
             targetType: '_blank'
         });
         setLoading(false);
