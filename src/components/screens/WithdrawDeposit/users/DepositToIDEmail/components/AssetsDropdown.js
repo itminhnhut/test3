@@ -61,7 +61,7 @@ const AssetsDropdown = React.memo(
                                 </div>
                                 <div className="flex items-center">
                                     <span className="float-right text-txtSecondary">
-                                        {formatNumber(asset?.availableValue || 0, mapAssetConfig?.[asset?.assetId]?.assetDigit || 0)}
+                                        {formatWallet(asset?.availableValue || 0, mapAssetConfig?.[asset?.assetId]?.assetDigit || 0)}
                                     </span>
                                 </div>
                             </button>

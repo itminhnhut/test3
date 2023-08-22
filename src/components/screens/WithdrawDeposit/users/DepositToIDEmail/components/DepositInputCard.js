@@ -12,7 +12,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 // import { ChevronDown } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
-import { formatNumber, getSymbolString, roundByExactDigit } from 'redux/actions/utils';
+import { formatNumber, formatWallet, getSymbolString, roundByExactDigit } from 'redux/actions/utils';
 import AssetsDropdown from './AssetsDropdown';
 import ReceiverInput from './ReceiverInput';
 import SvgChevronDown from 'components/svg/ChevronDown';
@@ -140,7 +140,7 @@ const DepositInputCard = () => {
         if (!amount) return '';
         if (+amount > +assetBalance) return t('deposit_namiid-email:error.insufficient_balance');
 
-        if (+amount * marketWatchPrice < currencyDepositAmount.min || +amount * marketWatchPrice > currencyDepositAmount.max) {
+        if (+amount < currencyDepositAmount.min || +amount > currencyDepositAmount.max) {
             return t('deposit_namiid-email:error.min_max', {
                 min: formatNumber(currencyDepositAmount.min, currentAssetConfig?.assetDigit),
                 max: formatNumber(currencyDepositAmount.max, currentAssetConfig?.assetDigit)
@@ -148,7 +148,7 @@ const DepositInputCard = () => {
         }
 
         return '';
-    }, [marketWatchPrice, t, currentAssetConfig?.assetDigit, amount, assetBalance]);
+    }, [currencyDepositAmount.min, currencyDepositAmount.max, t, currentAssetConfig?.assetDigit, amount, assetBalance]);
 
     return (
         <>
@@ -177,7 +177,7 @@ const DepositInputCard = () => {
                             <p>
                                 {t('common:available_balance')}:{' '}
                                 <span className="cursor-pointer" onClick={onSetMax}>
-                                    {formatNumber(assetBalance, currentAssetConfig?.assetDigit)}
+                                    {formatWallet(assetBalance, currentAssetConfig?.assetDigit)}
                                 </span>{' '}
                                 {currentAsset?.assetCode}
                             </p>
