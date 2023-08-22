@@ -534,6 +534,11 @@ export class TVChartContainer extends React.PureComponent {
         return this.setState({ chartType: 'price' });
     };
 
+    resetChart = () => {
+        localStorage.removeItem(this.getChartKey);
+        this.props.reNewComponentKey();
+    };
+
     render() {
         const { chartType } = this.state;
         const { isPro } = this.props;
@@ -571,7 +576,7 @@ export class TVChartContainer extends React.PureComponent {
                                 priceChartType={this.state.priceChartType}
                                 clearExtendsIndicators={this.props.clearExtendsIndicators}
                                 isVndcFutures={this.props.isVndcFutures}
-                                reNewComponentKey={this.props?.reNewComponentKey}
+                                resetChart={this.resetChart}
                                 fullscreen={this.state.fullscreen}
                                 handleFullScreen={this.handleFullScreen}
                             />
