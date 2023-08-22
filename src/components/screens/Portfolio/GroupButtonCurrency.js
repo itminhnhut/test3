@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
 import classNames from 'classnames';
 import { ArrowDownIcon, CheckCircleIcon } from 'components/svg/SvgIcon';
 import useOutsideClick from 'hooks/useOutsideClick';
@@ -19,55 +19,40 @@ export default ({ className, typeCurrency, setTypeCurrency, isMobile }) => {
                         'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': true
                     })}
                 >
-                    {typeCurrency === ALLOWED_ASSET_ID.USDT ? 'USDT' : 'VNDC'}
+                    {ALLOWED_ASSET?.[+typeCurrency]}
                     <ArrowDownIcon size={12} className={`${isShowModalChooseCurrency ? '!rotate-0' : ''} rotate-180 transition-all`} />
                 </div>
                 <AssetList className={!isShowModalChooseCurrency && 'hidden'}>
                     <div ref={fromAssetListRef} className="bg-white dark:bg-dark-4 py-2">
-                        <AssetItem
-                            onClick={() => {
-                                setTypeCurrency(ALLOWED_ASSET_ID.VNDC);
-                                setIsShowModalChooseCurrency(false);
-                            }}
-                            isChoosed={typeCurrency === ALLOWED_ASSET_ID.VNDC}
-                            className="!text-txtPrimary dark:!text-txtPrimary-dark !font-semibold"
-                        >
-                            VNDC
-                            {typeCurrency === ALLOWED_ASSET_ID.VNDC && <CheckCircleIcon color="currentColor" size={16} />}
-                        </AssetItem>
-                        <AssetItem
-                            onClick={() => {
-                                setTypeCurrency(ALLOWED_ASSET_ID.USDT);
-                                setIsShowModalChooseCurrency(false);
-                            }}
-                            isChoosed={typeCurrency === ALLOWED_ASSET_ID.USDT}
-                            className="!text-txtPrimary dark:!text-txtPrimary-dark !font-semibold"
-                        >
-                            USDT
-                            {typeCurrency === ALLOWED_ASSET_ID.USDT && <CheckCircleIcon color="currentColor" size={16} />}
-                        </AssetItem>
+                        {Object.keys(ALLOWED_ASSET_ID).map((assetCode) => (
+                            <AssetItem
+                                onClick={() => {
+                                    setTypeCurrency(ALLOWED_ASSET_ID?.[assetCode]);
+                                    setIsShowModalChooseCurrency(false);
+                                }}
+                                isChoosed={typeCurrency === ALLOWED_ASSET_ID?.[assetCode]}
+                                className="!text-txtPrimary dark:!text-txtPrimary-dark !font-semibold"
+                            >
+                                {assetCode}
+                                {typeCurrency === ALLOWED_ASSET_ID?.[assetCode] && <CheckCircleIcon color="currentColor" size={16} />}
+                            </AssetItem>
+                        ))}
                     </div>
                 </AssetList>
             </div>
         );
     return (
         <div className={`flex mt-0 text-sm md:text-base ${className}`}>
-            <button
-                onClick={() => setTypeCurrency(ALLOWED_ASSET_ID.VNDC)}
-                className={`border border-divider dark:border-divider-dark rounded-l-md px-4 md:px-9 py-2 md:py-3 ${
-                    typeCurrency === ALLOWED_ASSET_ID.VNDC ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-r-none'
-                }`}
-            >
-                VNDC
-            </button>
-            <button
-                onClick={() => setTypeCurrency(ALLOWED_ASSET_ID.USDT)}
-                className={`border border-divider dark:border-divider-dark rounded-r-md px-4 md:px-9 py-2 md:py-3 ${
-                    typeCurrency === ALLOWED_ASSET_ID.USDT ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-l-none'
-                }`}
-            >
-                USDT
-            </button>
+            {Object.keys(ALLOWED_ASSET_ID).map((assetCode) => (
+                <button
+                    onClick={() => setTypeCurrency(ALLOWED_ASSET_ID?.[assetCode])}
+                    className={`border border-divider dark:border-divider-dark first:rounded-l-md last:rounded-r-md px-4 md:px-9 py-2 md:py-3 ${
+                        typeCurrency === ALLOWED_ASSET_ID?.[assetCode] ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-r-none'
+                    }`}
+                >
+                    {assetCode}
+                </button>
+            ))}
         </div>
     );
 };

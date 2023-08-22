@@ -11,28 +11,28 @@ import { formatNumber } from 'utils/reference-utils';
 
 const deltaClipPath = 0.8;
 
-const TooltipProfit = ({ type, totalProfit, totalProfitPosition, isVndc, t, ...rest }) => (
+const TooltipProfit = ({ type, totalProfit, totalProfitPosition, precision, t, ...rest }) => (
     <Tooltip {...rest} id={`${type}_profit_tooltip`} place="top" className="max-w-[520px] !p-3">
         <div className="text-base">
             <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('portfolio:profit_position')}</div>
             <ul className="list-disc marker:text-xs ml-5 mt-2">
                 <li>{`${t('common:amount')}: ${totalProfitPosition}`}</li>
                 <li>
-                    {`${t('portfolio:total_profit')}: `} <span className="text-green-3 dark:text-green-2 font-semibold">+{formatNanNumber(totalProfit, isVndc ? 0 : 4)}</span>
+                    {`${t('portfolio:total_profit')}: `} <span className="text-green-3 dark:text-green-2 font-semibold">+{formatNanNumber(totalProfit, precision)}</span>
                 </li>
             </ul>
         </div>
     </Tooltip>
 );
 
-const TooltipLoss = ({ type, totalLoss, totalLossPosition, isVndc, t, ...rest }) => (
+const TooltipLoss = ({ type, totalLoss, totalLossPosition, precision, t, ...rest }) => (
     <Tooltip {...rest} id={`${type}_loss_tooltip`} place="top" className="max-w-[520px] !p-3">
         <div className="text-base">
             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('portfolio:loss_position')}</div>
             <ul className="list-disc marker:text-xs ml-5 mt-2">
                 <li>{`${t('common:amount')}: ${totalLossPosition}`}</li>
                 <li>
-                    {`${t('portfolio:total_loss')}: `} <span className="text-red-2 font-semibold">{formatNanNumber(totalLoss, isVndc ? 0 : 4)}</span>
+                    {`${t('portfolio:total_loss')}: `} <span className="text-red-2 font-semibold">{formatNanNumber(totalLoss, precision)}</span>
                 </li>
             </ul>
         </div>
@@ -48,10 +48,8 @@ const PositionInfo = ({
     totalLossPosition,
     totalProfitPosition,
     isNeverTrade,
-    isVndc = true,
+    precision,
     isMobile = false,
-    isDark,
-    setIsOpen
 }) => {
     const percentClipPath = useMemo(() => {
         return (totalLossPosition / total) * 100;
@@ -138,12 +136,12 @@ const PositionInfo = ({
                     ) : percentClipPath === 100 ? (
                         <>
                             <div className="w-full h-2 bg-red-2" data-for={`${type}_loss_tooltip`} data-tip="" />
-                            <TooltipLoss totalLoss={totalLoss} totalLossPosition={totalLossPosition} isVndc={isVndc} type={type} t={t} />
+                            <TooltipLoss totalLoss={totalLoss} totalLossPosition={totalLossPosition} precision={precision} type={type} t={t} />
                         </>
                     ) : percentClipPath === 0 ? (
                         <>
                             <div className="w-full h-2 bg-green-3 dark:bg-green-2" data-for={`${type}_profit_tooltip`} data-tip="" />
-                            <TooltipProfit totalProfit={totalProfit} totalProfitPosition={totalProfitPosition} isVndc={isVndc} type={type} t={t} />
+                            <TooltipProfit totalProfit={totalProfit} totalProfitPosition={totalProfitPosition} precision={precision} type={type} t={t} />
                         </>
                     ) : (
                         <div className="w-full h-2 relative" id={`${type}_bar`}>
@@ -183,7 +181,7 @@ const PositionInfo = ({
                                 }}
                                 totalLoss={totalLoss}
                                 totalLossPosition={totalLossPosition}
-                                isVndc={isVndc}
+                                precision={precision}
                                 type={type}
                                 t={t}
                             />
@@ -207,7 +205,7 @@ const PositionInfo = ({
                                 }}
                                 totalProfit={totalProfit}
                                 totalProfitPosition={totalProfitPosition}
-                                isVndc={isVndc}
+                                precision={precision}
                                 type={type}
                                 t={t}
                             />
@@ -232,7 +230,7 @@ const PositionInfo = ({
                         </div>
                         <div className="flex items-center justify-between mt-3">
                             <span className="txtSecond-3">{t('portfolio:total_loss')}</span>
-                            <span className={totalLoss < 0 && 'text-red-2'}>{formatNanNumber(totalLoss, isVndc ? 0 : 4)}</span>
+                            <span className={totalLoss < 0 && 'text-red-2'}>{formatNanNumber(totalLoss, precision)}</span>
                         </div>
                     </MCard>
 
@@ -244,7 +242,7 @@ const PositionInfo = ({
                         </div>
                         <div className="flex items-center justify-between mt-3">
                             <span className="txtSecond-3">{t('portfolio:total_profit')}</span>
-                            <span className={totalProfit > 0 && 'text-green-3 dark:text-green-2'}>+{formatNanNumber(totalProfit, isVndc ? 0 : 4)}</span>
+                            <span className={totalProfit > 0 && 'text-green-3 dark:text-green-2'}>+{formatNanNumber(totalProfit, precision)}</span>
                         </div>
                     </MCard>
                 </div>
