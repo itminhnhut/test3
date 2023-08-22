@@ -6,7 +6,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
 import React, { forwardRef } from 'react';
-import { formatNumber, roundByExactDigit } from 'redux/actions/utils';
+import { formatNumber, formatWallet, roundByExactDigit } from 'redux/actions/utils';
 
 const AssetsDropdown = React.memo(
     forwardRef(({ assetOptions, setOpenSelectAsset, search, setSearch, mapAssetConfig }, ref) => {
