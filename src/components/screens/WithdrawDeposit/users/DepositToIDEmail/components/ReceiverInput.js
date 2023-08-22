@@ -38,7 +38,8 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
         otpExpireTime: null,
         loadingConfirm: false,
         showAlert: false,
-        needSmartOtp: false
+        showAlertDisableSmartOtp: false,
+        isUseSmartOtp: false
     });
     const setState = (_state) => _setState((prev) => ({ ...prev, ..._state }));
 
@@ -120,7 +121,7 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
             if (response.data?.data?.use_smart_otp) {
                 setState({
                     showOtp: true,
-                    needSmartOtp: true
+                    isUseSmartOtp: true
                 });
             }
 
@@ -147,6 +148,13 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                     toast({
                         text: t('dw_partner:error.invalid_secret', { timesErr: response.data?.data?.count ?? 1 }),
                         type: 'warning'
+                    });
+                },
+                SOTP_INVALID_EXCEED_TIME: () => {
+                    setState({
+                        showAlertDisableSmartOtp: true,
+                        isUseSmartOtp: false,
+                        showOtp: false
                     });
                 }
             };
@@ -226,7 +234,19 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                     setState({ showOtp: false });
                 }}
                 loading={state.loadingConfirm}
-                isUseSmartOtp={state.needSmartOtp}
+                isUseSmartOtp={state.isUseSmartOtp}
+            />
+            <AlertModalV2
+                isVisible={state.showAlertDisableSmartOtp}
+                onClose={() => setState({ showAlertDisableSmartOtp: false })}
+                textButton={t('dw_partner:verify_by_email')}
+                onConfirm={() => {
+                    setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false });
+                    onDepositOffChainHandler()
+                }}
+                type="error"
+                title={t('dw_partner:disabled_smart_otp_title')}
+                message={t('dw_partner:disabled_smart_otp_des')}
             />
             <AlertModalV2
                 isVisible={state.showAlert}

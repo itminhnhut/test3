@@ -6,7 +6,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
 import React, { forwardRef } from 'react';
-import { formatWallet } from 'redux/actions/utils';
+import { formatNumber, roundByExactDigit } from 'redux/actions/utils';
 
 const AssetsDropdown = React.memo(
     forwardRef(({ assetOptions, setOpenSelectAsset, search, setSearch, mapAssetConfig }, ref) => {
@@ -25,7 +25,7 @@ const AssetsDropdown = React.memo(
                 <div className="overflow-y-auto flex-1 space-y-3">
                     {!assetOptions.length && <NoData isSearch={Boolean(search)} />}
                     {assetOptions.map((asset) => {
-                        const disabled = +asset?.availableValue <= 0;
+                        const disabled = roundByExactDigit(asset?.availableValue, mapAssetConfig?.[asset?.assetId]?.assetDigit || 0) <= 0;
                         const selected = asset?.assetCode === assetCode;
                         return (
                             <button
@@ -61,7 +61,7 @@ const AssetsDropdown = React.memo(
                                 </div>
                                 <div className="flex items-center">
                                     <span className="float-right text-txtSecondary">
-                                        {formatWallet(asset?.availableValue || 0, mapAssetConfig?.[asset?.assetId]?.assetDigit || 0)}
+                                        {formatNumber(asset?.availableValue || 0, mapAssetConfig?.[asset?.assetId]?.assetDigit || 0)}
                                     </span>
                                 </div>
                             </button>
