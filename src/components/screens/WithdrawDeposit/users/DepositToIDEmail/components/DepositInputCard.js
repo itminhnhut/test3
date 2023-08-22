@@ -125,7 +125,7 @@ const DepositInputCard = () => {
         [currentAssetConfig?.assetDigit, marketWatchPrice]
     );
 
-    const maxAmount = Math.min(assetBalance / marketWatchPrice, currencyDepositAmount.max);
+    const maxAmount = Math.min(assetBalance, currencyDepositAmount.max);
     const isMax = +amount === maxAmount;
 
     const onSetMax = () => {
