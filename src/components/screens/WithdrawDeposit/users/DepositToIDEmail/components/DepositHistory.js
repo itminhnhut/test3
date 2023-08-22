@@ -9,6 +9,7 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { PATHS } from 'constants/paths';
 import useFetchApi from 'hooks/useFetchApi';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import useToggle from 'hooks/useToggle';
 import { find } from 'lodash';
 import { useTranslation } from 'next-i18next';
@@ -23,7 +24,7 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const LIMIT_ROW = 10;
 
-const getColumns = (t, configs) => [
+const getColumns = (t, language, configs) => [
     {
         key: 'type',
         dataIndex: 'type',
@@ -127,7 +128,7 @@ const getColumns = (t, configs) => [
             ({
                 [DepWdlStatus.Success]: (
                     <TagV2 icon={false} className="!p-0 ml-auto !bg-transparent" type="success" labelClassname="!text-base">
-                        {t('common:completed')}
+                        {language === LANGUAGE_TAG.EN ? 'Completed' : 'Thành công'}
                     </TagV2>
                 ),
                 [DepWdlStatus.Pending]: (
@@ -225,7 +226,7 @@ const DepositHistory = () => {
                     skip={0}
                     useRowHover
                     data={filterData}
-                    columns={getColumns(t, configs)}
+                    columns={getColumns(t, language, configs)}
                     rowKey={(item) => item?._id}
                     scroll={{ x: true }}
                     loading={loading}
