@@ -12,7 +12,7 @@
         "transfer": "Transfer",
         "staking": "Staking Daily",
         "commission": "Commissions",
-        "off_chain": "Desposit/Receive"
+        "off_chain": "Send/Receive Off-chain"
     },
     "filter": {
         "all": "All",

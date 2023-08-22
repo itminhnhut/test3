@@ -59,7 +59,8 @@ export const getServerSideProps = async (context) => {
                 'dw_partner',
                 'transaction-history',
                 'reference',
-                'verification'
+                'verification',
+                'deposit_namiid-email'
             ])),
             type,
             side,
@@ -69,7 +70,6 @@ export const getServerSideProps = async (context) => {
 };
 
 const redirectFormatting = (side = 'BUY', assetId, type) => {
-
     if (SIDE[side]) {
         if (type === TYPE_DW.PARTNER && ALLOWED_ASSET[+assetId]) {
             return null;
@@ -97,5 +97,7 @@ const redirectFormatting = (side = 'BUY', assetId, type) => {
 
     const baseUrl = type === TYPE_DW.CRYPTO ? PATHS.WITHDRAW_DEPOSIT.DEFAULT : PATHS.WITHDRAW_DEPOSIT.PARTNER;
 
-    return type === TYPE_DW.ID_EMAIL ? `${PATHS.WITHDRAW_DEPOSIT.ID_EMAIL}?side=SELL&assetId=${assetIdFormat}` : `${baseUrl}?side=${sideFormat}&assetId=${assetIdFormat}`;
+    return type === TYPE_DW.ID_EMAIL
+        ? `${PATHS.WITHDRAW_DEPOSIT.ID_EMAIL}?side=SELL&assetId=${assetIdFormat}`
+        : `${baseUrl}?side=${sideFormat}&assetId=${assetIdFormat}`;
 };

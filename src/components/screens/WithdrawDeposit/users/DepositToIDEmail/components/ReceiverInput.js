@@ -71,7 +71,7 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                 } else if (response?.status === 'TOO_MANY_REQUEST') {
                     error = 'Bạn đã gửi quá nhiều yêu cầu!';
                 } else if (response?.status === 'user_not_found') {
-                    error = 'Không tìm thấy user!';
+                    error = t('deposit_namiid-email:error.not_found_receiver');
                 } else {
                     error = 'Lỗi không xác định';
                 }
@@ -80,7 +80,7 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
             }
         },
         Boolean(debounceReceiverInput),
-        [debounceReceiverInput]
+        [debounceReceiverInput, t]
     );
 
     const isUserFound = !loading && user && Boolean(debounceReceiverInput);
@@ -165,13 +165,13 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
         <div>
             <div className="mb-6">
                 <label htmlFor="receiver-input" className="text-txtSecondary  dark:text-txtSecondary-dark inline-block mb-2 text-sm">
-                    Thông tin người nhận
+                    {t('common:to')}
                 </label>
 
                 <InputV2
                     id="receiver-input"
                     className="!pb-0"
-                    placeholder="Nhập Nami ID"
+                    placeholder={t('deposit_namiid-email:receiver_input_placeholder')}
                     canPaste
                     onChange={(value) => setReceiver({ input: value, error: '' })}
                     value={receiver.input}
@@ -194,7 +194,7 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
             <div className="">
                 <div className="flex justify-between items-center mb-2 ">
                     <label htmlFor="note-input" className="text-txtSecondary  dark:text-txtSecondary-dark text-sm inline-block">
-                        Ghi chú
+                        {t('common:note')}
                     </label>
 
                     <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
@@ -205,7 +205,7 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                 <TextArea
                     value={receiver.noteValue}
                     onChange={onChangeNoteHandler}
-                    placeholder="Nhập ghi chú"
+                    placeholder={t('deposit_namiid-email:note_placeholder')}
                     className="pb-0 w-full"
                     classNameInput="h-12 resize-none"
                     rows={2}
@@ -214,7 +214,7 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
             </div>
             <div className="mt-10">
                 <Button disabled={!isUserFound || !isDepositAble || state.loadingConfirm} onClick={() => onDepositOffChainHandler()}>
-                    Rút
+                    {t('common:send')}
                     {state.loadingConfirm && <Spinner color="currentColor" />}
                 </Button>
             </div>
@@ -232,9 +232,9 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                 isVisible={state.showAlert}
                 onClose={() => router.push(PATHS.WALLET.OVERVIEW)}
                 type="success"
-                title="Thành công"
-                message="Lệnh rút thực hiện thành công"
-                customButton={<Button onClick={() => setState({ showAlert: false })}>Tạo lệnh rút mới</Button>}
+                title={t('common:success')}
+                message={t('deposit_namiid-email:success.alert_message')}
+                customButton={<Button onClick={() => setState({ showAlert: false })}>{t('deposit_namiid-email:success.deposit_again')}</Button>}
             />
         </div>
     );

@@ -12,13 +12,15 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 // import { ChevronDown } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
-import { formatNumber, roundByExactDigit } from 'redux/actions/utils';
+import { formatNumber, getSymbolString, roundByExactDigit } from 'redux/actions/utils';
 import AssetsDropdown from './AssetsDropdown';
 import ReceiverInput from './ReceiverInput';
 import SvgChevronDown from 'components/svg/ChevronDown';
 import { X } from 'react-feather';
 import useFetchApi from 'hooks/useFetchApi';
 import ErrorTriggers from 'components/svg/ErrorTriggers';
+import { getMarketWatch } from 'redux/actions/market';
+import { API_GET_MARKET_WATCH } from 'redux/actions/apis';
 
 export const MAX_NOTE_LENGTH = 70;
 
@@ -54,20 +56,29 @@ const DepositInputCard = () => {
         }
     }, [assetCode, paymentConfigs, router]);
 
-    const { data: fetchPrice, loading } = useFetchApi(
+    const { data: marketWatch, loading } = useFetchApi(
         {
-            url: '/api/v3/swap/estimate_price',
-
+            url: API_GET_MARKET_WATCH,
             params: {
-                fromAsset: assetCode,
-                toAsset: DEFAULT_QUOTE_SYMBOL,
-                requestQty: 1,
-                requestAsset: assetCode
+                symbol: `${assetCode}VNDC`
             }
         },
         [Boolean(assetCode)],
         [assetCode]
     );
+
+    let marketWatchPrice = marketWatch?.[0]?.p || 1;
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const result = await getMarketWatch(`${assetCode}VNDC`);
+                console.log('result:', result);
+            } catch (error) {
+                console.log('error:', error);
+            }
+        })();
+    }, [assetCode]);
 
     // LOCAL STATE
     const assetListRef = useRef();
@@ -106,10 +117,15 @@ const DepositInputCard = () => {
         return orderBy(listAssetAvailable, ['availableValue', 'assetCode'], ['desc', 'asc']);
     }, [paymentConfigs, spotWallets, search]);
 
-    const maxAmount = Math.min(
-        assetBalance / (fetchPrice?.price || 1),
-        roundByExactDigit(DEPOSIT_AMOUNT.MAX / (fetchPrice?.price || 1), currentAssetConfig?.assetDigit || 0)
+    const currencyDepositAmount = useMemo(
+        () => ({
+            max: roundByExactDigit(DEPOSIT_AMOUNT.MAX / marketWatchPrice, currentAssetConfig?.assetDigit || 0),
+            min: roundByExactDigit(DEPOSIT_AMOUNT.MIN / marketWatchPrice, currentAssetConfig?.assetDigit || 0)
+        }),
+        [currentAssetConfig?.assetDigit, marketWatchPrice]
     );
+
+    const maxAmount = Math.min(assetBalance / marketWatchPrice, currencyDepositAmount.max);
     const isMax = +amount === maxAmount;
 
     const onSetMax = () => {
@@ -117,23 +133,22 @@ const DepositInputCard = () => {
         setAmount(maxAmount);
     };
 
-    const isDepositAble = +amount >= DEPOSIT_AMOUNT.MIN && +amount <= DEPOSIT_AMOUNT.MAX && +amount <= assetBalance && +amount && Boolean(currentAsset);
+    const isDepositAble =
+        +amount >= currencyDepositAmount.min && +amount <= currencyDepositAmount.max && +amount <= assetBalance && +amount && Boolean(currentAsset);
 
     const error = useMemo(() => {
         if (!amount) return '';
-        let price = 1;
-        if (fetchPrice) {
-            price = fetchPrice?.price || 1;
+        if (+amount > +assetBalance) return t('deposit_namiid-email:error.insufficient_balance');
+
+        if (+amount * marketWatchPrice < currencyDepositAmount.min || +amount * marketWatchPrice > currencyDepositAmount.max) {
+            return t('deposit_namiid-email:error.min_max', {
+                min: formatNumber(currencyDepositAmount.min, currentAssetConfig?.assetDigit),
+                max: formatNumber(currencyDepositAmount.max, currentAssetConfig?.assetDigit)
+            });
         }
-        if (+amount * price < DEPOSIT_AMOUNT.MIN) {
-            return `Số lượng tối thiểu là ${formatNumber(DEPOSIT_AMOUNT.MIN, 0)} VNDC`;
-        }
-        if (+amount * price > DEPOSIT_AMOUNT.MAX) {
-            return `Số lượng tối đa là ${formatNumber(DEPOSIT_AMOUNT.MAX, 0)} VNDC`;
-        }
-        if (+amount > +assetBalance) return `Vượt quá số dư cho phép`;
+
         return '';
-    }, [fetchPrice, amount, assetBalance]);
+    }, [marketWatchPrice, t, currentAssetConfig?.assetDigit, amount, assetBalance]);
 
     return (
         <>

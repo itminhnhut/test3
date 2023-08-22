@@ -12,7 +12,7 @@
         "transfer": "Chuyển ví",
         "staking": "Nhận lãi hàng ngày",
         "commission": "Hoa hồng",
-        "off_chain": "Gửi/Nhận"
+        "off_chain": "Gửi/Nhận Off-chain"
     },
     "filter": {
         "all": "Tất cả",

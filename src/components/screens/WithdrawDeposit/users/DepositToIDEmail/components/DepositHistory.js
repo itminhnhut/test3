@@ -27,11 +27,12 @@ const getColumns = (t, configs) => [
     {
         key: 'type',
         dataIndex: 'type',
-        title: 'Loại Lệnh',
+        title: t('common:order_type'),
         align: 'center',
         width: 118,
         fixed: 'left',
-        render: (v) => (v === 1 ? 'Nhận Tiền' : v === 2 ? 'Gửi Tiền' : '')
+        render: (v) =>
+            v === 1 ? t('deposit_namiid-email:history_deposit.receive_offchain') : v === 2 ? t('deposit_namiid-email:history_deposit.send_offchain') : ''
     },
     {
         key: 'id',
@@ -46,7 +47,7 @@ const getColumns = (t, configs) => [
     {
         key: 'assetId',
         dataIndex: 'assetId',
-        title: 'Loại tài sản',
+        title: t('common:asset'),
         align: 'left',
         width: 148,
         render: (id) => {
@@ -87,7 +88,7 @@ const getColumns = (t, configs) => [
     {
         key: 'from',
         dataIndex: 'from',
-        title: 'Từ',
+        title: t('common:from'),
         align: 'left',
         width: 194,
         render: (v, item) => {
@@ -98,7 +99,7 @@ const getColumns = (t, configs) => [
     {
         key: 'to',
         dataIndex: 'to',
-        title: 'Đến',
+        title: t('common:to'),
         align: 'right',
         width: 194,
         render: (v, item) => {
@@ -109,7 +110,7 @@ const getColumns = (t, configs) => [
     {
         key: 'note',
         dataIndex: 'note',
-        title: 'Ghi chú',
+        title: t('common:note'),
         align: 'right',
         width: 296,
         render: (v, item) => {
@@ -119,7 +120,7 @@ const getColumns = (t, configs) => [
     {
         key: 'status',
         dataIndex: 'status',
-        title: 'Trạng thái',
+        title: t('common:status'),
         align: 'center',
         width: 130,
         render: (status) =>
@@ -217,7 +218,7 @@ const DepositHistory = () => {
                 }))}
             />
             {!filterData?.length ? (
-                <NoData text={t('common:no_data')} loading={loading} className="!text-base" />
+                <NoData text={t('deposit_namiid-email:history_deposit.no_transactions')} loading={loading} className="!text-base" />
             ) : (
                 <TableV2
                     limit={LIMIT_ROW}
@@ -235,7 +236,6 @@ const DepositHistory = () => {
                         padding: '16px',
                         headerFontStyle: { 'font-size': `14px !important` }
                     }}
-                    // emptyTextContent={t('common:no_data')}
                 />
             )}
         </div>
