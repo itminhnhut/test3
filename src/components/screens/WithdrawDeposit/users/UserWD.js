@@ -39,7 +39,7 @@ const TABS = [
         side: [SIDE.BUY, SIDE.SELL]
     },
     {
-        localized: 'Nami ID/Email',
+        localized: 'dw_partner:send_offchain',
         key: 3,
         href: PATHS.WITHDRAW_DEPOSIT.ID_EMAIL,
         value: TYPE_DW.ID_EMAIL,
