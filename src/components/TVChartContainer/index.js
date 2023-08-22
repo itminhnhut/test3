@@ -170,7 +170,7 @@ export class TVChartContainer extends React.PureComponent {
     handleFullScreen = (flag) => {
         const el = document.querySelector('#' + this.props.chartKey);
         if (el) {
-            el.classList[flag ? 'add' : 'remove']('!fixed', '!inset-0', '!w-screen', '!h-screen', '!translate-x-0', '!translate-y-0', '!z-[9999999999]');
+            el.classList[flag ? 'add' : 'remove']('!fixed', '!inset-0', '!w-screen', '!h-screen', '!translate-x-0', '!translate-y-0', '!z-[98]');
         }
         this.setState({ fullscreen: flag });
     };
@@ -456,7 +456,8 @@ export class TVChartContainer extends React.PureComponent {
                 'source_selection_markers',
                 'popup_hints',
                 'header_widget',
-                'axis_pressed_mouse_move_scale'
+                'axis_pressed_mouse_move_scale',
+                'symbol_search_hot_key'
             ],
             // hide_left_toolbar_by_default
             enabled_features: ['move_logo_to_main_pane', 'edit_buttons_in_legend'],
