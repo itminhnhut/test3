@@ -2,7 +2,7 @@
     "receiver_input_placeholder": "Nhập Nami ID hoặc Email người nhận",
     "note_placeholder": "Nhập ghi chú",
     "error": {
-        "not_found_receiver": "Nami ID không tồn tại",
+        "not_found_receiver": "Tài khoản Nami không tồn tại",
         "invalid_receiver_input": "Nami ID không đúng định dạng",
         "min_max": "Tối thiếu: {{min}} - Tối đa: {{max}}",
         "insufficient_balance": "Số dư không khả dụng"

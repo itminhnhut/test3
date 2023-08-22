@@ -2,7 +2,7 @@
     "receiver_input_placeholder": "Enter the recipient's Nami ID or Email",
     "note_placeholder": "Enter your note",
     "error": {
-        "not_found_receiver": "Nami ID doestn't exist ",
+        "not_found_receiver": "Nami's account doesn't exist",
         "invalid_receiver_input": "Invalid Nami ID",
         "min_max": "Min: {{min}} - Max: {{max}}",
         "insufficient_balance": "Insufficient balance"

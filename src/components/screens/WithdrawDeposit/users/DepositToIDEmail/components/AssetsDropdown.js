@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import NoData from 'components/common/V2/TableV2/NoData';
+import { CheckCircleIcon } from 'components/svg/SvgIcon';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
@@ -24,12 +25,14 @@ const AssetsDropdown = React.memo(
                 <div className="overflow-y-auto flex-1 space-y-3">
                     {!assetOptions.length && <NoData isSearch={Boolean(search)} />}
                     {assetOptions.map((asset) => {
-                        const disabled = asset?.assetCode === assetCode || +asset?.availableValue <= 0;
+                        const disabled = +asset?.availableValue <= 0;
+                        const selected = asset?.assetCode === assetCode;
                         return (
                             <button
-                                disabled={disabled}
+                                disabled={disabled || selected}
                                 key={asset._id}
-                                onClick={() => {
+                                onClick={(e) => {
+                                    e.stopPropagation();
                                     router.push(
                                         {
                                             pathname: PATHS.WITHDRAW_DEPOSIT.ID_EMAIL,
@@ -47,7 +50,8 @@ const AssetsDropdown = React.memo(
                                 }}
                                 className={classNames('flex items-center w-full disabled:cursor-default justify-between px-4 py-3 cursor-pointer transition ', {
                                     'hover:bg-hover dark:hover:bg-hover-dark': !disabled,
-                                    'opacity-50': disabled
+                                    'opacity-50': disabled,
+                                    'bg-hover dark:bg-hover-dark': selected
                                 })}
                             >
                                 <div className="flex items-center space-x-2">
@@ -55,9 +59,11 @@ const AssetsDropdown = React.memo(
                                     <span className="">{asset?.assetCode}</span>
                                     <span className="text-xs text-txtSecondary dark:text-txtSecondary-dark">{mapAssetConfig?.[asset?.assetId]?.assetName}</span>
                                 </div>
-                                <span className="float-right text-txtSecondary">
-                                    {formatWallet(asset?.availableValue || 0, mapAssetConfig?.[asset?.assetId]?.assetDigit || 0)}
-                                </span>
+                                <div className="flex items-center">
+                                    <span className="float-right text-txtSecondary">
+                                        {formatWallet(asset?.availableValue || 0, mapAssetConfig?.[asset?.assetId]?.assetDigit || 0)}
+                                    </span>
+                                </div>
                             </button>
                         );
                     })}
