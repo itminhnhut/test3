@@ -8,6 +8,7 @@ import isNil from 'lodash/isNil';
 import memoize from 'lodash/memoize';
 import defaults from 'lodash/defaults';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import { useStore as store } from 'src/redux/store';
 import {
     DefaultFuturesFee,
@@ -1353,13 +1354,10 @@ export const filterSearch = (originDataset, keys, searchValue) => {
 
     return originDataset.filter((item) => {
         for (const key of keys) {
-            if (parseUnormStr(item[key]).includes(parseUnormStr(searchValue))) return true;
+            if (parseUnormStr(get(item,key)).includes(parseUnormStr(searchValue))) return true;
         }
         return false;
     });
-    // const lowercaseSearch = searchValue.toLowerCase();
-    // const copyDataSet = cloneDeep(originDataset);
-    // return copyDataSet.filter((item) => keys.reduce((result, key) => result || (item?.[key] && item[key].toLowerCase().includes(lowercaseSearch)), false));
 };
 
 export const saveFile = (file, name) => {
