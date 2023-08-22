@@ -127,7 +127,7 @@ const getColumns = (t, configs) => [
             ({
                 [DepWdlStatus.Success]: (
                     <TagV2 icon={false} className="!p-0 ml-auto !bg-transparent" type="success" labelClassname="!text-base">
-                        {t('common:success')}
+                        {t('common:completed')}
                     </TagV2>
                 ),
                 [DepWdlStatus.Pending]: (
