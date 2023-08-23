@@ -252,14 +252,14 @@ const TabOpenOrders = ({
                 orderEditMarginId &&
                 <AdjustPositionMargin
                     order={orderEditMargin}
-                    pairPrice={marketWatch[orderEditMargin?.symbol]}
+                    pairPrice={marketWatch[convertSymbol(orderEditMargin?.symbol)]}
                     onClose={() => setOrderEditMarginId()}
                 />
             }
             {openAddVol &&
                 <ModifyOrder
                     order={rowData.current}
-                    pairPrice={marketWatch[rowData.current?.symbol]}
+                    pairPrice={marketWatch[convertSymbol(rowData.current?.symbol)]}
                     onClose={() => setOpenAddVol(false)}
                     pairConfig={pairConfig}
                 />
@@ -267,7 +267,7 @@ const TabOpenOrders = ({
             {openCloseOrderModal &&
                 <CloseOrderModalMobile
                     onClose={() => setOpenCloseOrderModal(false)} order={rowData.current}
-                    pairPrice={marketWatch[rowData.current?.symbol]}
+                    pairPrice={marketWatch[convertSymbol(rowData.current?.symbol)]}
                     pairConfig={pairConfig}
 
                 />
