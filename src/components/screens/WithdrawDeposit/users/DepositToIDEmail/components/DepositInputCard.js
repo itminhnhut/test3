@@ -72,17 +72,6 @@ const DepositInputCard = () => {
 
     let marketWatchPrice = marketWatch?.[0]?.p || 1;
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const result = await getMarketWatch(`${assetCode}VNDC`);
-                console.log('result:', result);
-            } catch (error) {
-                console.log('error:', error);
-            }
-        })();
-    }, [assetCode]);
-
     // LOCAL STATE
     const assetListRef = useRef();
     const [amount, setAmount] = useState('');
