@@ -239,14 +239,13 @@ export function formatBalance(value, digits = 2, acceptNegative = false) {
 }
 
 export const formatBalanceFiat = (value, assetCode, acceptNegative = false) => {
-    const isVNDC = assetCode === 'VNDC';
     const isUSDT = assetCode === 'USDT';
-    return formatBalance(isVNDC ? Math.round(value) : value, isVNDC ? 0 : isUSDT ? 4 : 0, acceptNegative);
+    return formatBalance(isUSDT ? value : Math.round(value), isUSDT ? 4 : 0, acceptNegative);
 };
 
 export const getExactBalanceFiat = (balance, assetCode) => {
-    const digit = assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : 0;
-    return roundByExactDigit(balance, digit);
+    const isUSDT = assetCode === 'USDT';
+    return roundByExactDigit(balance, isUSDT ? 4 : 0);
 };
 // Hiển thị cho phí spot tính bằng VNDC, USDT, ATS
 export function formatSpotFee(value) {
@@ -1425,10 +1424,10 @@ export const convertDateToMs = (date = 0, type = 'startOf') => {
     return moment.utc(moment(+date).endOf('day')).unix() * 1000;
 };
 
-const md5 = require('md5')
-export const getSignature = (userId, timestamp)=> {
-    return md5(userId.slice(0, 10)+timestamp)
-}
+const md5 = require('md5');
+export const getSignature = (userId, timestamp) => {
+    return md5(userId.slice(0, 10) + timestamp);
+};
 
 export const isBrowser = () => typeof window !== 'undefined';
 export const formatPair = (pair = 'BTCVNDC', t) => {

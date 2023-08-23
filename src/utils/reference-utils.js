@@ -35,7 +35,7 @@ export const WalletCurrency = {
     SPIN_CONQUEST: 31, // Spin cho che do 1E hoac custom
     SPIN_BONUS: 32, // Spin free
     SPIN_SPONSOR: 33, // Spin tai tro
-
+    VNST: 39,
     // Token for nami.exchange
     BNB: 40,
     BAT: 41,

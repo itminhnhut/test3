@@ -308,7 +308,7 @@ const CardInput = () => {
                                     router.push(
                                         {
                                             pathname: PATHS.WITHDRAW_DEPOSIT.PARTNER,
-                                            query: { side, assetId: +assetId === 72 ? 22 : 72 }
+                                            query: { side, assetId: +assetId === 72 ? 22 : +assetId === 22 ? 39 : 72 }
                                         },
                                         undefined,
                                         { shallow: true }

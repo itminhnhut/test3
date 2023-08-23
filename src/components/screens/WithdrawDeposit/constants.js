@@ -41,12 +41,14 @@ export const TranferreredType = {
 
 export const ALLOWED_ASSET = {
     72: 'VNDC',
-    22: 'USDT'
+    22: 'USDT',
+    39: 'VNST'
 };
 
 export const ALLOWED_ASSET_ID = {
     VNDC: 72,
-    USDT: 22
+    USDT: 22,
+    VNST: 39
 };
 
 export const TABS = [
@@ -274,6 +276,10 @@ export const fiatFilter = [
     {
         key: 72,
         localized: ALLOWED_ASSET['72']
+    },
+    {
+        key: 39,
+        localized: ALLOWED_ASSET['39']
     },
     {
         key: 22,
