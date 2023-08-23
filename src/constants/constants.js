@@ -1,8 +1,7 @@
 export const EMPTY_VALUE = '--';
 
 export const NAMI_FUTURES_EARNED_SHARE = 'NamiFutures_TakeProfit_';
-export const ONE_DAY = 86400000
-
+export const ONE_DAY = 86400000;
 
 export const ROOT_TOKEN = 'NAMI';
 
@@ -40,7 +39,7 @@ export const BREAK_POINTS = {
     mb: 820,
     xl: 1280,
     '2xl': 1536,
-    footer: 1200,
+    footer: 1200
 };
 
 export const FEE_STRUCTURES = {
@@ -245,9 +244,9 @@ export const MODE_OTP = {
 };
 
 export const FUTURES_PRODUCT = {
-    NAMI: { id: 0, name: 'Nami Futures'},
-    NAO: { id: 2, name: 'NAO Futures'}
-}
+    NAMI: { id: 0, name: 'Nami Futures' },
+    NAO: { id: 2, name: 'NAO Futures' }
+};
 
 export const CHART_JS_RANGE = {
     millisecond: 'millisecond',
@@ -259,4 +258,11 @@ export const CHART_JS_RANGE = {
     month: 'month',
     quarter: 'quarter',
     year: 'year'
+};
+
+export const CURRENCY = {
+    USDT: 22,
+    VNDC: 72,
+    NAO: 447,
+    VNST: 39
 };

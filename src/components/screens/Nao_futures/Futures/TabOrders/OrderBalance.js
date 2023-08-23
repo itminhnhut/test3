@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { formatCurrency, formatNumber } from 'redux/actions/utils';
+import { convertSymbol, formatCurrency, formatNumber } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import TradingLabel from 'components/trade/TradingLabel';
 import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
@@ -63,8 +63,9 @@ const OrderBalance = ({
         let _totalProfit = 0;
         const dataFilter = ordersList.filter(order => order.symbol.includes(quoteAsset))
         dataFilter.forEach((item) => {
-            const _priceData = state?.[item.symbol] || futuresMarketWatch?.[item.symbol]
-            const refPrice = item?.side === VndcFutureOrderType.Side.BUY ? _priceData?.bid : _priceData?.ask
+            const symbol = convertSymbol(item.symbol);
+            const _priceData = state?.[symbol] || futuresMarketWatch?.[symbol];
+            const refPrice = item?.side === VndcFutureOrderType.Side.BUY ? _priceData?.bid : _priceData?.ask;
             const lastPrice = refPrice || 0;
             _totalProfit += getProfitVndc(item, lastPrice, true);
         });

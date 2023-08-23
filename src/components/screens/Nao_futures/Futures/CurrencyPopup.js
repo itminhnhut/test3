@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef, useMemo } from "react";
 import Modal from "components/common/ReModal";
 import Button from "components/common/Button";
-import colors from "styles/colors";
+import colors, { hover } from "styles/colors";
 import CheckBox from "components/common/CheckBox";
 import { getS3Url, formatCurrency, formatNumber, emitWebViewEvent } from "redux/actions/utils";
 import { fees } from "components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType";
@@ -29,24 +29,25 @@ const CurrencyPopup = (props) => {
     const assetId = useRef(null);
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
     const [disableForAvailable, setDisableForAvailable] = useState(false);
-    const currency = dataRow?.fee_metadata?.close_order?.currency ?? dataRow?.fee_metadata?.place_order?.currency
+    const currency = dataRow?.fee_metadata?.close_order?.currency ?? dataRow?.fee_metadata?.place_order?.currency; 
     const alertContext = useContext(AlertContext);
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
-    const assetCodeArray = ["VNDC", "NAO", "NAMI",  "USDT"];
-    const codeOfAsset = [72, 447, 1,  22];
+
+    const allowCurrency = useMemo(() => {
+        const exclude = [72, 22, 39, 86, currency];
+        const openCurrency = dataRow?.fee_metadata?.place_order?.currency;
+        return fees.filter((rs) => !exclude.includes(rs.assetId) || (rs.assetId === openCurrency && currency !== openCurrency));
+    }, [currency]);
 
     useEffect(() => {
         if (dataRow) {
-            codeOfAsset.forEach((item, index) => {
-                if (currency === item) {
-                    setHoverItemsChose(assetCodeArray[index]);
-                }
-            });
-            const assetId = dataRow?.symbol?.indexOf('USDT') > -1 ? 72 : 22;
-            setFees(fees.filter((rs) => !(rs.assetId === 86 || rs.assetId === assetId)));
+            const asset = fees.find((rs) => rs.assetId === currency);
+            if (!asset) return;
+            setHoverItemsChose(asset.assetCode);
+            setFees([...[asset], ...allowCurrency]);
         }
-    }, [dataRow]);
+    }, [dataRow, visibleModalFees]);
 
     const handleDisableBTN = (availableAsset, _assetConfigs) => {
         setDisableForAvailable(formatNumber(availableAsset, _assetConfigs.assetDigit) === "0" ? true : false)
@@ -125,20 +126,7 @@ const CurrencyPopup = (props) => {
     const onClose = () => {
         setVisibleModalFees(false);
         if (forceFetchOrder) forceFetchOrder()
-        codeOfAsset.forEach((item, index) => {
-            if (currency === item) {
-                setHoverItemsChose(assetCodeArray[index]);
-            }
-        });
     };
-
-    useEffect(() => {
-        if (currency === codeOfAsset[assetCodeArray.indexOf(hoverItemsChose)]) {
-            setdDisabledButton(true);
-        } else {
-            setdDisabledButton(false);
-        }
-    }, [hoverItemsChose, currency])
 
     const HandleConfirmModal = async () => {
         setSubmitting(true);
@@ -186,17 +174,10 @@ const CurrencyPopup = (props) => {
     };
 
     return (
-        <Modal
-            onusMode={true}
-            isVisible={visibleModalFees}
-            onBackdropCb={onClose}
-            onusClassName="min-h-[334px]"
-        >
+        <Modal onusMode={true} isVisible={visibleModalFees} onBackdropCb={onClose} onusClassName="min-h-[334px]">
             <div className="w-full" style={{ color: colors.wildSand }}>
                 <div className="flex items-center w-full">
-                    <h4 className="text-lg leading-6 font-bold pr-[10px]">
-                        {t(`futures:mobile:trading_fees`)}
-                    </h4>
+                    <h4 className="text-lg leading-6 font-bold pr-[10px]">{t(`futures:mobile:trading_fees`)}</h4>
                     <div
                         className="flex items-center justify-center rounded-full
                         w-4 h-4 cursor-pointer text-txtSecondary dark:text-txtSecondary-dark"
@@ -214,18 +195,14 @@ const CurrencyPopup = (props) => {
                         className="!ml-[8.5rem] !mt-1 !p-2 !mr-4 !opacity-100 !rounded-lg after:!left-3"
                         overridePosition={(e) => ({
                             left: 0,
-                            top: e.top,
+                            top: e.top
                         })}
                         arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                     >
-                        <div className="font-medium text-xs leading-[18px] text-white dark:text-txtPrimary-dark">
-                            {t('futures:mobile:tooltip_popup')}
-                        </div>
+                        <div className="font-medium text-xs leading-[18px] text-white dark:text-txtPrimary-dark">{t('futures:mobile:tooltip_popup')}</div>
                     </Tooltip>
                 </div>
-                <div className="pt-6 pb-4 w-full flex flex-col space-y-2">
-                    {renderAllCurrency}
-                </div>
+                <div className="pt-6 pb-4 w-full flex flex-col space-y-2">{renderAllCurrency}</div>
                 <div className="flex items-center space-x-2 pb-6" onClick={() => setCheckBox(!checkBox)}>
                     <CheckBox onusMode={true} active={checkBox} boxContainerClassName="rounded-[2px]" />
                     <span className="whitespace-nowrap font-medium text-txtSecondary dark:text-txtSecondary-dark text-xs">
@@ -238,7 +215,7 @@ const CurrencyPopup = (props) => {
                     componentType="button"
                     className={`!text-base !h-12 !font-semibold`}
                     type="primary"
-                    disabled={disabledButton || submitting || disableForAvailable}
+                    disabled={disabledButton || submitting || disableForAvailable || currency === hoverItemsChose}
                     onClick={HandleConfirmModal}
                 />
             </div>

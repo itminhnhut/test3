@@ -14,7 +14,8 @@ import {
     scrollHorizontal,
     formatNumber,
     getDecimalPrice,
-    formatPrice
+    formatPrice,
+    convertSymbol
 } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import usePrevious from 'hooks/usePrevious';
@@ -42,6 +43,7 @@ const TABS = {
 const initTags = {
     VNDC: 'VNDC',
     USDT: 'USDT',
+    VNST: 'VNST',
 }
 
 const TAGS = {
@@ -175,7 +177,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                 const newData = data
                     .filter((item) => {
                         // Add more filter before store if needed
-                        return item.q === tag
+                        return item.q === convertSymbol(tag)
                     })
                     .map((item = {}) => ({
                         symbol: item.s,
@@ -244,7 +246,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
         }
         return orderBy(data, [filter.current.field], [filter.current.direction]).filter(((item, index) => {
             if (tab.active === TABS.FAVOURITE) {
-                return favoritePairs.includes(item.baseAsset + '_' + item.quoteAsset)
+                return favoritePairs.includes(item.baseAsset + '_' + tab.tagActive)
             }
             if (tab.active === TABS.TRENDING || tab.active === TABS.GAINERS || tab.active === TABS.LOSERS) {
                 return index < 10;
@@ -256,7 +258,6 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
     const dataSource = useMemo(() => {
         return searching.current ? dataFilter : orderBy(dataFilter, [sort.field], [sort.direction]);
     }, [sort, dataFilter])
-
 
     const onChangeTab = (t) => {
         switch (t) {
@@ -287,7 +288,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                 key={item.symbol}
                 className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-hover dark:bg-hover-dark' : ''}`}
                 onClick={() => {
-                    router.push(`/mobile/futures/${item.symbol}`);
+                    router.push(`/mobile/futures/${item.baseAsset + tab.tagActive}`);
                 }}
             >
                 <div className="flex flex-1 items-center">
