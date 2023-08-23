@@ -260,3 +260,9 @@ export const CHART_JS_RANGE = {
     quarter: 'quarter',
     year: 'year'
 };
+
+export const QUOTE_ASSET = {
+    USDT: 22,
+    VNDC: 72,
+    VNST: 39
+}
