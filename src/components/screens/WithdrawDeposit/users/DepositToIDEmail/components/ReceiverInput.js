@@ -150,6 +150,12 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                         type: 'warning'
                     });
                 },
+                SOTP_INVALID: () => {
+                    toast({
+                        text: t('dw_partner:error.invalid_secret', { timesErr: response.data?.data?.count ?? 1 }),
+                        type: 'warning'
+                    });
+                },
                 SOTP_INVALID_EXCEED_TIME: () => {
                     setState({
                         showAlertDisableSmartOtp: true,
@@ -242,7 +248,7 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                 textButton={t('dw_partner:verify_by_email')}
                 onConfirm={() => {
                     setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false });
-                    onDepositOffChainHandler()
+                    onDepositOffChainHandler();
                 }}
                 type="error"
                 title={t('dw_partner:disabled_smart_otp_title')}
