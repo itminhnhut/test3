@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import React from 'react';
 import { formatNumber, formatTime, formatNanNumber } from 'redux/actions/utils';
-
-import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import TableV2 from 'components/common/V2/TableV2';
@@ -11,10 +9,8 @@ import HeaderTooltip from './HeaderTooltip';
 import { API_FUTURES_STATISTIC_TOP_POSITIONS } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
 import PriceChangePercent from 'components/common/PriceChangePercent';
-import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
 import FuturesLeverage from 'components/common/FuturesLeverage';
 import Skeletor from 'components/common/Skeletor';
-import CollapseV2 from 'components/common/V2/CollapseV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import MCard from 'components/common/MCard';
 import TextCopyable from '../Account/TextCopyable';
@@ -26,7 +22,7 @@ const LIST_TABS = [
 
 const LIMIT_ROW = 5;
 
-const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, isMobile, isDark }) => {
+const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, isMobile, precision }) => {
     const { t } = useTranslation();
     // Data chart Pnl changing
     const [dataTopPosition, setDataTopPosition] = useState();
@@ -63,8 +59,6 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
 
         fetchTopPosition();
     }, [typeProduct, typeCurrency, filter]);
-
-    const isVndc = typeCurrency === ALLOWED_ASSET_ID.VNDC;
 
     const columns = useMemo(
         () => [
@@ -121,7 +115,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                     const sign = v > 0 ? '+' : '';
                     return (
                         <div className="flex items-center gap-x-1">
-                            <span className={v > 0 ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>{sign + formatNanNumber(v, isVndc ? 0 : 4)}</span>
+                            <span className={v > 0 ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>{sign + formatNanNumber(v, precision)}</span>
                             <PriceChangePercent priceChangePercent={v / item?.margin} className="!justify-start !text-base" />
                         </div>
                     );
@@ -213,7 +207,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                                                 </div>
                                                 <div className="flex items-center">
                                                     <span className={sign ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
-                                                        {sign + formatNanNumber(profit, isVndc ? 0 : 4)}
+                                                        {sign + formatNanNumber(profit, precision)}
                                                     </span>
                                                     <PriceChangePercent priceChangePercent={profit / margin} className="!justify-start !text-sm" />
                                                 </div>
@@ -235,7 +229,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
                     {/* </CollapseV2> */}
                     <ModalV2 isVisible={!!showDetails} onBackdropCb={() => setShowDetails(null)} wrapClassName="px-6" className="dark:bg-dark" isMobile={true}>
                         <h1 className="text-xl font-semibold text-gray-15 dark:text-gray-4">{t('portfolio:position_details')}</h1>
-                        {showDetails && <ModalDetailsPosition value={showDetails} isVndc={isVndc} t={t} />}
+                        {showDetails && <ModalDetailsPosition value={showDetails} precision={precision} t={t} />}
                     </ModalV2>
                 </>
             ) : (
@@ -280,7 +274,7 @@ const TopPositionTable = ({ className = '', typeProduct, typeCurrency, filter, i
     );
 };
 
-const ModalDetailsPosition = ({ value, isVndc, t }) => {
+const ModalDetailsPosition = ({ value, precision, t }) => {
     if (!value) return;
 
     const { displaying_id, closed_at, symbol, leverage, profit, margin, side, type, decimalScalePrice, order_value } = value;
@@ -295,7 +289,7 @@ const ModalDetailsPosition = ({ value, isVndc, t }) => {
                     <FuturesLeverage className="text-[10px] leading-[12px]" value={leverage} />
                 </div>
                 <div className="flex items-center">
-                    <span className={sign ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>{sign + formatNanNumber(profit, isVndc ? 0 : 4)}</span>
+                    <span className={sign ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>{sign + formatNanNumber(profit, precision)}</span>
                     <PriceChangePercent priceChangePercent={profit / margin} className="!justify-start !text-sm" />
                 </div>
             </div>
