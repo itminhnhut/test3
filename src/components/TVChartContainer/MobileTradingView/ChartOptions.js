@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
-import { formatNumber, getS3Url } from 'redux/actions/utils';
+import { formatNumber, getS3Url, convertSymbol } from 'redux/actions/utils';
 import { roundTo } from 'round-to';
 import classNames from 'classnames';
 import { Popover, Transition } from '@headlessui/react';
@@ -191,19 +191,23 @@ const Change24h = ({
 }) => {
     const [pairPrice, setPairPrice] = useState(null);
     const [lastSymbol, setLastSymbol] = useState(null);
+    const symbol = convertSymbol(pairConfig?.symbol);
+
+
     useEffect(() => {
         if (pairConfig?.symbol !== lastSymbol) {
             setLastSymbol(pairConfig?.symbol);
             setPairPrice(null);
         }
     }, [pairConfig]);
+
     useEffect(() => {
         if (!pairConfig) return;
         // ? Subscribe publicSocket
         // ? Get Pair Ticker
-        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig.symbol, async (data) => {
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol, async (data) => {
             const _pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
-            if (pairConfig.symbol === _pairPrice?.symbol && _pairPrice?.lastPrice > 0) {
+            if (symbol === _pairPrice?.symbol && _pairPrice?.lastPrice > 0) {
                 setPairPrice(_pairPrice);
             }
         });

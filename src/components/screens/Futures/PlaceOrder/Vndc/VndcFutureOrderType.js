@@ -112,7 +112,8 @@ export const fees = [
     { assetId: 447, assetCode: 'NAO', ratio: '0.036%' },
     { assetId: 86, assetCode: 'ONUS', ratio: '0.045%' },
     { assetId: 1, assetCode: 'NAMI', ratio: '0.045%' },
-    { assetId: 22, assetCode: 'USDT', ratio: '0.06%' }
+    { assetId: 22, assetCode: 'USDT', ratio: '0.06%' },
+    { assetId: 39, assetCode: 'VNST', ratio: '0.06%' }
 ];
 
 export const fees_futures = [

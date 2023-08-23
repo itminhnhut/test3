@@ -35,7 +35,7 @@ const categories = [
 
 ];
 
-const ASSETS = [72, 447, 1, 86, 22];
+const ASSETS = [72, 447, 1, 86, 22, 39];
 
 const noteCases = [
     '^BALANCE: Swap future order (\\d+)$',
@@ -164,7 +164,7 @@ function TabTransactionsHistory({
         return data.result.map(item => {
             const assetConfig = assetConfigMap[item.currency];
             const orderId = getOrderIdFromNote(item?.note);
-            const isUSDT = assetConfig.assetCode === 'USDT';
+            const isUSDT = assetConfig?.assetCode === 'USDT';
             const assetDigit = assetConfig?.assetDigit ?? 0;
             const decimal = item?.category === TransactionCategory.FUTURE_FUNDING_FEE ? (isUSDT ? 6 : 0) : (isUSDT ? assetDigit + 2 : assetDigit);
 

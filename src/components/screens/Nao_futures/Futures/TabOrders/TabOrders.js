@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next';
 import { FUTURES_RECORD_CODE, RECORD_TAB_VNDC_MOBILE } from 'components/screens/Futures/TradeRecord/RecordTableTab';
 import TabOpenOrders from 'components/screens/Nao_futures/Futures/TabOrders/TabOpenOrders';
 import TabOrdersHistory from 'components/screens/Nao_futures/Futures/TabOrders/TabOrdersHistory';
-import { emitWebViewEvent, scrollHorizontal } from 'redux/actions/utils';
+import { convertSymbol, emitWebViewEvent, scrollHorizontal } from 'redux/actions/utils';
 import OrderBalance from 'components/screens/Nao_futures/Futures/TabOrders/OrderBalance';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OrderDetail from 'components/screens/Nao_futures/Futures/OrderDetail';
@@ -251,7 +251,7 @@ const TabOrders = memo(({
             </div>}
             {tab === FUTURES_RECORD_CODE.information &&
                 <TabContent active={tab === FUTURES_RECORD_CODE.information}>
-                    <OrderInformation pair={pair} />
+                    <OrderInformation pair={convertSymbol(pair)} />
                 </TabContent>
             }
             <TabContent

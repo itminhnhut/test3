@@ -12,13 +12,16 @@ import { DangerIcon } from 'src/components/common/Icons';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { getOrdersList } from 'redux/actions/futures';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { convertSymbol, formatNumber } from 'redux/actions/utils';
+import { getAssetConfig } from 'redux/selectors';
 
 const CloseOrdersByCondtionMobile = memo(({
     onClose,
     onConfirm,
     isClosing,
     pair,
-    tab
+    tab,
+    pairConfig
 }) => {
     const { t } = useTranslation();
 
@@ -36,6 +39,8 @@ const CloseOrdersByCondtionMobile = memo(({
     const [isMore, setIsMore] = useState(false);
 
     const listInnerRef = useRef();
+    const quoteAsset = pairConfig?.quoteAsset;
+    const symbol = `${pairConfig?.baseAsset}/${quoteAsset}`;
 
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
@@ -43,6 +48,8 @@ const CloseOrdersByCondtionMobile = memo(({
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
     const indicatorColorClass = isDark ? '!bg-gray-4' : '!bg-white';
+    const assetToken = useSelector((state) => getAssetConfig(state, pairConfig?.quoteAssetId))
+    const decimal = assetToken?.assetDigit ?? 0;
 
     const getOrdersByCloseType = async () => {
         setState({
@@ -120,11 +127,7 @@ const CloseOrdersByCondtionMobile = memo(({
         for (const property in PnLObject) {
             pnl += PnLObject[property];
         }
-        let totalPnl
-        setTotalPnL(numeral(+pnl).format(
-            `0,0.${'0'.repeat(pair.includes('VNDC') ? 0 : 4)}`,
-            Math.floor
-        ))
+        setTotalPnL(formatNumber(pnl, decimal, 0, true));
         if (Object.keys(PnLObject).length !== state.orders.length) setTotalPnL("-")
     }, [PnLObject, state])
 
@@ -136,30 +139,30 @@ const CloseOrdersByCondtionMobile = memo(({
         position: [
             {
                 type: 'ALL',
-                value: t('futures:mobile.close_all_positions.close_type.close_all', { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
+                value: t('futures:mobile.close_all_positions.close_type.close_all', { pair: quoteAsset })
             },
             {
                 type: 'PROFIT',
-                value: t('futures:mobile.close_all_positions.close_type.close_all_profit', { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
+                value: t('futures:mobile.close_all_positions.close_type.close_all_profit', { pair: quoteAsset })
             },
             {
                 type: 'LOSS',
-                value: t('futures:mobile.close_all_positions.close_type.close_all_loss', { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
+                value: t('futures:mobile.close_all_positions.close_type.close_all_loss', { pair: quoteAsset })
             },
             {
                 type: 'PAIR',
-                value: t('futures:mobile.close_all_positions.close_type.close_all_pair', { pair: formatPair(pair) })
-            },
+                value: t('futures:mobile.close_all_positions.close_type.close_all_pair', { pair: symbol })
+            }
         ],
         openOrders: [
             {
                 type: 'ALL_PENDING',
-                value: t('futures:mobile.close_all_positions.close_type.close_all_pending', { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
+                value: t('futures:mobile.close_all_positions.close_type.close_all_pending', { pair: quoteAsset })
             },
             {
                 type: 'ALL_PAIR_PENDING',
-                value: t('futures:mobile.close_all_positions.close_type.close_all_pair_pending', { pair: formatPair(pair) })
-            },
+                value: t('futures:mobile.close_all_positions.close_type.close_all_pair_pending', { pair: symbol })
+            }
         ]
     };
 
@@ -196,20 +199,24 @@ const CloseOrdersByCondtionMobile = memo(({
     const renderCloseTypes = () => {
         const types = tab === 'position' ? closeTypes.position : closeTypes.openOrders;
         return (
-            <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
-                   modalClassName="z-[99999] flex justitfy-center h-full"
-                   onusClassName={'!px-4 pb-13 min-h-[200px] rounded-t-[16px] !bg-bgPrimary dark:!bg-bgPrimary-dark !overflow-hidden !pt-9'}
-                   containerClassName=""
+            <Modal
+                onusMode={true}
+                isVisible={true}
+                onBackdropCb={onClose}
+                modalClassName="z-[99999] flex justitfy-center h-full"
+                onusClassName={'!px-4 pb-13 min-h-[200px] rounded-t-[16px] !bg-bgPrimary dark:!bg-bgPrimary-dark !overflow-hidden !pt-9'}
+                containerClassName=""
             >
                 <div>
                     {types.map((closeType, index) => (
                         <div
-                            className={`h-12 rounded-md mt-2 bg-gray-13 dark:bg-dark-4 flex items-center w-full py-3 px-4 justify-between border ${closeType.type === type ? 'border-teal' : 'border-transparent'}`}
-                            onClick={() => setType(closeType.type)}>
-                            <div className="font-normal text-base leading-6">
-                                {closeType.value}
-                            </div>
-
+                            key={index}
+                            className={`h-12 rounded-md mt-2 bg-gray-13 dark:bg-dark-4 flex items-center w-full py-3 px-4 justify-between border ${
+                                closeType.type === type ? 'border-teal' : 'border-transparent'
+                            }`}
+                            onClick={() => setType(closeType.type)}
+                        >
+                            <div className="font-normal text-base leading-6">{closeType.value}</div>
                         </div>
                     ))}
                     <Button
@@ -229,42 +236,61 @@ const CloseOrdersByCondtionMobile = memo(({
     const renderConfirmCloseOrders = (type) => {
         //call api
         return (
-            <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
-                   modalClassName="z-[99999] flex justitfy-center h-full"
-                   onusClassName={'!px-4 pb-13 min-h-[200px] rounded-t-[16px] !bg-bgPrimary dark:!bg-bgPrimary-dark !overflow-hidden !pt-11'}
-                   containerClassName=""
+            <Modal
+                onusMode={true}
+                isVisible={true}
+                onBackdropCb={onClose}
+                modalClassName="z-[99999] flex justitfy-center h-full"
+                onusClassName={'!px-4 pb-13 min-h-[200px] rounded-t-[16px] !bg-bgPrimary dark:!bg-bgPrimary-dark !overflow-hidden !pt-11'}
+                containerClassName=""
             >
                 <div className="w-full leading-6 font-semibold tracking-[-0.02em] !text-[20px] mb-3">
-                    <div>{type.includes('PAIR') ? t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) }) : t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })}</div>
+                    <div>
+                        {type.includes('PAIR')
+                            ? t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: symbol })
+                            : t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, {
+                                  pair: quoteAsset
+                              })}
+                    </div>
                 </div>
-                <div className='w-full h-[calc(100%-84px)] pb-6 overflow-y-auto'>
+                <div className="w-full h-[calc(100%-84px)] pb-6 overflow-y-auto">
                     {state?.orders && renderCloseInfo()}
                     <div className="mt-3 flex w-full">
-                        <div className="w-[22px]">
-                            {DangerIcon({ height: "14", width: "14" })}
-                        </div>
+                        <div className="w-[22px]">{DangerIcon({ height: '14', width: '14' })}</div>
                         <div className="text-xs leading-[18px] font-medium tracking-[-0.02em] text-yellow-2 w-full">
                             {t('futures:mobile.close_all_positions.confirm_description')}
                         </div>
                     </div>
 
-                    <div className="flex mt-8 h-6 mb-6 gap-2" style={{ display: `${state?.orders?.length > 0 && type !== 'ALL_PAIR_PENDING' && type !== 'ALL_PENDING' ? 'flex' : 'none'}` }}>
-                        <div className="text-base font-semibold leading-[22px] tracking-[-0.02em]">
-                            {t('futures:mobile.close_all_positions.position_list')}
-                        </div>
+                    <div
+                        className="flex mt-8 h-6 mb-6 gap-2"
+                        style={{ display: `${state?.orders?.length > 0 && type !== 'ALL_PAIR_PENDING' && type !== 'ALL_PENDING' ? 'flex' : 'none'}` }}
+                    >
+                        <div className="text-base font-semibold leading-[22px] tracking-[-0.02em]">{t('futures:mobile.close_all_positions.position_list')}</div>
                         <div>
-                            <Switcher addClass={`!w-[22px] !h-[22px] ${indicatorColorClass}`} wrapperClass="!h-[24px] !w-[48px]" onusMode onChange={() => {
-                                setShowPositionList(!showPositionList)
-                            }} active={showPositionList} />
+                            <Switcher
+                                addClass={`!w-[22px] !h-[22px] ${indicatorColorClass}`}
+                                wrapperClass="!h-[24px] !w-[48px]"
+                                onusMode
+                                onChange={() => {
+                                    setShowPositionList(!showPositionList);
+                                }}
+                                active={showPositionList}
+                            />
                         </div>
                     </div>
-                    {state?.orders?.length ? <div className="w-full -mt-3"
-                        style={{ display: `${showPositionList ? 'block' : 'none'}` }}
-                        ref={listInnerRef}
-                        // onScroll={onScroll}
-                    >
-                        {renderPositionList()}
-                    </div> : <></>}
+                    {state?.orders?.length ? (
+                        <div
+                            className="w-full -mt-3"
+                            style={{ display: `${showPositionList ? 'block' : 'none'}` }}
+                            ref={listInnerRef}
+                            // onScroll={onScroll}
+                        >
+                            {renderPositionList()}
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                     {/* {state?.orders?.length > 5 && <div className='text-teal w-full flex justify-center h-4 items-end'>
                         {showPositionList && isMore && IsMoreIcon}
                     </div>} */}
@@ -294,40 +320,37 @@ const CloseOrdersByCondtionMobile = memo(({
     const renderCloseInfo = () => {
         return (
             <div className="font-normal text-sm leading-5 w-full">
-                <div className={`h-11 min-h-full border-b border-divider dark:border-divider-dark flex items-center w-full`} style={{ display: `${type !== 'ALL_PAIR_PENDING' && type !== 'ALL_PENDING' ? 'flex' : 'none'}` }}>
+                <div
+                    className={`h-11 min-h-full border-b border-divider dark:border-divider-dark flex items-center w-full`}
+                    style={{ display: `${type !== 'ALL_PAIR_PENDING' && type !== 'ALL_PENDING' ? 'flex' : 'none'}` }}
+                >
                     <div className="w-full flex justify-between">
-                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            {t('futures:mobile.close_all_positions.estimated_pnl')}
-                        </div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile.close_all_positions.estimated_pnl')}</div>
                         {!totalPnL.includes('-') ? (
-                            <div className='text-green-2 font-medium'>
-                                {totalPnL ? '+' : '-'}{totalPnL} {state?.orders?.length > 0 ? pair && totalPnL && pair.includes('VNDC') ? 'VNDC' : 'USDT' : ''}
+                            <div className="text-green-2 font-medium">
+                                {totalPnL ? '+' : '-'}
+                                {totalPnL} {state?.orders?.length > 0 ? pair && totalPnL && quoteAsset : ''}
                             </div>
                         ) : (
-                            <div className='text-red-2 font-medium'>
-                                {totalPnL} {state?.orders?.length > 0 ? pair && totalPnL && pair.includes('VNDC') ? 'VNDC' : 'USDT' : ''}
+                            <div className="text-red-2 font-medium">
+                                {totalPnL} {state?.orders?.length > 0 ? pair && totalPnL && quoteAsset : ''}
                             </div>
                         )}
                     </div>
                 </div>
                 <div className={`h-11 min-h-full border-b border-divider dark:border-divider-dark flex items-center w-full`}>
                     <div className="w-full flex justify-between">
-                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            {t('futures:mobile.close_all_positions.estimated_time')}
-                        </div>
-                        <div className='font-medium'>
-                            {state?.orders?.length * 0.5}s
-                        </div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile.close_all_positions.estimated_time')}</div>
+                        <div className="font-medium">{state?.orders?.length * 0.5}s</div>
                     </div>
                 </div>
 
                 <div className={`h-11 min-h-full flex items-center w-full`}>
                     <div className="w-full flex justify-between">
-                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            {t('futures:mobile.close_all_positions.estimated_orders')}
-                        </div>
-                        <div className='font-medium'>
-                            {state?.orders?.length} {state?.orders?.length > 1 ? t('futures:mobile.close_all_positions.orders') : t('futures:mobile.close_all_positions.order')}
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile.close_all_positions.estimated_orders')}</div>
+                        <div className="font-medium">
+                            {state?.orders?.length}{' '}
+                            {state?.orders?.length > 1 ? t('futures:mobile.close_all_positions.orders') : t('futures:mobile.close_all_positions.order')}
                         </div>
                     </div>
                 </div>
@@ -337,21 +360,26 @@ const CloseOrdersByCondtionMobile = memo(({
 
     const renderPositionList = () => {
         return state?.orders?.map((order, index) => {
-            const dataMarketWatch = marketWatch[order?.symbol];
-            const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
-            const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
-            const isVndcFutures = symbol?.quoteAsset === 'VNDC';
+            const dataMarketWatch = marketWatch[convertSymbol(order?.symbol)];
+            const isVndcFutures = ['VNDC', 'VNST'].includes(pairConfig?.quoteAsset);
             return (
                 <div
                     key={order.displaying_id}
                     style={{ display: `${showPositionList && state?.orders?.length > 0 ? 'block' : 'none'}` }}
                     // ref={index === state?.orders?.length - 1 ? ref : undefined}
                 >
-                    <CloseProfit key={order.displaying_id} onusMode={true} className="flex flex-col" index={index}
-                                 length={state?.orders?.length} doShow={() => doShow('confirm', type)}
-                                 calculatePnL={calculatePnL}
-                                 order={order} initPairPrice={dataMarketWatch} isMobile
-                                 decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}
+                    <CloseProfit
+                        key={order.displaying_id}
+                        onusMode={true}
+                        className="flex flex-col"
+                        index={index}
+                        length={state?.orders?.length}
+                        doShow={() => doShow('confirm', type)}
+                        calculatePnL={calculatePnL}
+                        order={order}
+                        initPairPrice={dataMarketWatch}
+                        isMobile
+                        decimal={isVndcFutures ? decimal : decimal + 2}
                     />
                 </div>
             );
@@ -366,9 +394,12 @@ const CloseOrdersByCondtionMobile = memo(({
         //     () => closeOrdersByCloseType(),
         // );
         return (
-            <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
+            <Modal
+                onusMode={true}
+                isVisible={true}
+                onBackdropCb={onClose}
                 modalClassName="z-[99999] flex justitfy-center h-full"
-                onusClassName={"!px-9 pb-13 min-h-[304px] !bg-bgPrimary dark:!bg-bgPrimary-dark !overflow-hidden !pt-11 !bottom-[52px] rounded-[16px]"}
+                onusClassName={'!px-9 pb-13 min-h-[304px] !bg-bgPrimary dark:!bg-bgPrimary-dark !overflow-hidden !pt-11 !bottom-[52px] rounded-[16px]'}
                 containerClassName="!px-4"
             >
                 <div className="w-full flex justify-center mb-8">
@@ -379,7 +410,7 @@ const CloseOrdersByCondtionMobile = memo(({
                 </div>
 
                 <div className="w-full leading-6 font-semibold tracking-[-0.02em] !text-lg mb-3 text-center">
-                    <div>{t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) })}</div>
+                    <div>{t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: symbol })}</div>
                 </div>
                 <div className="w-full leading-[22ox] font-normal tracking-[-0.02em] !text-base text-center text-txtSecondary dark:text-txtSecondary-dark">
                     <div>{t(`futures:mobile.close_all_positions.confirm_close_pending_description`)}</div>
