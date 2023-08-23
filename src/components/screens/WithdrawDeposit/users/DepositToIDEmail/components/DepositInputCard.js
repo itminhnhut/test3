@@ -101,7 +101,7 @@ const DepositInputCard = () => {
     const assetOptions = useMemo(() => {
         const listAssetAvailable = paymentConfigs
             .filter((asset) => asset?.networkList || asset?.networkList?.length)
-            .filter((c) => c.assetCode?.includes(search.trim().toUpperCase()))
+            .filter((asset) => asset?.assetCode?.includes(search.trim().toUpperCase()))
             .map((config) => {
                 const wallet = spotWallets[config.assetId] || {
                     value: 0,
