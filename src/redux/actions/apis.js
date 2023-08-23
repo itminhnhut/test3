@@ -391,3 +391,5 @@ export const API_GET_SPOT_ASSET_INFO = API_V3_PREFIX + 'spot/asset_info';
 // DEPOSIT TO NAMIID - EMAIL
 export const API_SEARCH_USER = API_V3_PREFIX + 'payment/check-user';
 export const API_DEPOSIT_CRYPTO = API_V3_PREFIX + 'payment/transfer-off-chain';
+// auth
+export const GOOGLE_OAUTH_CALLBACK = API_V3_PREFIX + 'auth/callback/google';

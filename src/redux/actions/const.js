@@ -224,6 +224,11 @@ export const ApiResultWithdrawETH = {
     UNKNOWN_ERROR: 'unknown_error'
 };
 
+export const AUTHORIZE_STATUS = {
+    MISSING_OTP: 'missing_otp',
+    OK: 'ok'
+};
+
 export const WithdrawalStatus = {
     PENDING: 1,
     COMPLETED: 2,

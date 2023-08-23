@@ -556,7 +556,7 @@ const NaoPerformance = memo(({}) => {
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center h-full px-4 text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
+                                'flex flex-col justify-center px-4 text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
                                 { '!border-teal !bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
@@ -566,7 +566,7 @@ const NaoPerformance = memo(({}) => {
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center h-full px-4 text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
+                                'flex flex-col justify-center px-4 text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
                                 { '!border-teal !bg-teal/10 bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.USDT }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
