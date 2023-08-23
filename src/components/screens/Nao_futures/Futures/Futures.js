@@ -52,12 +52,12 @@ const FuturesMobile = ({ symbol }) => {
     const assetConfig = useSelector((state) => getAssetConfig(state, pairConfig?.quoteAssetId));
 
     useEffect(() => {
-        if (!router?.query?.pair) return;
+        if (!symbol) return;
         if (!pairConfig && allPairConfigs?.length > 0) {
             const newPair = allPairConfigs?.find((o) => o.pair === FUTURES_DEFAULT_SYMBOL)?.pair || allPairConfigs[0].pair;
-            router.push(`/mobile${PATHS.FUTURES_V2.DEFAULT}/${newPair}`, undefined, { shallow: true });
+            router.replace(`/mobile${PATHS.FUTURES_V2.DEFAULT}/${newPair}`);
         }
-    }, [router?.query?.pair, pairConfig]);
+    }, [symbol, pairConfig]);
 
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1 || router.asPath.indexOf('VNST') !== -1;
 

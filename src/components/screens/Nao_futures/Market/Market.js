@@ -286,7 +286,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
         return listItem.map((item) => (
             <div
                 key={item.symbol}
-                className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-hover dark:bg-hover-dark' : ''}`}
+                className={`flex justify-between min-h-[3.375rem] items-center px-4 ${convertSymbol(pair) === item.symbol ? 'bg-hover dark:bg-hover-dark' : ''}`}
                 onClick={() => {
                     router.push(`/mobile/futures/${item.baseAsset + tab.tagActive}`);
                 }}
