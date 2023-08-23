@@ -24,7 +24,7 @@ const INITAL_OTP_STATE = {
 
 const OTP_MODE = ['email', 'tfa'];
 
-const ModalOtp = ({isVisible, onClose, otpExpireTime, loading, onConfirm, isUseSmartOtp }) => {
+const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUseSmartOtp }) => {
     const [state, set] = useState({
         otp: INITAL_OTP_STATE,
         pasted: {
@@ -123,6 +123,9 @@ const ModalOtp = ({isVisible, onClose, otpExpireTime, loading, onConfirm, isUseS
             isVisible={isVisible}
             wrapClassName=""
             onBackdropCb={() => {
+                // prevent close when making transaction
+                if (loading) return;
+                
                 setState({
                     otp: INITAL_OTP_STATE,
                     pasted: {

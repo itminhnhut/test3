@@ -278,6 +278,10 @@ export const fiatFilter = [
         localized: ALLOWED_ASSET['72']
     },
     {
+        key: 39,
+        localized: ALLOWED_ASSET['39']
+    },
+    {
         key: 22,
         localized: ALLOWED_ASSET['22']
     }
