@@ -29,8 +29,6 @@ const DEPOSIT_AMOUNT = {
     MAX: 50e6
 };
 
-const DEFAULT_QUOTE_SYMBOL = 'VNDC';
-
 const DepositInputCard = () => {
     const {
         t,
@@ -48,7 +46,12 @@ const DepositInputCard = () => {
     // CHECK IF ASSET IS ALLOW TO DEPOSIT
     useEffect(() => {
         const isAssetAllowed = paymentConfigs
-            .filter((asset) => asset?.networkList || asset?.networkList?.length)
+            .filter((asset) => {
+                if (asset?.networkList?.length > 0) {
+                    return asset.networkList.findIndex((network) => network?.withdrawEnable) !== -1;
+                }
+                return false;
+            })
             .find((asset) => asset?.assetCode === assetCode);
         if (!Boolean(isAssetAllowed)) {
             router.query.assetId = paymentConfigs[0]?.assetCode || 'USDT';
@@ -100,7 +103,12 @@ const DepositInputCard = () => {
 
     const assetOptions = useMemo(() => {
         const listAssetAvailable = paymentConfigs
-            .filter((asset) => asset?.networkList || asset?.networkList?.length)
+            .filter((asset) => {
+                if (asset?.networkList?.length > 0) {
+                    return asset.networkList.findIndex((network) => network?.withdrawEnable) !== -1;
+                }
+                return false;
+            })
             .filter((asset) => asset?.assetCode?.includes(search.trim().toUpperCase()))
             .map((config) => {
                 const wallet = spotWallets[config.assetId] || {
