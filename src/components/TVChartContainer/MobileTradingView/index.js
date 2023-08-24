@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IconLoading } from 'components/common/Icons';
-import { getTradingViewTimezone, getS3Url, formatFundingRate, emitWebViewEvent, encodeUrlFromApp } from 'redux/actions/utils';
+import { getTradingViewTimezone, getS3Url, formatFundingRate, emitWebViewEvent, encodeUrlFromApp, convertSymbol } from 'redux/actions/utils';
 import Countdown from 'react-countdown-now';
 import colors from '../../../styles/colors';
 import { widget } from '../../TradingView/charting_library/charting_library.min';
@@ -695,7 +695,7 @@ export class MobileTradingView extends React.PureComponent {
                             />
                         )}
                     </div>
-                    {!this.props.isDetail && <Funding symbol={this.props.symbol} />}
+                    {!this.props.isDetail && <Funding symbol={convertSymbol(this.props.symbol)} />}
                     {/*<div className="!w-32 cheat-watermark">*/}
                     {/*    <NamiExchangeSvg color={colors.gray[4]}/>*/}
                     {/*</div>*/}

@@ -3,7 +3,7 @@ import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import { OrderItem } from './TabOrders/OrderItemMobile';
 import { useSelector } from 'react-redux';
 import { renderCellTable, VndcFutureOrderType, getRatioProfit, fees } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
+import { convertSymbol, emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import Button from 'components/common/Button';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
@@ -20,6 +20,7 @@ import AdjustPositionMargin from './AdjustPositionMargin';
 import AddCircleOutline from 'components/svg/AddCircleOutline';
 import SvgShare from 'components/svg/Share';
 import { Share } from 'react-feather';
+import { getMarketWatch } from 'redux/selectors';
 
 const INITIAL_STATE = {
     socketStatus: false,
@@ -48,8 +49,8 @@ const OrderOpenDetail = ({
         sl: +order?.sl,
         tp: +order?.tp,
     });
-    const marketWatch = useSelector((state) => state.futures.marketWatch);
-    const dataMarketWatch = marketWatch[order?.symbol];
+    const symbol = convertSymbol(order?.symbol);
+    const dataMarketWatch = useSelector((state) => getMarketWatch(state, symbol));
 
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const [showEditMargin, setShowEditMargin] = useState(false);
@@ -80,9 +81,9 @@ const OrderOpenDetail = ({
     };
 
     useEffect(() => {
-        if (!order.symbol || order.status === VndcFutureOrderType.Status.CLOSED) return;
-        subscribeFuturesSocket(order.symbol);
-    }, [publicSocket, order.symbol]);
+        if (!symbol || order.status === VndcFutureOrderType.Status.CLOSED) return;
+        subscribeFuturesSocket(symbol);
+    }, [publicSocket, symbol]);
 
     const onConfirmSLTP = (e) => {
         // setData(e);
@@ -202,8 +203,8 @@ const OrderOpenDetail = ({
 
     const renderQuoteprice = useCallback(() => {
         return order?.side === VndcFutureOrderType.Side.BUY
-            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol} />
-            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol} />;
+            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={symbol} />
+            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={symbol} />;
     }, [order]);
 
     const orderStatus = useMemo(() => {

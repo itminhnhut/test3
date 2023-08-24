@@ -1465,3 +1465,5 @@ export const getFuturesFees = async (quotes) => {
     //     return data;
     // });
 };
+
+export const convertSymbol = (symbol) => String(symbol).replace('VNST', 'VNDC');
