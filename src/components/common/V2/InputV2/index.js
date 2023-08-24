@@ -18,119 +18,132 @@ const ErrorTriangle = ({ size = 16 }) => {
     );
 };
 
-const InputV2 = forwardRef(({
-    className,
-    label,
-    value,
-    onChange,
-    placeholder,
-    canPaste = false,
-    allowClear = true,
-    prefix,
-    suffix,
-    error,
-    onHitEnterButton,
-    type = 'text',
-    disabled = false,
-    classNameInput = '',
-    classNameDivInner = '',
-    showDividerSuffix = true,
-    ...restProps
-}, forwardedRef) => {
-    const { t } = useTranslation();
+const InputV2 = forwardRef(
+    (
+        {
+            className,
+            label,
+            value,
+            onChange,
+            placeholder,
+            canPaste = false,
+            allowClear = true,
+            prefix,
+            suffix,
+            error,
+            onHitEnterButton,
+            type = 'text',
+            disabled = false,
+            classNameInput = '',
+            classNameDivInner = '',
+            showDividerSuffix = true,
+            ...restProps
+        },
+        forwardedRef
+    ) => {
+        const { t } = useTranslation();
 
-    const inputRef = useRef(null);
-    const internalChange = (value) => {
-        if (onChange) onChange(value);
-    };
-    const onInputChange = (e) => {
-        internalChange(e?.target?.value);
-    };
-    const handleHitEnterButton = (e) => {
-        if (e?.nativeEvent?.code === 'Enter') {
-            if (onHitEnterButton) onHitEnterButton(e?.target?.value);
-        }
-    };
-
-    const handleClear = () => {
-        internalChange('');
-    };
-
-    const paste = () => {
-        navigator.clipboard.readText().then((text) => {
-            if (onChange) {
-                onChange(text);
+        const inputRef = useRef(null);
+        const internalChange = (value) => {
+            if (onChange) onChange(value);
+        };
+        const onInputChange = (e) => {
+            internalChange(e?.target?.value);
+        };
+        const handleHitEnterButton = (e) => {
+            if (e?.nativeEvent?.code === 'Enter') {
+                if (onHitEnterButton) onHitEnterButton(e?.target?.value);
             }
-        });
-    };
+        };
 
-    return (
-        <div className={classNames('relative pb-6', className)}>
-            {label ? <p className="text-gray-1 dark:text-gray-7 pb-2 text-sm">{label}</p> : null}
-            <div
-                className={classNames(
-                    'bg-gray-10 dark:bg-dark-2 border border-transparent rounded-md flex items-center gap-2 p-[0.6875rem] transition',
-                    'dark:focus-within:border-teal focus-within:border-green-3 dark:border-dark-2',
-                    {
-                        '!border-red': !!error,
-                        'text-txtDisabled dark:text-txtDisabled-dark select-none': disabled
-                    },
-                    classNameDivInner
-                )}
-            >
-                {prefix ? prefix : null}
-                <input
-                    ref={(current) => {
-                        inputRef.current = current;
-                        if (forwardedRef) {
-                            forwardedRef.current = current;
-                        }
-                    }}
-                    className={classNames(
-                        'flex-1 text-sm sm:text-base !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark text-txtPrimary dark:text-txtPrimary-dark',
-                        classNameInput
-                    )}
-                    type={type}
-                    placeholder={placeholder}
-                    value={value}
-                    disabled={disabled}
-                    onChange={onInputChange}
-                    onKeyPress={onHitEnterButton ? handleHitEnterButton : null}
-                    {...restProps}
-                />
+        const handleClear = () => {
+            internalChange('');
+        };
+
+        const paste = () => {
+            navigator.clipboard.readText().then((text) => {
+                if (onChange) {
+                    onChange(text);
+                }
+            });
+        };
+
+        return (
+            <div className={classNames('relative pb-6', className)}>
+                {label ? <p className="text-gray-1 dark:text-gray-7 pb-2 text-sm">{label}</p> : null}
                 <div
-                    className={classNames('flex items-center space-x-2', {
-                        'divide-x divide-divider dark:divide-divider-dark ': showDividerSuffix || (allowClear && !!value)
+                    className={classNames(
+                        'bg-gray-10 dark:bg-dark-2 border border-transparent rounded-md flex items-center gap-2 p-[0.6875rem] transition',
+                        'dark:focus-within:border-teal focus-within:border-green-3 dark:border-dark-2',
+                        {
+                            '!border-red': !!error,
+                            'text-txtDisabled dark:text-txtDisabled-dark select-none': disabled
+                        },
+                        classNameDivInner
+                    )}
+                >
+                    {prefix ? prefix : null}
+                    <input
+                        ref={(current) => {
+                            inputRef.current = current;
+                            if (forwardedRef) {
+                                forwardedRef.current = current;
+                            }
+                        }}
+                        className={classNames(
+                            'flex-1 text-sm sm:text-base !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark text-txtPrimary dark:text-txtPrimary-dark',
+                            classNameInput
+                        )}
+                        type={type}
+                        placeholder={placeholder}
+                        value={value}
+                        disabled={disabled}
+                        onChange={onInputChange}
+                        onKeyPress={onHitEnterButton ? handleHitEnterButton : null}
+                        {...restProps}
+                    />
+                    <div
+                        className={classNames('flex items-center space-x-2', {
+                            'divide-x divide-divider dark:divide-divider-dark ': showDividerSuffix || (allowClear && !!value)
+                        })}
+                    >
+                        <X
+                            className={classNames('transition', allowClear && !!value ? 'opacity-1 cursor-pointer' : 'opacity-0')}
+                            size={16}
+                            onClick={handleClear}
+                            color={colors.darkBlue5}
+                        />
+                        {suffix && <div className="pl-2">{suffix}</div>}
+                    </div>
+                    {canPaste ? (
+                        <span
+                            onClick={paste}
+                            className={classNames(
+                                'text-green-3 dark:text-green-2 hover:!text-green-4 font-semibold cursor-pointer select-none',
+                                {
+                                    ' pl-2  border-l border-divider dark:border-divider-dark': allowClear && !!value
+                                }
+                            )}
+                        >
+                            {t('common:paste')}
+                        </span>
+                    ) : null}
+                </div>
+
+                <div
+                    className={classNames('overflow-hidden transition-[max-height_opacity] duration-300', {
+                        'max-h-0 opacity-0 ease-out': !error,
+                        'max-h-[5rem] opacity-1 ease-in': !!error
                     })}
                 >
-                    <X
-                        className={classNames('transition', allowClear && !!value ? 'opacity-1 cursor-pointer' : 'opacity-0')}
-                        size={16}
-                        onClick={handleClear}
-                        color={colors.darkBlue5}
-                    />
-                    {suffix && <div className="pl-2">{suffix}</div>}
-                </div>
-                {canPaste ? (
-                    <span onClick={paste} className="text-teal font-semibold cursor-pointer select-none">
-                        {t('common:paste')}
-                    </span>
-                ) : null}
-            </div>
-
-            <div
-                className={classNames('overflow-hidden transition-[max-height_opacity] duration-300', {
-                    'max-h-0 opacity-0 ease-out': !error,
-                    'max-h-[5rem] opacity-1 ease-in': !!error
-                })}
-            >
-                <div className="flex items-center mt-2">
-                    <ErrorTriggers />
-                    <div className="text-red text-xs leading-4 ml-1">{error}</div>
+                    <div className="flex items-center mt-2">
+                        <ErrorTriggers />
+                        <div className="text-red text-xs leading-4 ml-1">{error}</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-});
+        );
+    }
+);
 
 export default InputV2;

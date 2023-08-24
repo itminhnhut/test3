@@ -72,9 +72,23 @@ const TransactionHistory = ({ id }) => {
         });
     }, []);
 
+    const customSort = (tableSorted) => {
+        const output = {};
+
+        for (const key in tableSorted) {
+            if (tableSorted.hasOwnProperty(key)) {
+                output.sortBy = key;
+                output.sortType = tableSorted[key] ? 1 : -1;
+            }
+
+            changeFilter({ curSort: output });
+        }
+    };
+
     useEffect(() => {
         const source = axios.CancelToken.source();
         let mounted = false;
+        hasNext.current = false
         const fetchTransactionHistory = async () => {
             const { range, asset, category } = filter;
             const { startDate, endDate } = range;
@@ -125,7 +139,8 @@ const TransactionHistory = ({ id }) => {
                 skip: currentPage * LIMIT,
                 category: category?.category_id || undefined,
                 currency: asset?.id || undefined,
-                walletType
+                walletType,
+                'sort[created_at]': !filter.curSort?.sortBy ? 'descending' : filter.curSort?.sortType === 1 ? 'ascending' : 'descending'
             };
             try {
                 setLoading(true);
@@ -272,6 +287,7 @@ const TransactionHistory = ({ id }) => {
                         sort={['created_at']}
                         useRowHover
                         data={data}
+                        customSort={customSort}
                         columns={columnsConfig.map((key) => columns?.[key]) ?? []}
                         rowKey={(item) => item?.key}
                         scroll={{ x: true }}
