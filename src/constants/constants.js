@@ -260,6 +260,11 @@ export const CHART_JS_RANGE = {
     year: 'year'
 };
 
+export const QUOTE_ASSET = {
+    USDT: 22,
+    VNDC: 72,
+    VNST: 39
+}
 export const CURRENCY = {
     USDT: 22,
     VNDC: 72,
