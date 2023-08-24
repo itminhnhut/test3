@@ -348,7 +348,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
     return (
         <div className="mt-4 space-y-4">
             <TradingInput
-                containerClassName="w-full dark:bg-dark-2"
+                containerClassName="w-full dark:bg-dark-2 !h-11"
                 label={t('common:price')}
                 value={isMarket ? t('futures:market') : price}
                 disabled={isMarket}
@@ -372,7 +372,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 textDescription={textDescription('quoteQty', { min: minQuoteQty, max: maxQuoteQty })}
                 errorTooltip={false}
                 decimalScale={decimals.qty}
-                containerClassName="w-full dark:bg-dark-2"
+                containerClassName="w-full dark:bg-dark-2 !h-11"
                 labelClassName="whitespace-nowrap"
                 tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark select-none"
                 renderTail={() => pairConfig?.quoteAsset}
