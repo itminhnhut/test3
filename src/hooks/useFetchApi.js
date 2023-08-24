@@ -20,7 +20,7 @@ const useFetchApi = ({ url = '', params, successCallBack = () => {} }, condition
                     } else {
                         setData(null);
                     }
-                    successCallBack();
+                    successCallBack(data);
                 } catch (error) {
                     setError(error);
                 } finally {
