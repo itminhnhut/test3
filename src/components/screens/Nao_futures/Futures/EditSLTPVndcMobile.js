@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
-import { countDecimals, formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
+import { convertSymbol, countDecimals, formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useSelector } from 'react-redux';
 import { ceil, find } from 'lodash';
@@ -17,6 +17,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { isNumeric } from 'utils';
 import classNames from 'classnames';
 import { createSelector } from 'reselect';
+import { getPairConfig } from 'redux/selectors';
 
 const EditSLTPVndcMobile = ({
     onClose,
@@ -54,12 +55,13 @@ const EditSLTPVndcMobile = ({
     });
     const [autoType, setAutoType] = useState(false);
     const dotStep = useRef(4);
-    const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
-    const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
+    const symbol = convertSymbol(order?.symbol);
+    const _lastPrice = pairTicker ? pairTicker[symbol]?.lastPrice : lastPrice;
+    const quoteAsset = pairTicker ? pairTicker[symbol]?.quoteAsset : order?.quoteAsset;
     const futuresConfigs = useSelector(state => state.futures.pairConfigs);
     const assetConfig = useSelector(state => state.utils.assetConfig)
-    const symbol = order?.symbol;
-    const pairConfig = find(futuresConfigs, { symbol });
+    const pairConfig = useSelector((state) => getPairConfig(state, order?.symbol));
+
     const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
     const decimalSymbol = find(assetConfig, { id: pairConfig?.quoteAssetId })?.assetDigit ?? 0;
     if (!pairConfig) return null;
@@ -513,7 +515,7 @@ const EditSLTPVndcMobile = ({
                         </div>
                         &nbsp;
                         <div
-                            className={`font-medium text-right ${textColor(profit.current.sl)}`}>{formatNumber(profit.current.sl, decimalSymbol, 0, true) + ' ' + quoteAsset}</div>
+                            className={`font-medium text-right ${textColor(profit.current.sl)}`}>{formatNumber(profit.current.sl, decimalSymbol, 0, true) + ' ' + pairConfig?.quoteAsset}</div>
                     </div>
                     }
                 </div>
@@ -536,7 +538,7 @@ const EditSLTPVndcMobile = ({
                                 onValueChange={(e) => onHandleChange('sl', e)}
                                 renderTail={() => (
                                     <span className={`font-medium pl-2 text-txtSecondary dark:text-txtSecondary-dark`}>
-                                        {tabSl === 2 ? '%' : quoteAsset}
+                                        {tabSl === 2 ? '%' : pairConfig?.quoteAsset}
                                     </span>
                                 )}
                                 inputMode="decimal"
@@ -583,7 +585,7 @@ const EditSLTPVndcMobile = ({
                         </div>
                         &nbsp;
                         <div
-                            className={`font-medium text-right ${textColor(profit.current.tp)}`}>{formatNumber(profit.current.tp, decimalSymbol, 0, true) + ' ' + quoteAsset}</div>
+                            className={`font-medium text-right ${textColor(profit.current.tp)}`}>{formatNumber(profit.current.tp, decimalSymbol, 0, true) + ' ' + pairConfig?.quoteAsset}</div>
                     </div>}
                 </div>
                 {show.tp &&
@@ -605,7 +607,7 @@ const EditSLTPVndcMobile = ({
                                 onValueChange={(e) => onHandleChange('tp', e)}
                                 renderTail={() => (
                                     <span className={`font-medium pl-2 text-txtSecondary dark:text-txtSecondary-dark`}>
-                                        {tabTp === 2 ? '%' : quoteAsset}
+                                        {tabTp === 2 ? '%' : pairConfig?.quoteAsset}
                                     </span>
                                 )}
                                 inputMode="decimal"

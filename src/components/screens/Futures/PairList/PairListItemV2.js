@@ -5,7 +5,7 @@ import { PublicSocketEvent } from 'redux/actions/const';
 import { PATHS } from 'constants/paths';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import Emitter from 'redux/actions/emitter';
-import { LastPrice } from 'redux/actions/utils';
+import { LastPrice, convertSymbol } from 'redux/actions/utils';
 import { BxsStarIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import { favoriteAction } from 'redux/actions/user';
@@ -19,6 +19,7 @@ const FuturesPairListItemV2 = ({ pairConfig, isDark, isFavorite, isAuth, onSelec
     const router = useRouter();
     const [ticker, setTicker] = useState(null);
     const isClickFavorite = useRef(false);
+    const symbol = convertSymbol(pairConfig?.pair);
     const lastPrice = ticker?.lastPrice ?? pairConfig?.lastPrice;
     const priceChangePercent = ticker?.priceChangePercent ?? pairConfig?.priceChangePercent;
 
@@ -30,21 +31,20 @@ const FuturesPairListItemV2 = ({ pairConfig, isDark, isFavorite, isAuth, onSelec
     };
 
     useEffect(() => {
-        if (pairConfig?.pair) {
-            Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig.pair, async (data) => {
+        if (symbol) {
+            Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol, async (data) => {
                 if (data) {
-                    const _pairTicker = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
-                    if (_pairTicker?.symbol === pairConfig.pair) {
+                    const _pairTicker = FuturesMarketWatch.create(data);
+                    if (convertSymbol(_pairTicker?.symbol) === symbol) {
                         setTicker(_pairTicker);
                     }
                 }
             });
         }
 
-        return () => Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig.pair);
-    }, [publicSocket, pairConfig?.pair]);
+        return () => Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
+    }, [publicSocket, symbol]);
 
-    // useEffect(() => console.log('MinTicker => ', pairTicker), [pairTicker])
     const handleClickItem = () => {
         if (!isClickFavorite.current) {
             if (isFunction(onSelectPair)) {

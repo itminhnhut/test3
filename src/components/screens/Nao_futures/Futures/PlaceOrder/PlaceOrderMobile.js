@@ -10,7 +10,7 @@ import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reduce
 import OrderTypeMobile from './OrderTypeMobile';
 import OrderMarginMobile from './OrderMarginMobile';
 import OrderButtonMobile from './OrderButtonMobile';
-import { emitWebViewEvent, formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp, getType } from 'redux/actions/utils';
+import { convertSymbol, emitWebViewEvent, formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp, getType } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import OrderCollapse from './OrderCollapse';
 // import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
@@ -44,7 +44,7 @@ const PlaceOrder = ({ decimals, side, setSide, pair, isAuth, availableAsset, pai
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const firstTime = useRef(true);
     const context = useContext(AlertContext);
-    const priceFromMarketWatch = useSelector((state) => getPairPrice(state, pair));
+    const priceFromMarketWatch = useSelector((state) => getPairPrice(state, convertSymbol(pair)));
     const newDataLeverage = useRef(0);
     const [showEditVolume, setShowEditVolume] = useState(false);
     const [quoteQty, setQuoteQty] = useState(0);

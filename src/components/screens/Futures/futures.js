@@ -19,7 +19,7 @@ import { useLocalStorage } from 'react-use';
 import { LOCAL_STORAGE_KEY, NON_LOGIN_KEY, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
 import Emitter from 'redux/actions/emitter';
 import { fetchFuturesSetting, getOrdersList } from 'redux/actions/futures';
-import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
+import { convertSymbol, getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
 import DefaultMobileView from 'src/components/common/DefaultMobileView';
 import styled from 'styled-components';
 
@@ -142,9 +142,10 @@ const Futures = () => {
     }, [userSocket, auth]);
 
     useEffect(() => {
-        if (marketWatch?.[state.pair]) {
+        const _pair = convertSymbol(state.pair);
+        if (marketWatch?.[_pair]) {
             setState({
-                pairPrice: marketWatch[state.pair],
+                pairPrice: marketWatch[_pair],
                 forceUpdateState: state.forceUpdateState + 1
             });
         }
@@ -175,7 +176,6 @@ const Futures = () => {
         // ? Get Pair Ticker
         Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol, async (data) => {
             const pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
-            // console.log('__ check pairPrice', pairPrice.symbol, state.pair, pairPrice);
             if (state.pair === pairPrice?.symbol && pairPrice?.lastPrice > 0) {
                 setState({ pairPrice });
             }

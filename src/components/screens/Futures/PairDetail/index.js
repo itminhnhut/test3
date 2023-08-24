@@ -9,7 +9,8 @@ import {
     getS3Url,
     secondToMinutesAndSeconds,
     formatFundingRate,
-    RefCurrency
+    RefCurrency,
+    convertSymbol
 } from 'redux/actions/utils';
 import Countdown from 'react-countdown-now';
 import { usePrevious } from 'react-use';
@@ -50,7 +51,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     const [currentSelectedPair, setCurrentSelectedPair] = useState(pairConfig);
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
     const assetConfig = useSelector((state) => state.utils.assetConfig);
-    const pair = currentSelectedPair?.symbol || currentSelectedPair;
+    const pair = convertSymbol(currentSelectedPair?.symbol || currentSelectedPair);
     const priceFromMarketWatch = useSelector((state) => getPairPrice(state, pair));
     const timesync = useSelector((state) => state.utils.timesync);
     const _pairPrice = priceFromMarketWatch || pairPrice;
@@ -275,7 +276,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                 </div>
             );
         });
-    }, [pairPrice, itemsPriceMinW, pricePrecision, isVndcFutures]);
+    }, [pairPrice, pairConfig, itemsPriceMinW, pricePrecision, isVndcFutures]);
 
     const onClickFunding = (mode) => {
         isFunding.current = mode;
@@ -489,7 +490,8 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
             >
                 <div className="relative z-10 flex items-center gap-1">
                     <span className="text-[22px] font-semibold leading-[30px]">
-                        {pairPrice?.baseAsset ? pairPrice?.baseAsset + '/' + pairPrice?.quoteAsset : '-/-'}
+                        {/* {pairPrice?.baseAsset ? pairPrice?.baseAsset + '/' + pairPrice?.quoteAsset : '-/-'} */}
+                        {pairConfig?.baseAsset ? `${pairConfig?.baseAsset}/${pairConfig?.quoteAsset}` : '-/-'}
                     </span>
                     <ArrowDropDownIcon
                         isFilled
