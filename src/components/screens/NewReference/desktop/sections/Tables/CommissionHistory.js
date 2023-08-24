@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { TableFilter } from '.';
 import { API_GET_COMMISSON_HISTORY } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
-import Skeletor from 'components/common/Skeletor';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { WalletCurrency } from 'components/screens/OnusWithdrawGate/helper';
 import _ from 'lodash';
@@ -17,7 +16,6 @@ const addEndDate = 86400 * 1000 - 1000 * 60 * 60 * timeZone - 1;
 // End: Do api filter date range sai nen moi can cai qq nay :D
 
 const CommissionHistory = ({ t, commisionConfig, id }) => {
-    // const assetConfig = useSelector(state => state.utils.assetConfig)
     const levelTabs = [
         { title: t('common:all'), value: null },
         { title: '1', value: 1 },
@@ -30,11 +28,13 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         { title: t('common:all'), value: null },
         { title: 'Spot', value: 'SPOT' },
         { title: 'Futures', value: 'FUTURES' },
-        { title: 'Stake', value: 'STAKING' }
+        { title: 'Stake', value: 'STAKING' },
+        { title: 'Insurance', value: 'INSURANCE' }
     ];
     const assetTabs = [
         { title: t('common:all'), value: null },
         { title: 'VNDC', value: WalletCurrency.VNDC },
+        { title: 'VNST', value: WalletCurrency.VNST },
         { title: 'NAO', value: WalletCurrency.NAO },
         { title: 'NAMI', value: WalletCurrency.NAMI },
         { title: 'ONUS', value: WalletCurrency.ONUS },
@@ -89,7 +89,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         total: 0
     });
 
-    const getCommisionHistory = _.throttle(async () => {
+    const getCommissionHistory = _.throttle(async () => {
         const params = {
             from: filter?.date?.value?.startDate ? new Date(filter?.date?.value?.startDate).getTime() + addFromDate : null,
             to: filter?.date?.value?.endDate ? new Date(filter?.date?.value?.endDate).getTime() + addEndDate : new Date().getTime(),
@@ -120,13 +120,13 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     }, 300);
 
     useEffect(() => {
-        getCommisionHistory();
+        getCommissionHistory();
     }, [page]);
 
     useEffect(() => {
         setPage(1);
         if (page === 1) {
-            getCommisionHistory();
+            getCommissionHistory();
         }
     }, [filter]);
 
@@ -229,11 +229,3 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
 };
 
 export default CommissionHistory;
-
-const ROW_SKELETON = {
-    date: <Skeletor width={200} />,
-    level: <Skeletor width={110} />,
-    kind: <Skeletor width={90} />,
-    currency: <Skeletor width={90} />,
-    value: <Skeletor width={90} />
-};
