@@ -85,8 +85,6 @@ export default function FuturesFeeMobileList({ t, data = [], currentQuote, loadi
 }
 
 export function FuturesFeeMobileListV2({ t, data = [], loading = true }) {
-    const [isShowMore, setIsShowMore] = useState(false);
-
     return (
         <div>
             <div className="flex justify-between mt-6">
