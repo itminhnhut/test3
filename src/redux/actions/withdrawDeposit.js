@@ -165,7 +165,7 @@ export const editPartnerConfig = async ({ side, min, max, status, assetId }) => 
         min,
         max,
         status,
-        assetId
+        assetId: +assetId || 0
     });
 
     return res.data;

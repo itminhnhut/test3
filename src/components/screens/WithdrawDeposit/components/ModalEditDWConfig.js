@@ -8,7 +8,8 @@ import { formatBalanceFiat, formatNumber } from 'redux/actions/utils';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from '../constants';
 
-const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose, side, onConfirm }) => {
+const ModalEditDWConfig = ({ isVisible, rate, assetId, loading, onClose, side, onConfirm, orderConfig }) => {
+    console.log('orderConfig:', orderConfig)
     const [amount, setAmount] = useState({
         min: '',
         max: ''
@@ -17,11 +18,6 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
         t,
         i18n: { language }
     } = useTranslation();
-
-    const orderConfig = useMemo(
-        () => partner?.orderConfig?.[(side?.toLowerCase() || SIDE.BUY) + (assetId === ALLOWED_ASSET_ID['VNDC'] ? '' : 'Usdt')],
-        [partner?.orderConfig, side, assetId]
-    );
 
     useEffect(() => {
         if (orderConfig && side) {
@@ -110,7 +106,7 @@ const ModalEditDWConfig = ({ isVisible, rate, assetId, partner, loading, onClose
             isMobile
             isVisible={isVisible}
             onBackdropCb={loading ? undefined : () => onClose()}
-            wrapClassName='!px-8 !pb-8'
+            wrapClassName="!px-8 !pb-8"
             className={classNames(`md:!max-w-[588px] overflow-y-auto select-none !border border-divider dark:border-divider-dark`)}
         >
             <form
