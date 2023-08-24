@@ -54,7 +54,8 @@ const KING = {
     FUTURES: { vi: 'Nami Futures', en: 'Nami Futures' },
     STAKING: { vi: 'Nami Daily Staking', en: 'Nami Daily Staking' },
     SWAP: { vi: 'Quy đổi', en: 'Swap' },
-    NAO_FUTURES: { vi: 'NAO Futures', en: 'NAO Futures' }
+    NAO_FUTURES: { vi: 'NAO Futures', en: 'NAO Futures' },
+    INSURANCE: { vi: 'Insurance', en: 'Insurance' }
 };
 
 const Commission = ({ t, language, id }) => {
