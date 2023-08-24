@@ -275,7 +275,7 @@ const MarketTable = ({
         let pairColumnsWidth = 300;
         let starColumnWidth = 64;
 
-        if (!data?.length) pairColumnsWidth = 128;
+        if (!data?.length) pairColumnsWidth = 148;
 
         // Hide star button if user not found
 
@@ -394,7 +394,7 @@ const MarketTable = ({
                     <div>
                         <div className="whitespace-nowrap">{formatPrice(row)}</div>
                         <div className="text-txtSecondary dark:text-txtSecondary-dark font-normal text-xs">
-                            ${formatPrice(item?.q === 'VNDC' ? item?.p / 23415 : restProps.referencePrice[`${item?.q}/USD`] * item?.p, 4)}
+                            ${formatPrice(['VNDC', 'VNST'].includes(item?.q) ? item?.p / 23415 : restProps.referencePrice[`${item?.q}/USD`] * item?.p, 4)}
                         </div>
                     </div>
                 )
@@ -611,7 +611,7 @@ const MarketTable = ({
                                 onClick={async () => {
                                     if (isLoading) return
                                     await addTokensToFav({
-                                        symbols: restProps?.favType + 1 === 1  ? restProps?.suggestedSymbols?.map(e => {
+                                        symbols: restProps?.favType + 1 === 1 ? restProps?.suggestedSymbols?.map(e => {
                                             const pairConfig = restProps.futuresConfigs.find(config => config.pair == (e.b + e.q))
                                             return pairConfig?.baseAssetId + '_' + pairConfig?.quoteAssetId
                                         }) : restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
@@ -664,6 +664,10 @@ export const subTab = [
     },
     {
         key: 'vndc',
+        localized: null
+    },
+    {
+        key: 'vnst',
         localized: null
     }
 ];
@@ -732,7 +736,13 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
                         favoriteRefresher={favoriteRefresher}
                     />
                 ) : null,
-                pair: <Pair item={{ b: baseAsset, q: quoteAsset, lbl: label }} width={screenWidth} tradingMode={mode} lang={lang} futuresConfigs={futuresConfigs} />,
+                pair: <Pair
+                    item={{ b: baseAsset, q: quoteAsset, lbl: label }}
+                    width={screenWidth} t
+                    radingMode={mode}
+                    lang={lang}
+                    futuresConfigs={futuresConfigs}
+                />,
                 last_price: <span className="whitespace-nowrap sm:text-base text-sm">{formatPrice(lastPrice)}</span>,
                 change_24h: render24hChange(item, false, 'justify-end !text-sm sm:!text-base sm:!font-normal'),
                 market_cap: renderMarketCap(lastPrice, supply),
