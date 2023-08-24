@@ -19,7 +19,7 @@ const Futures = ({ params }) => {
         case 'trading-rule':
             return <TradingRule />
         default:
-            return <FuturesComponent />;
+            return <FuturesComponent symbol={params?.pair} />;
     }
 };
 

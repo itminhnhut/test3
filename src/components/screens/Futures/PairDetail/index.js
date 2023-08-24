@@ -9,8 +9,7 @@ import {
     getS3Url,
     secondToMinutesAndSeconds,
     formatFundingRate,
-    RefCurrency,
-    convertSymbol
+    RefCurrency
 } from 'redux/actions/utils';
 import Countdown from 'react-countdown-now';
 import { usePrevious } from 'react-use';
@@ -35,9 +34,7 @@ import PriceChangePercent from 'components/common/PriceChangePercent';
 import dynamic from 'next/dynamic';
 const FuturesPairList = dynamic(() => import('components/screens/Futures/PairList'), { ssr: false });
 
-const getPairPrice = createSelector([(state) => state.futures, (state, pair) => pair], (futures, pair) => futures.marketWatch[pair]);
-
-const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutures, isAuth }) => {
+const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutures, isAuth, decimals, pair }) => {
     // ? Xử lí minW để khi giá thay đổi, giao diện này sẽ không bị xê dịch.
     // ? Nguyên nhân: Font sida (;_;)
     const [itemsPriceMinW, setItemsPriceMinW] = useState(0);
@@ -48,14 +45,8 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     const [isShowModalInfo, setIsShowModalInfo] = useState(false);
     const [isShowModalPriceList, setIsShowModalPriceList] = useState(false);
     // state, vars for information modal (Trading rules)
-    const [currentSelectedPair, setCurrentSelectedPair] = useState(pairConfig);
-    const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
-    const assetConfig = useSelector((state) => state.utils.assetConfig);
-    const pair = convertSymbol(currentSelectedPair?.symbol || currentSelectedPair);
-    const priceFromMarketWatch = useSelector((state) => getPairPrice(state, pair));
     const timesync = useSelector((state) => state.utils.timesync);
-    const _pairPrice = priceFromMarketWatch || pairPrice;
-    const lastPrice = _pairPrice?.lastPrice;
+    const lastPrice = pairPrice?.lastPrice;
     const [showPopover, setShowPopover] = useState(false);
     const isFunding = useRef(true);
     const router = useRouter();
@@ -67,24 +58,20 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     const pairListRef = useRef();
     const pairListModalRef = useRef();
     const prevLastPrice = usePrevious(pairPrice?.lastPrice);
-    const prevLastPriceModal = usePrevious(priceFromMarketWatch?.lastPrice);
+    const prevLastPriceModal = usePrevious(pairPrice?.lastPrice);
     // const [currentTheme] = useDarkMode();
 
     const currentExchangeConfig = useMemo(() => {
-        if (!currentSelectedPair && !currentSelectedPair?.symbol) return;
-        const symbol = currentSelectedPair?.symbol || currentSelectedPair;
-        const config = allPairConfigs.find((e) => e.symbol === symbol);
-
-        const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, config || []);
-        const quantityFilter = getFilter(ExchangeOrderEnum.Filter.LOT_SIZE, config || []);
-        const quantityMarketFilter = getFilter(ExchangeOrderEnum.Filter.MARKET_LOT_SIZE, config || []);
-        const minNotionalFilter = getFilter(ExchangeOrderEnum.Filter.MIN_NOTIONAL, config || []);
-        const maxNumberVolumeFilter = getFilter(ExchangeOrderEnum.Filter.MAX_TOTAL_VOLUME, config || []);
-        const maxNumOrderFilter = getFilter(ExchangeOrderEnum.Filter.MAX_NUM_ORDERS, config || []);
-        const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, config || []);
+        const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, pairConfig || []);
+        const quantityFilter = getFilter(ExchangeOrderEnum.Filter.LOT_SIZE, pairConfig || []);
+        const quantityMarketFilter = getFilter(ExchangeOrderEnum.Filter.MARKET_LOT_SIZE, pairConfig || []);
+        const minNotionalFilter = getFilter(ExchangeOrderEnum.Filter.MIN_NOTIONAL, pairConfig || []);
+        const maxNumberVolumeFilter = getFilter(ExchangeOrderEnum.Filter.MAX_TOTAL_VOLUME, pairConfig || []);
+        const maxNumOrderFilter = getFilter(ExchangeOrderEnum.Filter.MAX_NUM_ORDERS, pairConfig || []);
+        const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, pairConfig || []);
 
         return {
-            config,
+            config: pairConfig,
             priceFilter,
             quantityMarketFilter,
             quantityFilter,
@@ -93,7 +80,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
             maxNumberVolumeFilter,
             percentPriceFilter
         };
-    }, [allPairConfigs, currentSelectedPair]);
+    }, [pairConfig]);
 
     // ? Memmoized Var
     const pricePrecision = useMemo(
@@ -113,12 +100,12 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                     // style={{ minWidth: lastPriceMinW }}
                     // style={{ minWidth: 82 }}
                     className={classNames(className, {
-                        '!text-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
+                        '!text-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : pairPrice?.lastPrice < prevLastPriceModal
                     })}
                 >
                     <div>
                         {formatNumber(
-                            roundTo(!isShownOnModal ? pairPrice?.lastPrice || 0 : priceFromMarketWatch?.lastPrice || 0, pricePrecision),
+                            roundTo(!isShownOnModal ? pairPrice?.lastPrice || 0 : pairPrice?.lastPrice || 0, pricePrecision),
                             pricePrecision,
                             lastPriceMinW !== undefined ? 0 : pricePrecision
                         )}
@@ -276,7 +263,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                 </div>
             );
         });
-    }, [pairPrice, pairConfig, itemsPriceMinW, pricePrecision, isVndcFutures]);
+    }, [pairPrice, itemsPriceMinW, pricePrecision, isVndcFutures]);
 
     const onClickFunding = (mode) => {
         isFunding.current = mode;
@@ -299,16 +286,16 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     }, [pairPrice?.symbol]);
 
     useEffect(() => {
-        if (router.query?.pair === pairPrice?.symbol && lastPriceMinW === undefined && lastPriceRef.current && pairPrice && pairPrice?.lastPrice) {
+        if (pair === pairPrice?.symbol && lastPriceMinW === undefined && lastPriceRef.current && pairPrice && pairPrice?.lastPrice) {
             setLastPriceMinW(lastPriceRef.current?.clientWidth + 6 || 0);
         }
-    }, [router.query, pairPrice?.symbol, pairPrice, lastPriceRef, lastPriceMinW]);
+    }, [pair, pairPrice?.symbol, pairPrice, lastPriceRef, lastPriceMinW]);
 
     useEffect(() => {
-        if (router.query?.pair === pairPrice?.symbol && itemsPriceMinW === undefined && itemsPriceRef.current) {
+        if (pair === pairPrice?.symbol && itemsPriceMinW === undefined && itemsPriceRef.current) {
             setItemsPriceMinW((itemsPriceRef?.current?.clientWidth || 20) + 24);
         }
-    }, [router.query, pairPrice?.symbol, itemsPriceRef, itemsPriceMinW]);
+    }, [pair, pairPrice?.symbol, itemsPriceRef, itemsPriceMinW]);
 
     useEffect(() => {
         setPairListMode(pairConfig?.quoteAsset);
@@ -319,7 +306,6 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
             if (!currentExchangeConfig?.config) return '-';
             // const exchange = allPairConfigs.find((e) => e.symbol === currentExchangeConfig?.config?.symbol);
             const quoteAsset = currentExchangeConfig?.config?.quoteAsset || '';
-            const currentAssetConfig = assetConfig?.find((item) => item.assetCode === quoteAsset);
             switch (title) {
                 case 'min_order_size': {
                     return formatPrice(currentExchangeConfig?.minNotionalFilter?.notional) + ' ' + quoteAsset;
@@ -337,10 +323,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                 case 'min_limit_order_price': {
                     const _minPrice = currentExchangeConfig?.priceFilter?.minPrice;
                     return (
-                        formatPrice(
-                            Math.max(_minPrice, lastPrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown),
-                            currentAssetConfig?.assetDigit || 0
-                        ) +
+                        formatPrice(Math.max(_minPrice, lastPrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown), decimals?.symbol) +
                         ' ' +
                         quoteAsset
                     );
@@ -349,10 +332,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                 case 'max_limit_order_price': {
                     const _maxPrice = currentExchangeConfig?.priceFilter?.maxPrice;
                     return (
-                        formatPrice(
-                            Math.min(_maxPrice, lastPrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp),
-                            currentAssetConfig?.assetDigit || 0
-                        ) +
+                        formatPrice(Math.min(_maxPrice, lastPrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp), decimals?.symbol) +
                         ' ' +
                         quoteAsset
                     );
@@ -370,7 +350,6 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
         };
 
         const onSelectPair = (pair) => {
-            setCurrentSelectedPair(pair);
             setActivePairList(false);
         };
 
@@ -448,7 +427,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                         </div>
                         <div className="flex flex-col items-end justify-start flex-1">
                             {renderLastPrice(true)}
-                            <PriceChangePercent priceChangePercent={priceFromMarketWatch?.priceChangePercent} className="mt-2 text-sm" />
+                            <PriceChangePercent priceChangePercent={pairPrice?.priceChangePercent} className="mt-2 text-sm" />
                         </div>
                     </div>
                     {/* Funding fee */}
@@ -468,9 +447,6 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     };
 
     const handleToggleModalInfo = (state = true) => {
-        if (state) {
-            setCurrentSelectedPair(pairConfig);
-        }
         setIsShowModalInfo(state);
     };
 
@@ -490,8 +466,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
             >
                 <div className="relative z-10 flex items-center gap-1">
                     <span className="text-[22px] font-semibold leading-[30px]">
-                        {/* {pairPrice?.baseAsset ? pairPrice?.baseAsset + '/' + pairPrice?.quoteAsset : '-/-'} */}
-                        {pairConfig?.baseAsset ? `${pairConfig?.baseAsset}/${pairConfig?.quoteAsset}` : '-/-'}
+                        {pairPrice?.baseAsset ? pairPrice?.baseAsset + '/' + pairPrice?.quoteAsset : '-/-'}
                     </span>
                     <ArrowDropDownIcon
                         isFilled
