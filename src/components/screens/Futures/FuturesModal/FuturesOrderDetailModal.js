@@ -56,7 +56,12 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
         const number = row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1;
         const swap = row?.swap || 0;
         const liqPrice =
-            (size * row?.open_price + (row?.fee_data?.place_order?.['22'] || 0) + (row?.fee_data?.place_order?.['72'] || 0) + swap - row?.margin) /
+            (size * row?.open_price +
+                (row?.fee_data?.place_order?.['22'] || 0) +
+                (row?.fee_data?.place_order?.['72'] || 0) +
+                (row?.fee_data?.place_order?.['39'] || 0) +
+                swap -
+                row?.margin) /
             (row?.quantity * (number - DefaultFuturesFee.Nami));
         return liqPrice > 0 ? formatNumber(liqPrice, 0, decimals.price, false) : '-';
     };
@@ -65,8 +70,8 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
         const currency = get(order, `fee_metadata[${key}].currency`, get(order, 'margin_currency', null));
         if (!order || !currency) return '-';
         const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
-        const decimalFunding = currency === 72 ? 0 : 6;
-        const decimal = key === 'funding_fee.total' ? decimalFunding : currency === 72 ? assetDigit : assetDigit + 2;
+        const decimalFunding = currency === 72 || currency === 39 ? 0 : 6;
+        const decimal = key === 'funding_fee.total' ? decimalFunding : currency === 72 || currency === 39 ? assetDigit : assetDigit + 2;
         const assetCode = allAssets?.[currency]?.assetCode ?? '';
         const data = get(order, `fee_metadata[${key}].value`, get(order, key, 0));
         const prefix = negative ? (data < 0 ? '-' : '+') : '';
@@ -274,7 +279,7 @@ const AdjustmentHistory = React.memo(({ id, onClose, pairConfigDetail }) => {
         }
     }, [ordersList, orderDetail, isHistory]);
 
-    const isVndcFutures = pairConfigDetail?.quoteAsset === 'VNDC';
+    const isVndcOrVnstFutures = pairConfigDetail?.quoteAsset === 'VNDC' || pairConfigDetail?.quoteAsset === 'VNST';
 
     const getColor = (key, value) => {
         if (key === 'tp') {
@@ -409,8 +414,8 @@ const AdjustmentHistory = React.memo(({ id, onClose, pairConfigDetail }) => {
         if (!orderDetail) return '-';
         const currency = orderDetail?.fee_metadata[key]?.currency ?? orderDetail?.margin_currency;
         const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
-        const decimalFunding = currency === 72 ? 0 : 6;
-        const decimal = key === 'funding_fee.total' ? decimalFunding : currency === 72 ? assetDigit : assetDigit + 2;
+        const decimalFunding = currency === 72 || currency === 39 ? 0 : 6;
+        const decimal = key === 'funding_fee.total' ? decimalFunding : currency === 72 || currency === 39 ? assetDigit : assetDigit + 2;
         const assetCode = allAssets?.[currency]?.assetCode ?? '';
         const data = orderDetail?.fee_metadata[key] ? orderDetail?.fee_metadata[key]['value'] : get(orderDetail, key, 0);
         const prefix = negative ? (data < 0 ? '-' : '+') : '';
@@ -725,7 +730,7 @@ const AdjustmentHistory = React.memo(({ id, onClose, pairConfigDetail }) => {
                         </Item>
                         <Item>
                             <Span className={+item?.metadata?.profit > 0 ? 'text-green-2' : 'text-red-2'}>
-                                {formatNumber(item?.metadata?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} (
+                                {formatNumber(item?.metadata?.profit, isVndcOrVnstFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} (
                                 {formatNumber(ratio, 2, 0, true)}%)
                             </Span>
                         </Item>
@@ -810,8 +815,10 @@ const FeeMeta = React.memo(({ orderDetail, mode = 'open_fee', allAssets, t }) =>
         const fee = feeFilter ? convertObject(feeFilter) : [];
         return fee;
     }, [orderDetail]);
-
-    const decimal = fee_metadata[0]?.asset === 72 ? allAssets[fee_metadata[0]?.asset]?.assetDigit : allAssets[fee_metadata[0]?.asset]?.assetDigit + 2;
+    const vnAsset = [72, 39];
+    const decimal = vnAsset.includes(fee_metadata[0]?.asset)
+        ? allAssets[fee_metadata[0]?.asset]?.assetDigit
+        : allAssets[fee_metadata[0]?.asset]?.assetDigit + 2;
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
@@ -840,7 +847,7 @@ const FeeMeta = React.memo(({ orderDetail, mode = 'open_fee', allAssets, t }) =>
                 <div className="mt-2 rounded-md w-full grid grid-cols-2 gap-2 border dark:border-divider-dark p-3">
                     {fee_metadata.map((rs, idx) => (
                         <div className={`text-base font-semibold text-darkBlue dark:text-gray-4 ${idx % 2 === 0 ? 'text-left' : 'text-right'}`} key={idx}>
-                            {formatNumber(rs.value, rs.asset === 72 ? allAssets[rs.asset].assetDigit : allAssets[rs.asset].assetDigit + 2)}{' '}
+                            {formatNumber(rs.value, rs.asset === 72 || rs.asset === 39 ? allAssets[rs.asset].assetDigit : allAssets[rs.asset].assetDigit + 2)}{' '}
                             {allAssets[rs.asset].assetCode}
                         </div>
                     ))}

@@ -1,8 +1,7 @@
 export const EMPTY_VALUE = '--';
 
 export const NAMI_FUTURES_EARNED_SHARE = 'NamiFutures_TakeProfit_';
-export const ONE_DAY = 86400000
-
+export const ONE_DAY = 86400000;
 
 export const ROOT_TOKEN = 'NAMI';
 
@@ -40,7 +39,7 @@ export const BREAK_POINTS = {
     mb: 820,
     xl: 1280,
     '2xl': 1536,
-    footer: 1200,
+    footer: 1200
 };
 
 export const FEE_STRUCTURES = {
@@ -72,7 +71,8 @@ export const FEE_STRUCTURES = {
 export const NAMI_FEE_FUTURE = [
     { assetId: 72, assetCode: 'VNDC', ratio: '0.06%' },
     { assetId: 1, assetCode: 'NAMI', ratio: '0.042%' },
-    { assetId: 22, assetCode: 'USDT', ratio: '0.06%' }
+    { assetId: 22, assetCode: 'USDT', ratio: '0.06%' },
+    { assetId: 39, assetCode: 'VNST', ratio: '0.06%' }
 ];
 
 export const FEE_TABLE = [
@@ -245,9 +245,9 @@ export const MODE_OTP = {
 };
 
 export const FUTURES_PRODUCT = {
-    NAMI: { id: 0, name: 'Nami Futures'},
-    NAO: { id: 2, name: 'NAO Futures'}
-}
+    NAMI: { id: 0, name: 'Nami Futures' },
+    NAO: { id: 2, name: 'NAO Futures' }
+};
 
 export const CHART_JS_RANGE = {
     millisecond: 'millisecond',
