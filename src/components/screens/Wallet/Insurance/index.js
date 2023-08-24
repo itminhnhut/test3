@@ -107,8 +107,8 @@ const InsuranceWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, 
                 )
             },
             {
-                key: 'futures_available',
-                dataIndex: 'futures_available',
+                key: AVAILBLE_KEY,
+                dataIndex: AVAILBLE_KEY,
                 title: t('common:available_balance'),
                 align: 'right',
                 width: 213,
