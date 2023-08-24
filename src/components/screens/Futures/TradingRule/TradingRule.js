@@ -29,6 +29,10 @@ export const CURRENCIES = [
     {
         name: 'USDT',
         value: 'USDT'
+    },
+    {
+        name: 'VNST',
+        value: 'VNST'
     }
 ];
 const limit = 10;
@@ -110,7 +114,6 @@ const TradingRules = () => {
             setNoDataContainerWidth(sourceWidth);
         }
     }, [width]);
-    console.log('🚀 ~ file: TradingRule.js:110 ~ useEffect ~ noDataContainerWidth:', noDataContainerWidth);
 
     useEffect(() => {
         if (!publicSocket) return;
