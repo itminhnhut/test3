@@ -805,6 +805,6 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     );
 };
 
-const ALLOWED_FUTURES_TRANSFER = ['VNDC', 'USDT', 'NAMI', 'NAC'];
+const ALLOWED_FUTURES_TRANSFER = ['VNDC', 'USDT', 'NAMI', 'NAC', 'VNST'];
 
 export default ExchangeWallet;
