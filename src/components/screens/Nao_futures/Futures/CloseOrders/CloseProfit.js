@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { formatNumber, getPriceColor } from 'redux/actions/utils';
+import { convertSymbol, formatNumber, getPriceColor } from 'redux/actions/utils';
 import Emitter from 'redux/actions/emitter';
 import { FuturesOrderEnum, PublicSocketEvent } from 'redux/actions/const';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
@@ -14,7 +14,7 @@ const CloseProfit = ({ length, order, initPairPrice, doShow, calculatePnL, isMob
     const _pairPrice = pairPrice || initPairPrice
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const { t, i18n: { language } } = useTranslation();
-    const { symbol } = order
+    const symbol = convertSymbol(order?.symbol);
     useEffect(() => {
         if (order?.symbol !== lastSymbol) {
             setLastSymbol(order?.symbol);
@@ -41,7 +41,7 @@ const CloseProfit = ({ length, order, initPairPrice, doShow, calculatePnL, isMob
     // Lệnh đang mở, khi ước tính profit thì buy lấy giá bid, sell lấy giá ask
     let profit = 0
 
-    if (order.symbol !== _pairPrice.symbol) return '-'
+    if (symbol !== _pairPrice.symbol) return '-'
     if (order && _pairPrice) {
         profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? _pairPrice?.bid : _pairPrice?.ask, true);
     }

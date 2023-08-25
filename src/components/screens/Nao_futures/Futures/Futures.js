@@ -12,13 +12,14 @@ import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/
 import PlaceOrderMobile from 'components/screens/Nao_futures/Futures/PlaceOrder/PlaceOrderMobile';
 import ChartMobile from 'components/screens/Nao_futures/Futures/Chart/ChartMobile';
 import styled from 'styled-components';
-import { countDecimals, emitWebViewEvent } from 'redux/actions/utils';
+import { convertSymbol, countDecimals, emitWebViewEvent } from 'redux/actions/utils';
 import EventModalMobile from './EventModalMobile';
 import { API_FUTURES_CAMPAIGN_STATUS } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { PromotionStatus } from 'components/screens/Nao_futures/Futures/onboardingType';
 import AnnouncementPopup from 'components/screens/Nao_futures/AnnouncementPopup';
 import ContestModal from './ContestModal';
+import { getAssetConfig, getPairConfig } from 'redux/selectors';
 
 const INITIAL_STATE = {
     loading: false,
@@ -27,7 +28,7 @@ const INITIAL_STATE = {
     socketStatus: false
 };
 
-const FuturesMobile = () => {
+const FuturesMobile = ({ symbol }) => {
     const [state, set] = useState(INITIAL_STATE);
     const dispatch = useDispatch();
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
@@ -45,25 +46,20 @@ const FuturesMobile = () => {
     const [scrollSnap, setScrollSnap] = useState(false);
     const [forceRender, setForceRender] = useState(false);
     const [showOnBoardingModal, setShowOnBoardingModal] = useState(false);
-    const assetConfig = useSelector((state) => state?.utils?.assetConfig);
     const campaign = useRef(null);
 
-    const pairConfig = useMemo(() => allPairConfigs?.find((o) => o.pair === state.pair), [allPairConfigs, state.pair]);
-
-    const asset = useMemo(() => {
-        return assetConfig.find((rs) => rs.id === pairConfig?.quoteAssetId);
-    }, [assetConfig, pairConfig]);
+    const pairConfig = useSelector((state) => getPairConfig(state, symbol));
+    const assetConfig = useSelector((state) => getAssetConfig(state, pairConfig?.quoteAssetId));
 
     useEffect(() => {
-        if (!router?.query?.pair) return;
-        const pairConfig = allPairConfigs?.find((o) => o.pair === router?.query?.pair);
+        if (!symbol) return;
         if (!pairConfig && allPairConfigs?.length > 0) {
             const newPair = allPairConfigs?.find((o) => o.pair === FUTURES_DEFAULT_SYMBOL)?.pair || allPairConfigs[0].pair;
-            router.push(`/mobile${PATHS.FUTURES_V2.DEFAULT}/${newPair}`, undefined, { shallow: true });
+            router.replace(`/mobile${PATHS.FUTURES_V2.DEFAULT}/${newPair}`);
         }
-    }, [router?.query?.pair, allPairConfigs]);
+    }, [symbol, pairConfig]);
 
-    const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
+    const isVndcFutures = router.asPath.indexOf('VNDC') !== -1 || router.asPath.indexOf('VNST') !== -1;
 
     // Re-load Previous Pair
     useEffect(() => {
@@ -96,7 +92,7 @@ const FuturesMobile = () => {
             setState({ socketStatus: !!publicSocket });
         } else {
             if (!state.prevPair || state.prevPair !== pair || !!publicSocket !== state.socketStatus) {
-                publicSocket.emit('subscribe:futures:ticker', pair);
+                publicSocket.emit('subscribe:futures:ticker', convertSymbol(pair));
                 // publicSocket.emit('subscribe:futures:mini_ticker', 'all');
                 setState({
                     socketStatus: !!publicSocket,
@@ -248,7 +244,7 @@ const FuturesMobile = () => {
                             isVndcFutures={isVndcFutures}
                             collapse={collapse}
                             onBlurInput={onBlurInput}
-                            decimalSymbol={asset?.assetDigit ?? 0}
+                            decimalSymbol={assetConfig?.assetDigit ?? 0}
                         />
                     </Section>
                     <Section className="bg-bgPrimary dark:bg-bgPrimary-dark" style={{ ...futuresScreen.style }}>
