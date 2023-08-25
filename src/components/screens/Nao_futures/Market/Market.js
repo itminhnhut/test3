@@ -283,54 +283,60 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
 
 
     const renderItem = (listItem) => {
-        return listItem.map((item) => (
-            <div
-                key={item.symbol}
-                className={`flex justify-between min-h-[3.375rem] items-center px-4 ${convertSymbol(pair) === item.symbol ? 'bg-hover dark:bg-hover-dark' : ''}`}
-                onClick={() => {
-                    router.push(`/mobile/futures/${item.baseAsset + tab.tagActive}`);
-                }}
-            >
-                <div className="flex flex-1 items-center">
-                    <AssetLogo assetCode={item.baseAsset} size={30} />
-                    <div className="ml-3">
-                        <div className="flex items-center text-sm whitespace-nowrap leading-5 mr-2">
-                            <span className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">{item.baseAsset}</span>
-                            {/* <span className='text-txtSecondary dark:text-txtSecondary-dark'>
+        return listItem.map((item) => {
+            const _symbol = tab.tagActive === 'VNST' ? String(item.symbol).replace('VNDC', 'VNST') : item.symbol;
+            return (
+                <div
+                    key={item.symbol}
+                    className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === _symbol ? 'bg-hover dark:bg-hover-dark' : ''}`}
+                    onClick={() => {
+                        router.push(`/mobile/futures/${_symbol}`);
+                    }}
+                >
+                    <div className="flex flex-1 items-center">
+                        <AssetLogo assetCode={item.baseAsset} size={30} />
+                        <div className="ml-3">
+                            <div className="flex items-center text-sm whitespace-nowrap leading-5 mr-2">
+                                <span className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">{item.baseAsset}</span>
+                                {/* <span className='text-txtSecondary dark:text-txtSecondary-dark'>
                                     /{item.quoteAsset}
                                 </span> */}
-                            {item.leverageMax && (
-                                <div className="ml-2 bg-gray-12 dark:bg-dark-2 rounded-[2px] px-[0.375rem] h-[18px] text-xs font-medium">
-                                    {item.leverageMax}
-                                </div>
-                            )}
-                        </div>
-                        <p className="text-xs text-txtSecondary dark:text-txtSecondary-dark">${formatCurrency(item.volume24h, 1)}</p>
-                    </div>
-                </div>
-                <div className="flex items-start justify-end">
-                    <div className="flex flex-col text-right">
-                        <LastPrice price={item.lastPrice} />
-                        <span className="text-xs text-txtSecondary dark:text-txtSecondary-dark leading-[1.125rem] whitespace-nowrap">
-                            ${formatPrice(item?.quoteAsset === 'VNDC' ? item.lastPrice / 23415 : referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
-                        </span>
-                    </div>
-                    <div className="flex justify-end ml-6">
-                        <div
-                            className={cn('h-9 min-w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium', {
-                                'bg-red-2 text-txtBtnPrimary': item.change24h < 0,
-                                'bg-green-2 text-txtBtnPrimary': item.change24h >= 0
-                            })}
-                        >
-                            {item.change24h > 0 && '+'}
-                            {formatNumber(item.change24h, 2, 2, true)} %
+                                {item.leverageMax && (
+                                    <div className="ml-2 bg-gray-12 dark:bg-dark-2 rounded-[2px] px-[0.375rem] h-[18px] text-xs font-medium">
+                                        {item.leverageMax}
+                                    </div>
+                                )}
+                            </div>
+                            <p className="text-xs text-txtSecondary dark:text-txtSecondary-dark">${formatCurrency(item.volume24h, 1)}</p>
                         </div>
                     </div>
+                    <div className="flex items-start justify-end">
+                        <div className="flex flex-col text-right">
+                            <LastPrice price={item.lastPrice} />
+                            <span className="text-xs text-txtSecondary dark:text-txtSecondary-dark leading-[1.125rem] whitespace-nowrap">
+                                $
+                                {formatPrice(
+                                    item?.quoteAsset === 'VNDC' ? item.lastPrice / 23415 : referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice,
+                                    4
+                                )}
+                            </span>
+                        </div>
+                        <div className="flex justify-end ml-6">
+                            <div
+                                className={cn('h-9 min-w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium', {
+                                    'bg-red-2 text-txtBtnPrimary': item.change24h < 0,
+                                    'bg-green-2 text-txtBtnPrimary': item.change24h >= 0
+                                })}
+                            >
+                                {item.change24h > 0 && '+'}
+                                {formatNumber(item.change24h, 2, 2, true)} %
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        ));
-
-    }
+            );
+        });
+    };
 
     return (
         <div className='market-mobile'>
