@@ -36,6 +36,8 @@ export const WalletCurrency = {
     SPIN_BONUS: 32, // Spin free
     SPIN_SPONSOR: 33, // Spin tai tro
 
+    VNST: 39,
+
     // Token for nami.exchange
     BNB: 40,
     BAT: 41,

@@ -80,7 +80,7 @@ const days = [
 
 const getAssets = createSelector([(state) => state.utils, (utils, params) => params], (utils, params) => {
     const assets = {};
-    const arr = [1, 72, 86, 447, 22];
+    const arr = [1, 72, 86, 447, 22, 39];
     arr.map((id) => {
         const asset = utils.assetConfig.find((rs) => rs.id === id);
         if (asset) {
@@ -403,6 +403,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         {dataFilter.map((item, index) => {
                             const sumUSDT = Object.values(item.interestUSD || {}).reduce((a, b) => a + b, 0);
                             const sumVNDC = Object.values(item.interestVND || {}).reduce((a, b) => a + b, 0);
+                            // this var is used for only showing VNST after this coin is released
                             weekNumber--;
                             return (
                                 <CardHistoryPrice key={index}>
@@ -433,6 +434,19 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                                     assetSymbol={assetConfig[447]?.assetCode}
                                                 />
                                             </div>
+                                            {!isNaN(+item?.interest?.[39]) && (
+                                                <div className="w-full sm:p-0.5">
+                                                    <HistoryPriceItem
+                                                        s3Url={`/images/coins/64/${39}.png`}
+                                                        total={item?.interest?.[39]}
+                                                        digitsTotal={assetConfig[39]?.assetDigit ?? 0}
+                                                        usdPrice={item?.interestUSD?.[39]}
+                                                        vndcPrice={item?.interestVND?.[39]}
+                                                        assetName={assetConfig[39]?.assetName}
+                                                        assetSymbol={assetConfig[39]?.assetCode}
+                                                    />
+                                                </div>
+                                            )}
                                             <div className="w-full sm:p-0.5">
                                                 <HistoryPriceItem
                                                     s3Url={'/images/nao/ic_vndc.png'}
@@ -873,6 +887,17 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 vndcPrice={data.estimateVNDC?.[447]}
                                 assetName={assetConfig[447]?.assetName}
                                 assetSymbol={assetConfig[447]?.assetCode}
+                            />
+                        </div>
+                        <div className="w-full sm:p-0.5">
+                            <PoolPriceItem
+                                digitsPrice={assetConfig[39]?.assetDigit ?? 0}
+                                s3Url={`/images/coins/64/${39}.png`}
+                                price={data.estimate?.[39]}
+                                usdPrice={data.estimateUsd?.[39] ?? 0}
+                                vndcPrice={data.estimateVNDC?.[39] ?? 0}
+                                assetName={assetConfig[39]?.assetName}
+                                assetSymbol={assetConfig[39]?.assetCode}
                             />
                         </div>
                         <div className="w-full sm:p-0.5">
