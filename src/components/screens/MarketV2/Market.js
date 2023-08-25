@@ -179,8 +179,12 @@ const Market = () => {
     const suggested = useMemo(() => {
         const q = subTab[state.subTabIndex].key.toUpperCase()
         if (q === 'ALL') return state?.exchangeMarket?.filter(e => suggestedSymbols.includes(e.b))
-        return state?.exchangeMarket?.filter(e => suggestedSymbols.includes(e.b) && e.q === q)
-    }, [state?.exchangeMarket, state?.subTabIndex, state?.futuresMarket])
+        if(favSubTab[state.favType]?.key === 'futures') {
+            return state?.futuresMarket?.filter(e => suggestedSymbols.includes(e.b) && e.q === q)
+        } else {
+            return state?.exchangeMarket?.filter(e => suggestedSymbols.includes(e.b) && e.q === q)
+        }
+    }, [state?.exchangeMarket, state?.subTabIndex, state?.futuresMarket, state.favType])
 
 
     // * Render Handler
@@ -298,7 +302,7 @@ const Market = () => {
 
             const favorite = filterer([...convert?.exchange, ...convert?.futures], state.search.toLowerCase())
             const exchange = filterer(state.exchangeMarket.filter(e => e.q === asset), state.search.toLowerCase())
-            const futures = filterer(state.futuresMarket.concat.filter(e => e.q === asset), state.search.toLowerCase())
+            const futures = filterer(state.futuresMarket.filter(e => e.q === asset), state.search.toLowerCase())
 
             setState({
                 tabLabelCount: {
