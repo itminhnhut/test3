@@ -564,11 +564,11 @@ const Contest = (props) => {
                     <NaoHeader />
                 </div> */}
                         <div className="nao_section">
-                            <div className="px-4 nao:px-0 sm_only:pt-6 max-w-[72.5rem] w-full m-auto">
+                            <div className="px-4 nao:px-0 sm_only:pt-6 max-w-screen-v3 w-full m-auto">
                                 <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
                             </div>
                             <div className="bg-bgPrimary dark:bg-dark rounded-t-3xl">
-                                <div className="px-4 pb-14 sm:pb-[120px] max-w-[72.5rem] nao:px-0 w-full m-auto">
+                                <div className="px-4 pb-14 sm:pb-[120px] max-w-screen-v3 nao:px-0 w-full m-auto">
                                     <ContestInfo
                                         {...props}
                                         ref={refInfo}
