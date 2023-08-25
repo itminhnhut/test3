@@ -75,6 +75,7 @@ export const WalletTypeV1 = {
 export const MinTransferFromBroker = {
     NAMI: 500,
     VNDC: 100000,
+    VNST: 100000,
     USDT: 5,
     NAO: 100
 };
