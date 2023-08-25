@@ -153,7 +153,6 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
     }, [symbol]);
 
     useEffect(() => {
-        console.log("_________filter: ", filter);
         setCurrentPage(1);
         getHistoryData();
     }, [filter]);

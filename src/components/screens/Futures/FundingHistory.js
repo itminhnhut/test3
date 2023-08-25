@@ -53,9 +53,9 @@ export default function FundingHistory(props) {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const symbol = urlParams.get('symbol');
-        if(symbol) setSelectedCurrency(symbol.slice(-4))
+        if (symbol) setSelectedCurrency(symbol.slice(-4));
         // if (symbol && symbol.indexOf(CURRENCIES[1].value) !== -1) setSelectedCurrency(CURRENCIES[1].value);
-        setHasRendered(true)
+        setHasRendered(true);
     }, []);
 
     useEffect(() => {
@@ -65,7 +65,7 @@ export default function FundingHistory(props) {
             {
                 query: {
                     ...router.query,
-                    symbol: symbol.slice(0, -4) + selectedCurrency
+                    symbol: symbol ? symbol.slice(0, -4) + selectedCurrency : 'BTC' + selectedCurrency
                 }
             },
             undefined,
@@ -73,16 +73,7 @@ export default function FundingHistory(props) {
                 shallow: true
             }
         );
-    }, [selectedCurrency]);
-
-    const renderTabContent = () => {
-        return (
-            <>
-                <FundingTab currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[0].key} />
-                <FundingHistoryTable isDark={currentTheme === THEME_MODE.DARK} currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[1].key} />
-            </>
-        );
-    };
+    }, [selectedCurrency, selectedTab]);
 
     const urlPost =
         language === 'en'
@@ -136,7 +127,12 @@ export default function FundingHistory(props) {
                             </div>
                         </div>
                         <FundingTab currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[0].key} />
-                        <FundingHistoryTable symbol={router?.query?.symbol} isDark={currentTheme === THEME_MODE.DARK} currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[1].key} />
+                        <FundingHistoryTable
+                            symbol={router?.query?.symbol}
+                            isDark={currentTheme === THEME_MODE.DARK}
+                            currency={selectedCurrency}
+                            active={selectedTab === SCREEN_TAB_SERIES[1].key}
+                        />
                         {/* {renderTabContent()} */}
                     </div>
                 </Background>
