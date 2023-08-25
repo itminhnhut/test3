@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { formatNumber, formatTime, getLoginUrl, countDecimals, getS3Url } from 'redux/actions/utils';
+import { formatNumber, formatTime, getLoginUrl, countDecimals, getS3Url, convertSymbol } from 'redux/actions/utils';
 import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem';
 import { getRatioProfit, VndcFutureOrderType, fees_futures } from './VndcFutureOrderType';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
@@ -273,14 +273,16 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 width: 138,
                 render: (row) => {
                     if (!isPosition) return undefined;
-                    const isVndc = row?.symbol.indexOf('VNDC') !== -1;
+                    const isVndc = row?.symbol.indexOf('VNDC') !== -1 || row?.symbol.indexOf('VNST') !== -1;
+                    const symbol = convertSymbol(row?.symbol);
+                    const ticker = marketWatch[symbol];
                     return (
                         <OrderProfit
                             className="w-full !text-sm"
                             percentClassName="!justify-start"
                             key={row.displaying_id}
                             order={row}
-                            initPairPrice={marketWatch[row?.symbol]}
+                            initPairPrice={ticker}
                             setShareOrderModal={() => setShareOrder(row)}
                             decimal={isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2}
                         />
@@ -323,20 +325,24 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: `${t('futures:mobile.market_price')} / ${t('futures:order_table:open_price')}`,
                 align: 'left',
                 width: 200,
-                render: (row) => (
-                    <div className="flex flex-col gap-1 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
-                        <div>
-                            {t('common:market')}:{' '}
-                            <span className="text-txtPrimary dark:text-gray-4">
-                                {marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true)}
-                            </span>
+                render: (row) => {
+                    const symbol = convertSymbol(row?.symbol);
+                    const ticker = marketWatch[symbol];
+                    return (
+                        <div className="flex flex-col gap-1 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
+                            <div>
+                                {t('common:market')}:{' '}
+                                <span className="text-txtPrimary dark:text-gray-4">
+                                    {ticker && formatNumber(ticker?.lastPrice, row?.decimalScalePrice, 0, true)}
+                                </span>
+                            </div>
+                            <div>
+                                {t('futures:order_table.open')}:{' '}
+                                <span className="text-txtPrimary dark:text-gray-4">{formatNumber(row?.price, row?.decimalScalePrice, 0, true)}</span>
+                            </div>
                         </div>
-                        <div>
-                            {t('futures:order_table.open')}:{' '}
-                            <span className="text-txtPrimary dark:text-gray-4">{formatNumber(row?.price, row?.decimalScalePrice, 0, true)}</span>
-                        </div>
-                    </div>
-                ),
+                    );
+                },
                 sortable: false
             },
             {
@@ -390,17 +396,17 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('futures:mobile.market_price'),
                 align: 'right',
                 width: 138,
-                render: (row, item) =>
-                    marketWatch[row?.symbol] && (
-                        <div className="text-txtPrimary dark:text-gray-4 text-sm font-normal">
-                            {formatNumber(
-                                marketWatch[row?.symbol]?.[row?.side === VndcFutureOrderType.Side.BUY ? 'bid' : 'ask'],
-                                row?.decimalScalePrice,
-                                0,
-                                true
-                            )}
-                        </div>
-                    ),
+                render: (row, item) => {
+                    const symbol = convertSymbol(row?.symbol);
+                    const ticker = marketWatch[symbol];
+                    return (
+                        ticker && (
+                            <div className="text-txtPrimary dark:text-gray-4 text-sm font-normal">
+                                {formatNumber(ticker?.[row?.side === VndcFutureOrderType.Side.BUY ? 'bid' : 'ask'], row?.decimalScalePrice, 0, true)}
+                            </div>
+                        )
+                    );
+                },
                 sortable: false
             },
             {
@@ -417,10 +423,11 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('futures:order_table:last_price'),
                 align: 'right',
                 width: 138,
-                render: (row) =>
-                    marketWatch[row?.symbol] && (
-                        <span className="text-sm">{formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true)}</span>
-                    ),
+                render: (row) => {
+                    const symbol = convertSymbol(row?.symbol);
+                    const ticker = marketWatch[symbol];
+                    return ticker && <span className="text-sm">{formatNumber(ticker?.lastPrice, row?.decimalScalePrice, 0, true)}</span>;
+                },
                 sortable: true
             },
             {
@@ -446,7 +453,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('common:fee'),
                 align: 'right',
                 width: 138,
-                render: renderFee,
+                render: renderFee
             },
             {
                 key: 'status',

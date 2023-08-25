@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { FUTURES_DEFAULT_SYMBOL } from './index';
 
 const FuturesComponent = dynamic(() => import('components/screens/Futures/futures'), {
     ssr: false

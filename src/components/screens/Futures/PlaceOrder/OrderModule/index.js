@@ -371,8 +371,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 validator={inputValidator('quoteQty')}
                 textDescription={textDescription('quoteQty', { min: minQuoteQty, max: maxQuoteQty })}
                 errorTooltip={false}
-                decimalScale={decimals.qty}
-                containerClassName="w-full dark:bg-dark-2 !h-11"
+                decimalScale={decimals.symbol}
+                containerClassName="w-full dark:bg-dark-2"
                 labelClassName="whitespace-nowrap"
                 tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark select-none"
                 renderTail={() => pairConfig?.quoteAsset}

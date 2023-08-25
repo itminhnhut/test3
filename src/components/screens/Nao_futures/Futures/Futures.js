@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
 import { useDispatch, useSelector } from 'react-redux';
-import { FUTURES_DEFAULT_SYMBOL } from 'pages/futures';
 import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
 import { ApiStatus, UserSocketEvent, TRADING_MODE, LOCAL_STORAGE_KEY } from 'redux/actions/const';
@@ -20,6 +19,7 @@ import { PromotionStatus } from 'components/screens/Nao_futures/Futures/onboardi
 import AnnouncementPopup from 'components/screens/Nao_futures/AnnouncementPopup';
 import ContestModal from './ContestModal';
 import { getAssetConfig, getPairConfig } from 'redux/selectors';
+import { FUTURES_DEFAULT_SYMBOL } from 'constants/constants';
 
 const INITIAL_STATE = {
     loading: false,
@@ -54,7 +54,8 @@ const FuturesMobile = ({ symbol }) => {
     useEffect(() => {
         if (!symbol) return;
         if (!pairConfig && allPairConfigs?.length > 0) {
-            const newPair = allPairConfigs?.find((o) => o.pair === FUTURES_DEFAULT_SYMBOL)?.pair || allPairConfigs[0].pair;
+            const _symbol = `${FUTURES_DEFAULT_SYMBOL}VNDC`;
+            const newPair = allPairConfigs?.find((o) => o.pair === _symbol)?.pair || allPairConfigs[0].pair;
             router.replace(`/mobile${PATHS.FUTURES_V2.DEFAULT}/${newPair}`);
         }
     }, [symbol, pairConfig]);

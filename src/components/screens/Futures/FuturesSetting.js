@@ -35,7 +35,7 @@ const FuturesSetting = memo(
         const [loading, setLoading] = useState(false);
         const [mount, setMount] = useState(false);
         const [showFee, setShowFee] = useState(null);
-        const [settingFee, setSettingFee] = useState({ VNDC: {}, USDT: {} });
+        const [settingFee, setSettingFee] = useState({ VNDC: {}, USDT: {}, VNST: {} });
         const [disableReset, setDisableReset] = useState(false);
 
         const [layoutFutures, setLocalLayoutFutures] = useLocalStorage(LOCAL_STORAGE_KEY.FUTURE_SETTING_LAYOUT);
@@ -44,7 +44,7 @@ const FuturesSetting = memo(
 
         useEffect(() => {
             if (auth)
-                getFuturesFees(['VNDC', 'USDT']).then((data) => {
+                getFuturesFees(['VNDC', 'USDT', 'VNST']).then((data) => {
                     setSettingFee(data);
                 });
         }, [auth]);
@@ -103,7 +103,8 @@ const FuturesSetting = memo(
         const getFeeSettings = () => {
             return [
                 { key: 'VNDC', label: t('futures:fee_modal:futures_fee', { value: 'VNDC' }), value: settingFee?.VNDC?.user_setting ?? '', isCheckBox: false },
-                { key: 'USDT', label: t('futures:fee_modal:futures_fee', { value: 'USDT' }), value: settingFee?.USDT?.user_setting ?? '', isCheckBox: false }
+                { key: 'USDT', label: t('futures:fee_modal:futures_fee', { value: 'USDT' }), value: settingFee?.USDT?.user_setting ?? '', isCheckBox: false },
+                { key: 'VNST', label: t('futures:fee_modal:futures_fee', { value: 'VNST' }), value: settingFee?.VNST?.user_setting ?? '', isCheckBox: false }
             ];
         };
 

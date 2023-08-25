@@ -370,7 +370,12 @@ const Futures = ({ symbol }) => {
                                             onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.marginRatio]: false })}
                                         />
                                         <DragHandleArea height={32} />
-                                        <FuturesMarginRatioVndc pairConfig={pairConfig} auth={auth} lastPrice={pairPrice?.lastPrice} decimals={decimals} />
+                                        <FuturesMarginRatioVndc
+                                            pairConfig={pairConfig}
+                                            pairPrice={pairPrice}
+                                            auth={auth}
+                                            decimals={decimals}
+                                        />
                                     </GridItem>
                                 )}
                             </GridLayout>

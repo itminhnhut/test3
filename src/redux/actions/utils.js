@@ -1354,7 +1354,7 @@ export const filterSearch = (originDataset, keys, searchValue) => {
 
     return originDataset.filter((item) => {
         for (const key of keys) {
-            if (parseUnormStr(get(item,key)).includes(parseUnormStr(searchValue))) return true;
+            if (parseUnormStr(get(item, key)).includes(parseUnormStr(searchValue))) return true;
         }
         return false;
     });
