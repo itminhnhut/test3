@@ -266,3 +266,9 @@ export const CURRENCY = {
     NAO: 447,
     VNST: 39
 };
+
+export const QUOTE_ASSET = {
+    USDT: 22,
+    VNDC: 72,
+    VNST: 39
+}
