@@ -8,20 +8,39 @@ import { API_DEPOSIT_CRYPTO, API_SEARCH_USER } from 'redux/actions/apis';
 import Spinner from 'components/svg/Spinner';
 import Button from 'components/common/V2/ButtonV2/Button';
 import axios from 'axios';
-import ModalOtp from 'components/screens/WithdrawDeposit/components/ModalOtp';
 import { ApiResultCreateOrder, ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
 import { useTranslation } from 'next-i18next';
-import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Emitter from 'redux/actions/emitter';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
+import dynamic from 'next/dynamic';
+
+const AlertModalV2 = dynamic(() => import('components/common/V2/ModalV2/AlertModalV2'), { ssr: false });
+const ModalOtp = dynamic(() => import('components/screens/WithdrawDeposit/components/ModalOtp'), { ssr: false });
+
+const ErrorModal = ({ error, onClose }) => (
+    <AlertModalV2
+        error={error}
+        isVisible={Boolean(error?.type)}
+        onClose={onClose}
+        textButton={error?.textButton}
+        onConfirm={error?.onConfirm}
+        type="error"
+        title={error?.title}
+        message={error?.message}
+    />
+);
 
 const initialReceiverState = {
     input: '',
     isTypingInput: false,
     noteValue: '',
     error: ''
+};
+
+const DEFAULT_ERROR = {
+    type: null
 };
 
 const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble }) => {
@@ -41,6 +60,9 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
         showAlertDisableSmartOtp: false,
         isUseSmartOtp: false
     });
+
+    const [error, setError] = useState(DEFAULT_ERROR);
+
     const setState = (_state) => _setState((prev) => ({ ...prev, ..._state }));
 
     const [receiver, _setReceiver] = useState(initialReceiverState);
@@ -157,10 +179,29 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                     });
                 },
                 SOTP_INVALID_EXCEED_TIME: () => {
+                    setError({
+                        type: 'SOTP_INVALID_EXCEED_TIME',
+                        textButton: t('dw_partner:verify_by_email'),
+                        onConfirm: () => {
+                            setError(DEFAULT_ERROR);
+                            setState({ showOtp: true, isUseSmartOtp: false });
+                            onDepositOffChainHandler();
+                        },
+                        title: t('dw_partner:disabled_smart_otp_title'),
+                        message: t('dw_partner:disabled_smart_otp_des')
+                    });
                     setState({
-                        showAlertDisableSmartOtp: true,
                         isUseSmartOtp: false,
                         showOtp: false
+                    });
+                },
+                WITHDRAW_DISABLED: () => {
+                    setError({
+                        type: 'WITHDRAW_DISABLED',
+                        textButton: 'OK',
+                        onConfirm: () => setError(DEFAULT_ERROR),
+                        title: t('common:error'),
+                        message: t('error:COMMON_ERROR')
                     });
                 }
             };
@@ -242,18 +283,8 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                 loading={state.loadingConfirm}
                 isUseSmartOtp={state.isUseSmartOtp}
             />
-            <AlertModalV2
-                isVisible={state.showAlertDisableSmartOtp}
-                onClose={() => setState({ showAlertDisableSmartOtp: false })}
-                textButton={t('dw_partner:verify_by_email')}
-                onConfirm={() => {
-                    setState({ showAlertDisableSmartOtp: false, showOtp: true, isUseSmartOtp: false });
-                    onDepositOffChainHandler();
-                }}
-                type="error"
-                title={t('dw_partner:disabled_smart_otp_title')}
-                message={t('dw_partner:disabled_smart_otp_des')}
-            />
+
+            {/* SUCCESS MODAL */}
             <AlertModalV2
                 isVisible={state.showAlert}
                 onClose={() => router.push(PATHS.WALLET.OVERVIEW)}
@@ -262,6 +293,9 @@ const ReceiverInput = React.memo(({ assetId, amount, setAmount, isDepositAble })
                 message={t('deposit_namiid-email:success.alert_message')}
                 customButton={<Button onClick={() => setState({ showAlert: false })}>{t('deposit_namiid-email:success.deposit_again')}</Button>}
             />
+
+            {/* ERROR MODAL */}
+            <ErrorModal error={error} onClose={() => setError(DEFAULT_ERROR)} />
         </div>
     );
 });

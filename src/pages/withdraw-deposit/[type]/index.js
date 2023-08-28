@@ -52,6 +52,7 @@ export const getServerSideProps = async (context) => {
         props: {
             ...(await serverSideTranslations(context.locale, [
                 'common',
+                'error',
                 'navbar',
                 'modal',
                 'wallet',
