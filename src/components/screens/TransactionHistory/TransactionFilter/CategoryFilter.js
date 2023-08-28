@@ -6,15 +6,13 @@ import { useSelector } from 'react-redux';
 import { X } from 'react-feather';
 import NoResult from 'components/screens/Support/NoResult';
 import { CheckCircleIcon } from 'components/svg/SvgIcon';
+import { filterSearch } from 'redux/actions/utils';
 
 const CategoryFilter = ({ category, setCategory, categoryConfig, language, t }) => {
     const popoverRef = useRef(null);
     const [search, setSearch] = useState('');
     const { user: auth } = useSelector((state) => state.auth) || null;
-    const filterCategory = useMemo(
-        () => categoryConfig.filter((cate) => cate.content?.[language]?.toLowerCase().includes(search.toLowerCase())) || [],
-        [search, categoryConfig, language]
-    );
+    const filterCategory = useMemo(() => filterSearch(categoryConfig, [`content.${language}`], search), [search, categoryConfig, language]);
     return (
         <FilterWrapper label={t('transaction-history:filter.category_type')}>
             <PopoverSelect

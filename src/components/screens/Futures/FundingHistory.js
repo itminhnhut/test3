@@ -20,6 +20,10 @@ export const CURRENCIES = [
     {
         name: 'USDT',
         value: 'USDT'
+    },
+    {
+        name: 'VNST',
+        value: 'VNST'
     }
 ];
 
@@ -43,21 +47,33 @@ export default function FundingHistory(props) {
         };
     }, [isApp]);
 
+    const [hasRendered, setHasRendered] = useState(false);
+
     useEffect(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const symbol = urlParams.get('symbol');
-        if (symbol && symbol.indexOf(CURRENCIES[1].value) !== -1) setSelectedCurrency(CURRENCIES[1].value);
+        if (symbol) setSelectedCurrency(symbol.slice(-4));
+        // if (symbol && symbol.indexOf(CURRENCIES[1].value) !== -1) setSelectedCurrency(CURRENCIES[1].value);
+        setHasRendered(true);
     }, []);
 
-    const renderTabContent = () => {
-        return (
-            <>
-                <FundingTab currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[0].key} />
-                <FundingHistoryTable isDark={currentTheme === THEME_MODE.DARK} currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[1].key} />
-            </>
+    useEffect(() => {
+        if (!hasRendered) return;
+        const { symbol } = router.query;
+        router.replace(
+            {
+                query: {
+                    ...router.query,
+                    symbol: symbol ? symbol.slice(0, -4) + selectedCurrency : 'BTC' + selectedCurrency
+                }
+            },
+            undefined,
+            {
+                shallow: true
+            }
         );
-    };
+    }, [selectedCurrency, selectedTab]);
 
     const urlPost =
         language === 'en'
@@ -110,7 +126,14 @@ export default function FundingHistory(props) {
                                 ))}
                             </div>
                         </div>
-                        {renderTabContent()}
+                        <FundingTab currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[0].key} />
+                        <FundingHistoryTable
+                            symbol={router?.query?.symbol}
+                            isDark={currentTheme === THEME_MODE.DARK}
+                            currency={selectedCurrency}
+                            active={selectedTab === SCREEN_TAB_SERIES[1].key}
+                        />
+                        {/* {renderTabContent()} */}
                     </div>
                 </Background>
             </div>

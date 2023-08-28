@@ -8,6 +8,7 @@ import isNil from 'lodash/isNil';
 import memoize from 'lodash/memoize';
 import defaults from 'lodash/defaults';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import { useStore as store } from 'src/redux/store';
 import {
     DefaultFuturesFee,
@@ -905,6 +906,8 @@ export function dwLinkBuilder(type, side, assetId) {
             return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
         case TYPE_DW.PARTNER:
             return `${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId || 'USDT'}`;
+        case TYPE_DW.ID_EMAIL:
+            return `${PATHS.WITHDRAW_DEPOSIT.ID_EMAIL}?side=SELL&assetId=${assetId || 'USDT'}`;
         default:
             return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
     }
@@ -1351,13 +1354,10 @@ export const filterSearch = (originDataset, keys, searchValue) => {
 
     return originDataset.filter((item) => {
         for (const key of keys) {
-            if (parseUnormStr(item[key]).includes(parseUnormStr(searchValue))) return true;
+            if (parseUnormStr(get(item,key)).includes(parseUnormStr(searchValue))) return true;
         }
         return false;
     });
-    // const lowercaseSearch = searchValue.toLowerCase();
-    // const copyDataSet = cloneDeep(originDataset);
-    // return copyDataSet.filter((item) => keys.reduce((result, key) => result || (item?.[key] && item[key].toLowerCase().includes(lowercaseSearch)), false));
 };
 
 export const saveFile = (file, name) => {
@@ -1425,10 +1425,10 @@ export const convertDateToMs = (date = 0, type = 'startOf') => {
     return moment.utc(moment(+date).endOf('day')).unix() * 1000;
 };
 
-const md5 = require('md5')
-export const getSignature = (userId, timestamp)=> {
-    return md5(userId.slice(0, 10)+timestamp)
-}
+const md5 = require('md5');
+export const getSignature = (userId, timestamp) => {
+    return md5(userId.slice(0, 10) + timestamp);
+};
 
 export const isBrowser = () => typeof window !== 'undefined';
 export const formatPair = (pair = 'BTCVNDC', t) => {
@@ -1465,3 +1465,5 @@ export const getFuturesFees = async (quotes) => {
     //     return data;
     // });
 };
+
+export const convertSymbol = (symbol) => String(symbol).replace('VNST', 'VNDC');

@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { ChartMode } from 'redux/actions/const';
+import { convertSymbol } from 'redux/actions/utils';
 
 const axios = require('axios');
 
@@ -31,15 +32,13 @@ export default {
                 from,
                 to,
                 resolution: getInterval(resolution),
-                limit,
-            },
+                limit
+            }
         });
         if (data && data.length) {
             const bars = [];
             for (let i = 0; i < data.length; i++) {
-                const [
-                    time, open, high, low, close, volume,
-                ] = data[i];
+                const [time, open, high, low, close, volume] = data[i];
                 bars.push({
                     time: time * 1000,
                     timeSecond: time,
@@ -47,7 +46,7 @@ export default {
                     high,
                     open,
                     close,
-                    volume,
+                    volume
                 });
             }
             if (first) {
@@ -63,11 +62,9 @@ export default {
         const { data } = await axios.get(url, {
             params: {
                 broker: mode === ChartMode.SPOT ? 'NAMI_SPOT' : 'NAMI_FUTURES',
-                symbol,
-            },
-        },
-        );
+                symbol: convertSymbol(symbol)
+            }
+        });
         return data;
-    },
-
+    }
 };

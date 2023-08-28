@@ -3,7 +3,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { formatNumber } from 'redux/actions/utils';
+import { convertSymbol, formatNumber } from 'redux/actions/utils';
 import { RETABLE_SORTBY } from 'components/common/ReTable';
 import { Countdown } from 'redux/actions/utils';
 import FetchApi from 'utils/fetch-api';
@@ -14,17 +14,6 @@ import Tooltip from 'components/common/Tooltip';
 import classNames from 'classnames';
 import ChevronDown from 'components/svg/ChevronDown';
 import PopoverV2 from 'components/common/V2/PopoverV2';
-
-export const CURRENCIES = [
-    {
-        name: 'VNDC',
-        value: 'VNDC'
-    },
-    {
-        name: 'USDT',
-        value: 'USDT'
-    }
-];
 
 const sortDescending = (arr, key, isString) => {
     if (isString) return arr.sort((a, b) => b[key].localeCompare(a[key]));
@@ -115,7 +104,7 @@ export default function FundingHistory({ currency, active }) {
         const marketWatchKies = Object.entries(marketWatch || {});
         const res = marketWatchKies.reduce((pre, currentValue) => {
             const [value, data] = currentValue;
-            if (data?.q === currency) {
+            if (data?.q === convertSymbol(currency)) {
                 return [
                     ...pre,
                     {
@@ -125,7 +114,7 @@ export default function FundingHistory({ currency, active }) {
                                 <div className="ml-3 lg:ml-4">
                                     <p className="text-base font-semibold lg:font-medium leading-[22px] lg:leading-6 text-txtPrimary dark:text-txtPrimary-dark">
                                         <span>{data?.b}</span>
-                                        <span className="text-darkBlue-5">/{data?.q}</span>
+                                        <span className="text-darkBlue-5">/{currency}</span>
                                         <span className="ml-3 lg:ml-4">{t('futures:funding_history_tab:perpetual')}</span>
                                     </p>
                                 </div>

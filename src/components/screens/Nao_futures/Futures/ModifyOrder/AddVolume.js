@@ -24,17 +24,7 @@ import fetchApi from "utils/fetch-api";
 import { AlertContext } from "components/common/layouts/LayoutMobile";
 import { getMaxQuoteQty } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { createSelector } from 'reselect';
-import find from 'lodash/find';
-
-const getPairConfig = createSelector(
-    [
-        state => state?.futures?.pairConfigs,
-        (utils, params) => params
-    ],
-    (pairConfigs, params) => {
-        return find(pairConfigs, { ...params })
-    }
-);
+import { getAssetConfig, getPairConfig } from "redux/selectors";
 
 const getAvailable = createSelector(
     [
@@ -54,9 +44,8 @@ const AddVolume = ({
     forceFetchOrder
 }) => {
     const { t } = useTranslation();
-    const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
-    const pairConfig = useSelector(state => getPairConfig(state, { pair: order?.symbol }));
-    const assetConfig = useSelector((state) => state.utils.assetConfig);
+    const pairConfig = useSelector((state) => getPairConfig(state, order?.symbol));
+    const assetConfig = useSelector((state) => getAssetConfig(state, pairConfig?.quoteAssetId));
     const lastPrice = pairPrice?.lastPrice ?? 0;
     const order_value = order?.order_value ?? 0;
     const side = order?.side
@@ -89,19 +78,16 @@ const AddVolume = ({
     }, [order])
 
     const configSymbol = useMemo(() => {
-        const symbol = allPairConfigs.find((rs) => rs.symbol === order?.symbol);
-        const isVndcFutures = symbol?.quoteAsset === "VNDC";
-        const decimalSymbol =
-            assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)
-                ?.assetDigit ?? 0;
-        const decimalScalePrice = getDecimalPrice(symbol);
+        const isVndcFutures = ['VNDC', 'VNST'].includes(pairConfig?.quoteAsset);
+        const decimalSymbol = assetConfig?.assetDigit ?? 0;
+        const decimalScalePrice = getDecimalPrice(pairConfig);
         return {
             decimalSymbol,
             decimalScalePrice,
             isVndcFutures,
-            quoteAsset: symbol?.quoteAsset,
+            quoteAsset: pairConfig?.quoteAsset
         };
-    }, [order]);
+    }, [order, assetConfig, pairConfig]);
 
     const minQuoteQty = useMemo(() => {
         const initValue = configSymbol.isVndcFutures ? 100000 : 5;

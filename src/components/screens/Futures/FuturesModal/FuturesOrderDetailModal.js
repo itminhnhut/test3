@@ -39,6 +39,7 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const pairTicker = marketWatch[order?.symbol];
     const _lastPrice = pairTicker ? pairTicker?.lastPrice : lastPrice;
+    const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
 
     const price = order?.status === VndcFutureOrderType.Status.PENDING ? order?.price : order?.open_price;
 
@@ -84,6 +85,10 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
         </div>
     );
 
+    const pairConfig = useMemo(() => {
+        return allPairConfigs.find((rs) => rs.symbol === order?.symbol);
+    }, [order, allPairConfigs]);
+
     return (
         <ModalV2
             className="!max-w-[884px]"
@@ -120,7 +125,9 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
                         </Row>
                         <Row>
                             <Item>{t('common:volume')}</Item>
-                            <Item>{formatNumber(order?.order_value, decimals.symbol)}</Item>
+                            <Item>
+                                {formatNumber(order?.order_value, decimals.symbol)} ({formatNumber(order?.quantity, 6)} {pairConfig?.baseAsset})
+                            </Item>
                         </Row>
                         <Row>
                             <Item>{t('futures:mobile:open_time')}</Item>
@@ -202,7 +209,7 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
                     </div>
                 </div>
             </div>
-            <AdjustmentHistory id={order?.displaying_id} onClose={onCloseCb} />
+            <AdjustmentHistory id={order?.displaying_id} onClose={onCloseCb} pairConfigDetail={pairConfig} />
         </ModalV2>
     );
 };
@@ -224,11 +231,10 @@ const Span = styled.div.attrs(({ isTabOpen }) => ({
     className: `text-base text-right font-semibold ${isTabOpen ? 'text-xs' : 'text-base'}`
 }))``;
 
-const AdjustmentHistory = React.memo(({ id, onClose }) => {
+const AdjustmentHistory = React.memo(({ id, onClose, pairConfigDetail }) => {
     const router = useRouter();
     const [dataSource, setDataSource] = useState([]);
     const allAssets = useSelector((state) => getAllAssets(state));
-    const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const [orderDetail, setOrderDetail] = useState(null);
     const checking = useRef(false);
     const mount = useRef(false);
@@ -268,9 +274,6 @@ const AdjustmentHistory = React.memo(({ id, onClose }) => {
         }
     }, [ordersList, orderDetail, isHistory]);
 
-    const pairConfigDetail = useMemo(() => {
-        return allPairConfigs.find((rs) => rs.symbol === orderDetail?.symbol);
-    }, [orderDetail, allPairConfigs]);
     const isVndcFutures = pairConfigDetail?.quoteAsset === 'VNDC';
 
     const getColor = (key, value) => {

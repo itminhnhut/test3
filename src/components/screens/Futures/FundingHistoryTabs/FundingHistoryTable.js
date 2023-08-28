@@ -99,7 +99,7 @@ const days = [
 ];
 const limit = 10;
 
-export default function FundingHistoryTable({ currency, active, isDark }) {
+export default function FundingHistoryTable({ symbol, currency, active, isDark }) {
     const router = useRouter();
     const {
         t,
@@ -149,20 +149,8 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
     };
 
     useEffect(() => {
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const isApp = urlParams.get('source');
-        let symbol = urlParams.get('symbol');
-        if (!isApp) {
-            if (!symbol?.includes(currency) && !router.query.symbol) {
-                symbol = currency === 'VNDC' ? 'BTCVNDC' : 'BTCUSDT';
-                urlParams.set('symbol', currency === 'VNDC' ? 'BTCVNDC' : 'BTCUSDT');
-            }
-            const url = `/${router.locale}/futures/funding-history?${urlParams.toString()}`;
-            window.history.pushState(null, null, url);
-        }
         setFilter({ ...filter, symbol: symbol });
-    }, [currency, router]);
+    }, [symbol]);
 
     useEffect(() => {
         setCurrentPage(1);
