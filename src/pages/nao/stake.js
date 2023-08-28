@@ -76,7 +76,7 @@ const Stake = () => {
                 <NaoHeader />
             </div> */}
                 <div className={`${user ? 'mb:min-h-[calc(100vh-16.75rem)]' : 'mb:pb-[7.5rem] pb-10'} px-4`}>
-                    <div className="mb_only:sticky top-0 z-10 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                    <div className="mb_only:sticky top-0 z-10 nao:p-0 max-w-screen-v3 w-full m-auto">
                         <div className="stake_header bg-bgPrimary dark:bg-bgPrimary-dark relative z-[9]">
                             {/* <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                     language={language} t={t} />
@@ -114,7 +114,7 @@ const Stake = () => {
                         </div>
                     </div>
                     {user ? (
-                        <div className="nao:px-0 max-w-[72.5rem] w-full m-auto !mt-0">
+                        <div className="nao:px-0 max-w-screen-v3 w-full m-auto !mt-0">
                             <div className={`h-full w-full py-6 mb:py-8`}>
                                 <div className={tab !== 0 ? 'hidden' : ''}>
                                     <StakeTab ref={refStake} assetNao={assetNao} dataSource={dataSource} getStake={getStake} />
@@ -126,7 +126,7 @@ const Stake = () => {
                         </div>
                     ) : (
                         <div
-                            className={`flex flex-col space-y-3 items-center justify-center font-semibold leading-normal mb:bg-bgPrimary mb:dark:bg-[#141921] p-4 max-w-[72.5rem] w-full m-auto h-[16.25rem] rounded-xl`}
+                            className={`flex flex-col space-y-3 items-center justify-center font-semibold leading-normal mb:bg-bgPrimary mb:dark:bg-[#141921] p-4 max-w-screen-v3 w-full m-auto h-[16.25rem] rounded-xl`}
                         >
                             <img
                                 className="max-h-[124px]"

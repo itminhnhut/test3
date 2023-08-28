@@ -6,7 +6,7 @@ import TelegramFilled from 'components/svg/TelegramFilled';
 import RedditFilled from 'components/svg/RedditFilled';
 import classNames from 'classnames';
 
-const NaoFooter = memo(({noSpacingTop}) => {
+const NaoFooter = memo(({ noSpacingTop }) => {
     const { t } = useTranslation();
     const onRedirect = (key) => {
         let url = '';
@@ -33,11 +33,16 @@ const NaoFooter = memo(({noSpacingTop}) => {
                 break;
         }
         window.open(url, '_blank');
-    }
+    };
 
     return (
-        <div className={classNames("nao_footer min-h-[6.25rem] bg-gray-12 dark:bg-dark-2 flex items-center py-9 px-4 nao:p-0 text-txtSecondary dark:text-txtSecondary-dark", noSpacingTop ? '' : 'mt-12 sm:mt-20')}>
-            <div className="text-sm max-w-[72.5rem] w-full m-auto h-full flex flex-col lg:flex-row  items-center justify-between text-center flex-wrap sm:gap-5">
+        <div
+            className={classNames(
+                'nao_footer min-h-[6.25rem] bg-gray-12 dark:bg-dark-2 flex items-center py-9 px-4 nao:p-0 text-txtSecondary dark:text-txtSecondary-dark',
+                noSpacingTop ? '' : 'mt-12 sm:mt-20'
+            )}
+        >
+            <div className="text-sm max-w-screen-v3 w-full m-auto h-full flex flex-col lg:flex-row  items-center justify-between text-center flex-wrap sm:gap-5">
                 <div className="nao_footer_left font-semibold gap-0 sm:gap-5 flex items-center sm:flex-row flex-col sm:w-auto w-full">
                     <div
                         onClick={() => onRedirect('term')}
