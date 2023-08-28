@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/actions/utils';
+import { formatStringNumber, formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -13,7 +13,6 @@ import { orderBy } from 'lodash';
 import { WalletType } from 'redux/actions/const';
 import Link from 'next/link';
 import { PATHS } from 'constants/paths';
-import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
 import HideSmallBalance from 'components/common/HideSmallBalance';
@@ -103,7 +102,7 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                 width: 213,
                 render: (v, item) => (
                     <span className="whitespace-nowrap">
-                        {isHideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                        {isHideAsset ? SECRET_STRING : v >= 0 ? formatStringNumber(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
                     </span>
                 )
             },
@@ -115,7 +114,7 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                 width: 213,
                 render: (v, item) => (
                     <span className="whitespace-nowrap">
-                        {isHideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                        {isHideAsset ? SECRET_STRING : v >= 0 ? formatStringNumber(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
                     </span>
                 )
             },
@@ -216,7 +215,7 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
     const renderEstWallet = useCallback(() => {
         return (
             <div className="flex items-center justify-between">
-                <div className="hidden md:flex rounded-full dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
+                <div className="hidden md:flex rounded-full bg-gray-13 dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
                     <Image src={getS3Url('/images/nao/ic_nao.png')} width={32} height={32} />
                     {/* <SvgWalletFutures size={32} /> */}
                 </div>
@@ -277,7 +276,7 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
     return (
         <div>
             <MCard
-                addClass={`mt-5 !p-8 rounded-xl 
+                addClass={`mt-5 !p-8 rounded-xl
              ${currentTheme === THEME_MODE.DARK ? ' bg-bgTabInactive-dark border border-divider-dark' : ' bg-white shadow-card_light border-none'}`}
             >
                 <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 ">
@@ -411,8 +410,8 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                                             {isHideAsset
                                                 ? SECRET_STRING
                                                 : wallet.value
-                                                    ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                    : '0.0000'}
+                                                ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                : '0.0000'}
                                         </span>
                                         &nbsp;
                                         <span className="txtSecond-1  whitespace-nowrap">
@@ -426,8 +425,8 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                                                 {isHideAsset
                                                     ? SECRET_STRING
                                                     : available
-                                                        ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
-                                                        : '0.0000'}
+                                                    ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-3">
@@ -436,8 +435,8 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                                                 {isHideAsset
                                                     ? SECRET_STRING
                                                     : wallet.locked_value
-                                                        ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                        : '0.0000'}
+                                                    ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
                                             </span>
                                         </div>
                                     </div>
