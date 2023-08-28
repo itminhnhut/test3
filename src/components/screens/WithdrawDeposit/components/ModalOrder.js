@@ -3,7 +3,7 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { isFunction } from 'redux/actions/utils';
 import classNames from 'classnames';
-import { MODE, ORDER_TYPES } from '../constants';
+import { ALLOWED_ASSET_ID, MODE, ORDER_TYPES } from '../constants';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useDispatch } from 'react-redux';
@@ -36,7 +36,7 @@ const ModalOrder = ({ mode, isVisible, onClose, loading, type = ORDER_TYPES.CONF
                             type.showConfirm({
                                 router,
                                 t,
-                                assetId: additionalData?.assetId || 72,
+                                assetId: additionalData?.assetId || ALLOWED_ASSET_ID['VNDC'],
                                 side: additionalData?.side || 'BUY',
                                 mode,
                                 resetModalState

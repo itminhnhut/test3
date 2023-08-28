@@ -66,7 +66,10 @@ const getColumns = (t, user, side, configs) => [
         title: t('common:amount'),
         align: 'right',
         width: 140,
-        render: (v, item) => `${side === SIDE.BUY ? '+' : '-'}${formatNanNumber(v, item?.baseAssetId === 72 ? 0 : 4)}`
+        render: (v, item) => {
+            const assetConfig = find(configs, { id: +item?.baseAssetId });
+            return `${side === SIDE.BUY ? '+' : '-'}${formatNanNumber(v, assetConfig?.assetDigit || 0)}`;
+        }
     },
     {
         key: 'partnerMetadata',

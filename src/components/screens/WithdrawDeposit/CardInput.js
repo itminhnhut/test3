@@ -280,7 +280,7 @@ const CardInput = () => {
                                 onValueChange={({ value }) => setState({ amount: value })}
                                 validator={validator}
                                 errorTooltip={false}
-                                decimalScale={assetCode === 'VNDC' ? 0 : 4}
+                                decimalScale={assetConfig?.assetDigit || 0}
                                 allowedDecimalSeparators={[',', '.']}
                                 clearAble
                                 placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
