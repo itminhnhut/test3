@@ -15,7 +15,7 @@ import toast from 'utils/toast';
 import { isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { PATHS } from 'constants/paths';
-import { ALLOWED_ASSET_ID } from './constants';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from './constants';
 import { useSelector } from 'react-redux';
 
 const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdropCb }) => {
@@ -135,7 +135,9 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                     <div className="flex justify-between">
                         <span className="txtSecond-4">{t('common:amount')}</span>
                         <span>
-                            {state.baseQty ? `${formatNumber(state.baseQty, baseAssetConfig?.assetDigit || 0)} ${ALLOWED_ASSET_ID[+state.baseAssetId]}` : '_'}
+                            {state.baseQty
+                                ? `${formatNumber(state.baseQty, baseAssetConfig?.assetDigit || 0)} ${ALLOWED_ASSET[+state.baseAssetId || 72]}`
+                                : '_'}
                         </span>
                     </div>
                     {state.fee > 0 && (
