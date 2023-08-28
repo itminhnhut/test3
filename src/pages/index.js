@@ -195,7 +195,7 @@ const Index = () => {
     return (
         <MaldivesLayout navMode={NAVBAR_USE_TYPE.FLUENT}>
             <div className="homepage">
-                <HomeIntroduce width={width} trendData={convertMarketWatchData.trending} t={t} />
+                <HomeIntroduce width={width} marketCurrency={state.marketTrendCurrency} trendData={convertMarketWatchData.trending} t={t} />
                 <HomeMarketTrend
                     loadingTrendData={state.loadingTrendData}
                     trendData={convertMarketWatchData.trending}
