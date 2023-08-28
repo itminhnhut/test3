@@ -523,7 +523,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
         try {
             const { data } = await fetchApi({
                 url: API_GET_REFERENCE_CURRENCY,
-                params: { base: 'VNDC,USDT', quote: 'USD' }
+                params: { base: 'VNST,VNDC,USDT', quote: 'USD' }
             });
             if (data) {
                 setReferencePrice(

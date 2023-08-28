@@ -318,7 +318,7 @@ const NaoPerformance = memo(({}) => {
             const { data } = await fetchApi({
                 url: API_GET_REFERENCE_CURRENCY,
                 params: {
-                    base: 'VNDC,USDT',
+                    base: 'VNST,VNDC,USDT',
                     quote: 'USD'
                 }
             });
