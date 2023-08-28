@@ -1,13 +1,17 @@
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { QRCode } from 'react-qrcode-logo';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { NAVBAR_USE_TYPE } from 'src/components/common/NavBar/NavBar';
-import { getMarketWatch, getFuturesMarketWatch } from 'redux/actions/market';
-import { compact, uniqBy, find, filter, sortBy } from 'lodash';
+import { getFuturesMarketWatch } from 'redux/actions/market';
+import compact from 'lodash/compact';
+import uniqBy from 'lodash/uniqBy';
+import find from 'lodash/find';
+import filter from 'lodash/filter';
+import sortBy from 'lodash/sortBy';
 import { useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import LoadingPage from 'components/screens/Nao_futures/LoadingPage';
@@ -59,10 +63,9 @@ const Index = () => {
     // * Initial State
     const [state, set] = useState({
         showQR: false,
-        streamLineData: null,
-        trendData: null,
         loadingTrendData: false,
-        marketTrendCurrency: null
+        marketTrendCurrency: null,
+        marketWatchData: []
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const futuresConfigs = useSelector((state) => state.futures.pairConfigs);
@@ -118,16 +121,29 @@ const Index = () => {
     }, [state.showQR]);
 
     useAsync(async () => {
-        if (!(futuresConfigs && futuresConfigs.length) || !state.marketTrendCurrency) return;
+        if (!(futuresConfigs && futuresConfigs.length)) return;
         setState({
             loadingTrendData: true
         });
-        const originPairs = await getFuturesMarketWatch();
-        let pairs = originPairs;
+        let originPairs = null;
+        try {
+            originPairs = await getFuturesMarketWatch();
+        } catch (error) {
+        } finally {
+            setState({
+                marketWatchData: originPairs ?? [],
+                loadingTrendData: false
+            });
+        }
+    }, [futuresConfigs]);
+
+    const convertMarketWatchData = useMemo(() => {
+        let pairs = state.marketWatchData;
+        const quoteFilter = ['VNDC', 'VNST'].includes(state.marketTrendCurrency) ? 'VNDC' : 'USDT';
         pairs = compact(
             pairs.map((p) => {
                 p.change_24 = getExchange24hPercentageChange(p);
-                const config = find(futuresConfigs, { symbol: p.s });
+                const config = futuresConfigs?.find((pair) => pair?.symbol === p.s);
                 if (config?.tags?.length && config.tags.includes('NEW_LISTING')) {
                     p.is_new_listing = true;
                     p.listing_time = config?.createdAt ? new Date(config?.createdAt).getTime() : 0;
@@ -137,7 +153,7 @@ const Index = () => {
                 return null;
             })
         );
-        pairs = filter(pairs, { q: state.marketTrendCurrency });
+        pairs = filter(pairs, { q: quoteFilter });
 
         pairs = uniqBy(pairs, 'b');
 
@@ -163,27 +179,26 @@ const Index = () => {
             }
         ]);
 
-        setState({
-            loadingTrendData: false,
-            trendData: {
+        return {
+            trending: {
                 topView: topView.slice(0, 5),
                 topGainers: topGainers.slice(0, 5),
                 topLosers: topLosers.slice(0, 5),
                 newListings: newListings.slice(0, 5)
             },
-            streamLineData: {
-                total: originPairs.length
+            streamLine: {
+                total: state.marketWatchData.length
             }
-        });
-    }, [futuresConfigs, state.marketTrendCurrency]);
+        };
+    }, [state.marketWatchData, state.marketTrendCurrency]);
 
     return (
         <MaldivesLayout navMode={NAVBAR_USE_TYPE.FLUENT}>
             <div className="homepage">
-                <HomeIntroduce width={width} trendData={state.trendData} t={t} />
+                <HomeIntroduce width={width} trendData={convertMarketWatchData.trending} t={t} />
                 <HomeMarketTrend
                     loadingTrendData={state.loadingTrendData}
-                    trendData={state.trendData}
+                    trendData={convertMarketWatchData.trending}
                     setCurrency={setMarketTrendCurrency}
                     marketCurrency={state.marketTrendCurrency}
                 />

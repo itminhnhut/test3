@@ -91,7 +91,7 @@ const SelectAsset = ({ setCurrency, marketCurrency }) => {
 
                 <div
                     className={classNames(
-                        'shadow-card_light absolute mt-2 w-full bg-white dark:bg-bgTabInactive-dark py-2 border border-divider dark:border-divider-dark top-full left-0 rounded-md',
+                        'shadow-card_light space-y-3 absolute mt-2 w-full bg-white dark:bg-bgTabInactive-dark py-2 border border-divider dark:border-divider-dark top-full left-0 rounded-md',
                         {
                             hidden: !toggleOpen
                         }
@@ -101,7 +101,7 @@ const SelectAsset = ({ setCurrency, marketCurrency }) => {
                         <button
                             key={currency}
                             onClick={() => setCurrency(currency)}
-                            className="py-3 w-full justify-between cursor-pointer items-center text-txtPrimary dark:text-txtPrimary-dark px-4 flex dark:hover:bg-hover-dark hover:bg-hover first:mb-3 disabled:cursor-default"
+                            className="py-3 w-full justify-between cursor-pointer items-center text-txtPrimary dark:text-txtPrimary-dark px-4 flex dark:hover:bg-hover-dark hover:bg-hover disabled:cursor-default"
                         >
                             {currency}
                             {currency === marketCurrency && <CheckCircleIcon color="currentColor" size={16} />}
@@ -193,9 +193,11 @@ const HomeMarketTrend = ({ loadingTrendData, trendData, setCurrency, marketCurre
                 if (_24hChange <= 0) sparkLineColor = colors.red2;
             }
             const sparkLine = sparkLineBuilder(pair?.s, sparkLineColor);
+            let quoteConvert = marketCurrency;
+            const symbol = `${pair.b}${quoteConvert}`;
             if (width >= 992) {
                 return (
-                    <Link key={`markettrend_${pair?.s}__${state.marketTabIndex}`} href={`/futures/${pair?.s}`} passHref>
+                    <Link key={`markettrend_${symbol}__${state.marketTabIndex}`} href={`/futures/${symbol}`} passHref>
                         <a className="homepage-markettrend__market_table__row">
                             <div className="homepage-markettrend__market_table__row__col1">
                                 <div className="homepage-markettrend__market_table__coin">
@@ -204,7 +206,7 @@ const HomeMarketTrend = ({ loadingTrendData, trendData, setCurrency, marketCurre
                                     </div>
                                     <div className="homepage-markettrend__market_table__coin__pair">
                                         <span>{pair?.b}</span>
-                                        <span>/{pair?.q}</span>
+                                        <span>/{quoteConvert}</span>
                                     </div>
                                     {pair.leverage && (
                                         <div className="ml-2 text-xs font-semibold bg-gray-11 dark:bg-dark-2 p-1 rounded-[3px] ">{pair.leverage?.max}x</div>
@@ -258,7 +260,7 @@ const HomeMarketTrend = ({ loadingTrendData, trendData, setCurrency, marketCurre
                 );
             }
         });
-    }, [width, trendData, state.marketTabIndex, loadingTrendData]);
+    }, [width, trendData, state.marketTabIndex, loadingTrendData, marketCurrency]);
 
     return (
         <section className="homepage-markettrend">
