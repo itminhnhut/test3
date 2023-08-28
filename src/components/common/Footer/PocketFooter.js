@@ -83,6 +83,9 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <Link href="/terms-of-service">
                                 <a>{language === LANGUAGE_TAG.VI ? 'Thỏa thuận dịch vụ' : 'Terms of Services'}</a>
                             </Link>
+                            <Link href="/privacy">
+                                <a>{language === LANGUAGE_TAG.VI ? 'Quyền riêng tư' : 'Privacy Policy'}</a>
+                            </Link>
                             <Link href="/licences">
                                 <a>{language === LANGUAGE_TAG.VI ? 'Giấy phép' : 'Licences'}</a>
                             </Link>
