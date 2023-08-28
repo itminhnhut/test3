@@ -1,7 +1,4 @@
-import { useRouter } from 'next/router';
-import { PATHS } from 'constants/paths';
-
-export const FUTURES_DEFAULT_SYMBOL = 'BTCVNDC';
+import { FUTURES_DEFAULT_SYMBOL } from 'constants/constants';
 
 const FuturesIndex = () => {
     // const router = useRouter();
@@ -18,10 +15,11 @@ const FuturesIndex = () => {
 
 export default FuturesIndex;
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps({ locale }) {
+    const prefix = locale === 'vi' ? '/vi' : '';
     return {
         redirect: {
-            destination: `/futures/${FUTURES_DEFAULT_SYMBOL}`,
+            destination: `${prefix}/futures/${FUTURES_DEFAULT_SYMBOL}${locale === 'vi' ? 'VNDC' : 'USDT'}`,
             permanent: false
         }
     };

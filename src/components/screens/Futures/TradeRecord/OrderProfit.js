@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getProfitVndc, VndcFutureOrderType } from '../PlaceOrder/Vndc/VndcFutureOrderType';
-import { formatNumber, getPriceColor } from 'redux/actions/utils';
+import { convertSymbol, formatNumber, getPriceColor } from 'redux/actions/utils';
 import ChevronDown from 'components/svg/ChevronDown';
 import { IconArrowOnus } from 'components/common/Icons';
 import colors from 'styles/colors';
@@ -23,10 +23,11 @@ const OrderProfit = ({
     const [pairPrice, setPairPrice] = useState(null);
     const [lastSymbol, setLastSymbol] = useState(null);
     const _pairPrice = pairPrice || initPairPrice;
-    const { symbol } = order;
+    const symbol = convertSymbol(order?.symbol);
+    
     useEffect(() => {
-        if (order?.symbol !== lastSymbol) {
-            setLastSymbol(order?.symbol);
+        if (symbol !== lastSymbol) {
+            setLastSymbol(symbol);
             setPairPrice(null);
         }
     }, [order]);
@@ -52,7 +53,7 @@ const OrderProfit = ({
     if (isTabHistory) {
         profit = order?.profit;
     } else {
-        if (order.symbol !== _pairPrice.symbol) return '-';
+        if (symbol !== _pairPrice.symbol) return '-';
         if (order && _pairPrice) {
             profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? _pairPrice?.bid : _pairPrice?.ask, true);
         }

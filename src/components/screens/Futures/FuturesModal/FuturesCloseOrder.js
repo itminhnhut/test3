@@ -3,7 +3,7 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import { useTranslation } from 'next-i18next';
 import SwitchV2 from 'components/common/V2/SwitchV2';
 import styled from 'styled-components';
-import { getType, formatNumber, checkInFundingTime, checkLargeVolume } from 'redux/actions/utils';
+import { getType, formatNumber, checkInFundingTime, checkLargeVolume, convertSymbol } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { getProfitVndc, VndcFutureOrderType, getTypesLabel, validator } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import CollapseV2 from 'components/common/V2/CollapseV2';
@@ -24,13 +24,13 @@ import { getOrdersList } from 'redux/actions/futures';
 const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, decimals, pairConfig, forceFetchOrder }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const _lastPrice = marketWatch ? marketWatch[order?.symbol]?.lastPrice : lastPrice;
-    const pairTicker = marketWatch[order?.symbol];
-    const quoteAsset = pairTicker?.quoteAsset;
+    const pairTicker = marketWatch?.[convertSymbol(order?.symbol)];
+    const _lastPrice = pairTicker?.lastPrice ?? lastPrice;
+    const quoteAsset = pairConfig?.quoteAsset;
     const [partialClose, setPartialClose] = useState(false);
     const order_value = order?.order_value || 0;
     const side = order?.side;
-
+    const isVNDC = ['VNDC', 'VNST'].includes(quoteAsset);
     const [volume, setVolume] = useState();
     const [price, setPrice] = useState(_lastPrice);
     const [type, setType] = useState(order?.type);
@@ -64,9 +64,9 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
     }, [order, pairTicker]);
 
     const minQuoteQty = useMemo(() => {
-        const initValue = quoteAsset === 'VNDC' ? 100000 : 5;
+        const initValue = isVNDC ? 100000 : 5;
         return pairConfig ? pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional : initValue;
-    }, [pairConfig, quoteAsset]);
+    }, [pairConfig, isVNDC]);
 
     const maxQuoteQty = useMemo(() => {
         const pendingVol = order?.metadata?.partial_close_metadata?.partial_close_orders?.reduce((pre, { close_volume = 0, status }) => {
@@ -171,9 +171,8 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
     };
 
     const general = useMemo(() => {
-        const isVndc = quoteAsset === 'VNDC';
         const profit = getProfitVndc(order, side === VndcFutureOrderType.Side.BUY ? pairTicker?.bid : pairTicker?.ask, true);
-        const formatProfit = formatNumber(profit, isVndc ? decimals.symbol : decimals.symbol + 2, 0, true);
+        const formatProfit = formatNumber(profit, isVNDC ? decimals.symbol : decimals.symbol + 2, 0, true);
         const totalPercent = (formatProfit > 0 ? '+' : '-') + formatNumber(Math.abs(profit / order?.margin) * 100, 2, 0, true);
         let est_pnl = 0;
         // const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
@@ -196,7 +195,7 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
             est_pnl: est_pnl,
             pendingVol: order_value - maxQuoteQty
         };
-    }, [volume, order, percent, pairTicker, decimals, price, type, maxQuoteQty]);
+    }, [volume, order, percent, pairTicker, decimals, price, type, maxQuoteQty, isVNDC]);
 
     const optionsTypes = useMemo(() => {
         const options = [];
@@ -228,9 +227,9 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
             let isLargeVolume = false;
             const isPartialClose = partialClose && percent < 100;
             if (isPartialClose) {
-                isLargeVolume = checkLargeVolume(+volume, quoteAsset === 'VNDC');
+                isLargeVolume = checkLargeVolume(+volume, isVNDC);
             } else {
-                isLargeVolume = checkLargeVolume(order?.order_value, quoteAsset === 'VNDC');
+                isLargeVolume = checkLargeVolume(order?.order_value, isVNDC);
             }
             const inFundingTime = checkInFundingTime();
             let notice = null;

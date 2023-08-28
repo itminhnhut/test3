@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
-import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
+import { convertSymbol, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import { useTranslation } from 'next-i18next';
 import { renderCellTable, VndcFutureOrderType, getRatioProfit, fees, modeOrders } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
@@ -17,13 +17,14 @@ import classnames from 'classnames'
 import SortIcon from 'components/screens/Nao_futures/SortIcon';
 import AddCircleOutline from 'components/svg/AddCircleOutline';
 import SvgShare from 'components/svg/Share';
+import { getMarketWatch } from 'redux/selectors';
 
 const OrderItemMobile = ({
     order,
     onShowModal,
     mode,
     onShowDetail,
-    symbol,
+    pairConfig,
     allowButton,
     tab,
     decimalSymbol = 0,
@@ -36,31 +37,15 @@ const OrderItemMobile = ({
     const isTabHistory = tab === FUTURES_RECORD_CODE.orderHistory;
     const isTabOpen = tab === FUTURES_RECORD_CODE.openOrders;
     const isTabPosition = tab === FUTURES_RECORD_CODE.position;
-    const [pairPrice, setPairPrice] = useState(null);
-    const marketWatch = useSelector((state) => state.futures.marketWatch);
     const [lastSymbol, setLastSymbol] = useState(null);
-    const dataMarketWatch = marketWatch[order?.symbol];
+    const symbol = convertSymbol(order?.symbol);
+    const dataMarketWatch = useSelector((state) => getMarketWatch(state, symbol));
 
     useEffect(() => {
-        if (order?.symbol !== lastSymbol) {
-            setLastSymbol(order?.symbol);
-            setPairPrice(null);
+        if (symbol !== lastSymbol) {
+            setLastSymbol(symbol);
         }
     }, [order]);
-
-
-    useEffect(() => {
-        if (!order.symbol || order.status === VndcFutureOrderType.Status.CLOSED) return;
-        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + order.symbol, async (data) => {
-            if (order.symbol === data?.s && data?.p > 0) {
-                const _pairPrice = FuturesMarketWatch.create(data);
-                setPairPrice(_pairPrice);
-            }
-        });
-        return () => {
-            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + order.symbol);
-        };
-    }, [order?.symbol]);
 
     const getOpenPrice = (row, pairPrice) => {
         let text = row?.price ? formatNumber(row?.price, decimalScalePrice, 0, true) : 0;
@@ -175,15 +160,15 @@ const OrderItemMobile = ({
 
     const renderQuoteprice = () => {
         return order?.side === VndcFutureOrderType.Side.BUY
-            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol} />
-            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol} />;
+            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={symbol} />
+            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={symbol} />;
     };
 
     const _renderLastPrice = (isTabHistory) => {
         if (isTabHistory) {
             return order?.close_price ? formatNumber(order?.close_price, decimalScalePrice, 0, true) : '-';
         } else {
-            return <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order?.symbol} />;
+            return <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={symbol} />;
         }
     };
 
@@ -260,7 +245,7 @@ const OrderItemMobile = ({
                 <div className="flex flex-col gap-[2px]">
                     <div className="flex items-center">
                         <div
-                            className="font-semibold leading-[1.375rem] mr-[6px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
+                            className="font-semibold leading-[1.375rem] mr-[6px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                         <div
                             className="text-txtSecondary dark:text-txtPrimary-dark bg-gray-12 dark:bg-dark-2 text-xs font-medium leading-5 px-[7px] rounded-[3px]">
                             {order?.leverage}x

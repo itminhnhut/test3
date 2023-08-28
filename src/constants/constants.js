@@ -260,3 +260,17 @@ export const CHART_JS_RANGE = {
     quarter: 'quarter',
     year: 'year'
 };
+
+export const QUOTE_ASSET = {
+    USDT: 22,
+    VNDC: 72,
+    VNST: 39
+};
+export const CURRENCY = {
+    USDT: 22,
+    VNDC: 72,
+    NAO: 447,
+    VNST: 39
+};
+
+export const FUTURES_DEFAULT_SYMBOL = 'BTC';
