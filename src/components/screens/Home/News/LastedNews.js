@@ -42,8 +42,8 @@ const LastedNews = ({ data, lang }) => {
     const renderLastestNews = useCallback(() => {
         if (!data) return null;
         return data.map((item) => {
-            const primary_tags = item.primary_tag?.slug.split('-');
-            const tag = primary_tags[1] === 'faq' ? 'faq' : 'announcement';
+            const primary_tags = item.primary_tag?.slug?.split('-') || [];
+            const tag = primary_tags?.[1] === 'faq' ? 'faq' : 'announcement';
             const refId = `https://nami.exchange/${lang}/support/${tag}/${primary_tags.slice(2, primary_tags.length).join('-')}/${item.slug}?source=app`;
             return (
                 <div className="keen-slider__slide" key={`home_news_${item.id}__alt`}>
