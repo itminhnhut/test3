@@ -265,8 +265,8 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                 onMouseOver={() => {
                     !isShowModalInfo && setActivePairList(true);
                 }}
-                onMouseLeave={() => setActivePairList(false)}
-                onBlur={() => setActivePairList(false)}
+                onMouseLeave={() => activePairList && setActivePairList(false)}
+                // onBlur={() => setActivePairList(false)}
             >
                 <div className="relative z-10 flex items-center gap-1">
                     <span className="text-[22px] font-semibold leading-[30px]">
