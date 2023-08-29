@@ -113,6 +113,11 @@ const PARTNER_WITHDRAW_DEPOSIT = {
     DETAILS: `/partner-dw/${PARTNER_WD_TABS.DETAILS}`
 };
 
+const INSURANCE = {
+    DEFAULT: '/insurance',
+    RULES: '/insurance/rules'
+};
+
 export const PATHS = {
     ACCOUNT,
     WALLET,
@@ -126,7 +131,8 @@ export const PATHS = {
     TRANSACTION_HISTORY,
     WITHDRAW_DEPOSIT,
     PARTNER_WITHDRAW_DEPOSIT,
-    FUTURES_PORTFOLIO: '/statistics'
+    FUTURES_PORTFOLIO: '/statistics',
+    INSURANCE
     // Add news path here
 };
 

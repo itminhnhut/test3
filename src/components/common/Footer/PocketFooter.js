@@ -184,6 +184,10 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                 {language === LANGUAGE_TAG.VI ? 'Quy định giao dịch Futures' : 'Trading Rules'}
                             </Link>
 
+                            <Link href={PATHS.INSURANCE.RULES} className="cursor-pointer">
+                                {language === LANGUAGE_TAG.VI ? 'Quy định hợp đồng Insurance' : 'Insurance Contract Rule'}
+                            </Link>
+
                             <Link href="/futures/funding-history" className="cursor-pointer">
                                 {language === LANGUAGE_TAG.VI ? 'Lịch sử Funding' : 'Funding Rate History'}
                             </Link>

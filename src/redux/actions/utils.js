@@ -1318,7 +1318,7 @@ export const getOffsetEl = (el) => {
 
 export function parseUnormStr(input) {
     //Đổi chữ hoa thành chữ thường
-    let slug = input.toLowerCase();
+    let slug = input?.toLowerCase();
 
     //Đổi ký tự có dấu thành không dấu
     slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');

@@ -14,6 +14,8 @@ import { getInsuranceLoginLink, roundByExactDigit } from 'redux/actions/utils';
 import InsuranceListModal from './InsuranceListModal';
 import InsuranceRuleModal from './InsuranceRuleModal';
 import InsurancePurchaseButton from './InsurancePurchaseButton';
+import Link from 'next/link';
+import { PATHS } from 'constants/paths';
 
 const initialState = {
     showRules: false,
@@ -105,13 +107,15 @@ const InsuranceSection = React.memo(({ onCloseOrderDetailModal, insuranceRules, 
             <div className="mb-8 p-4 bg-white dark:bg-dark-4 border dark:border-none rounded-xl">
                 <div className="flex justify-between items-center">
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:insurance:title')}</div>
-                    <div
-                        className="text-green-3 dark:text-green-2 hover:text-green-4 font-semibold flex items-center space-x-2 cursor-pointer"
-                        onClick={() => setState({ showRules: true })}
-                    >
-                        <span>{t('futures:insurance:rules')}</span>
-                        <ChevronRight color="currentColor" size={16} strokeWidth={1.5} />
-                    </div>
+                    <Link href={PATHS.INSURANCE.RULES}>
+                        <a
+                            target="_blank"
+                            className="text-green-3 dark:text-green-2 hover:text-green-4 font-semibold flex items-center space-x-2 cursor-pointer"
+                        >
+                            <span>{t('futures:insurance:rules')}</span>
+                            <ChevronRight color="currentColor" size={16} strokeWidth={1.5} />
+                        </a>
+                    </Link>
                 </div>
                 <div className="mt-4 flex justify-between items-center">
                     <div className="flex space-x-1 text-2xl font-semibold">
@@ -136,7 +140,7 @@ const InsuranceSection = React.memo(({ onCloseOrderDetailModal, insuranceRules, 
                     </div>
                 </div>
             </div>
-            {state.showRules && (
+            {/* {state.showRules && (
                 <InsuranceRuleModal
                     insuranceRules={insuranceRules}
                     visible={state.showRules}
@@ -146,7 +150,7 @@ const InsuranceSection = React.memo(({ onCloseOrderDetailModal, insuranceRules, 
                     }}
                     onClose={() => setState({ showRules: false })}
                 />
-            )}
+            )} */}
             {state.showList && (
                 <InsuranceListModal
                     symbol={order?.symbol}
