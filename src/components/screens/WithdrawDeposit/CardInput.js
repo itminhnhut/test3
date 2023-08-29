@@ -405,7 +405,7 @@ const CardInput = () => {
                                 <div className="txtSecond-2">{t('dw_partner:daily_limit')}</div>
                                 <div className="txtPri-1 flex items-center">
                                     {loadingLimitWithdraw ? <Skeletor width="50px" /> : !limitWithdraw ? '--' : formatBalanceFiat(limitWithdraw?.limit, 'VNDC')}
-                                    <span className="ml-1">{'VNDC'}</span>
+                                    <span className="ml-1">VND</span>
                                 </div>
                             </div>
                             <div className="flex items-center justify-between ">
@@ -418,19 +418,14 @@ const CardInput = () => {
                                     ) : (
                                         formatBalanceFiat(limitWithdraw?.remain, 'VNDC')
                                     )}{' '}
-                                    <span className="ml-1">{'VNDC'}</span>
+                                    <span className="ml-1">VND</span>
                                 </div>
                             </div>
                         </>
                     )}
 
                     <div className="flex items-center justify-between ">
-                        {/* <div className="txtSecond-2">{t(`dw_partner:${side === SIDE.BUY ? 'will_transfer' : 'will_received'}`)}</div> */}
                         <div className="txtSecond-2">{t(`dw_partner:vnd_amount`)}</div>
-
-                        {/* <Tooltip place="top" effect="solid" isV3 id="will-transfer-receive">
-                            <div className="max-w-[300px] ">{formatBalanceFiat(input * rate, 'VNDC')}</div>
-                        </Tooltip> */}
 
                         <div data-tip="" className="inline-flex txtPri-1 space-x-1 !cursor-default">
                             {loadingRate ? (
