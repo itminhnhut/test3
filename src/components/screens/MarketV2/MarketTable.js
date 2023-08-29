@@ -127,6 +127,7 @@ const MarketTable = ({
     // Render Handler
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
+            if (subTab[restProps.subTabIndex].key === 'vnst' && item.key === 'exchange') return null // vnst chua co exchange
             const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null
             return (
                 <div
@@ -154,7 +155,7 @@ const MarketTable = ({
                         <div className="absolute left-1/2 bottom-0 w-[40px] h-[2px] bg-dominant -translate-x-1/2" />}
                 </div>);
         });
-    }, [currentTheme, restProps.tabIndex, restProps.tabLabelCount]);
+    }, [currentTheme, restProps.tabIndex, restProps.tabLabelCount, restProps.subTabIndex]);
 
     const renderSubTab = useCallback(() => {
         return subTab.map((item, index) => {
