@@ -12,31 +12,14 @@ export const SOCIALS_HREF = {
         },
         {
             key: 2,
-            name: 'telegram',
-            href: 'https://t.me/NamiGlobal'
-        },
-
-        {
-            key: 3,
             name: 'twitter',
             href: 'https://twitter.com/NamiExchange'
         },
         {
-            key: 4,
+            key: 3,
             name: 'coingecko',
             href: 'https://www.coingecko.com/en/exchanges/nami_exchange'
         }
-
-        // {
-        //     key: 4,
-        //     name: 'reddit',
-        //     href: 'https://www.reddit.com/r/NAMIcoin'
-        // }
-        // {
-        //     key: 6,
-        //     name: 'medium',
-        //     href: '#'
-        // },
     ],
     vi: [
         {
@@ -49,30 +32,23 @@ export const SOCIALS_HREF = {
             name: 'facebook_group',
             href: 'https://www.facebook.com/groups/nami.exchange'
         },
-
         {
             key: 2,
-            name: 'telegram',
-            href: 'https://t.me/namitradevn'
-        },
-
-        {
-            key: 3,
             name: 'twitter',
             href: 'https://twitter.com/NamiExchange'
         },
         {
-            key: 4,
+            key: 3,
             name: 'coingecko',
             href: 'https://www.coingecko.com/vi/san_giao_dich/nami_exchange'
         },
         {
-            key: 5,
+            key: 4,
             name: 'tiktok',
             href: 'https://www.tiktok.com/@nami.officialchannel'
         },
         {
-            key: 6,
+            key: 5,
             name: 'youtube',
             href: 'https://www.youtube.com/channel/UCYAqEagemhtu0MOtnE7rNJQ'
         }
