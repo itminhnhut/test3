@@ -13,7 +13,7 @@ const index = () => {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'futures']))
+        ...(await serverSideTranslations(locale, ['navbar', 'footer', 'common', 'futures']))
     }
 });
 
