@@ -158,12 +158,16 @@ const InsuranceRules = () => {
 
     return (
         <div className={classNames('mt-10 mb-20 px-4 mb:mb-[120px] mb:mt-20 ')}>
-            <Tooltip className="p-6 max-w-[247px] text-center" id="avg_changing_detail" place="top" effect="solid" isV3>
-                {t('futures:insurance.difference_description')}
-            </Tooltip>
-            <Tooltip className="p-6 max-w-[247px] text-center" id="minmax_ratio" place="top" effect="solid" isV3>
-                {t('futures:insurance.min_max_margin_ratio_description')}
-            </Tooltip>
+            {!rulesData.loading && (
+                <>
+                    <Tooltip className="p-6 max-w-[247px] text-center" id="avg_changing_detail" place="top" effect="solid" isV3>
+                        {t('futures:insurance.difference_description')}
+                    </Tooltip>
+                    <Tooltip className="p-6 max-w-[247px] text-center" id="minmax_ratio" place="top" effect="solid" isV3>
+                        {t('futures:insurance.min_max_margin_ratio_description')}
+                    </Tooltip>
+                </>
+            )}
             <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                 <div className="flex items-center justify-between gap-6 flex-wrap mb-10 mb:mb-8">
                     <div className="text-xl mb:text-4xl font-semibold ">{t('futures:insurance.insurance_rules_title')}</div>
