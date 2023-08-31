@@ -5,11 +5,15 @@ import { formatNumber, getSymbolObject } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { useTranslation } from 'next-i18next';
 import NoData from 'components/common/V2/TableV2/NoData';
+import Tooltip from 'components/common/Tooltip';
 
 const TableMobileView = ({ filterRulesData, loading, isSearch, page }) => {
     const { t } = useTranslation();
     return (
         <div className="space-y-8 mb-6">
+            <Tooltip className="p-6 max-w-[247px] text-center" id="avg_changing_detail_mobile" place="right" effect="solid" isV3>
+                {t('futures:insurance.difference_description')}
+            </Tooltip>
             {loading ? (
                 // LOADING
                 [...Array(2).keys()].map((key) => (
@@ -44,13 +48,13 @@ const TableMobileView = ({ filterRulesData, loading, isSearch, page }) => {
                 [...filterRulesData].slice(0, MOBILE_ROWS_PER_PAGE * page)?.map((rule, i) => {
                     const symbolObject = getSymbolObject(rule?.symbol);
                     return (
-                        <div key={i} className="space-y-4 last:pb-0 pb-4 last:border-0 border-b border-divider dark:border-divider-dark">
+                        <div key={rule.symbol + i} className="space-y-4 last:pb-0 pb-4 last:border-0 border-b border-divider dark:border-divider-dark">
                             <div className="flex items-center font-semibold space-x-2">
                                 <AssetLogo assetCode={symbolObject?.baseAsset} size={24} useNextImg />
                                 <div className="">{rule?.symbol}</div>
                             </div>
                             <div className="flex items-center text-sm justify-between">
-                                <div data-for="avg_changing_detail" data-tip="" className="text-txtSecondary dark:text-txtSecondary-dark nami-underline-dotted">
+                                <div data-for="avg_changing_detail_mobile" data-tip="" className="text-txtSecondary dark:text-txtSecondary-dark nami-underline-dotted">
                                     {t('futures:insurance.difference')}
                                 </div>
                                 <div>{formatNumber(rule?.avg_changing * 100, 2)}%</div>
