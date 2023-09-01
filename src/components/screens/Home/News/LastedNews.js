@@ -3,6 +3,7 @@ import SvgSpeaker from 'src/components/svg/SvgSpeaker';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useKeenSlider } from 'keen-slider/react';
+import { useWindowSize } from 'utils/customHooks';
 import { useTranslation } from 'next-i18next';
 import 'keen-slider/keen-slider.min.css';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -13,10 +14,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { PATHS } from 'constants/paths';
 
-const LastedNews = ({
-    data,
-    lang
-}) => {
+const LastedNews = ({ data, lang }) => {
     const [state, set] = useState({
         loadingNews: false,
         lastedNewsAutoplay: true
@@ -45,10 +43,8 @@ const LastedNews = ({
         if (!data) return null;
         return data.map((item) => {
             const primary_tags = item.primary_tag?.slug.split('-');
-            console.log('__ primary_tags', item, primary_tags);
             const tag = primary_tags[1] === 'faq' ? 'faq' : 'announcement';
-            const refId = `https://nami.exchange/${lang}/support/${tag}/${primary_tags.slice(2, primary_tags.length)
-                .join('-')}/${item.slug}?source=app`;
+            const refId = `https://nami.exchange/${lang}/support/${tag}/${primary_tags.slice(2, primary_tags.length).join('-')}/${item.slug}?source=app`;
             return (
                 <div className="keen-slider__slide" key={`home_news_${item.id}__alt`}>
                     <a href={refId} target="_blank" title={item.title}>
@@ -96,7 +92,7 @@ const LastedNews = ({
         <div className="homepage-news___lastest_news_wrapper">
             <div className="homepage-news___lastest___news">
                 <div className="homepage-news___lastest___news____left">
-                    <SvgSpeaker fill={colors.darkBlue5}/>
+                    <SvgSpeaker fill={colors.darkBlue5} />
                     <div className="homepage-news___lasted_slider">
                         <div ref={lastedNewsRef} className="keen-slider">
                             {renderLastestNews()}
@@ -106,11 +102,11 @@ const LastedNews = ({
 
                 <div className="homepage-news___lastest___news____right ">
                     <Link href={PATHS.SUPPORT.ANNOUNCEMENT} passHref>
-                        <a>
+                        <a >
                             <ButtonV2 variants="text" className="capitalize">
                                 <span className="mr-3"> {language === LANGUAGE_TAG.VI ? 'Xem Thêm' : 'More'}</span>
                                 <div className="!ml-0">
-                                    <ArrowRightIcon size={16}/>
+                                    <ArrowRightIcon size={16} />
                                 </div>
                             </ButtonV2>
                         </a>

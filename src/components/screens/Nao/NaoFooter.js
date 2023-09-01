@@ -66,7 +66,7 @@ const NaoFooter = memo(({ noSpacingTop }) => {
                     <div className="items-center gap-5 flex">
                         <SvgFacebook className="cursor-pointer" onClick={() => onRedirect('facebook')} size={24} color="#1778F2" />
                         <TwitterFilled className="cursor-pointer" onClick={() => onRedirect('twitter')} size={24} color="#1DA1F2" />
-                        {/* <TelegramFilled className="cursor-pointer" onClick={() => onRedirect('telegram')} size={24} color="#6CC1E3" /> */}
+                        <TelegramFilled className="cursor-pointer" onClick={() => onRedirect('telegram')} size={24} color="#6CC1E3" />
                         <RedditFilled className="cursor-pointer" onClick={() => onRedirect('reddit')} size={24} color="#FF4300" color2="white" />
                     </div>
                 </div>

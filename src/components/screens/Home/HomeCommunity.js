@@ -20,12 +20,12 @@ export const SOCIALS_HREF = {
             href: 'https://www.facebook.com/groups/namiglobal',
             title: 'Facebook Group'
         },
-        // {
-        //     key: 2,
-        //     image: { src: '/images/icon/ic_telegram_v3_plus.png', width: 90, height: 52 },
-        //     href: 'https://t.me/NamiGlobal',
-        //     title: 'Telegram'
-        // },
+        {
+            key: 2,
+            image: { src: '/images/icon/ic_telegram_v3_plus.png', width: 90, height: 52 },
+            href: 'https://t.me/NamiGlobal',
+            title: 'Telegram'
+        },
 
         {
             key: 3,
@@ -53,12 +53,12 @@ export const SOCIALS_HREF = {
             href: 'https://www.facebook.com/groups/nami.exchange',
             title: 'Facebook Group'
         },
-        // {
-        //     key: 2,
-        //     image: { src: '/images/icon/ic_telegram_v3.png', width: 78, height: 58 },
-        //     href: 'https://t.me/namitradevn',
-        //     title: 'Telegram'
-        // },
+        {
+            key: 2,
+            image: { src: '/images/icon/ic_telegram_v3.png', width: 78, height: 58 },
+            href: 'https://t.me/namitradevn',
+            title: 'Telegram'
+        },
 
         {
             key: 3,
