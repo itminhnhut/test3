@@ -21,7 +21,7 @@ const NaoFooter = memo(({ noSpacingTop }) => {
                 url = 'https://www.facebook.com/groups/nami.exchange';
                 break;
             case 'telegram':
-                url = 'https://t.me/namitradevn';
+                url = 'https://t.me/CongdongNamiVietnam';
                 break;
             case 'twitter':
                 url = 'https://twitter.com/NamiTrade';
