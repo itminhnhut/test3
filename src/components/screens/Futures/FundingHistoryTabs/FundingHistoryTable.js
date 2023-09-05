@@ -19,6 +19,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import PopoverV2 from 'components/common/V2/PopoverV2';
 import sortBy from 'lodash/sortBy';
 import NoData from 'components/common/V2/TableV2/NoData';
+import Chip from 'components/common/V2/Chip';
 
 ChartJS.register(Title, Tooltip, LineElement, Legend, CategoryScale, LinearScale, PointElement, Filler);
 
@@ -356,18 +357,14 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
                             <FilterChart value={filter.pageSize} onChange={(day) => setFilter({ ...filter, pageSize: day.value })} />
                         ) : (
                             days.map((day) => (
-                                <div
+                                <Chip
+                                    variants="filter2"
                                     key={day.id}
+                                    selected={filter.pageSize === day.value}
                                     onClick={() => setFilter({ ...filter, pageSize: day.value })}
-                                    className={classNames(
-                                        'text-txtSecondary dark:text-txtSecondary-dark px-4 py-3 border border-divider dark:border-divider-dark rounded-full cursor-pointer',
-                                        {
-                                            'font-semibold !border-teal !text-teal bg-teal/[0.1]': filter.pageSize === day.value
-                                        }
-                                    )}
                                 >
                                     {day[language]}
-                                </div>
+                                </Chip>
                             ))
                         )}
                     </div>
@@ -540,9 +537,12 @@ const FilterChart = ({ value, onChange }) => {
                             handleChangeFilter(item);
                             close();
                         }}
-                        className={classNames('cursor-pointer px-4 py-2 text-txtSecondary dark:text-txtSecondary-dark hover:bg-hover dark:hover:bg-hover-dark', {
-                            '!text-txtPrimary dark:!text-white': value === item.value
-                        })}
+                        className={classNames(
+                            'cursor-pointer px-4 py-2 text-txtSecondary dark:text-txtSecondary-dark hover:bg-hover dark:hover:bg-hover-dark',
+                            {
+                                '!text-txtPrimary dark:!text-white': value === item.value
+                            }
+                        )}
                     >
                         {item[language]}
                     </div>

@@ -11,8 +11,14 @@ import useApp from 'hooks/useApp';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import { ChevronLeft } from 'react-feather';
 import router from 'next/router';
+import TabV2 from 'components/common/V2/TabV2';
+import Chip from 'components/common/V2/Chip';
 
 export const CURRENCIES = [
+    {
+        name: 'VNST',
+        value: 'VNST'
+    },
     {
         name: 'VNDC',
         value: 'VNDC'
@@ -20,10 +26,6 @@ export const CURRENCIES = [
     {
         name: 'USDT',
         value: 'USDT'
-    },
-    {
-        name: 'VNST',
-        value: 'VNST'
     }
 ];
 
@@ -111,18 +113,13 @@ export default function FundingHistory(props) {
                             </Tabs>
                             <div className="flex items-center space-x-4 text-sm sm:text-base mb-4 sm:mb-0">
                                 {CURRENCIES.map((rs) => (
-                                    <div
+                                    <Chip
+                                        selected={selectedCurrency === rs.value}
                                         key={rs.value}
-                                        className={classNames(
-                                            'text-txtSecondary dark:text-txtSecondary-dark px-4 py-2 sm:py-3 border border-divider dark:border-divider-dark rounded-full cursor-pointer',
-                                            {
-                                                '!border-teal !text-teal font-semibold bg-teal/[0.1]': selectedCurrency === rs.value
-                                            }
-                                        )}
                                         onClick={() => setSelectedCurrency(rs.value)}
                                     >
                                         {rs.name}
-                                    </div>
+                                    </Chip>
                                 ))}
                             </div>
                         </div>
