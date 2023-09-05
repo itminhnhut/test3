@@ -344,7 +344,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                                     <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(
                                         state.baseQty,
                                         baseAssetConfig?.assetDigit || 0
-                                    )} ${ALLOWED_ASSET[+state?.baseAssetId]}}`}</span>
+                                    )} ${ALLOWED_ASSET[+state?.baseAssetId]}`}</span>
                                 </div>
                                 {state.side && (
                                     <div className="flex items-center justify-between mt-3">
