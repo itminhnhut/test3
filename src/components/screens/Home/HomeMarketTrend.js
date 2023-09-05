@@ -97,7 +97,7 @@ const SelectAsset = ({ setCurrency, marketCurrency }) => {
                         }
                     )}
                 >
-                    {['VNDC', 'USDT', 'VNST'].map((currency) => (
+                    {['VNST', 'VNDC', 'USDT'].map((currency) => (
                         <button
                             key={currency}
                             onClick={() => setCurrency(currency)}
