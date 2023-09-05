@@ -19,7 +19,7 @@
         "contracts": "Contracts",
         "difference": "Minimum distance limit",
         "difference_description": "The closest distance against which a asset is covered under a Bull and Bear contract",
-        "min_margin": "Min margin",
+        "min_margin": "Min Q-Cover",
         "min_max_margin_ratio": "Min/Max margin ratio",
         "min_max_margin_ratio_description": "Margin = Margin ratio x Q-Cover",
         "condition_buy_cover": "The position does not meet conditions to buy cover. View more insurance rules",
