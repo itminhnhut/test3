@@ -563,32 +563,32 @@ const NaoPerformance = memo(({}) => {
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center px-4 text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
+                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
                                 { '!border-teal !bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNST }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.VNST)}
                         >
-                            Futures VNST
+                            VNST
                         </button>
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center px-4 text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
+                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
                                 { '!border-teal !bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
                         >
-                            Futures VNDC
+                            VNDC
                         </button>
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center px-4 text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
+                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
                                 { '!border-teal !bg-teal/10 bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.USDT }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
                         >
-                            Futures USDT
+                            USDT
                         </button>
                     </div>
                 </div>

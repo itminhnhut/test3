@@ -423,17 +423,6 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                             </div>
                                         </div>
                                         <div className="pt-6 sm:pt-8 flex flex-col space-y-4 sm:space-y-6">
-                                            <div className="w-full sm:p-0.5">
-                                                <HistoryPriceItem
-                                                    s3Url={'/images/nao/ic_nao.png'}
-                                                    total={item?.interest?.[447]}
-                                                    digitsTotal={assetConfig[447]?.assetDigit ?? 8}
-                                                    usdPrice={item?.interestUSD?.[447]}
-                                                    vndcPrice={item?.interestVND?.[447]}
-                                                    assetName={assetConfig[447]?.assetName}
-                                                    assetSymbol={assetConfig[447]?.assetCode}
-                                                />
-                                            </div>
                                             {!isNaN(+item?.interest?.[39]) && (
                                                 <div className="w-full sm:p-0.5">
                                                     <HistoryPriceItem
@@ -447,6 +436,17 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                                     />
                                                 </div>
                                             )}
+                                            <div className="w-full sm:p-0.5">
+                                                <HistoryPriceItem
+                                                    s3Url={'/images/nao/ic_nao.png'}
+                                                    total={item?.interest?.[447]}
+                                                    digitsTotal={assetConfig[447]?.assetDigit ?? 8}
+                                                    usdPrice={item?.interestUSD?.[447]}
+                                                    vndcPrice={item?.interestVND?.[447]}
+                                                    assetName={assetConfig[447]?.assetName}
+                                                    assetSymbol={assetConfig[447]?.assetCode}
+                                                />
+                                            </div>
                                             <div className="w-full sm:p-0.5">
                                                 <HistoryPriceItem
                                                     s3Url={'/images/nao/ic_vndc.png'}
@@ -880,20 +880,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
                     <div className="flex items-center w-full flex-wrap space-y-4 sm:space-y-6 mt-6 sm:mt-8">
                         <div className="w-full sm:p-0.5">
                             <PoolPriceItem
-                                digitsPrice={assetConfig[447]?.assetDigit ?? 2}
-                                s3Url={'/images/nao/ic_nao.png'}
-                                price={data.estimate?.[447]}
-                                usdPrice={data.estimateUsd?.[447]}
-                                vndcPrice={data.estimateVNDC?.[447]}
-                                assetName={assetConfig[447]?.assetName}
-                                assetSymbol={assetConfig[447]?.assetCode}
-                            />
-                        </div>
-                        <div className="w-full sm:p-0.5">
-                            <PoolPriceItem
                                 digitsPrice={assetConfig[39]?.assetDigit ?? 0}
                                 s3Url={`/images/coins/64/${39}.png`}
-                                price={data.estimate?.[39]}
+                                price={data.estimate?.[39] ?? 0}
                                 usdPrice={data.estimateUsd?.[39] ?? 0}
                                 vndcPrice={data.estimateVNDC?.[39] ?? 0}
                                 assetName={assetConfig[39]?.assetName}
@@ -902,10 +891,21 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         </div>
                         <div className="w-full sm:p-0.5">
                             <PoolPriceItem
+                                digitsPrice={assetConfig[447]?.assetDigit ?? 2}
+                                s3Url={'/images/nao/ic_nao.png'}
+                                price={data.estimate?.[447] ?? 0}
+                                usdPrice={data.estimateUsd?.[447] ?? 0}
+                                vndcPrice={data.estimateVNDC?.[447] ?? 0}
+                                assetName={assetConfig[447]?.assetName}
+                                assetSymbol={assetConfig[447]?.assetCode}
+                            />
+                        </div>
+                        <div className="w-full sm:p-0.5">
+                            <PoolPriceItem
                                 digitsPrice={assetConfig[72]?.assetDigit ?? 0}
                                 s3Url={'/images/nao/ic_vndc.png'}
-                                price={data.estimate?.[72]}
-                                usdPrice={data.estimateUsd?.[72]}
+                                price={data.estimate?.[72] ?? 0}
+                                usdPrice={data.estimateUsd?.[72] ?? 0}
                                 assetName={assetConfig[72]?.assetName}
                                 assetSymbol={assetConfig[72]?.assetCode}
                             />
@@ -914,9 +914,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             <PoolPriceItem
                                 digitsPrice={assetConfig[1]?.assetDigit ?? 0}
                                 s3Url={`/images/coins/64/${1}.png`}
-                                price={data.estimate?.[1]}
-                                vndcPrice={data.estimateVNDC?.[1]}
-                                usdPrice={data.estimateUsd?.[1]}
+                                price={data.estimate?.[1] ?? 0}
+                                vndcPrice={data.estimateVNDC?.[1] ?? 0}
+                                usdPrice={data.estimateUsd?.[1] ?? 0}
                                 assetName={assetConfig[1]?.assetName}
                                 assetSymbol={assetConfig[1]?.assetCode}
                             />
@@ -926,9 +926,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 <PoolPriceItem
                                     digitsPrice={assetConfig[86]?.assetDigit ?? 0}
                                     s3Url={'/images/nao/ic_onus.png'}
-                                    price={data.estimate?.[86]}
-                                    usdPrice={data.estimateUsd?.[86]}
-                                    vndcPrice={data.estimateVNDC?.[86]}
+                                    price={data.estimate?.[86] ?? 0}
+                                    usdPrice={data.estimateUsd?.[86] ?? 0}
+                                    vndcPrice={data.estimateVNDC?.[86] ?? 0}
                                     assetName={assetConfig[86]?.assetName}
                                     assetSymbol={assetConfig[86]?.assetCode}
                                 />
@@ -938,9 +938,9 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             <PoolPriceItem
                                 digitsPrice={assetConfig[22]?.assetDigit ?? 0}
                                 s3Url={'/images/nao/ic_onus.png'}
-                                price={data.estimate?.[22]}
-                                usdPrice={data.estimateUsd?.[22]}
-                                vndcPrice={data.estimateVNDC?.[22]}
+                                price={data.estimate?.[22] ?? 0}
+                                usdPrice={data.estimateUsd?.[22] ?? 0}
+                                vndcPrice={data.estimateVNDC?.[22] ?? 0}
                                 isUSDT
                                 assetName={assetConfig[22]?.assetName}
                                 assetSymbol={assetConfig[22]?.assetCode}
