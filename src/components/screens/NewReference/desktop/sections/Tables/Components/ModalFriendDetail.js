@@ -7,6 +7,7 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 
 import UserCircle from 'components/svg/UserCircle';
+import { CheckCircleIcon } from 'components/svg/SvgIcon';
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -94,7 +95,10 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                         displayExpr="title"
                         options={defaultOption}
                         value={valueCommission}
+                        popoverClassName="w-[129px]"
                         onChange={(e) => onChangeOption(e, 'commission')}
+                        icon={<CheckCircleIcon color="currentColor" size={16} />}
+                        optionClassName="flex flex-row items-center justify-between"
                     />
                 </div>
             </div>
@@ -120,7 +124,10 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                         displayExpr="title"
                         value={valueOrderVol}
                         options={defaultOption}
+                        popoverClassName="w-[129px]"
                         onChange={(e) => onChangeOption(e, 'orderVol')}
+                        icon={<CheckCircleIcon color="currentColor" size={16} />}
+                        optionClassName="flex flex-row items-center justify-between"
                     />
                 </div>
             </div>

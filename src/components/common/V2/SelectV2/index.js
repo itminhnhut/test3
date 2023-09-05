@@ -12,7 +12,8 @@ const SelectV2 = ({
     popoverPanelClassName = '',
     popoverClassName = '',
     position = 'bottom',
-    optionClassName
+    optionClassName,
+    icon = ''
 }) => {
     const title = useMemo(() => {
         return options.find((rs) => rs?.[keyExpr] === value)?.[displayExpr] ?? '';
@@ -59,6 +60,7 @@ const SelectV2 = ({
                             >
                                 <div className="relative py-2">
                                     {options.map((item, index) => {
+                                        console.log('item', item, value);
                                         return (
                                             <div
                                                 key={index}
@@ -75,6 +77,7 @@ const SelectV2 = ({
                                                 }}
                                             >
                                                 {item?.[displayExpr] ?? ''}
+                                                {icon && item.value === value ? icon : null}
                                             </div>
                                         );
                                     })}
