@@ -1,5 +1,5 @@
-import { IconNoSort, IconSort, IconStarFilled } from 'src/components/common/Icons';
-import SearchInput from 'src/components/markets/SearchInput';
+import { IconNoSort, IconSort, IconStarFilled } from 'components/common/Icons';
+import SearchInput from 'components/markets/SearchInput';
 import compact from 'lodash/compact';
 import orderBy from 'lodash/orderBy';
 import { useTranslation } from 'next-i18next';
@@ -7,10 +7,10 @@ import { useRouter } from 'next/router';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAsync, useInterval } from 'react-use';
-import SymbolListItem from 'src/components/markets/SymbolListItem';
-import { CATEGORY_SPOT_SIGNAL, TRADING_MODE } from 'src/redux/actions/const';
-import { getMarketWatch } from 'src/redux/actions/market';
-import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
+import SymbolListItem from 'components/markets/SymbolListItem';
+import { CATEGORY_SPOT_SIGNAL, TRADING_MODE } from 'redux/actions/const';
+import { getMarketWatch } from 'redux/actions/market';
+import { getExchange24hPercentageChange } from 'redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from '../../styles/colors';
 import { favoriteAction } from 'redux/actions/user';
@@ -343,7 +343,7 @@ const SymbolList = (props) => {
     return (
         <>
             <div className={`${isPro ? 'p-4' : 'pr-6 py-6 pl-4'} h-full`}>
-                <div className="mb-7 dragHandleArea">
+                <div className="mb-7">
                     <SearchInput placeholder={t('spot:search')} onChange={(e) => setSearch(e.target.value)} parentState={setSearch} />
                 </div>
 

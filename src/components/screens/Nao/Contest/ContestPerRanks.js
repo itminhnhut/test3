@@ -254,14 +254,12 @@ const ContestPerRanks = ({
                                     </div>
                                     <span className="font-semibold">{formatNumber(item?.total_volume, 0)}</span>
                                 </div>
-                                {!previous && (
-                                    <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</div>
-                                        <span className="font-semibold">
-                                            {formatNumber(item?.time, 2)} {t('common:hours')}
-                                        </span>
-                                    </div>
-                                )}
+                                <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</div>
+                                    <span className="font-semibold">
+                                        {formatNumber(item?.time, 2)} {t('common:hours')}
+                                    </span>
+                                </div>
                                 {tab === 'pnl' ? (
                                     <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
@@ -333,14 +331,12 @@ const ContestPerRanks = ({
                                             </label>
                                             <span className="text-right">{formatNumber(item?.total_volume, 0)}</span>
                                         </div>
-                                        {!previous && (
-                                            <div className="flex items-center justify-between pt-3">
-                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</label>
-                                                <span className="text-right">
-                                                    {formatNumber(item?.time, 2)} {t('common:hours')}
-                                                </span>
-                                            </div>
-                                        )}
+                                        <div className="flex items-center justify-between pt-3">
+                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</label>
+                                            <span className="text-right">
+                                                {formatNumber(item?.time, 2)} {t('common:hours')}
+                                            </span>
+                                        </div>
                                         <div className="flex items-center justify-between pt-3">
                                             <label className="text-txtSecondary dark:text-txtSecondary-dark">
                                                 {t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
@@ -391,7 +387,6 @@ const ContestPerRanks = ({
                         />
                         <Column
                             minWidth={120}
-                            visible={!previous}
                             align="right"
                             className=""
                             title={t('common:ext_gate:time')}

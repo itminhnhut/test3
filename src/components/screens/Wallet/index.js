@@ -179,6 +179,7 @@ const Wallet = () => {
 
     const reNewUsdRate = async () => {
         const usdRate = await getUsdRate();
+        console.log('usdRate:', usdRate)
         usdRate && setState({ usdRate });
     };
 

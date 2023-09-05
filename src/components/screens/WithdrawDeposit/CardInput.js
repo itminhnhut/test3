@@ -209,8 +209,6 @@ const CardInput = () => {
 
     useEffect(() => {
         let isCanSubmitOrder = true;
-        console.log("_______tipValidator: ", tipValidator);
-
         isCanSubmitOrder =
             !tipValidator?.isValid ||
             // !partner ||

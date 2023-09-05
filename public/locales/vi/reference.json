@@ -80,8 +80,8 @@
             "total_commissions": "Thời gian phát sinh hoa hồng",
             "reset": "Đặt lại",
             "search_id": "Tìm theo Nami ID ",
-            "placeholder_search": "Nhập Nami ID",
-            "export": "Xuất file"
+            "placeholder_search": "Nhập NamiID, Họ và tên",
+            "export": "Xuất báo cáo"
         },
         "detail": {
             "volume": "Khối lượng",
@@ -203,7 +203,7 @@
         "reset": "Đặt lại",
         "error": "Lỗi",
         "success": "Thành công",
-        "placeholder_search": "Nhập Nami ID",
+        "placeholder_search": "Nhập NamiID, Họ và tên",
         "partner": {
             "button": "Đăng ký đối tác",
             "title": "Đăng ký đối tác cộng đồng",

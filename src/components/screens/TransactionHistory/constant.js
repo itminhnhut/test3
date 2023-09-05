@@ -7,7 +7,8 @@ export const INITAL_FILTER = {
         key: 'selection'
     },
     category: null,
-    asset: null
+    asset: null,
+    curSort: {}
 };
 
 export const TRANSACTION_TYPES = {
@@ -29,6 +30,7 @@ export const TRANSACTION_TYPES = {
     FUTURESCOMMISSION: 'futurescommission',
     PARTNERCOMMISSION: 'partnercommission',
     COMMISSION: 'commision',
+    OFF_CHAIN: 'off_chain',
     INSURANCE: 'insurance'
 };
 
@@ -89,6 +91,11 @@ export const TransactionTabs = [
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.REWARD)
     },
     {
+        key: TRANSACTION_TYPES.OFF_CHAIN,
+        localized: 'off_chain',
+        href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.OFF_CHAIN)
+    },
+    {
         key: TRANSACTION_TYPES.INSURANCE,
         localized: null,
         title: 'Nami Insurance',
@@ -113,7 +120,8 @@ export const COLUMNS_TYPE = {
     INSURANCE_EXPECT: 'insurance_expect',
     INSURANCE_PAIR: 'insurance_pair',
     FUTURES_ORDER_VALUE: 'futures_order_value',
-    CONVERT_ASSET: 'convert_asset'
+    CONVERT_ASSET: 'convert_asset',
+    OFF_CHAIN: 'off_chain'
 };
 
 export const modalDetailColumn = {
@@ -233,6 +241,25 @@ export const modalDetailColumn = {
             localized: 'modal_detail.to',
             type: COLUMNS_TYPE.FIAT_USER
         }
+    ],
+    [TRANSACTION_TYPES.OFF_CHAIN]: [
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
+        { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
+        { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
+        {
+            keys: ['additionalData.metadata.fromUser.code'],
+            backupKeys: ['result.metadata.fromUser.code'],
+            localized: 'modal_detail.from',
+            type: COLUMNS_TYPE.COPIEDABLE
+        },
+        {
+            keys: ['additionalData.metadata.toUser.code'],
+            backupKeys: ['result.metadata.toUser.code'],
+            localized: 'modal_detail.to',
+            type: COLUMNS_TYPE.COPIEDABLE
+        },
+
+        { keys: ['additionalData.metadata.note'], localized: 'modal_detail.note' }
     ],
     common: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },

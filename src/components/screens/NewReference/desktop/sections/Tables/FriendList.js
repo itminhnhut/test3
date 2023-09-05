@@ -1,28 +1,22 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-
 import { TableFilter } from '.';
-
-import dynamic from 'next/dynamic';
-
-import TagV2 from 'components/common/V2/TagV2';
+import classNames from 'classnames';
+import { ExportIcon } from 'components/common/Icons';
 import Tooltip from 'components/common/Tooltip';
-import TableV2 from 'components/common/V2/TableV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import TableV2 from 'components/common/V2/TableV2';
+import TagV2 from 'components/common/V2/TagV2';
 import TextCopyable from 'components/screens/Account/TextCopyable';
-
+import { isValid } from 'date-fns';
+import dynamic from 'next/dynamic';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-
-import FetchApi from 'utils/fetch-api';
-import { assetCodeFromId } from 'utils/reference-utils';
-
+import { API_GET_LIST_FRIENDS, API_GET_REFERRAL_FRIENDS_BY_CODE } from 'redux/actions/apis';
 import { KYC_STATUS } from 'redux/actions/const';
 import { formatNumber, formatTime } from 'redux/actions/utils';
-import { API_GET_LIST_FRIENDS, API_GET_REFERRAL_FRIENDS_BY_CODE } from 'redux/actions/apis';
-
-import { ExportIcon } from 'components/common/Icons';
-import { isValid } from 'date-fns';
-import classNames from 'classnames';
+import FetchApi from 'utils/fetch-api';
+import { assetCodeFromId } from 'utils/reference-utils';
 import FriendListExportModal from './Components/FriendListExportModal';
+
 
 const ModalFriendDetail = dynamic(() => import('./Components/ModalFriendDetail'), { ssr: false });
 const BreadCrumbs = dynamic(() => import('./Components/BreadCrumbs'), { ssr: false });
@@ -119,7 +113,7 @@ const FriendList = ({ language, t, id }) => {
             title: t('reference:friend_list.filter.search_id'),
             label: t('reference:friend_list.filter.search_id'),
             placeholder: t('reference:friend_list.filter.placeholder_search'),
-            childClassName: 'max-w-[240px]'
+            childClassName: 'w-[280px]'
         },
         reset: {
             type: 'reset',
@@ -192,11 +186,11 @@ const FriendList = ({ language, t, id }) => {
         }
         return levelFriend > 0
             ? BREADCRUMB?.map((value, key) => {
-                if (path?.[key] && key > 0) {
-                    value['parentCode'] = path[key];
-                }
-                return value;
-            })
+                  if (path?.[key] && key > 0) {
+                      value['parentCode'] = path[key];
+                  }
+                  return value;
+              })
             : [];
     }, [dataSource, levelFriend]);
 

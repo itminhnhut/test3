@@ -82,7 +82,7 @@
             "total_commissions": "Commission Date Range",
             "reset": "Reset",
             "search_id": "Search Nami ID",
-            "placeholder_search": "Enter Nami ID",
+            "placeholder_search": "Enter NamiID, Name",
             "export": "Export"
         },
         "detail": {
@@ -205,7 +205,7 @@
         "reset": "Reset",
         "error": "Error",
         "success": "Success",
-        "placeholder_search": "Enter Nami ID",
+        "placeholder_search": "Enter NamiID, Name",
         "partner": {
             "button": "Partner Registration",
             "title": "Community Partner Registration",

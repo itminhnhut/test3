@@ -39,10 +39,10 @@ export default function ({ version }) {
     return (
         <LayoutNaoToken isHeader={false}>
             <div className="min-h-screen">
-                <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
+                <div className="px-4 nao:p-0 max-w-screen-v3 w-full m-auto !mt-0">
                     <NaoHeader />
                 </div>
-                <div className="nao_section px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                <div className="nao_section px-4 nao:p-0 max-w-screen-v3 w-full m-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 mt-14">
                         <div className="flex flex-col justify-center">
                             <h4 className="font-semibold text-xl sm:text-5xl text-center sm:text-left">{t('nao:year_summary:title', { version })}</h4>
@@ -63,7 +63,7 @@ export default function ({ version }) {
                 </div>
 
                 <div className="bg-gray-13 dark:bg-dark rounded-t-2xl pb-20 sm:pb-[120px] mt-12 sm:mt-20">
-                    <div className="nao_section pt-6 px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                    <div className="nao_section pt-6 px-4 nao:p-0 max-w-screen-v3 w-full m-auto">
                         <NaoFuturesPerformance version={version} />
 
                         <div className="mt-12 md:mt-20">

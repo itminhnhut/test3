@@ -127,6 +127,13 @@ const ContestWeekRanks = ({
         );
     };
 
+    useEffect(() => {
+        if (previous) {
+            checked.current = false;
+            setTab(0);
+        }
+    }, [previous]);
+
     const weeks = useMemo(() => {
         return getWeeksInRange(new Date(start), new Date(end));
     }, [start]);
@@ -137,7 +144,7 @@ const ContestWeekRanks = ({
         for (let i = 0; i < weeks.numWeeks; i++) {
             const start = new Date(weeks.weeks[i].start).getTime();
             const end = new Date(weeks.weeks[i].end).getTime();
-            if (now > start && now < end && !checked.current) {
+            if (now > start && now < end && !checked.current && !previous) {
                 checked.current = true;
                 onFilter(i);
             }
@@ -149,7 +156,7 @@ const ContestWeekRanks = ({
             );
         }
         return rs;
-    }, [weeks, tab]);
+    }, [weeks, tab, previous]);
 
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
@@ -214,14 +221,12 @@ const ContestWeekRanks = ({
                                         {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                     </span>
                                 </div>
-                                {!previous && (
-                                    <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</div>
-                                        <span className="font-semibold">
-                                            {formatNumber(item?.time, 2)} {t('common:hours')}
-                                        </span>
-                                    </div>
-                                )}
+                                <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
+                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</div>
+                                    <span className="font-semibold">
+                                        {formatNumber(item?.time, 2)} {t('common:hours')}
+                                    </span>
+                                </div>
                                 {tab === 'pnl' ? (
                                     <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
@@ -293,14 +298,12 @@ const ContestWeekRanks = ({
                                                 {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                             </span>
                                         </div>
-                                        {!previous && (
-                                            <div className="flex items-center justify-between pt-3">
-                                                <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</label>
-                                                <span className="text-right">
-                                                    {formatNumber(item?.time, 2)} {t('common:hours')}
-                                                </span>
-                                            </div>
-                                        )}
+                                        <div className="flex items-center justify-between pt-3">
+                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</label>
+                                            <span className="text-right">
+                                                {formatNumber(item?.time, 2)} {t('common:hours')}
+                                            </span>
+                                        </div>
                                         <div className="flex items-center justify-between pt-3">
                                             <label className="text-txtSecondary dark:text-txtSecondary-dark">
                                                 {t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
@@ -351,7 +354,6 @@ const ContestWeekRanks = ({
                         />
                         <Column
                             minWidth={150}
-                            visible={!previous}
                             align="right"
                             className=""
                             title={t('common:ext_gate:time')}

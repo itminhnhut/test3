@@ -50,13 +50,13 @@ const IndicatorBars = ({
     setFullChart,
     isDetail
 }) => {
-    const setIndicator = (item, key) => {
+    const setIndicator = (item, key, active) => {
         let value = '';
         if (key === 'main') {
-            value = mainIndicator === item.value ? '' : item.value;
+            value = active > -1 ? active : item.value;
             setMainIndicator(value, item);
         } else {
-            value = subIndicator === item.value ? '' : item.value;
+            value = active > -1 ? active : item.value;
             setSubIndicator(value, item);
         }
     };
@@ -73,25 +73,31 @@ const IndicatorBars = ({
                 <div onClick={handleOpenIndicatorModal}>
                     <SvgActivity color={currentTheme === THEME_MODE.DARK ? colors.gray[7] : colors.gray[1]} />
                 </div>
-                {mainIndicators.map((item) => (
-                    <div
-                        key={item.value}
-                        className={mainIndicator === item.value ? 'text-txtPrimary dark:text-txtPrimary-dark' : ''}
-                        onClick={() => setIndicator(item, 'main')}
-                    >
-                        {item.label}
-                    </div>
-                ))}
+                {mainIndicators.map((item) => {
+                    const active = mainIndicator.findIndex((m) => m.name === item.value);
+                    return (
+                        <div
+                            key={item.value}
+                            className={active > -1 ? 'text-txtPrimary dark:text-txtPrimary-dark' : ''}
+                            onClick={() => setIndicator(item, 'main', active)}
+                        >
+                            {item.label}
+                        </div>
+                    );
+                })}
                 <div className="bg-divider dark:bg-divider-dark w-[2px] h-4" />
-                {subIndicators.map((item) => (
-                    <div
-                        key={item.value}
-                        className={subIndicator === item.value ? 'text-txtPrimary dark:text-txtPrimary-dark' : ''}
-                        onClick={() => setIndicator(item, 'sub')}
-                    >
-                        {item.label}
-                    </div>
-                ))}
+                {subIndicators.map((item) => {
+                    const active = subIndicator.findIndex((m) => m.name === item.value);
+                    return (
+                        <div
+                            key={item.value}
+                            className={active > -1 ? 'text-txtPrimary dark:text-txtPrimary-dark' : ''}
+                            onClick={() => setIndicator(item, 'sub', active)}
+                        >
+                            {item.label}
+                        </div>
+                    );
+                })}
                 {isDetail ? (
                     <Reload onClick={resetComponent} color={currentTheme === THEME_MODE.DARK ? colors.gray[7] : colors.gray[1]} />
                 ) : (

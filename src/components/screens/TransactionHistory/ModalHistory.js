@@ -274,6 +274,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     case COLUMNS_TYPE.NAMI_SYSTEM:
                                         formatKeyData = t('transaction-history:nami_system');
                                         break;
+
                                     case COLUMNS_TYPE.STAKING_SNAPSHOT:
                                         asset = assetConfig.find((asset) => asset.id === get(detailTx, col.keys[1]));
                                         formatKeyData = (
@@ -357,26 +358,36 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     default:
                                         break;
                                 }
-                                if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
+                                if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW || detailTx.type === TRANSACTION_TYPES.OFF_CHAIN) {
+                                    // Nạp Rút on_chain:
                                     // not showing "To" on type deposit (nạp)
                                     // not showing "From" on type withdraw (rút)
                                     if (
                                         (detailTx.result.category === 4 && col.localized === 'modal_detail.to') ||
                                         (detailTx.result.category === 5 && col.localized === 'modal_detail.from')
-                                    )
+                                    ) {
                                         return null;
-
+                                    }
                                     // not showing "Fee" on type deposit (nạp)
                                     if (detailTx.result.category === 4 && col.localized === 'modal_detail.fee') {
+                                        return null;
+                                    }
+
+                                    //Nạp Rút off_chain:
+                                    // category 51 (Gửi tiền) bỏ field from
+                                    if (detailTx.result.category === 51 && col.localized === 'modal_detail.from') {
                                         return null;
                                     }
                                 }
                                 return (
                                     <div key={col.localized} className="flex justify-between py-3 items-center">
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark max-w-[170px]">
+                                        <div className="text-txtSecondary w-full dark:text-txtSecondary-dark max-w-[170px]">
                                             {t(`transaction-history:${col.localized}`)}
                                         </div>
                                         <div
+                                            style={{
+                                                wordBreak: 'break-word'
+                                            }}
                                             className={classNames('ml-2 text-right font-semibold text-txtPrimary  dark:text-txtPrimary-dark', {
                                                 '!text-dominant': col.primaryTeal
                                             })}

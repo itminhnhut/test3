@@ -1,4 +1,5 @@
 {
+    "send_offchain": "Send Off-chain",
     "buy_title": "Buy via Partner",
     "sell_title": "Sell via Partner",
     "partner_title": "Deposit/Withdraw Partner",
@@ -225,5 +226,8 @@
     "fee_received": "Fee received",
     "auto_suggestion_mode": "Auto-suggestion mode",
     "auto_suggestion_mode_tooltip": "Allow system automatically suggests to the users to execute orders",
-    "receive_addresses": "Receive addresses continuous updates from time to time, please always get the latest wallet address when making transactions"
+    "receive_addresses": "Receive addresses continuous updates from time to time, please always get the latest wallet address when making transactions",
+    "transaction_limit": "Transaction limit",
+    "processing_time": "Processing time",
+    "number_of_transactions": "Number of transactions"
 }

@@ -47,7 +47,7 @@
         "1002": "<0>{{- type}} is expired<0>",
         "1003": "<0>{{- type}} expired<0>",
         "1004": "<0>{{- type}} is activated before<0>",
-        "1005": "<0>{{- type}} cant transfer<0>",
+        "1005": "<0>{{- nameNFT}} cannot transfer<0>",
         "9001": "Nami ID doesn't exist",
         "9000": "Nami ID not valid",
         "code_error_format": "Nami ID is incorrectly formatted"

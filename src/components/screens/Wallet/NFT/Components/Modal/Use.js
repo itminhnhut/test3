@@ -14,7 +14,7 @@ const CATEGORY = {
     2: 'WNFT'
 };
 
-const Use = ({ isModal, onCloseModal, statusCodeNFT, onUseSubmit, category }) => {
+const Use = ({ isModal, nameNFT, onCloseModal, statusCodeNFT, onUseSubmit, category }) => {
     const { t } = useTranslation();
 
     const [currentTheme] = useDarkMode();
@@ -33,7 +33,7 @@ const Use = ({ isModal, onCloseModal, statusCodeNFT, onUseSubmit, category }) =>
                     <Trans
                         i18nKey={`nft:status_code:${statusCodeNFT}`}
                         components={[<section className="mt-4 text-center text-gray-1 dark:text-gray-7" />]}
-                        values={{ type: CATEGORY[category] }}
+                        values={{ type: CATEGORY[category], nameNFT }}
                     />
                 )}
                 {statusCodeNFT === 1004 ? (

@@ -1,32 +1,39 @@
-import { IconLoading } from 'src/components/common/Icons';
-import { reverse } from 'lodash';
+import classNames from 'classnames';
+import Tooltip from 'components/common/Tooltip';
+import PopoverV2 from 'components/common/V2/PopoverV2';
 import maxBy from 'lodash/maxBy';
 import orderBy from 'lodash/orderBy';
+import reverse from 'lodash/reverse';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAsync } from 'react-use';
-import { ExchangeOrderEnum, PublicSocketEvent } from 'src/redux/actions/const';
-import Emitter from 'src/redux/actions/emitter';
-import { getOrderBook } from 'src/redux/actions/market';
-import { SET_SPOT_SELECTED_ORDER } from 'src/redux/actions/types';
-import { formatNumber, getFilter, getSymbolString, RefCurrency, exponentialToDecimal, getDecimalPrice, getDecimalQty } from 'src/redux/actions/utils';
-import LastPrice from '../markets/LastPrice';
-import OrderBookAll from 'src/components/svg/OrderBookAll';
-import OrderBookBids from 'src/components/svg/OrderBookBids';
-import OrderBookAsks from 'src/components/svg/OrderBookAsks';
 import { ORDER_BOOK_MODE } from 'redux/actions/const';
-import SvgChevronDown from 'src/components/svg/ChevronDown';
+import { IconLoading } from 'components/common/Icons';
+import SvgChevronDown from 'components/svg/ChevronDown';
+import { ExchangeOrderEnum, PublicSocketEvent } from 'redux/actions/const';
+import Emitter from 'redux/actions/emitter';
+import { getOrderBook } from 'redux/actions/market';
+import { SET_SPOT_SELECTED_ORDER } from 'redux/actions/types';
+import { RefCurrency, exponentialToDecimal, formatNumber, getFilter, getSymbolString } from 'redux/actions/utils';
 import { handleTickSize } from 'utils/MarketDepthMerger';
-import classNames from 'classnames';
-import PopoverV2 from 'components/common/V2/PopoverV2';
+import LastPrice from '../markets/LastPrice';
 
-const OrderBook = (props) => {
+import dynamic from 'next/dynamic';
+
+const OrderBookAll = dynamic(() => import('components/svg/OrderBookAll'), { ssr: false });
+const OrderBookBids = dynamic(() => import('components/svg/OrderBookBids'), { ssr: false });
+const OrderBookAsks = dynamic(() => import('components/svg/OrderBookAsks'), { ssr: false });
+
+const initHoverData = {
+    index: null,
+    side: null
+};
+
+const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
     const { t } = useTranslation(['common', 'spot']);
-    const { symbol, layoutConfig, parentState, isPro, decimals } = props;
-    const [orderBook, setOrderBook] = useState({ bids: [], asks: [] });
-    const { base, quote } = props.symbol;
+    const { base, quote } = symbol;
     const dispatch = useDispatch();
     const setSelectedOrder = (order) => {
         dispatch({
@@ -35,18 +42,14 @@ const OrderBook = (props) => {
         });
     };
     const quoteAsset = useSelector((state) => state.user.quoteAsset) || 'USDT';
+    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     const router = useRouter();
     const popover = useRef(null);
 
-    const symbolString = useMemo(() => {
-        return base + quote;
-    }, [base, quote]);
-    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     const [tickSize, setTickSize] = useState(0.01);
     const [tickSizeOptions, setTickSizeOptions] = useState([]);
-    const [loadingAsks, setLoadingAsks] = useState(true);
-    const [loadingBids, setLoadingBids] = useState(true);
-    const [orderBookMode, setOrderBookMode] = useState(ORDER_BOOK_MODE.ALL);
+
+    const [orderBook, setOrderBook] = useState({ bids: [], asks: [], mode: ORDER_BOOK_MODE.ALL, loading: true });
 
     const [height, setHeight] = useState(0);
     const ref = useRef(null);
@@ -61,19 +64,21 @@ const OrderBook = (props) => {
     useAsync(async () => {
         // Get symbol list
         const _orderBook = await getOrderBook(getSymbolString(symbol));
-        await setOrderBook(_orderBook);
-        setLoadingAsks(false);
-        setLoadingBids(false);
+        setOrderBook((prev) => ({ ...prev, ..._orderBook, loading: false }));
     }, [symbol]);
 
     const handleRouteChange = async () => {
-        setLoadingAsks(true);
-        setLoadingBids(true);
+        setOrderBook((prev) => ({ ...prev, loading: true }));
     };
 
     useEffect(() => {
         if (orderBook) {
-            parentState({ orderBook });
+            parentState({
+                orderBook: {
+                    bids: orderBook.bids,
+                    asks: orderBook.asks
+                }
+            });
         }
     }, [orderBook]);
 
@@ -86,9 +91,7 @@ const OrderBook = (props) => {
         });
         Emitter.on(event, async (data) => {
             if (data?.symbol === `${symbol.base}${symbol.quote}`) {
-                setLoadingAsks(false);
-                setLoadingBids(false);
-                setOrderBook(data);
+                setOrderBook((prev) => ({ ...prev, ...data, loading: false }));
             }
         });
         router.events.on('routeChangeStart', handleRouteChange);
@@ -115,110 +118,163 @@ const OrderBook = (props) => {
         setTickSize(+priceFilter?.tickSize);
     }, [exchangeConfig, symbol]);
 
-    const divide = orderBookMode === ORDER_BOOK_MODE.ALL ? 2 : 1;
+    const divide = orderBook.mode === ORDER_BOOK_MODE.ALL ? 2 : 1;
 
-    const MAX_LENGTH = Math.floor((height - 145) / divide / 20);
+    const MAX_LENGTH = Math.floor((height - 165) / divide / 20);
 
-    const originAsks = orderBook?.asks?.length > 0 ? orderBy(orderBook?.asks, [(e) => +e[0]]) : [];
-    const originBids = orderBook?.bids?.length > 0 ? orderBy(orderBook?.bids, [(e) => +e[0]], 'desc') : [];
+    const asks = useMemo(() => {
+        const originAsks = orderBook?.asks?.length > 0 ? orderBy(orderBook?.asks, [(e) => +e[0]]) : [];
+        const reverseAsks = reverse([...originAsks]);
+        return orderBy(handleTickSize(reverseAsks, tickSize, 'ask').slice(-MAX_LENGTH), [(e) => +e[0]], ['desc']);
+    }, [orderBook?.asks, tickSize]);
 
-    let asks = originAsks;
-    let bids = originBids;
+    const bids = useMemo(() => {
+        const originBids = orderBook?.bids?.length > 0 ? orderBy(orderBook?.bids, [(e) => +e[0]], 'desc') : [];
+        return orderBy(handleTickSize(originBids, tickSize, 'bids').slice(0, MAX_LENGTH), [(e) => -e[0]]);
+    }, [orderBook?.bids, tickSize]);
 
-    // for (let i = 0; i < Math.min(MAX_LENGTH, orderBook?.asks?.length || 0); i++) {
-    //     if (originAsks[i]) {
-    //         asks.push(originAsks[i]);
-    //     } else {
-    //         asks.push([0, 0]);
-    //     }
-    // }
-    // for (let i = 0; i < Math.min(MAX_LENGTH, orderBook?.bids?.length || 0); i++) {
-    //     if (originBids[i]) {
-    //         bids.push(originBids[i]);
-    //     } else {
-    //         bids.push([0, 0]);
-    //     }
-    // }
+    const [hoverData, setHoverData] = useState(initHoverData);
 
-    // const handleTickSize = (data, type) => {
-    //     const _data = data.map((e) => {
-    //         const rate = type === 'ask' ? ceil((+e[0]), decimal)  : floor((+e[0]) , decimal);
-    //         return { rate, amount: +e[1] };
-    //     });
+    const hoveringDataCalculate = useMemo(() => {
+        const { index, side } = hoverData;
+        if (isNaN(index) || !side)
+            return {
+                totalQuantity: 0,
+                totalQuote: 0,
+                priceAvg: 0
+            };
+        const rows = side === 'buy' ? asks : bids;
+        const startSlice = side === 'buy' ? index : 0;
+        const endSlice = side === 'buy' ? rows.length : index + 1;
+        const newRows = [...rows].slice(startSlice, endSlice);
+        return {
+            totalQuantity: newRows.reduce((quantity, [_, curQuantity]) => quantity + curQuantity, 0) ?? 0,
+            totalQuote: newRows.reduce((quote, [curPrice, curQuantity]) => quote + curQuantity * curPrice, 0) ?? 0,
+            priceAvg: newRows.reduce((price, [curPrice, _]) => +price + +curPrice, 0) / newRows.length ?? 0
+        };
+    }, [asks, bids, hoverData.index]);
 
-    //     const groupedData = groupBy(_data, 'rate');
-    //     const output = [];
-    //     map(groupedData, (objs, key) => {
-    //         output.push([key, sumBy(objs, 'amount')]);
-    //         return true;
-    //     });
-    //     return output;
-    // };
+    const renderOrderRow = useCallback(
+        (order, index, side) => {
+            const [p, q] = order;
+            const rows = side === 'buy' ? asks : bids;
+            const maxQuote = maxBy(rows, (o) => {
+                return o[1];
+            })?.[1];
 
-    asks = reverse(asks);
-    asks = handleTickSize(asks, tickSize, 'ask');
-    bids = handleTickSize(bids, tickSize, 'bids');
-    asks = orderBy(asks.slice(-MAX_LENGTH), [(e) => +e[0]], ['desc']);
-    bids = orderBy(bids.slice(0, MAX_LENGTH), [(e) => -e[0]]);
+            const percentage = (q / maxQuote) * 100;
+            const isSameSide = side === hoverData?.side;
+            const isHover = isSameSide && (side === 'buy' ? index >= hoverData?.index : index <= hoverData?.index);
+            return (
+                <>
+                    <Tooltip
+                        overridePosition={({ top, left }) => {
+                            const gap = isPro ? 11 : -10;
+                            return {
+                                top,
+                                left: left + gap
+                            };
+                        }}
+                        place={isPro ? 'left' : 'right'}
+                        className={`max-w-[400px] !px-4 !py-3`}
+                        effect="solid"
+                        isV3
+                        id={`${index}-${side}`}
+                    >
+                        <div className="w-[200px] text-sm z-50 space-y-1">
+                            <div className="flex gap-6 justify-between items-center">
+                                <span>{t('spot:orderbook_tooltip.avg_price')} </span>
+                                <span>≈ {formatNumber(+hoveringDataCalculate.priceAvg, decimals.price)}</span>
+                            </div>
+                            <div className="flex gap-6 justify-between items-center">
+                                <span>
+                                    {' '}
+                                    {t('common:total')} {base?.toUpperCase()}:{' '}
+                                </span>
+                                <span>{formatNumber(+hoveringDataCalculate.totalQuantity, decimals.qty)}</span>
+                            </div>
+                            <div className="flex gap-6 justify-between items-center">
+                                <span>
+                                    {' '}
+                                    {t('common:total')} {quote?.toUpperCase()}:{' '}
+                                </span>
+                                <span>{formatNumber(+hoveringDataCalculate.totalQuote, quoteAsset === 'VNDC' ? 0 : 2)}</span>
+                            </div>
+                        </div>
+                    </Tooltip>
 
-    const maxAsk = maxBy(asks, (o) => {
-        return o[1];
-    });
-    const maxBid = maxBy(bids, (o) => {
-        return o[1];
-    });
-
-    const renderOrderRow = (order, index, side) => {
-        const [p, q] = order;
-        const maxQuote = side === 'buy' ? maxAsk?.[1] : maxBid?.[1];
-        const percentage = (q / maxQuote) * 100;
-        return (
-            <div
-                className={classNames('progress-container my-[1px] cursor-pointer hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3', {
-                    'pr-4': isPro,
-                    'pr-3': !isPro
-                })}
-                key={index}
-                onClick={() => setSelectedOrder({ price: +p, quantity: +q })}
-            >
-                <div className="flex items-center flex-1">
-                    <div className={`flex-1  text-xs font-medium leading-table ${side === 'buy' ? 'text-red' : 'text-teal'}`}>
-                        {p ? formatNumber(p, decimals.price) : '-'}
+                    <div
+                        data-tip=""
+                        data-for={`${index}-${side}`}
+                        className={classNames(
+                            `progress-container my-[1px] cursor-pointer hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3 border-transparent`,
+                            {
+                                'border-t': side === 'buy',
+                                'border-b': side === 'sell',
+                                [`px-4  `]: isPro,
+                                'pr-3': !isPro,
+                                'bg-teal-lightTeal dark:bg-darkBlue-3': isHover,
+                                [`${side === 'buy' ? 'border-t' : 'border-b'} border-hover-dark dark:border-hover border-dashed`]:
+                                    hoverData?.index === index && isSameSide
+                            }
+                        )}
+                        onMouseOver={() => {
+                            setHoverData({ index, side });
+                        }}
+                        key={index}
+                        onClick={() => setSelectedOrder({ price: +p, quantity: +q })}
+                    >
+                        <div className="flex items-center flex-1">
+                            <div className={`flex-1  text-xs font-medium leading-table ${side === 'buy' ? 'text-red' : 'text-teal'}`}>
+                                {p ? formatNumber(p, decimals.price) : '-'}
+                            </div>
+                            <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-medium leading-table text-right">
+                                {q ? formatNumber(+q, decimals.qty) : '-'}
+                            </div>
+                            <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-medium leading-table text-right">
+                                {p > 0 ? formatNumber(p * q, quoteAsset === 'VNDC' ? 0 : 2) : '-'}
+                            </div>
+                        </div>
+                        <div className={`progress-bar ${side === 'buy' ? 'ask-bar' : 'bid-bar'} `} style={{ width: `${parseInt(percentage, 10)}%` }} />
                     </div>
-                    <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-medium leading-table text-right">
-                        {q ? formatNumber(+q, decimals.qty) : '-'}
-                    </div>
-                    <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-medium leading-table text-right">
-                        {p > 0 ? formatNumber(p * q, quoteAsset === 'VNDC' ? 0 : 2) : '-'}
-                    </div>
-                </div>
-                <div className={`progress-bar ${side === 'buy' ? 'ask-bar' : 'bid-bar'} `} style={{ width: `${parseInt(percentage, 10)}%` }} />
-            </div>
-        );
-    };
+                </>
+            );
+        },
+        [decimals, quoteAsset, isPro, asks, bids, hoverData, hoveringDataCalculate]
+    );
 
     const renderOrderBook = (side) => {
         // side: buy|sell
         let inner;
-        if (side === 'buy' && [ORDER_BOOK_MODE.ASKS, ORDER_BOOK_MODE.ALL].includes(orderBookMode)) {
-            inner = loadingAsks ? (
+        if (side === 'buy' && [ORDER_BOOK_MODE.ASKS, ORDER_BOOK_MODE.ALL].includes(orderBook.mode)) {
+            inner = orderBook.loading ? (
                 <div className="flex items-center justify-center h-full">
                     <IconLoading color="#0c0e14" />
                 </div>
             ) : (
-                <div className="mt-6">
+                <div
+                    onMouseLeave={() => {
+                        setHoverData(initHoverData);
+                    }}
+                    className=""
+                >
                     {asks.map((order, index) => {
                         return renderOrderRow(order, index, 'buy');
                     })}
                 </div>
             );
-        } else if (side === 'sell' && [ORDER_BOOK_MODE.BIDS, ORDER_BOOK_MODE.ALL].includes(orderBookMode)) {
-            inner = loadingBids ? (
+        } else if (side === 'sell' && [ORDER_BOOK_MODE.BIDS, ORDER_BOOK_MODE.ALL].includes(orderBook.mode)) {
+            inner = orderBook.loading ? (
                 <div className="flex items-center justify-center h-full">
                     <IconLoading color="#0c0e14" />
                 </div>
             ) : (
-                <div className="">
+                <div
+                    onMouseLeave={() => {
+                        setHoverData(initHoverData);
+                    }}
+                    className=""
+                >
                     {bids.map((order, index) => {
                         return renderOrderRow(order, index, 'sell');
                     })}
@@ -274,36 +330,39 @@ const OrderBook = (props) => {
         <>
             <div
                 className={classNames('relative h-full bg-bgSpotContainer dark:bg-bgSpotContainer-dark flex flex-col box-border overflow-hidden', {
-                    'pl-4': isPro,
                     'pl-6': !isPro
                 })}
                 ref={ref}
             >
                 <div
                     className={classNames('flex items-center justify-between my-6', {
-                        'pr-4': isPro,
+                        'px-4': isPro,
                         'pr-3': !isPro
                     })}
                 >
                     <div className="flex justify-start space-x-3">
                         <OrderBookAll
-                            className={`cursor-pointer ${orderBookMode === ORDER_BOOK_MODE.ALL ? '' : 'opacity-50'}`}
-                            onClick={() => setOrderBookMode(ORDER_BOOK_MODE.ALL)}
+                            className={`cursor-pointer ${orderBook.mode === ORDER_BOOK_MODE.ALL ? '' : 'opacity-50'}`}
+                            onClick={() => setOrderBook((prev) => ({ ...prev, mode: ORDER_BOOK_MODE.ALL }))}
                         />
                         <OrderBookBids
-                            className={`cursor-pointer ${orderBookMode === ORDER_BOOK_MODE.BIDS ? '' : 'opacity-50'}`}
-                            onClick={() => setOrderBookMode(ORDER_BOOK_MODE.BIDS)}
+                            className={`cursor-pointer ${orderBook.mode === ORDER_BOOK_MODE.BIDS ? '' : 'opacity-50'}`}
+                            onClick={() => setOrderBook((prev) => ({ ...prev, mode: ORDER_BOOK_MODE.BIDS }))}
                         />
                         <OrderBookAsks
-                            className={`cursor-pointer ${orderBookMode === ORDER_BOOK_MODE.ASKS ? '' : 'opacity-50'}`}
-                            onClick={() => setOrderBookMode(ORDER_BOOK_MODE.ASKS)}
+                            className={`cursor-pointer ${orderBook.mode === ORDER_BOOK_MODE.ASKS ? '' : 'opacity-50'}`}
+                            onClick={() => setOrderBook((prev) => ({ ...prev, mode: ORDER_BOOK_MODE.ASKS }))}
                         />
                     </div>
                     {renderTickSizeOptions()}
                 </div>
                 <div className="flex flex-col flex-1 over">
                     <div className="">
-                        <div className="flex justify-between items-center">
+                        <div
+                            className={classNames('flex justify-between items-center  mb-6', {
+                                'px-4': isPro
+                            })}
+                        >
                             <div className="flex flex-1 justify-start text-txtSecondary dark:text-txtSecondary-dark text-xs">
                                 {t('price')} ({quote})
                             </div>
@@ -320,9 +379,17 @@ const OrderBook = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col">
+                    <div className=" flex flex-col">
                         {renderOrderBook('buy')}
-                        <div className=" dark:border-divider-dark py-2 my-3 flex justify-center items-center">
+                        <div
+                            className={classNames(
+                                'dark:border-divider-dark py-2 my-3 flex justify-center items-center',
+
+                                {
+                                    'px-4': isPro
+                                }
+                            )}
+                        >
                             <div className="w-full flex items-center space-x-2">
                                 <div className="font-semibold">
                                     <LastPrice symbol={symbol} colored exchangeConfig={exchangeConfig} />

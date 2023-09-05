@@ -677,7 +677,7 @@ const PartnersIcon = ({ size = 32, color, mode, ...props }) => {
             <path d="m7.733 5.333-1.18 1.182 1.18 1.181 1.18-1.181-1.18-1.182zM22.13 5.33l-1.18 1.181 1.18 1.182 1.18-1.182-1.18-1.181z" fill="#C5D1DB" />
         </svg>
     ) : mode === 'disabled_dm' ? (
-        <svg xmlns="http://www.w3.org/2000/svg"  width={size} height={size}  {...props} viewBox="0 0 30 30" fill="none">
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} {...props} viewBox="0 0 30 30" fill="none">
             <path
                 d="M22.225 21.175a2.41 2.41 0 0 1-2.406 2.417A2.402 2.402 0 0 1 17.396 26a3.388 3.388 0 0 1-4.812 0l-7.218-7.233 4.812-4.825a3.39 3.39 0 0 1 4.82 0l-3.608 3.612a3.387 3.387 0 0 0 4.812 0l1.194-1.204 4.83 4.825z"
                 fill="#464D5C"
@@ -859,6 +859,20 @@ const BxsInfoCircle = ({ size = 24, color }) => {
             <path
                 d="M12.398 2.344c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm1 15h-2v-6h2v6zm0-8h-2v-2h2v2z"
                 fill={color ?? defaultColor}
+            />
+        </svg>
+    );
+};
+
+const BxsInfoCircleV2 = ({ size = 24, color }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694B3' : '#768394';
+
+    return (
+        <svg width={size} height={size} viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M8.997 1.334a6.674 6.674 0 0 0-6.666 6.667 6.674 6.674 0 0 0 6.666 6.666 6.674 6.674 0 0 0 6.667-6.666 6.674 6.674 0 0 0-6.667-6.667zm.667 10H8.331v-4h1.333v4zm0-5.333H8.331V4.667h1.333v1.334z"
+                fill={defaultColor}
             />
         </svg>
     );
@@ -1540,6 +1554,112 @@ const RadioButtonUncheckIcon = ({ width = 24, height = 24 }) => {
     );
 };
 
+const TelegramIconV2 = ({ size = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0 0 5.373 0 12zm9.8 5.5.204-3.059 5.564-5.021c.245-.217-.053-.323-.377-.126l-6.867 4.332-2.967-.926c-.64-.196-.645-.636.144-.952l11.56-4.458c.527-.24 1.037.127.835.935l-1.968 9.277c-.138.659-.536.816-1.088.512l-2.999-2.215L10.4 17.2a1.72 1.72 0 0 0-.014.013c-.16.157-.294.287-.586.287z"
+                fill={defaultColor}
+            />
+        </svg>
+    );
+};
+
+const TwitterIconV2 = ({ size = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-.334 10.169-.025-.416c-.076-1.076.587-2.059 1.636-2.44.387-.136 1.041-.153 1.47-.034.167.05.486.22.713.373l.411.28.453-.145c.252-.076.588-.203.739-.288.143-.076.268-.118.268-.093 0 .144-.31.636-.57.907-.353.381-.252.415.461.16.428-.143.437-.143.353.018-.05.085-.31.381-.588.652-.47.466-.495.517-.495.907 0 .602-.285 1.856-.57 2.542-.53 1.288-1.663 2.619-2.796 3.288-1.595.94-3.718 1.178-5.506.627-.596-.186-1.62-.66-1.62-.746 0-.025.31-.059.688-.067a4.725 4.725 0 0 0 2.25-.627l.453-.271-.52-.178c-.739-.255-1.402-.84-1.57-1.39-.05-.178-.034-.187.436-.187l.487-.008-.411-.195c-.487-.246-.932-.661-1.15-1.085-.16-.305-.36-1.076-.302-1.135.017-.026.193.025.394.093.58.212.655.161.32-.195-.63-.644-.823-1.601-.521-2.508l.143-.407.554.55c1.133 1.111 2.467 1.772 3.995 1.967l.42.05z"
+                fill={defaultColor}
+            />
+        </svg>
+    );
+};
+
+const MediumIconV2 = ({ size = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm7 6.692L17.883 7.76a.323.323 0 0 0-.124.311v7.856c-.02.118.029.239.125.311l1.09 1.068v.234h-5.49v-.234l1.132-1.095c.11-.11.11-.144.11-.312V9.553l-3.147 7.968h-.425L7.495 9.553v5.34a.726.726 0 0 0 .203.612l1.47 1.78v.233H5v-.231l1.47-1.781a.704.704 0 0 0 .188-.613V8.72a.548.548 0 0 0-.176-.457L5.177 6.692v-.234h4.057l3.138 6.865 2.758-6.865H19v.234z"
+                fill={defaultColor}
+            />
+        </svg>
+    );
+};
+
+const DiscordIconV2 = ({ size = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm2.807 16.07c.363.454.798.968.798.968 2.674-.084 3.702-1.816 3.702-1.816 0-3.848-1.742-6.967-1.742-6.967-1.742-1.29-3.4-1.255-3.4-1.255l-.169.191c2.057.622 3.012 1.518 3.012 1.518a9.946 9.946 0 0 0-3.64-1.147 10.359 10.359 0 0 0-2.444.024c-.063 0-.117.009-.178.019l-.028.005c-.423.035-1.451.19-2.746.752-.447.204-.713.347-.713.347s1.004-.944 3.181-1.565L10.32 7s-1.658-.036-3.4 1.255c0 0-1.742 3.119-1.742 6.967 0 0 1.016 1.732 3.69 1.816 0 0 .447-.538.81-.992-1.536-.454-2.117-1.41-2.117-1.41s.121.084.339.203c.012.012.024.024.048.036.018.012.037.021.055.03a7.137 7.137 0 0 0 .937.436c.496.191 1.089.383 1.778.514a8.576 8.576 0 0 0 3.133.012 8.032 8.032 0 0 0 1.754-.514 6.952 6.952 0 0 0 1.391-.705s-.604.98-2.19 1.422zm-5.71-3.03c0-.75.54-1.366 1.224-1.366.684 0 1.236.615 1.224 1.366 0 .75-.54 1.366-1.224 1.366-.672 0-1.224-.616-1.224-1.366zm5.604-1.366c-.684 0-1.224.615-1.224 1.366 0 .75.552 1.366 1.224 1.366.684 0 1.225-.616 1.225-1.366 0-.75-.54-1.366-1.225-1.366z"
+                fill={defaultColor}
+            />
+        </svg>
+    );
+};
+
+const FbIconV2 = ({ size = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#oht9hldeia)">
+                <path
+                    d="M24 12.073a12 12 0 1 0-13.875 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.67 4.532-4.67.9.014 1.798.092 2.687.235v2.954H15.83a1.734 1.734 0 0 0-1.955 1.875v2.25H17.2l-.532 3.469h-2.8v8.385A12 12 0 0 0 24 12.073z"
+                    fill={defaultColor}
+                />
+            </g>
+            <defs>
+                <clipPath id="oht9hldeia">
+                    <path fill="#fff" d="M0 0h24v24H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
+
+const RedditIconV2 = ({ size = 24 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0 0 5.373 0 12zm18.801-2.146c1.103 0 2 .893 2 1.99 0 .726-.394 1.36-.977 1.707.024.166.036.333.036.503 0 2.83-3.452 5.133-7.695 5.133S4.47 16.884 4.47 14.054c0-.183.015-.364.043-.542a1.986 1.986 0 0 1-.912-1.668 1.997 1.997 0 0 1 3.286-1.52c1.328-.836 3.1-1.361 5.052-1.4l1.141-3.592a.385.385 0 0 1 .455-.258l2.957.693a1.66 1.66 0 0 1 1.5-.954c.914 0 1.658.74 1.658 1.65 0 .91-.744 1.65-1.658 1.65-.895 0-1.625-.71-1.654-1.595l-2.631-.616-.965 3.034c1.834.092 3.49.613 4.743 1.414a1.994 1.994 0 0 1 1.316-.496z"
+                fill={defaultColor}
+            />
+            <path
+                d="M19.61 12.76c-.28-.722-.793-1.381-1.478-1.943a1.228 1.228 0 0 1 1.897 1.026c0 .365-.163.692-.418.916zM17.99 5.58c.49 0 .888.396.888.884a.886.886 0 0 1-1.774 0c0-.488.398-.884.887-.884z"
+                fill={defaultColor}
+            />
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12.163 18.419c3.818 0 6.925-1.96 6.925-4.367a2.817 2.817 0 0 0-.182-.992c-.228-.614-.66-1.178-1.25-1.663a5.897 5.897 0 0 0-.638-.455c-1.25-.776-2.965-1.256-4.855-1.256-1.863 0-3.555.467-4.8 1.224a6.074 6.074 0 0 0-.64.445c-.614.491-1.065 1.068-1.3 1.697a2.884 2.884 0 0 0-.185 1c0 2.408 3.107 4.367 6.925 4.367zM9.631 11.94c.65 0 1.176.543 1.176 1.19 0 .646-.526 1.17-1.176 1.17-.649 0-1.193-.524-1.193-1.17 0-.647.544-1.19 1.193-1.19zm5.153-.003c-.65 0-1.196.543-1.196 1.19 0 .646.546 1.17 1.196 1.17.65 0 1.176-.524 1.176-1.17a1.19 1.19 0 0 0-1.176-1.19zm-2.577 4.673c1.075 0 1.808-.21 2.244-.643.15-.15.395-.15.545 0 .15.15.15.392 0 .542-.587.584-1.5.868-2.789.868H12.188c-1.29 0-2.201-.284-2.788-.868a.382.382 0 0 1 0-.542c.15-.15.394-.15.545 0 .435.433 1.168.643 2.243.643h.005l.005.001H12.207z"
+                fill={defaultColor}
+            />
+            <path d="M4.368 11.843a1.228 1.228 0 0 1 1.856-1.05c-.686.554-1.2 1.207-1.489 1.92a1.216 1.216 0 0 1-.367-.87z" fill={defaultColor} />
+        </svg>
+    );
+};
+
 const NoResultIcon = () => {
     const [currentTheme] = useDarkMode();
     const defaultColor = currentTheme === THEME_MODE.DARK;
@@ -1670,6 +1790,20 @@ const NAOIconDisable = ({ size = 24, mode = 'disabled_lm' }) => {
     );
 };
 
+const CheckCircle2Icon = ({ size = '16' }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#47CC85' : '#30BF73';
+
+    return (
+        <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M7.999 1.332a6.674 6.674 0 0 0-6.667 6.667 6.674 6.674 0 0 0 6.667 6.666A6.674 6.674 0 0 0 14.665 8 6.674 6.674 0 0 0 8 1.332zm-1.333 9.609L4.191 8.47l.941-.944 1.533 1.53 3.529-3.53.943.943-4.471 4.47z"
+                fill={defaultColor}
+            />
+        </svg>
+    );
+};
+
 export {
     AddCircleColorIcon,
     AddCircleIcon,
@@ -1756,6 +1890,14 @@ export {
     FilterSharpIcon,
     NoResultIcon,
     ContentCopyIcon,
+    NAOIconDisable,
     IconClose,
-    NAOIconDisable
+    CheckCircle2Icon,
+    BxsInfoCircleV2,
+    TelegramIconV2,
+    TwitterIconV2,
+    MediumIconV2,
+    DiscordIconV2,
+    FbIconV2,
+    RedditIconV2
 };

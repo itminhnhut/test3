@@ -25,6 +25,7 @@ import { isMobile } from 'react-device-detect';
 import { getCookie, setCookie } from 'cookies-next';
 import { WalletType } from 'src/redux/actions/const';
 import initOneSignal from 'components/common/InitOneSignal';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {
 //         case 'FCP':
@@ -72,6 +73,7 @@ const ignoreConfigUrls = [
 let lastUserId = null;
 const lastToken = null;
 let initConfig = false;
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 const App = ({ Component, pageProps }) => {
     const store = useStore(pageProps.initialReduxState);
     const router = useRouter();
@@ -212,9 +214,11 @@ const App = ({ Component, pageProps }) => {
         <>
             <Head language={language} />
             <Provider store={store}>
-                <Tracking>
-                    <Component {...pageProps} />
-                </Tracking>
+                <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+                    <Tracking>
+                        <Component {...pageProps} />
+                    </Tracking>
+                </GoogleOAuthProvider>
             </Provider>
         </>
     );
