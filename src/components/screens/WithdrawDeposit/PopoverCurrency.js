@@ -15,7 +15,7 @@ const PopoverCurrency = React.memo(() => {
     return (
         <PopoverV2
             containerClassName="z-20"
-            className="w-[150px] !left-[unset] -right-4 !-translate-x-0"
+            className="w-[150px] !left-[unset] -right-3 !-translate-x-0"
             ref={ref}
             label={(open) => (
                 <div className="space-x-2 h-11 flex items-center w-full">
