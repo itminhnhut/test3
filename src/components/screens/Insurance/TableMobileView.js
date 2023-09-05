@@ -46,19 +46,19 @@ const TableMobileView = ({ filterRulesData, loading, isSearch, page }) => {
                     const symbolObject = getSymbolObject(rule?.symbol);
                     return (
                         <>
-                            <Tooltip
-                                className="p-6 max-w-[247px] text-center"
-                                id={`avg_changing_detail_mobile_${rule?.symbol}`}
-                                place="top"
-                                effect="solid"
-                                isV3
-                            >
-                                {t('futures:insurance.difference_description')}
-                            </Tooltip>
-                            <Tooltip className="p-6 max-w-[247px] text-center" id={`minmax_ratio_${rule?.symbol}`} place="top" effect="solid" isV3>
-                                {t('futures:insurance.min_max_margin_ratio_description')}
-                            </Tooltip>
                             <div key={rule.symbol + i} className="space-y-4 last:pb-0 pb-4 last:border-0 border-b border-divider dark:border-divider-dark">
+                                <Tooltip
+                                    className="p-6 max-w-[247px] text-center"
+                                    id={`avg_changing_detail_mobile_${rule?.symbol}`}
+                                    place="top"
+                                    effect="solid"
+                                    isV3
+                                >
+                                    {t('futures:insurance.difference_description')}
+                                </Tooltip>
+                                <Tooltip className="p-6 max-w-[247px] text-center" id={`minmax_ratio_${rule?.symbol}`} place="top" effect="solid" isV3>
+                                    {t('futures:insurance.min_max_margin_ratio_description')}
+                                </Tooltip>
                                 <div className="flex items-center font-semibold space-x-2">
                                     <AssetLogo assetCode={symbolObject?.baseAsset} size={24} useNextImg />
                                     <div className="">{rule?.symbol}</div>
@@ -82,7 +82,11 @@ const TableMobileView = ({ filterRulesData, loading, isSearch, page }) => {
                                     <div>{MIN_MARGIN} USDT</div>
                                 </div>
                                 <div className="flex items-center text-sm justify-between">
-                                    <div data-for={`minmax_ratio_${rule?.symbol}`} data-tip="" className="nami-underline-dotted text-txtSecondary dark:text-txtSecondary-dark">
+                                    <div
+                                        data-for={`minmax_ratio_${rule?.symbol}`}
+                                        data-tip=""
+                                        className="nami-underline-dotted text-txtSecondary dark:text-txtSecondary-dark"
+                                    >
                                         {t('futures:insurance.min_max_margin_ratio')}
                                     </div>
                                     <div className="">
