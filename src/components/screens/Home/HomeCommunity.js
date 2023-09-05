@@ -23,7 +23,7 @@ export const SOCIALS_HREF = {
         {
             key: 2,
             image: { src: '/images/icon/ic_telegram_v3_plus.png', width: 90, height: 52 },
-            href: 'https://t.me/NamiGlobal',
+            href: 'https://t.me/NamiGlobalGroup',
             title: 'Telegram'
         },
 
@@ -56,7 +56,7 @@ export const SOCIALS_HREF = {
         {
             key: 2,
             image: { src: '/images/icon/ic_telegram_v3.png', width: 78, height: 58 },
-            href: 'https://t.me/namitradevn',
+            href: 'https://t.me/CongdongNamiVietnam',
             title: 'Telegram'
         },
 
@@ -144,7 +144,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                             <div className="homepage-community___channel__group___item__label">Facebook Group</div>
                         </a>
                     </Link>
-                    <Link href="https://t.me/NamiGlobal">
+                    <Link href="https://t.me/NamiGlobalGroup">
                         <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon ">
                                 <Image alt="telegram_global_icon" width={90} height={52} src={getS3Url('/images/icon/ic_telegram_v3_plus.png')} />
@@ -153,7 +153,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                             <div className="homepage-community___channel__group___item__label">Telegram Global</div>
                         </a>
                     </Link>
-                    <Link href="https://t.me/namitradevn">
+                    <Link href="https://t.me/CongdongNamiVietnam">
                         <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
                                 <Image alt="telegram_icon" width={78} height={58} src={getS3Url('/images/icon/ic_telegram_v3.png')} />
