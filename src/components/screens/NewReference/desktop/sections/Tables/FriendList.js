@@ -188,6 +188,7 @@ const FriendList = ({ language, t, id }) => {
         if (active) return;
         setLevelFriend((prev) => prev + 1);
         setParentCode(row?.code);
+        setPage(1); // reset page
         handleResetSearchByCode();
     };
 
