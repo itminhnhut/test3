@@ -34,6 +34,15 @@ import FeeSettingModal from 'components/screens/FeeSchedule/FeeSettingModal';
 const NAMI_NAO_TYPE = [
     {
         id: 0,
+        name: 'VNST_SUB_TAB',
+        code: 'VNST',
+        content: {
+            vi: 'VNST',
+            en: 'VNST'
+        }
+    },
+    {
+        id: 1,
         name: 'VNDC_SUB_TAB',
         code: 'VNDC',
         content: {
@@ -42,21 +51,12 @@ const NAMI_NAO_TYPE = [
         }
     },
     {
-        id: 1,
+        id: 2,
         name: 'USDT_SUB_TAB',
         code: 'USDT',
         content: {
             vi: 'USDT',
             en: 'USDT'
-        }
-    },
-    {
-        id: 2,
-        name: 'VNST_SUB_TAB',
-        code: 'VNST',
-        content: {
-            vi: 'VNST',
-            en: 'VNST'
         }
     }
 ];
@@ -257,10 +257,10 @@ const TradingFee = () => {
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 tableStyle={{
-                    paddingHorizontal: width >= 768 ? '2rem' : '0.75rem',
+                    paddingHorizontal: width >= 768 ? '1.5rem' : '0.75rem',
                     tableStyle: { minWidth: '768px !important' },
                     headerStyle: {},
-                    rowStyle: {},
+                    rowStyle: { paddingHorizontal: '24px !important' },
                     // shadowWithFixedCol: width <= BREAK_POINTS.lg,
                     noDataStyle: {
                         minHeight: '280px'
@@ -330,9 +330,9 @@ const TradingFee = () => {
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 tableStyle={{
-                    paddingHorizontal: width >= 768 ? '2rem' : '0.75rem',
+                    paddingHorizontal: width >= 768 ? '1.5rem' : '0.75rem',
                     tableStyle: { minWidth: '768px !important' },
-                    headerStyle: {},
+                    headerStyle: { paddingHorizontal: '1.5rem !important' },
                     rowStyle: {},
                     // shadowWithFixedCol: width < BREAK_POINTS.lg,
                     noDataStyle: {
@@ -476,9 +476,9 @@ const TradingFee = () => {
             <div className="mt-20 mb-6 md:!mb-8 text-xl md:!text-2xl font-semibold">{t('fee-structure:fee_rate')}</div>
 
             <div id="trading_fee" className="hidden md:block">
-                <div className="flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-xl px-8 pt-4">{renderFeeTab()}</div>
+                <div className="flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-xl px-6 pt-4">{renderFeeTab()}</div>
                 {state.tabIndex === 1 || state.tabIndex === 2 ? (
-                    <div className="py-8 sm:py-6 flex items-center border border-b-0 border-divider dark:border-divider-dark px-8 flex-wrap justify-between">
+                    <div className="py-8 sm:py-6 flex items-center border border-b-0 border-divider dark:border-divider-dark px-6 flex-wrap justify-between">
                         {state.tabIndex === 1 || state.tabIndex === 2 ? (
                             <TokenTypes
                                 type={state.subTabIndex}
@@ -636,17 +636,16 @@ const dataHandler = (props) => {
 
 const TokenTypes = ({ type, setType, types, lang, className }) => {
     return (
-        <div className={classnames('flex items-center space-x-3 h-9 sm:h-12 font-normal text-sm overflow-auto no-scrollbar', className)}>
+        <div className={classnames('flex items-center space-x-2 sm:space-x-3 h-8 sm:h-9 font-normal text-sm overflow-auto no-scrollbar', className)}>
             {types.map((e) => (
                 <div
                     key={e.id}
                     className={classnames(
                         ` ${
                             type !== e.id && 'text-txtTextBtn-tonal_dark'
-                        } flex items-center h-full flex-auto justify-center px-4 text-sm sm:text-base rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap`,
+                        } flex items-center h-full flex-auto justify-center px-2 sm:px-4 text-xs sm:text-sm rounded-md cursor-pointer whitespace-nowrap dark:bg-darkBlue-3 bg-gray-13`,
                         {
-                            'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
-                            'border-divider dark:border-divider-dark': e.id !== type
+                            'bg-teal bg-opacity-10 text-teal font-semibold': e.id === type
                         }
                     )}
                     onClick={() => setType(e.id)}

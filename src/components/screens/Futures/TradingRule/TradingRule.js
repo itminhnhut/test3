@@ -23,16 +23,16 @@ import { HelpIcon } from 'components/svg/SvgIcon';
 
 export const CURRENCIES = [
     {
+        name: 'VNST',
+        value: 'VNST'
+    },
+    {
         name: 'VNDC',
         value: 'VNDC'
     },
     {
         name: 'USDT',
         value: 'USDT'
-    },
-    {
-        name: 'VNST',
-        value: 'VNST'
     }
 ];
 const limit = 10;
@@ -282,11 +282,11 @@ const TradingRules = () => {
                         )}
                     </div>
                     <div className="sm:flex items-center justify-between mb-8">
-                        <div className="flex items-center space-x-4 text-sm sm:text-base mb-12 sm:mb-0">
+                        <div className="flex items-center space-x-2 sm:space-x-3 text-sm sm:text-base mb-12 sm:mb-0">
                             {CURRENCIES.map((rs) => (
                                 <div
                                     className={classNames(
-                                        'text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base px-4 sm:px-5 py-2 sm:py-3 border border-divider dark:border-divider-dark rounded-full cursor-pointer',
+                                        'text-txtSecondary dark:text-txtSecondary-dark text-xs sm:text-sm sm:px-4 p-2 dark:bg-darkBlue-3 bg-gray-13 sm:py-2 rounded-md cursor-pointer',
                                         {
                                             '!border-teal !text-teal font-semibold bg-teal/[0.1]': currency === rs.value
                                         }

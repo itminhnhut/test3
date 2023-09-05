@@ -27,6 +27,14 @@ import toast from 'utils/toast';
 const NAMI_NAO_TYPE = [
     {
         id: 0,
+        name: 'VNST',
+        content: {
+            vi: 'VNST',
+            en: 'VNST'
+        }
+    },
+    {
+        id: 1,
         name: 'VNDC',
         content: {
             vi: 'VNDC',
@@ -34,19 +42,11 @@ const NAMI_NAO_TYPE = [
         }
     },
     {
-        id: 1,
+        id: 2,
         name: 'USDT',
         content: {
             vi: 'USDT',
             en: 'USDT'
-        }
-    },
-    {
-        id: 2,
-        name: 'VNST',
-        content: {
-            vi: 'VNST',
-            en: 'VNST'
         }
     }
 ];
@@ -773,17 +773,17 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
 
 const TokenTypes = ({ type, setType, types, lang, className }) => {
     return (
-        <div className={classnames('flex items-center space-x-2 md:space-x-3 h-9 sm:h-12 font-normal text-sm overflow-auto no-scrollbar', className)}>
+        <div className={classnames('flex items-center space-x-2 sm:space-x-3 h-8 sm:h-9 font-normal text-xs sm:text-sm overflow-auto no-scrollbar', className)}>
             {types.map((e) => (
                 <div
                     key={e.id}
                     className={classnames(
                         `${
                             type !== e.id && 'text-txtTextBtn-tonal_dark'
-                        } flex items-center h-full flex-auto justify-center px-4 text-sm sm:text-base rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap`,
+                        } flex items-center h-full flex-auto justify-center px-2 sm:px-4 text-xs sm:text-sm rounded-md cursor-pointer whitespace-nowrap`,
                         {
                             'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
-                            'border-divider dark:border-divider-dark': e.id !== type
+                            'dark:bg-darkBlue-3 bg-gray-13': e.id !== type
                         }
                     )}
                     onClick={() => setType(e.id)}

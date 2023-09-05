@@ -115,7 +115,7 @@ export function FuturesFeeMobileListV2({ t, data = [], loading = true }) {
                         <div key={item.assetId} className="mt-4">
                             <div className="flex justify-between items-center text-sm mt-4">
                                 <div className="flex items-center font-semibold text-sm sm:text-base">
-                                    <AssetLogo assetCode={item.assetCode} size={32} />
+                                    <AssetLogo assetCode={item.assetCode} size={24} />
                                     <div className="whitespace-nowrap truncate ml-2">
                                         <span className="text-txtPrimary dark:text-txtPrimary-dark">{item.assetCode}</span>
                                     </div>
