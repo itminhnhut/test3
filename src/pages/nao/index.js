@@ -81,11 +81,11 @@ const NaoDashboard = () => {
                     {/* <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
                     <NaoHeader/>
                 </div> */}
-                    <div className="nao_section px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                    <div className="nao_section px-4 nao:p-0 max-w-screen-v3 w-full m-auto">
                         <NaoInfo dataSource={dataSource} assetNao={assetNao} ammData={ammData} />
                     </div>
                     <div className="bg-bgPrimary dark:bg-dark mt-6 sm:mt-0 rounded-t-3xl">
-                        <div className="nao_section px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                        <div className="nao_section px-4 nao:p-0 max-w-screen-v3 w-full m-auto">
                             <NaoPerformance />
                             <NaoPool dataSource={dataSource} assetNao={assetNao} />
                             <NaoProposals listProposal={listProposal} assetNao={assetNao} />
