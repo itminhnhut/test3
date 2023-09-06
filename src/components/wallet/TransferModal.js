@@ -605,8 +605,7 @@ const TransferModal = ({ isMobile, alert }) => {
 
     const renderAvailableWallet = useCallback(() => {
         const available = currentWallet?.available;
-
-        return formatAvl(available, assetDigit);
+        return state.asset ? formatAvl(available, assetDigit) + ' ' + state.asset : '-'
     }, [state.asset, currentWallet, assetDigit]);
 
     const renderTransferButton = useCallback(() => {
