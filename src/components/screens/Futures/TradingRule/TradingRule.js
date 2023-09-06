@@ -337,7 +337,7 @@ const TradingRules = () => {
                                 )}
                             </>
                         ) : (
-                            <NoData />
+                            <NoData isAuth={true} />
                         )
                     ) : (
                         <Wrapper ref={containerRef} searchWidth={noDataContainerWidth} isDarkMode={currentTheme === THEME_MODE.DARK}>
