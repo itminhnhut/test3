@@ -10,11 +10,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import TableV2 from 'components/common/V2/TableV2';
 import styled from 'styled-components';
 
-// Start: Do api filter date range sai nen moi can cai qq nay :D
-const timeZone = parseInt(new Date().getTimezoneOffset() / -60);
-const addFromDate = 86400 * 1000 - 1000 * 60 * 60 * (24 - timeZone);
-const addEndDate = 86400 * 1000 - 1000 * 60 * 60 * timeZone - 1;
-// End: Do api filter date range sai nen moi can cai qq nay :D
+const MILLISECOND = 1;
 
 const CommissionHistory = ({ t, commisionConfig, id }) => {
     const levelTabs = [
@@ -22,8 +18,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         { title: '1', value: 1 },
         { title: '2', value: 2 },
         { title: '3', value: 3 },
-        { title: '4', value: 4 },
-        { title: '5', value: 5 }
+        { title: '4', value: 4 }
     ];
     const typeTabs = [
         { title: t('common:all'), value: null },
@@ -94,10 +89,17 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         total: 0
     });
 
+    const formatDate = (value, type) => {
+        if (type === 'startDate') return value?.startDate ? new Date(value?.startDate).getTime() : null;
+        if (type === 'endDate') return value?.endDate ? new Date(value?.endDate).getTime() + 86400000 - MILLISECOND : null;
+    };
+
     const getCommissionHistory = _.throttle(async () => {
+        const { date } = filter || {};
+
         const params = {
-            from: filter?.date?.value?.startDate ? new Date(filter?.date?.value?.startDate).getTime() + addFromDate : null,
-            to: filter?.date?.value?.endDate ? new Date(filter?.date?.value?.endDate).getTime() + addEndDate : new Date().getTime(),
+            invitedAtFROM: formatDate(date?.value, 'startDate'),
+            invitedAtTO: formatDate(date?.value, 'endDate'),
             kind: filter?.commission_type?.value,
             level: filter?.level?.value,
             currency: filter?.asset_type?.value

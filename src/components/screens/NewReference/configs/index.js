@@ -11,13 +11,14 @@ const DEFAULT_TOKENS = [
         value: 22,
         title: 'USDT'
     },
-    {
-        value: 39,
-        title: 'VNST'
-    },
+
     {
         value: 72,
         title: 'VNDC'
+    },
+    {
+        value: 39,
+        title: 'VNST'
     }
 ];
 

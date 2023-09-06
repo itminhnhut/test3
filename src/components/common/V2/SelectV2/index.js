@@ -6,6 +6,7 @@ const SelectV2 = ({
     options = [],
     value,
     onChange,
+    name = '',
     keyExpr = 'value',
     displayExpr = 'title',
     className = '',
@@ -13,6 +14,7 @@ const SelectV2 = ({
     popoverClassName = '',
     position = 'bottom',
     optionClassName,
+    wrapperClassName,
     icon = ''
 }) => {
     const title = useMemo(() => {
@@ -58,7 +60,7 @@ const SelectV2 = ({
                                     popoverClassName
                                 )}
                             >
-                                <div className="relative py-2">
+                                <div className={classNames('relative py-2', wrapperClassName)}>
                                     {options.map((item, index) => {
                                         return (
                                             <div
@@ -67,6 +69,9 @@ const SelectV2 = ({
                                                     'px-4 py-2 hover:bg-hover dark:hover:bg-hover-dark text-txtSecondary dark:text-txtSecondary-dark cursor-pointer',
                                                     {
                                                         '!text-txtPrimary dark:!text-white font-semibold': value === item?.[keyExpr]
+                                                    },
+                                                    {
+                                                        'dark:!text-gray-4 !text-gray-15 font-normal': value === item?.[keyExpr] && name === 'customer'
                                                     },
                                                     optionClassName
                                                 )}

@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import InputV2 from 'components/common/V2/InputV2';
 import SelectV2 from 'components/common/V2/SelectV2';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 import dynamic from 'next/dynamic';
 
@@ -60,6 +61,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
         const data = filter?.[key] || {};
         return (
             <SelectV2
+                name="customer"
                 keyExpr="value"
                 popoverPanelClassName="top-auto"
                 className={classNames('!h-11', item.childClassName)}
@@ -68,22 +70,17 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
                 popoverClassName="w-[240px]"
                 onChange={(e) => onChange(e, key)}
                 icon={<CheckCircleIcon color="currentColor" size={16} />}
-                optionClassName="flex flex-row items-center justify-between"
+                wrapperClassName="flex flex-row gap-2 flex-col"
+                optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
             />
         );
     };
 
     const Reset = ({ item }) => {
         return (
-            <button
-                onClick={() => setFilter(config)}
-                className={classNames(
-                    'whitespace-nowrap !bg-dark-12 dark:!bg-dark-2 hover:bg-gray-6 text-gray-1 dark:hover:bg-dark-5 dark:text-gray-7 px-4 rounded-md px-auto py-auto font-semibold h-12',
-                    item?.buttonClassName
-                )}
-            >
+            <ButtonV2 onClick={() => setFilter(config)} variants="reset" className={classNames(item?.buttonClassName)}>
                 {item.title}
-            </button>
+            </ButtonV2>
         );
     };
 
