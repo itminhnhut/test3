@@ -60,6 +60,12 @@
         "wallet_type": "Wallet Type",
         "volume": "Volume",
         "fee": "Fee",
+        "expect": "Expect",
+        "contract_id": "Contract ID",
+        "expect_sell": "Bear",
+        "expect_buy": "Bull",
+        "expect_bear": "Bear",
+        "expect_bull": "Bull",
         "note": "Note"
     }
 }

@@ -1,11 +1,15 @@
+import { countDecimals, getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
 import classNames from 'classnames';
 import DynamicNoSsr from 'components/DynamicNoSsr';
 import { DragHandleArea, RemoveItemArea, ResizeHandleArea } from 'components/common/ReactGridItem';
+import FuturesOrderDetailModal from './FuturesModal/FuturesOrderDetailModal';
+import { API_ORDER_DETAIL } from 'redux/actions/apis';
+import useFetchApi from 'hooks/useFetchApi';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
 import futuresGridConfig, { futuresGridKey, futuresLayoutKey } from 'components/screens/Futures/_futuresGrid';
-import Spinner from 'components/svg/Spinner';
 import { BREAK_POINTS } from 'constants/constants';
 import useWindowSize from 'hooks/useWindowSize';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
@@ -19,7 +23,6 @@ import { useLocalStorage } from 'react-use';
 import { LOCAL_STORAGE_KEY, NON_LOGIN_KEY, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
 import Emitter from 'redux/actions/emitter';
 import { fetchFuturesSetting, getOrdersList } from 'redux/actions/futures';
-import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
 import DefaultMobileView from 'src/components/common/DefaultMobileView';
 import styled from 'styled-components';
 
@@ -31,11 +34,15 @@ const FuturesChart = dynamic(() => import('components/screens/Futures/FuturesCha
 const FuturesPairDetail = dynamic(() => import('components/screens/Futures/PairDetail'), { ssr: false });
 const FuturesTradeRecord = dynamic(() => import('components/screens/Futures/TradeRecord'), {
     ssr: false,
-    loading: () => (
-        <div className="h-full flex justify-center items-center">
-            <Spiner />
-        </div>
-    )
+    loading: () => {
+        const [currentTheme] = useDarkMode();
+
+        return (
+            <div className="h-full flex justify-center items-center">
+                <Spiner isDark={currentTheme === THEME_MODE.DARK} />
+            </div>
+        );
+    }
 });
 const FuturesMarginRatioVndc = dynamic(() => import('./PlaceOrder/Vndc/MarginRatioVndc'), { ssr: false });
 const FuturesTermsModal = dynamic(() => import('components/screens/Futures/FuturesModal/FuturesTermsModal'), { ssr: false });
@@ -54,7 +61,8 @@ const INITIAL_STATE = {
     orderBookLayout: null,
     tradeRecordLayout: null,
     isVndcFutures: true,
-    assumingPrice: null
+    assumingPrice: null,
+    isShowOrderIntegrateFromInsurance: false
 };
 
 const initFuturesComponent = {
@@ -68,7 +76,9 @@ const initFuturesComponent = {
     // [FuturesSettings.show_sl_tp_order_line]: true
 };
 
-const Futures = () => {
+const Futures = ({ integrate, orderId }) => {
+    const isIntegrateFromInsurance = integrate === 'nami_insurance';
+
     const [state, set] = useState(INITIAL_STATE);
 
     const [localGridLayouts, setLocalGridLayout] = useLocalStorage(LOCAL_STORAGE_KEY.FUTURE_GRID_LAYOUT);
@@ -80,6 +90,7 @@ const Futures = () => {
     const userSocket = useSelector((state) => state.socket.userSocket);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const auth = useSelector((state) => state.auth?.user);
     const userSettings = useSelector((state) => state.futures?.userSettings);
@@ -91,6 +102,40 @@ const Futures = () => {
     // Memmoized Variable
     const pairConfig = useMemo(() => allPairConfigs?.find((o) => o.pair === state.pair), [allPairConfigs, state.pair]);
     const unitConfig = useSelector((state) => getUnit(state, pairConfig?.quoteAsset));
+
+    /* INSURANCE INTEGRATE ORDER ID  */
+    const { data: orderIntegrateFromInsurance, error } = useFetchApi(
+        {
+            url: API_ORDER_DETAIL,
+            params: {
+                orderId
+            }
+        },
+        isIntegrateFromInsurance,
+        [isIntegrateFromInsurance, orderId]
+    );
+
+    useEffect(() => {
+        if (Boolean(orderIntegrateFromInsurance) && !error) {
+            setState({ isShowOrderIntegrateFromInsurance: true });
+        }
+    }, [orderIntegrateFromInsurance, error]);
+
+    const insuranceIntegrateDecimals = useMemo(() => {
+        const getDecimalPrice = (symbol) => {
+            const decimalScalePrice = symbol?.filters.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
+            return countDecimals(decimalScalePrice?.tickSize);
+        };
+
+        const symbol = allPairConfigs.find((rs) => rs.symbol === orderIntegrateFromInsurance?.symbol);
+        const decimalSymbol = assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
+        const decimalScalePrice = getDecimalPrice(symbol);
+        return {
+            price: decimalScalePrice || 0,
+            symbol: decimalSymbol || 0
+        };
+    }, [orderIntegrateFromInsurance, allPairConfigs, assetConfig]);
+    /* INSURANCE INTEGRATE ORDER ID  */
 
     const subscribeFuturesSocket = (pair) => {
         if (!publicSocket) {
@@ -392,6 +437,12 @@ const Futures = () => {
                     </div>
                 </MaldivesLayout>
             </DynamicNoSsr>
+            <FuturesOrderDetailModal
+                order={orderIntegrateFromInsurance}
+                isVisible={state.isShowOrderIntegrateFromInsurance}
+                onClose={() => setState({ isShowOrderIntegrateFromInsurance: false })}
+                decimals={insuranceIntegrateDecimals}
+            />
 
             <FuturesProfitEarned isVisible={false} />
         </>

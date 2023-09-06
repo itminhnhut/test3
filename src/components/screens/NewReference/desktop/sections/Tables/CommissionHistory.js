@@ -13,7 +13,7 @@ import TableV2 from 'components/common/V2/TableV2';
 // Start: Do api filter date range sai nen moi can cai qq nay :D
 const timeZone = parseInt(new Date().getTimezoneOffset() / -60);
 const addFromDate = 86400 * 1000 - 1000 * 60 * 60 * (24 - timeZone);
-const addEndDate = 86400 * 1000 - 1000 * 60 * 60 * timeZone - 1;
+const addEndDate = 86400 * 1000 - 1;
 // End: Do api filter date range sai nen moi can cai qq nay :D
 
 const CommissionHistory = ({ t, commisionConfig, id }) => {
@@ -24,13 +24,13 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         { title: '2', value: 2 },
         { title: '3', value: 3 },
         { title: '4', value: 4 },
-        { title: '5', value: 5 }
     ];
     const typeTabs = [
         { title: t('common:all'), value: null },
         { title: 'Spot', value: 'SPOT' },
         { title: 'Futures', value: 'FUTURES' },
-        { title: 'Stake', value: 'STAKING' }
+        { title: 'Stake', value: 'STAKING' },
+        { title: 'Nami Insurance', value: 'INSURANCE' }
     ];
     const assetTabs = [
         { title: t('common:all'), value: null },
@@ -41,16 +41,16 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         { title: 'USDT', value: WalletCurrency.USDT }
     ];
 
-    const filters = {
+    const configs = {
         date: {
-            type: 'daterange',
+            type: 'dateRange',
             value: {
                 startDate: null,
                 endDate: null,
                 key: 'selection'
             },
             values: null,
-            title: t('reference:referral.date'),
+            label: t('reference:referral.date'),
             position: 'left',
             childClassName: 'min-w-[240px]'
         },
@@ -58,31 +58,32 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
             type: 'popover',
             value: null,
             values: levelTabs,
-            title: t('reference:referral.level'),
+            label: t('reference:referral.level'),
             childClassName: 'flex-1'
         },
         commission_type: {
             type: 'popover',
             value: null,
             values: typeTabs,
-            title: t('reference:referral.commission_type'),
+            label: t('reference:referral.commission_type'),
             childClassName: 'flex-1'
         },
         asset_type: {
             type: 'popover',
             value: null,
             values: assetTabs,
-            title: t('reference:referral.asset_type'),
+            label: t('reference:referral.asset_type'),
             childClassName: 'flex-1'
         },
         reset: {
-            type: 'reset'
+            type: 'reset',
+            title: t('reference:referral.reset')
         }
     };
     const limit = 10;
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [filter, setFilter] = useState(filters);
+    const [filter, setFilter] = useState(configs);
     const [dataSource, setDataSource] = useState({
         results: [],
         hasNext: false,
@@ -91,7 +92,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
 
     const getCommisionHistory = _.throttle(async () => {
         const params = {
-            from: filter?.date?.value?.startDate ? new Date(filter?.date?.value?.startDate).getTime() + addFromDate : null,
+            from: filter?.date?.value?.startDate ? new Date(filter?.date?.value?.startDate).getTime() : null,
             to: filter?.date?.value?.endDate ? new Date(filter?.date?.value?.endDate).getTime() + addEndDate : new Date().getTime(),
             kind: filter?.commission_type?.value,
             level: filter?.level?.value,
@@ -138,7 +139,6 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 title: t('reference:referral.date'),
                 align: 'left',
                 width: 200,
-                fixed: 'left',
                 render: (data) => formatTime(data, 'dd/MM/yyyy HH:mm:ss')
             },
             {
@@ -179,10 +179,11 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 align: 'right',
                 width: 183,
                 sorter: false,
+                fixed: 'right',
                 render: (data, item) => {
                     const value = data < 0 ? 0 : `+ ${formatNumber(data, 4)}`;
                     return (
-                        <span className="text-teal">
+                        <span className="text-teal font-semibold">
                             {value} {assetTabs.find((e) => e.value === item.currency)?.title}
                         </span>
                     );
@@ -197,9 +198,10 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
             <div className="w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8">
                 <div className="font-semibold text-[22px] leading-7 mx-6 mb-8">{t('reference:tabs.commission_histories')}</div>
                 <div className="flex gap-6 flex-wrap mx-6 mb-6">
-                    <TableFilter filters={filters} filter={filter} setFilter={setFilter} />
+                    <TableFilter config={configs} filter={filter} setFilter={setFilter} />
                 </div>
                 <TableV2
+                    // sort
                     loading={loading}
                     useRowHover
                     data={dataSource?.results || []}

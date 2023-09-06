@@ -216,7 +216,7 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
     const renderEstWallet = useCallback(() => {
         return (
             <div className="flex items-center justify-between">
-                <div className="hidden md:flex rounded-full dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
+                <div className="hidden md:flex rounded-full bg-gray-13 dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
                     <Image src={getS3Url('/images/nao/ic_nao.png')} width={32} height={32} />
                     {/* <SvgWalletFutures size={32} /> */}
                 </div>

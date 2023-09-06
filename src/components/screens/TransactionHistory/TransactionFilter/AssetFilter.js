@@ -5,7 +5,7 @@ import { FilterWrapper } from '.';
 import { useSelector } from 'react-redux';
 import { List } from 'react-virtualized';
 import classNames from 'classnames';
-import { sortBy } from 'lodash';
+import sortBy from 'lodash/sortBy';
 import { X } from 'react-feather';
 import NoResult from 'components/screens/Support/NoResult';
 import { CheckCircleIcon } from 'components/svg/SvgIcon';

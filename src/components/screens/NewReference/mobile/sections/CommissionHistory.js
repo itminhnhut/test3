@@ -15,6 +15,8 @@ import RePagination from 'components/common/ReTable/RePagination';
 import classNames from 'classnames';
 import AssetName from 'components/wallet/AssetName';
 import AssetCode from 'components/wallet/AssetCode';
+import { ONE_DAY } from 'constants/constants';
+import { startOfDay } from 'date-fns';
 const title = {
     vi: 'Lịch sử hoàn phí hoa hồng',
     en: 'Commission history'
@@ -33,13 +35,13 @@ const CommissionHistory = () => {
         { title: '02', value: 2 },
         { title: '03', value: 3 },
         { title: '04', value: 4 },
-        { title: '05', value: 5 }
     ];
     const typeTabs = [
         { title: t('common:all'), value: null },
         { title: 'Spot', value: 'SPOT' },
         { title: 'Futures', value: 'FUTURES' },
-        { title: 'Stake', value: 'STAKING' }
+        { title: 'Stake', value: 'STAKING' },
+        { title: 'Insurance', value: 'INSURANCE' }
     ];
     const assetTabs = [
         { title: t('common:all'), value: null },
@@ -63,7 +65,7 @@ const CommissionHistory = () => {
         currency: assetTabs[0].value,
         range: {
             startDate: null,
-            endDate: new Date(''),
+            endDate: startOfDay(new Date()),
             key: 'selection'
         }
     });
@@ -72,7 +74,7 @@ const CommissionHistory = () => {
         const params = { ...filter };
         if (params.range.startDate) {
             params.from = new Date(params.range.startDate).getTime();
-            params.to = new Date(params.range.endDate).getTime();
+            params.to = new Date(params.range.endDate).getTime() + ONE_DAY;
         }
         delete params.range;
         try {
@@ -156,19 +158,31 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, levelTabs, type
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.level')}</div>
-                    <div className="flex">
-                        <FilterTabs className="!px-4 !py-2 !font-medium !text-sm" tabs={levelTabs} type={state.level} setType={(e) => onChange('level', e)} isMobile />
+                    <div className="flex overflow-x-auto w-full no-scrollbar">
+                        <FilterTabs
+                            className="!px-4 !py-2 !font-medium !text-sm whitespace-nowrap"
+                            tabs={levelTabs}
+                            type={state.level}
+                            setType={(e) => onChange('level', e)}
+                            isMobile
+                        />
                     </div>
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.commission_type')}</div>
-                    <div className="flex">
-                        <FilterTabs className="!px-4 !py-2 !font-medium !text-sm" tabs={typeTabs} type={state.kind} setType={(e) => onChange('kind', e)} isMobile />
+                    <div className="flex overflow-x-auto w-full no-scrollbar">
+                        <FilterTabs
+                            className="!px-4 !py-2 !font-medium !text-sm whitespace-nowrap"
+                            tabs={typeTabs}
+                            type={state.kind}
+                            setType={(e) => onChange('kind', e)}
+                            isMobile
+                        />
                     </div>
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1 mb-4">
                     <div>{t('reference:referral.asset_type')}</div>
-                    <div className="flex overflow-auto no-scrollbar">
+                    <div className="flex overflow-x-auto w-full no-scrollbar">
                         <FilterTabs
                             className="!px-4 !py-2 !font-medium !text-sm whitespace-nowrap"
                             tabs={assetTabs}
@@ -225,7 +239,11 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                         <FilterContainer onClick={() => setShowFilter(true)}>
                             <FilterIcon /> {t('common:filter')}
                         </FilterContainer>
-                        {general.range && <FilterContainer onClick={() => setShowFilter(true)}>Thời gian: {general.range}</FilterContainer>}
+                        {general.range && (
+                            <FilterContainer onClick={() => setShowFilter(true)}>
+                                {t('common:time')}: {general.range}
+                            </FilterContainer>
+                        )}
                         <FilterContainer onClick={() => setShowFilter(true)}>
                             {t('reference:referral.level')}: {general.level}
                         </FilterContainer>
@@ -237,9 +255,11 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                         </FilterContainer>
                     </div>
                 </div>
-                <div className={classNames("mt-6", { "!mt-8": loading })}>
-                    {loading ? <IconLoading color={colors.teal} /> : dataSource.length <= 0 ? (
-                        <NoData text={t('reference:referral.no_commission')} className='my-20' />
+                <div className={classNames('mt-6', { '!mt-8': loading })}>
+                    {loading ? (
+                        <IconLoading color={colors.teal} />
+                    ) : dataSource.length <= 0 ? (
+                        <NoData text={t('reference:referral.no_commission')} className="my-20" />
                     ) : (
                         dataFilter?.map((data, index) => {
                             const asset = typeTabs.find((rs) => rs.value === data.kind)?.title;
@@ -252,7 +272,9 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                                                 <div className="font-semibold text-sm leading-6 text-gray-6">
                                                     {t('broker:your_commission')} ({t('common:level', { level: data?.level })})
                                                 </div>
-                                                <div className="text-teal font-semibold text-sm leading-6">+{formatNumber(data.value, 4)} <AssetCode assetId={data.currency} /></div>
+                                                <div className="text-teal font-semibold text-sm leading-6">
+                                                    +{formatNumber(data.value, 4)} <AssetCode assetId={data.currency} />
+                                                </div>
                                             </div>
                                             <div className="flex items-center justify-between text-gray-7">
                                                 <div className="font-medium text-xs">{formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}</div>
@@ -273,13 +295,13 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                         {loading ? <IconLoading color={colors.teal} /> : t('common:show_more')}
                     </div>
                 )} */}
-                <div className='w-full flex justify-center items-center mt-8'>
+                <div className="w-full flex justify-center items-center mt-8">
                     <RePagination
                         total={total}
                         pageSize={limit}
                         current={page}
                         onChange={(page) => setPage(page)}
-                        className='!text-teal'
+                        className="!text-teal"
                         style={{
                             fontColor: colors.teal
                         }}

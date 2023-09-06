@@ -23,6 +23,7 @@ const index = ({
     onRowClick,
     showPaging = true,
     textEmptyCustom,
+    initPage,
     ...props
 }) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -94,6 +95,7 @@ const index = ({
                         name="market_table___list"
                         pagingPrevNext={pagingPrevNext}
                         onChange={_onChangePage}
+                        initPage={initPage}
                     />
                 </div>
             )}

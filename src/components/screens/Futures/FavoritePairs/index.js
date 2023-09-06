@@ -14,6 +14,7 @@ import { BxsStarIcon } from 'components/svg/SvgIcon';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Skeletor from 'components/common/Skeletor';
 import { FireIcon } from 'components/svg/SvgIcon';
+import orderBy from 'lodash/orderBy';
 
 export const SUGGESTED_SYMBOLS = ['BNB', 'BCH', 'BTC', 'LTC', 'ETH', 'EOS', 'ETC'];
 
@@ -53,7 +54,7 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout, pairConfig }) => {
             return FuturesMarketWatch.create(o, quoteAsset);
         });
 
-        const favorites = mergeFuturesFavoritePairs(favoritePairs, marketWatch);
+        const favorites = orderBy(mergeFuturesFavoritePairs(favoritePairs, marketWatch), [(o) => o.quoteAsset === quoteAsset], 'desc');
         return {
             isFavorite: Array.isArray(favorites) && favorites.length > 0,
             list:
@@ -61,7 +62,7 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout, pairConfig }) => {
                     ? favorites
                     : marketWatch?.filter((o) => SUGGESTED_SYMBOLS.find((s) => s + quoteAsset === o?.symbol))) || []
         };
-    }, [favoritePairs, refreshMarketWatch]);
+    }, [favoritePairs, refreshMarketWatch, quoteAsset]);
 
     return (
         <div className="h-full w-full flex items-center pr-3">

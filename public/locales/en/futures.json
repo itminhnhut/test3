@@ -12,6 +12,38 @@
     "last_price": "Last",
     "last_price_tooltip": "Fill in the current last price",
     "fee_level": "Fee level",
+    "insurance": {
+        "rules": "Insurance Rules",
+        "title": "Insurance",
+        "contract": "Contract",
+        "contracts": "Contracts",
+        "difference": "Minimum distance limit",
+        "difference_description": "The closest distance against which a asset is covered under a Bull and Bear contract",
+        "min_margin": "Min margin",
+        "min_max_margin_ratio": "Min/Max margin ratio",
+        "min_max_margin_ratio_description": "Margin = Margin ratio x Q-Cover",
+        "condition_buy_cover": "The position does not meet conditions to buy cover. View more insurance rules",
+        "buy_insurance": "Buy Cover",
+        "insurance_contract_title": "Insurance contract",
+        "insurance_rules_title": "Insurance Contract Rule",
+        "max_leverage": "Max leverage",
+        "status": {
+            "available": "Available",
+            "expired": "Expired",
+            "liquidated": "Liquidated",
+            "claimed": "Claimed",
+            "refunded": "Refunded",
+            "claim_waiting": "Claim waiting",
+            "invalid": "Invalid",
+            "canceled": "Canceled"
+        },
+        "buy_insurance_alert": {
+            "title": "Terms and Agreements",
+            "message": "<0>Nami Insurance's Terms and Agreements:</0> <1>1. I accept Nami Insurance's Term Of Services.</1> <2>Details</2> <3>2. I accept Nami Insurance's private policy.</3> <4>Details</4>",
+            "not_show_again": "Do not show this again",
+            "buy_now": "Buy Cover Now"
+        }
+    },
     "order_table": {
         "opening_volume": "Opening Volume",
         "opening_volume_tooltips": "Opening Volume = Quantity x Opening Price",

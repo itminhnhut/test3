@@ -20,6 +20,11 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { FuturesMarginMode } from 'redux/reducers/futures';
 import { X } from 'react-feather';
 
+import InsuranceSection from './InsuranceSection';
+import FetchApi from 'utils/fetch-api';
+import axios from 'axios';
+import { API_CONFIG_INSURANCE_RULE } from 'redux/actions/apis';
+
 const getAllAssets = createSelector([(state) => state.utils, (utils, params) => params], (utils, params) => {
     const assets = {};
     return fees.reduce((newItem, item) => {
@@ -39,6 +44,23 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const pairTicker = marketWatch[order?.symbol];
     const _lastPrice = pairTicker ? pairTicker?.lastPrice : lastPrice;
+    const [insuranceRules, setInsuranceRules] = useState([]);
+
+    useEffect(() => {
+        const source = axios.CancelToken.source();
+        const fetchInsuranceRules = async () => {
+            try {
+                const data = await FetchApi({ url: API_CONFIG_INSURANCE_RULE, cancelToken: source.token });
+                if (data) {
+                    setInsuranceRules(data?.data || []);
+                }
+            } catch (error) {
+                console.error('API_CONFIG_INSURANCE_RULE error:', error);
+            }
+        };
+        fetchInsuranceRules();
+        return () => source.cancel();
+    }, []);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
 
     const price = order?.status === VndcFutureOrderType.Status.PENDING ? order?.price : order?.open_price;
@@ -51,13 +73,14 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
         );
     }, [order]);
 
-    const renderLiqPrice = (row) => {
+    const renderLiqPrice = (row, forceNumber = false) => {
         const size = row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity;
         const number = row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1;
         const swap = row?.swap || 0;
         const liqPrice =
             (size * row?.open_price + (row?.fee_data?.place_order?.['22'] || 0) + (row?.fee_data?.place_order?.['72'] || 0) + swap - row?.margin) /
             (row?.quantity * (number - DefaultFuturesFee.Nami));
+        if (forceNumber) return liqPrice;
         return liqPrice > 0 ? formatNumber(liqPrice, 0, decimals.price, false) : '-';
     };
 
@@ -115,6 +138,8 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
             />
             <div>
                 <div className="text-2xl font-semibold mb-8">{t('futures:mobile:order_detail')}</div>
+                <InsuranceSection insuranceRules={insuranceRules} order={order} liquidPrice={renderLiqPrice(order, true)} onCloseOrderDetailModal={onClose} />
+
                 <div className="grid grid-cols-2 gap-8">
                     <div>
                         <Row>

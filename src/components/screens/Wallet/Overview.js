@@ -14,19 +14,13 @@ import { EXCHANGE_ACTION, WALLET_SCREENS } from 'pages/wallet';
 import SvgWalletOverview from 'components/svg/SvgWalletOverview';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { PartnersIcon, MoreHorizIcon, FutureExchangeIcon } from 'components/svg/SvgIcon';
+import { PartnersIcon, MoreHorizIcon, FutureExchangeIcon, FutureInsurance } from 'components/svg/SvgIcon';
 import styled from 'styled-components';
 import ModalV2 from 'components/common/V2/ModalV2';
-import Types from 'components/screens/Account/types';
 import EstBalance from 'components/common/EstBalance';
 import { TYPE_DW } from '../WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import Image from 'next/image';
-import { PATHS } from 'constants/paths';
-
-const INITIAL_STATE = {
-    // ...
-};
 
 const OverviewWallet = (props) => {
     const {
@@ -36,33 +30,23 @@ const OverviewWallet = (props) => {
         futuresEstBtc,
         futuresRefPrice,
         naoFuturesEstBtc,
+        insuranceRefPrice,
+        insuranceEstBtc,
         naoFuturesRefPrice,
         partnersEstBtc,
         partnersRefPrice,
-        stakingEstBtc,
-        stakingRefPrice,
-        farmingEstBtc,
-        farmingRefPrice,
+
         isSmallScreen,
         isHideAsset,
         setIsHideAsset
     } = props;
-
-    // Init State
-    const [state, set] = useState(INITIAL_STATE);
-    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Use Hooks
     const { t } = useTranslation();
     const { width } = useWindowSize();
     const dispatch = useDispatch();
 
-    // Memmoized
-    const limitExchangeAsset = useMemo(() => {
-        let limit = 5;
-        if (width >= 1280) limit = 7;
-        return limit;
-    }, [width]);
+    const limitExchangeAsset = width >= 1280 ? 7 : 5;
 
     // Render Handler
     const renderExchangeAsset = useCallback(() => {
@@ -143,6 +127,16 @@ const OverviewWallet = (props) => {
         );
     }, [naoFuturesEstBtc, naoFuturesRefPrice, isHideAsset]);
 
+    const renderInsuranceEstBalance = useCallback(() => {
+        return (
+            <span>
+                {isHideAsset
+                    ? SECRET_STRING
+                    : formatWallet(insuranceEstBtc?.totalValue, insuranceEstBtc?.assetDigit) + ' BTC ' + '~ $' + formatWallet(insuranceRefPrice?.totalValue, 2)}
+            </span>
+        );
+    }, [insuranceEstBtc, insuranceRefPrice, isHideAsset]);
+
     const renderPartnersEstBalance = useCallback(() => {
         return (
             <span>
@@ -153,41 +147,11 @@ const OverviewWallet = (props) => {
         );
     }, [partnersEstBtc, partnersRefPrice, isHideAsset]);
 
-    // const renderFarmingEstBalance = useCallback(() => {
-    //     return (
-    //         <>
-    //             <span className="font-bold"> {formatWallet(farmingEstBtc?.totalValue, farmingEstBtc?.assetDigit, farmingEstBtc?.totalValue ? 0 : 8)} </span>{' '}
-    //             <span className="text-xs font-medium">
-    //                 {' '}
-    //                 <AssetName assetCode="BTC" />{' '}
-    //                 <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-    //                     ~ ${formatWallet(farmingRefPrice?.totalValue, farmingRefPrice?.assetDigit, farmingRefPrice?.assetDigit ? 0 : 2)}
-    //                 </span>
-    //             </span>
-    //         </>
-    //     );
-    // }, [farmingEstBtc, farmingRefPrice]);
-
-    // const renderStakingEstBalance = useCallback(() => {
-    //     return (
-    //         <>
-    //             <span className="font-bold"> {formatWallet(stakingEstBtc?.totalValue, stakingEstBtc?.assetDigit, stakingEstBtc?.totalValue ? 0 : 8)} </span>{' '}
-    //             <span className="text-xs font-medium">
-    //                 {' '}
-    //                 <AssetName assetCode="BTC" />{' '}
-    //                 <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-    //                     ~ ${formatWallet(stakingRefPrice?.totalValue, stakingRefPrice?.assetDigit, stakingRefPrice?.assetDigit ? 0 : 2)}
-    //                 </span>
-    //             </span>
-    //         </>
-    //     );
-    // }, [stakingEstBtc, stakingRefPrice]);
-
     // Check Kyc before redirect to page Deposit / Withdraw
     const router = useRouter();
 
     const [isShowAction, setIsShowAction] = useState({});
-    const { EXCHANGE, FUTURES, PARTNERS, NAO_FUTURES } = ActionType;
+    const { EXCHANGE, FUTURES, PARTNERS, NAO_FUTURES, INSURANCE } = ActionType;
     const { DEPOSIT, WITHDRAW, TRANSFER } = ActionCategory;
     const flag = useRef(false);
     const onHandleClick = (key, href) => {
@@ -250,6 +214,18 @@ const OverviewWallet = (props) => {
                     return;
                 }
                 router.push(`/wallet/${WALLET_SCREENS.NAO_FUTURES}`);
+                break;
+
+            case TRANSFER + INSURANCE:
+                flag.current = true;
+                dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.INSURANCE, toWallet: WalletType.SPOT }));
+                break;
+            case 'details_insurance':
+                if (flag.current) {
+                    flag.current = false;
+                    return;
+                }
+                router.push(`/wallet/${WALLET_SCREENS.INSURANCE}`);
                 break;
             case TRANSFER + PARTNERS:
                 flag.current = true;
@@ -329,7 +305,7 @@ const OverviewWallet = (props) => {
                         renderEstBalance={renderExchangeEstBalance}
                         isSmallScreen={isSmallScreen}
                         onHandleClick={onHandleClick}
-                        triggerName={ActionType.EXCHANGE}
+                        triggerName={ActionType.INSURANCE}
                     />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between flex-auto lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
                         <div className={`flex items-center ${isSmallScreen && 'mt-6'}`}>
@@ -397,6 +373,29 @@ const OverviewWallet = (props) => {
                         )}
                         <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
                             <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(TRANSFER + NAO_FUTURES)}>
+                                {t('common:transfer')}
+                            </ButtonV2>
+                        </div>
+                    </div>
+                </CardWallet>
+
+                <CardWallet onClick={() => onHandleClick('details_insurance')} isSmallScreen={isSmallScreen}>
+                    <AssetBalance
+                        title="Insurance"
+                        icon={<FutureInsurance size={32} />}
+                        renderEstBalance={renderInsuranceEstBalance}
+                        isSmallScreen={isSmallScreen}
+                        onHandleClick={onHandleClick}
+                        triggerName={ActionType.NAO_FUTURES}
+                    />
+                    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
+                        {!isSmallScreen && (
+                            <div className="flex items-center text-base font-normal text-gray-15 dark:text-gray-4 mr-3">
+                                <Trans>{t('wallet:nao_overview')}</Trans>
+                            </div>
+                        )}
+                        <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
+                            <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(TRANSFER + INSURANCE)}>
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
@@ -515,6 +514,10 @@ const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
         case ActionType.NAO_FUTURES:
             listActions = [TRANSFER];
             break;
+        case ActionType.INSURANCE:
+            listActions = [TRANSFER];
+            break;
+
         default:
             break;
     }
@@ -544,7 +547,8 @@ export const ActionType = {
     EXCHANGE: 'EXCHANGE',
     FUTURES: 'FUTURES',
     PARTNERS: 'PARTNERS',
-    NAO_FUTURES: 'NAO_FUTURES'
+    NAO_FUTURES: 'NAO_FUTURES',
+    INSURANCE: 'INSURANCE'
 };
 const ActionCategory = {
     WITHDRAW: 'WITHDRAW',

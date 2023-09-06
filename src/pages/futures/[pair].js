@@ -12,32 +12,23 @@ const TradingRule = dynamic(() => import('components/screens/Futures/TradingRule
     ssr: false
 });
 
-const Futures = ({ params }) => {
+const Futures = ({ params, query }) => {
     switch (params?.pair) {
         case 'funding-history':
-            return <FundingHistory />
+            return <FundingHistory />;
         case 'trading-rule':
-            return <TradingRule />
+            return <TradingRule />;
         default:
-            return <FuturesComponent />;
+            return <FuturesComponent integrate={query?.integrate} orderId={query?.order} />;
     }
 };
 
-
-
-export const getServerSideProps = async ({ locale, params }) => {
+export const getServerSideProps = async ({ locale, params, query }) => {
     return {
         props: {
-            ...(await serverSideTranslations(locale, [
-                'common',
-                'navbar',
-                'trade',
-                'futures',
-                'wallet',
-                'error',
-                'spot'
-            ])),
-            params
+            ...(await serverSideTranslations(locale, ['common', 'navbar', 'trade', 'futures', 'wallet', 'error', 'spot'])),
+            params,
+            query
         }
     };
 };

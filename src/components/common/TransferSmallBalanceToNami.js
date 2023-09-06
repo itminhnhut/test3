@@ -220,11 +220,11 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
             <button
                 onClick={() => (auth?.kyc_status !== 2 ? setIsOpenModalKyc(true) : setIsShowPoppup((prev) => !prev))}
                 className={`bg-gray-10 dark:bg-dark-2 flex items-center justify-between text-txtTabHover dark:text-white
-           text-sm gap-3 rounded-md px-4 py-3 cursor-pointer ${className}`}
+           text-sm space-x-3 rounded-md px-4 py-3 cursor-pointer ${className}`}
             >
                 <LogoIcon />
-                <div className="flex items-center gap-3">
-                    {t('wallet:convert_small', { asset: 'NAMI' })}
+                <div className="flex items-center font-normal space-x-4">
+                    <span>{t('wallet:convert_small', { asset: 'NAMI' })}</span>
                     <BxChevronDown size={24} />
                 </div>
             </button>

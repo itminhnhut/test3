@@ -14,6 +14,38 @@
     "close_order_success": "Lệnh #{{orderId}} đã được đóng thành công.",
     "close_order_failed": "Đóng lệnh #{{orderId}} thất bại.",
     "fee_level": "Mức phí",
+    "insurance": {
+        "rules": "Quy định bảo hiểm",
+        "title": "Bảo hiểm",
+        "contract": "Hợp đồng",
+        "contracts": "Hợp đồng",
+        "difference": "Giới hạn khoảng cách tối thiểu",
+        "difference_description": "Khoảng cách tuyệt đối gần nhất mà tài sản được hỗ trợ bảo hiểm đối với hợp đồng Bull và Bear",
+        "min_margin":"Ký quỹ tối thiểu",
+        "min_max_margin_ratio": "Tỷ lệ ký quỹ tối thiểu/tối đa",
+        "min_max_margin_ratio_description": "Giá trị ký quỹ = Tỷ lệ ký quỹ x Q-Cover",
+        "condition_buy_cover": "Vị thế không đủ điều kiện được hỗ trợ bảo hiểm. Xem thêm quy định giao dịch",
+        "buy_insurance": "Hỗ trợ bảo hiểm",
+        "insurance_contract_title": "Hợp đồng bảo hiểm",
+        "insurance_rules_title": "Quy định hợp đồng Insurance",
+        "max_leverage": "Đòn bẩy tối đa",
+        "status": {
+            "available": "Còn hiệu lực",
+            "expired": "Hết hạn",
+            "liquidated": "Thanh lý",
+            "claimed": "Đã chi trả",
+            "refunded": "Hoàn ký quỹ",
+            "claim_waiting": "Chờ chi trả",
+            "invalid": "Không hợp lệ",
+            "canceled": "Dừng hợp đồng"
+        },
+        "buy_insurance_alert": {
+            "title": "Điều khoản sử dụng",
+            "message": "<0>Điều khoản sử dụng của Nami Insurance</0> <1>1. Đồng ý thỏa thuận sử dụng Nami Insurance.</1> <2>Chi tiết</2> <3>2. Đồng ý thỏa thuận chính sách quyền riêng tư tại Nami Insurance.</3> <4>Chi tiết</4>",
+            "not_show_again": "Không hiển thị lại thông tin này",
+            "buy_now": "Tạo hợp đồng ngay"
+        }
+    },
     "order_table": {
         "opening_volume": "Khối lượng mở",
         "opening_volume_tooltips": "Khối lượng mở = Số lượng tài sản giao dịch x Giá mở",

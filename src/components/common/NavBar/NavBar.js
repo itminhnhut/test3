@@ -1,43 +1,31 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { PulseLoader } from 'react-spinners';
-import { useAsync } from 'react-use';
-
 import Axios from 'axios';
-
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-
-import { useTranslation } from 'next-i18next';
-
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-
-import { useWindowSize } from 'utils/customHooks';
-
-import { API_GET_VIP, GOOGLE_OAUTH_CALLBACK } from 'redux/actions/apis';
-import { AUTHORIZE_STATUS, DefaultAvatar, KYC_STATUS } from 'redux/actions/const';
-import { getMarketWatch } from 'redux/actions/market';
-import { getS3Url } from 'redux/actions/utils';
-
-import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
-
-import TextCopyable from 'components/screens/Account/TextCopyable';
-
-import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
 import SvgIcon from 'src/components/svg';
 import SvgMenu from 'src/components/svg/Menu';
 import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
+import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
 import SpotSetting from 'src/components/trade/SpotSetting';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { PulseLoader } from 'react-spinners';
+import { useAsync } from 'react-use';
+import { API_GET_VIP } from 'redux/actions/apis';
+import { getMarketWatch } from 'redux/actions/market';
+import { getS3Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
-
-import classNames from 'classnames';
-import { PATHS } from 'constants/paths';
 import { buildLogoutUrl } from 'src/utils';
+import { useWindowSize } from 'utils/customHooks';
+import { PATHS } from 'constants/paths';
+import { Router, useRouter } from 'next/router';
+import classNames from 'classnames';
+import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import LanguageSetting from './LanguageSetting';
+import { KYC_STATUS, DefaultAvatar, AUTHORIZE_STATUS } from 'redux/actions/const';
 import styled from 'styled-components';
+import InsuranceRedirectLink from './InsuranceRedirectLink';
 
 import {
     BxChevronDown,
@@ -49,9 +37,13 @@ import {
     NFTIcon,
     SuccessfulTransactionIcon
 } from '../../svg/SvgIcon';
-import Button from '../V2/ButtonV2/Button';
 import TagV2 from '../V2/TagV2';
 import AuthButton from './AuthButton';
+import Button from '../V2/ButtonV2/Button';
+import TextCopyable from 'components/screens/Account/TextCopyable';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
 import NavbarIcons from './Icons';
 import { useGoogleOneTapLogin } from '@react-oauth/google';
 import FetchApi from 'utils/fetch-api';
@@ -349,32 +341,49 @@ const NavBar = ({
 
                 // DROPDOWN WITH ICON
                 child_lv1.map((child) => {
-                    const shouldReload = false; //child?.localized === 'advance';
-
                     const Icon = NavbarIcons[child?.localized];
-                    if (shouldReload) {
-                        itemsLevel1withIcon.push(
-                            <div
+
+                    const isNamiInsurance = child.localized === 'nami_insurance';
+
+                    const WrapperLink = ({ children }) =>
+                        isNamiInsurance && auth ? (
+                            <InsuranceRedirectLink
+                                className={classNames('relative !pt-0 !pr-0 mal-navbar__link__group___item___childen__lv1___col2 w-1/2 flex', {
+                                    '!w-full': isVertical,
+                                    'w-[48%]': !isVertical
+                                })}
                                 key={`${child.title}_${child.key}`}
-                                className={
-                                    useOneCol
-                                        ? 'mal-navbar__link__group___item___childen__lv1___item2 min-w-[350px]'
-                                        : 'mal-navbar__link__group___item___childen__lv1___item2'
-                                }
-                                onClick={() => window?.open(child.url, '_self')}
+                                targetType="_blank"
                             >
-                                <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
-                                    {Icon ? (
-                                        <Icon size={24}/>
-                                    ) : (
-                                        <img
-                                            src={getS3Url(getIcon(child.localized))}
-                                            width={width >= 2560 ? '38' : '32'}
-                                            height={width >= 2560 ? '38' : '32'}
-                                            alt=""
-                                        />
+                                {children}
+                            </InsuranceRedirectLink>
+                        ) : (
+                            <Link href={handleURLHref(child)} key={`${child.title}_${child.key}`} passHref>
+                                <a
+                                    className={classNames(
+                                        '!pt-0 !pr-0',
+                                        useOneCol
+                                            ? 'mal-navbar__link__group___item___childen__lv1___col1 min-w-[350px]'
+                                            : 'mal-navbar__link__group___item___childen__lv1___col2 w-1/2 flex',
+                                        {
+                                            '!w-full': isVertical,
+                                            'w-[48%]': !isVertical,
+                                            hidden: child.hide
+                                        }
                                     )}
-                                </div>
+                                    target={child?.isTarget ? '_blank' : '_self'}
+                                >
+                                    {children}
+                                </a>
+                            </Link>
+                        );
+
+                    itemsLevel1withIcon.push(
+                        <WrapperLink>
+                            <div className={'mal-navbar__link__group___item___childen__lv1___item2'}>
+                                <WrapperItemChild className="mal-navbar__link__group___item___childen__lv1___item2__icon">
+                                    {Icon ? <Icon size={24} /> : renderImageSubMenu({ child })}
+                                </WrapperItemChild>
                                 <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
                                     <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
                                         {t(`navbar:submenu.${child.localized}`)}
@@ -393,52 +402,55 @@ const NavBar = ({
                                     </div>
                                 </div>
                             </div>
-                        );
-                    } else {
-                        itemsLevel1withIcon.push(
-                            <Link href={handleURLHref(child)} key={`${child.title}_${child.key}`} passHref>
-                                <a
-                                    className={classNames(
-                                        '!pt-0 !pr-0',
-                                        useOneCol
-                                            ? 'mal-navbar__link__group___item___childen__lv1___col1 min-w-[350px]'
-                                            : 'mal-navbar__link__group___item___childen__lv1___col2 w-1/2 flex',
-                                        {
-                                            '!w-full': isVertical,
-                                            'w-[48%]': !isVertical,
-                                            hidden: child.hide
-                                        }
-                                    )}
-                                    target={child?.isTarget ? '_blank' : '_self'}
-                                >
-                                    <div className={'mal-navbar__link__group___item___childen__lv1___item2'}>
-                                        <WrapperItemChild
-                                            className="mal-navbar__link__group___item___childen__lv1___item2__icon">
-                                            {Icon ? <Icon size={24}/> : renderImageSubMenu({ child })}
-                                        </WrapperItemChild>
-                                        <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
-                                            <div
-                                                className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
-                                                {t(`navbar:submenu.${child.localized}`)}
-                                                {/* {child.isNew && <div className="mal-dot__newest"/> */}
-                                            </div>
-                                            <div
-                                                className="!font-normal mal-navbar__link__group___item___childen__lv1___item2___c__description">
-                                                {t(
-                                                    `navbar:submenu.${child.localized}_description`,
-                                                    child.localized === 'spot'
-                                                        ? {
-                                                            pairsLength: state.pairsLength
-                                                        }
-                                                        : undefined
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </Link>
-                        );
-                    }
+                        </WrapperLink>
+                        // <Link href={isNamiInsurance ? '#' : handleURLHref(child)} key={`${child.title}_${child.key}`} passHref>
+                        //     <a
+                        //         className={classNames(
+                        //             '!pt-0 !pr-0',
+                        //             useOneCol
+                        //                 ? 'mal-navbar__link__group___item___childen__lv1___col1 min-w-[350px]'
+                        //                 : 'mal-navbar__link__group___item___childen__lv1___col2 w-1/2 flex',
+                        //             {
+                        //                 '!w-full': isVertical,
+                        //                 'w-[48%]': !isVertical,
+                        //                 hidden: child.hide
+                        //             }
+                        //         )}
+                        //         target={child?.isTarget ? '_blank' : '_self'}
+                        //     >
+                        //         <div className={'mal-navbar__link__group___item___childen__lv1___item2'}>
+                        //             <WrapperItemChild className="mal-navbar__link__group___item___childen__lv1___item2__icon">
+                        //                 {Icon ? (
+                        //                     <Icon size={24} />
+                        //                 ) : (
+                        //                     <Image
+                        //                         src={getS3Url(getIcon(child.localized))}
+                        //                         width={width >= 2560 ? '38' : '24'}
+                        //                         height={width >= 2560 ? '38' : '24'}
+                        //                         alt={child.title}
+                        //                     />
+                        //                 )}
+                        //             </WrapperItemChild>
+                        //             <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
+                        //                 <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
+                        //                     {t(`navbar:submenu.${child.localized}`)}
+                        //                     {/* {child.isNew && <div className="mal-dot__newest"/> */}
+                        //                 </div>
+                        //                 <div className="!font-normal mal-navbar__link__group___item___childen__lv1___item2___c__description">
+                        //                     {t(
+                        //                         `navbar:submenu.${child.localized}_description`,
+                        //                         child.localized === 'spot'
+                        //                             ? {
+                        //                                   pairsLength: state.pairsLength
+                        //                               }
+                        //                             : undefined
+                        //                     )}
+                        //                 </div>
+                        //             </div>
+                        //         </div>
+                        //     </a>
+                        // </Link>
+                    );
                 });
 
                 return (
@@ -540,7 +552,6 @@ const NavBar = ({
         USER_CP.map((item) => {
             if (item.hide) return null;
             if (item.isPartner && partner_type !== 2) return null;
-            const Icon = NavbarIcons?.[item.localized === 'referral' ? 'profile_referral' : item.localized];
             items.push(
                 item.url ? (
                     <Link key={`user_cp__${item.localized}`}
