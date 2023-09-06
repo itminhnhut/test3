@@ -89,6 +89,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                 <div className="font-semibold">{t('reference:friend_list.detail.commission')}</div>
                 <div className="!w-[98px] h-10">
                     <SelectV2
+                        name="customer"
                         position="top"
                         keyExpr="value"
                         className="!h-10"
@@ -98,7 +99,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                         popoverClassName="w-[129px]"
                         onChange={(e) => onChangeOption(e, 'commission')}
                         icon={<CheckCircleIcon color="currentColor" size={16} />}
-                        optionClassName="flex flex-row items-center justify-between"
+                        optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
                     />
                 </div>
             </div>
@@ -118,6 +119,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                 <div className="font-semibold">{t('reference:friend_list.detail.volume')}</div>
                 <div className="!w-[98px] h-10">
                     <SelectV2
+                        name="customer"
                         position="top"
                         keyExpr="value"
                         className="!h-10"
@@ -127,7 +129,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                         popoverClassName="w-[129px]"
                         onChange={(e) => onChangeOption(e, 'orderVol')}
                         icon={<CheckCircleIcon color="currentColor" size={16} />}
-                        optionClassName="flex flex-row items-center justify-between"
+                        optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
                     />
                 </div>
             </div>
