@@ -112,7 +112,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
     );
     const filterArray = Object.keys(config || []);
     return filterArray.map((key) => (
-        <div className={`flex flex-col items-start justify-end w-auto ${config[key]?.childClassName || ''}`} key={key}>
+        <div className={`flex flex-col items-start  w-auto ${config[key]?.childClassName || ''}`} key={key}>
             <div
                 className={classNames('text-txtSecondary dark:text-txtSecondary-dark mb-2 text-sm', {
                     hidden: config[key].label === '',

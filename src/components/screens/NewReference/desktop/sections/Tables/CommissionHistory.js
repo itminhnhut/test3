@@ -80,7 +80,8 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         reset: {
             type: 'reset',
             title: t('reference:friend_list.filter.reset'),
-            buttonClassName: '!h-11 !text-gray-15 dark:!text-gray-7 font-semibold text-base'
+            buttonClassName: '!h-11 !text-gray-15 dark:!text-gray-7 font-semibold text-base',
+            childClassName: 'justify-end'
         }
     };
     const limit = 10;
@@ -201,7 +202,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
             <div className="w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8">
                 <div className="mb-8 mx-6 text-gray-15 dark:text-gray-4 font-semibold text-2xl">{t('reference:tabs.commission_histories')}</div>
                 <div className="flex gap-6 flex-wrap mx-6 mb-8 items-end justify-between">
-                    <WrapperFilter className="grid w-full gap-4">
+                    <WrapperFilter className="grid w-full gap-x-6">
                         <TableFilter filter={filter} config={filters} type="history" setFilter={setFilter} />
                     </WrapperFilter>
                 </div>

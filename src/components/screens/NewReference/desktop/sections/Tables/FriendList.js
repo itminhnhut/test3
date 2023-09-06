@@ -81,7 +81,8 @@ const FriendList = ({ language, t, id }) => {
             type: 'reset',
             label: '',
             title: t('reference:friend_list.filter.reset'),
-            buttonClassName: '!text-gray-15 dark:!text-gray-7 font-semibold text-base'
+            buttonClassName: '!text-gray-15 dark:!text-gray-7 font-semibold text-base',
+            childClassName: 'justify-end'
         }
     };
     const [loading, setLoading] = useState(false);
@@ -170,8 +171,13 @@ const FriendList = ({ language, t, id }) => {
 
     const handleDetailFriend = async (row) => {
         try {
+            const { total_commissions } = filter || {};
             const { data, status } = await FetchApi({
-                url: API_GET_REFERRAL_FRIENDS_BY_CODE.replace(':code', row?.code)
+                url: API_GET_REFERRAL_FRIENDS_BY_CODE.replace(':code', row?.code),
+                params: {
+                    from: formatDate(total_commissions?.value, 'startDate'),
+                    to: formatDate(total_commissions?.value, 'endDate')
+                }
             });
             if (status === 'ok') {
                 const { name = '', code = '', email = '' } = row;
