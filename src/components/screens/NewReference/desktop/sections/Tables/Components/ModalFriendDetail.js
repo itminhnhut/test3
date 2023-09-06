@@ -77,7 +77,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                         {invitedBy} <CopyIcon data={invitedBy} size={16} className="cursor-pointer" />
                     </div>
                 </div>
-                <div className="flex flex-row justify-between mt-3">
+                <div className={classNames('flex flex-row justify-between mt-3', { hidden: !range?.from || !range?.to })}>
                     <div className="text-gray-1 dark:text-gray-7">{t('reference:statistic')}</div>
                     <div className="font-semibold">
                         {range?.from ? `${formatTime(range?.from, 'dd/MM/yyyy')} - ${formatTime(range?.to ?? new Date(), 'dd/MM/yyyy')}` : '-'}
