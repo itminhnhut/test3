@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { dwLinkBuilder, formatNumber, formatWallet, getLoginUrl, getS3Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber, formatWallet, getLoginUrl, getS3Url, setTransferModal } from 'redux/actions/utils';
 import { ApiStatus, WalletType } from 'redux/actions/const';
 import { useTranslation } from 'next-i18next';
 import { API_FUTURES_CAMPAIGN_TRANSFER_STATUS, POST_WALLET_TRANSFER } from 'redux/actions/apis';
@@ -8,24 +8,26 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { getUserFuturesBalance, getUserPartnersBalance, getWallet } from 'redux/actions/user';
 import { orderBy } from 'lodash';
 
-import Axios from 'axios';
 import axios from 'axios';
 import useOutsideClick from 'hooks/useOutsideClick';
-import NumberFormat from 'react-number-format';
 import AssetLogo from 'components/wallet/AssetLogo';
-import colors from '../../styles/colors';
 import { useRouter } from 'next/router';
 import isNil from 'lodash/isNil';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { AddCircleColorIcon, ArrowDownIcon, ArrowDropDownIcon, ArrowForwardIcon, CheckCircleIcon, PartnersIcon, SyncAltIcon } from 'components/svg/SvgIcon';
-import CheckSuccess from 'components/svg/CheckSuccess';
+import {
+    AddCircleColorIcon,
+    ArrowDropDownIcon,
+    ArrowForwardIcon,
+    CheckCircleIcon,
+    FutureInsurance,
+    NAOIconDisable,
+    PartnersIcon,
+    SyncAltIcon
+} from 'components/svg/SvgIcon';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
-import { EXCHANGE_ACTION } from 'pages/wallet';
-import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import SwapWarning from 'components/svg/SwapWarning';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Notice from 'components/svg/Notice';
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
@@ -44,16 +46,20 @@ const ALLOWED_WALLET_FROM = {
     SPOT: WalletType.SPOT,
     FUTURES: WalletType.FUTURES,
     NAO_FUTURES: WalletType.NAO_FUTURES,
+    INSURANCE: WalletType.INSURANCE,
     BROKER: WalletType.BROKER
 };
 
 const ALLOWED_WALLET_TO = {
     SPOT: WalletType.SPOT,
     FUTURES: WalletType.FUTURES,
-    NAO_FUTURES: WalletType.NAO_FUTURES
+    NAO_FUTURES: WalletType.NAO_FUTURES,
+    INSURANCE: WalletType.INSURANCE
 };
 
-const NOT_ALLOWED_WALLET_TO = Object.values(ALLOWED_WALLET_FROM).filter((wallet) => !Object.values(ALLOWED_WALLET_TO).includes(wallet));
+const ALLOWED_INSURANCE_WALLET_TRANSFER = {
+    SPOT: WalletType.SPOT
+};
 
 const TransferWalletResult = {
     INVALID_AMOUNT: 'INVALID_AMOUNT',
@@ -69,7 +75,8 @@ export const WalletTypeV1 = {
     P2P: 3,
     POOL: 4,
     PARTNERS: 8,
-    NAO_FUTURES: 9
+    NAO_FUTURES: 9,
+    INSURANCE: 10
 };
 
 export const MinTransferFromBroker = {
@@ -81,6 +88,7 @@ export const MinTransferFromBroker = {
 
 const ALLOWED_ASSET = ['VNDC', 'NAMI', 'USDT', 'NAC', 'NAO'];
 const ALLOWED_ASSET_FUTURES = ['VNDC', 'NAMI', 'USDT', 'NAC'];
+const ALLOWED_ASSET_INSURANCE = ['USDT'];
 
 const INITIAL_STATE = {
     fromWallet: null,
@@ -111,6 +119,9 @@ const getTitleWallet = (wallet, t, language) => {
         case WalletType.NAO_FUTURES:
             _strTitleWallet = t('common:wallet', { wallet: 'NAO Futures' });
             break;
+        case WalletType.INSURANCE:
+            _strTitleWallet = t('common:wallet', { wallet: 'Insurance' });
+            break;
         case WalletType.PARTNERS:
             _strTitleWallet = t('common:partners');
             break;
@@ -118,9 +129,9 @@ const getTitleWallet = (wallet, t, language) => {
             _strTitleWallet = wallet;
             break;
     }
-    // _strTitleWallet = _strTitleWallet.charAt(0).toUpperCase() + _strTitleWallet.slice(1).toLowerCase();
 
     return _strTitleWallet;
+    s;
 };
 
 const TransferModal = ({ isMobile, alert }) => {
@@ -182,12 +193,12 @@ const TransferModal = ({ isMobile, alert }) => {
                 }
             })
     );
-    // const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
     // Rdx
     const { isVisible, fromWallet, toWallet, asset } = useSelector((state) => state.utils.transferModal) || {};
     const auth = useSelector((state) => state.auth?.user);
     const allExchangeWallet = useSelector((state) => state.wallet?.SPOT) || null;
     const allFuturesWallet = useSelector((state) => state.wallet?.FUTURES) || null;
+    const allInsuranceWallet = useSelector((state) => state.wallet?.INSURANCE) || null;
     const allPartnersWallet = useSelector((state) => state.wallet?.PARTNERS) || null;
     const allNAOsWallet = useSelector((state) => state.wallet.NAO_FUTURES) || null;
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
@@ -201,7 +212,7 @@ const TransferModal = ({ isMobile, alert }) => {
 
         return {
             ..._,
-            available: isNaN(available) ? 0 : available
+            available: isNaN(available) || available < 0 ? 0 : available
         };
     }, [state.asset, state.allWallets, state.maxValue, isVisible]);
 
@@ -243,7 +254,7 @@ const TransferModal = ({ isMobile, alert }) => {
     const onTransfer = async (currency, from_wallet, to_wallet, amount, utils) => {
         setState({ isPlacingOrder: true });
         try {
-            const { data } = await Axios.post(POST_WALLET_TRANSFER, {
+            const { data } = await axios.post(POST_WALLET_TRANSFER, {
                 from_wallet,
                 to_wallet,
                 currency,
@@ -293,16 +304,6 @@ const TransferModal = ({ isMobile, alert }) => {
                     type: 'warning',
                     title: t('common:failure')
                 });
-
-                // if (isMobile && alert) {
-                //     alert.show('error', t('common:failure'), message);
-                // } else {
-                //     showNotification({
-                //         message,
-                //         title: t('common:failure'),
-                //         type: 'failure'
-                //     });
-                // }
             }
         } catch (e) {
             console.error('Swap error: ', e);
@@ -329,32 +330,27 @@ const TransferModal = ({ isMobile, alert }) => {
         });
     };
 
-    const onFocus = () =>
-        setState({
-            focus: { amount: true },
-            openList: {}
-        });
-
-    const onBlur = () => setState({ focus: {} });
-
-    const isNotAllowToRevert = NOT_ALLOWED_WALLET_TO.includes(state.fromWallet);
+    const isFromWalletSwitchable = Boolean(ALLOWED_WALLET_TO?.[state.fromWallet]);
 
     const onSetWallet = (targetWallet, walletType) => {
         let otherWallet = targetWallet === 'fromWallet' ? 'toWallet' : 'fromWallet';
 
-        // thực hiện hoán đổi fromWallet và toWallet nếu như targetWallet === otherWallet
-        if (state?.[otherWallet] === walletType) {
-            // If not allow to revert
-            if (isNotAllowToRevert) {
-                setState({
-                    fromWallet: state.toWallet,
-                    toWallet: Object.values(ALLOWED_WALLET_TO).filter((allowWallet) => allowWallet !== state.toWallet)[0]
-                });
+        if (state[targetWallet])
+            if (state?.[otherWallet] === walletType) {
+                // thực hiện hoán đổi fromWallet và toWallet nếu như targetWallet === otherWallet
+                // If fromWallet not able to switch
+                // toWallet will be the first wallet in the allow_wallet_to list
+                if (!isFromWalletSwitchable) {
+                    setState({
+                        fromWallet: state.toWallet,
+                        toWallet: Object.values(ALLOWED_WALLET_TO).find((allowWallet) => allowWallet !== state.toWallet)
+                    });
+                    return;
+                }
+                revertWallet();
                 return;
             }
-            revertWallet();
-            return;
-        }
+
         setState({
             [targetWallet]: walletType,
             openList: {}
@@ -362,7 +358,7 @@ const TransferModal = ({ isMobile, alert }) => {
     };
 
     const revertWallet = () => {
-        if (isNotAllowToRevert) return;
+        if (!isFromWalletSwitchable) return;
         if (state.fromWallet && state.toWallet) {
             const _newState = {
                 fromWallet: state.toWallet,
@@ -389,12 +385,16 @@ const TransferModal = ({ isMobile, alert }) => {
             }
 
             const WALLET = {
-                [WalletType.SPOT]: { icon: <SvgWalletExchange size={20} mode={iconMode} />, type: t('wallet:spot_short') },
-                [WalletType.FUTURES]: { icon: <SvgWalletFutures size={20} mode={iconMode} />, type: t('wallet:nami_futures_short') },
-                [WalletType.BROKER]: { icon: <PartnersIcon size={20} mode={iconMode} />, type: t('wallet:commission') },
+                [WalletType.SPOT]: { icon: <SvgWalletExchange size={24} mode={iconMode} />, type: t('wallet:spot_short') },
+                [WalletType.FUTURES]: { icon: <SvgWalletFutures size={24} mode={iconMode} />, type: t('wallet:nami_futures_short') },
+                [WalletType.BROKER]: { icon: <PartnersIcon size={24} mode={iconMode} />, type: t('wallet:commission') },
                 [WalletType.NAO_FUTURES]: {
-                    icon: <Image width={20} height={20} src={getS3Url('/images/nao/ic_nao.png')} />,
+                    icon: isDisable ? <NAOIconDisable size={24} mode={iconMode} /> : <Image width={24} height={24} src={getS3Url('/images/nao/ic_nao.png')} />,
                     type: 'NAO Futures'
+                },
+                [WalletType.INSURANCE]: {
+                    icon: <FutureInsurance mode={iconMode} size={24} />,
+                    type: 'Insurance'
                 }
             };
 
@@ -406,9 +406,9 @@ const TransferModal = ({ isMobile, alert }) => {
             return (
                 <div className="flex w-full space-x-3 items-center ">
                     <div className="flex items-center ">{renderWallet().icon}</div>
-                    {side && <div className="txtSecond-3 w-10 ">{side}</div>}
+                    {side && <div className="text-sm md:text-base w-10 ">{side}</div>}
 
-                    <div className="relative flex-grow text-sm font-semibold flex items-center">
+                    <div className="relative flex-grow text-sm md:text-base font-semibold flex items-center">
                         <span className={`${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{renderWallet().type}</span>
 
                         {isDropdown && (
@@ -430,6 +430,14 @@ const TransferModal = ({ isMobile, alert }) => {
 
     // Render Handler
     const renderWalletSelect = useCallback(() => {
+        const isFromInsuranceWallet = state.fromWallet === WalletType.INSURANCE;
+        const isToInsuranceWallet = state.toWallet === WalletType.INSURANCE;
+
+        const isFromInsuranceAllowWallet = Boolean(ALLOWED_INSURANCE_WALLET_TRANSFER?.[state.fromWallet]);
+        const isToInsuranceAllowWallet = Boolean(ALLOWED_INSURANCE_WALLET_TRANSFER?.[state.toWallet]);
+
+        const allowWalletTo = isFromInsuranceWallet ? ALLOWED_INSURANCE_WALLET_TRANSFER : ALLOWED_WALLET_TO;
+
         return (
             <div className="px-4 py-3 rounded-md bg-dark-12 dark:bg-bgBtnV2-tonal_dark mt-6 ">
                 <div
@@ -445,13 +453,20 @@ const TransferModal = ({ isMobile, alert }) => {
                             state.openList?.fromWalletList && (
                                 <div className="shadow-card_light space-y-3 absolute z-20 mt-1 rounded-xl py-4 left-0 top-full w-full bg-bgPrimary dark:bg-dark-4 overflow-hidden gap-y-3">
                                     {Object.keys(ALLOWED_WALLET_FROM).map((walletType) => {
+                                        // disable
+                                        const isDisable =
+                                            (isToInsuranceWallet && !ALLOWED_INSURANCE_WALLET_TRANSFER?.[walletType]) ||
+                                            (!isToInsuranceAllowWallet && walletType === WalletType.INSURANCE);
                                         return (
                                             <div
                                                 key={`wallet_type_from__${walletType}`}
-                                                className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
-                                                onClick={() => onSetWallet('fromWallet', walletType)}
+                                                className={classNames('flex items-center justify-between text-sm py-3 px-4 sm:py-2.5 ', {
+                                                    ' text-txtDisabled dark:text-txtDisabled-dark  ': isDisable,
+                                                    'hover:bg-hover-1 dark:hover:bg-hover-dark cursor-pointer': !isDisable
+                                                })}
+                                                onClick={() => !isDisable && onSetWallet('fromWallet', walletType)}
                                             >
-                                                {renderWalletWithType({ walletType: ALLOWED_WALLET_FROM[walletType], isDropdown: false })}
+                                                {renderWalletWithType({ isDisable, walletType: ALLOWED_WALLET_FROM[walletType], isDropdown: false })}
                                                 {ALLOWED_WALLET_FROM[walletType] === state.fromWallet && (
                                                     <CheckCircleIcon
                                                         size={16}
@@ -471,14 +486,14 @@ const TransferModal = ({ isMobile, alert }) => {
                         <ArrowForwardIcon color="currentColor" size={16} />
                     </div>
                     <button
-                        disabled={isNotAllowToRevert}
-                        className={classNames('rounded-full transition  select-none', {
-                            'cursor-not-allowed opacity-60': isNotAllowToRevert,
-                            'hover:opacity-75 cursor-pointer': !isNotAllowToRevert
+                        disabled={!isFromWalletSwitchable}
+                        className={classNames('rounded-full transition select-none text-green-3 dark:text-teal', {
+                            'cursor-not-allowed opacity-60': !isFromWalletSwitchable,
+                            'hover:opacity-75 cursor-pointer': isFromWalletSwitchable
                         })}
                         onClick={revertWallet}
                     >
-                        <SyncAltIcon size={24} />
+                        <SyncAltIcon size={24} color="currentColor" />
                     </button>
                 </div>
 
@@ -494,10 +509,14 @@ const TransferModal = ({ isMobile, alert }) => {
                         dropList: () =>
                             state.openList?.toWalletList && (
                                 <div className="shadow-card_light space-y-3 absolute py-4 z-20 mt-1 rounded-xl left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
-                                    {Object.keys(ALLOWED_WALLET_TO)
-                                        .filter((wallet) => wallet !== state.fromWallet)
+                                    {Object.keys(allowWalletTo)
+                                        .filter((wallet) => {
+                                            if (!isFromInsuranceAllowWallet) {
+                                                return wallet !== WalletType.INSURANCE && wallet !== state.fromWallet;
+                                            }
+                                            return wallet !== state.fromWallet;
+                                        })
                                         .map((walletType) => {
-                                            // const isDisable = state.fromWallet === walletType;
                                             return (
                                                 <div
                                                     key={`wallet_type_to__${walletType}`}
@@ -561,16 +580,17 @@ const TransferModal = ({ isMobile, alert }) => {
                     return (
                         <div
                             key={`transfer_asset__list_${wallet?.assetCode}_${state.asset}`}
-                            className={`px-4 py-3 flex items-center justify-between cursor-pointer first:mt-0 mt-3
-                                hover:bg-hover-1 dark:hover:bg-hover-dark
-                                ${state.asset === wallet?.assetCode ? 'bg-hover-1 dark:bg-hover-dark' : ''}`}
-                            onClick={() =>
-                                state.asset !== wallet?.assetCode &&
+                            className={classNames(
+                                'px-4 py-3 flex items-center justify-between cursor-pointer first:mt-0 mt-3 hover:bg-hover-1 dark:hover:bg-hover-dark',
+                                { 'bg-hover-1 dark:bg-hover-dark': state.asset === wallet?.assetCode }
+                            )}
+                            onClick={() => {
+                                if (state.asset === wallet?.assetCode) return;
                                 setState({
                                     asset: wallet?.assetCode,
                                     openList: {}
-                                })
-                            }
+                                });
+                            }}
                         >
                             <div className="flex justify-center">
                                 <AssetLogo assetCode={wallet?.assetCode} size={24} />
@@ -586,22 +606,6 @@ const TransferModal = ({ isMobile, alert }) => {
         );
     }, [state.allWallets, state.openList, state.asset, assetConfig]);
 
-    const renderAmountInput = useCallback(() => {
-        return (
-            <NumberFormat
-                thousandSeparator
-                allowNegative={false}
-                placeholder={Number(0).toPrecision(assetDigit + 1)}
-                className="w-full text-left"
-                value={state.amount}
-                onValueChange={({ value }) => setState({ amount: value })}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                decimalScale={assetDigit}
-            />
-        );
-    }, [state.amount, state.focus, state.asset, assetDigit]);
-
     const renderAvailableWallet = useCallback(() => {
         const available = currentWallet?.available;
 
@@ -610,7 +614,7 @@ const TransferModal = ({ isMobile, alert }) => {
 
     const renderTransferButton = useCallback(() => {
         const isErrors = !Object.values(state.errors)?.findIndex((item) => item?.length);
-        const isAmountEmpty = !(state.amount?.length && typeof +state.amount === 'number');
+        const isAmountEmpty = !+state.amount;
         const isInsufficient = currentWallet?.available < +state.amount;
         if (!auth) {
             return (
@@ -623,7 +627,9 @@ const TransferModal = ({ isMobile, alert }) => {
             );
         }
 
-        let shouldDisable = isErrors || isAmountEmpty || isInsufficient || state.isPlacingOrder;
+        const isInsuranceWalletSelected = [state.fromWallet, state.toWallet].includes(WalletType.INSURANCE);
+        const isSpotWalletSelected = [state.fromWallet, state.toWallet].includes(WalletType.SPOT);
+        let shouldDisable = (isInsuranceWalletSelected && !isSpotWalletSelected) || isErrors || isAmountEmpty || isInsufficient || state.isPlacingOrder;
 
         return (
             <ButtonV2
@@ -689,7 +695,7 @@ const TransferModal = ({ isMobile, alert }) => {
     }, [state.errors]);
 
     useEffect(() => {
-        if (!!!isVisible) {
+        if (!Boolean(isVisible)) {
             dispatch(
                 setTransferModal({
                     isVisible: false,
@@ -707,7 +713,9 @@ const TransferModal = ({ isMobile, alert }) => {
     }, [fromWallet, toWallet]);
 
     useEffect(() => {
-        asset ? setState({ asset }) : setState({ asset: DEFAULT_STATE.asset });
+        if (asset) {
+            setState({ asset });
+        }
     }, [asset]);
 
     useEffect(() => {
@@ -718,14 +726,23 @@ const TransferModal = ({ isMobile, alert }) => {
                 [ALLOWED_WALLET_FROM.SPOT]: allExchangeWallet,
                 [ALLOWED_WALLET_FROM.FUTURES]: allFuturesWallet,
                 [ALLOWED_WALLET_FROM.BROKER]: allPartnersWallet,
-                [ALLOWED_WALLET_FROM.NAO_FUTURES]: allNAOsWallet
+                [ALLOWED_WALLET_FROM.NAO_FUTURES]: allNAOsWallet,
+                [ALLOWED_WALLET_FROM.INSURANCE]: allInsuranceWallet
             };
 
             const currentWallets = currentWalletMapping?.[state.fromWallet];
 
-            const isFuturesWalletSelected = state.fromWallet === WalletType.FUTURES || state.toWallet === WalletType.FUTURES;
+            const isFuturesWalletSelected = [state.fromWallet, state.toWallet].includes(WalletType.FUTURES);
+            const isInsuranceWalletSelected = [state.fromWallet, state.toWallet].includes(WalletType.INSURANCE);
 
-            const allowAssets = isFuturesWalletSelected ? ALLOWED_ASSET_FUTURES : ALLOWED_ASSET;
+            const getAllowedAssets = () => {
+                let allowAssets = ALLOWED_ASSET;
+                if (isFuturesWalletSelected) allowAssets = ALLOWED_ASSET_FUTURES;
+                if (isInsuranceWalletSelected) allowAssets = ALLOWED_ASSET_INSURANCE;
+                return allowAssets;
+            };
+
+            const allowAssets = getAllowedAssets();
 
             allWallets = assetConfig
                 .filter((asset) => {
@@ -737,11 +754,10 @@ const TransferModal = ({ isMobile, alert }) => {
                 }));
             allWallets = orderBy(allWallets, (o) => o?.wallet?.value - o?.wallet?.locked_value, 'desc');
 
-            // RESET asset to VNDC
-            // if current asset is NAO && one of the wallet is FUTURES.
-            const asset = isFuturesWalletSelected && state.asset === 'NAO' ? allowAssets[0] : state.asset;
+            // RESET asset to first allow asset list
+            const selectAsset = !allowAssets.includes(state.asset) ? allowAssets[0] : state.asset;
 
-            setState({ allWallets, asset });
+            setState({ allWallets, asset: selectAsset });
         }
     }, [state.asset, state.fromWallet, state.toWallet, allFuturesWallet, allPartnersWallet, allExchangeWallet, allNAOsWallet, assetConfig]);
 
@@ -760,13 +776,6 @@ const TransferModal = ({ isMobile, alert }) => {
                 _errors.insufficient = t('wallet:errors.invalid_insufficient_balance');
             } else {
                 _errors.insufficient = null;
-                // setState({
-                //     errors: {
-                //         ...state.errors,
-                //         insufficient: null
-                //     }
-                // });
-                // return;
             }
         } else {
             _errors.insufficient = null;
@@ -844,9 +853,10 @@ const TransferModal = ({ isMobile, alert }) => {
                             {renderAvailableWallet()}
                         </div>
                         <AddCircleColorIcon
-                            className="cursor-pointer"
-                            // onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
+                            className="cursor-pointer text-green-3 dark:text-teal"
                             onClick={() => handleKycRequest(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))}
+                            size={16}
+                            color="currentColor"
                         />
                     </div>
                 </div>
@@ -892,6 +902,8 @@ const convertToWalletV1Type = (walletType) => {
             return WalletTypeV1.PARTNERS;
         case WalletType.NAO_FUTURES:
             return WalletTypeV1.NAO_FUTURES;
+        case WalletType.INSURANCE:
+            return WalletTypeV1.INSURANCE;
         default:
             return null;
     }

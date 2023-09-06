@@ -13,7 +13,7 @@ export const SOCIALS_HREF = {
         {
             key: 2,
             name: 'telegram',
-            href: 'https://t.me/NamiGlobal'
+            href: 'https://t.me/NamiGlobalGroup'
         },
 
         {
@@ -53,7 +53,7 @@ export const SOCIALS_HREF = {
         {
             key: 2,
             name: 'telegram',
-            href: 'https://t.me/namitradevn'
+            href: 'https://t.me/CongdongNamiVietnam'
         },
 
         {

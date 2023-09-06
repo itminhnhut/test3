@@ -1,4 +1,6 @@
 import { PATHS } from 'constants/paths';
+import { KYC_STATUS } from 'redux/actions/const';
+import { INSURANCE_URL } from 'constants/constants';
 
 export const DESKTOP_NAV_HEIGHT = 80;
 
@@ -64,6 +66,16 @@ export const NAV_DATA = [
                 child_lv1: []
             },
             {
+                key: 5,
+                title: 'Nami Insurance',
+                localized: 'nami_insurance',
+                isNew: false,
+                notSameOrigin: true,
+                isTarget:true,
+                url: INSURANCE_URL + '/buy-covered',
+                child_lv2: []
+            },
+            {
                 key: 6,
                 title: 'NFT',
                 localized: 'nft',
@@ -71,22 +83,7 @@ export const NAV_DATA = [
                 url: '/nft',
                 child_lv1: []
             },
-            // {
-            //     key: 2,
-            //     title: 'Launchpad',
-            //     localized: 'launchpad',
-            //     isNew: false,
-            //     url: 'https://launchpad.nami.exchange/',
-            //     child_lv1: []
-            // },
-            // {
-            //     key: 3,
-            //     title: 'Copy Trade',
-            //     localized: 'copytrade',
-            //     isNew: false,
-            //     url: '/',
-            //     child_lv2: [],
-            // },
+
             {
                 key: 3,
                 title: 'Referral',
@@ -96,15 +93,6 @@ export const NAV_DATA = [
                 url: '/reference',
                 child_lv2: []
             }
-            // {
-            //     key: 4,
-            //     title: 'Nami Insurance',
-            //     localized: 'nami_insurance',
-            //     isNew: false,
-            //     notSameOrigin: true,
-            //     url: 'https://namiinsurance.io/',
-            //     child_lv2: []
-            // }
         ]
     },
     {
@@ -382,6 +370,7 @@ export const MOBILE_NAV_DATA = [
                 url: '/swap',
                 child_lv2: []
             },
+
             {
                 key: 1,
                 title: 'Spot',
@@ -416,6 +405,16 @@ export const MOBILE_NAV_DATA = [
                 child_lv1: []
             },
             {
+                key: 8,
+                title: 'Nami Insurance',
+                localized: 'nami_insurance',
+                isNew: false,
+                notSameOrigin: true,
+                isTarget: true,
+                url: INSURANCE_URL + '/buy-covered',
+                child_lv2: []
+            },
+            {
                 key: 'nft',
                 title: 'nft',
                 localized: 'nft',
@@ -423,15 +422,6 @@ export const MOBILE_NAV_DATA = [
                 url: '/nft',
                 child_lv1: []
             }
-            // {
-            //     key: 7,
-            //     title: 'Nami Insurance',
-            //     localized: 'nami_insurance',
-            //     isNew: false,
-            //     notSameOrigin: true,
-            //     url: 'https://namiinsurance.io/',
-            //     child_lv2: []
-            // }
         ]
     },
     {

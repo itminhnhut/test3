@@ -12,6 +12,7 @@ export const initialState = {
     P2P: {},
     POOL: {},
     EARN: {},
+    INSURANCE: {},
     paymentConfigs: [],
 }
 

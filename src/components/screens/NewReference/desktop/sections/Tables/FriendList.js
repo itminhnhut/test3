@@ -15,6 +15,8 @@ import { KYC_STATUS } from 'redux/actions/const';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import FetchApi from 'utils/fetch-api';
 import { assetCodeFromId } from 'utils/reference-utils';
+import FriendListExportModal from './Components/FriendListExportModal';
+
 
 const ModalFriendDetail = dynamic(() => import('./Components/ModalFriendDetail'), { ssr: false });
 const BreadCrumbs = dynamic(() => import('./Components/BreadCrumbs'), { ssr: false });
@@ -138,6 +140,7 @@ const FriendList = ({ language, t, id }) => {
     const [levelFriend, setLevelFriend] = useState(0);
     const [parentCode, setParentCode] = useState(null);
     const [detailFriend, setDetailFriend] = useState({});
+    const [showExportFriends, setShowExportFriends] = useState(false);
 
     const formatDate = (value, type) => {
         if (type === 'startDate') return value?.startDate ? new Date(value?.startDate).getTime() : null;
@@ -166,6 +169,7 @@ const FriendList = ({ language, t, id }) => {
                 }
             });
             if (data) {
+                console.log({ data });
                 setDataSource(data);
             }
         } catch (err) {
@@ -429,6 +433,7 @@ const FriendList = ({ language, t, id }) => {
                 }}
                 invitedBy={dataSource?.path?.at(-1)}
             />
+            <FriendListExportModal show={showExportFriends} onClose={() => setShowExportFriends(false)} />
             <div className="w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8">
                 {/* <div className="font-semibold text-[22px] leading-7 mx-6 mb-8">{t('reference:referral.friend_list')}</div> */}
                 <BreadCrumbs
@@ -443,10 +448,14 @@ const FriendList = ({ language, t, id }) => {
                     <div className="flex justify-between gap-4">
                         <TableFilter config={filters} filter={filter} setFilter={setFilter} resetParentCode={handleResetParentCode} />
                     </div>
-                    <ButtonV2 className="hidden w-[122px] whitespace-nowrap rounded-md px-auto py-auto font-semibold h-12" variants="secondary">
-                        <ExportIcon />
+                    {/* <ButtonV2
+                        className="w-fit whitespace-nowrap rounded-md px-4 py-3 font-semibold h-12"
+                        onClick={() => setShowExportFriends(true)}
+                        variants="secondary"
+                    >
+                        <ExportIcon color="currentColor" />
                         <span className="ml-2">{t('reference:friend_list.filter.export')}</span>
-                    </ButtonV2>
+                    </ButtonV2> */}
                 </div>
                 {renderTable()}
             </div>

@@ -205,6 +205,7 @@ const App = ({ Component, pageProps }) => {
                 store.dispatch(getUserFuturesBalance(router.pathname.includes('mobile')));
                 store.dispatch(getUserPartnersBalance());
                 store.dispatch(getBalance(9, WalletType.NAO_FUTURES)); // wallet NAO FUTURES
+                store.dispatch(getBalance(10, WalletType.INSURANCE)); // wallet INSURANCE
             }
         }
     });

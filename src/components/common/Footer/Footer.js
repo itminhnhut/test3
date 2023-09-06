@@ -1,7 +1,7 @@
 import { useWindowSize } from 'utils/customHooks';
 import { memo, useCallback, useState } from 'react';
 
-import PocketFooter from 'src/components/common/Footer/PocketFooter';
+import PocketFooter from 'components/common/Footer/PocketFooter';
 import useApp from 'hooks/useApp';
 import { useSelector } from 'react-redux';
 import { getS3Url } from 'redux/actions/utils';

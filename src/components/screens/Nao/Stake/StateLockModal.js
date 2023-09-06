@@ -150,7 +150,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                     isLock ? 'mb:max-w-[800px]' : 'mb:max-w-[488px]'
                 )}
             >
-                <div className="h-full">
+                <div className="h-fit">
                     <SvgCross size={24} onClick={onClose} color="currentColor" className="hidden mb:block ml-auto mr-8 mt-8 cursor-pointer stroke-2" />
                     <div className="flex items-center px-4 py-6 mb-6 mb:px-8 mb:mb-2">
                         <ChevronLeft size={20} onClick={onClose} className="mb:hidden mr-2" />

@@ -7,7 +7,8 @@ export const INITAL_FILTER = {
         key: 'selection'
     },
     category: null,
-    asset: null
+    asset: null,
+    curSort: {}
 };
 
 export const TRANSACTION_TYPES = {
@@ -28,7 +29,9 @@ export const TRANSACTION_TYPES = {
     REWARD: 'reward',
     FUTURESCOMMISSION: 'futurescommission',
     PARTNERCOMMISSION: 'partnercommission',
-    COMMISSION: 'commision'
+    COMMISSION: 'commision',
+    OFF_CHAIN: 'off_chain',
+    INSURANCE: 'insurance'
 };
 
 export const TransactionTabs = [
@@ -86,6 +89,17 @@ export const TransactionTabs = [
         key: TRANSACTION_TYPES.REWARD,
         localized: 'commission',
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.REWARD)
+    },
+    {
+        key: TRANSACTION_TYPES.OFF_CHAIN,
+        localized: 'off_chain',
+        href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.OFF_CHAIN)
+    },
+    {
+        key: TRANSACTION_TYPES.INSURANCE,
+        localized: null,
+        title: 'Nami Insurance',
+        href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.INSURANCE)
     }
 ];
 
@@ -103,8 +117,11 @@ export const COLUMNS_TYPE = {
     STAKING_SNAPSHOT: 'staking_snapshot',
     FIAT_USER: 'fiat_user',
     SIDETYPE: 'sidetype',
+    INSURANCE_EXPECT: 'insurance_expect',
+    INSURANCE_PAIR: 'insurance_pair',
     FUTURES_ORDER_VALUE: 'futures_order_value',
-    CONVERT_ASSET: 'convert_asset'
+    CONVERT_ASSET: 'convert_asset',
+    OFF_CHAIN: 'off_chain'
 };
 
 export const modalDetailColumn = {
@@ -147,12 +164,19 @@ export const modalDetailColumn = {
         { keys: ['additionalData.network'], localized: 'modal_detail.network' },
         { keys: ['additionalData.metadata.txhash'], localized: 'modal_detail.txhash', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true }
     ],
+    [TRANSACTION_TYPES.INSURANCE]: [
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
+        { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
+        { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
+        { keys: ['assets'], localized: 'modal_detail.pair', type: COLUMNS_TYPE.INSURANCE_PAIR },
+        { keys: ['additionalData.payload.side'], localized: 'modal_detail.expect', type: COLUMNS_TYPE.INSURANCE_EXPECT },
+        { keys: ['additionalData.payload._id'], localized: 'modal_detail.contract_id', type: COLUMNS_TYPE.COPIEDABLE }
+    ],
     [TRANSACTION_TYPES.FUTURES]: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
         { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
         { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
         { keys: ['additionalData.symbol'], localized: 'modal_detail.pair', type: COLUMNS_TYPE.SYMBOL },
-        // { keys: ['additionalData.close_price'], localized: 'modal_detail.close_price', type: COLUMNS_TYPE.FUTURES_ORDER },
         { keys: ['additionalData.side', 'additionalData.type'], localized: 'modal_detail.type', primaryTeal: true, type: COLUMNS_TYPE.SIDETYPE },
         {
             keys: ['additionalData.order_value'],
@@ -189,7 +213,6 @@ export const modalDetailColumn = {
         { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
         { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
         { keys: ['nami_system'], localized: 'modal_detail.from', type: COLUMNS_TYPE.NAMI_SYSTEM }
-        // { keys: ['additionalData.reward'], localized: 'modal_detail.assets_number', type: COLUMNS_TYPE.NUMBER_OF_ASSETS }
     ],
     [TRANSACTION_TYPES.STAKING]: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
@@ -218,6 +241,25 @@ export const modalDetailColumn = {
             localized: 'modal_detail.to',
             type: COLUMNS_TYPE.FIAT_USER
         }
+    ],
+    [TRANSACTION_TYPES.OFF_CHAIN]: [
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
+        { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
+        { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
+        {
+            keys: ['additionalData.metadata.fromUser.code'],
+            backupKeys: ['result.metadata.fromUser.code'],
+            localized: 'modal_detail.from',
+            type: COLUMNS_TYPE.COPIEDABLE
+        },
+        {
+            keys: ['additionalData.metadata.toUser.code'],
+            backupKeys: ['result.metadata.toUser.code'],
+            localized: 'modal_detail.to',
+            type: COLUMNS_TYPE.COPIEDABLE
+        },
+
+        { keys: ['additionalData.metadata.note'], localized: 'modal_detail.note' }
     ],
     common: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },

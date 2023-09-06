@@ -187,6 +187,7 @@
     "convert_small": "Convert small balances to {{ asset }}",
     "convert_small_mobile": "Convert to {{ asset }}",
     "convert_small_balance": "Convert small balance",
+    "buy_insurance": "Buy Cover",
     "asset": "Asset",
     "value": "Value",
     "selected": "Selected",

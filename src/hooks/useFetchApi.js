@@ -9,7 +9,9 @@ const useFetchApi = ({ url = '', params, successCallBack = () => {} }, condition
 
     useEffect(() => {
         const source = axios.CancelToken.source();
-        if(isNotFetch) return setData(null)
+        let mounted = false;
+
+        if (isNotFetch) return setData(null);
         if (condition) {
             (async () => {
                 try {
@@ -20,15 +22,20 @@ const useFetchApi = ({ url = '', params, successCallBack = () => {} }, condition
                     } else {
                         setData(null);
                     }
-                    successCallBack();
+                    successCallBack(data);
                 } catch (error) {
                     setError(error);
                 } finally {
-                    setLoading(false);
+                    if (mounted) {
+                        setLoading(true);
+                    } else setLoading(false);
                 }
             })();
         }
-        return () => source.cancel();
+        return () => {
+            mounted = true;
+            source.cancel();
+        };
     }, dependencies);
 
     return { data, loading, error };

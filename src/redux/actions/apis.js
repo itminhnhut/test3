@@ -1,6 +1,9 @@
+
 const API_PREFIX = `/api/v1/`;
 const API_V2_PREFIX = `/api/v2/`;
 const API_V3_PREFIX = `/api/v3/`;
+export const INSURANCE_API_URL = process.env.NEXT_PUBLIC_INSURANCE_API_URL || 'https://api.namiinsurance.io/api';
+
 const BLOG_API_PREFIX = `${process.env.NEXT_PUBLIC_BLOG_API_URL}/ghost/api/v3/content`;
 
 export const getBlogApi = (apiEndpoint, params) => {
@@ -373,6 +376,12 @@ export const API_MARKETING_EVENT = API_PREFIX + 'marketing/event';
 // Staking statics
 export const API_HISTORY_STAKING_DAILY_OVERVIEW = API_V3_PREFIX + 'wallet/history/staking-daily/overview';
 
+
+// Insurance
+export const API_AUTH_INSURANCE = API_V3_PREFIX + 'auth/oauth-insurance';
+export const API_USER_INSURANCE_HISTORY = API_PREFIX + 'user/insurance'
+export const API_CONFIG_INSURANCE_RULE = `${INSURANCE_API_URL}/insurance/v1/get-insurance-rule`
+
 // ** NFT
 export const API_GET_LIST_NFT = API_V3_PREFIX + 'nft';
 export const API_GET_COLLECTION = API_V3_PREFIX + 'nft/collection';
@@ -388,5 +397,8 @@ export const API_GET_CHECK_NAMI_CODE_NFT = API_V3_PREFIX + 'nft/check-nami-code'
 //** spot
 export const API_GET_SPOT_ASSET_INFO = API_V3_PREFIX + 'spot/asset_info';
 
+// DEPOSIT TO NAMIID - EMAIL
+export const API_SEARCH_USER = API_V3_PREFIX + 'payment/check-user';
+export const API_DEPOSIT_CRYPTO = API_V3_PREFIX + 'payment/transfer-off-chain';
 // auth
 export const GOOGLE_OAUTH_CALLBACK = API_V3_PREFIX + 'auth/callback/google';

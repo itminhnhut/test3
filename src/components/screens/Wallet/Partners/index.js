@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { formatNumber as formatWallet, setTransferModal } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { PartnersIcon } from 'components/svg/SvgIcon';
+import { PartnersIcon, PortfolioIcon } from 'components/svg/SvgIcon';
 
 import { SECRET_STRING } from 'utils';
 
@@ -20,6 +20,7 @@ import SearchBoxV2 from 'components/common/SearchBoxV2';
 import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import Link from 'next/link';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -191,7 +192,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
     const renderEstWallet = useCallback(() => {
         return (
             <div className="mt-[24px] md:mt-12 flex items-center justify-between">
-                <div className="hidden md:flex rounded-full dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
+                <div className="hidden md:flex rounded-full bg-gray-13 dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
                     <PartnersIcon size={32} />
                 </div>
                 <div>
@@ -279,13 +280,22 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                     </div>
 
                     <div className="hidden md:block">
-                        <div className="flex items-end justify-end h-full w-full ">
+                        <div className="flex space-x-3 items-end justify-end h-full w-full ">
                             <ButtonV2
                                 onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.BROKER, toWallet: WalletType.SPOT }))}
                                 className="!px-6 !py-3 !font-semibold !text-base"
                             >
                                 {t('common:transfer')}
                             </ButtonV2>
+                            {/* <Link href={'/statistics/commission'} passHref>
+                                <a className="block">
+                                    <ButtonV2 variants="secondary" className="px-6 py-3 !space-x-2 !font-semibold !text-base !w-auto">
+                                        <PortfolioIcon size={16} />
+
+                                        <span>{t('wallet:statistics')}</span>
+                                    </ButtonV2>
+                                </a>
+                            </Link> */}
                         </div>
                     </div>
                 </div>

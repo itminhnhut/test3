@@ -1,18 +1,44 @@
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
-const FutureInsurance = ({ size }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
-        <path d="M12.231 2.4 5.6 6.261V9.27l6.631-3.956 6.625 3.956V6.261l-6.625-3.86z" fill={'#EB2B3D'} />
-        <path
-            d="M18.884 10.322v2.534a8.718 8.718 0 0 1-3.928 7.214c-.678.48-2.71 1.53-2.71 1.53l-2.648-1.483c.928-.325 1.815-.76 2.641-1.294l.258-.162a8.568 8.568 0 0 0 3.712-7.072V9.02l2.675 1.301z"
-            fill={'#EB2B3D'}
-        />
-        <path
-            d="M11.73 18.457c-.823.53-1.702.966-2.622 1.301l-.528-.42a8.576 8.576 0 0 1-2.98-6.503v-2.242l2.71-1.572v2.561a8.582 8.582 0 0 0 3.42 6.875z"
-            fill={'#EB2B3D'}
-        />
-    </svg>
-);
+const FutureInsurance = ({ size, mode }) => {
+    return mode === 'disabled_lm' ? (
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 30 30" fill="none">
+            <path d="M15.29 3 7 7.826v3.76l8.29-4.945 8.28 4.945v-3.76L15.29 3z" fill="#EEF3F5" />
+            <path
+                d="M23.606 12.902v3.167a10.898 10.898 0 0 1-4.911 9.017c-.847.602-3.387 1.914-3.387 1.914l-3.31-1.854c1.16-.407 2.269-.95 3.301-1.618l.322-.203a10.713 10.713 0 0 0 4.64-8.84v-3.209l3.345 1.626z"
+                fill="#C5D1DB"
+            />
+            <path
+                d="M14.663 23.071a16.56 16.56 0 0 1-3.277 1.626l-.66-.525A10.72 10.72 0 0 1 7 16.043v-2.802l3.387-1.965v3.2a10.728 10.728 0 0 0 4.276 8.595z"
+                fill="#C5D1DB"
+            />
+        </svg>
+    ) : mode === 'disabled_dm' ? (
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 30 30" fill="none">
+            <path d="M15.29 3 7 7.826v3.76l8.29-4.945 8.28 4.945v-3.76L15.29 3z" fill="#262E40" />
+            <path
+                d="M23.606 12.902v3.167a10.898 10.898 0 0 1-4.911 9.017c-.847.602-3.387 1.914-3.387 1.914l-3.31-1.854c1.16-.407 2.269-.95 3.301-1.618l.322-.203a10.713 10.713 0 0 0 4.64-8.84v-3.209l3.345 1.626z"
+                fill="#393F4D"
+            />
+            <path
+                d="M14.663 23.071a16.56 16.56 0 0 1-3.277 1.626l-.66-.525A10.72 10.72 0 0 1 7 16.043v-2.802l3.387-1.965v3.2a10.728 10.728 0 0 0 4.276 8.595z"
+                fill="#393F4D"
+            />
+        </svg>
+    ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
+            <path d="M12.231 2.4 5.6 6.261V9.27l6.631-3.956 6.625 3.956V6.261l-6.625-3.86z" fill={'#EB2B3D'} />
+            <path
+                d="M18.884 10.322v2.534a8.718 8.718 0 0 1-3.928 7.214c-.678.48-2.71 1.53-2.71 1.53l-2.648-1.483c.928-.325 1.815-.76 2.641-1.294l.258-.162a8.568 8.568 0 0 0 3.712-7.072V9.02l2.675 1.301z"
+                fill={'#EB2B3D'}
+            />
+            <path
+                d="M11.73 18.457c-.823.53-1.702.966-2.622 1.301l-.528-.42a8.576 8.576 0 0 1-2.98-6.503v-2.242l2.71-1.572v2.561a8.582 8.582 0 0 0 3.42 6.875z"
+                fill={'#EB2B3D'}
+            />
+        </svg>
+    );
+};
 
 const ArrowDownIcon = ({ className = '', color = '#8694B3' }) => (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -463,10 +489,10 @@ const AddCircleIcon = ({ color = '#768394', ...props }) => (
     </svg>
 );
 
-const AddCircleColorIcon = (props) => (
-    <svg {...props} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+const AddCircleColorIcon = ({ size = 12, color = '#47CC85', ...rest }) => (
+    <svg {...rest} width={size} height={size} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#zfktez410a)">
-            <path d="M6 1C3.24 1 1 3.24 1 6s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm2.5 5.5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1z" fill="#47CC85" />
+            <path d="M6 1C3.24 1 1 3.24 1 6s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm2.5 5.5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1z" fill={color} />
         </g>
         <defs>
             <clipPath id="zfktez410a">
@@ -635,9 +661,37 @@ const TuneIcon = ({ size = 16, color, ...props }) => (
     </svg>
 );
 
-const PartnersIcon = ({ size, color, ...props }) => {
-    return (
-        <svg {...props} width={size || 32} height={size || 32} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+const PartnersIcon = ({ size = 32, color, mode, ...props }) => {
+    return mode === 'disabled_lm' ? (
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} {...props} viewBox="0 0 30 30" fill="none">
+            <path
+                d="M22.225 21.175a2.41 2.41 0 0 1-2.406 2.417A2.402 2.402 0 0 1 17.396 26a3.388 3.388 0 0 1-4.812 0l-7.218-7.233 4.812-4.825a3.39 3.39 0 0 1 4.82 0l-3.608 3.612a3.387 3.387 0 0 0 4.812 0l1.194-1.204 4.83 4.825z"
+                fill="#CEDAE5"
+            />
+            <path d="m24.636 18.767-2.414 2.408-7.227-7.233a3.389 3.389 0 0 1 4.82 0l4.821 4.825z" fill="#EEF3F5" />
+            <path d="M9.39 13.89 4.983 18.3 2.994 16.3l4.405-4.41 1.99 2.002z" fill="#CEDAE5" />
+            <path d="m7.399 11.898 1.99 1.993-4.405 4.41-1.99-2.002 4.405-4.401z" fill="#CEDAE5" />
+            <path d="m22.59 11.882-1.99 1.99 4.404 4.408 1.988-1.991-4.402-4.407z" fill="#EEF3F5" />
+            <path d="m17.265 16.158-1.203 1.204a3.39 3.39 0 0 1-4.812 0l3.61-3.612 2.405 2.408z" fill="#C5D1DB" />
+            <path d="m14.993 3.003-3.516 3.52 3.516 3.52 3.517-3.52-3.517-3.52z" fill="#EEF3F5" />
+            <path d="m7.733 5.333-1.18 1.182 1.18 1.181 1.18-1.181-1.18-1.182zM22.13 5.33l-1.18 1.181 1.18 1.182 1.18-1.182-1.18-1.181z" fill="#C5D1DB" />
+        </svg>
+    ) : mode === 'disabled_dm' ? (
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} {...props} viewBox="0 0 30 30" fill="none">
+            <path
+                d="M22.225 21.175a2.41 2.41 0 0 1-2.406 2.417A2.402 2.402 0 0 1 17.396 26a3.388 3.388 0 0 1-4.812 0l-7.218-7.233 4.812-4.825a3.39 3.39 0 0 1 4.82 0l-3.608 3.612a3.387 3.387 0 0 0 4.812 0l1.194-1.204 4.83 4.825z"
+                fill="#464D5C"
+            />
+            <path d="m24.636 18.767-2.414 2.408-7.227-7.233a3.389 3.389 0 0 1 4.82 0l4.821 4.825z" fill="#262E40" />
+            <path d="M9.39 13.89 4.983 18.3 2.994 16.3l4.405-4.41 1.99 2.002z" fill="#464D5C" />
+            <path d="m7.399 11.898 1.99 1.993-4.405 4.41-1.99-2.002 4.405-4.401z" fill="#464D5C" />
+            <path d="m22.59 11.882-1.99 1.99 4.404 4.408 1.988-1.991-4.402-4.407z" fill="#262E40" />
+            <path d="m17.265 16.158-1.203 1.204a3.39 3.39 0 0 1-4.812 0l3.61-3.612 2.405 2.408z" fill="#393F4D" />
+            <path d="m14.993 3.003-3.516 3.52 3.516 3.52 3.517-3.52-3.517-3.52z" fill="#262E40" />
+            <path d="m7.733 5.333-1.18 1.182 1.18 1.181 1.18-1.181-1.18-1.182zM22.13 5.33l-1.18 1.181 1.18 1.182 1.18-1.182-1.18-1.181z" fill="#393F4D" />
+        </svg>
+    ) : (
+        <svg {...props} width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M23.707 22.587a2.571 2.571 0 0 1-1.582 2.381c-.312.13-.647.197-.984.197a2.564 2.564 0 0 1-1.596 2.38c-.314.128-.65.192-.989.188a3.615 3.615 0 0 1-5.133 0l-7.7-7.715 5.134-5.147a3.615 3.615 0 0 1 5.142 0l-3.85 3.853a3.613 3.613 0 0 0 5.133 0l1.274-1.284 5.151 5.147z"
                 fill="#9FF2C5"
@@ -689,6 +743,22 @@ const CopyIcon = ({ color = '#8694B3', ...props }) => (
         <defs>
             <clipPath id="piv8lb9sya">
                 <path fill="#fff" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const ContentCopyIcon = ({ color = 'currentColor', size = 12 }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 12 12" fill="none">
+        <g clipPath="url(#63l1ohfwla)">
+            <path
+                d="M8 .5H2c-.55 0-1 .45-1 1v7h1v-7h6v-1zm1.5 2H4c-.55 0-1 .45-1 1v7c0 .55.45 1 1 1h5.5c.55 0 1-.45 1-1v-7c0-.55-.45-1-1-1zm0 8H4v-7h5.5v7z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="63l1ohfwla">
+                <path fill="#fff" d="M0 0h12v12H0z" />
             </clipPath>
         </defs>
     </svg>
@@ -1686,6 +1756,40 @@ const IconClose = ({ size = 24 }) => {
     );
 };
 
+const NAOIconDisable = ({ size = 24, mode = 'disabled_lm' }) => {
+    return mode === 'disabled_lm' ? (
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 30 30" fill="none">
+            <path
+                d="M14.941 3A11.95 11.95 0 0 0 8.33 5.007h4.33a3.514 3.514 0 0 1 3.063 1.775l2.006 3.462 2.744 4.775-2.777 4.785h4a3.513 3.513 0 0 0 3.063-1.775l2.204-3.749a12.011 12.011 0 0 0-3.77-8.032A11.995 11.995 0 0 0 14.941 3z"
+                fill="#C5D1DB"
+            />
+            <path
+                d="M4.621 21.001A12.044 12.044 0 0 0 9.7 25.777l-2.212-3.77a3.569 3.569 0 0 1 0-3.548L9.5 14.988l2.766-4.787h5.532L15.784 6.73a3.528 3.528 0 0 0-3.075-1.78H8.383a12.02 12.02 0 0 0-3.761 16.051z"
+                fill="#EEF3F5"
+            />
+            <path
+                d="M25.413 20.979a11.88 11.88 0 0 0 1.56-6.728l-2.212 3.75a3.524 3.524 0 0 1-3.01 1.764h-9.536L9.45 15.002l-2.013 3.474a3.553 3.553 0 0 0 0 3.54l2.212 3.75a12.083 12.083 0 0 0 8.832.714 12.041 12.041 0 0 0 6.933-5.5z"
+                fill="#CEDAE5"
+            />
+        </svg>
+    ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 30 30" fill="none">
+            <path
+                d="M14.941 3A11.95 11.95 0 0 0 8.33 5.007h4.33a3.514 3.514 0 0 1 3.063 1.775l2.006 3.462 2.744 4.775-2.777 4.785h4a3.513 3.513 0 0 0 3.063-1.775l2.204-3.749a12.01 12.01 0 0 0-3.77-8.032A11.995 11.995 0 0 0 14.941 3z"
+                fill="#393F4D"
+            />
+            <path
+                d="M4.621 21.001A12.044 12.044 0 0 0 9.7 25.777l-2.212-3.77a3.569 3.569 0 0 1 0-3.548L9.5 14.988l2.766-4.787h5.532L15.784 6.73a3.528 3.528 0 0 0-3.075-1.78H8.383a12.02 12.02 0 0 0-3.761 16.051z"
+                fill="#262E40"
+            />
+            <path
+                d="M25.413 20.979a11.88 11.88 0 0 0 1.56-6.728l-2.212 3.75a3.524 3.524 0 0 1-3.01 1.764h-9.536L9.45 15.002l-2.013 3.474a3.553 3.553 0 0 0 0 3.54l2.212 3.75a12.083 12.083 0 0 0 8.832.714 12.041 12.041 0 0 0 6.933-5.5z"
+                fill="#464D5C"
+            />
+        </svg>
+    );
+};
+
 const CheckCircle2Icon = ({ size = '16' }) => {
     const [currentTheme] = useDarkMode();
     const defaultColor = currentTheme === THEME_MODE.DARK ? '#47CC85' : '#30BF73';
@@ -1785,6 +1889,8 @@ export {
     VietnamFlagIcon,
     FilterSharpIcon,
     NoResultIcon,
+    ContentCopyIcon,
+    NAOIconDisable,
     IconClose,
     CheckCircle2Icon,
     BxsInfoCircleV2,

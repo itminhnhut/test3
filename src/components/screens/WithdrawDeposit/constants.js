@@ -22,7 +22,8 @@ export const MODE = {
 
 export const TYPE_DW = {
     PARTNER: 'partner',
-    CRYPTO: 'crypto'
+    CRYPTO: 'crypto',
+    ID_EMAIL: 'namiid-email'
 };
 
 export const TranferreredType = {

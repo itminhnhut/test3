@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import TagV2 from 'components/common/V2/TagV2';
-import { formatSwapRate, formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
+import { formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
 import { X } from 'react-feather';
 import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
 import axios from 'axios';
@@ -9,32 +9,24 @@ import { ApiStatus } from 'redux/actions/const';
 import AssetLogo from '../../wallet/AssetLogo';
 import Skeletor from 'components/common/Skeletor';
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import { find, get, isNumber, isString } from 'lodash';
+import get from 'lodash/get';
+import isNumber from 'lodash/isNumber';
+import isString from 'lodash/isString';
 import classNames from 'classnames';
 import { TRANSACTION_TYPES, modalDetailColumn, COLUMNS_TYPE } from './constant';
-import { WalletType, EarnWalletType } from 'redux/actions/const';
+import { WalletTypeById, WalletType } from 'redux/actions/const';
 import { ArrowCompareIcon } from '../../svg/SvgIcon';
 import { customFormatBalance } from '.';
 
 const NULL_ASSET = '--';
-export const WalletTypeById = {
-    0: WalletType.SPOT,
-    1: WalletType.MARGIN,
-    2: WalletType.FUTURES,
-    3: WalletType.P2P,
-    4: WalletType.POOL,
-    5: WalletType.EARN,
-    6: EarnWalletType.STAKE,
-    7: EarnWalletType.FARM,
-    8: WalletType.BROKER,
-    9: WalletType.NAO_FUTURES
-};
+
 const renderWallet = ({ t, key, language }) => {
     const wallet = {
         [WalletType.SPOT]: t('common:wallet', { wallet: 'Nami Spot' }),
         [WalletType.FUTURES]: t('common:wallet', { wallet: 'Nami Futures' }),
         [WalletType.BROKER]: t('common:wallet', { wallet: language === 'vi' ? 'hoa hồng Nami' : 'Nami Commission' }),
-        [WalletType.NAO_FUTURES]: t('common:wallet', { wallet: 'NAO Futures' })
+        [WalletType.NAO_FUTURES]: t('common:wallet', { wallet: 'NAO Futures' }),
+        [WalletType.INSURANCE]: 'Insurance' // t('common:wallet', { wallet: 'Insurance' })
     };
 
     const walletType = WalletTypeById[key];
@@ -136,7 +128,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                             <div className="flex w-full mb-6 justify-end rounded-md hover:opacity-50 transition-opacity cursor-pointer" onClick={onClose}>
                                 <X size={24} />
                             </div>
-                            <div className="mb-6 flex w-full items-start capitalize">
+                            <div className="mb-6 flex w-full items-start">
                                 {detailTx?.categoryContent?.[language] ?? t('transaction-history:default_category')}
                             </div>
                             <div className="mb-6">
@@ -282,6 +274,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     case COLUMNS_TYPE.NAMI_SYSTEM:
                                         formatKeyData = t('transaction-history:nami_system');
                                         break;
+
                                     case COLUMNS_TYPE.STAKING_SNAPSHOT:
                                         asset = assetConfig.find((asset) => asset.id === get(detailTx, col.keys[1]));
                                         formatKeyData = (
@@ -315,6 +308,35 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             )} ${type ? t('transaction-history:' + type) : ''}`}</div>
                                         );
                                         break;
+                                    case COLUMNS_TYPE.INSURANCE_EXPECT:
+                                        const sideInsurance =
+                                            get(detailTx, col.keys[0])?.toLowerCase() ||
+                                            get(detailTx, 'result.metadata.payload.side')?.toLowerCase() ||
+                                            NULL_ASSET;
+                                        formatKeyData = (
+                                            <div
+                                                className={classNames(
+                                                    'capitalize',
+                                                    { 'text-red': ['bear', 'sell'].includes(sideInsurance) },
+                                                    { 'text-green-3 dark:text-green-2': ['bull', 'buy'].includes(sideInsurance) }
+                                                )}
+                                            >
+                                                {['buy', 'sell', 'bull', 'bear'].includes(sideInsurance)
+                                                    ? t('transaction-history:modal_detail.expect_' + sideInsurance)
+                                                    : NULL_ASSET}
+                                            </div>
+                                        );
+                                        break;
+                                    case COLUMNS_TYPE.INSURANCE_PAIR:
+                                        symbol = {
+                                            baseAsset:
+                                                get(detailTx, 'additionalData.payload.asset_covered') || get(detailTx, 'result.metadata.payload.asset_covered'),
+                                            quoteAsset:
+                                                get(detailTx, 'additionalData.payload.quote_asset') || get(detailTx, 'result.metadata.payload.quote_asset')
+                                        };
+
+                                        formatKeyData = `${symbol?.baseAsset || NULL_ASSET}/${symbol?.quoteAsset || NULL_ASSET}`;
+                                        break;
                                     case COLUMNS_TYPE.DEPOSIT_WITHDRAW_FEE:
                                         const fee = get(detailTx, col.keys[0]) || get(detailTx, 'result.metadata.fee.value') || 0;
 
@@ -336,26 +358,36 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     default:
                                         break;
                                 }
-                                if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
+                                if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW || detailTx.type === TRANSACTION_TYPES.OFF_CHAIN) {
+                                    // Nạp Rút on_chain:
                                     // not showing "To" on type deposit (nạp)
                                     // not showing "From" on type withdraw (rút)
                                     if (
                                         (detailTx.result.category === 4 && col.localized === 'modal_detail.to') ||
                                         (detailTx.result.category === 5 && col.localized === 'modal_detail.from')
-                                    )
+                                    ) {
                                         return null;
-
+                                    }
                                     // not showing "Fee" on type deposit (nạp)
                                     if (detailTx.result.category === 4 && col.localized === 'modal_detail.fee') {
+                                        return null;
+                                    }
+
+                                    //Nạp Rút off_chain:
+                                    // category 51 (Gửi tiền) bỏ field from
+                                    if (detailTx.result.category === 51 && col.localized === 'modal_detail.from') {
                                         return null;
                                     }
                                 }
                                 return (
                                     <div key={col.localized} className="flex justify-between py-3 items-center">
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark max-w-[170px]">
+                                        <div className="text-txtSecondary w-full dark:text-txtSecondary-dark max-w-[170px]">
                                             {t(`transaction-history:${col.localized}`)}
                                         </div>
                                         <div
+                                            style={{
+                                                wordBreak: 'break-word'
+                                            }}
                                             className={classNames('ml-2 text-right font-semibold text-txtPrimary  dark:text-txtPrimary-dark', {
                                                 '!text-dominant': col.primaryTeal
                                             })}

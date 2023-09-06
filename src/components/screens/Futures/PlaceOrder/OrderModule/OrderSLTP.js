@@ -80,7 +80,7 @@ const FuturesOrderSLTP = ({
                 validator={inputValidator('take_profit')}
                 onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, tp: value })}
                 labelClassName="whitespace-nowrap"
-                containerClassName="w-full dark:bg-dark-2"
+                containerClassName="w-full dark:bg-dark-2 !h-11"
                 tailContainerClassName="flex items-center font-medium text-xs select-none"
                 renderTail={
                     canShowChangeTpSL && <AddCircleIcon className="cursor-pointer" color={isDark ? colors.gray[1] : colors.gray[7]} onClick={onChangeTpSL} />
@@ -90,7 +90,7 @@ const FuturesOrderSLTP = ({
             />
 
             <TradingInput
-                containerClassName="w-full dark:bg-dark-2"
+                containerClassName="w-full dark:bg-dark-2 !h-11"
                 clearAble
                 label={t('futures:stop_loss')}
                 allowNegative={false}

@@ -9,7 +9,8 @@ export const LOCAL_STORAGE_KEY = {
     SPOT_GRID_LAYOUT: 'gridLayoutSpot',
     SPOT_SETTING_LAYOUT: 'settingLayoutSpot',
     FUTURE_GRID_LAYOUT: 'gridLayoutFutures',
-    FUTURE_SETTING_LAYOUT: 'settingLayoutFutures'
+    FUTURE_SETTING_LAYOUT: 'settingLayoutFutures',
+    ACCEPT_PURCHASE_INSURANCE_ALERT:'acceptPurchaseInsuranceAlert'
 };
 
 const TokenConfigNetwork = {
@@ -486,12 +487,27 @@ export const WalletType = {
     BROKER: 'BROKER',
     EARN: 'EARN',
     ONUS: 'ONUS',
+    INSURANCE: 'INSURANCE',
     NAO_FUTURES: 'NAO_FUTURES'
 };
 
 export const EarnWalletType = {
     STAKING: 'stake',
     FARMING: 'farm'
+};
+
+export const WalletTypeById = {
+    0: WalletType.SPOT,
+    1: WalletType.MARGIN,
+    2: WalletType.FUTURES,
+    3: WalletType.P2P,
+    4: WalletType.POOL,
+    5: WalletType.EARN,
+    6: EarnWalletType.STAKE,
+    7: EarnWalletType.FARM,
+    8: WalletType.BROKER,
+    9: WalletType.NAO_FUTURES,
+    10: WalletType.INSURANCE
 };
 
 export const WalletTypeReducerKey = {
@@ -851,7 +867,9 @@ export const UserSocketEvent = {
     PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER',
     SMART_OTP: 'SMART_OTP',
     USER_CREATE_ORDER: 'USER_CREATE_ORDER',
-    PARTNER_UPDATE_ORDER_AUTO_SUGGEST: 'PARTNER_UPDATE_ORDER_AUTO_SUGGEST'
+    PARTNER_UPDATE_ORDER_AUTO_SUGGEST: 'PARTNER_UPDATE_ORDER_AUTO_SUGGEST',
+
+    INSURANCE_CONTRACTS: 'insurance:update:insurance'
 };
 
 export const EarnOrder_Status = {

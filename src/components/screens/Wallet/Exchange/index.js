@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { dwLinkBuilder, formatNumber as formatWallet, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
-import { MoreHorizIcon } from 'components/svg/SvgIcon';
+import { BxChevronDown, FutureInsurance, MoreHorizIcon } from 'components/svg/SvgIcon';
 
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils';
@@ -29,8 +29,8 @@ import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceTo
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import InsuranceButton from './InsuranceButton';
 import { ChevronRight } from 'react-feather';
-import colors from 'styles/colors';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -84,7 +84,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     const renderEstWallet = useCallback(() => {
         return (
             <div className="mt-[24px] md:mt-12 flex items-center justify-between">
-                <div className="hidden md:flex rounded-full dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
+                <div className="hidden md:flex rounded-full bg-gray-13 dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
                     <SvgWalletExchange size={32} />
                 </div>
                 <div>
@@ -557,13 +557,15 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
             </div> */}
 
             {/* Khi nao co Function Chuyen so du nho thanh Nami thi enable code nay */}
-            <div className="mt-12 md:mt-16 lg:items-center lg:justify-between">
+            <div className="mt-4 md:mt-16 lg:items-center lg:justify-between">
                 <div className="t-common-v2 hidden md:block">
                     {language === LANGUAGE_TAG.VI ? 'Ví' : ''} {t('wallet:spot_short')}
                 </div>
-                <div className="flex items-end justify-between md:pt-8">
-                    <TransferSmallBalanceToNami className="hidden md:flex" width={width} allAssets={allAssets} />
-
+                <div className="flex items-end justify-between md:pt-8 w-full md:w-fit flex-wrap">
+                    <div className="flex items-center mb-12 md:mb-0">
+                        <TransferSmallBalanceToNami className="hidden md:flex mr-4" width={width} allAssets={allAssets} />
+                        <InsuranceButton />
+                    </div>
                     {isSmallScreen ? (
                         <div className="w-full flex items-center justify-between">
                             <SearchBoxV2

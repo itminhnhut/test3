@@ -5,10 +5,11 @@ import { FilterWrapper } from '.';
 import { useSelector } from 'react-redux';
 import { List } from 'react-virtualized';
 import classNames from 'classnames';
-import { sortBy } from 'lodash';
+import sortBy from 'lodash/sortBy';
 import { X } from 'react-feather';
 import NoResult from 'components/screens/Support/NoResult';
 import { CheckCircleIcon } from 'components/svg/SvgIcon';
+import { filterSearch } from 'redux/actions/utils';
 
 const AssetFilter = ({ asset, setAsset, t }) => {
     const popoverRef = useRef(null);
@@ -17,16 +18,11 @@ const AssetFilter = ({ asset, setAsset, t }) => {
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
 
     const fitlerAssets = useMemo(() => {
-        return sortBy(
-            assetConfigs.filter((asset) =>
-                search ? asset?.assetCode?.toLowerCase().includes(search.toLowerCase()) || asset?.assetName?.toLowerCase().includes(search.toLowerCase()) : true
-            ),
-            [
-                function (asset) {
-                    return asset?.assetCode;
-                }
-            ]
-        );
+        return sortBy(filterSearch(assetConfigs, ['assetCode', 'assetName'], search), [
+            function (asset) {
+                return asset?.assetCode;
+            }
+        ]);
     }, [assetConfigs, search]);
 
     const rowRenderer = useCallback(

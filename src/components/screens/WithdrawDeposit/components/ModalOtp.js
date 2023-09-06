@@ -83,13 +83,18 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUse
     };
 
     const onConfirmHandler = async (otp) => {
+        let isError = false;
         try {
             const response = await onConfirm(otp);
-            if (response?.status === ApiResultCreateOrder.INVALID_OTP) {
+            if (typeof response?.status === 'string' && response.status.toUpperCase() === ApiResultCreateOrder.INVALID_OTP) {
                 onFocusFirstInput();
-                setState({ otp: INITAL_OTP_STATE, isError: true });
+                isError = true;
             }
-        } catch (error) {}
+        } catch (error) {
+            isError = true;
+        } finally {
+            setState({ otp: INITAL_OTP_STATE, isError });
+        }
     };
 
     const doPaste = async (mode) => {
