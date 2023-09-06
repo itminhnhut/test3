@@ -519,15 +519,14 @@ const TradingFee = () => {
                 )}
             </div>
 
-            <div className="mt-12 md:mt-8 space-y-2 nami-list-disc">
-                <div className="flex items-center">
-                    {t('fee-structure:maker_taker_description')}
-                    <span className="ml-2">{t('fee-structure:maker_taker_description_2')}</span>
-                    <HrefButton variants="blank" className="!w-auto ml-3 !py-0" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank">
+            <div className="mt-12 md:mt-8 space-y-2 nami-list-disc text-sm md:text-base">
+                <div className="">
+                    {t('fee-structure:maker_taker_description')} {t('fee-structure:maker_taker_description_2')}.
+                    <HrefButton variants="blank" className="!inline !pl-1" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank">
                         {t('fee-structure:read_more')}
                     </HrefButton>
                 </div>
-                <div className="flex items-center">
+                <div className="">
                     {t('fee-structure:referral_description_value', { value: '20%' })}
                     {isApp ? (
                         <span
@@ -539,7 +538,7 @@ const TradingFee = () => {
                     ) : (
                         <HrefButton
                             variants="blank"
-                            className="!w-auto ml-3 !py-0"
+                            className="!inline !py-0 !pl-1"
                             href={language === LANGUAGE_TAG.VI ? PATHS.ACCOUNT.REFERRAL_VI : PATHS.ACCOUNT.REFERRAL}
                             target="_blank"
                         >
