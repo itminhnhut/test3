@@ -97,6 +97,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                         options={defaultOption}
                         value={valueCommission}
                         popoverClassName="w-[129px]"
+                        popoverPanelClassName="w-max"
                         onChange={(e) => onChangeOption(e, 'commission')}
                         icon={<CheckCircleIcon color="currentColor" size={16} />}
                         optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
@@ -126,6 +127,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                         displayExpr="title"
                         value={valueOrderVol}
                         options={defaultOption}
+                        popoverPanelClassName="w-max"
                         popoverClassName="w-[129px]"
                         onChange={(e) => onChangeOption(e, 'orderVol')}
                         icon={<CheckCircleIcon color="currentColor" size={16} />}
