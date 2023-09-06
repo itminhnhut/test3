@@ -17,7 +17,23 @@ import styled from 'styled-components';
 import { isFunction } from 'lodash';
 import { differenceInMonths } from 'date-fns';
 
-const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapperClassname, text, colorX = '#e2e8f0', onClickOutside, customHeaderCalendar, maxMonths, minDate, maxDate, ignoreAuth  }) => {
+const DatePickerV2 = ({
+    initDate,
+    isCalendar,
+    onChange,
+    month,
+    position,
+    wrapperClassname,
+    wrapperClassNameDate,
+    text,
+    colorX = '#e2e8f0',
+    onClickOutside,
+    customHeaderCalendar,
+    maxMonths,
+    minDate,
+    maxDate,
+    ignoreAuth
+}) => {
     const [showPicker, setShowPicker] = useState(false);
     const wrapperRef = useRef(null);
 
@@ -36,7 +52,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
 
     const handleOutside = () => {
         if (showPicker) {
-            if(isFunction(onClickOutside)) onClickOutside()
+            if (isFunction(onClickOutside)) onClickOutside();
             if (!isCalendar) {
                 setDate(initDate);
             }
@@ -143,7 +159,13 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                     onClick={() => onHandleClick('show_modal')}
                 >
                     <div className="flex flex-1 items-center justify-between">
-                        <div className={classNames('px-2 leading-5', { 'dark:text-gray-7 text-gray-1': !date?.startDate && !date?.endDate })}>
+                        <div
+                            className={classNames(
+                                'px-2 leading-5',
+                                { 'dark:text-gray-7 text-gray-1': !date?.startDate && !date?.endDate },
+                                wrapperClassNameDate
+                            )}
+                        >
                             {isCalendar && (date ? formatTime(date, 'dd/MM/yyyy') : 'DD/MM/YYYY')}
                             {!isCalendar &&
                                 (date?.startDate ? formatTime(date?.startDate, 'dd/MM/yyyy') : 'DD/MM/YYYY') +
@@ -172,9 +194,9 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
             >
                 <div
                     className={classNames('date-range-picker flex flex-col justify-center mt-2 w-full', {
-                        '!left-0 !absolute z-20 !w-auto': position === 'left',
-                        '!right-0 !absolute z-20 !w-auto': position === 'right',
-                        'absolute left-1/2 z-20 !w-auto -translate-x-1/2': position === 'center'
+                        '!left-0 !absolute z-50 !w-auto': position === 'left',
+                        '!right-0 !absolute z-50 !w-auto': position === 'right',
+                        'absolute left-1/2 z-50 !w-auto -translate-x-1/2': position === 'center'
                     })}
                 >
                     {customHeaderCalendar && customHeaderCalendar()}
@@ -203,7 +225,11 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                             maxDate={maxDate}
                         />
                     </DatePickerWrapper>
-                    <ButtonV2 disabled={maxMonths && Math.abs(differenceInMonths(date?.startDate, date?.endDate)) >= maxMonths} onClick={onConfirm} className="mx-6 mt-2 mb-8 w-auto">
+                    <ButtonV2
+                        disabled={maxMonths && Math.abs(differenceInMonths(date?.startDate, date?.endDate)) >= maxMonths}
+                        onClick={onConfirm}
+                        className="mx-6 mt-2 mb-8 w-auto"
+                    >
                         {t('common:global_btn.apply')}
                     </ButtonV2>
                 </div>

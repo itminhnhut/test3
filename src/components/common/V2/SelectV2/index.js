@@ -60,7 +60,6 @@ const SelectV2 = ({
                             >
                                 <div className="relative py-2">
                                     {options.map((item, index) => {
-                                        console.log('item', item, value);
                                         return (
                                             <div
                                                 key={index}

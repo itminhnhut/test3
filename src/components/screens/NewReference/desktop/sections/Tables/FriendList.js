@@ -55,7 +55,7 @@ const FriendList = ({ language, t, id }) => {
             label: t('reference:friend_list.filter.referral_date'),
             title: t('reference:friend_list.filter.referral_date'),
             position: 'left',
-            childClassName: 'min-w-[240px]'
+            wrapperDate: '!text-gray-15 dark:!text-gray-4 !text-base'
         },
         total_commissions: {
             type: 'dateRange',
@@ -67,7 +67,7 @@ const FriendList = ({ language, t, id }) => {
             values: null,
             label: t('reference:friend_list.filter.total_commissions'),
             title: t('reference:friend_list.filter.total_commissions'),
-            childClassName: 'min-w-[240px]'
+            wrapperDate: '!text-gray-15 dark:!text-gray-4 !text-base'
         },
         search: {
             type: 'input',
@@ -80,7 +80,8 @@ const FriendList = ({ language, t, id }) => {
         reset: {
             type: 'reset',
             label: '',
-            title: t('reference:friend_list.filter.reset')
+            title: t('reference:friend_list.filter.reset'),
+            buttonClassName: '!text-gray-15 dark:!text-gray-7 font-semibold text-base'
         }
     };
     const [loading, setLoading] = useState(false);

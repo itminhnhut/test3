@@ -8,6 +8,7 @@ import { WalletCurrency } from 'components/screens/OnusWithdrawGate/helper';
 import _ from 'lodash';
 import AssetLogo from 'components/wallet/AssetLogo';
 import TableV2 from 'components/common/V2/TableV2';
+import styled from 'styled-components';
 
 // Start: Do api filter date range sai nen moi can cai qq nay :D
 const timeZone = parseInt(new Date().getTimezoneOffset() / -60);
@@ -33,8 +34,8 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     ];
     const assetTabs = [
         { title: t('common:all'), value: null },
-        { title: 'VNDC', value: WalletCurrency.VNDC },
         { title: 'VNST', value: WalletCurrency.VNST },
+        { title: 'VNDC', value: WalletCurrency.VNDC },
         { title: 'NAO', value: WalletCurrency.NAO },
         { title: 'NAMI', value: WalletCurrency.NAMI },
         { title: 'ONUS', value: WalletCurrency.ONUS },
@@ -43,40 +44,43 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
 
     const filters = {
         date: {
-            type: 'daterange',
+            type: 'dateRange',
             value: {
                 startDate: null,
                 endDate: null,
                 key: 'selection'
             },
             values: null,
-            title: t('reference:referral.date'),
+            label: t('reference:friend_list.filter.referral_date'),
             position: 'left',
-            childClassName: 'min-w-[240px]'
+            wrapperDate: '!text-gray-15 dark:!text-gray-4'
         },
         level: {
-            type: 'popover',
+            type: 'select',
             value: null,
             values: levelTabs,
+            label: t('reference:referral.level'),
             title: t('reference:referral.level'),
-            childClassName: 'flex-1'
+            childClassName: 'text-sm !text-gray-15 dark:!text-gray-7'
         },
         commission_type: {
-            type: 'popover',
+            type: 'select',
             value: null,
             values: typeTabs,
-            title: t('reference:referral.commission_type'),
-            childClassName: 'flex-1'
+            label: t('reference:referral.commission_type'),
+            childClassName: 'text-sm !text-gray-15 dark:!text-gray-7'
         },
         asset_type: {
-            type: 'popover',
+            type: 'select',
             value: null,
             values: assetTabs,
-            title: t('reference:referral.asset_type'),
-            childClassName: 'flex-1'
+            label: t('reference:referral.asset_type'),
+            childClassName: 'text-sm !text-gray-15 dark:!text-gray-7'
         },
         reset: {
-            type: 'reset'
+            type: 'reset',
+            title: t('reference:friend_list.filter.reset'),
+            buttonClassName: '!h-11 !text-gray-15 dark:!text-gray-7 font-semibold text-base'
         }
     };
     const limit = 10;
@@ -195,10 +199,13 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     return (
         <div className="flex w-full" id={id}>
             <div className="w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8">
-                <div className="font-semibold text-[22px] leading-7 mx-6 mb-8">{t('reference:tabs.commission_histories')}</div>
-                <div className="flex gap-6 flex-wrap mx-6 mb-6">
-                    <TableFilter filters={filters} filter={filter} setFilter={setFilter} />
+                <div className="mb-8 mx-6 text-gray-15 dark:text-gray-4 font-semibold text-2xl">{t('reference:tabs.commission_histories')}</div>
+                <div className="flex gap-6 flex-wrap mx-6 mb-8 items-end justify-between">
+                    <WrapperFilter className="grid w-full gap-4">
+                        <TableFilter filter={filter} config={filters} type="history" setFilter={setFilter} />
+                    </WrapperFilter>
                 </div>
+
                 <TableV2
                     loading={loading}
                     useRowHover
@@ -227,5 +234,11 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         </div>
     );
 };
+
+const WrapperFilter = styled.div.attrs(({ className }) => ({
+    className: className
+}))`
+    grid-template-columns: 250px repeat(auto-fit, minmax(calc((100% - 100px) / 5), 1fr)) 83px;
+`;
 
 export default CommissionHistory;
