@@ -20,7 +20,11 @@ import TableMobileView from './TableMobileView';
 const ROWS_PER_PAGE = 10;
 export const MOBILE_ROWS_PER_PAGE = 5;
 
-export const MIN_MARGIN = 5;
+export const MIN_MAX_MARGIN = {
+    min: 5,
+    max: 10e3
+};
+
 export const MIN_MAX_RATIO = {
     min: 2,
     max: 10
@@ -75,7 +79,11 @@ const getColumns = (t) => [
         align: 'left',
         width: 262,
         render: (_) => {
-            return <div className="">{MIN_MARGIN} USDT</div>;
+            return (
+                <div className="">
+                    {MIN_MAX_MARGIN.min}/{MIN_MAX_MARGIN.max} USDT
+                </div>
+            );
         }
     },
     {

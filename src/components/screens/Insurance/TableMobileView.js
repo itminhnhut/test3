@@ -1,6 +1,6 @@
 import Skeletor from 'components/common/Skeletor';
 import React from 'react';
-import { MIN_MARGIN, MIN_MAX_RATIO, MOBILE_ROWS_PER_PAGE } from './InsuranceRules';
+import { MIN_MAX_MARGIN, MIN_MAX_RATIO, MOBILE_ROWS_PER_PAGE } from './InsuranceRules';
 import { formatNumber, getSymbolObject } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { useTranslation } from 'next-i18next';
@@ -79,7 +79,7 @@ const TableMobileView = ({ filterRulesData, loading, isSearch, page }) => {
                                 </div>
                                 <div className="flex items-center text-sm justify-between">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:insurance.min_margin')}</div>
-                                    <div>{MIN_MARGIN} USDT</div>
+                                    <div>{MIN_MAX_MARGIN.min}/{MIN_MAX_MARGIN.max} USDT</div>
                                 </div>
                                 <div className="flex items-center text-sm justify-between">
                                     <div
