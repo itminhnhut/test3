@@ -37,7 +37,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         { title: 'USDT', value: WalletCurrency.USDT }
     ];
 
-    const configs = {
+    const filters = {
         date: {
             type: 'dateRange',
             value: {
@@ -82,7 +82,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     const limit = 10;
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [filter, setFilter] = useState(configs);
+    const [filter, setFilter] = useState(filters);
     const [dataSource, setDataSource] = useState({
         results: [],
         hasNext: false,

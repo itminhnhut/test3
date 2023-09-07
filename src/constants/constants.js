@@ -1,7 +1,6 @@
 export const EMPTY_VALUE = '--';
 
 export const ONE_DAY = 86400000;
-export const ONE_DAY = 86400000;
 
 export const INSURANCE_URL = process.env.NEXT_PUBLIC_INSURANCE_URL || 'https://namiinsurance.io/';
 export const NAMI_FUTURES_EARNED_SHARE = 'NamiFutures_TakeProfit_';
