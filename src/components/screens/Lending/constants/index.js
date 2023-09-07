@@ -61,4 +61,10 @@ const FAQ = [
     }
 ];
 
-export { FAQ };
+const TABS = [
+    { label: { vi: 'Vay Crypto', en: 'Vay Crypto' }, value: 'lending' },
+    { label: { vi: 'Khoản vay của tôi', en: 'Khoản vay của tôi' }, value: 'loan' },
+    { label: { vi: 'Lịch sử khoản vay', en: 'Lịch sử khoản vay' }, value: 'history' }
+];
+
+export { FAQ, TABS };

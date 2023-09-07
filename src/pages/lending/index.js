@@ -10,6 +10,7 @@ import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
 // ** Dynamic components
 const HeaderLending = dynamic(() => import('components/screens/Lending/Header'), { ssr: true });
+const CryptoLending = dynamic(() => import('components/screens/Lending/CryptoLending'), { ssr: false });
 const FQALending = dynamic(() => import('components/screens/Lending/FAQ'), { ssr: false });
 
 const Lending = () => {
@@ -27,7 +28,7 @@ const Lending = () => {
                         <HeaderLending />
                     </section>
                     <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
-                        content
+                        <CryptoLending />
                         <FQALending isDark={isDark} />
                     </section>
                 </main>

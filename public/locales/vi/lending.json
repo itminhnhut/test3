@@ -5,5 +5,12 @@
     },
     "FAQ": {
         "title": "Câu hỏi thường gặp"
+    },
+    "crypto": {
+        "lending": {
+            "title": "Thị trường vay",
+            "place_search": "Tìm kiếm tài sản vay",
+            "button": "Tìm"
+        }
     }
 }
