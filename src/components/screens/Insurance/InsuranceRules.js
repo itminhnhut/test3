@@ -81,7 +81,7 @@ const getColumns = (t) => [
         render: (_) => {
             return (
                 <div className="">
-                    {MIN_MAX_MARGIN.min}/{MIN_MAX_MARGIN.max} USDT
+                    {MIN_MAX_MARGIN.min}/{formatNumber(MIN_MAX_MARGIN.max)} USDT
                 </div>
             );
         }

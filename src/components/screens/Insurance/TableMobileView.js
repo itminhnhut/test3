@@ -79,7 +79,9 @@ const TableMobileView = ({ filterRulesData, loading, isSearch, page }) => {
                                 </div>
                                 <div className="flex items-center text-sm justify-between">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:insurance.min_margin')}</div>
-                                    <div>{MIN_MAX_MARGIN.min}/{MIN_MAX_MARGIN.max} USDT</div>
+                                    <div>
+                                        {MIN_MAX_MARGIN.min}/{formatNumber(MIN_MAX_MARGIN.max)} USDT
+                                    </div>
                                 </div>
                                 <div className="flex items-center text-sm justify-between">
                                     <div
