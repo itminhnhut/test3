@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import TagV2 from 'components/common/V2/TagV2';
-import { formatSwapRate, formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
+import { formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
 import { X } from 'react-feather';
 import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
 import axios from 'axios';
@@ -9,32 +9,24 @@ import { ApiStatus } from 'redux/actions/const';
 import AssetLogo from '../../wallet/AssetLogo';
 import Skeletor from 'components/common/Skeletor';
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import { find, get, isNumber, isString } from 'lodash';
+import get from 'lodash/get';
+import isNumber from 'lodash/isNumber';
+import isString from 'lodash/isString';
 import classNames from 'classnames';
 import { TRANSACTION_TYPES, modalDetailColumn, COLUMNS_TYPE } from './constant';
-import { WalletType, EarnWalletType } from 'redux/actions/const';
+import { WalletTypeById, WalletType } from 'redux/actions/const';
 import { ArrowCompareIcon } from '../../svg/SvgIcon';
 import { customFormatBalance } from '.';
 
 const NULL_ASSET = '--';
-export const WalletTypeById = {
-    0: WalletType.SPOT,
-    1: WalletType.MARGIN,
-    2: WalletType.FUTURES,
-    3: WalletType.P2P,
-    4: WalletType.POOL,
-    5: WalletType.EARN,
-    6: EarnWalletType.STAKE,
-    7: EarnWalletType.FARM,
-    8: WalletType.BROKER,
-    9: WalletType.NAO_FUTURES
-};
+
 const renderWallet = ({ t, key, language }) => {
     const wallet = {
         [WalletType.SPOT]: t('common:wallet', { wallet: 'Nami Spot' }),
         [WalletType.FUTURES]: t('common:wallet', { wallet: 'Nami Futures' }),
         [WalletType.BROKER]: t('common:wallet', { wallet: language === 'vi' ? 'hoa hồng Nami' : 'Nami Commission' }),
-        [WalletType.NAO_FUTURES]: t('common:wallet', { wallet: 'NAO Futures' })
+        [WalletType.NAO_FUTURES]: t('common:wallet', { wallet: 'NAO Futures' }),
+        [WalletType.INSURANCE]: 'Insurance' // t('common:wallet', { wallet: 'Insurance' })
     };
 
     const walletType = WalletTypeById[key];
@@ -136,7 +128,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                             <div className="flex w-full mb-6 justify-end rounded-md hover:opacity-50 transition-opacity cursor-pointer" onClick={onClose}>
                                 <X size={24} />
                             </div>
-                            <div className="mb-6 flex w-full items-start capitalize">
+                            <div className="mb-6 flex w-full items-start">
                                 {detailTx?.categoryContent?.[language] ?? t('transaction-history:default_category')}
                             </div>
                             <div className="mb-6">
@@ -315,6 +307,35 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                                 'transaction-history:' + side
                                             )} ${type ? t('transaction-history:' + type) : ''}`}</div>
                                         );
+                                        break;
+                                    case COLUMNS_TYPE.INSURANCE_EXPECT:
+                                        const sideInsurance =
+                                            get(detailTx, col.keys[0])?.toLowerCase() ||
+                                            get(detailTx, 'result.metadata.payload.side')?.toLowerCase() ||
+                                            NULL_ASSET;
+                                        formatKeyData = (
+                                            <div
+                                                className={classNames(
+                                                    'capitalize',
+                                                    { 'text-red': ['bear', 'sell'].includes(sideInsurance) },
+                                                    { 'text-green-3 dark:text-green-2': ['bull', 'buy'].includes(sideInsurance) }
+                                                )}
+                                            >
+                                                {['buy', 'sell', 'bull', 'bear'].includes(sideInsurance)
+                                                    ? t('transaction-history:modal_detail.expect_' + sideInsurance)
+                                                    : NULL_ASSET}
+                                            </div>
+                                        );
+                                        break;
+                                    case COLUMNS_TYPE.INSURANCE_PAIR:
+                                        symbol = {
+                                            baseAsset:
+                                                get(detailTx, 'additionalData.payload.asset_covered') || get(detailTx, 'result.metadata.payload.asset_covered'),
+                                            quoteAsset:
+                                                get(detailTx, 'additionalData.payload.quote_asset') || get(detailTx, 'result.metadata.payload.quote_asset')
+                                        };
+
+                                        formatKeyData = `${symbol?.baseAsset || NULL_ASSET}/${symbol?.quoteAsset || NULL_ASSET}`;
                                         break;
                                     case COLUMNS_TYPE.DEPOSIT_WITHDRAW_FEE:
                                         const fee = get(detailTx, col.keys[0]) || get(detailTx, 'result.metadata.fee.value') || 0;

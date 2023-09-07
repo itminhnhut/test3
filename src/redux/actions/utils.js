@@ -20,7 +20,7 @@ import {
     rateCurrency
 } from './const';
 import { SET_BOTTOM_NAVIGATION, SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types';
-import { API_GET_REFERENCE_CURRENCY, API_GET_FEE_ASSET } from 'redux/actions/apis';
+import { API_GET_REFERENCE_CURRENCY, API_GET_FEE_ASSET, API_AUTH_INSURANCE } from 'redux/actions/apis';
 import fetchAPI from 'utils/fetch-api';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
@@ -37,14 +37,12 @@ import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { CopyIcon, CheckedIcon } from 'components/svg/SvgIcon';
 import { useSelector } from 'react-redux';
 import utilsSelectors from 'redux/selectors/utilsSelectors';
-import { useRouter } from 'next/router';
 import { log } from 'utils';
-import { cloneDeep } from 'lodash';
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
-import { SIDE as SIDE_DW } from 'redux/reducers/withdrawDeposit';
 import moment from 'moment-timezone';
 import usePrevious from 'hooks/usePrevious';
 import classNames from 'classnames';
+import { INSURANCE_URL } from 'constants/constants';
 import axios from 'axios';
 
 export function scrollHorizontal(el, parentEl) {
@@ -1322,7 +1320,7 @@ export const getOffsetEl = (el) => {
 
 export function parseUnormStr(input) {
     //Đổi chữ hoa thành chữ thường
-    let slug = input.toLowerCase();
+    let slug = input?.toLowerCase();
 
     //Đổi ký tự có dấu thành không dấu
     slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
@@ -1439,6 +1437,26 @@ export const getDayInterestPercent = (apy) =>
         apy / 365, // DAYS_IN_YEAR = 365
         4
     );
+
+export const getInsuranceLoginLink = async ({ params = 'BNBUSDT', language = 'en', targetType = null, redirectTo = null }) => {
+    try {
+        const data = await fetchAPI({
+            url: API_AUTH_INSURANCE,
+            params: {
+                redirectDomain: INSURANCE_URL,
+                redirectTo: redirectTo || `${INSURANCE_URL}/${language}/buy-covered/${params}`
+            }
+        });
+        const link = document.createElement('a');
+        link.href = data.data;
+        if (targetType === '_blank') {
+            link.target = targetType;
+        }
+        link.click();
+    } catch (error) {
+        console.error('getInsuranceLoginLink error:', error);
+    }
+};
 
 export const getFuturesFees = async (quotes) => {
     const { data } = await axios.get(API_GET_FEE_ASSET, { params: { marginAsset: quotes } }).then((data) => {

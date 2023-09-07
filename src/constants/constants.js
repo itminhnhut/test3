@@ -1,7 +1,10 @@
 export const EMPTY_VALUE = '--';
 
-export const NAMI_FUTURES_EARNED_SHARE = 'NamiFutures_TakeProfit_';
 export const ONE_DAY = 86400000;
+export const ONE_DAY = 86400000;
+
+export const INSURANCE_URL = process.env.NEXT_PUBLIC_INSURANCE_URL || 'https://namiinsurance.io/';
+export const NAMI_FUTURES_EARNED_SHARE = 'NamiFutures_TakeProfit_';
 
 export const ROOT_TOKEN = 'NAMI';
 
@@ -271,4 +274,13 @@ export const QUOTE_ASSET = {
     USDT: 22,
     VNDC: 72,
     VNST: 39
-}
+};
+export const INSURANCE_STATE = {
+    AVAILABLE: 'Available',
+    CLAIM_WAITING: 'Claim_waiting',
+    CLAIMED: 'Claimed',
+    REFUNDED: 'Refunded',
+    LIQUIDATED: 'Liquidated',
+    EXPIRED: 'Expired',
+    CANCELED: 'Canceled'
+};

@@ -16,6 +16,8 @@ import { CheckCircleIcon } from 'components/svg/SvgIcon';
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import SelectV2 from 'components/common/V2/SelectV2';
+import CheckCircle from 'components/svg/CheckCircle';
 
 const Tables = ({ language, t, commisionConfig, id1, id2 }) => {
     return (
@@ -69,7 +71,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
                 options={item.values}
                 popoverClassName="w-[240px]"
                 onChange={(e) => onChange(e, key)}
-                icon={<CheckCircleIcon color="currentColor" size={16} />}
+                activeIcon={<CheckCircleIcon color="currentColor" size={16} />}
                 wrapperClassName="flex flex-row gap-2 flex-col"
                 optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
             />
@@ -81,6 +83,20 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
             <ButtonV2 onClick={() => setFilter(config)} variants="reset" className={classNames(item?.buttonClassName)}>
                 {item.title}
             </ButtonV2>
+        );
+    };
+
+    const Select = ({ item, filter, key }) => {
+        const data = filter?.[key] || {};
+        return (
+            <SelectV2
+                // className="text-txtSecondary dark:text-txtSecondary-dark"
+                options={item?.values || []}
+                value={data?.value || null}
+                onChange={(e) => onChange(e, key)}
+                optionClassName="!font-normal !text-txtPrimary dark:!text-txtPrimary-dark flex justify-between items-center first:mt-2 mb-2"
+                activeIcon={<CheckCircle color="currentColor" size={16} />}
+            />
         );
     };
 

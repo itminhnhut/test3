@@ -84,6 +84,12 @@ const colors = {
     purple: {
         1: '#7c99f7'
     },
+    pink: {
+        1: '#d87bf9'
+    },
+    orange: {
+        1: '#f36528'
+    },
     onus: {
         bg: '#1B222D',
         bg2: '#36445A',

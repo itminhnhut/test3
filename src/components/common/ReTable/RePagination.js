@@ -19,7 +19,7 @@ import { ChevronLeft, ChevronRight } from 'react-feather';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import { useTranslation } from 'next-i18next';
 
-const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiV2 = false, pagingPrevNext = {}, onusMode, ...restProps }) => {
+const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiV2 = false, initPage, pagingPrevNext = {}, onusMode, ...restProps }) => {
     const [currentTheme] = useDarkMode();
     const {
         i18n: { language }
@@ -33,12 +33,12 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNa
     if (!_.isEmpty(pagingPrevNext)) {
         const { page, hasNext, onChangeNextPrev } = pagingPrevNext;
 
-        if (page === 0 && !hasNext) return null;
+        if (page === (initPage || 0) && !hasNext) return null;
 
         return (
             <Wapper isDark>
                 <div className="w-full flex items-center justify-center select-none gap-8">
-                    <TextButton disabled={page === 0} className={`!text-base gap-2`} onClick={() => page !== 0 && onChangeNextPrev(-1)}>
+                    <TextButton disabled={page === (initPage || 0)} className={`!text-base gap-2`} onClick={() => page !== 0 && onChangeNextPrev(-1)}>
                         <ChevronLeft size={16} />
                         {language === LANGUAGE_TAG.VI ? 'Trước đó' : 'Previous'}
                     </TextButton>

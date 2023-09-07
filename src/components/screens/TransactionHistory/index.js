@@ -8,20 +8,19 @@ import FetchApi from 'utils/fetch-api';
 import { API_GET_WALLET_TRANSACTION_HISTORY, API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { formatBalance, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
+import { formatNumber, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
-import { WALLET_SCREENS } from 'pages/wallet';
 import { ApiStatus } from 'redux/actions/const';
 import ModalHistory from './ModalHistory';
 import axios from 'axios';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
-import { isNull } from 'lodash';
+import isNull from 'lodash/isNull';
 import usePrevious from 'hooks/usePrevious';
 
 const LIMIT = 10;
 
 export const customFormatBalance = (number, digit, acceptNegative = true) => {
-    return formatBalance(+number < 0 ? Math.ceil(number) : number, digit, acceptNegative);
+    return formatNumber(number, digit, 0, acceptNegative);
 };
 
 export const isFilterEmpty = (filter) => !filter.category && !filter.asset && isNull(filter.range.endDate);
@@ -274,7 +273,7 @@ const TransactionHistory = ({ id }) => {
                             onChangeTab={onChangeTab}
                             tabs={TransactionTabs.map((tab) => ({
                                 key: tab.key,
-                                children: <div className="">{t('transaction-history:tab.' + tab.localized)}</div>
+                                children: <div className="">{tab.localized ? t('transaction-history:tab.' + tab.localized) : tab.title}</div>
                             }))}
                         />
                     </div>

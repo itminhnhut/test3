@@ -17,7 +17,8 @@ const KIND = {
     Spot: { vi: 'KL Nami Spot', en: 'Nami Spot Vol' },
     Futures: { vi: 'KL Nami Futures', en: 'Nami Futures Vol' },
     Staking: { vi: 'KL Nami Daily Staking', en: 'Nami Daily Staking Vol' },
-    nao_futures: { vi: 'KL NAO Futures', en: 'NAO Futures Vol' }
+    nao_futures: { vi: 'KL NAO Futures', en: 'NAO Futures Vol' },
+    insurance: { vi: 'Ký quỹ bảo hiểm', en: 'Margin insurance contract' }
 };
 
 const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onChangeOption, defaultOption, t, language, assetConfig, range, invitedBy }) => {
@@ -25,7 +26,6 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
         const commissionByAsset = (detailFriend?.commission || [])?.find((f) => f?.asset === options?.commission) || {};
         return commissionByAsset?.total || {};
     }, [detailFriend?.commission, options?.commission]);
-
     const totalOrderVol = useMemo(() => {
         const orderVolByAsset = (detailFriend?.order_vol || [])?.find((f) => f?.asset === options?.orderVol) || {};
         return orderVolByAsset?.total?.reduce((acc, curr) => {
@@ -33,7 +33,6 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
             return acc;
         }, {});
     }, [detailFriend?.order_vol, options?.orderVol]);
-
     const valueCommission = useMemo(() => {
         return defaultOption.find((f) => f.value === options.commission)?.value;
     }, [options]);
@@ -99,7 +98,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                         popoverClassName="w-[129px]"
                         popoverPanelClassName="w-max"
                         onChange={(e) => onChangeOption(e, 'commission')}
-                        icon={<CheckCircleIcon color="currentColor" size={16} />}
+                        activeIcon={<CheckCircleIcon color="currentColor" size={16} />}
                         optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
                     />
                 </div>
@@ -130,7 +129,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                         popoverPanelClassName="w-max"
                         popoverClassName="w-[129px]"
                         onChange={(e) => onChangeOption(e, 'orderVol')}
-                        icon={<CheckCircleIcon color="currentColor" size={16} />}
+                        activeIcon={<CheckCircleIcon color="currentColor" size={16} />}
                         optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
                     />
                 </div>
@@ -152,6 +151,10 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                 <div className="flex flex-row justify-between mb-3 last:mb-0">
                     <div className="text-gray-1 dark:text-gray-7">{KIND['nao_futures']?.[language]}</div>
                     <div className="font-semibold">{handleTotal(valueOrderVol, totalOrderVol?.nao_futures)}</div>
+                </div>
+                <div className="flex flex-row justify-between mb-3 last:mb-0">
+                    <div className="text-gray-1 dark:text-gray-7">{KIND['insurance']?.[language]}</div>
+                    <div className="font-semibold">{handleTotal(valueOrderVol, totalOrderVol?.insurance)}</div>
                 </div>
             </div>
 

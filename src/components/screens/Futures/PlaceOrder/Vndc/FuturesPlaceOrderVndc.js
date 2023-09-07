@@ -33,7 +33,7 @@ const FuturesPlaceOrderVndc = ({ pairConfig, userSettings, pairPrice, isAuth, is
     };
 
     useEffect(() => {
-        isAuth && getLeverage(pairConfig?.pair);
+        isAuth ? getLeverage(pairConfig?.pair) : setLeverage(pairConfig?.leverageConfig?.max ?? 1);
     }, [pairConfig, isAuth]);
 
     useEffect(() => {

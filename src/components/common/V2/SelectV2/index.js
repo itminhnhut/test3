@@ -15,7 +15,7 @@ const SelectV2 = ({
     position = 'bottom',
     optionClassName,
     wrapperClassName,
-    icon = ''
+    activeIcon
 }) => {
     const title = useMemo(() => {
         return options.find((rs) => rs?.[keyExpr] === value)?.[displayExpr] ?? '';
@@ -48,7 +48,7 @@ const SelectV2 = ({
                             className={classNames(
                                 'absolute right-0 z-[99] w-full',
                                 {
-                                    'top-0 mt-2': position === 'bottom',
+                                    'top-full mt-2': position === 'bottom',
                                     'bottom-full mb-2': position === 'top'
                                 },
                                 popoverPanelClassName
@@ -66,9 +66,10 @@ const SelectV2 = ({
                                             <div
                                                 key={index}
                                                 className={classNames(
-                                                    'px-4 py-2 hover:bg-hover dark:hover:bg-hover-dark text-txtSecondary dark:text-txtSecondary-dark cursor-pointer',
+                                                    'px-4 py-2 hover:bg-hover dark:hover:bg-hover-dark cursor-pointer',
                                                     {
-                                                        '!text-txtPrimary dark:!text-white font-semibold': value === item?.[keyExpr]
+                                                        'text-txtPrimary dark:text-txtPrimary-dark font-semibold': value === item?.[keyExpr],
+                                                        'text-txtSecondary dark:text-txtSecondary-dark': value !== item?.[keyExpr]
                                                     },
                                                     {
                                                         'dark:!text-gray-4 !text-gray-15 font-normal': value === item?.[keyExpr] && name === 'customer'
@@ -80,8 +81,8 @@ const SelectV2 = ({
                                                     close();
                                                 }}
                                             >
-                                                {item?.[displayExpr] ?? ''}
-                                                {icon && item.value === value ? icon : null}
+                                                <span>{item?.[displayExpr] ?? ''}</span>
+                                                {value === item?.[keyExpr] ? activeIcon : undefined}
                                             </div>
                                         );
                                     })}

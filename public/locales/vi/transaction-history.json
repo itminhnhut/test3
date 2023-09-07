@@ -60,6 +60,12 @@
         "wallet_type": "Loại ví",
         "volume": "Khối lượng giao dịch",
         "fee": "Phí giao dịch",
+        "expect": "Kỳ vọng",
+        "contract_id": "Contract ID",
+        "expect_sell": "Bear",
+        "expect_buy": "Bull",
+        "expect_bear": "Bear",
+        "expect_bull": "Bull",
         "note": "Ghi chú"
     }
 }

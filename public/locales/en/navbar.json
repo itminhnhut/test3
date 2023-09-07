@@ -49,6 +49,7 @@
     "submenu": {
         "convert": "Nami Swap",
         "nami_insurance": "Nami Insurance",
+        "nami_insurance_description": "Covering diversify your assets, adapting to any market fluctuations. High insurance value, low risk",
         "convert_description": "Trade cryptocurrencies in one click",
         "spot": "Spot Trading",
         "spot_description": "Choose your favourite assets with {{pairsLength}} trading pairs listed with high liquidity",

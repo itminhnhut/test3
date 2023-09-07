@@ -17,6 +17,7 @@ export const WALLET_SCREENS = {
     // STAKING: 'staking',
     PARTNERS: 'partners',
     NAO_FUTURES: 'nao-futures',
+    INSURANCE: 'insurance',
     // FARMING: 'farming',
     TRANSACTION_HISTORY: 'transaction-history/all',
     NFT: 'NFT'

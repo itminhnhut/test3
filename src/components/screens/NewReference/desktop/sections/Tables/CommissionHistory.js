@@ -25,7 +25,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         { title: 'Spot', value: 'SPOT' },
         { title: 'Futures', value: 'FUTURES' },
         { title: 'Stake', value: 'STAKING' },
-        { title: 'Insurance', value: 'INSURANCE' }
+        { title: 'Nami Insurance', value: 'INSURANCE' }
     ];
     const assetTabs = [
         { title: t('common:all'), value: null },
@@ -37,7 +37,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         { title: 'USDT', value: WalletCurrency.USDT }
     ];
 
-    const filters = {
+    const configs = {
         date: {
             type: 'dateRange',
             value: {
@@ -82,7 +82,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     const limit = 10;
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [filter, setFilter] = useState(filters);
+    const [filter, setFilter] = useState(configs);
     const [dataSource, setDataSource] = useState({
         results: [],
         hasNext: false,
@@ -145,7 +145,6 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 title: t('reference:referral.date'),
                 align: 'left',
                 width: 200,
-                fixed: 'left',
                 render: (data) => formatTime(data, 'dd/MM/yyyy HH:mm:ss')
             },
             {
@@ -186,10 +185,11 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 align: 'right',
                 width: 183,
                 sorter: false,
+                fixed: 'right',
                 render: (data, item) => {
                     const value = data < 0 ? 0 : `+ ${formatNumber(data, 4)}`;
                     return (
-                        <span className="text-teal">
+                        <span className="text-teal font-semibold">
                             {value} {assetTabs.find((e) => e.value === item.currency)?.title}
                         </span>
                     );
@@ -210,6 +210,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 </div>
 
                 <TableV2
+                    // sort
                     loading={loading}
                     useRowHover
                     data={dataSource?.results || []}
