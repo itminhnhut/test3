@@ -202,6 +202,7 @@ const InsuranceRules = () => {
                         columns={getColumns(t)}
                         rowKey={(item) => `${item?.key}`}
                         loading={rulesData.loading}
+                        sort={['symbol', 'avg_changing', 'max_leverage']}
                         limit={ROWS_PER_PAGE}
                         page={rulesData.page}
                         isSearch={search}
