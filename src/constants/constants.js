@@ -266,7 +266,6 @@ export const CHART_JS_RANGE = {
 export const QUOTE_ASSET = {
     USDT: 22,
     VNDC: 72,
-    NAO: 447,
     VNST: 39
 };
 export const CURRENCY = {
