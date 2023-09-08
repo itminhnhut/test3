@@ -42,8 +42,8 @@ const TABS = {
 
 const initTags = {
     VNDC: 'VNDC',
-    USDT: 'USDT',
     VNST: 'VNST',
+    USDT: 'USDT',
 }
 
 const TAGS = {
