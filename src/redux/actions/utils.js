@@ -972,15 +972,30 @@ export const getPriceColor = (value, onusMode = false) => {
     }
 };
 
-const BASE_ASSET = ['VNDC', 'USDT'];
+const BASE_ASSET = ['VNDC', 'USDT', 'VNST'];
+const BASE_ASSET_GENERATING = BASE_ASSET.reduce((generateArr, asset) => {
+    const allAssetParital = BASE_ASSET.reduce((arr, childAsset) => {
+        if (asset === childAsset) return arr;
+        return [...arr, `${asset}/${childAsset}`, `${asset}${childAsset}`];
+    }, []);
+
+    return [...generateArr, ...allAssetParital, `${asset}/`];
+}, []);
 
 export const getSymbolObject = (symbol) => {
-    if (!symbol || ['USDTVNDC', 'VNDCUSDT', 'VNDC/USDT', 'USDT/VNDC', 'VNDC/', 'USDT/'].includes(symbol)) {
+    if (!symbol || BASE_ASSET_GENERATING.includes(symbol)) {
         log?.d(`Symbol not support`);
         return;
     }
 
-    if (symbol?.includes('/VNDC') || symbol?.includes('/USDT') || symbol?.includes('VNDC') || symbol?.includes('USDT')) {
+    if (
+        symbol?.includes('/VNDC') ||
+        symbol?.includes('/USDT') ||
+        symbol?.includes('/VNST') ||
+        symbol?.includes('VNDC') ||
+        symbol?.includes('USDT') ||
+        symbol?.includes('VNST')
+    ) {
         let baseAsset = '',
             quoteAsset = '';
 
@@ -992,6 +1007,11 @@ export const getSymbolObject = (symbol) => {
         if (symbol?.includes('USDT')) {
             quoteAsset = 'USDT';
             baseAsset = symbol?.replace('USDT', '');
+        }
+
+        if (symbol?.includes('VNST')) {
+            quoteAsset = 'VNST';
+            baseAsset = symbol?.replace('VNST', '');
         }
 
         // ? Handle predictable symbol

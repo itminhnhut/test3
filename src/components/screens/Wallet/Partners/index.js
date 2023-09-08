@@ -32,7 +32,7 @@ const INITIAL_STATE = {
 };
 
 const AVAILBLE_KEY = 'partners_available';
-const PARTNERS_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT', 'NAO'];
+const PARTNERS_ASSET = ['VNDC', 'VNST', 'NAMI', 'NAC', 'USDT', 'NAO'];
 
 const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, isHideAsset, setIsHideAsset }) => {
     // Init State
@@ -113,11 +113,11 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                             {isHideAsset
                                 ? SECRET_STRING
                                 : v
-                                ? // <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
-                                  //     <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
-                                  // </Link>
-                                  lockedValue
-                                : '0.0000'}
+                                    ? // <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
+                                    //     <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
+                                    // </Link>
+                                    lockedValue
+                                    : '0.0000'}
                         </span>
                     );
                 }
@@ -382,8 +382,8 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                                             {isHideAsset
                                                 ? SECRET_STRING
                                                 : wallet.value
-                                                ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                : '0.0000'}
+                                                    ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
                                         </span>
                                         &nbsp;
                                         <span className="txtSecond-1  whitespace-nowrap">
@@ -397,8 +397,8 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                                                 {isHideAsset
                                                     ? SECRET_STRING
                                                     : available
-                                                    ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
-                                                    : '0.0000'}
+                                                        ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                        : '0.0000'}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-3">
@@ -407,8 +407,8 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                                                 {isHideAsset
                                                     ? SECRET_STRING
                                                     : wallet.locked_value
-                                                    ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                    : '0.0000'}
+                                                        ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                        : '0.0000'}
                                             </span>
                                         </div>
                                     </div>
