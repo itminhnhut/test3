@@ -189,7 +189,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, setPartner }) => {
                 {Object.values(ALLOWED_ASSET_ID).map((assetId) => {
                     const assetCode = ALLOWED_ASSET[assetId];
                     return (
-                        <div key={assetId} className="p-3 w-full md:w-1/2">
+                        <div key={assetId} className="p-3 w-full md:w-1/3">
                             <div className="mb-8 txtPri-3 font-semibold">{t('dw_partner:buy_sell_title', { assetCode })}</div>
                             <ConfigAutoSuggest
                                 key={`config_auto_asset_${assetId}`}

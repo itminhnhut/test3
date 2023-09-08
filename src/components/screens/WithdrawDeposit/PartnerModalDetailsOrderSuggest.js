@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { SystemInfoCircleFilled } from 'components/svg/SvgIcon';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { ApiStatus } from 'redux/actions/const';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
@@ -15,12 +15,22 @@ import toast from 'utils/toast';
 import { isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { PATHS } from 'constants/paths';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from './constants';
+import { useSelector } from 'react-redux';
 
 const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdropCb }) => {
     const router = useRouter();
     const { t } = useTranslation();
     const [state, setState] = useState({});
     const [loadingProcessOrder, setLoadingProcessOrder] = useState(false);
+    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
+    const baseAssetConfig = useMemo(
+        () =>
+            find(assetConfigs, {
+                id: state.baseAssetId
+            }),
+        [assetConfigs, state.baseAssetId]
+    );
 
     const toastError = (statusError = '') => {
         return toast({
@@ -126,7 +136,7 @@ const PartnerModalDetailsOrderSuggest = ({ showProcessSuggestPartner, onBackdrop
                         <span className="txtSecond-4">{t('common:amount')}</span>
                         <span>
                             {state.baseQty
-                                ? `${formatNumber(state.baseQty, state.baseAssetId === 72 ? 0 : 4)} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`
+                                ? `${formatNumber(state.baseQty, baseAssetConfig?.assetDigit || 0)} ${ALLOWED_ASSET[+state.baseAssetId || 72]}`
                                 : '_'}
                         </span>
                     </div>

@@ -8,6 +8,7 @@ import { API_GET_COMMISSION_HISTORY_PARTNER } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
 import { WalletTypeById } from 'components/screens/TransactionHistory/ModalHistory';
 import TextCopyable from 'components/screens/Account/TextCopyable';
+import { ALLOWED_ASSET_ID } from '../constants';
 
 const ModalCommissionHistory = ({ onClose, isVisible, t, transaction, id = '', sideCommission }) => {
     if (!transaction) return null;
@@ -44,7 +45,9 @@ const ModalCommissionHistory = ({ onClose, isVisible, t, transaction, id = '', s
                 <h1 className="text-2xl">{sideCommission}</h1>
                 <div className="flex flex-col items-center justify-center my-6">
                     <AssetLogo assetCode={getAssetCode(currency)} size={80} useNextImg />
-                    <div className="mt-6 text-2xl">+{formatNanNumber(money_use, +currency === 72 ? 0 : 4) + ' ' + getAssetCode(currency)}</div>
+                    <div className="mt-6 text-2xl">
+                        +{formatNanNumber(money_use, +currency === ALLOWED_ASSET_ID['USDT'] ? 4 : 0) + ' ' + getAssetCode(currency)}
+                    </div>
                     <OrderStatusTag status={1} className="m-auto mt-3 !font-normal" />
                 </div>
                 {/* Card ID */}

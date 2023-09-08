@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import TradingInputV2 from 'components/trade/TradingInputV2';
 import Card from './components/common/Card';
 import { useDispatch, useSelector } from 'react-redux';
-import { SyncAltIcon } from 'components/svg/SvgIcon';
+import { CheckCircleIcon, SyncAltIcon } from 'components/svg/SvgIcon';
 import { formatBalanceFiat, getExactBalanceFiat, formatNanNumber } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Skeletor from 'components/common/Skeletor';
@@ -13,7 +13,7 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { PATHS } from 'constants/paths';
 import { useTranslation } from 'next-i18next';
 import useGetPartner from './hooks/useGetPartner';
-import { ALLOWED_ASSET_ID } from './constants';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from './constants';
 import Tooltip from 'components/common/Tooltip';
 import { find } from 'lodash';
 import RecommendAmount from './components/RecommendAmount';
@@ -21,6 +21,8 @@ import TabV2 from 'components/common/V2/TabV2';
 import { SET_ALLOWED_SUBMIT_ORDER } from 'redux/actions/types';
 import { setFee } from 'redux/actions/withdrawDeposit';
 import { MIN_TIP } from 'redux/actions/const';
+import PopoverCurrency from './PopoverCurrency';
+import AssetLogo from 'components/wallet/AssetLogo';
 
 const CardInput = () => {
     const { t } = useTranslation();
@@ -280,44 +282,31 @@ const CardInput = () => {
                                 onValueChange={({ value }) => setState({ amount: value })}
                                 validator={validator}
                                 errorTooltip={false}
-                                decimalScale={assetCode === 'VNDC' ? 0 : 4}
+                                decimalScale={assetConfig?.assetDigit || 0}
                                 allowedDecimalSeparators={[',', '.']}
                                 clearAble
                                 placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
                                 errorEmpty
                                 onFocus={handleFocusInput}
                                 renderTail={
-                                    side === SIDE.SELL && (
-                                        <ButtonV2
-                                            variants="text"
-                                            disabled={+state.amount === maximumAllowed || +state.amount === availableAsset || loadingRate}
-                                            onClick={onMaxHandler}
-                                            className="uppercase font-semibold text-teal !h-10 "
-                                        >
-                                            MAX
-                                        </ButtonV2>
-                                    )
+                                    <div className="flex items-center space-x-2">
+                                        {side === SIDE.SELL && (
+                                            <div className="flex items-center space-x-2">
+                                                <ButtonV2
+                                                    variants="text"
+                                                    disabled={+state.amount === maximumAllowed || +state.amount === availableAsset || loadingRate}
+                                                    onClick={onMaxHandler}
+                                                    className="uppercase font-semibold text-teal !h-10 "
+                                                >
+                                                    MAX
+                                                </ButtonV2>
+                                                <div className="h-4 min-w-[1px] bg-divider dark:bg-divider-dark w-[1px]" />
+                                            </div>
+                                        )}
+                                        <PopoverCurrency />
+                                    </div>
                                 }
                             />
-                        </div>
-                        <div className="w-24 p-1">
-                            <ButtonV2
-                                className="!text-dominant w-full bg-gray-12 dark:bg-dark-2 hover:opacity-80"
-                                variants="text"
-                                onClick={() => {
-                                    router.push(
-                                        {
-                                            pathname: PATHS.WITHDRAW_DEPOSIT.PARTNER,
-                                            query: { side, assetId: +assetId === 72 ? 22 : +assetId === 22 ? 39 : 72 }
-                                        },
-                                        undefined,
-                                        { shallow: true }
-                                    );
-                                }}
-                            >
-                                <span className="uppercase">{assetCode}</span>
-                                <SyncAltIcon className=" rotate-90" size={16} />
-                            </ButtonV2>
                         </div>
                     </div>
                 </div>
@@ -405,7 +394,7 @@ const CardInput = () => {
                                 <div className="txtSecond-2">{t('dw_partner:daily_limit')}</div>
                                 <div className="txtPri-1 flex items-center">
                                     {loadingLimitWithdraw ? <Skeletor width="50px" /> : !limitWithdraw ? '--' : formatBalanceFiat(limitWithdraw?.limit, 'VNDC')}
-                                    <span className="ml-1">{'VNDC'}</span>
+                                    <span className="ml-1">VND</span>
                                 </div>
                             </div>
                             <div className="flex items-center justify-between ">
@@ -418,19 +407,14 @@ const CardInput = () => {
                                     ) : (
                                         formatBalanceFiat(limitWithdraw?.remain, 'VNDC')
                                     )}{' '}
-                                    <span className="ml-1">{'VNDC'}</span>
+                                    <span className="ml-1">VND</span>
                                 </div>
                             </div>
                         </>
                     )}
 
                     <div className="flex items-center justify-between ">
-                        {/* <div className="txtSecond-2">{t(`dw_partner:${side === SIDE.BUY ? 'will_transfer' : 'will_received'}`)}</div> */}
                         <div className="txtSecond-2">{t(`dw_partner:vnd_amount`)}</div>
-
-                        {/* <Tooltip place="top" effect="solid" isV3 id="will-transfer-receive">
-                            <div className="max-w-[300px] ">{formatBalanceFiat(input * rate, 'VNDC')}</div>
-                        </Tooltip> */}
 
                         <div data-tip="" className="inline-flex txtPri-1 space-x-1 !cursor-default">
                             {loadingRate ? (

@@ -18,9 +18,9 @@ import toast from 'utils/toast';
 import { useTranslation } from 'next-i18next';
 import { UserSocketEvent } from 'redux/actions/const';
 import { useRouter } from 'next/router';
-import { formatNumber } from 'utils/reference-utils';
 import { PARTNER_WD_TABS, PATHS } from 'constants/paths';
 import { getNotifications } from 'redux/actions/notification';
+import { ALLOWED_ASSET } from 'components/screens/WithdrawDeposit/constants';
 
 const NavBar = dynamic(() => import('src/components/common/NavBar/NavBar'), {
     ssr: false,
@@ -98,7 +98,7 @@ const MadivesLayout = ({
                         side: t(`common:${side.toLowerCase()}`),
                         displayingID: displayingId,
                         amount: baseQty,
-                        asset: baseAssetId === 72 ? 'VNDC' : 'USDT'
+                        asset: ALLOWED_ASSET[+baseAssetId || 72]
                     }),
                     type: 'info',
                     duration: 5000,
@@ -119,7 +119,7 @@ const MadivesLayout = ({
 
         return () => {
             if (userSocket) {
-                userSocket.off(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST)
+                userSocket.off(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST);
                 userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER_AUTO_SUGGEST, (data) => {
                     console.log('socket removeListener PARTNER_UPDATE_ORDER_AUTO_SUGGEST:', data);
                 });

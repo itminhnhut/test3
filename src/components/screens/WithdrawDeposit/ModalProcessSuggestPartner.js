@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { ApiStatus, MIN_TIP, UserSocketEvent } from 'redux/actions/const';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
@@ -20,15 +20,24 @@ import TabV2 from 'components/common/V2/TabV2';
 import { formatBalanceFiat, formatNanNumber, getS3Url } from 'redux/actions/utils';
 import { setFee } from 'redux/actions/withdrawDeposit';
 import CollapseV2 from 'components/common/V2/CollapseV2';
-import Card from './components/common/Card';
-import toast from 'utils/toast';
 import Tooltip from 'components/common/Tooltip';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from './constants';
+import { find } from 'lodash';
 
 const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb }) => {
     const { fee } = useSelector((state) => state.withdrawDeposit);
-    const [state, setState] = useState({ side: SIDE.BUY, countdownTime: null, timeExpire: null, baseQty: 0, baseAssetId: 72, displayingId: '' });
+    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
+    const [state, setState] = useState({ side: SIDE.BUY, countdownTime: null, timeExpire: null, baseQty: 0, baseAssetId: ALLOWED_ASSET_ID['VNDC'], displayingId: '' });
     const router = useRouter();
     const [currentTheme] = useDarkMode();
+
+    const baseAssetConfig = useMemo(
+        () =>
+            find(assetConfigs, {
+                id: state.baseAssetId
+            }),
+        [assetConfigs, state.baseAssetId]
+    );
 
     useEffect(() => {
         if (!showProcessSuggestPartner) return;
@@ -207,7 +216,6 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 wrapClassName="p-8 flex flex-col items-center txtSecond-4 "
             >
                 <video className="pointer-events-none" width="124" height="124" loop muted autoPlay preload="none" playsInline>
-                    {/* <source src={`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`} type="video/mp4" /> */}
                     <source src={getS3Url(`/images/screen/partner/suggestion_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.mp4`)} type="video/mp4" />
                 </video>
 
@@ -230,8 +238,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                     </div>
                     <div className="flex items-center justify-between mt-3">
                         <span>{t('common:amount')}</span>
-                        <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(state.baseQty, state.baseAssetId === 72 ? 0 : 4)} ${
-                            state.baseAssetId === 72 ? 'VNDC' : 'USDT'
+                        <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(state.baseQty, baseAssetConfig?.assetDigit || 0)} ${
+                            ALLOWED_ASSET[+state?.baseAssetId]
                         }`}</span>
                     </div>
                     {state.side === SIDE.SELL && (
@@ -335,8 +343,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                                     <span>{t('common:amount')}</span>
                                     <span className="text-gray-15 dark:text-gray-4 font-semibold">{`${formatNumber(
                                         state.baseQty,
-                                        state.baseAssetId === 72 ? 0 : 4
-                                    )} ${state.baseAssetId === 72 ? 'VNDC' : 'USDT'}`}</span>
+                                        baseAssetConfig?.assetDigit || 0
+                                    )} ${ALLOWED_ASSET[+state?.baseAssetId]}`}</span>
                                 </div>
                                 {state.side && (
                                     <div className="flex items-center justify-between mt-3">
