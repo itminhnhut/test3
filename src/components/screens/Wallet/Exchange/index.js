@@ -53,7 +53,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     // Use Hooks
     const router = useRouter();
 
-
     const {
         t,
         i18n: { language }
@@ -243,19 +242,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                     if (lockedValue === 'NaN') {
                         lockedValue = '0.0000';
                     }
-                    return (
-                        <span className="whitespace-nowrap">
-                            {isHideAsset ? (
-                                SECRET_STRING
-                            ) : v ? (
-                                <Link href={PATHS.EXCHANGE.TRADE.DEFAULT}>
-                                    <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
-                                </Link>
-                            ) : (
-                                '0.0000'
-                            )}
-                        </span>
-                    );
+                    return <span className="whitespace-nowrap">{isHideAsset ? SECRET_STRING : v ? lockedValue : '0.0000'}</span>;
                 }
             },
             {
@@ -487,18 +474,16 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                 addClass={`mt-5 !p-8 rounded-xl
              ${currentTheme === THEME_MODE.DARK ? ' bg-bgTabInactive-dark border border-divider-dark' : ' bg-white shadow-card_light border-none'}`}
             >
-                <div className='w-full flex justify-between items-center'>
+                <div className="w-full flex justify-between items-center">
                     <EstBalance onClick={() => setIsHideAsset(!isHideAsset)} isHide={isHideAsset} isSmallScreen={isSmallScreen} />
                     <Link href={'/staking'}>
-                        <a className='flex gap-2 items-center text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 font-semibold text-sm md:text-base cursor-pointer'>
+                        <a className="flex gap-2 items-center text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 font-semibold text-sm md:text-base cursor-pointer">
                             {t('wallet:staking')} <ChevronRight size={16} />
                         </a>
                     </Link>
                 </div>
                 <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 flex justify-between items-end">
-                    <div>
-                        {renderEstWallet()}
-                    </div>
+                    <div>{renderEstWallet()}</div>
                     <div className="hidden md:block">
                         <ListButton className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto gap-3" />
                     </div>
@@ -643,8 +628,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                             {isHideAsset
                                                 ? SECRET_STRING
                                                 : wallet.value
-                                                    ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                    : '0.0000'}
+                                                ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                : '0.0000'}
                                         </span>
                                         &nbsp;
                                         <span className="txtSecond-1  whitespace-nowrap">
@@ -658,8 +643,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                                 {isHideAsset
                                                     ? SECRET_STRING
                                                     : available
-                                                        ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
-                                                        : '0.0000'}
+                                                    ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-3">
@@ -668,8 +653,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                                 {isHideAsset
                                                     ? SECRET_STRING
                                                     : wallet.locked_value
-                                                        ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                        : '0.0000'}
+                                                    ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
                                             </span>
                                         </div>
                                     </div>
