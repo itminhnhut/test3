@@ -247,11 +247,17 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:assigned_margin')}</div>
-                            <div className="font-semibold text-right">{formatNumber(margin, decimals.symbol)}</div>
+                            <div className="font-semibold text-right">
+                                {formatNumber(margin, decimals.symbol)}
+                                <span className="ml-1">{quoteAsset}</span>
+                            </div>
                         </div>
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:available')}</div>
-                            <div className="font-semibold text-right">{formatNumber(available, decimals.symbol)}</div>
+                            <div className="font-semibold text-right">
+                                {formatNumber(available, decimals.symbol)}
+                                <span className="ml-1">{quoteAsset}</span>
+                            </div>
                         </div>
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:new_liq_price')}</div>
