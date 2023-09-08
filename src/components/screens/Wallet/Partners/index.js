@@ -107,7 +107,6 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                     if (lockedValue === 'NaN') {
                         lockedValue = '0.0000';
                     }
-
                     return (
                         <span className="whitespace-nowrap">
                             {isHideAsset

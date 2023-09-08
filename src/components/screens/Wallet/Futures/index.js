@@ -130,19 +130,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
                         lockedValue = '0.0000';
                     }
 
-                    return (
-                        <span className="whitespace-nowrap">
-                            {isHideAsset ? (
-                                SECRET_STRING
-                            ) : v ? (
-                                <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
-                                    <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
-                                </Link>
-                            ) : (
-                                '0.0000'
-                            )}
-                        </span>
-                    );
+                    return <span className="whitespace-nowrap">{isHideAsset ? SECRET_STRING : v ? lockedValue : '0.0000'}</span>;
                 }
             },
             {
