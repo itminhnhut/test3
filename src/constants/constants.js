@@ -4,6 +4,7 @@ export const ONE_DAY = 86400000;
 
 export const INSURANCE_URL = process.env.NEXT_PUBLIC_INSURANCE_URL || 'https://namiinsurance.io/';
 export const NAMI_FUTURES_EARNED_SHARE = 'NamiFutures_TakeProfit_';
+export const ONE_DAY = 86400000;
 
 export const ROOT_TOKEN = 'NAMI';
 
@@ -73,7 +74,8 @@ export const FEE_STRUCTURES = {
 export const NAMI_FEE_FUTURE = [
     { assetId: 72, assetCode: 'VNDC', ratio: '0.06%' },
     { assetId: 1, assetCode: 'NAMI', ratio: '0.042%' },
-    { assetId: 22, assetCode: 'USDT', ratio: '0.06%' }
+    { assetId: 22, assetCode: 'USDT', ratio: '0.06%' },
+    { assetId: 39, assetCode: 'VNST', ratio: '0.06%' }
 ];
 
 export const FEE_TABLE = [
@@ -261,6 +263,20 @@ export const CHART_JS_RANGE = {
     quarter: 'quarter',
     year: 'year'
 };
+
+export const QUOTE_ASSET = {
+    USDT: 22,
+    VNDC: 72,
+    VNST: 39
+};
+export const CURRENCY = {
+    USDT: 22,
+    VNDC: 72,
+    NAO: 447,
+    VNST: 39
+};
+
+export const FUTURES_DEFAULT_SYMBOL = 'BTC';
 
 export const INSURANCE_STATE = {
     AVAILABLE: 'Available',

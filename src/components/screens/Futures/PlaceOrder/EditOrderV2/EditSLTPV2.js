@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import ModalV2 from 'components/common/V2/ModalV2';
 import { useTranslation } from 'next-i18next';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { formatNumber, getFilter, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
+import { convertSymbol, formatNumber, getFilter, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
 import CheckBox from 'components/common/CheckBox';
 import SwitchV2 from 'components/common/V2/SwitchV2';
 import Button from 'components/common/V2/ButtonV2/Button';
@@ -16,6 +16,7 @@ import { ceil, find } from 'lodash';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
+import { getPairConfig } from 'redux/selectors';
 
 const initValue = {
     displaying_id: null,
@@ -27,11 +28,11 @@ const initValue = {
 const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onConfirm, marketWatch }) => {
     const { t } = useTranslation();
     const symbol = order?.symbol;
-    const futuresConfigs = useSelector((state) => state.futures.pairConfigs);
-    const pairConfig = find(futuresConfigs, { symbol });
+    const pairConfig = useSelector((state) => getPairConfig(state, symbol));
     const [currentTheme] = useDarkMode();
-    const _lastPrice = marketWatch ? marketWatch[order?.symbol]?.lastPrice : lastPrice;
-    const quoteAsset = marketWatch ? marketWatch[order?.symbol]?.quoteAsset : order?.quoteAsset;
+    const pairTicker = marketWatch?.[convertSymbol(symbol)];
+    const _lastPrice = pairTicker?.lastPrice ?? lastPrice;
+    const quoteAsset = pairConfig?.quoteAsset;
     const [autoType, setAutoType] = useState(false);
     const [data, setData] = useState(initValue);
     const [show, setShow] = useState({ tp: +order?.tp > 0, sl: +order?.sl > 0 });

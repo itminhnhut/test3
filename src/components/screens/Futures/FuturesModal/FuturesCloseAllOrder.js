@@ -5,7 +5,7 @@ import { BxsInfoCircle, ShareIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { API_CLOSE_ALL_ORDERS_BY_CONDTION, API_GET_ALL_ORDERS_BY_CONDTION } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
-import { formatNumber, formatTime, TypeTable, getDecimalPrice, getUnit } from 'redux/actions/utils';
+import { formatNumber, formatTime, TypeTable, getDecimalPrice, convertSymbol } from 'redux/actions/utils';
 import { VndcFutureOrderType, getProfitVndc } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useSelector } from 'react-redux';
 import ChevronDown from 'components/svg/ChevronDown';
@@ -17,10 +17,11 @@ import NoData from 'components/common/V2/TableV2/NoData';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import FututesShareModal from 'components/screens/Futures/FuturesModal/FututesShareModal';
 import classNames from 'classnames';
+import { getAssetConfig } from 'redux/selectors';
 
 const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, closeType, isPosition }) => {
     const { t } = useTranslation();
-    const unitConfig = useSelector((state) => getUnit(state, pairConfig?.quoteAsset));
+    const unitConfig = useSelector((state) => getAssetConfig(state, pairConfig?.quoteAssetId));
     const quoteAsset = pairConfig?.quoteAsset;
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -89,9 +90,9 @@ const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, clo
                 message: error?.message
             };
         } finally {
+            if (onClose) onClose();
             setClosing(false);
             setShowAlert(true);
-            if (onClose) onClose();
         }
     };
 
@@ -257,7 +258,7 @@ const OrdersList = ({ orders, marketWatch, decimals, calProfit, loading }) => {
                     orders.length > 0 &&
                     orders?.map((order, i) => {
                         const isBuy = order?.side === VndcFutureOrderType.Side.BUY;
-                        const pairTicker = marketWatch[order?.symbol];
+                        const pairTicker = marketWatch?.[convertSymbol(order?.symbol)];
                         const profit = getProfitVndc(order, isBuy ? pairTicker?.bid : pairTicker?.ask, true);
                         const percent = (profit / order?.margin) * 100;
                         calProfit({ [order?.displaying_id]: profit });

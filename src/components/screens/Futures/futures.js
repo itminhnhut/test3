@@ -23,6 +23,8 @@ import { useLocalStorage } from 'react-use';
 import { LOCAL_STORAGE_KEY, NON_LOGIN_KEY, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
 import Emitter from 'redux/actions/emitter';
 import { fetchFuturesSetting, getOrdersList } from 'redux/actions/futures';
+import { convertSymbol, getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
+import { getMarketWatch, getPairConfig } from 'redux/selectors';
 import DefaultMobileView from 'src/components/common/DefaultMobileView';
 import styled from 'styled-components';
 
@@ -60,7 +62,6 @@ const INITIAL_STATE = {
     favoritePairLayout: null,
     orderBookLayout: null,
     tradeRecordLayout: null,
-    isVndcFutures: true,
     assumingPrice: null,
     isShowOrderIntegrateFromInsurance: false
 };
@@ -76,7 +77,7 @@ const initFuturesComponent = {
     // [FuturesSettings.show_sl_tp_order_line]: true
 };
 
-const Futures = ({ integrate, orderId }) => {
+const Futures = ({ integrate, orderId, symbol }) => {
     const isIntegrateFromInsurance = integrate === 'nami_insurance';
 
     const [state, set] = useState(INITIAL_STATE);
@@ -89,19 +90,19 @@ const Futures = ({ integrate, orderId }) => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const userSocket = useSelector((state) => state.socket.userSocket);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
-    const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
-    const assetConfig = useSelector((state) => state.utils.assetConfig);
-    const marketWatch = useSelector((state) => state.futures?.marketWatch);
+    const pairPrice = useSelector((state) => getMarketWatch(state, convertSymbol(symbol)));
     const auth = useSelector((state) => state.auth?.user);
     const userSettings = useSelector((state) => state.futures?.userSettings);
     const ordersList = useSelector((state) => state?.futures?.ordersList);
     const router = useRouter();
     const { width } = useWindowSize();
     const isMediumDevices = width >= BREAK_POINTS.lg;
-
+    const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
     // Memmoized Variable
-    const pairConfig = useMemo(() => allPairConfigs?.find((o) => o.pair === state.pair), [allPairConfigs, state.pair]);
+    const pairConfig = useSelector((state) => getPairConfig(state, symbol));
     const unitConfig = useSelector((state) => getUnit(state, pairConfig?.quoteAsset));
+    const isVndcFutures = ['VNDC', 'VSNT'].includes(pairConfig?.quoteAsset);
 
     /* INSURANCE INTEGRATE ORDER ID  */
     const { data: orderIntegrateFromInsurance, error } = useFetchApi(
@@ -186,14 +187,11 @@ const Futures = ({ integrate, orderId }) => {
         };
     }, [userSocket, auth]);
 
-    useEffect(() => {
-        if (marketWatch?.[state.pair]) {
-            setState({
-                pairPrice: marketWatch[state.pair],
-                forceUpdateState: state.forceUpdateState + 1
-            });
-        }
-    }, [marketWatch, state.pair]);
+    // useEffect(() => {
+    //     if (ticker) {
+    //         setState({ pairPrice: ticker });
+    //     }
+    // }, [ticker]);
 
     useEffect(() => {
         // ? Hide global scroll
@@ -212,30 +210,25 @@ const Futures = ({ integrate, orderId }) => {
     }, [router]);
 
     useEffect(() => {
-        if (!state.pair) return;
-
+        if (!symbol) return;
+        const _symbol = convertSymbol(symbol);
         // ? Subscribe publicSocket
-        subscribeFuturesSocket(state.pair);
+        subscribeFuturesSocket(_symbol);
 
-        // ? Get Pair Ticker
-        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol, async (data) => {
-            const pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
-            // console.log('__ check pairPrice', pairPrice.symbol, state.pair, pairPrice);
-            if (state.pair === pairPrice?.symbol && pairPrice?.lastPrice > 0) {
-                setState({ pairPrice });
-            }
-        });
+        // // ? Get Pair Ticker
+        // Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + _symbol, async (data) => {
+        //     const pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
+        //     if (_symbol === convertSymbol(pairPrice?.symbol) && pairPrice?.lastPrice > 0) {
+        //         setState({ pairPrice });
+        //     }
+        // });
 
         // ? Unsubscribe publicSocket
         return () => {
-            publicSocket && unsubscribeFuturesSocket(state.pair);
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol);
+            publicSocket && unsubscribeFuturesSocket(_symbol);
+            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + _symbol);
         };
-    }, [publicSocket, state.pair]);
-
-    useEffect(() => {
-        setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
-    }, [pairConfig, userSettings]);
+    }, [publicSocket, symbol]);
 
     useEffect(() => {
         if (!localLayoutFutures) {
@@ -336,11 +329,12 @@ const Futures = ({ integrate, orderId }) => {
                                         <RemoveItemArea onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.pairDetail]: false })} />
                                         <DragHandleArea />
                                         <FuturesPairDetail
-                                            pairPrice={state.pairPrice}
+                                            pairPrice={pairPrice}
                                             pairConfig={pairConfig}
-                                            forceUpdateState={state.forceUpdateState}
-                                            isVndcFutures={state.isVndcFutures}
+                                            isVndcFutures={isVndcFutures}
                                             isAuth={!!auth}
+                                            decimals={decimals}
+                                            pair={convertSymbol(symbol)}
                                         />
                                     </GridItem>
                                 )}
@@ -357,9 +351,9 @@ const Futures = ({ integrate, orderId }) => {
                                         <DragHandleArea />
                                         <FuturesChart
                                             chartKey="futures_containter_chart"
-                                            pair={pairConfig?.pair}
+                                            pair={symbol}
                                             initTimeFrame=""
-                                            isVndcFutures={state.isVndcFutures}
+                                            isVndcFutures={isVndcFutures}
                                             ordersList={ordersList}
                                         />
                                     </GridItem>
@@ -382,9 +376,9 @@ const Futures = ({ integrate, orderId }) => {
                                             isVndcFutures={true}
                                             layoutConfig={state.tradeRecordLayout}
                                             pairConfig={pairConfig}
-                                            pairPrice={state.pairPrice}
+                                            pairPrice={pairPrice}
                                             isAuth={!!auth}
-                                            pair={state.pair}
+                                            pair={symbol}
                                         />
                                     </GridItem>
                                 )}
@@ -403,9 +397,9 @@ const Futures = ({ integrate, orderId }) => {
                                             pairConfig={pairConfig}
                                             userSettings={userSettings}
                                             assumingPrice={state.assumingPrice}
-                                            isVndcFutures={state.isVndcFutures}
-                                            pairPrice={state.pairPrice}
-                                            pair={state.pair}
+                                            isVndcFutures={isVndcFutures}
+                                            pairPrice={pairPrice}
+                                            pair={symbol}
                                             decimals={decimals}
                                         />
                                     </GridItem>
@@ -424,8 +418,8 @@ const Futures = ({ integrate, orderId }) => {
                                         <DragHandleArea height={32} />
                                         <FuturesMarginRatioVndc
                                             pairConfig={pairConfig}
+                                            pairPrice={pairPrice}
                                             auth={auth}
-                                            lastPrice={state.pairPrice?.lastPrice}
                                             decimals={decimals}
                                         />
                                     </GridItem>

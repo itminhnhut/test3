@@ -26,9 +26,10 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
     const [showCustomized, setShowCustomized] = useState(false);
     const isChangeSlide = useRef(false);
     const [loading, setLoading] = useState(false);
+    const isVNDC = ['VNDC', 'VNST'].includes(quoteAsset);
 
     const minQuoteQty = useMemo(() => {
-        const initValue = quoteAsset === 'VNDC' ? 100000 : 5;
+        const initValue = isVNDC ? 100000 : 5;
         return pairConfig ? +pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional : initValue;
     }, [pairConfig]);
 
@@ -165,7 +166,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
     };
 
     const _onConfirm = async () => {
-        const isLargeVolume = checkLargeVolume(+volume, quoteAsset === 'VNDC');
+        const isLargeVolume = checkLargeVolume(+volume, isVNDC);
         const inFundingTime = checkInFundingTime();
         let notice = null;
         if (inFundingTime) {

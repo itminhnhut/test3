@@ -17,6 +17,7 @@ import { SUGGESTED_SYMBOLS } from '../FavoritePairs';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { searchSort } from 'redux/actions/utils';
 import useDebounce from 'hooks/useDebounce';
+import { QUOTE_ASSET } from 'constants/constants';
 
 const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectPair = null, className = '' }) => {
     const { t } = useTranslation();
@@ -176,18 +177,16 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                         wrapperClassname="py-2 flex-1"
                     />
                     <div className="pl-4 flex items-center text-sm gap-3 text-txtSecondary dark:text-txtSecondary-dark  select-none">
-                        <button
-                            onClick={() => setMode('VNDC')}
-                            className={`${mode === 'VNDC' ? 'text-green-3 dark:text-green-2 font-semibold' : 'hover:text-gray-15 dark:hover:text-gray-14'}`}
-                        >
-                            VNDC
-                        </button>
-                        <button
-                            onClick={() => setMode('USDT')}
-                            className={`${mode === 'USDT' ? 'text-green-3 dark:text-green-2 font-semibold' : 'hover:text-gray-15 dark:hover:text-gray-14'}`}
-                        >
-                            USDT
-                        </button>
+                        {Object.keys(QUOTE_ASSET).map((quoteAsset) => (
+                            <button
+                                onClick={() => setMode(quoteAsset)}
+                                className={`${
+                                    mode === quoteAsset ? 'text-green-3 dark:text-green-2 font-semibold' : 'hover:text-gray-15 dark:hover:text-gray-14'
+                                }`}
+                            >
+                                {quoteAsset}
+                            </button>
+                        ))}
                     </div>
                 </div>
 

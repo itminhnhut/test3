@@ -1,7 +1,4 @@
-import { useRouter } from 'next/router';
-import { PATHS } from 'constants/paths';
-
-export const FUTURES_DEFAULT_SYMBOL = 'BTC';
+import { FUTURES_DEFAULT_SYMBOL } from 'constants/constants';
 
 const FuturesIndex = () => {
     // const router = useRouter();

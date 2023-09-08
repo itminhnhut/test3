@@ -164,13 +164,13 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, tab, active, onShowDetail,
             <div className={scrollSnap ? 'h-[calc(100vh-100px)] overflow-y-auto' : ''}>
                 <div className="px-[16px]">
                     {dataFilter?.map((order, i) => {
-                        const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
-                        const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
-                        const decimalScalePrice = getDecimalPrice(symbol);
-                        const isVndcFutures = symbol?.quoteAsset === 'VNDC';
+                        const pairConfig = allPairConfigs.find(rs => rs.symbol === order.symbol);
+                        const decimalSymbol = assetConfig.find(rs => rs.id === pairConfig?.quoteAssetId)?.assetDigit ?? 0;
+                        const decimalScalePrice = getDecimalPrice(pairConfig);
+                        const isVndcFutures = ['VNDC', 'VNST'].includes(pairConfig?.quoteAsset);
                         return (
                             <OrderItemMobile key={i} order={order} tab={tab}
-                                isDark={isDark} onShowDetail={onShowDetail} symbol={symbol}
+                                isDark={isDark} onShowDetail={onShowDetail} pairConfig={pairConfig}
                                 onShowModal={onShowModal} decimalSymbol={decimalSymbol} decimalScalePrice={decimalScalePrice}
                                 isVndcFutures={isVndcFutures}
                             />
