@@ -86,8 +86,8 @@ export const MinTransferFromBroker = {
     NAO: 100
 };
 
-const ALLOWED_ASSET = ['VNDC', 'NAMI', 'USDT', 'NAC', 'NAO'];
-const ALLOWED_ASSET_FUTURES = ['VNDC', 'NAMI', 'USDT', 'NAC'];
+const ALLOWED_ASSET = ['VNDC', 'NAMI', 'USDT', 'NAC', 'NAO', 'VNST'];
+const ALLOWED_ASSET_FUTURES = ['VNDC', 'NAMI', 'USDT', 'NAC', 'VNST'];
 const ALLOWED_ASSET_INSURANCE = ['USDT'];
 
 const INITIAL_STATE = {

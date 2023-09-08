@@ -238,14 +238,13 @@ export function formatBalance(value, digits = 2, acceptNegative = false) {
 }
 
 export const formatBalanceFiat = (value, assetCode, acceptNegative = false) => {
-    const isVNDC = assetCode === 'VNDC';
     const isUSDT = assetCode === 'USDT';
-    return formatBalance(isVNDC ? Math.round(value) : value, isVNDC ? 0 : isUSDT ? 4 : 0, acceptNegative);
+    return formatBalance(isUSDT ? value : Math.round(value), isUSDT ? 4 : 0, acceptNegative);
 };
 
 export const getExactBalanceFiat = (balance, assetCode) => {
-    const digit = assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : 0;
-    return roundByExactDigit(balance, digit);
+    const isUSDT = assetCode === 'USDT';
+    return roundByExactDigit(balance, isUSDT ? 4 : 0);
 };
 // Hiển thị cho phí spot tính bằng VNDC, USDT, ATS
 export function formatSpotFee(value) {

@@ -34,7 +34,7 @@ const FILTER_PNL = [
     }
 ];
 
-const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrade = true, isVndc = true, isMobile }) => {
+const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, precision, isMobile }) => {
     const [filterPnl, setFilterPnl] = useState(FILTER_PNL[0].value);
 
     // Data trading pairs
@@ -116,7 +116,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                         const ratePnl = profit?.value / margin?.value;
                         const rate = doc_count / totalPosition;
 
-                        externalTooltipHandler(context, isDark, t, isVndc, doc_count, rate, profit?.value, ratePnl);
+                        externalTooltipHandler(context, isDark, t, precision, doc_count, rate, profit?.value, ratePnl);
                     }
                 }
             }
@@ -240,7 +240,7 @@ const TradingPair = ({ isDark, t, typeProduct, typeCurrency, filter, isNeverTrad
                             <div className="flex items-center justify-between mt-2.5">
                                 <span className="txtSecond-3">{t('portfolio:total_pnl')}</span>
                                 <span className={showDetails?.profit?.value > 0 ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
-                                    {`${showDetails?.profit?.value > 0 ? '+' : ''}${formatNanNumber(showDetails?.profit?.value, isVndc ? 0 : 4)} (${
+                                    {`${showDetails?.profit?.value > 0 ? '+' : ''}${formatNanNumber(showDetails?.profit?.value, precision)} (${
                                         showDetails?.profit?.value > 0 ? '+' : ''
                                     }${formatNanNumber((showDetails?.profit?.value * 100) / showDetails?.margin?.value, 2)}%)`}
                                 </span>
@@ -342,7 +342,7 @@ const generateThead = (isDark, label) => {
     return tableHead;
 };
 
-const externalTooltipHandler = (context, isDark, t, isVndc, doc_count, rate, profit, ratePnl) => {
+const externalTooltipHandler = (context, isDark, t, precision, doc_count, rate, profit, ratePnl) => {
     // Tooltip Element
     const { chart, tooltip } = context;
     const tooltipEl = getOrCreateTooltip(chart, isDark);
@@ -360,7 +360,7 @@ const externalTooltipHandler = (context, isDark, t, isVndc, doc_count, rate, pro
 
         const sign = profit > 0 ? '+' : '';
 
-        const pnl = `${sign}${formatNanNumber(profit, isVndc ? 0 : 4)} (${sign}${formatNanNumber(ratePnl * 100, 2)}%)`;
+        const pnl = `${sign}${formatNanNumber(profit, precision)} (${sign}${formatNanNumber(ratePnl * 100, 2)}%)`;
 
         // Generate header
         const tableHead = generateThead(isDark, label);

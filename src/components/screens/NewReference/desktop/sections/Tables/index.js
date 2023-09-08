@@ -1,7 +1,9 @@
 import { useCallback } from 'react';
 
 import InputV2 from 'components/common/V2/InputV2';
+import SelectV2 from 'components/common/V2/SelectV2';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 import dynamic from 'next/dynamic';
 
@@ -10,10 +12,10 @@ const CommissionHistory = dynamic(() => import('components/screens/NewReference/
 
 import { Search } from 'react-feather';
 
+import { CheckCircleIcon } from 'components/svg/SvgIcon';
+
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import SelectV2 from 'components/common/V2/SelectV2';
-import CheckCircle from 'components/svg/CheckCircle';
 
 const Tables = ({ language, t, commisionConfig, id1, id2 }) => {
     return (
@@ -24,7 +26,7 @@ const Tables = ({ language, t, commisionConfig, id1, id2 }) => {
     );
 };
 
-export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
+export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }) => {
     const DatePicker = ({ item, filter, key }) => {
         const data = filter?.[key] || {};
         return (
@@ -32,8 +34,9 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
                 month={2}
                 hasShadow
                 initDate={data?.value}
-                wrapperClassname="!w-full !h-12"
+                wrapperClassname="!w-full !h-11"
                 colorX="#8694b2"
+                wrapperClassNameDate={item.wrapperDate}
                 position={item?.position || 'center'}
                 onChange={(e) => onChange(e?.selection, key)}
             />
@@ -54,37 +57,38 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
         );
     };
 
-    const Reset = ({ item }) => {
-        return (
-            <button
-                onClick={() => setFilter(config)}
-                className="whitespace-nowrap bg-gray-10 hover:bg-gray-6 text-gray-15 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7
-                        px-4 rounded-md px-auto py-auto font-semibold h-12"
-            >
-                {item.title}
-            </button>
-        );
-    };
-
     const Select = ({ item, filter, key }) => {
         const data = filter?.[key] || {};
         return (
             <SelectV2
-                // className="text-txtSecondary dark:text-txtSecondary-dark"
-                options={item?.values || []}
-                value={data?.value || null}
+                name="customer"
+                keyExpr="value"
+                popoverPanelClassName="top-auto"
+                className={classNames('!h-11', item.childClassName)}
+                value={data?.value || item.values[0]?.value}
+                options={item.values}
+                popoverClassName="w-[240px]"
                 onChange={(e) => onChange(e, key)}
-                optionClassName="!font-normal !text-txtPrimary dark:!text-txtPrimary-dark flex justify-between items-center first:mt-2 mb-2"
-                activeIcon={<CheckCircle color="currentColor" size={16} />}
+                activeIcon={<CheckCircleIcon color="currentColor" size={16} />}
+                wrapperClassName="flex flex-row gap-2 flex-col"
+                optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
             />
+        );
+    };
+
+    const Reset = ({ item }) => {
+        return (
+            <ButtonV2 onClick={() => setFilter(config)} variants="reset" className={classNames(item?.buttonClassName)}>
+                {item.title}
+            </ButtonV2>
         );
     };
 
     const ListFilter = {
         dateRange: (data) => DatePicker(data),
         input: (data) => Input(data),
-        reset: (data) => Reset(data),
-        popover: (data) => Select(data)
+        select: (data) => Select(data),
+        reset: (data) => Reset(data)
     };
 
     const onChange = (value, key) => {
@@ -105,8 +109,15 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
     );
     const filterArray = Object.keys(config || []);
     return filterArray.map((key) => (
-        <div className={`flex flex-col items-start justify-end w-auto ${config[key]?.childClassName || ''}`} key={key}>
-            <div className="text-txtSecondary dark:text-txtSecondary-dark mb-3 text-sm">{config[key].label}</div>
+        <div className={`flex flex-col items-start  w-auto ${config[key]?.childClassName || ''}`} key={key}>
+            <div
+                className={classNames('text-txtSecondary dark:text-txtSecondary-dark mb-2 text-sm', {
+                    hidden: config[key].label === '',
+                    'text-xs': type === 'history'
+                })}
+            >
+                {config[key].label}
+            </div>
             {renderFilter(config[key], key)}
         </div>
     ));

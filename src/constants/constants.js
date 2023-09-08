@@ -4,7 +4,6 @@ export const ONE_DAY = 86400000;
 
 export const INSURANCE_URL = process.env.NEXT_PUBLIC_INSURANCE_URL || 'https://namiinsurance.io/';
 export const NAMI_FUTURES_EARNED_SHARE = 'NamiFutures_TakeProfit_';
-export const ONE_DAY = 86400000;
 
 export const ROOT_TOKEN = 'NAMI';
 
@@ -267,12 +266,12 @@ export const CHART_JS_RANGE = {
 export const QUOTE_ASSET = {
     USDT: 22,
     VNDC: 72,
+    NAO: 447,
     VNST: 39
 };
 export const CURRENCY = {
     USDT: 22,
     VNDC: 72,
-    NAO: 447,
     VNST: 39
 };
 

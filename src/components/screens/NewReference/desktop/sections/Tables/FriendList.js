@@ -1,82 +1,43 @@
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TableFilter } from '.';
 import classNames from 'classnames';
-import { ExportIcon } from 'components/common/Icons';
 import Tooltip from 'components/common/Tooltip';
-import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
 import TagV2 from 'components/common/V2/TagV2';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import { isValid } from 'date-fns';
 import dynamic from 'next/dynamic';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { API_GET_LIST_FRIENDS, API_GET_REFERRAL_FRIENDS_BY_CODE } from 'redux/actions/apis';
-import { KYC_STATUS } from 'redux/actions/const';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import FetchApi from 'utils/fetch-api';
 import { assetCodeFromId } from 'utils/reference-utils';
+import styled from 'styled-components';
 import FriendListExportModal from './Components/FriendListExportModal';
 
+// ** configs
+import { DEFAULT_TOKENS, BREADCRUMB, RANK } from 'components/screens/NewReference/configs';
 
+// ** dynamic
 const ModalFriendDetail = dynamic(() => import('./Components/ModalFriendDetail'), { ssr: false });
 const BreadCrumbs = dynamic(() => import('./Components/BreadCrumbs'), { ssr: false });
 
 const NoKYCTag = ({ t }) => <TagV2 className="whitespace-nowrap">{t('reference:referral.not_kyc')}</TagV2>;
 
-// const KYCPendingTag = ({ t }) => <TagV2 className="whitespace-nowrap type="warning">{t('reference:referral.pending_kyc')}</TagV2>;
 const KYCApprovedTag = ({ t }) => (
     <TagV2 className="whitespace-nowrap text-green-3 dark:text-teal" type="success">
         {t('reference:referral.kyc')}
     </TagV2>
 );
 
-const DEFAULT_TOKENS = [
-    {
-        value: 447,
-        title: 'NAO'
-    },
-    {
-        value: 1,
-        title: 'NAMI'
-    },
-    {
-        value: 22,
-        title: 'USDT'
-    },
-    {
-        value: 72,
-        title: 'VNDC'
-    }
-];
-
-const BREADCRUMB = [
-    {
-        name: { en: 'Friends list F1', vi: 'Danh sách bạn bè F1' }
-    },
-    {
-        name: { en: 'Nhóm F2', vi: 'Group F2' }
-    },
-    {
-        name: { en: 'Nhóm F3', vi: 'Group F3' }
-    },
-    {
-        name: { en: 'Nhóm F4', vi: 'Group F4' }
-    }
-];
-const MAX_BREAD_CRUMB = 3;
 const LIMIT = 10;
 const MILLISECOND = 1;
+const MAX_BREAD_CRUMB = 3;
+const DEFAULT_TOKEN = 'VNDC';
 
 const FriendList = ({ language, t, id }) => {
     const assetConfig = useSelector((state) => state.utils.assetConfig);
 
-    const rank = {
-        1: t('reference:referral.normal'),
-        2: t('reference:referral.official'),
-        3: t('reference:referral.gold'),
-        4: t('reference:referral.platinum'),
-        5: t('reference:referral.diamond')
-    };
     const tooltipCommission = {
         commission: t('reference:table.tooltip.commission'),
         commission_indirect: t('reference:table.tooltip.commission_indirect')
@@ -93,7 +54,7 @@ const FriendList = ({ language, t, id }) => {
             label: t('reference:friend_list.filter.referral_date'),
             title: t('reference:friend_list.filter.referral_date'),
             position: 'left',
-            childClassName: 'min-w-[240px]'
+            wrapperDate: '!text-gray-15 dark:!text-gray-4 !text-base'
         },
         total_commissions: {
             type: 'dateRange',
@@ -105,7 +66,7 @@ const FriendList = ({ language, t, id }) => {
             values: null,
             label: t('reference:friend_list.filter.total_commissions'),
             title: t('reference:friend_list.filter.total_commissions'),
-            childClassName: 'min-w-[240px]'
+            wrapperDate: '!text-gray-15 dark:!text-gray-4 !text-base'
         },
         search: {
             type: 'input',
@@ -118,7 +79,9 @@ const FriendList = ({ language, t, id }) => {
         reset: {
             type: 'reset',
             label: '',
-            title: t('reference:friend_list.filter.reset')
+            title: t('reference:friend_list.filter.reset'),
+            buttonClassName: '!text-gray-15 dark:!text-gray-7 font-semibold text-base',
+            childClassName: 'justify-end'
         }
     };
     const [loading, setLoading] = useState(false);
@@ -209,8 +172,13 @@ const FriendList = ({ language, t, id }) => {
 
     const handleDetailFriend = async (row) => {
         try {
+            const { total_commissions } = filter || {};
             const { data, status } = await FetchApi({
-                url: API_GET_REFERRAL_FRIENDS_BY_CODE.replace(':code', row?.code)
+                url: API_GET_REFERRAL_FRIENDS_BY_CODE.replace(':code', row?.code),
+                params: {
+                    from: formatDate(total_commissions?.value, 'startDate'),
+                    to: formatDate(total_commissions?.value, 'endDate')
+                }
             });
             if (status === 'ok') {
                 const { name = '', code = '', email = '' } = row;
@@ -228,6 +196,7 @@ const FriendList = ({ language, t, id }) => {
         if (active) return;
         setLevelFriend((prev) => prev + 1);
         setParentCode(row?.code);
+        setPage(1); // reset page
         handleResetSearchByCode();
     };
 
@@ -281,7 +250,7 @@ const FriendList = ({ language, t, id }) => {
                 title: t('reference:table.ranking'),
                 align: 'left',
                 width: 120,
-                render: (value) => <div className="font-normal">{rank[value?.toString() ?? '0']}</div>
+                render: (value) => <div className="font-normal">{RANK[value?.toString() ?? '0']?.[language]}</div>
             },
             {
                 key: 'kyc_status',
@@ -290,11 +259,6 @@ const FriendList = ({ language, t, id }) => {
                 align: 'left',
                 width: 150,
                 render: (value) => (value === 2 ? <KYCApprovedTag t={t} /> : <NoKYCTag t={t} />)
-                // return {
-                //     [KYC_STATUS.NO_KYC]: <NoKYCTag t={t} />,
-                //     [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                //     [KYC_STATUS.APPROVED]: <KYCApprovedTag t={t} />
-                // }[value];
             },
             {
                 key: 'user_count',
@@ -338,7 +302,7 @@ const FriendList = ({ language, t, id }) => {
                             <hr className="h-7 w-[1px] border-[1px] border-solid dark:border-[#222940] border-[#dcdfe6] mx-3" />
                             <div
                                 className={classNames({
-                                    'dark:text-green-7 text-gray-1': isNotActive
+                                    'text-gray-16 dark:text-dark-6': isNotActive
                                 })}
                                 onClick={() => handleFriendLevel(row, isNotActive)}
                             >
@@ -351,7 +315,7 @@ const FriendList = ({ language, t, id }) => {
         ];
 
         return (
-            <TableV2
+            <WrapperTable
                 sort
                 skip={0}
                 useRowHover
@@ -383,23 +347,20 @@ const FriendList = ({ language, t, id }) => {
 
     const handleTotal = (data, assetId, type) => {
         const symbol = assetConfig.find((f) => f.id === assetId) || {};
-        return formatNumber(data?.[type]?.[assetId], symbol?.assetDigit);
+        return formatNumber(data?.[type]?.[assetId], symbol?.assetDigit) || 0;
     };
 
     const renderCommissionData = (data, type = 'commission') => {
         return (
             <div>
                 <p className="text-green-3 relative dark:text-teal inline-block font-semibold nami-underline-dotted" data-tip="" data-for={type + data?.code}>
-                    ~ {formatNumber(data?.[type]?.total)} {data?.symbol} VNDC
+                    ~ {formatNumber(data?.[type]?.total)} {data?.symbol} {DEFAULT_TOKEN}
                 </p>
                 <Tooltip offset={{ top: 18 }} id={type + data?.code} place="top" effect="solid" className={`max-w-[220px]`} isV3>
                     <div className="w-full">
-                        <div className="mb-4 text-white dark:text-txtSecondary-dark text-center text-xs">
-                            {/* {t('reference:referral.total_direct_commissions')} */}
-                            {tooltipCommission[type]}
-                        </div>
+                        <div className="mb-4 text-white dark:text-txtSecondary-dark text-center text-xs">{tooltipCommission[type]}</div>
                         <div className="space-y-1 text-sm">
-                            {[72, 22, 1].map((assetId) => {
+                            {[72, 39, 22, 1].map((assetId) => {
                                 return (
                                     <div key={assetId} className="flex items-center justify-between">
                                         <span className="text-white">{handleTotal(data, assetId, type)}</span>
@@ -462,5 +423,15 @@ const FriendList = ({ language, t, id }) => {
         </div>
     );
 };
+
+const WrapperTable = styled(TableV2)`
+    .rc-table-cell-fix-right,
+    .rc-table-cell-fix-right-first,
+    .rc-table-cell-fix-right-last {
+        &:after {
+            height: 100vh !important;
+        }
+    }
+`;
 
 export default FriendList;

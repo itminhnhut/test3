@@ -1,16 +1,15 @@
 import React, { useRef } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import PriceChangePercent from 'components/common/PriceChangePercent';
-import colors from 'styles/colors';
 import Tooltip from 'components/common/Tooltip';
 import { formatNanNumber, formatTime } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
-import { ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from '../WithdrawDeposit/constants';
 import classNames from 'classnames';
 import HeaderTooltip from './HeaderTooltip';
 import { API_FUTURES_STATISTIC_DW, API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
-import { ShareIcon, SaveAltIcon, FacebookIcon, TwitterIcon, TelegramIcon, RedditIcon, LinkedInIcon, DiscordIcon } from 'components/svg/SvgIcon';
+import { ShareIcon } from 'components/svg/SvgIcon';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import styled from 'styled-components';
 import ModalV2 from 'components/common/V2/ModalV2';
@@ -34,16 +33,16 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
     useEffect(() => {
         FetchApi({
             url: API_GET_REFERENCE_CURRENCY,
-            params: { base: 'VNDC,USDT', quote: 'USD' }
+            params: { base: Object.keys(ALLOWED_ASSET_ID).join(','), quote: 'USD' }
         })
             .then(({ data = [] }) => {
-                const baseCurrency = typeCurrency === ALLOWED_ASSET_ID.VNDC ? 'VNDC' : 'USDT';
+                const baseCurrency = ALLOWED_ASSET?.[typeCurrency];
                 setUsdRate(data.find((obj) => obj.base === baseCurrency)?.price);
             })
             .catch((err) => console.error(err));
     }, [typeCurrency]);
 
-    const isVnd = typeCurrency === ALLOWED_ASSET_ID.VNDC;
+    const precision = typeCurrency === ALLOWED_ASSET_ID.USDT ? 4 : 0
 
     const [dataDw, setDataDw] = useState({ totalWithdraw: null, totalDeposit: null });
     const [loadingDataDW, setLoadingDataDW] = useState(false);
@@ -84,7 +83,7 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
                     {loadingOverview ? (
                         <Skeletor width={isMobile ? 80 : 150} height={20} />
                     ) : (
-                        formatNanNumber(totalVolume, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)
+                        formatNanNumber(totalVolume, precision)
                     )}
                 </div>
                 <div className="mt-1 md:mt-2">{loadingOverview ? <Skeletor width={isMobile ? 60 : 150} height={12} /> : swapValue}</div>
@@ -111,7 +110,7 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
                         '!text-red-2 !dark:text-red': totalPnl < 0
                     })}
                 >
-                    {loadingOverview ? <Skeletor width={isMobile ? 80 : 150} height={20} /> : `${sign}${formatNanNumber(totalPnl, isVnd ? 0 : 4)}`}
+                    {loadingOverview ? <Skeletor width={isMobile ? 80 : 150} height={20} /> : `${sign}${formatNanNumber(totalPnl, precision)}`}
                 </div>
                 {loadingOverview ? (
                     <Skeletor width={isMobile ? 60 : 150} height={12} />
@@ -140,7 +139,7 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
                         <Skeletor className="!my-0.5" width={isMobile ? 150 : 200} height={16} />
                     ) : (
                         <div className="text-right">
-                            <span className="txtPri-1">{formatNanNumber(totalMargin, isVnd ? 0 : 4)}</span>
+                            <span className="txtPri-1">{formatNanNumber(totalMargin, precision)}</span>
                             <span className="txtSecond-2">{` (${swapValue})`}</span>
                         </div>
                     )}
@@ -172,7 +171,7 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
                     {loadingDataDW ? (
                         <Skeletor width={isMobile ? 100 : 150} height={16} />
                     ) : (
-                        <span className="txtPri-1">{formatNanNumber(dataDw?.totalDeposit?.total?.value, isVnd ? 0 : 4)}</span>
+                        <span className="txtPri-1">{formatNanNumber(dataDw?.totalDeposit?.total?.value, precision)}</span>
                     )}
                 </div>
                 {/* Tổng giá trị rút */}
@@ -181,7 +180,7 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
                     {loadingDataDW ? (
                         <Skeletor width={isMobile ? 120 : 150} height={16} />
                     ) : (
-                        <span className="txtPri-1">{formatNanNumber(dataDw?.totalWithdraw?.total?.value, isVnd ? 0 : 4)}</span>
+                        <span className="txtPri-1">{formatNanNumber(dataDw?.totalWithdraw?.total?.value, precision)}</span>
                     )}
                 </div>
                 {/* Tỷ lệ % thắng */}
@@ -392,7 +391,7 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center">
-                        <div className='flex w-full items-center justify-center'>
+                        <div className="flex w-full items-center justify-center">
                             <ImageShare
                                 className="w-full"
                                 content={content}
@@ -492,22 +491,18 @@ const ImageShare = ({
                     {formatNanNumber((totalPnl * 100) / totalMargin, 2)}%
                 </div>
                 <div className={`h-11 w-full flex items-center justify-center transition-all duration-75`}>
-                    {/* <div className={`${!isShowTotalPnl ? 'hidden' : isShowRate ? 'w-1/2 !items-end' : ' w-full '} flex justify-center items-center flex-col`}> */}
                     <div className={`${!isShowTotalPnl && 'hidden'} flex flex-col items-center justify-center`}>
                         <div>{t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? 'VNDC' : 'USDT' })}</div>
                         <div className="text-gray-4 text-sm font-semibold">
                             {!negative && '+'}
-                            {formatNanNumber(totalPnl, typeCurrency === ALLOWED_ASSET_ID.VNDC ? 0 : 4)}
+                            {formatNanNumber(totalPnl, typeCurrency === ALLOWED_ASSET_ID.USDT ? 4 : 0)}
                         </div>
                     </div>
-                    {/* </div> */}
                     {isShowRate && isShowTotalPnl && <div className={`border-divider-dark border-l-[1px] h-9 mx-6`}></div>}
-                    {/* <div className={`${!isShowRate ? 'hidden' : isShowTotalPnl ? 'w-1/2 !items-start' : ' w-full '} flex justify-center items-center flex-col`}> */}
                     <div className={`${!isShowRate && 'hidden'} flex flex-col items-center justify-center`}>
                         <div>{t('portfolio:win_rate')}</div>
                         <div className="text-gray-4 text-sm font-semibold">{formatNanNumber(winRate, 2)}%</div>
                     </div>
-                    {/* </div> */}
                 </div>
 
                 <div className="mt-8 mb-[92px]">

@@ -12,14 +12,15 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import Card from './common/Card';
 import Skeletor from 'components/common/Skeletor';
 import { Trans } from 'next-i18next';
+import ReferralLevelIcon from 'components/svg/RefIcons';
 
 const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
     const router = useRouter();
     return (
         <div>
             <Card className="px-8 py-[42px] dark:!bg-darkBlue-3 mb-6 border-0">
-                <div className="flex flex-wrap items-center justify-center md:justify-between">
-                    <div className="flex md:flex-grow items-center">
+                <div className="flex -m-3 flex-wrap items-center justify-center md:justify-between">
+                    <div className="flex md:flex-grow items-center p-3">
                         {!partner ? (
                             <>
                                 <Skeletor circle width={80} height={80} />
@@ -39,6 +40,7 @@ const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
                         ) : (
                             <>
                                 <img className="rounded-full object-cover w-14 h-14 md:h-20 md:w-20" src={partner?.avatar} />
+
                                 <div className="ml-6">
                                     <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px] truncate max-w-[260px] mb-3">
                                         {partner?.name}
@@ -49,7 +51,7 @@ const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
                                             <div className="text-txtPrimary dark:text-txtPrimary-dark ml-2">{formatTime(partner?.startedAt, 'dd/MM/yyyy')}</div>
                                         </div>
                                         <div className="ml-4 flex items-center">
-                                            <ContactIcon className='rotate-90' color="currentColor" size={16} />
+                                            <ContactIcon className="rotate-90" color="currentColor" size={16} />
                                             <div className="text-txtPrimary dark:text-txtPrimary-dark ml-2">{formatPhoneNumber(partner?.phone)}</div>
                                         </div>
                                     </div>
@@ -57,7 +59,7 @@ const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
                             </>
                         )}
                     </div>
-                    <div className="min-w-[460px]">
+                    <div className="min-w-[460px] p-3">
                         <div
                             onClick={() => router.push(PATHS.ACCOUNT?.PAYMENT_METHOD || '/')}
                             className="p-4 bg-gray-12 dark:bg-dark-2 rounded-xl w-full cursor-pointer flex items-center justify-between"
@@ -66,7 +68,7 @@ const ProfileHeader = ({ t, partner, bankDefault, language, loading }) => {
                                 loading={loading}
                                 imgSize={loading || bankDefault ? 40 : 24}
                                 content={{
-                                    mainContent: !bankDefault ? t('dw_partner:payment_method') : <div >{bankDefault?.bankName}</div>,
+                                    mainContent: !bankDefault ? t('dw_partner:payment_method') : <div>{bankDefault?.bankName}</div>,
                                     subContent: bankDefault && (
                                         <div className="flex space-x-2 items-center ">
                                             <span>{bankDefault?.accountNumber}</span>

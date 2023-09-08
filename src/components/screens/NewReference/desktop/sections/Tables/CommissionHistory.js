@@ -3,27 +3,22 @@ import { useState } from 'react';
 import { TableFilter } from '.';
 import { API_GET_COMMISSON_HISTORY } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
-import Skeletor from 'components/common/Skeletor';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { WalletCurrency } from 'components/screens/OnusWithdrawGate/helper';
 import _ from 'lodash';
 import AssetLogo from 'components/wallet/AssetLogo';
 import TableV2 from 'components/common/V2/TableV2';
+import styled from 'styled-components';
 
-// Start: Do api filter date range sai nen moi can cai qq nay :D
-const timeZone = parseInt(new Date().getTimezoneOffset() / -60);
-const addFromDate = 86400 * 1000 - 1000 * 60 * 60 * (24 - timeZone);
-const addEndDate = 86400 * 1000 - 1;
-// End: Do api filter date range sai nen moi can cai qq nay :D
+const MILLISECOND = 1;
 
 const CommissionHistory = ({ t, commisionConfig, id }) => {
-    // const assetConfig = useSelector(state => state.utils.assetConfig)
     const levelTabs = [
         { title: t('common:all'), value: null },
         { title: '1', value: 1 },
         { title: '2', value: 2 },
         { title: '3', value: 3 },
-        { title: '4', value: 4 },
+        { title: '4', value: 4 }
     ];
     const typeTabs = [
         { title: t('common:all'), value: null },
@@ -34,6 +29,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     ];
     const assetTabs = [
         { title: t('common:all'), value: null },
+        { title: 'VNST', value: WalletCurrency.VNST },
         { title: 'VNDC', value: WalletCurrency.VNDC },
         { title: 'NAO', value: WalletCurrency.NAO },
         { title: 'NAMI', value: WalletCurrency.NAMI },
@@ -41,7 +37,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         { title: 'USDT', value: WalletCurrency.USDT }
     ];
 
-    const configs = {
+    const filters = {
         date: {
             type: 'dateRange',
             value: {
@@ -50,50 +46,60 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 key: 'selection'
             },
             values: null,
-            label: t('reference:referral.date'),
+            label: t('reference:friend_list.filter.referral_date'),
             position: 'left',
-            childClassName: 'min-w-[240px]'
+            wrapperDate: '!text-gray-15 dark:!text-gray-4'
         },
         level: {
-            type: 'popover',
+            type: 'select',
             value: null,
             values: levelTabs,
             label: t('reference:referral.level'),
-            childClassName: 'flex-1'
+            title: t('reference:referral.level'),
+            childClassName: 'text-sm !text-gray-15 dark:!text-gray-7'
         },
         commission_type: {
-            type: 'popover',
+            type: 'select',
             value: null,
             values: typeTabs,
             label: t('reference:referral.commission_type'),
-            childClassName: 'flex-1'
+            childClassName: 'text-sm !text-gray-15 dark:!text-gray-7'
         },
         asset_type: {
-            type: 'popover',
+            type: 'select',
             value: null,
             values: assetTabs,
             label: t('reference:referral.asset_type'),
-            childClassName: 'flex-1'
+            childClassName: 'text-sm !text-gray-15 dark:!text-gray-7'
         },
         reset: {
             type: 'reset',
-            title: t('reference:referral.reset')
+            title: t('reference:friend_list.filter.reset'),
+            buttonClassName: '!h-11 !text-gray-15 dark:!text-gray-7 font-semibold text-base',
+            childClassName: 'justify-end'
         }
     };
     const limit = 10;
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [filter, setFilter] = useState(configs);
+    const [filter, setFilter] = useState(filters);
     const [dataSource, setDataSource] = useState({
         results: [],
         hasNext: false,
         total: 0
     });
 
-    const getCommisionHistory = _.throttle(async () => {
+    const formatDate = (value, type) => {
+        if (type === 'startDate') return value?.startDate ? new Date(value?.startDate).getTime() : null;
+        if (type === 'endDate') return value?.endDate ? new Date(value?.endDate).getTime() + 86400000 - MILLISECOND : null;
+    };
+
+    const getCommissionHistory = _.throttle(async () => {
+        const { date } = filter || {};
+
         const params = {
-            from: filter?.date?.value?.startDate ? new Date(filter?.date?.value?.startDate).getTime() : null,
-            to: filter?.date?.value?.endDate ? new Date(filter?.date?.value?.endDate).getTime() + addEndDate : new Date().getTime(),
+            invitedAtFROM: formatDate(date?.value, 'startDate'),
+            invitedAtTO: formatDate(date?.value, 'endDate'),
             kind: filter?.commission_type?.value,
             level: filter?.level?.value,
             currency: filter?.asset_type?.value
@@ -121,13 +127,13 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     }, 300);
 
     useEffect(() => {
-        getCommisionHistory();
+        getCommissionHistory();
     }, [page]);
 
     useEffect(() => {
         setPage(1);
         if (page === 1) {
-            getCommisionHistory();
+            getCommissionHistory();
         }
     }, [filter]);
 
@@ -196,10 +202,13 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     return (
         <div className="flex w-full" id={id}>
             <div className="w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8">
-                <div className="font-semibold text-[22px] leading-7 mx-6 mb-8">{t('reference:tabs.commission_histories')}</div>
-                <div className="flex gap-6 flex-wrap mx-6 mb-6">
-                    <TableFilter config={configs} filter={filter} setFilter={setFilter} />
+                <div className="mb-8 mx-6 text-gray-15 dark:text-gray-4 font-semibold text-2xl">{t('reference:tabs.commission_histories')}</div>
+                <div className="flex gap-6 flex-wrap mx-6 mb-8 items-end justify-between">
+                    <WrapperFilter className="grid w-full gap-x-6">
+                        <TableFilter filter={filter} config={filters} type="history" setFilter={setFilter} />
+                    </WrapperFilter>
                 </div>
+
                 <TableV2
                     // sort
                     loading={loading}
@@ -230,12 +239,10 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     );
 };
 
-export default CommissionHistory;
+const WrapperFilter = styled.div.attrs(({ className }) => ({
+    className: className
+}))`
+    grid-template-columns: 250px repeat(auto-fit, minmax(calc((100% - 100px) / 5), 1fr)) 83px;
+`;
 
-const ROW_SKELETON = {
-    date: <Skeletor width={200} />,
-    level: <Skeletor width={110} />,
-    kind: <Skeletor width={90} />,
-    currency: <Skeletor width={90} />,
-    value: <Skeletor width={90} />
-};
+export default CommissionHistory;

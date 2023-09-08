@@ -12,9 +12,7 @@ import { TRADING_MODE } from 'redux/actions/const';
 import { marketWatchToFavorite } from 'utils';
 import { useSelector } from 'react-redux';
 
-import { isMobile } from 'react-device-detect';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import LayoutMobile from 'components/common/layouts/LayoutMobile'
 import { useMemo } from 'react';
 import FetchApi from 'utils/fetch-api';
 import { orderBy } from 'lodash';
@@ -42,7 +40,7 @@ const Market = () => {
     const { user: auth } = useSelector(state => state.auth) || null
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
     const futuresConfigs = useSelector((state) => state?.futures?.pairConfigs);
-    
+
     let categories = useMemo(() => {
         const data = {
             MOST_TRADED: [],
@@ -99,7 +97,8 @@ const Market = () => {
                     }
                 })
                 if (trending.length === 2) {
-                    setState({ trending: [...trending[0], ...trending[1]] })
+                    const array = [...trending[0], ...trending[1]]
+                    setState({ trending: [...new Map(array.map(item => [item['s'], item])).values()] })
                 }
             }
         } catch (e) {
@@ -111,19 +110,29 @@ const Market = () => {
 
     const getMarket = async (tradingMode, isInitial = true) => {
         isInitial && setState({ loading: true })
+
+        const fetchExchange = async () => {
+            const exchangeMarket = await getMarketWatch()
+            setState({ exchangeMarket })
+        }
+
+        const fetchFutures = async () => {
+            const _futuresMarket = await getFuturesMarketWatch()
+            const copyFuturesMarketVNDCtoVNST = _futuresMarket.filter(v => v.q === 'VNDC').map(v => ({ ...v, q: 'VNST', s: v.b + 'VNST' }))
+            const futuresMarket = [..._futuresMarket, ...copyFuturesMarketVNDCtoVNST]
+            setState({ futuresMarket })
+        }
+
         try {
             if (tradingMode) {
                 if (tradingMode === TRADING_MODE.EXCHANGE) {
-                    const _ = await getMarketWatch()
-                    setState({ exchangeMarket: _ })
+                    await fetchExchange()
                 } else {
-                    const _ = await getFuturesMarketWatch()
-                    setState({ futuresMarket: Object.values(_) })
+                    await fetchFutures()
                 }
             } else {
-                const exchangeMarket = await getMarketWatch()
-                const futuresMarket = await getFuturesMarketWatch()
-                setState({ exchangeMarket, futuresMarket: Object.values(futuresMarket) })
+                await fetchExchange()
+                await fetchFutures()
             }
         } catch (e) {
 
@@ -138,7 +147,7 @@ const Market = () => {
             const exchange = await favoriteAction('get', TRADING_MODE.EXCHANGE)
             const futures = await favoriteAction('get', TRADING_MODE.FUTURES)
 
-            setState({ favoriteList: { exchange, futures } })
+            setState({ favoriteList: { exchange, futures: futures } })
         } catch (e) {
             console.log('Cant get favorite list ', e)
             return []
@@ -149,7 +158,7 @@ const Market = () => {
 
     const reNewHelper = async (tabIndex, subTabIndex) => {
         const { key } = tab[tabIndex]
-        const { key: subKey } = key === 'favorite' ? favSubTab[subTabIndex] : subTab[subTabIndex]
+        const { key: subKey } = key === 'favorite' ? favSubTab[tabIndex] : subTab[subTabIndex]
 
         // Refresh Exchange pair price
         if (key === 'exchange' || (key === 'favorite' && subKey === 'exchange')) {
@@ -220,14 +229,15 @@ const Market = () => {
             interval = setInterval(() => reNewHelper(state.tabIndex, state.subTabIndex), 2800)
         }
         return () => interval && clearInterval(interval)
-    }, [state.tabIndex, state.subTabIndex, focused])
+    }, [focused, state.tabIndex])
 
     useEffect(() => {
         setState({ loading: true })
         let watch = []
         let convert = []
 
-        const asset = subTab[state.subTabIndex].key === 'vndc' ? 'VNDC' : 'USDT'
+        // const asset = subTab[state.subTabIndex].key === 'vndc' ? 'VNDC' : 'USDT'
+        const asset = subTab[state.subTabIndex]?.key?.toUpperCase()
 
         if (state.exchangeMarket && state.futuresMarket) {
             convert = {
@@ -244,41 +254,38 @@ const Market = () => {
                 watch = convert?.futures
             }
 
-            if (subTab?.[state?.subTabIndex]?.key === 'vndc') {
-                // log.d('Tab Exchange - VNDC')
-                watch = watch?.filter(e => e.q === 'VNDC')
-            } else if (subTab?.[state.subTabIndex]?.key === 'usdt') {
-                // log.d('Tab Exchange - USDT')
-                watch = watch?.filter(e => e.q === 'USDT')
-            }
+            // if (['vndc', 'vnst']?.includes(subTab?.[state?.subTabIndex]?.key)) {
+            //     watch = watch?.filter(e => e.q === 'VNDC')
+            // } else if (subTab?.[state.subTabIndex]?.key === 'usdt') {
+            //     watch = watch?.filter(e => e.q === 'USDT')
+            // }
+
+            watch = watch?.filter(e => e.q === asset)
         }
 
         // Exchange data handling
         if (tab?.[state?.tabIndex]?.key === 'exchange') {
-            if (subTab?.[state?.subTabIndex]?.key === 'vndc' && state.exchangeMarket) {
-                // log.d('Tab Exchange - VNDC')
+            if (['vndc']?.includes(asset.toLowerCase()) && state.exchangeMarket) {
                 watch = state.exchangeMarket.filter(e => e.q === 'VNDC')
             } else if (subTab[state.subTabIndex].key === 'usdt' && state.exchangeMarket) {
-                // log.d('Tab Exchange - USDT')
                 watch = state.exchangeMarket.filter(e => e.q === 'USDT')
             } else {
-                // log.d('Tab Exchange - ALL')
-                watch = state?.exchangeMarket
+                watch = []
             }
         }
 
+
         // Futures data handling
         if (tab[state.tabIndex].key === 'futures') {
-            if (subTab[state.subTabIndex].key === 'vndc' && state.futuresMarket) {
-                // log.d('Tab Futures - VNDC')
-                watch = state.futuresMarket.filter(e => e.q === 'VNDC')
-            } else if (subTab[state.subTabIndex].key === 'usdt' && state.futuresMarket) {
-                // log.d('Tab Futures - USDT')
-                watch = state.futuresMarket.filter(e => e.q === 'USDT')
-            } else {
-                // log.d('Tab Futures - ALL')
-                watch = state?.futuresMarket
-            }
+            // if (['vndc', 'vnst'].includes(asset.toLowerCase()) && state.futuresMarket) {
+            //     watch = state.futuresMarket.filter(e => e.q === 'VNDC')
+            // } else if (asset.toLowerCase() === 'usdt' && state.futuresMarket) {
+            //     watch = state.futuresMarket.filter(e => e.q === 'USDT')
+            // } else {
+            //     watch = state?.futuresMarket
+            // }
+
+            watch = state.futuresMarket.filter(e => e.q === asset)
         }
 
         // Search data handling
@@ -291,7 +298,7 @@ const Market = () => {
 
             const favorite = filterer([...convert?.exchange, ...convert?.futures], state.search.toLowerCase())
             const exchange = filterer(state.exchangeMarket.filter(e => e.q === asset), state.search.toLowerCase())
-            const futures = filterer(state.futuresMarket.filter(e => e.q === asset), state.search.toLowerCase())
+            const futures = filterer(state.futuresMarket.concat.filter(e => e.q === asset), state.search.toLowerCase())
 
             setState({
                 tabLabelCount: {
@@ -305,7 +312,7 @@ const Market = () => {
         }
 
         if (tab[state.tabIndex].key !== 'favorite') {
-            if(watch && watch.length){
+            if (watch && watch.length) {
                 switch (state.type) {
                     case 0:
                         break;

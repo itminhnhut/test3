@@ -14,6 +14,7 @@ import { find } from 'lodash';
 import DWAddPhoneNumber from 'components/common/DWAddPhoneNumber';
 import ModalOtp from './components/ModalOtp';
 import ModalProcessSuggestPartner from './ModalProcessSuggestPartner';
+import toast from 'utils/toast';
 
 const ButtonBuySell = ({ canSubmit }) => {
     const {
@@ -41,10 +42,10 @@ const ButtonBuySell = ({ canSubmit }) => {
     const [loadingConfirm, setLoadingConfirm] = useState(false);
     const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
 
-    const handleSubmitOrder = () => {
+    const handleSubmitOrder = async () => {
         setLoadingConfirm(true);
         try {
-            FetchApi({
+            const response = await FetchApi({
                 url: API_GET_ME,
                 options: {
                     method: 'GET'
@@ -52,19 +53,23 @@ const ButtonBuySell = ({ canSubmit }) => {
                 params: {
                     resetCache: true
                 }
-            })
-                .then(({ status, data }) => {
-                    if (status === 'ok') {
-                        !data?.phone ? setIsOpenModalAddPhone(true) : onMakeOrderHandler(null, null, fee);
-                    }
-                })
-                .finally(() => setLoadingConfirm(false));
+            });
+
+            if (response?.status === 'ok') {
+                if (!response?.data?.phone) {
+                    setIsOpenModalAddPhone(true);
+                } else {
+                    await onMakeOrderHandler(null, null, fee);
+                }
+            }
         } catch (error) {
             console.error('ERROR WHEN HANDLE SUBMIT ORDER: ', error);
             toast({
                 text: 'System error, please try again in a few minutes',
                 type: 'error'
             });
+        } finally {
+            setLoadingConfirm(false);
         }
     };
 
