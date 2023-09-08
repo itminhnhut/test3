@@ -1,4 +1,3 @@
-import { countDecimals, getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
 import classNames from 'classnames';
 import DynamicNoSsr from 'components/DynamicNoSsr';
 import { DragHandleArea, RemoveItemArea, ResizeHandleArea } from 'components/common/ReactGridItem';
@@ -123,11 +122,6 @@ const Futures = ({ integrate, orderId, symbol }) => {
     }, [orderIntegrateFromInsurance, error]);
 
     const insuranceIntegrateDecimals = useMemo(() => {
-        const getDecimalPrice = (symbol) => {
-            const decimalScalePrice = symbol?.filters.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
-            return countDecimals(decimalScalePrice?.tickSize);
-        };
-
         const symbol = allPairConfigs.find((rs) => rs.symbol === orderIntegrateFromInsurance?.symbol);
         const decimalSymbol = assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
         const decimalScalePrice = getDecimalPrice(symbol);
