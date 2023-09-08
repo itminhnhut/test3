@@ -52,7 +52,7 @@ const initState = {
                 user_id: 583056,
                 category: 570,
                 currency: 72,
-                money_use: 175000,
+                money_use: 175001,
                 money_before: 5127323340102.4,
                 money_after: 5127323515102.4,
                 main_balance: 1,
@@ -94,6 +94,7 @@ const Lending = () => {
                     <InputV2
                         value={search}
                         onChange={setSearch}
+                        classNameDivInner="bg-dark-12"
                         placeholder={t('lending:crypto:lending:place_search')}
                         prefix={<Search color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" size={16} />}
                     />

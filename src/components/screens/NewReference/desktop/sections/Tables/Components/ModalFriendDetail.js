@@ -20,20 +20,7 @@ const KIND = {
     insurance: { vi: 'Ký quỹ bảo hiểm', en: 'Margin insurance contract' }
 };
 
-const ModalFriendDetail = ({
-    isModal,
-    detailFriend,
-    options,
-    toggle,
-    level,
-    onChangeOption,
-    defaultOption,
-    t,
-    language,
-    assetConfig,
-    range,
-    invitedBy
-}) => {
+const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onChangeOption, defaultOption, t, language, assetConfig, range, invitedBy }) => {
     const totalCommission = useMemo(() => {
         const commissionByAsset = (detailFriend?.commission || [])?.find((f) => f?.asset === options?.commission) || {};
         return commissionByAsset?.total || {};

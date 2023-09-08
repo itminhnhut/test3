@@ -23,7 +23,7 @@ const Lending = () => {
     return (
         <>
             <MaldivesLayout>
-                <main className="bg-white dark:bg-shadow">
+                <main className="bg-dark-13 dark:bg-dark-dark">
                     <section className="2xl:max-w-screen-xxl">
                         <HeaderLending />
                     </section>

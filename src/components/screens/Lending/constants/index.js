@@ -67,4 +67,22 @@ const TABS = [
     { label: { vi: 'Lịch sử khoản vay', en: 'Lịch sử khoản vay' }, value: 'history' }
 ];
 
-export { FAQ, TABS };
+const BORROWING_TERM = [
+    { vi: '7 ngày', en: '7 days', key: 7 },
+    { vi: '30 ngày', en: '30 days', key: 30 }
+];
+
+const PROFITS = [
+    { title: { vi: 'Lãi suất theo năm', en: 'Lãi suất theo năm' }, asset: '%', key: 'profit_yearn' },
+    { title: { vi: 'Lãi suất hằng ngày', en: 'Lãi suất hằng ngày' }, asset: '%', key: 'profit_daily' },
+    { title: { vi: 'Lãi ước tính theo giờ', en: 'Lãi ước tính theo giờ' }, asset: 'VNDC', key: 'profit_hours' },
+    { title: { vi: 'Lãi ước tính theo kỳ hạn', en: 'Lãi ước tính theo kỳ hạn' }, asset: 'VNDC', key: 'profit_term' }
+];
+
+const LTV = [
+    { title: { vi: 'LTV Ban đầu', en: 'LTV Ban đầu' }, key: 'ltv_initial' },
+    { title: { vi: 'LTV Gọi ký quỹ', en: 'LTV Gọi ký quỹ' }, key: 'ltv_margin' },
+    { title: { vi: 'LTV Thanh lý', en: 'LTV Thanh lý' }, key: 'ltv_liquidate' }
+];
+
+export { FAQ, TABS, BORROWING_TERM, PROFITS, LTV };

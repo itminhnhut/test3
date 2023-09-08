@@ -12,5 +12,24 @@
             "place_search": "Tìm kiếm tài sản vay",
             "button": "Tìm"
         }
+    },
+    "tabs": {
+        "info": "Thông tin về Nami Lending"
+    },
+    "lending": {
+        "table": {
+            "assets": "Tài sản vay",
+            "minimum": "Hạn mức tối thiểu",
+            "maximum": "Hạn mức tối đa",
+            "7days": "Tỷ giá trong 7 ngày",
+            "30days": "Tỷ giá trong 30 ngày",
+            "active": "Vay ngay"
+        },
+        "rule": "Tôi đồng ý với <0>Thoả thuận và Điều khoản Dịch vụ Nami Lending</0>",
+        "ltv": {
+            "ltv_initial": "<primary>Tỷ lệ LTV ban đầu <secondary> (Số lượng tài sản vay/Số lượng ký quỹ)</secondary></primary>xác định số coin ban đầu có thể vay. Tỷ lệ LTV ban đầu có thể thay đổi đối với các tài sản đảm bảo khác nhau.",
+            "ltv_margin": "<primary>Nếu tỷ lệ LTV <secondary>[Số lượng tài sản vay (gốc + lãi)/Số lượng ký quỹ]</secondary></primary> đạt ngưỡng giới hạn, bạn sẽ được yêu cầu thêm tài sản đảm bảo vào lệnh vay.",
+            "ltv_liquidate": "<primary>Nếu tỷ lệ LTV <secondary>[Số lượng tài sản vay (gốc + lãi)/Số lượng ký quỹ]</secondary></primary> đạt ngưỡng giới hạn, sàn sẽ thanh lý tài sản đảm bảo để hoàn trả toàn bộ khoản vay và lãi vay."
+        }
     }
 }
