@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { ChartMode } from 'redux/actions/const';
-import { convertSymbol } from 'redux/actions/utils';
 
 const axios = require('axios');
 
@@ -62,7 +61,7 @@ export default {
         const { data } = await axios.get(url, {
             params: {
                 broker: mode === ChartMode.SPOT ? 'NAMI_SPOT' : 'NAMI_FUTURES',
-                symbol: convertSymbol(symbol)
+                symbol: symbol
             }
         });
         return data;
