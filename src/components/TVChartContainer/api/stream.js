@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { convertSymbol } from 'redux/actions/utils';
 import historyProvider from './historyProvider';
 
 const io = require('socket.io-client');
@@ -69,16 +70,13 @@ export default class {
     }
 
     subscribeBars(symbolInfo, resolution, updateCb, uid, resetCache) {
-        socket.emit(
-            symbolInfo.exchange === 'NAMI_SPOT'
-                ? 'subscribe:recent_trade'
-                : 'subscribe:futures:ticker',
-            symbolInfo.symbol);
+        const symbol = convertSymbol(symbolInfo.symbol);
+        socket.emit(symbolInfo.exchange === 'NAMI_SPOT' ? 'subscribe:recent_trade' : 'subscribe:futures:ticker', symbol);
         try {
-            lastSymbol = symbolInfo.symbol;
+            lastSymbol = symbol;
             const newSub = {
                 exchange: symbolInfo.exchange,
-                symbol: symbolInfo.symbol,
+                symbol: symbol,
                 uid,
                 resolution,
                 symbolInfo,
