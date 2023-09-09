@@ -11,8 +11,14 @@ import useApp from 'hooks/useApp';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import { ChevronLeft } from 'react-feather';
 import router from 'next/router';
+import TabV2 from 'components/common/V2/TabV2';
+import Chip from 'components/common/V2/Chip';
 
 export const CURRENCIES = [
+    {
+        name: 'VNST',
+        value: 'VNST'
+    },
     {
         name: 'VNDC',
         value: 'VNDC'
@@ -43,21 +49,33 @@ export default function FundingHistory(props) {
         };
     }, [isApp]);
 
+    const [hasRendered, setHasRendered] = useState(false);
+
     useEffect(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const symbol = urlParams.get('symbol');
-        if (symbol && symbol.indexOf(CURRENCIES[1].value) !== -1) setSelectedCurrency(CURRENCIES[1].value);
+        if (symbol) setSelectedCurrency(symbol.slice(-4));
+        // if (symbol && symbol.indexOf(CURRENCIES[1].value) !== -1) setSelectedCurrency(CURRENCIES[1].value);
+        setHasRendered(true);
     }, []);
 
-    const renderTabContent = () => {
-        return (
-            <>
-                <FundingTab currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[0].key} />
-                <FundingHistoryTable isDark={currentTheme === THEME_MODE.DARK} currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[1].key} />
-            </>
+    useEffect(() => {
+        if (!hasRendered) return;
+        const { symbol } = router.query;
+        router.replace(
+            {
+                query: {
+                    ...router.query,
+                    symbol: symbol ? symbol.slice(0, -4) + selectedCurrency : 'BTC' + selectedCurrency
+                }
+            },
+            undefined,
+            {
+                shallow: true
+            }
         );
-    };
+    }, [selectedCurrency, selectedTab]);
 
     const urlPost =
         language === 'en'
@@ -95,22 +113,24 @@ export default function FundingHistory(props) {
                             </Tabs>
                             <div className="flex items-center space-x-4 text-sm sm:text-base mb-4 sm:mb-0">
                                 {CURRENCIES.map((rs) => (
-                                    <div
+                                    <Chip
+                                        selected={selectedCurrency === rs.value}
                                         key={rs.value}
-                                        className={classNames(
-                                            'text-txtSecondary dark:text-txtSecondary-dark px-4 py-2 sm:py-3 border border-divider dark:border-divider-dark rounded-full cursor-pointer',
-                                            {
-                                                '!border-teal !text-teal font-semibold bg-teal/[0.1]': selectedCurrency === rs.value
-                                            }
-                                        )}
                                         onClick={() => setSelectedCurrency(rs.value)}
                                     >
                                         {rs.name}
-                                    </div>
+                                    </Chip>
                                 ))}
                             </div>
                         </div>
-                        {renderTabContent()}
+                        <FundingTab currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[0].key} />
+                        <FundingHistoryTable
+                            symbol={router?.query?.symbol}
+                            isDark={currentTheme === THEME_MODE.DARK}
+                            currency={selectedCurrency}
+                            active={selectedTab === SCREEN_TAB_SERIES[1].key}
+                        />
+                        {/* {renderTabContent()} */}
                     </div>
                 </Background>
             </div>

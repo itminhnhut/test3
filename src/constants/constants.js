@@ -263,11 +263,6 @@ export const CHART_JS_RANGE = {
     year: 'year'
 };
 
-export const QUOTE_ASSET = {
-    USDT: 22,
-    VNDC: 72,
-    VNST: 39
-};
 export const CURRENCY = {
     USDT: 22,
     VNDC: 72,
@@ -285,3 +280,9 @@ export const INSURANCE_STATE = {
     EXPIRED: 'Expired',
     CANCELED: 'Canceled'
 };
+
+export const QUOTE_ASSET = {
+    USDT: 22,
+    VNDC: 72,
+    VNST: 39
+}
