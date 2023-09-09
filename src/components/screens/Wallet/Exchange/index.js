@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { dwLinkBuilder, formatNumber as formatWallet, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
+import { dwLinkBuilder, formatStringNumber, formatNumber as formatWallet, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { BxChevronDown, FutureInsurance, MoreHorizIcon } from 'components/svg/SvgIcon';
 
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils';
 import { WalletType } from 'redux/actions/const';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { PATHS } from 'constants/paths';
 import { Menu, useContextMenu } from 'react-contexify';
 
@@ -219,7 +219,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                 width: 200,
                 render: (v, item) => (
                     <span className="whitespace-nowrap">
-                        {isHideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                        {isHideAsset ? SECRET_STRING : v >= 0 ? formatStringNumber(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
                     </span>
                 )
             },
@@ -229,7 +229,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                 title: t('common:available_balance'),
                 align: 'right',
                 width: 200,
-                render: (v, item) => (isHideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000')
+                render: (v, item) => (isHideAsset ? SECRET_STRING : v >= 0 ? formatStringNumber(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000')
             },
             {
                 key: 'wallet.locked_value',
@@ -792,6 +792,6 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     );
 };
 
-const ALLOWED_FUTURES_TRANSFER = ['VNDC', 'USDT', 'NAMI', 'NAC'];
+const ALLOWED_FUTURES_TRANSFER = ['VNDC', 'USDT', 'NAMI', 'NAC', 'VNST'];
 
 export default ExchangeWallet;

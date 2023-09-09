@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { formatNumber as formatWallet, setTransferModal } from 'redux/actions/utils';
+import { formatStringNumber, formatNumber as formatWallet, setTransferModal } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -102,7 +102,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
                 width: 213,
                 render: (v, item) => (
                     <span className="whitespace-nowrap">
-                        {isHideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                        {isHideAsset ? SECRET_STRING : v >= 0 ? formatStringNumber(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
                     </span>
                 )
             },
@@ -114,7 +114,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
                 width: 213,
                 render: (v, item) => (
                     <span className="whitespace-nowrap">
-                        {isHideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                        {isHideAsset ? SECRET_STRING : v >= 0 ? formatStringNumber(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
                     </span>
                 )
             },
@@ -263,7 +263,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, is
     return (
         <div>
             <MCard
-                addClass={`mt-5 !p-8 rounded-xl 
+                addClass={`mt-5 !p-8 rounded-xl
              ${currentTheme === THEME_MODE.DARK ? ' bg-bgTabInactive-dark border border-divider-dark' : ' bg-white shadow-card_light border-none'}`}
             >
                 <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 flex justify-between items-end">

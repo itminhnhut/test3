@@ -1435,6 +1435,14 @@ export function formatNanNumber(value, digits = 0) {
     return `${formatedNumber === 'NaN' ? 0 : formatedNumber}`;
 }
 
+export function formatStringNumber(value, digits = 0) {
+    const formatedNumber = formatPrice(value, digits);
+
+    const isZero = !value || formatedNumber === 'NaN';
+    if(isZero) return +digits === 0 ? 0 : `0.${'0'.repeat(digits)}`
+    return formatedNumber
+}
+
 export const convertDateToMs = (date = 0, type = 'startOf') => {
     if (type === 'startOf') {
         return moment.utc(moment(+date).startOf('day')).unix() * 1000;
