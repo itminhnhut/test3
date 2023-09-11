@@ -1,8 +1,6 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React from 'react';
-import DynamicNoSsr from 'components/DynamicNoSsr';
 import Portfolio from 'src/components/screens/Portfolio/Portfolio';
-import NeedLoginV2 from 'components/common/NeedLoginV2';
 import Spinner from 'components/svg/Spinner';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import { useSelector } from 'react-redux';
