@@ -63,7 +63,6 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                     ticker = FuturesMarketWatch.create(tickerDraw);
                     ticker.viewCount = tickerDraw?.vc ?? 0;
                 }
-                if (ticker?.priceChangePercent > 0) console.log('_________', ticker?.priceChangePercent);
 
                 return {
                     ...item,
