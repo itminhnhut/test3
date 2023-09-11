@@ -184,7 +184,7 @@ const TradingRules = () => {
     const renderContent = (key, item) => {
         const quoteAsset = item?.quoteAsset || '';
         const currentAssetConfig = assetConfig?.find((i) => i.assetCode === quoteAsset);
-        const lastPrice = marketWatch?.[item?.symbol]?.lastPrice ?? 0;
+        const lastPrice = marketWatch?.[item?.symbol?.replace('VNST', 'VNDC')]?.lastPrice ?? 0;
         const { priceFilter, percentPriceFilter, minNotionalFilter, quantityFilterMarket, maxNumOrderFilter, quantityFilter, maxVolumeFilter } = general(item);
         const decimal = currentAssetConfig?.assetDigit || 0;
         switch (key) {
