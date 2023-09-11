@@ -29,7 +29,7 @@ const InterestEstimate = ({ assetId }) => {
     }, [assetConfigs, assetId]);
 
     const userTotalBalance = ALLOW_WALLETS.reduce((totalBalance, walletType) => (totalBalance += allWallet?.[walletType]?.[asset?.id]?.value ?? 0), 0);
-    console.log(' asset?.assetDigit:', asset?.assetDigit);
+    // console.log(' asset?.assetDigit:', asset?.assetDigit);
 
     const renderAvailableBalance = useCallback(
         () => (

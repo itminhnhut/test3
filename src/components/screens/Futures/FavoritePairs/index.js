@@ -15,6 +15,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import Skeletor from 'components/common/Skeletor';
 import { FireIcon } from 'components/svg/SvgIcon';
 import orderBy from 'lodash/orderBy';
+import { convertSymbol } from 'redux/actions/utils';
 
 export const SUGGESTED_SYMBOLS = ['BNB', 'BCH', 'BTC', 'LTC', 'ETH', 'EOS', 'ETC'];
 
@@ -60,7 +61,9 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout, pairConfig }) => {
             list:
                 (Array.isArray(favorites) && favorites.length > 0
                     ? favorites
-                    : marketWatch?.filter((o) => SUGGESTED_SYMBOLS.find((s) => s + quoteAsset === o?.symbol))) || []
+                    : marketWatch
+                          ?.filter((o) => SUGGESTED_SYMBOLS.includes(o.baseAsset) && o.quoteAsset === convertSymbol(quoteAsset))
+                          .map((o) => ({ ...o, quoteAsset, symbol: o.symbol.slice(0, -4) + quoteAsset }))) || []
         };
     }, [favoritePairs, refreshMarketWatch, quoteAsset]);
 
