@@ -168,7 +168,7 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
     // **
     return (
         <ModalV2
-            isVisible={!isModal}
+            isVisible={isModal}
             className="w-[596px] overflow-auto no-scrollbar"
             onBackdropCb={onClose}
             wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"

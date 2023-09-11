@@ -159,7 +159,7 @@ const LendingTable = ({ data, page, loading, onPage }) => {
 
     return (
         <>
-            <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-2">{renderTable()}</section>
+            <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">{renderTable()}</section>
             {/* Tạo khoản vay  */}
             <ModalRegisterLoan isModal={isModal} onClose={handleToggleModal} />
         </>

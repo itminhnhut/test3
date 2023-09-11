@@ -98,7 +98,6 @@ const Lending = () => {
                         placeholder={t('lending:crypto:lending:place_search')}
                         prefix={<Search color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" size={16} />}
                     />
-                    <ButtonV2 className="w-max px-6">{t('lending:crypto:lending:button')}</ButtonV2>
                 </section>
             </section>
             <section className="mt-8">
