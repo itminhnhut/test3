@@ -224,7 +224,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                 </div>
                 <div className="px-4 pt-6">
                     <div className="uppercase text-xs text-txtSecondary dark:text-txtSecondary-dark leading-[1.125rem] pb-2">
-                        {t('futures:mobile:adjust_margin:amount')}
+                        {t('futures:margin')}
                     </div>
                     <ErrorToolTip message={!errorProfit ? error : ''}>
                         <div className="flex justify-between items-center pl-4 bg-gray-12 dark:bg-dark-2 text-sm rounded-md h-11">
