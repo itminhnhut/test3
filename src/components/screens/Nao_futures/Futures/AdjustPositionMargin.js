@@ -136,7 +136,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
 
     const error = useMemo(() => {
         if (+amount > available && adjustType === ADJUST_TYPE.ADD) {
-            return t('futures:maximum_price') + formatNumber(available, assetConfig?.assetDigit)
+            return `${t('futures:mobile:adjust_margin:max')} ${formatNumber(available, assetConfig?.assetDigit)}`; 
         }
 
     }, [amount, available, assetConfig, adjustType, percent])
