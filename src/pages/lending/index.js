@@ -39,7 +39,7 @@ const Lending = () => {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'navbar', 'lending']))
+        ...(await serverSideTranslations(locale, ['common', 'navbar', 'lending', 'transaction-history']))
     }
 });
 

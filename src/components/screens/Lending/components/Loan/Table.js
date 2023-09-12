@@ -20,7 +20,6 @@ import { useSelector } from 'react-redux';
 
 // ** Third party
 import colors from 'styles/colors';
-import dynamic from 'next/dynamic';
 import classNames from 'classnames';
 import styled from 'styled-components';
 import { useWindowSize } from 'react-use';

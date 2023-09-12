@@ -1,7 +1,11 @@
 import { useCallback, useState } from 'react';
 
 // ** next
+import dynamic from 'next/dynamic';
 import { useTranslation, Trans } from 'next-i18next';
+
+// ** Redux
+import { useSelector } from 'react-redux';
 
 //** components
 import Chip from 'components/common/V2/Chip';
@@ -17,13 +21,22 @@ import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
 // ** Third party
 import classNames from 'classnames';
 
+// ** Dynamic
+const ConfirmLoan = dynamic(() => import('./ConfirmLoan'), { ssr: false });
+const AssetFilter = dynamic(() => import('components/screens/Lending/components/AssetFilter'), { ssr: false });
+
 // ** CONSTANTS
 import { BORROWING_TERM, PROFITS, LTV } from 'components/screens/Lending/constants';
 
 // ** INIT DATA
 const INIT_DATA = {
     borrowing_term: 7,
-    rule: false
+    rule: false,
+    isConfirm: false,
+    filter: {
+        lendingAsset: { assetCode: 'VNST', assetName: 'VNST', id: 39 },
+        lendingMargin: { assetCode: 'BNB', assetName: 'BNB', id: 40 }
+    }
 };
 
 const ALLOW_LTV_TOOLTIP = ['ltv_initial', 'ltv_margin', 'ltv_liquidate'];
@@ -37,16 +50,25 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
     // ** useState
     const [borrowingTerm, setBorrowingTerm] = useState(INIT_DATA.borrowing_term);
     const [rule, setRule] = useState(INIT_DATA.rule);
+    const [isConfirm, setIsConfirm] = useState(INIT_DATA.false);
+    const [filter, setFilter] = useState(INIT_DATA.filter);
 
     // ** handle
+    const handleToggleConfirm = () => setIsConfirm((prev) => !prev);
     const handleBorrowingTermClick = useCallback(
         (value) => {
             setBorrowingTerm(value);
         },
         [borrowingTerm]
     );
-
     const onChangeRule = () => setRule((prev) => !prev);
+    const onChangeAsset = (value, key) => setFilter((prev) => ({ ...prev, [key]: value }));
+
+    // ** get data
+    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
+    const getAsset = (assetId) => {
+        return assetConfigs.find((asset) => asset.id === assetId);
+    };
 
     // ** render
     const renderProfit = () => {
@@ -165,74 +187,117 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
         );
     };
 
+    const renderValueToken = ({ asset, onchange, key, assetCode }) => {
+        return (
+            <AssetFilter
+                asset={asset}
+                assetCode={assetCode}
+                className="h-6"
+                wrapperLabel="h-6"
+                onChangeAsset={(e) => onchange(e, key)}
+                labelClassName="mr-2"
+                wrapperClassName="w-max right-[-12px] !left-[auto]"
+                containerClassName={classNames({ '!z-[auto]': key === 'lendingMargin' })}
+            />
+        );
+    };
+
+    console.log('2', filter);
     // **
     return (
-        <ModalV2
-            isVisible={isModal}
-            className="w-[596px] overflow-auto no-scrollbar"
-            onBackdropCb={onClose}
-            wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
-            customHeader={() => (
-                <div className="flex justify-end mb-6">
-                    <div
-                        className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
-                        onClick={onClose}
-                    >
-                        <IconClose />
+        <>
+            <ModalV2
+                isVisible={isModal}
+                className="w-[596px] overflow-auto no-scrollbar"
+                onBackdropCb={onClose}
+                wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
+                customHeader={() => (
+                    <div className="flex justify-end mb-6">
+                        <div
+                            className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
+                            onClick={onClose}
+                        >
+                            <IconClose />
+                        </div>
                     </div>
-                </div>
-            )}
-        >
-            <section>
-                {renderTooltip()}
-                {renderTooltipLTV()}
-                <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Tạo lệnh vay</p>
-                <section className="mt-6">
-                    <InputV2
-                        allowClear
-                        label="Tôi muốn vay"
-                        placeholder="Nhập số lượng tài sản bạn muốn vay"
-                        suffix={<label htmlFor="search_events">sss</label>}
-                        prefix={<span className="mt-1 text-xs font-normal absolute bottom-0 left-0">Tối thiểu: 10,000. Tối đa: 10,000,000,000</span>}
-                    />
-                </section>
-                <section className="mt-8">
-                    <section className="flex flex-row justify-between mb-[14px]">
-                        <div className="dark:text-gray-4 text-gray-15">Số lượng ký quỹ</div>
-                        <section className="flex flex-row gap-1 items-center">
-                            <div>Khả dụng: 10 BTC</div>
-                            <AddCircleColorIcon size={16} />
-                        </section>
-                    </section>
-                    <InputV2 allowClear placeholder="Nhập số lượng tài sản đảm bảo" suffix={<label htmlFor="search_events">sss</label>} />
-                </section>
+                )}
+            >
                 <section>
-                    <div
-                        data-tip=""
-                        data-for="loan_term"
-                        className="dark:text-gray-4 text-gray-15 border-b border-darkBlue-5 border-dashed cursor-pointer w-max"
-                    >
-                        Thời hạn vay
-                    </div>
-                    <section className="flex flex-row gap-4 w-max mt-4">
-                        {BORROWING_TERM.map((term) => {
-                            const isActive = term.key === borrowingTerm;
-                            return (
-                                <Chip onClick={() => handleBorrowingTermClick(term.key)} selected={isActive} key={term?.[language]}>
-                                    {term?.[language]}
-                                </Chip>
-                            );
-                        })}
+                    {renderTooltip()}
+                    {renderTooltipLTV()}
+                    <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Tạo lệnh vay</p>
+                    <section className="mt-6">
+                        <InputV2
+                            allowClear
+                            label="Tôi muốn vay"
+                            showDividerSuffix={false}
+                            placeholder="Nhập số lượng tài sản bạn muốn vay"
+                            suffix={
+                                <label htmlFor="search_events">
+                                    {renderValueToken({
+                                        asset: filter?.lendingAsset,
+                                        onchange: onChangeAsset,
+                                        key: 'lendingAsset',
+                                        assetCode: filter?.lendingMargin?.id
+                                    })}
+                                </label>
+                            }
+                            prefix={<span className="mt-1 text-xs font-normal absolute bottom-0 left-0">Tối thiểu: 10,000. Tối đa: 10,000,000,000</span>}
+                        />
                     </section>
-                    {renderProfit()}
-                    {renderLTV()}
-                    {renderRules()}
-                    <ButtonV2 className="mt-10" disabled={!true}>
-                        Vay ngay
-                    </ButtonV2>
+                    <section className="mt-8">
+                        <section className="flex flex-row justify-between mb-[14px]">
+                            <div className="dark:text-gray-4 text-gray-15">Số lượng ký quỹ</div>
+                            <section className="flex flex-row gap-1 items-center">
+                                <div>Khả dụng: 10 BTC</div>
+                                <AddCircleColorIcon size={16} />
+                            </section>
+                        </section>
+                        <InputV2
+                            allowClear
+                            showDividerSuffix={false}
+                            placeholder="Nhập số lượng tài sản đảm bảo"
+                            suffix={
+                                <label htmlFor="search_events">
+                                    {renderValueToken({
+                                        asset: filter?.lendingMargin,
+                                        onchange: onChangeAsset,
+                                        key: 'lendingMargin',
+                                        assetCode: filter?.lendingAsset?.id
+                                    })}
+                                </label>
+                            }
+                        />
+                    </section>
+                    <section>
+                        <div
+                            data-tip=""
+                            data-for="loan_term"
+                            className="dark:text-gray-4 text-gray-15 border-b border-darkBlue-5 border-dashed cursor-pointer w-max"
+                        >
+                            Thời hạn vay
+                        </div>
+                        <section className="flex flex-row gap-4 w-max mt-4">
+                            {BORROWING_TERM.map((term) => {
+                                const isActive = term.key === borrowingTerm;
+                                return (
+                                    <Chip onClick={() => handleBorrowingTermClick(term.key)} selected={isActive} key={term?.[language]}>
+                                        {term?.[language]}
+                                    </Chip>
+                                );
+                            })}
+                        </section>
+                        {renderProfit()}
+                        {renderLTV()}
+                        {renderRules()}
+                        <ButtonV2 className="mt-10" disabled={!true}>
+                            Vay ngay
+                        </ButtonV2>
+                    </section>
                 </section>
-            </section>
-        </ModalV2>
+            </ModalV2>
+            <ConfirmLoan isModal={isConfirm} onClose={handleToggleConfirm} />
+        </>
     );
 };
 

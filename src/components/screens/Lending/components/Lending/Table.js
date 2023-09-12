@@ -60,7 +60,7 @@ const LendingTable = ({ data, page, loading, onPage }) => {
         return (
             <section>
                 <div>{title}</div>
-                <div className="text-gray-1 dark:text-gray-7 text-xs font-normal mt-1">{content}</div>
+                <div className={classNames('text-gray-1 dark:text-gray-7 text-xs font-normal mt-1', { 'invisible h-4': !content })}>{content}</div>
             </section>
         );
     };
@@ -70,8 +70,7 @@ const LendingTable = ({ data, page, loading, onPage }) => {
             {
                 key: 'currency',
                 dataIndex: 'currency',
-
-                title: t('lending:lending:table:assets'),
+                title: renderTitle(t('lending:lending:table:assets')),
                 align: 'left',
                 width: 189,
                 render: (value) => (
