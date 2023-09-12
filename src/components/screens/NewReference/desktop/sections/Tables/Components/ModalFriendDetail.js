@@ -7,6 +7,7 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 
 import UserCircle from 'components/svg/UserCircle';
+import { CheckCircleIcon } from 'components/svg/SvgIcon';
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -75,7 +76,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                         {invitedBy} <CopyIcon data={invitedBy} size={16} className="cursor-pointer" />
                     </div>
                 </div>
-                <div className="flex flex-row justify-between mt-3">
+                <div className={classNames('flex flex-row justify-between mt-3', { hidden: !range?.from || !range?.to })}>
                     <div className="text-gray-1 dark:text-gray-7">{t('reference:statistic')}</div>
                     <div className="font-semibold">
                         {range?.from ? `${formatTime(range?.from, 'dd/MM/yyyy')} - ${formatTime(range?.to ?? new Date(), 'dd/MM/yyyy')}` : '-'}
@@ -87,13 +88,18 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                 <div className="font-semibold">{t('reference:friend_list.detail.commission')}</div>
                 <div className="!w-[98px] h-10">
                     <SelectV2
+                        name="customer"
                         position="top"
                         keyExpr="value"
                         className="!h-10"
                         displayExpr="title"
                         options={defaultOption}
                         value={valueCommission}
+                        popoverClassName="w-[129px]"
+                        popoverPanelClassName="w-max"
                         onChange={(e) => onChangeOption(e, 'commission')}
+                        activeIcon={<CheckCircleIcon color="currentColor" size={16} />}
+                        optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
                     />
                 </div>
             </div>
@@ -113,13 +119,18 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                 <div className="font-semibold">{t('reference:friend_list.detail.volume')}</div>
                 <div className="!w-[98px] h-10">
                     <SelectV2
+                        name="customer"
                         position="top"
                         keyExpr="value"
                         className="!h-10"
                         displayExpr="title"
                         value={valueOrderVol}
                         options={defaultOption}
+                        popoverPanelClassName="w-max"
+                        popoverClassName="w-[129px]"
                         onChange={(e) => onChangeOption(e, 'orderVol')}
+                        activeIcon={<CheckCircleIcon color="currentColor" size={16} />}
+                        optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
                     />
                 </div>
             </div>

@@ -108,22 +108,6 @@ const Portfolio = () => {
                 }
             });
 
-            // remove from here
-            // const min = -100000;
-            // const max = 100000;
-            // const mock = data.values.map((x) => {
-            //     const mockProfit = Math.floor(Math.random() * (max - 0 + 1)) + 0;
-            //     const mockLoss = Math.floor(Math.random() * (0 - min + 1)) + min;
-            //     return {
-            //         loss: Math.floor(Math.random() * (0 - min + 1)) + min,
-            //         profit: mockProfit,
-            //         margin: mockLoss,
-            //         pnl: mockProfit + mockLoss
-            //     };
-            // });
-            // setDataPnlChanging({ ...data, values: mock });
-            // remove to here
-
             setDataPnlChanging(data);
         } catch (error) {
         } finally {
@@ -140,6 +124,8 @@ const Portfolio = () => {
 
     const [isOpenPositionInfo1, setIsOpenPositionInfo1] = useState(false);
     const [isOpenPositionInfo2, setIsOpenPositionInfo2] = useState(false);
+
+    const precision = typeCurrency === ALLOWED_ASSET_ID.USDT ? 4 : 0;
 
     return (
         <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal text-xs leading-[16px] md:text-base pb-20 md:pb-[120px]">
@@ -195,7 +181,7 @@ const Portfolio = () => {
                         filter={filter?.range}
                         isNeverTrade={!!!dataOverview?.overallStatistic?.totalVolume?.value}
                         loadingPnlChanging={loadingPnlChanging}
-                        isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
+                        precision={precision}
                     />
                     <div className={`relative w-full border-b border-divider dark:border-divider-dark mt-12 ${!isMobile && 'hidden'}`}></div>
                     {/* Cap giao dich || Vi the mua - Vi the ban */}
@@ -207,7 +193,7 @@ const Portfolio = () => {
                             typeCurrency={typeCurrency}
                             filter={filter}
                             isNeverTrade={isNeverTrade}
-                            isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
+                            precision={precision}
                             isMobile={isMobile}
                         />
                         <div className={`relative w-full border-b border-divider dark:border-divider-dark my-12 ${!isMobile && 'hidden'}`}></div>
@@ -221,7 +207,7 @@ const Portfolio = () => {
                                 totalLossPosition={dataOverview?.overallStatistic?.countLossLongPositions?.doc_count}
                                 totalProfitPosition={dataOverview?.overallStatistic?.countProfitLongPositions?.doc_count}
                                 isNeverTrade={isNeverTrade}
-                                isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
+                                precision={precision}
                                 isMobile={isMobile}
                                 isDark={isDark}
                                 setIsOpen={setIsOpenPositionInfo1}
@@ -235,7 +221,7 @@ const Portfolio = () => {
                                 totalLossPosition={dataOverview?.overallStatistic?.countLossShortPositions?.doc_count}
                                 totalProfitPosition={dataOverview?.overallStatistic?.countProfitShortPositions?.doc_count}
                                 isNeverTrade={isNeverTrade}
-                                isVndc={typeCurrency === ALLOWED_ASSET_ID.VNDC}
+                                precision={precision}
                                 isMobile={isMobile}
                                 isDark={isDark}
                                 setIsOpen={setIsOpenPositionInfo2}
@@ -264,6 +250,7 @@ const Portfolio = () => {
                     filter={filter}
                     isMobile={isMobile}
                     isDark={isDark}
+                    precision={precision}
                 />
             </div>
             <div

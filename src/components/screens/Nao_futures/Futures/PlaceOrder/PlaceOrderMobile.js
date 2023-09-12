@@ -10,7 +10,7 @@ import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reduce
 import OrderTypeMobile from './OrderTypeMobile';
 import OrderMarginMobile from './OrderMarginMobile';
 import OrderButtonMobile from './OrderButtonMobile';
-import { emitWebViewEvent, formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp, getType } from 'redux/actions/utils';
+import { convertSymbol, emitWebViewEvent, formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp, getType } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import OrderCollapse from './OrderCollapse';
 // import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
@@ -44,7 +44,7 @@ const PlaceOrder = ({ decimals, side, setSide, pair, isAuth, availableAsset, pai
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const firstTime = useRef(true);
     const context = useContext(AlertContext);
-    const priceFromMarketWatch = useSelector((state) => getPairPrice(state, pair));
+    const priceFromMarketWatch = useSelector((state) => getPairPrice(state, convertSymbol(pair)));
     const newDataLeverage = useRef(0);
     const [showEditVolume, setShowEditVolume] = useState(false);
     const [quoteQty, setQuoteQty] = useState(0);
@@ -65,8 +65,9 @@ const PlaceOrder = ({ decimals, side, setSide, pair, isAuth, availableAsset, pai
         if (!pairConfig) return;
         // ? Subscribe publicSocket
         // ? Get Pair Ticker
-        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol, async (data) => {
-            if (pairConfig.symbol === data?.s && data?.p > 0) {
+        const _symbol = convertSymbol(pairConfig.symbol);
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + _symbol, async (data) => {
+            if (_symbol === data?.s && data?.p > 0) {
                 const _pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
                 setPairPrice(_pairPrice);
             }
@@ -413,7 +414,7 @@ const PlaceOrder = ({ decimals, side, setSide, pair, isAuth, availableAsset, pai
             return false;
         }
         return true;
-    }, [isAuth, type, pairConfig, price, side, leverage, availableAsset, pairPrice]);
+    }, [isAuth, type, pairConfig, price, side, leverage, availableAsset, pairPrice, quoteQty]);
 
     const onChangeTpSL = () => {
         if (!isAuth) return;
@@ -427,6 +428,7 @@ const PlaceOrder = ({ decimals, side, setSide, pair, isAuth, availableAsset, pai
         }
         onBlurInput();
         const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
+        console.log(pairPrice);
         rowData.current = {
             fee: 0,
             quantity: size,

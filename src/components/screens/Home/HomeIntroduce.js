@@ -14,7 +14,7 @@ const TrendingSlide = dynamic(() => import('./TrendingSlide'), {
     loading: () => <div className="h-10 w-full bg-transparent" />
 });
 
-const HomeIntroduce = ({ trendData, t }) => {
+const HomeIntroduce = ({ marketCurrency, trendData, t }) => {
     const [state, set] = useState({
         pairsLength: null,
         loading: false,
@@ -48,7 +48,7 @@ const HomeIntroduce = ({ trendData, t }) => {
 
     return (
         <section className="homepage-introduce relative">
-            <TrendingSlide trending={trendData} />
+            <TrendingSlide marketCurrency={marketCurrency} trending={trendData} />
             <div className="homepage-introduce___wrapper max-w-screen-v3 2xl:max-w-screen-xxl mx-auto relative">
                 <div className="homepage-introduce___wrapper__left">
                     <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>

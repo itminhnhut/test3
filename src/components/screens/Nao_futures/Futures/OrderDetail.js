@@ -122,13 +122,13 @@ const OrderDetail = ({
         if (!order) return '-';
         const currency = order?.fee_metadata[key]?.currency ?? order?.margin_currency;
         const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
-        const decimalFunding = currency === 72 ? 0 : 6;
-        const decimal = key === 'funding_fee.total' ? decimalFunding : currency === 72 ? assetDigit : assetDigit + 2;
+        const isVndc = currency === 72 || currency === 39;
+        const decimalFunding = isVndc ? 0 : 6;
+        const decimal = key === 'funding_fee.total' ? decimalFunding : isVndc ? assetDigit : assetDigit + 2;
         const assetCode = allAssets?.[currency]?.assetCode ?? '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : get(order, key, 0);
         const prefix = negative ? (data < 0 ? '-' : '+') : '';
         return data ? prefix + formatNumber(Math.abs(data), decimal) + ' ' + assetCode : '-';
-
     };
 
     const getValue = (number, symbol = false) => {
@@ -648,7 +648,10 @@ const OrderDetail = ({
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity);
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
         const swap = row?.swap || 0;
-        const liqPrice = (size * row?.open_price + (row?.fee_data?.place_order?.['22'] || 0) +(row?.fee_data?.place_order?.['72'] || 0) + swap - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.Nami));
+        const fee_data = [22, 72, 39].reduce((acc, cur) => {
+            return acc + (row?.fee_data?.place_order?.[cur] || 0);
+        }, 0);
+        const liqPrice = (size * row?.open_price + fee_data + swap - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.Nami));
         return liqPrice > 0 ? formatNumber(liqPrice, 0, decimalPrice, false) : '-';
     };
 
@@ -1040,7 +1043,9 @@ const FeeMeta = ({
         return fee;
     }, [order]);
 
-    const decimal = fee_metadata[0]?.asset === 72 ? allAssets[fee_metadata[0]?.asset]?.assetDigit : allAssets[fee_metadata[0]?.asset]?.assetDigit + 2;
+    const isVndc = [72, 39].includes(fee_metadata[0]?.asset);
+    const digit = allAssets[fee_metadata[0]?.asset]?.assetDigit;
+    const decimal = isVndc ? digit : digit + 2;
 
     return (
         <>
@@ -1059,7 +1064,7 @@ const FeeMeta = ({
             {visible && <div className="mt-3 text-sm font-medium w-full grid grid-cols-2 gap-2">
                 {fee_metadata.map((rs, idx) => (
                     <div className={idx % 2 === 0 ? 'text-left' : 'text-right'} key={idx}>
-                        {formatNumber(rs.value, rs.asset === 72 ? allAssets[rs.asset].assetDigit : allAssets[rs.asset].assetDigit + 2)} {allAssets[rs.asset].assetCode}
+                        {formatNumber(rs.value, [72, 39].includes(rs.asset) ? allAssets[rs.asset].assetDigit : allAssets[rs.asset].assetDigit + 2)} {allAssets[rs.asset].assetCode}
                     </div>
                 ))}
             </div>

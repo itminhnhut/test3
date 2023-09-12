@@ -238,14 +238,13 @@ export function formatBalance(value, digits = 2, acceptNegative = false) {
 }
 
 export const formatBalanceFiat = (value, assetCode, acceptNegative = false) => {
-    const isVNDC = assetCode === 'VNDC';
     const isUSDT = assetCode === 'USDT';
-    return formatBalance(isVNDC ? Math.round(value) : value, isVNDC ? 0 : isUSDT ? 4 : 0, acceptNegative);
+    return formatBalance(isUSDT ? value : Math.round(value), isUSDT ? 4 : 0, acceptNegative);
 };
 
 export const getExactBalanceFiat = (balance, assetCode) => {
-    const digit = assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : 0;
-    return roundByExactDigit(balance, digit);
+    const isUSDT = assetCode === 'USDT';
+    return roundByExactDigit(balance, isUSDT ? 4 : 0);
 };
 // Hiển thị cho phí spot tính bằng VNDC, USDT, ATS
 export function formatSpotFee(value) {
@@ -973,15 +972,30 @@ export const getPriceColor = (value, onusMode = false) => {
     }
 };
 
-const BASE_ASSET = ['VNDC', 'USDT'];
+const BASE_ASSET = ['VNDC', 'USDT', 'VNST'];
+const BASE_ASSET_GENERATING = BASE_ASSET.reduce((generateArr, asset) => {
+    const allAssetParital = BASE_ASSET.reduce((arr, childAsset) => {
+        if (asset === childAsset) return arr;
+        return [...arr, `${asset}/${childAsset}`, `${asset}${childAsset}`];
+    }, []);
+
+    return [...generateArr, ...allAssetParital, `${asset}/`];
+}, []);
 
 export const getSymbolObject = (symbol) => {
-    if (!symbol || ['USDTVNDC', 'VNDCUSDT', 'VNDC/USDT', 'USDT/VNDC', 'VNDC/', 'USDT/'].includes(symbol)) {
+    if (!symbol || BASE_ASSET_GENERATING.includes(symbol)) {
         log?.d(`Symbol not support`);
         return;
     }
 
-    if (symbol?.includes('/VNDC') || symbol?.includes('/USDT') || symbol?.includes('VNDC') || symbol?.includes('USDT')) {
+    if (
+        symbol?.includes('/VNDC') ||
+        symbol?.includes('/USDT') ||
+        symbol?.includes('/VNST') ||
+        symbol?.includes('VNDC') ||
+        symbol?.includes('USDT') ||
+        symbol?.includes('VNST')
+    ) {
         let baseAsset = '',
             quoteAsset = '';
 
@@ -993,6 +1007,11 @@ export const getSymbolObject = (symbol) => {
         if (symbol?.includes('USDT')) {
             quoteAsset = 'USDT';
             baseAsset = symbol?.replace('USDT', '');
+        }
+
+        if (symbol?.includes('VNST')) {
+            quoteAsset = 'VNST';
+            baseAsset = symbol?.replace('VNST', '');
         }
 
         // ? Handle predictable symbol
@@ -1352,7 +1371,7 @@ export const filterSearch = (originDataset, keys, searchValue) => {
 
     return originDataset.filter((item) => {
         for (const key of keys) {
-            if (parseUnormStr(get(item,key)).includes(parseUnormStr(searchValue))) return true;
+            if (parseUnormStr(get(item, key)).includes(parseUnormStr(searchValue))) return true;
         }
         return false;
     });
@@ -1483,3 +1502,5 @@ export const getFuturesFees = async (quotes) => {
     //     return data;
     // });
 };
+
+export const convertSymbol = (symbol) => String(symbol).replace('VNST', 'VNDC');

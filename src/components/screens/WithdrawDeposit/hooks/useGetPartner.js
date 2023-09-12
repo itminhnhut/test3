@@ -11,12 +11,11 @@ const useGetPartner = ({ assetId, side, amount, rate, assetConfig }) => {
 
     const dispatch = useDispatch();
 
-
     useEffect(() => {
         if (rate && assetConfig) {
             dispatch(
                 setAllowedAmount({
-                    min: assetConfig?.assetCode === 'VNDC' ? DEFAULT_PARTNER_MIN[side] : 5,
+                    min: ['VNDC', 'VNST'].includes(assetConfig?.assetCode) ? DEFAULT_PARTNER_MIN[side] : 5,
                     max: roundByExactDigit(DEFAULT_PARTNER_MAX[side] / rate, assetConfig?.assetDigit)
                 })
             );
@@ -24,13 +23,12 @@ const useGetPartner = ({ assetId, side, amount, rate, assetConfig }) => {
     }, [rate, side, assetConfig?.assetCode, assetConfig?.assetDigit]);
 
     useEffect(() => {
-
         let timeout = setTimeout(() => {
             dispatch(setInput(amount));
         }, DEBOUNCE_TIME);
 
         if (+amount >= minimumAllowed && +amount <= maximumAllowed) {
-            if(isAutoSuggest) return;
+            if (isAutoSuggest) return;
 
             dispatch(setLoadingPartner(true));
         }
@@ -40,7 +38,7 @@ const useGetPartner = ({ assetId, side, amount, rate, assetConfig }) => {
     }, [amount, minimumAllowed, maximumAllowed, isAutoSuggest]);
 
     useEffect(() => {
-        if(isAutoSuggest) return;
+        if (isAutoSuggest) return;
 
         let mounted = false;
         const source = axios.CancelToken.source();

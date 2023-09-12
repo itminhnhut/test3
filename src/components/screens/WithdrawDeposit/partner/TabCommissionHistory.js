@@ -180,12 +180,10 @@ const TabCommissionHistory = () => {
                 title: t('common:amount'),
                 align: 'right',
                 width: 200,
-                render: (v, item) => '+' + formatNanNumber(v, +item?.currency === 72 ? 0 : 4)
-                // render: (v, item) => {
-                //     const formattedNumber = formatNanNumber(v, +item?.currency === 72 ? 0 : 4);
-                //     if (!formattedNumber) return <span className="text-gray-15 dark:text-gray-4">_</span>;
-                //     return '+' + formattedNumber;
-                // }
+                render: (v, item) => {
+                    const assetConfig = find(configs, { id: +item?.currency });
+                    return '+' + formatNanNumber(v, assetConfig?.assetDigit || 0);
+                }
             }
         ],
         [categoryConfig]

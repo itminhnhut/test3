@@ -33,7 +33,7 @@ const PnlChanging = ({
     loadingPnlChanging = false,
     dataPnl = { labels: [], values: [], interval: 'day' },
     filter = { startDate: null, endDate: null },
-    isVndc = true
+    precision
 }) => {
     const [showDetails, setShowDetails] = useState(null);
     const router = useRouter();
@@ -112,7 +112,7 @@ const PnlChanging = ({
                         let pnl = dataPnl.values[dataIndex].pnl;
                         let ratePnl = pnl / margin;
 
-                        externalTooltipHandler(context, isDark, t, isVndc, title, pnl, ratePnl, dataIndex);
+                        externalTooltipHandler(context, isDark, t, precision, title, pnl, ratePnl, dataIndex);
                     }
                 }
             }
@@ -270,7 +270,7 @@ const PnlChanging = ({
                                     <span className={dataPnl?.values?.[showDetails]?.pnl > 0 ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>
                                         {`${dataPnl?.values?.[showDetails]?.pnl > 0 ? '+' : ''}${formatNanNumber(
                                             dataPnl?.values?.[showDetails]?.pnl,
-                                            isVndc ? 0 : 4
+                                            precision
                                         )} (${dataPnl?.values?.[showDetails]?.pnl > 0 ? '+' : ''}${formatNanNumber(
                                             (dataPnl?.values?.[showDetails]?.pnl * 100) / dataPnl?.values?.[showDetails]?.margin,
                                             2
@@ -378,7 +378,7 @@ const generateThead = (isDark, label) => {
     return tableHead;
 };
 
-const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl, dataIndex) => {
+const externalTooltipHandler = (context, isDark, t, precision, title, pnl, ratePnl, dataIndex) => {
     // Tooltip Element
     const { chart, tooltip } = context;
     const tooltipEl = getOrCreateTooltip(chart, isDark);
@@ -413,7 +413,7 @@ const externalTooltipHandler = (context, isDark, t, isVndc, title, pnl, ratePnl,
         const spanElement = document.createElement('span');
         spanElement.className = 'red-2 font-semibold';
         spanElement.style.color = pnl > 0 ? colors.green['2'] : colors.red['2'];
-        spanElement.textContent = `${pnl > 0 ? '+' : ''}${formatNanNumber(pnl, isVndc ? 0 : 4)} (${formatNanNumber(ratePnl * 100, 2)}%)`;
+        spanElement.textContent = `${pnl > 0 ? '+' : ''}${formatNanNumber(pnl, precision)} (${formatNanNumber(ratePnl * 100, 2)}%)`;
         liElement3.style.whiteSpace = 'nowrap';
         liElement3.appendChild(spanElement);
         ulElement.appendChild(liElement3);
@@ -525,9 +525,9 @@ const parseTitle = (stringDate, interval, isDetails = false, markTime, isMarkTim
 
     let title = '';
     let getToTime = (cb) => {
-        if(isMarkTime && dataIndex !== 0) return formatTime(new Date(markTime), 'dd/MM/yyyy')
-        return formatTime(subDays(cb(new Date(stringDate), 1), 1), 'dd/MM/yyyy')
-    }
+        if (isMarkTime && dataIndex !== 0) return formatTime(new Date(markTime), 'dd/MM/yyyy');
+        return formatTime(subDays(cb(new Date(stringDate), 1), 1), 'dd/MM/yyyy');
+    };
 
     switch (interval) {
         case INTERVAL.DAY:

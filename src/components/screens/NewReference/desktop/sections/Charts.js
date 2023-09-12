@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import RefCard from 'components/screens/NewReference/RefCard';
 import { FilterTabs } from 'components/screens/NewReference/mobile/index';
 import FetchApi from 'utils/fetch-api';
@@ -11,9 +11,9 @@ import { formatNumber } from 'redux/actions/utils';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { isEmpty, isEqual, xorWith } from 'lodash';
 
 const MILLISECOND = 1;
-const LIMIT = 10;
 
 const Charts = ({ t, id }) => {
     const timeTabs = [
@@ -107,6 +107,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
         if (!filter.range.startDate) return;
         fetchChartData();
     }, [filter]);
+
     useEffect(() => {
         if (timeTab !== 'custom') {
             const date = new Date();
@@ -171,7 +172,6 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
         }));
     };
     const renderChart = () => {
-        // const getData = (level) => dataSource.data.map(e => e[level - 1]?.[tab === tags[0].value ? 'count' : 'volume'] ?? [])
         const getData = (level) => dataSource?.data?.map((e) => e[level - 1]?.[type]) ?? [];
         const data = {
             labels: dataSource?.labels || [],
@@ -294,51 +294,10 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     }
                 }
             }
-            // scales: {
-            //     x: {
-            //         stacked: true,
-            // ticks: {
-            //     color: baseColors.darkBlue5,
-            //     showLabelBackdrop: false
-            // },
-            // grid: {
-            //     display: false,
-            //     drawBorder: true,
-            //     borderColor: currentTheme === THEME_MODE.DARK ? baseColors.divider.dark : baseColors.divider.DEFAULT
-            // }
-            //     },
-            //     y: {
-            // ticks: {
-            //     color: baseColors.darkBlue5
-            // },
-            // grid: {
-            //     borderDash: [1, 4],
-            //     // color: baseColors.divider.DEFAULT,
-            //     color: function (context) {
-            //         if (context.tick.value === 0) {
-            //             return 'rgba(0, 0, 0, 0)';
-            //         }
-            //         return currentTheme === THEME_MODE.DARK ? baseColors.divider.dark : baseColors.divider.DEFAULT;
-            //     },
-            //     drawBorder: false
-            // }
-
-            //         // ticks: {
-            //         //     callback: function(value) {
-            //         //         return value + 'k';
-            //         //     }
-            //         // }
-            //         // grid: {
-            //         //     color: 'magenta',
-            //         // },
-            //         // border: {
-            //         //     dash: [2, 4],
-            //         // },
-            //     }
-            // }
         };
-        return <ChartJS type="bar" data={data} options={options} plugins={plugin} height="400px" />;
+        return <RenderChart data={data} options={options} plugin={plugin} />;
     };
+
     return (
         <RefCard wrapperClassName="!p-8 w-full h-auto bg-white dark:bg-dark-4" style={{ height: 'fit-content' }}>
             <div className="mb-6 flex justify-between w-full">
@@ -393,3 +352,13 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
         </RefCard>
     );
 };
+
+const isArrayEqual = (x, y) => isEmpty(xorWith(x, y, isEqual));
+
+function moviePropsAreEqual(prev, next) {
+    return isArrayEqual(prev.data.datasets, next.data.datasets);
+}
+
+const RenderChart = memo(({ data, options, plugin }) => {
+    return <ChartJS type="bar" data={data} options={options} plugins={plugin} height="400px" />;
+}, moviePropsAreEqual);

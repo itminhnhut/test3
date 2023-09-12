@@ -48,7 +48,6 @@ const SessionChart = ({ filter }) => {
     const { t } = useTranslation();
 
     const [dataIndex, setDataIndex] = useState(null);
-    // const [curToken, setCurToken] = useState(72);
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: []

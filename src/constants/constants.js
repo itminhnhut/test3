@@ -73,7 +73,8 @@ export const FEE_STRUCTURES = {
 export const NAMI_FEE_FUTURE = [
     { assetId: 72, assetCode: 'VNDC', ratio: '0.06%' },
     { assetId: 1, assetCode: 'NAMI', ratio: '0.042%' },
-    { assetId: 22, assetCode: 'USDT', ratio: '0.06%' }
+    { assetId: 22, assetCode: 'USDT', ratio: '0.06%' },
+    { assetId: 39, assetCode: 'VNST', ratio: '0.06%' }
 ];
 
 export const FEE_TABLE = [
@@ -262,6 +263,14 @@ export const CHART_JS_RANGE = {
     year: 'year'
 };
 
+export const CURRENCY = {
+    USDT: 22,
+    VNDC: 72,
+    VNST: 39
+};
+
+export const FUTURES_DEFAULT_SYMBOL = 'BTC';
+
 export const INSURANCE_STATE = {
     AVAILABLE: 'Available',
     CLAIM_WAITING: 'Claim_waiting',
@@ -271,3 +280,9 @@ export const INSURANCE_STATE = {
     EXPIRED: 'Expired',
     CANCELED: 'Canceled'
 };
+
+export const QUOTE_ASSET = {
+    USDT: 22,
+    VNDC: 72,
+    VNST: 39
+}

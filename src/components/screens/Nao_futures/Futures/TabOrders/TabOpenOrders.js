@@ -8,7 +8,7 @@ import fetchApi from 'utils/fetch-api';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import OrderItemMobile from './OrderItemMobile';
 import { getShareModalData } from './ShareFutureMobile';
-import { countDecimals, emitWebViewEvent, formatNumber } from 'redux/actions/utils';
+import { convertSymbol, countDecimals, emitWebViewEvent, formatNumber } from 'redux/actions/utils';
 import ModifyOrder from '../ModifyOrder';
 import { find } from 'lodash';
 import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
@@ -96,7 +96,7 @@ const TabOpenOrders = ({
                 if (!openShareModal) {
                     const shareModalData = getShareModalData({
                         order: rowData.current,
-                        pairPrice: marketWatch[rowData.current?.symbol]
+                        pairPrice: marketWatch[convertSymbol(rowData.current?.symbol)],
                     });
                     emitWebViewEvent(JSON.stringify(shareModalData));
                 }
@@ -192,13 +192,13 @@ const TabOpenOrders = ({
 
     const renderListOrder = () => {
         return dataFilter?.map((order, i) => {
-            const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
-            const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
-            const decimalScalePrice = getDecimalPrice(symbol);
-            const isVndcFutures = symbol?.quoteAsset === 'VNDC';
+            const pairConfig = allPairConfigs.find(rs => rs.symbol === order.symbol);
+            const decimalSymbol = assetConfig.find(rs => rs.id === pairConfig?.quoteAssetId)?.assetDigit ?? 0;
+            const decimalScalePrice = getDecimalPrice(pairConfig);
+            const isVndcFutures = ['VNDC', 'VNST'].includes(pairConfig?.quoteAsset);
             return (
                 <OrderItemMobile key={i} order={order} mode={mode}
-                    onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
+                    onShowModal={onShowModal} allowButton isDark={isDark} pairConfig={pairConfig}
                     onShowDetail={onShowDetail} decimalSymbol={decimalSymbol}
                     decimalScalePrice={decimalScalePrice}
                     tab={tab} isVndcFutures={isVndcFutures}
@@ -252,14 +252,14 @@ const TabOpenOrders = ({
                 orderEditMarginId &&
                 <AdjustPositionMargin
                     order={orderEditMargin}
-                    pairPrice={marketWatch[orderEditMargin?.symbol]}
+                    pairPrice={marketWatch[convertSymbol(orderEditMargin?.symbol)]}
                     onClose={() => setOrderEditMarginId()}
                 />
             }
             {openAddVol &&
                 <ModifyOrder
                     order={rowData.current}
-                    pairPrice={marketWatch[rowData.current?.symbol]}
+                    pairPrice={marketWatch[convertSymbol(rowData.current?.symbol)]}
                     onClose={() => setOpenAddVol(false)}
                     pairConfig={pairConfig}
                 />
@@ -267,7 +267,7 @@ const TabOpenOrders = ({
             {openCloseOrderModal &&
                 <CloseOrderModalMobile
                     onClose={() => setOpenCloseOrderModal(false)} order={rowData.current}
-                    pairPrice={marketWatch[rowData.current?.symbol]}
+                    pairPrice={marketWatch[convertSymbol(rowData.current?.symbol)]}
                     pairConfig={pairConfig}
 
                 />

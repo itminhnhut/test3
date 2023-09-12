@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { FUTURES_DEFAULT_SYMBOL } from './index';
 
 const FuturesComponent = dynamic(() => import('components/screens/Futures/futures'), {
     ssr: false
@@ -19,7 +18,7 @@ const Futures = ({ params, query }) => {
         case 'trading-rule':
             return <TradingRule />;
         default:
-            return <FuturesComponent integrate={query?.integrate} orderId={query?.order} />;
+            return <FuturesComponent symbol={params?.pair} integrate={query?.integrate} orderId={query?.order} />;
     }
 };
 

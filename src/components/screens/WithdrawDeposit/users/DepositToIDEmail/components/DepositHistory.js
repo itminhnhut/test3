@@ -132,12 +132,12 @@ const getColumns = (t, language, configs) => [
                     </TagV2>
                 ),
                 [DepWdlStatus.Pending]: (
-                    <TagV2 icon={false} className="ml-auto !bg-transparent" type="warning" labelClassname="!text-base">
+                    <TagV2 icon={false} className="!p-0 ml-auto !bg-transparent" type="warning" labelClassname="!text-base">
                         {t('common:processing')}
                     </TagV2>
                 ),
                 [DepWdlStatus.Declined]: (
-                    <TagV2 icon={false} className="ml-auto !bg-transparent" type="failed" labelClassname="!text-base">
+                    <TagV2 icon={false} className="!p-0 ml-auto !bg-transparent" type="failed" labelClassname="!text-base">
                         {t('common:declined')}
                     </TagV2>
                 )

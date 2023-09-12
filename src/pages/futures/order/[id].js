@@ -75,7 +75,7 @@ const OrderDetail = ({ id }) => {
     const unitConfig = useSelector((state) => getUnit(state, pairConfig?.quoteAsset));
 
     const pairTicker = marketWatch[pairConfig?.symbol];
-    const isVndcFutures = pairConfig?.quoteAsset === 'VNDC';
+    const isVndcFutures = ['VNDC', 'VNST'].includes(pairConfig?.quoteAsset);
     const isDark = currentTheme === THEME_MODE.DARK;
 
     useEffect(() => {

@@ -128,6 +128,9 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm, isUse
             isVisible={isVisible}
             wrapClassName=""
             onBackdropCb={() => {
+                // prevent close when making transaction
+                if (loading) return;
+                
                 setState({
                     otp: INITAL_OTP_STATE,
                     pasted: {

@@ -31,7 +31,7 @@ import {
     SET_FUTURES_USER_SETTINGS,
 } from './types';
 import { favoriteAction } from './user';
-import { checkInFundingTime, checkLargeVolume, formatNumber } from 'redux/actions/utils';
+import { checkInFundingTime, checkLargeVolume, convertSymbol, formatNumber } from 'redux/actions/utils';
 import isEmpty from 'lodash/isEmpty';
 
 export const setUsingSltp = (payload) => (dispatch) => dispatch({
@@ -138,17 +138,26 @@ export const setFuturesPositionMode = async (dualSidePosition) => {
 };
 
 export const mergeFuturesFavoritePairs = (favoritePairs, marketWatch) => {
-    if (
-        !marketWatch ||
-        !marketWatch?.length ||
-        !favoritePairs ||
-        !favoritePairs?.length
-    ) {
+    if (!marketWatch || !marketWatch?.length || !favoritePairs || !favoritePairs?.length) {
         return;
     }
-    const _favoritePairs = favoritePairs.map((o) => o.replace('_', ''));
 
-    return marketWatch.filter((o) => _favoritePairs.includes(o?.symbol));
+    const listPriceFav = [];
+
+    for (const pairFav of favoritePairs) {
+        const [baseAsset, quoteAsset] = pairFav.split('_');
+        const originSymbol = baseAsset + quoteAsset;
+        const marketWatchInfo = marketWatch.find((item) => item.symbol === convertSymbol(originSymbol));
+        if (marketWatchInfo)
+            listPriceFav.push({
+                symbol: originSymbol,
+                baseAsset,
+                quoteAsset,
+                priceChangePercent: marketWatchInfo.priceChangePercent
+            });
+    }
+
+    return listPriceFav;
 };
 
 export const getMarginModeLabel = (mode) => {
@@ -192,7 +201,7 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
                     message: t('futures:place_order_success_message'),
                     notes: notice
                 };
-               
+
                 // showNotification(
                 //     {
                 //         message: t('futures:place_order_success'),

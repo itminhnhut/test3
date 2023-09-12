@@ -795,7 +795,6 @@ const CryptoDeposit = ({ assetId }) => {
     }, [state.selectedNetwork, state.selectedAsset]);
 
     useEffect(() => {
-        // const asset = get(router?.query, 'asset', 'VNDC');
 
         if (paymentConfigs && assetId) {
             const selectedAsset = find(paymentConfigs, (o) => o?.assetCode === assetId);

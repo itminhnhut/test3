@@ -34,15 +34,26 @@ import FeeSettingModal from 'components/screens/FeeSchedule/FeeSettingModal';
 const NAMI_NAO_TYPE = [
     {
         id: 0,
+        name: 'VNST_SUB_TAB',
+        code: 'VNST',
+        content: {
+            vi: 'VNST',
+            en: 'VNST'
+        }
+    },
+    {
+        id: 1,
         name: 'VNDC_SUB_TAB',
+        code: 'VNDC',
         content: {
             vi: 'VNDC',
             en: 'VNDC'
         }
     },
     {
-        id: 1,
+        id: 2,
         name: 'USDT_SUB_TAB',
+        code: 'USDT',
         content: {
             vi: 'USDT',
             en: 'USDT'
@@ -50,11 +61,41 @@ const NAMI_NAO_TYPE = [
     }
 ];
 
+const TRADING_FEE_TAB = [
+    {
+        index: 0,
+        dataIndex: 'SPOT',
+        title: 'Spot'
+    },
+    {
+        index: 1,
+        dataIndex: 'NAMI',
+        title: 'NAMI Futures'
+    },
+    {
+        index: 2,
+        dataIndex: 'NAO',
+        title: 'NAO Futures'
+    }
+];
+
+const FUTURE_FEE_CONFIG = {
+    NAMI: {
+        VNDC: ['VNDC', 'NAMI'],
+        USDT: ['USDT', 'NAMI'],
+        VNST: ['VNST', 'NAMI']
+    },
+    NAO: {
+        VNDC: ['VNDC', 'NAO', 'NAMI'],
+        USDT: ['USDT', 'NAO', 'NAMI'],
+        VNST: ['VNST', 'NAO', 'NAMI']
+    }
+};
+
 const INITIAL_STATE = {
     tabIndex: 0,
     loading: false,
     vipLevel: null,
-    futuresFeeConfig: null,
     loadingFuturesFeeConfigs: false,
     currentFuturesFeePage: 1,
     loadingVipLevel: false,
@@ -105,8 +146,6 @@ const TradingFee = () => {
     };
     useEffect(handleHideScrollBar, []);
     // Helper
-
-    console.log(state.futuresFeeConfig?.filter((rs) => String(rs.name).includes('NAMI')));
 
     const getVip = async () => {
         setState({ loadingVipLevel: true });
@@ -173,8 +212,6 @@ const TradingFee = () => {
     }, [state.tabIndex, TRADING_FEE_TAB]);
 
     const renderFuturesTableFee = useCallback(() => {
-        let tableStatus;
-
         const columns = [
             {
                 key: 'symbol',
@@ -211,24 +248,6 @@ const TradingFee = () => {
             }
         ];
 
-        const dataFilter = state.futuresFeeConfig?.filter((e) => {
-            const quote = e?.name.substring(e?.name?.length - 4);
-            if (state.tabIndex === 1) {
-                return quote === 'USDT';
-            } else {
-                return quote === 'VNDC';
-            }
-        });
-
-        const data = dataHandler({
-            tabIndex: state.tabIndex,
-            data: orderBy(dataFilter || state.futuresFeeConfig, ['name'], ['asc']),
-            loading: state.loadingFuturesFeeConfigs
-        });
-
-        if (!data?.length) {
-            tableStatus = <Empty />;
-        }
         const dataForTable = getRenderFutureFeeData(state.tabIndex, state.subTabIndex);
         return (
             <ReTable
@@ -236,13 +255,12 @@ const TradingFee = () => {
                 data={dataForTable}
                 columns={columns}
                 rowKey={(item) => item?.key}
-                tableStatus={tableStatus}
                 scroll={{ x: true }}
                 tableStyle={{
-                    paddingHorizontal: width >= 768 ? '2rem' : '0.75rem',
+                    paddingHorizontal: width >= 768 ? '1.5rem' : '0.75rem',
                     tableStyle: { minWidth: '768px !important' },
                     headerStyle: {},
-                    rowStyle: {},
+                    rowStyle: { paddingHorizontal: '24px !important' },
                     // shadowWithFixedCol: width <= BREAK_POINTS.lg,
                     noDataStyle: {
                         minHeight: '280px'
@@ -312,9 +330,9 @@ const TradingFee = () => {
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 tableStyle={{
-                    paddingHorizontal: width >= 768 ? '2rem' : '0.75rem',
+                    paddingHorizontal: width >= 768 ? '1.5rem' : '0.75rem',
                     tableStyle: { minWidth: '768px !important' },
-                    headerStyle: {},
+                    headerStyle: { paddingHorizontal: '1.5rem !important' },
                     rowStyle: {},
                     // shadowWithFixedCol: width < BREAK_POINTS.lg,
                     noDataStyle: {
@@ -458,9 +476,9 @@ const TradingFee = () => {
             <div className="mt-20 mb-6 md:!mb-8 text-xl md:!text-2xl font-semibold">{t('fee-structure:fee_rate')}</div>
 
             <div id="trading_fee" className="hidden md:block">
-                <div className="flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-xl px-8 pt-4">{renderFeeTab()}</div>
+                <div className="flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-xl px-6 pt-4">{renderFeeTab()}</div>
                 {state.tabIndex === 1 || state.tabIndex === 2 ? (
-                    <div className="py-8 sm:py-6 flex items-center border border-b-0 border-divider dark:border-divider-dark px-8 flex-wrap justify-between">
+                    <div className="py-8 sm:py-6 flex items-center border border-b-0 border-divider dark:border-divider-dark px-6 flex-wrap justify-between">
                         {state.tabIndex === 1 || state.tabIndex === 2 ? (
                             <TokenTypes
                                 type={state.subTabIndex}
@@ -497,29 +515,18 @@ const TradingFee = () => {
                 ) : null}
                 {state.tabIndex === 0 && <ExchangeFeeMobileList t={t} />}
                 {[1, 2].includes(state.tabIndex) && (
-                    <FuturesFeeMobileListV2
-                        t={t}
-                        currentQuote={
-                            {
-                                1: 'VNDC',
-                                2: 'USDT'
-                            }[state.tabIndex]
-                        }
-                        loading={state.loadingFuturesFeeConfigs}
-                        data={getRenderFutureFeeData(state.tabIndex, state.subTabIndex)}
-                    />
+                    <FuturesFeeMobileListV2 t={t} loading={state.loadingFuturesFeeConfigs} data={getRenderFutureFeeData(state.tabIndex, state.subTabIndex)} />
                 )}
             </div>
 
-            <div className="mt-12 md:mt-8 space-y-2 nami-list-disc">
-                <div className="flex items-center">
-                    {t('fee-structure:maker_taker_description')}
-                    <span className="ml-2">{t('fee-structure:maker_taker_description_2')}</span>
-                    <HrefButton variants="blank" className="!w-auto ml-3 !py-0" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank">
+            <div className="mt-12 md:mt-8 space-y-2 nami-list-disc text-sm md:text-base">
+                <div className="">
+                    {t('fee-structure:maker_taker_description')} {t('fee-structure:maker_taker_description_2')}.
+                    <HrefButton variants="blank" className="!inline !pl-1" href={PATHS.REFERENCE.MAKER_TAKER} target="_blank">
                         {t('fee-structure:read_more')}
                     </HrefButton>
                 </div>
-                <div className="flex items-center">
+                <div className="">
                     {t('fee-structure:referral_description_value', { value: '20%' })}
                     {isApp ? (
                         <span
@@ -531,7 +538,7 @@ const TradingFee = () => {
                     ) : (
                         <HrefButton
                             variants="blank"
-                            className="!w-auto ml-3 !py-0"
+                            className="!inline !py-0 !pl-1"
                             href={language === LANGUAGE_TAG.VI ? PATHS.ACCOUNT.REFERRAL_VI : PATHS.ACCOUNT.REFERRAL}
                             target="_blank"
                         >
@@ -549,24 +556,6 @@ const TradingFee = () => {
         </>
     );
 };
-
-const TRADING_FEE_TAB = [
-    {
-        index: 0,
-        dataIndex: 'SPOT',
-        title: 'Spot'
-    },
-    {
-        index: 1,
-        dataIndex: 'NAMI',
-        title: 'NAMI Futures'
-    },
-    {
-        index: 2,
-        dataIndex: 'NAO',
-        title: 'NAO Futures'
-    }
-];
 
 const dataHandler = (props) => {
     const { tabIndex, data, loading, utils } = props;
@@ -646,17 +635,16 @@ const dataHandler = (props) => {
 
 const TokenTypes = ({ type, setType, types, lang, className }) => {
     return (
-        <div className={classnames('flex items-center space-x-3 h-9 sm:h-12 font-normal text-sm overflow-auto no-scrollbar', className)}>
+        <div className={classnames('flex items-center space-x-2 sm:space-x-3 h-8 sm:h-9 font-normal text-sm overflow-auto no-scrollbar', className)}>
             {types.map((e) => (
                 <div
                     key={e.id}
                     className={classnames(
                         ` ${
                             type !== e.id && 'text-txtTextBtn-tonal_dark'
-                        } flex items-center h-full flex-auto justify-center px-4 text-sm sm:text-base rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap`,
+                        } flex items-center h-full flex-auto justify-center px-2 sm:px-4 text-xs sm:text-sm rounded-md cursor-pointer whitespace-nowrap dark:bg-darkBlue-3 bg-gray-13`,
                         {
-                            'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
-                            'border-divider dark:border-divider-dark': e.id !== type
+                            'bg-teal bg-opacity-10 text-teal font-semibold': e.id === type
                         }
                     )}
                     onClick={() => setType(e.id)}
@@ -669,24 +657,16 @@ const TokenTypes = ({ type, setType, types, lang, className }) => {
 };
 
 const getRenderFutureFeeData = (tabIndex, subTabIndex) => {
-    const codeOfAssetOrder = [];
+    const selectedAsset = NAMI_NAO_TYPE[subTabIndex]?.code;
+    const codeOfAssetOrder = FUTURE_FEE_CONFIG?.[TRADING_FEE_TAB[tabIndex]?.dataIndex]?.[selectedAsset] || [];
     const dataForTable = [];
     if (naoFeesWithoutOnus && naoFeesWithoutOnus.length > 0) {
-        if (tabIndex === 1 && subTabIndex === 0) {
-            codeOfAssetOrder = [72, 1];
-        } else if (tabIndex === 1 && subTabIndex === 1) {
-            codeOfAssetOrder = [22, 1];
-        } else if (tabIndex === 2 && subTabIndex === 0) {
-            codeOfAssetOrder = [72, 447, 1];
-        } else if (tabIndex === 2 && subTabIndex === 1) {
-            codeOfAssetOrder = [22, 447, 1];
-        }
-        codeOfAssetOrder.forEach((assetCode) => {
+        codeOfAssetOrder.forEach((asset) => {
             const foundFee = null;
             if (tabIndex === 1) {
-                foundFee = namiFees.find((fee) => fee.assetId === assetCode);
+                foundFee = namiFees.find((fee) => fee.assetCode === asset);
             } else {
-                foundFee = naoFeesWithoutOnus.find((fee) => fee.assetId === assetCode);
+                foundFee = naoFeesWithoutOnus.find((fee) => fee.assetCode === asset);
             }
             if (foundFee) {
                 dataForTable.push(foundFee);

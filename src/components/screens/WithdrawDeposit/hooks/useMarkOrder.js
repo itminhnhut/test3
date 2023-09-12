@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { ALLOWED_ASSET, ALLOWED_ASSET_ID, DisputedType, MODE, ORDER_TYPES, TranferreredType } from '../constants';
 import { ApiResultCreateOrder, ApiStatus, PartnerAcceptStatus, PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
-import { formatBalance } from 'redux/actions/utils';
+import { formatBalance, formatBalanceFiat } from 'redux/actions/utils';
 import { processPartnerOrder, approveOrder, markOrder, rejectOrder, setPartnerModal, resolveDispute } from 'redux/actions/withdrawDeposit';
 import { useDispatch } from 'react-redux';
 import { MODAL_TYPE } from 'redux/reducers/withdrawDeposit';
@@ -21,7 +21,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                 isResolveDispute = false;
             const isApprove = statusType === TranferreredType[mode].TAKE;
             const isProcessOrderAction = mode === MODE.PARTNER && partnerAcceptStatus === PartnerAcceptStatus.PENDING;
-            const amount = formatBalance(baseQty, assetId === 72 ? 0 : 4);
+            const amount = formatBalanceFiat(baseQty, assetCode);
 
             switch (userStatus) {
                 case PartnerPersonStatus.DISPUTED:
@@ -81,7 +81,11 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                     });
 
                     // push to detail page when partner accept order on 'Opening Order' page
-                    if (isProcessOrderAction && userStatus === PartnerAcceptStatus.ACCEPTED && !router.asPath.includes(PATHS.PARTNER_WITHDRAW_DEPOSIT.DETAILS)) {
+                    if (
+                        isProcessOrderAction &&
+                        userStatus === PartnerAcceptStatus.ACCEPTED &&
+                        !router.asPath.includes(PATHS.PARTNER_WITHDRAW_DEPOSIT.DETAILS)
+                    ) {
                         router.push(PATHS.PARTNER_WITHDRAW_DEPOSIT.DETAILS + '/' + id);
                     }
 
@@ -154,7 +158,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
             setModalState(MODAL_TYPE.CONFIRM, {
                 visible: true,
                 type: ORDER_TYPES.CANCEL_ORDER,
-                additionalData: { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id },
+                additionalData: { token: assetCode, amount: formatBalanceFiat(baseQty, assetCode), side, id },
                 onConfirm
             });
         } else if (partnerProcessStatus === PartnerAcceptStatus.ACCEPTED) {
@@ -182,7 +186,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                 },
                 [DisputedType.REJECTED]: () => {
                     type = ORDER_TYPES.CANCEL_ORDER;
-                    additionalData = { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id };
+                    additionalData = { token: assetCode, amount: formatBalanceFiat(baseQty, assetCode), side, id };
                 },
                 [DisputedType.RESOLVE_DISPUTE]: () => {
                     type = ORDER_TYPES.RESOLVE_DISPUTE;
@@ -192,38 +196,6 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
 
         mappingModalState[userStatus]?.[statusType]?.();
 
-        // switch (userStatus) {
-        //     case PartnerPersonStatus.TRANSFERRED:
-        //         switch (statusType) {
-        //             case TranferreredType[mode].TAKE:
-        //                 type = ORDER_TYPES.CONFIRM_TAKE_MONEY
-        //                 break;
-        //             case TranferreredType[mode].TRANSFERRED:
-        //                 type = ORDER_TYPES.CONFIRM_TRANSFERRED;
-        //                 break;
-        //             default:
-        //                 break;
-        //         }
-        //         break;
-        //     case PartnerPersonStatus.DISPUTED:
-        //         switch (statusType) {
-        //             case DisputedType.REPORT:
-        //                 type = ORDER_TYPES.REPORT;
-        //                 additionalData = { displayingId: id };
-        //                 break;
-        //             case DisputedType.REJECTED:
-        //                 type = ORDER_TYPES.CANCEL_ORDER;
-        //                 additionalData = { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id };
-        //                 break;
-        //             case DisputedType.RESOLVE_DISPUTE:
-        //                 type = ORDER_TYPES.RESOLVE_DISPUTE;
-        //             default:
-        //                 break;
-        //         }
-        //         break;
-        //     default:
-        //         break;
-        // }
         setModalState(MODAL_TYPE.CONFIRM, {
             visible: true,
             type,

@@ -34,7 +34,7 @@ const INITIAL_STATE = {
 };
 
 const AVAILBLE_KEY = 'futures_available';
-const FUTURES_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT', 'NAO'];
+const FUTURES_ASSET = ['VNDC', 'VNST', 'NAMI', 'NAC', 'USDT', 'NAO'];
 
 const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, isHideAsset, setIsHideAsset }) => {
     // Init State
@@ -130,20 +130,7 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                     if (lockedValue === 'NaN') {
                         lockedValue = '0.0000';
                     }
-
-                    return (
-                        <span className="whitespace-nowrap">
-                            {isHideAsset ? (
-                                SECRET_STRING
-                            ) : v ? (
-                                <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
-                                    <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
-                                </Link>
-                            ) : (
-                                '0.0000'
-                            )}
-                        </span>
-                    );
+                    return <span className="whitespace-nowrap">{isHideAsset ? SECRET_STRING : v ? lockedValue : '0.0000'}</span>;
                 }
             },
             {
@@ -411,8 +398,8 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                                             {isHideAsset
                                                 ? SECRET_STRING
                                                 : wallet.value
-                                                ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                : '0.0000'}
+                                                    ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
                                         </span>
                                         &nbsp;
                                         <span className="txtSecond-1  whitespace-nowrap">
@@ -426,8 +413,8 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                                                 {isHideAsset
                                                     ? SECRET_STRING
                                                     : available
-                                                    ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
-                                                    : '0.0000'}
+                                                        ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                        : '0.0000'}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-3">
@@ -436,8 +423,8 @@ const NAOFuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen,
                                                 {isHideAsset
                                                     ? SECRET_STRING
                                                     : wallet.locked_value
-                                                    ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                    : '0.0000'}
+                                                        ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                        : '0.0000'}
                                             </span>
                                         </div>
                                     </div>

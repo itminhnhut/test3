@@ -27,6 +27,14 @@ import toast from 'utils/toast';
 const NAMI_NAO_TYPE = [
     {
         id: 0,
+        name: 'VNST',
+        content: {
+            vi: 'VNST',
+            en: 'VNST'
+        }
+    },
+    {
+        id: 1,
         name: 'VNDC',
         content: {
             vi: 'VNDC',
@@ -34,7 +42,7 @@ const NAMI_NAO_TYPE = [
         }
     },
     {
-        id: 1,
+        id: 2,
         name: 'USDT',
         content: {
             vi: 'USDT',
@@ -95,6 +103,24 @@ const TRADING_FEE_SETTING = {
                 LINE_THROUGH_DATA: null,
                 ASSET_ID: 22
             }
+        ],
+        VNST: [
+            {
+                KEY: 'NAMI_VNST_NAMI_FUTURE',
+                TOKEN_COIN_NAME: 'NAMI',
+                NOTE: null,
+                FEE: null,
+                LINE_THROUGH_DATA: null,
+                ASSET_ID: 1
+            },
+            {
+                KEY: 'VNST_VNST_NAMI_FUTURE',
+                TOKEN_COIN_NAME: 'VNST',
+                NOTE: null,
+                FEE: null,
+                LINE_THROUGH_DATA: null,
+                ASSET_ID: 39
+            }
         ]
     },
     NAO_FUTURE: {
@@ -149,6 +175,32 @@ const TRADING_FEE_SETTING = {
                 LINE_THROUGH_DATA: null,
                 ASSET_ID: 22
             }
+        ],
+        VNST: [
+            {
+                KEY: 'NAO_VNST_NAO_FUTURE',
+                TOKEN_COIN_NAME: 'NAO',
+                NOTE: null,
+                FEE: null,
+                LINE_THROUGH_DATA: null,
+                ASSET_ID: 447
+            },
+            {
+                KEY: 'NAMI_VNST_NAO_FUTURE',
+                TOKEN_COIN_NAME: 'NAMI',
+                NOTE: null,
+                FEE: null,
+                LINE_THROUGH_DATA: null,
+                ASSET_ID: 1
+            },
+            {
+                KEY: 'VNST_VNST_NAO_FUTURE',
+                TOKEN_COIN_NAME: 'VNST',
+                NOTE: null,
+                FEE: null,
+                LINE_THROUGH_DATA: null,
+                ASSET_ID: 39
+            }
         ]
     }
 };
@@ -172,23 +224,29 @@ const INITIAL_STATE = {
     isDisableSaveBtn: true,
     namiFutureConfigData: {
         VNDC: TRADING_FEE_SETTING.NAMI_FUTURE.VNDC,
-        USDT: TRADING_FEE_SETTING.NAMI_FUTURE.USDT
+        USDT: TRADING_FEE_SETTING.NAMI_FUTURE.USDT,
+        VNST: TRADING_FEE_SETTING.NAMI_FUTURE.VNST
     },
     naoFutureConfigData: {
         VNDC: TRADING_FEE_SETTING.NAO_FUTURE.VNDC,
-        USDT: TRADING_FEE_SETTING.NAO_FUTURE.USDT
+        USDT: TRADING_FEE_SETTING.NAO_FUTURE.USDT,
+        VNST: TRADING_FEE_SETTING.NAO_FUTURE.VNST
     },
     currentSelectedFutureConfig: {
         NAMI_VNDC: null,
         NAMI_USDT: null,
         NAO_VNDC: null,
-        NAO_USDT: null
+        NAO_USDT: null,
+        NAMI_VNST: null,
+        NAO_VNST: null
     },
     originSelectedFutureConfig: {
         NAMI_VNDC: null,
         NAMI_USDT: null,
         NAO_VNDC: null,
-        NAO_USDT: null
+        NAO_USDT: null,
+        NAMI_VNST: null,
+        NAO_VNST: null
     },
     // isCloseSettingOrChangeTab: 0,
     isCloseSettingOrChangeTab: INIT_MODAL_STATE
@@ -232,7 +290,6 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
     const namiSpotAvailable = useSelector((state) => getSpotAvailable(state, { assetId: 1 }));
     const namiFutureAvailable = useSelector((state) => getNamiFutureAvailable(state));
     const naoFutureAvailable = useSelector((state) => getNaoFutureAvailable(state));
-
     const setSpotDataField = (data) => {
         if (data?.status === ApiStatus.SUCCESS && data?.data) {
             setState({
@@ -324,7 +381,7 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
                 if (cb) cb(data);
             }
         } catch (e) {
-            console.log('🚀 ~ file: FeeSettingModal.js:248 ~ handleSpotConfigRequest ~ e:', e);
+            console.log(e);
         } finally {
             setState({ isLoading: false, isLoadingSaveSetting: false });
         }
@@ -353,7 +410,7 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
                 if (cb) cb(data);
             }
         } catch (e) {
-            console.log('🚀 ~ file: FeeSettingModal.js:270 ~ handleNamiFutureConfigRequest ~ e:', e);
+            console.log(e);
         } finally {
             setState({ isLoading: false, isLoadingSaveSetting: false });
         }
@@ -541,8 +598,8 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
         return dataForRender.map((item) => (
             <div
                 key={item.KEY}
-                className={`bg-[#F2F4F5] dark:bg-listItemSelected-dark max-w-[524px] py-4 px-3 md:!p-6 rounded-xl flex justify-between items-center cursor-pointer ${
-                    item.FEE && item.KEY === state.selectedSpotConfig && 'border-[1px] border-teal'
+                className={`bg-[#F2F4F5] dark:bg-listItemSelected-dark max-w-[524px] py-4 px-3 md:!p-6 rounded-xl flex justify-between items-center cursor-pointer border-[1px] ${
+                    item.FEE && item.KEY === state.selectedSpotConfig ? 'border-teal' : 'border-transparent'
                 }`}
                 onClick={() => setState({ selectedSpotConfig: item.KEY })}
             >
@@ -564,20 +621,20 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
                         </span>
                     )}
                 </div>
-                <div className="flex gap-3 md:!gap-[18px] items-center">
+                <div className="flex gap-1 md:!gap-[10px] items-center">
                     <div>
                         <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:!text-sm text-right">Maker/Taker</div>
                         <span className={`mt-2 font-semibold text-right text-xs md:!text-base whitespace-nowrap`}>{item.FEE ? item.FEE : '-'}</span>
                     </div>
                     {item.FEE && (
-                        <>
+                        <div className="w-[1.5rem] md:w-[2rem] flex justify-end">
                             {item.KEY === state.selectedSpotConfig ? (
                                 <CheckCircleIcon color="#47cc85" size={isMobile ? 16 : 24} />
                             ) : (
                                 // <CancelCircleFillIcon />
                                 <div className="w-[13.33px] h-[13.33px] md:!w-[20px] md:!h-[20px] dark:border-[#3e4351] border-[#b5c0c9] border-[2px] rounded-full"></div>
                             )}
-                        </>
+                        </div>
                     )}
                 </div>
             </div>
@@ -598,8 +655,8 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
         return dataForRender.map((item) => (
             <div
                 className={`bg-[#F2F4F5] dark:bg-listItemSelected-dark max-w-[524px] py-4 px-3 md:p-6 rounded-xl flex cursor-pointer 
-                justify-between items-center ${
-                    item.FEE && state.currentSelectedFutureConfig[originSelectedKey] === item.TOKEN_COIN_NAME && 'border-[1px] border-teal'
+                justify-between items-center border-[1px] ${
+                    item.FEE && state.currentSelectedFutureConfig[originSelectedKey] === item.TOKEN_COIN_NAME ? 'border-teal' : 'border-transparent'
                 }`}
                 key={item.KEY}
                 onClick={() => handleOnClickFeeAsset(originSelectedKey, item.TOKEN_COIN_NAME)}
@@ -617,7 +674,7 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
                         </span>
                     )}
                 </div>
-                <div className="flex gap-3 md:!gap-[18px] items-center">
+                <div className="flex gap-1 md:!gap-[10px] items-center">
                     <div>
                         {item.LINE_THROUGH_DATA && (
                             <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs md:text-sm text-right line-through">
@@ -627,13 +684,13 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
                         <span className="mt-2 font-semibold text-right md:text-base text-xs whitespace-nowrap">{item.FEE ? `${item.FEE}%` : '-'}</span>
                     </div>
                     {item.FEE && (
-                        <>
+                        <div className="w-[1.5rem] md:w-[2rem] flex justify-end">
                             {state.currentSelectedFutureConfig[originSelectedKey] === item.TOKEN_COIN_NAME ? (
                                 <CheckCircleIcon color="#47cc85" size={isMobile ? 16 : 24} />
                             ) : (
                                 <div className="w-[13.33px] h-[13.33px] md:!w-[20px] md:!h-[20px] dark:border-[#3e4351] border-[#b5c0c9] border-[2px] rounded-full"></div>
                             )}
-                        </>
+                        </div>
                     )}
                 </div>
             </div>
@@ -716,17 +773,17 @@ export default function FeeSettingModal({ configFeeTab, isVisible, onBackdropCb,
 
 const TokenTypes = ({ type, setType, types, lang, className }) => {
     return (
-        <div className={classnames('flex items-center space-x-2 md:space-x-3 h-9 sm:h-12 font-normal text-sm overflow-auto no-scrollbar', className)}>
+        <div className={classnames('flex items-center space-x-2 sm:space-x-3 h-8 sm:h-9 font-normal text-xs sm:text-sm overflow-auto no-scrollbar', className)}>
             {types.map((e) => (
                 <div
                     key={e.id}
                     className={classnames(
                         `${
                             type !== e.id && 'text-txtTextBtn-tonal_dark'
-                        } flex items-center h-full flex-auto justify-center px-4 text-sm sm:text-base rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap`,
+                        } flex items-center h-full flex-auto justify-center px-2 sm:px-4 text-xs sm:text-sm rounded-md cursor-pointer whitespace-nowrap`,
                         {
                             'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
-                            'border-divider dark:border-divider-dark': e.id !== type
+                            'dark:bg-darkBlue-3 bg-gray-13': e.id !== type
                         }
                     )}
                     onClick={() => setType(e.id)}

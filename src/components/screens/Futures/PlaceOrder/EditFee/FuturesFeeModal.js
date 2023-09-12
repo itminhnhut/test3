@@ -21,7 +21,11 @@ const FuturesFeeModal = memo(
         const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
         const [fee, setFee] = useState({ asset: null, assetId: null, assetCode: null });
         const [loading, setLoading] = useState(true);
-        const quoteAsset = order?.quoteAsset ?? (order?.symbol?.indexOf('USDT') > -1 ? 'USDT' : 'VNDC');
+
+        const quoteAsset = useMemo(() => {
+            return fees_futures.find((rs) => String(order?.quoteAsset ?? order?.symbol).indexOf(rs.assetCode) !== -1)?.assetCode;
+        }, [order]);
+
         const [dataSource, setDataSource] = useState({
             accepted_assets: [],
             user_setting: null
@@ -146,7 +150,7 @@ const FuturesFeeModal = memo(
         }, [walletFutures, isSubmit, fee, dataSource]);
 
         return (
-            <ModalV2 containerClassName='!z-[9999999999]' className="!max-w-[588px]" isVisible={isVisible} onBackdropCb={onClose}>
+            <ModalV2 containerClassName="!z-[9999999999]" className="!max-w-[588px]" isVisible={isVisible} onBackdropCb={onClose}>
                 <div className="text-xl sm:text-2xl font-semibold pb-4">
                     {t('common:transaction_fee')} {quoteAsset} Futures
                 </div>
@@ -193,7 +197,10 @@ const FuturesFeeModal = memo(
                                               {active ? (
                                                   <CheckCircleIcon size={24} color={colors.teal} />
                                               ) : (
-                                                  <div style={{ minWidth: 20 }} className="w-5 h-5 rounded-full border-2 border-gray-16 dark:border-dark-6 m-auto"></div>
+                                                  <div
+                                                      style={{ minWidth: 20 }}
+                                                      className="w-5 h-5 rounded-full border-2 border-gray-16 dark:border-dark-6 m-auto"
+                                                  ></div>
                                               )}
                                           </div>
                                       </div>

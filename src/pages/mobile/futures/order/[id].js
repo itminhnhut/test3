@@ -109,7 +109,7 @@ const OrderDetail = (props) => {
 
     if (loading) return <OrderDetailLoading />
     if (!orderDetail) return null;
-    const isVndcFutures = pairConfigDetail?.quoteAsset === 'VNDC'
+    const isVndcFutures = ['VNDC', 'VNST'].includes(pairConfigDetail?.quoteAsset);
     return (
         <LayoutMobile>
             <OrderDetailComponent order={orderDetail} isMobile
