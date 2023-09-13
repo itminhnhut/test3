@@ -24,6 +24,7 @@ import { formatNumber } from 'redux/actions/utils';
 import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
 import { WalletType } from 'redux/actions/const';
 import { max, min } from 'lodash/math';
+import { useAsync } from 'react-use';
 
 let initPrice = '';
 
@@ -80,7 +81,7 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
         }
     }, [orderBook]);
 
-    useEffect(async () => {
+    useAsync(async () => {
         if (symbol) {
             const newSymbolTicker = await getMarketWatch(getSymbolString(symbol));
             setSymbolTicker(newSymbolTicker?.[0]);
@@ -97,8 +98,8 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
     }, [Emitter]);
 
     useEffect(() => {
-        if (initPrice !== symbolTicker?.b) {
-            initPrice = symbolTicker?.b;
+        if (initPrice !== symbolTicker?.s) {
+            initPrice = symbolTicker?.s;
             setPrice(+symbolTicker?.p);
             setQuantity('');
             setQuoteQty('');
