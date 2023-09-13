@@ -31,5 +31,14 @@
             "ltv_margin": "<primary>Nếu tỷ lệ LTV <secondary>[Số lượng tài sản vay (gốc + lãi)/Số lượng ký quỹ]</secondary></primary> đạt ngưỡng giới hạn, bạn sẽ được yêu cầu thêm tài sản đảm bảo vào lệnh vay.",
             "ltv_liquidate": "<primary>Nếu tỷ lệ LTV <secondary>[Số lượng tài sản vay (gốc + lãi)/Số lượng ký quỹ]</secondary></primary> đạt ngưỡng giới hạn, sàn sẽ thanh lý tài sản đảm bảo để hoàn trả toàn bộ khoản vay và lãi vay."
         }
+    },
+    "history": {
+        "table": {
+            "time": "Thời gian",
+            "status": "Trạng thái",
+            "loan_asset": "Tài sản vay",
+            "margin_asset": "Tài sản ký quỹ",
+            "reset": "Đặt lại"
+        }
     }
 }

@@ -26,9 +26,9 @@ const HeaderLending = () => {
                     <h1 className="text-6xl font-semibold text-white">{t('lending:header:title')}</h1>
                     <h2 className="text-base text-white w-[460px] mt-6 mb-7">{t('lending:header:des')}</h2>
                     <section className="grid grid-cols-2 gap-x-[30px] gap-y-[16px]">
-                        {CONTENT.map((item) => {
+                        {CONTENT.map((item, key) => {
                             return (
-                                <section className="flex flex-row items-center gap-2">
+                                <section className="flex flex-row items-center gap-2" key={`header_${key}_${item.title?.[language]}`}>
                                     <CheckCircle size={24} />
                                     <h3 className="text-teal text-base font-semibold">{item.title?.[language]}</h3>
                                 </section>

@@ -1,7 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 // ** Next
 import { useTranslation } from 'next-i18next';
+import dynamic from 'next/dynamic';
 
 // ** components
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -14,7 +15,6 @@ import { IconClose } from 'components/svg/SvgIcon';
 
 //** components
 import ModalV2 from 'components/common/V2/ModalV2';
-import dynamic from 'next/dynamic';
 
 // ** Third party
 import colors from 'styles/colors';
@@ -22,18 +22,9 @@ import colors from 'styles/colors';
 // ** Dynamic
 const SucessLoan = dynamic(() => import('./SucessLoan'), { ssrc: false });
 
-const DATA = [
-    { vi: 'Tài sản vay', en: 'Tài sản vay' },
-    { vi: 'Tài sản ký quỹ', en: 'Tài sản ký quỹ' },
-    { vi: 'Lãi ước tính theo kỳ hạn', en: 'Lãi ước tính theo kỳ hạn' },
-    { vi: 'Lãi hằng ngày', en: 'Lãi hằng ngày' },
-    { vi: 'Thời hạn vay', en: 'Thời hạn vay' },
-    { vi: 'Thời gian hết hạn', en: 'Thời gian hết hạn' }
-];
+const DATA = [{ vi: 'LTV Hiện tại', en: 'LTV Hiện tại' }, { vi: 'LTV đã điều chỉnh' }, { vi: 'Tổng ký quỹ đã điều chỉnh', en: 'Tổng ký quỹ đã điều chỉnh' }];
 
-const DATA2 = { vi: 'Tổng dư nợ', en: 'Tổng dư nợ' };
-
-const ConfirmLoan = ({ isModal, onClose }) => {
+const ConfirmMargin = ({ isModal, onClose }) => {
     const {
         t,
         i18n: { language }
@@ -46,7 +37,7 @@ const ConfirmLoan = ({ isModal, onClose }) => {
     const handleToggleModal = () => setIsModalConfirm((prev) => !prev);
 
     // ** handle
-    const total = ['100,000,000 VNDC', '3 BTC', '2,369,000 VNDC', '0.1234%', '7 ngày', '09:55:39 19/08/2023'];
+    const total = ['85%', '55%', '2 BTC'];
 
     return (
         <>
@@ -66,8 +57,8 @@ const ConfirmLoan = ({ isModal, onClose }) => {
                     </div>
                 )}
             >
-                <div className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Xác nhận khoản vay</div>
-                <section className="my-6 dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex flex-col gap-4">
+                <div className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Xác nhận thêm ký quỹ</div>
+                <section className="mt-6 dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex flex-col gap-4">
                     {DATA?.map((item, key) => {
                         return (
                             <section className="flex flex-row justify-between" key={`modal_confirm_loan_${key}_${total?.[key]}`}>
@@ -77,16 +68,10 @@ const ConfirmLoan = ({ isModal, onClose }) => {
                         );
                     })}
                 </section>
-                <section className="dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex flex-col gap-4">
-                    <section className="flex flex-row justify-between">
-                        <div className="dark:text-gray-7 text-gray-1">{DATA2?.[language]}</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold">102,369,000 VNDC</div>
-                    </section>
-                </section>
                 <ButtonV2 className="mt-10">Xác nhận</ButtonV2>
             </ModalV2>
             <SucessLoan isModal={isModalConfirm} onClose={handleToggleModal} />
         </>
     );
 };
-export default ConfirmLoan;
+export default ConfirmMargin;

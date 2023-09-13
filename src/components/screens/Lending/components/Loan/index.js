@@ -124,7 +124,7 @@ const Loan = () => {
             <section className="grid grid-cols-2 mt-8 gap-6 ">
                 {ASSETS?.map((item, key) => {
                     return (
-                        <section className="dark:bg-dark-4 bg-white rounded-xl px-8 py-6">
+                        <section className="dark:bg-dark-4 bg-white rounded-xl px-8 py-6" key={`loan_${key}_${item.title?.[language]}`}>
                             <div className="dark:text-gay-7 text-gray-1">{item.title?.[language]}</div>
                             <section className="flex flex-row gap-1 mt-4 text-gray-15 text-2xl font-semibold dark:text-gray-4">
                                 <div>{formatNumber(total?.[key])}</div>

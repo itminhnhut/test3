@@ -28,7 +28,8 @@ const AssetFilter = ({
     wrapperLabel,
     wrapperClassName = '',
     labelClassName = '',
-    containerClassName = ''
+    containerClassName = '',
+    labelAsset = ''
 }) => {
     const { t } = useTranslation();
 
@@ -47,7 +48,6 @@ const AssetFilter = ({
                 return asset?.assetCode;
             }
         ]).filter((f) => f.id !== assetCode);
-        console.log('assetCode', assetCode);
         return rs;
     }, [assetConfigs, search, assetCode]);
 
@@ -92,35 +92,38 @@ const AssetFilter = ({
                 className={classNames('min-w-[400px] rounded-xl !left-0 !translate-x-0', wrapperClassName)}
                 hideChevron={Boolean(asset)}
                 wrapperLabel={wrapperLabel}
+                labelAsset={labelAsset}
                 labelValue={() => (
-                    <div
-                        className={classNames(
-                            { 'text-txtPrimary dark:text-txtPrimary-dark flex justify-between items-center w-full': asset },
-                            {
-                                'cursor-not-allowed': !auth
-                            }
-                        )}
-                    >
-                        {!asset ? (
-                            t('transaction-history:filter.all')
-                        ) : (
-                            <>
-                                <div className={classNames('flex items-center space-x-2', labelClassName)}>
-                                    <AssetLogo useNextImg={true} size={24} assetCode={asset?.assetCode} />
-                                    <span>{asset?.assetCode || asset?.assetName}</span>
-                                </div>
-                                <div className="text-gray-7">
-                                    <X
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onChangeAsset(null);
-                                        }}
-                                        size={16}
-                                    />
-                                </div>
-                            </>
-                        )}
-                    </div>
+                    <>
+                        <div
+                            className={classNames(
+                                { 'text-txtPrimary dark:text-txtPrimary-dark flex justify-between items-center w-full': asset },
+                                {
+                                    'cursor-not-allowed': !auth
+                                }
+                            )}
+                        >
+                            {!asset ? (
+                                t('transaction-history:filter.all')
+                            ) : (
+                                <>
+                                    <div className={classNames('flex items-center space-x-2', labelClassName)}>
+                                        <AssetLogo useNextImg={true} size={24} assetCode={asset?.assetCode} />
+                                        <div>{asset?.assetCode || asset?.assetName}</div>
+                                    </div>
+                                    <div className="text-gray-7">
+                                        <X
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onChangeAsset(null);
+                                            }}
+                                            size={16}
+                                        />
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </>
                 )}
                 ref={popoverRef}
                 value={search}

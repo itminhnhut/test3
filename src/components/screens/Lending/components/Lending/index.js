@@ -6,7 +6,6 @@ import { useTranslation } from 'next-i18next';
 
 // ** components
 import InputV2 from 'components/common/V2/InputV2';
-import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 // ** third party
 import { Search } from 'react-feather';

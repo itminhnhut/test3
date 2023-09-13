@@ -85,4 +85,22 @@ const LTV = [
     { title: { vi: 'LTV Thanh lý', en: 'LTV Thanh lý' }, key: 'ltv_liquidate' }
 ];
 
-export { FAQ, TABS, BORROWING_TERM, PROFITS, LTV };
+const HISTORY_TAB = [
+    { title: { vi: 'Vay', en: 'Vay' }, key: 'loan' },
+    { title: { vi: 'Điều chỉnh ký quỹ', en: 'Điều chỉnh ký quỹ' }, key: 'adjust' },
+    { title: { vi: 'Thanh toán', en: 'Thanh toán' }, key: 'payment' },
+    { title: { vi: 'Thanh lý', en: 'Thanh lý' }, key: 'reject' }
+];
+
+const STATUS_VI = [
+    { title: 'All', value: null },
+    { title: 'Lệnh thanh lý', value: '1' },
+    { title: 'Lệnh đã thanh toán', value: '2' }
+];
+const STATUS_EN = [
+    { title: 'All', value: null },
+    { title: 'Lệnh thanh lý', value: '1' },
+    { title: 'Lệnh đã thanh toán', value: '2' }
+];
+
+export { FAQ, TABS, BORROWING_TERM, PROFITS, LTV, HISTORY_TAB, STATUS_VI, STATUS_EN };

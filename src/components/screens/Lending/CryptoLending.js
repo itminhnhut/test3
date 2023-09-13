@@ -51,7 +51,7 @@ const CryptoLending = () => {
     };
 
     return (
-        <section>
+        <>
             <Tabs isDark tab={tab} className="mt-8 gap-6 border-b border-divider dark:border-divider-dark justify-between">
                 <div className="flex flex-row gap-x-6">
                     {TABS?.map((item) => (
@@ -70,7 +70,7 @@ const CryptoLending = () => {
                 <div className="text-green-3 dark:text-green-2 font-semibold cursor-pointer">{t('lending:tabs:info')}</div>
             </Tabs>
             {renderTabContent()}
-        </section>
+        </>
     );
 };
 

@@ -25,6 +25,11 @@ import styled from 'styled-components';
 import { useWindowSize } from 'react-use';
 import { Check } from 'react-feather';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import dynamic from 'next/dynamic';
+
+// ** dynamic
+const ModalAdjustMargin = dynamic(() => import('components/screens/Lending/components/Modal/AdjustMargin'), { ssr: false });
+const ModalLoanRepayment = dynamic(() => import('components/screens/Lending/components/Modal/LoanRepayment'), { ssr: false });
 
 // ** Constants
 const LIMIT = 10;
@@ -84,11 +89,15 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     const isMobile = width < 830;
 
     // ** useState
-    const [isModal, setIsModal] = useState(INIT_DATA.isModal);
+    const [isAdjustModal, setIsAdjustModal] = useState(INIT_DATA.isModal);
+    const [isLoadRepaymentModal, setIsLoadRepaymentModal] = useState(INIT_DATA.isModal);
+
     const [copied, setCopied] = useState(false);
 
     // ** handle
-    const handleToggleModal = () => setIsModal((prev) => !prev);
+    const handleToggleAdjustModal = () => setIsAdjustModal((prev) => !prev);
+    const handleToggleLoadRepaymentModal = () => setIsLoadRepaymentModal((prev) => !prev);
+
     const onCopy = () => {
         setCopied(true);
     };
@@ -159,7 +168,6 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                     '-';
             }
         })(data, type);
-        console.log('data', data, type);
         return rs;
     };
 
@@ -227,10 +235,9 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 width: 205,
                 render: () => (
                     <section className="flex flex-col items-center gap-3">
-                        <ButtonV2>Trả khoản vay</ButtonV2>
-                        <ButtonV2 disabled={true} className="dark:!text-gray-7 !text-gray-1">
-                            Điều chỉnh ký quỹ
-                        </ButtonV2>
+                        <ButtonV2 onClick={handleToggleLoadRepaymentModal}>Trả khoản vay</ButtonV2>
+                        {/* className={classNames('', { a: 'dark:!text-gray-7 !text-gray-1' })} */}
+                        <ButtonV2 onClick={handleToggleAdjustModal}>Điều chỉnh ký quỹ</ButtonV2>
                     </section>
                 )
             }
@@ -270,6 +277,8 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     return (
         <>
             <section className="rounded-b-2xl bg-white dark:bg-dark-4">{renderTable()}</section>
+            <ModalAdjustMargin isModal={isAdjustModal} onClose={handleToggleAdjustModal} />
+            <ModalLoanRepayment isModal={isLoadRepaymentModal} onClose={handleToggleLoadRepaymentModal} />
         </>
     );
 };
@@ -290,17 +299,7 @@ const WrapperTable = styled(TableV2).attrs(({ ...props }) => ({
         }
         .rc-table-thead {
             tr th {
-                display:none
-            }
-
-            // tr th {
-            //     white-space: nowrap;
-            //     font-size: 16px;
-            //     font-weight: 600 !important;
-            //     color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.gray[15])};
-            //     div > span {
-            //         margin-top: 24px;
-            //     }
+                display: none;
             }
         }
     }

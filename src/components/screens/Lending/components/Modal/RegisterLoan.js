@@ -5,7 +5,9 @@ import dynamic from 'next/dynamic';
 import { useTranslation, Trans } from 'next-i18next';
 
 // ** Redux
-import { useSelector } from 'react-redux';
+import { WalletType } from 'redux/actions/const';
+import { setTransferModal } from 'redux/actions/utils';
+import { useSelector, useDispatch } from 'react-redux';
 
 //** components
 import Chip from 'components/common/V2/Chip';
@@ -47,6 +49,8 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
         i18n: { language }
     } = useTranslation();
 
+    const dispatch = useDispatch();
+
     // ** useState
     const [borrowingTerm, setBorrowingTerm] = useState(INIT_DATA.borrowing_term);
     const [rule, setRule] = useState(INIT_DATA.rule);
@@ -74,9 +78,9 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
     const renderProfit = () => {
         return (
             <section className="flex flex-col gap-3 mt-8">
-                {PROFITS.map((profit) => {
+                {PROFITS.map((profit, key) => {
                     return (
-                        <section className="flex justify-between">
+                        <section className="flex justify-between" key={`profit_${key}_${profit.title?.[language]}`}>
                             <div className="dark:text-gray-7 text-gray-1">{profit.title?.[language]}</div>
                             <div className="dark:text-gray-4 text-gray-15 font-semibold">- {profit.asset}</div>
                         </section>
@@ -94,15 +98,15 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
         };
         return (
             <section className="flex flex-row mt-4">
-                {LTV.map((item) => {
+                {LTV.map((item, key) => {
                     return (
-                        <>
+                        <section className="h-6 flex flex-row" key={`ltv_${key}_${item.title?.[language]}`}>
                             <section className="border-b border-darkBlue-5 border-dashed cursor-pointer flex flex-row" data-tip="" data-for={item.key}>
                                 <section className="dark:text-gray-7 text-gray-1">{item.title?.[language]}:</section>
                                 <section className="dark:text-gray-4 text-gray-15 ml-1">{data?.[item.key] || '-'}%</section>
                             </section>
-                            <div className="mx-2 dark:text-gray-7 text-gray-1 last:hidden">/</div>
-                        </>
+                            {key !== 2 ? <div className="mx-2 dark:text-gray-7 text-gray-1">/</div> : null}
+                        </section>
                     );
                 })}
             </section>
@@ -136,7 +140,7 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                 place="top"
                 id="loan_term"
                 effect="solid"
-                className="max-w-[527px] after:!left-[auto] !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1  dark:!text-gray-7 !text-gray-1 !text-sm"
+                className="max-w-[527px] dark:after:!border-t-[#2e333d] after:!border-t-[#e1e2e3] after:!left-[auto] !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1  dark:!text-gray-7 !text-gray-1 !text-sm"
                 overridePosition={({ top }) => {
                     return { left: 32, top };
                 }}
@@ -165,10 +169,13 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                             place="top"
                             id={item}
                             effect="solid"
-                            className={classNames('max-w-[511px] !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1  dark:!text-gray-7 !text-gray-1 !text-sm', {
-                                'after:!left-[8%]': key === 0,
-                                'after:!left-[84%]': key === 2
-                            })}
+                            className={classNames(
+                                'max-w-[511px] dark:after:!border-t-[#2e333d] after:!border-t-[#e1e2e3]  !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1  dark:!text-gray-7 !text-gray-1 !text-sm',
+                                {
+                                    'after:!left-[8%]': key === 0,
+                                    'after:!left-[84%]': key === 2
+                                }
+                            )}
                             overridePosition={({ top }) => {
                                 return { left: 32, top };
                             }}
@@ -202,7 +209,6 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
         );
     };
 
-    console.log('2', filter);
     // **
     return (
         <>
@@ -250,7 +256,11 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                             <div className="dark:text-gray-4 text-gray-15">Số lượng ký quỹ</div>
                             <section className="flex flex-row gap-1 items-center">
                                 <div>Khả dụng: 10 BTC</div>
-                                <AddCircleColorIcon size={16} />
+                                <AddCircleColorIcon
+                                    size={16}
+                                    onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }))}
+                                    className="cursor-pointer"
+                                />
                             </section>
                         </section>
                         <InputV2
@@ -289,7 +299,7 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                         </section>
                         {renderProfit()}
                         {renderLTV()}
-                        {renderRules()}
+                        {/* {renderRules()} */}
                         <ButtonV2 className="mt-10" disabled={!true}>
                             Vay ngay
                         </ButtonV2>
