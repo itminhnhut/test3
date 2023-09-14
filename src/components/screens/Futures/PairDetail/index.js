@@ -341,6 +341,8 @@ const ModalPerpetual = ({ isShowModalInfo, onBackdropCb, t, symbol, pairListMode
     const pairPrice = useSelector((state) => getMarketWatch(state, convertSymbol(curConfigPair)));
     const timesync = useSelector((state) => state.utils.timesync);
 
+    useEffect(() => {setCurConfigPair(symbol)}, [symbol])
+
     const decimals = useMemo(() => {
         return {
             price: getDecimalPrice(pairConfig),
