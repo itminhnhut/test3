@@ -12,6 +12,7 @@ import { HISTORY_TAB } from 'components/screens/Lending/constants';
 
 // ** dynamic
 const HistoryTable = dynamic(() => import('./Table'), { ssr: false });
+const NotAuth = dynamic(() => import('components/screens/Lending/components/NotAuth'), { ssr: false });
 
 const initState = {
     tab: 'loan',
@@ -180,9 +181,12 @@ const History = () => {
 
     return (
         <>
-            <section className="flex flex-row gap-3 mt-8">{renderTabs()}</section>
-            <section className="mt-8">
-                <HistoryTable data={data} page={page} loading={loading} onPage={setPage} keyTab={tab} />
+            {/* <NotAuth /> */}
+            <section>
+                <section className="flex flex-row gap-3 mt-8">{renderTabs()}</section>
+                <section className="mt-8">
+                    <HistoryTable data={data} page={page} loading={loading} onPage={setPage} keyTab={tab} />
+                </section>
             </section>
         </>
     );

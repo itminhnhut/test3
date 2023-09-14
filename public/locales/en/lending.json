@@ -40,5 +40,6 @@
             "margin_asset": "Tài sản ký quỹ",
             "reset": "Đặt lại"
         }
-    }
+    },
+    "not_auth": "<0>Register</0> now to start receive Daily Staking interest or <1>login</1> to check your statistics"
 }

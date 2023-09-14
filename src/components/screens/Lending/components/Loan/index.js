@@ -9,6 +9,7 @@ import { formatNumber } from 'src/redux/actions/utils';
 
 // ** dynamic
 const LoanTable = dynamic(() => import('./Table'), { ssr: false });
+const NotAuth = dynamic(() => import('components/screens/Lending/components/NotAuth'), { ssr: false });
 
 const ASSETS = [
     { title: { vi: 'Thời gian xử lý trung bình', en: 'Thời gian xử lý trung bình' }, asset: 'VNDC' },
@@ -119,26 +120,29 @@ const Loan = () => {
     const total = [6000000, 98000000];
 
     return (
-        <section>
-            <h3 className="text-2xl font-semibold dark:text-gray-4 text-gray-15">Tổng quan tài sản</h3>
-            <section className="grid grid-cols-2 mt-8 gap-6 ">
-                {ASSETS?.map((item, key) => {
-                    return (
-                        <section className="dark:bg-dark-4 bg-white rounded-xl px-8 py-6" key={`loan_${key}_${item.title?.[language]}`}>
-                            <div className="dark:text-gay-7 text-gray-1">{item.title?.[language]}</div>
-                            <section className="flex flex-row gap-1 mt-4 text-gray-15 text-2xl font-semibold dark:text-gray-4">
-                                <div>{formatNumber(total?.[key])}</div>
-                                <div>{item.asset}</div>
+        <>
+            {/* <NotAuth /> */}
+            <section>
+                <h3 className="text-2xl font-semibold dark:text-gray-4 text-gray-15">Tổng quan tài sản</h3>
+                <section className="grid grid-cols-2 mt-8 gap-6 ">
+                    {ASSETS?.map((item, key) => {
+                        return (
+                            <section className="dark:bg-dark-4 bg-white rounded-xl px-8 py-6" key={`loan_${key}_${item.title?.[language]}`}>
+                                <div className="dark:text-gay-7 text-gray-1">{item.title?.[language]}</div>
+                                <section className="flex flex-row gap-1 mt-4 text-gray-15 text-2xl font-semibold dark:text-gray-4">
+                                    <div>{formatNumber(total?.[key])}</div>
+                                    <div>{item.asset}</div>
+                                </section>
                             </section>
-                        </section>
-                    );
-                })}
+                        );
+                    })}
+                </section>
+                <h4 className="mt-12 text-2xl font-semibold dark:text-gray-4 text-gray-15">Khoản vay đang mở</h4>
+                <section className="mt-8">
+                    <LoanTable data={data} page={page} loading={loading} onPage={setPage} />
+                </section>
             </section>
-            <h4 className="mt-12 text-2xl font-semibold dark:text-gray-4 text-gray-15">Khoản vay đang mở</h4>
-            <section className="mt-8">
-                <LoanTable data={data} page={page} loading={loading} onPage={setPage} />
-            </section>
-        </section>
+        </>
     );
 };
 export default Loan;
