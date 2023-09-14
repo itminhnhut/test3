@@ -106,8 +106,8 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     }, [Emitter]);
 
     useEffect(() => {
-        if (initPrice !== symbolTicker?.b) {
-            initPrice = symbolTicker?.b;
+        if (initPrice !== symbolTicker?.s) {
+            initPrice = symbolTicker?.s;
             setBuyPrice(+symbolTicker?.p);
             setSellPrice(+symbolTicker?.p);
             setBuyQuantity('');
