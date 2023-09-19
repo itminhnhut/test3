@@ -10,6 +10,7 @@ import { getS3Url } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 import { ASSET_DIGITAL } from 'constants/staking';
+import AssetLogo from 'components/wallet/AssetLogo';
 
 const AssetDigitalStaking = ({ isMobile }) => {
     const auth = useSelector((state) => state.auth?.user);

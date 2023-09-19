@@ -38,8 +38,8 @@ export const STEP_STAKING = [
         imgSrc: '/images/staking/ic_asset_digital.png',
         title: { vi: 'Nạp tài sản số', en: 'Deposit assets' },
         subText: {
-            vi: 'Nạp VNDC hoặc USDT qua các blockchain hoặc qua hệ thống đối tác của Nami',
-            en: 'Deposit VNDC and USDT on-chain or via our Partners'
+            vi: 'Nạp VNDC, VNST hoặc USDT qua các blockchain hoặc qua hệ thống đối tác của Nami',
+            en: 'Deposit VNDC, VNST and USDT on-chain or via our Partners'
         }
     },
     {
@@ -73,8 +73,8 @@ export const WHY_CHOOSE_NAMI = [
     {
         title: { vi: 'Lãi suất hấp dẫn', en: 'Attractive APY' },
         context: {
-            vi: 'Lãi suất hấp dẫn và cạnh tranh trên thị trường, được tính kép trên số lượng tài sản thực tế, mức lãi suất năm căn bản với VNDC là 12.79% và USDT là 6%',
-            en: 'Attractive and competitive interest rates in the market, compounded on the actual quantity of assets, the base APY for VNDC is 12.79% and USDT is 6%'
+            vi: 'Lãi suất hấp dẫn và cạnh tranh trên thị trường, được tính kép trên số lượng tài sản thực tế, mức lãi suất năm căn bản với VNDC, VNST là 12.79% và USDT là 6%',
+            en: 'Attractive and competitive interest rates in the market, compounded on the actual quantity of assets, the base APY for VNDC, VNST are 12.79% and USDT is 6%'
         }
     }
 ];
@@ -107,8 +107,8 @@ export const FAQ = [
             en: 'How to join the Daily Staking program?'
         },
         content: {
-            vi: 'Người dùng chỉ cần duy trì số dư VNDC và USDT đạt mức tối thiểu tại ví Spot và ví Futures là đủ điều kiện tham gia chương trình.',
-            en: 'Users only need to maintain a minimum balance of VNDC and USDT at Spot and Futures wallets to be eligible to participate in the program.'
+            vi: 'Người dùng chỉ cần duy trì số dư VNDC, VNST và USDT đạt mức tối thiểu tại ví Spot và ví Futures là đủ điều kiện tham gia chương trình.',
+            en: 'Users only need to maintain a minimum balance of VNDC, VNST and USDT at Spot and Futures wallets to be eligible to participate in the program.'
         }
     },
     {
@@ -127,8 +127,8 @@ export const FAQ = [
             en: 'What kind of assets does the Daily Staking program apply to?'
         },
         content: {
-            vi: 'Hiện tại Nami Exchange áp dụng chương trình Daily Staking với hai loại tài sản là VNDC và USDT.',
-            en: 'Currently, Nami Exchange applies the Daily Staking program with two types of assets, VNDC and USDT.'
+            vi: 'Hiện tại Nami Exchange áp dụng chương trình Daily Staking với ba loại tài sản là VNDC, VNST và USDT.',
+            en: 'Currently, Nami Exchange applies the Daily Staking program with three types of assets, VNDC, VNST and USDT.'
         }
     },
     {
@@ -138,8 +138,14 @@ export const FAQ = [
         },
         content: {
             isHTMl: true,
-            vi: '<ul class="list-disc pl-5"><li class="text-gray-1 dark:text-gray-7">Đối với VNDC: Mức lãi suất năm (APY) là 12.79%, tương đương 0.0350%/ngày.</li><li class="text-gray-1 dark:text-gray-7">Đối với USDT: Mức lãi suất năm (APY) với USDT là 6%, tương đương 0.0164%/ngày.</li></ul>',
-            en: '<ul class="list-disc pl-5"><li class="text-gray-1 dark:text-gray-7">For VNDC: The annual interest rate (APY) is 12.79%, equivalent to 0.0350%/day.</li><li class="text-gray-1 dark:text-gray-7">For USDT: The annual interest rate (APY) for USDT is 6%, equivalent to 0.0164%/day.</li></ul>'
+            vi: `<ul class="list-disc pl-5">
+            <li class="text-gray-1 dark:text-gray-7">Đối với VNDC: Mức lãi suất năm (APY) là 12.79%, tương đương 0.0350%/ngày.</li>
+            <li class="text-gray-1 dark:text-gray-7">Đối với VNST: Mức lãi suất năm (APY) là 12.79%, tương đương 0.0350%/ngày.</li>
+            <li class="text-gray-1 dark:text-gray-7">Đối với USDT: Mức lãi suất năm (APY) với USDT là 6%, tương đương 0.0164%/ngày.</li></ul>`,
+            en: `<ul class="list-disc pl-5">
+            <li class="text-gray-1 dark:text-gray-7">For VNDC: The annual interest rate (APY) is 12.79%, equivalent to 0.0350%/day.</li>
+            <li class="text-gray-1 dark:text-gray-7">For VNST: The annual interest rate (APY) is 12.79%, equivalent to 0.0350%/day.</li>
+            <li class="text-gray-1 dark:text-gray-7">For USDT: The annual interest rate (APY) for USDT is 6%, equivalent to 0.0164%/day.</li></ul>`
         }
     },
     {
@@ -159,8 +165,8 @@ export const FAQ = [
             en: 'How much do I need to deposit to qualify for Staking interest?'
         },
         content: {
-            vi: 'Hạn mức tài sản tối thiểu là 10,000 VNDC hoặc 5 USDT hoặc 10,000 VNST, hạn mức tài sản tối đa là 500,000,000 VNDC; 20,000 USDT hoặc 200,000,000 VNST. Người dùng có số lượng tài sản nhỏ hơn hạn mức tối thiểu không được hưởng lãi hàng ngày, người dùng có số lượng tài sản lớn hơn hạn mức tối đa sẽ chỉ được hưởng lãi bằng với lãi của hạn mức tối đa.',
-            en: 'Minimum asset limit is 10,000 VNDC or 5 USDT or 10,000 VNST, maximum asset limit is 500,000,000 VNDC; 20,000 USDT or 200,000,000 VNST. Users with less than the minimum amount of assets will not be entitled to daily interest, users with a larger amount of assets than the maximum limit will only receive interest equal to the maximum limit.'
+            vi: 'Hạn mức tài sản tối thiểu là 10,000 VNDC; 10,000 VNST hoặc 5 USDT, hạn mức tài sản tối đa là 500,000,000 VNDC; 20,000 USDT hoặc 200,000,000 VNST. Người dùng có số lượng tài sản nhỏ hơn hạn mức tối thiểu không được hưởng lãi hàng ngày, người dùng có số lượng tài sản lớn hơn hạn mức tối đa sẽ chỉ được hưởng lãi bằng với lãi của hạn mức tối đa.',
+            en: 'Minimum asset limit is 10,000 VNDC; 10,000 VNST or 5 USDT, maximum asset limit is 500,000,000 VNDC; 20,000 USDT or 200,000,000 VNST. Users with less than the minimum amount of assets will not be entitled to daily interest, users with a larger amount of assets than the maximum limit will only receive interest equal to the maximum limit.'
         }
     },
     {
@@ -180,8 +186,8 @@ export const FAQ = [
         },
         content: {
             isHTMl: true,
-            vi: '<ul class="list-disc pl-5 "><li >Đối với VNDC: Hoa hồng giới thiệu là 20% trên lãi thực nhận của người được giới thiệu. Lãi suất được trả bằng VNDC.</li></ul><p class="my-2" >Ví dụ: Anh Nam giới thiệu chị Nhi thông qua tính năng “giới thiệu người dùng” của Nami. Khi chị Nhi gửi vào 100,000,000 VNDC và nhận được lãi suất 35,000 VNDC, anh Nam sẽ nhận được hoa hồng giới thiệu ở mức 20% của 35,000 VNDC tương đương 7,000 VNDC.</p><ul class="list-disc pl-5"><li >Đối với USDT: Hoa hồng giới thiệu là 20% trên lãi thực nhận của người được giới thiệu. Lãi suất được trả bằng USDT.</li></ul><p class="mt-2">Ví dụ: Anh Nam giới thiệu chị Nhi thông qua tính năng “giới thiệu người dùng” của Nami. Khi chị Nhi gửi vào 20,000 USDT và nhận được lãi suất 3.2876 USDT, anh Nam sẽ nhận được hoa hồng là 20% của 3.2876 USDT tương đương 0.6575 USDT.</p>',
-            en: '<ul class="list-disc pl-5 "><li>For VNDC: Referral commission is 20% on the actual profit received by the referrer. Interest is paid in VNDC.</li></ul><p class="my-2">Example: Mr. Nam introduced Ms. Nhi through referral code or link. When Ms. Nhi deposits 100,000,000 VNDC and receives an interest of 35,000 VNDC, Mr. Nam will receive a referral commission at 20% of 35,000 VNDC, equivalent to 7,000 VNDC.</p><ul class="list-disc pl-5 "><li>For USDT: Referral commission is 20% on the actual profit received by the referrer. Interest is paid in USDT.</li></ul><p class="mt-2">Example: David introduced Sam through referral code or link. When Sam deposits 20,000 USDT and receives interest of 3.2876 USDT, David will receive a commission of 20% of 3.2876 USDT equivalent to 0.6575 USDT.</p>'
+            vi: '<ul class="list-disc pl-5 "><li >Đối với VNDC và VNST: Hoa hồng giới thiệu là 20% trên lãi thực nhận của người được giới thiệu. Lãi suất được trả bằng VNDC.</li></ul><p class="my-2" >Ví dụ: Anh Nam giới thiệu chị Nhi thông qua tính năng “giới thiệu người dùng” của Nami. Khi chị Nhi gửi vào 100,000,000 VNDC và nhận được lãi suất 35,000 VNDC, anh Nam sẽ nhận được hoa hồng giới thiệu ở mức 20% của 35,000 VNDC tương đương 7,000 VNDC.</p><ul class="list-disc pl-5"><li >Đối với USDT: Hoa hồng giới thiệu là 20% trên lãi thực nhận của người được giới thiệu. Lãi suất được trả bằng USDT.</li></ul><p class="mt-2">Ví dụ: Anh Nam giới thiệu chị Nhi thông qua tính năng “giới thiệu người dùng” của Nami. Khi chị Nhi gửi vào 20,000 USDT và nhận được lãi suất 3.2876 USDT, anh Nam sẽ nhận được hoa hồng là 20% của 3.2876 USDT tương đương 0.6575 USDT.</p>',
+            en: '<ul class="list-disc pl-5 "><li>For VNDC and VNST: Referral commission is 20% on the actual profit received by the referrer. Interest is paid in VNDC.</li></ul><p class="my-2">Example: Mr. Nam introduced Ms. Nhi through referral code or link. When Ms. Nhi deposits 100,000,000 VNDC and receives an interest of 35,000 VNDC, Mr. Nam will receive a referral commission at 20% of 35,000 VNDC, equivalent to 7,000 VNDC.</p><ul class="list-disc pl-5 "><li>For USDT: Referral commission is 20% on the actual profit received by the referrer. Interest is paid in USDT.</li></ul><p class="mt-2">Example: David introduced Sam through referral code or link. When Sam deposits 20,000 USDT and receives interest of 3.2876 USDT, David will receive a commission of 20% of 3.2876 USDT equivalent to 0.6575 USDT.</p>'
         }
     },
     {
@@ -190,8 +196,8 @@ export const FAQ = [
             en: 'Will I get Daily Staking interest if I store assets in Futures wallet?'
         },
         content: {
-            vi: 'Có. Nami áp dụng trả lãi suất trên tổng số dư ví Spot và ví Futures với các tài sản VNDC và USDT.',
-            en: 'Yes. Nami applies the program on the total balance of Spot and Futures wallets with VNDC and USDT assets.'
+            vi: 'Có. Nami áp dụng trả lãi suất trên tổng số dư ví Spot và ví Futures với các tài sản VNDC, VNST và USDT.',
+            en: 'Yes. Nami applies the program on the total balance of Spot and Futures wallets with VNDC, VNST and USDT assets.'
         }
     }
 ];
