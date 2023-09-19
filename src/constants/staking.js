@@ -1,18 +1,24 @@
 export const APY_PERCENT = {
     VNDC: 12.79,
+    VNST: 12.79,
     USDT: 6
 };
 
 export const STAKING_RANGE = {
     72: {
         min: 10e3, // 10k
-        max: 2e9, // 2 tỷ,
+        max: 500e6, // 500 tr,
         DEFAULT: 100e6
     },
     22: {
         DEFAULT: 5e3,
         min: 5,
         max: 20e3 // 20k
+    },
+    39: {
+        min: 10e3, // 10k
+        max: 200e6, // 200 tr,
+        DEFAULT: 100e6
     }
 };
 
@@ -153,8 +159,8 @@ export const FAQ = [
             en: 'How much do I need to deposit to qualify for Staking interest?'
         },
         content: {
-            vi: 'Hạn mức tài sản tối thiểu là 10,000 VNDC hoặc 5 USDT, hạn mức tài sản tối đa là 500,000,000 VNDC hoặc 20,000 USDT. Người dùng có số lượng tài sản nhỏ hơn hạn mức tối thiểu không được hưởng lãi hàng ngày, người dùng có số lượng tài sản lớn hơn hạn mức tối đa sẽ chỉ được hưởng lãi bằng với lãi của hạn mức tối đa.',
-            en: 'Minimum asset limit is 10,000 VNDC or 5 USDT, maximum asset limit is 500,000,000 VNDC or 20,000 USDT. Users with less than the minimum amount of assets will not be entitled to daily interest, users with a larger amount of assets than the maximum limit will only receive interest equal to the maximum limit.'
+            vi: 'Hạn mức tài sản tối thiểu là 10,000 VNDC hoặc 5 USDT hoặc 10,000 VNST, hạn mức tài sản tối đa là 500,000,000 VNDC; 20,000 USDT hoặc 200,000,000 VNST. Người dùng có số lượng tài sản nhỏ hơn hạn mức tối thiểu không được hưởng lãi hàng ngày, người dùng có số lượng tài sản lớn hơn hạn mức tối đa sẽ chỉ được hưởng lãi bằng với lãi của hạn mức tối đa.',
+            en: 'Minimum asset limit is 10,000 VNDC or 5 USDT or 10,000 VNST, maximum asset limit is 500,000,000 VNDC; 20,000 USDT or 200,000,000 VNST. Users with less than the minimum amount of assets will not be entitled to daily interest, users with a larger amount of assets than the maximum limit will only receive interest equal to the maximum limit.'
         }
     },
     {

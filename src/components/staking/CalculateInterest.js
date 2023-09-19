@@ -17,11 +17,17 @@ const STAKING_CURRENCIES = [
         title: <AssetItem assetCode="VNDC" assetId={72} />
     },
     {
+        value: 39,
+        code: 'VNST',
+        dayInterestPercent: getDayInterestPercent(APY_PERCENT['VNST']),
+        title: <AssetItem assetCode="VNST" assetId={39} />
+    },
+    {
         value: 22,
         code: 'USDT',
         dayInterestPercent: getDayInterestPercent(APY_PERCENT['USDT']),
         title: <AssetItem assetCode="USDT" assetId={22} />
-    }
+    },
 ];
 
 const initState = {

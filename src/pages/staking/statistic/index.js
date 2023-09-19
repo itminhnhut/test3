@@ -13,6 +13,7 @@ const HistoryStaking = dynamic(() => import('components/staking/statistic/Histor
 
 export const ASSET = {
     VNDC: 72,
+    VNST: 39,
     USDT: 22
 };
 const ASSET_TABS = Object.keys(ASSET).map((assetCode) => ({ children: assetCode, key: ASSET[assetCode] }));
