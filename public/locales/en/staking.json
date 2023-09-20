@@ -23,7 +23,7 @@
         "not_auth": "<0>Register</0> now to start receive Daily Staking interest or <1>login</1> to check your statistics",
         "interest": {
             "balance": "Total balance",
-            "balance_description": "Total balance of VNDC or USDT on all wallets",
+            "balance_description": "Total balance of VNDC or USDT or VNST on all wallets",
             "apy_interest": "APY (compound):",
             "deposit_now": "Deposit Now",
             "daily_interest": "Daily interest",

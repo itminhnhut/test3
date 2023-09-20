@@ -48,7 +48,7 @@ const index = () => {
     return (
         <MaldivesLayout>
             <main className="bg-gray-13 dark:bg-shadow">
-                <div className="max-w-screen-v3 2xl:max-w-screen-xxl pt-20 pb-[120px] mx-auto px-4 md:px-0">
+                <div className="max-w-screen-v3 2xl:max-w-screen-xxl pt-20 pb-[120px] mx-auto px-4">
                     <Header />
                     {renderPage()}
                 </div>

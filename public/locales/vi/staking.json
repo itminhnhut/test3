@@ -23,7 +23,7 @@
         "not_auth": "<0>Đăng ký</0> ngay để tham gia nhận lãi hàng ngày từ Nami hoặc <1>đăng nhập</1> để xem thống kê của bạn",
         "interest": {
             "balance": "Tổng số dư",
-            "balance_description": "Tổng số dư VNDC hoặc USDT trên tất cả các Ví ",
+            "balance_description": "Tổng số dư VNDC hoặc USDT hoặc VNST trên tất cả các Ví ",
             "apy_interest": "Lãi suất năm (kép):",
             "deposit_now": "Nạp ngay",
             "daily_interest": "Lợi nhuận ngày",
