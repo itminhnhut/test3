@@ -27,10 +27,13 @@
             "apy_interest": "APY (compound):",
             "deposit_now": "Deposit Now",
             "daily_interest": "Daily interest",
-            "annual_interest": "Estimated annual interest"
+            "annual_interest": "Estimated annual interest",
+            "daily_interest_rate": "Daily interest rate",
+            "annual_interest_rate": "APY"
         },
         "history": {
             "title": "Interest History",
+            "statistics": "Statistics",
             "profit_received": "Total Profit Received",
             "columns": {
                 "type": "Stablecoins",

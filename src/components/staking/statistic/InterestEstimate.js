@@ -74,30 +74,36 @@ const InterestEstimate = ({ assetId }) => {
     );
 
     const renderInterestCard = useCallback(
-        ({ numberOfDays, title, type = 'dayInterestPercent' }) => {
+        ({ numberOfDays, title1, title2, type = 'dayInterestPercent' }) => {
             const allowAmount = userTotalBalance > STAKING_RANGE[asset?.id]?.max ? STAKING_RANGE[asset?.id]?.max : userTotalBalance;
             const dayInterestPercent = getDayInterestPercent(APY_PERCENT[asset?.assetCode]);
             return (
                 <Card className="md:!px-8 !py-6">
-                    <div className="mb-2 md:mb-4 text-txtSecondary dark:text-txtSecondary-dark text-sm md:text-base">
-                        {title}
-                        <span className="text-green-3 dark:text-green-2 font-semibold ml-2 ">
+                    <div className="mb-2 md:mb-4 flex items-center justify-between">
+                        <span className="text-txtSecondary text-sm md:text-base dark:text-txtSecondary-dark">{title1}</span>
+                        <span className="text-green-3 dark:text-green-2 font-semibold ml-2 md:text-lg">
                             {type === 'dayInterestPercent' ? dayInterestPercent : type === 'yearInterestPercent' ? APY_PERCENT[asset?.assetCode] : ''}%
                         </span>
                     </div>
-                    <div className="text-lg md:text-2xl font-semibold">
-                        {isHideBalance
-                            ? SECRET_STRING
-                            : formatBalance(
-                                  getApyByDay({
-                                      allowAmount,
-                                      amount: userTotalBalance,
-                                      numberOfDays: numberOfDays,
-                                      percentPerDay: dayInterestPercent
-                                  })?.interestAmount,
-                                  asset?.assetDigit
-                              )}
-                        <span className="ml-1">{asset?.assetCode}</span>
+                    <div className="flex items-center justify-between">
+                        <span className="text-txtSecondary text-sm md:text-base dark:text-txtSecondary-dark">{title2}</span>
+                        <div className="flex items-center md:text-lg font-semibold ">
+                            <span>
+                                {isHideBalance
+                                    ? SECRET_STRING
+                                    : formatBalance(
+                                          getApyByDay({
+                                              allowAmount,
+                                              amount: userTotalBalance,
+                                              numberOfDays: numberOfDays,
+                                              percentPerDay: dayInterestPercent
+                                          })?.interestAmount,
+                                          asset?.assetDigit
+                                      )}
+                            </span>
+
+                            <span className="ml-1">{asset?.assetCode}</span>
+                        </div>
                     </div>
                 </Card>
             );
@@ -111,14 +117,16 @@ const InterestEstimate = ({ assetId }) => {
                 {renderInterestCard({
                     numberOfDays: 1,
                     type: 'dayInterestPercent',
-                    title: t('staking:statics.interest.daily_interest')
+                    title1: t('staking:statics.interest.daily_interest_rate'),
+                    title2: t('staking:statics.interest.daily_interest')
                 })}
             </div>
             <div className="w-full md:w-1/2 p-3">
                 {renderInterestCard({
                     numberOfDays: 365,
                     type: 'yearInterestPercent',
-                    title: t('staking:statics.interest.annual_interest')
+                    title1: t('staking:statics.interest.annual_interest_rate'),
+                    title2: t('staking:statics.interest.annual_interest')
                 })}
             </div>
         </div>

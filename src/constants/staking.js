@@ -79,7 +79,17 @@ export const WHY_CHOOSE_NAMI = [
     }
 ];
 
+
 export const ASSET_DIGITAL = [
+    {
+        imgSrc: '/images/staking/ic_VNST.png',
+        title: 'VNST',
+        subText: 'VNST',
+        content: { vi: 'Lãi suất năm căn bản', en: 'Base APY' },
+        percent: 12.79,
+        btn: { vi: 'Nạp VNST', en: 'Deposit VNST' },
+        href: 'withdraw-deposit/crypto?side=BUY&assetId=VNST'
+    },
     {
         imgSrc: '/images/staking/ic_VNDC.png',
         title: 'VNDC',

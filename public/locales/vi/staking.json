@@ -27,10 +27,13 @@
             "apy_interest": "Lãi suất năm (kép):",
             "deposit_now": "Nạp ngay",
             "daily_interest": "Lợi nhuận ngày",
-            "annual_interest": "Lợi nhuận dự kiến năm"
+            "annual_interest": "Lợi nhuận dự kiến năm",
+            "daily_interest_rate": "Lãi suất hàng ngày",
+            "annual_interest_rate": "Lãi suất hàng năm:"
         },
         "history": {
             "title": "Lịch sử nhận lãi",
+            "statistics": "Thống kê",
             "profit_received": "Tổng lợi nhuận đã nhận",
             "columns": {
                 "type": "Loại tài sản",

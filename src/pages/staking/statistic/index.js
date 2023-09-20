@@ -12,26 +12,26 @@ const NotAuth = dynamic(() => import('components/staking/statistic/NotAuth', { s
 const HistoryStaking = dynamic(() => import('components/staking/statistic/History', { ssr: false }));
 
 export const ASSET = {
-    VNDC: 72,
     VNST: 39,
+    VNDC: 72,
     USDT: 22
 };
 const ASSET_TABS = Object.keys(ASSET).map((assetCode) => ({ children: assetCode, key: ASSET[assetCode] }));
 
 const index = () => {
-    const [assetId, setAssetId] = useState(ASSET.VNDC);
+    const [assetId, setAssetId] = useState(ASSET.VNST);
     const { loadingUser, user: isAuth } = useSelector((state) => state.auth);
 
     const toggleAsset = (newAssetId) => setAssetId(newAssetId);
 
     const renderPage = useCallback(() => {
-        if (loadingUser)
-            return (
-                <div className="flex justify-center items-center ">
-                    <Spinner size={40} />
-                </div>
-            );
-        if (!isAuth) return <NotAuth />;
+        // if (loadingUser)
+        //     return (
+        //         <div className="flex justify-center items-center ">
+        //             <Spinner size={40} />
+        //         </div>
+        //     );
+        // if (!isAuth) return <NotAuth />;
         return (
             <section>
                 <TabV2 wrapperClassName="!gap-3" chipClassName="bg-gray-12" activeTabKey={assetId} onChangeTab={toggleAsset} tabs={ASSET_TABS} />
@@ -48,7 +48,7 @@ const index = () => {
     return (
         <MaldivesLayout>
             <main className="bg-gray-13 dark:bg-shadow">
-                <div className="max-w-screen-v3 2xl:max-w-screen-xxl pt-20 pb-[120px] mx-auto px-4">
+                <div className="max-w-screen-v3 2xl:max-w-screen-xxl pt-20 pb-[120px] mx-auto v3:px-0 px-4">
                     <Header />
                     {renderPage()}
                 </div>
