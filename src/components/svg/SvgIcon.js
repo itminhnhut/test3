@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const FutureInsurance = ({ size, mode }) => {
@@ -350,6 +351,79 @@ const FutureNFTIcon = ({ size = 24 }) => {
             </g>
             <defs>
                 <clipPath id="xx78pzbdva">
+                    <path fill="#fff" transform="translate(2 2)" d="M0 0h20v20H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
+
+const EarningIcon = ({ size = 36, className, color = 'currentColor', ...rest }) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={classNames('text-txtSecondary dark:text-txtPrimary-dark', className)}
+            width={size}
+            height={size}
+            viewBox="0 0 36 36"
+            fill="none"
+            {...rest}
+        >
+            <g clipPath="url(#4lvivnr41a)">
+                <path d="M5.219 27.233v-2.28l13.59 5.596 13.78-5.596v2.28l-13.76 5.766-13.61-5.766z" fill={color} />
+                <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="m29.047 21.604-10.55-4.043.805-2.1 13.291 5.094v2.1l-13.694 5.554-13.686-5.554-.002-2.1 10.633-3.974v2.267l-7.092 2.754L18.9 25.486l10.148-3.882z"
+                    fill="#6FC98B"
+                />
+                <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M25.595 7.398a5.842 5.842 0 0 0-5.837 5.838v.933h.927c3.214-.032 5.8-2.673 5.774-5.892l-.015-.879h-.849zm-8.087 5.838c0-4.463 3.625-8.088 8.087-8.088h3.08v1.15l.034 1.955c.04 4.46-3.543 8.126-8.008 8.166H17.508v-3.183z"
+                    fill="#6FC98B"
+                />
+                <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="m11.613 5.239-.879.015v.849a5.842 5.842 0 0 0 5.838 5.837h.933v-.927c-.032-3.214-2.673-5.8-5.892-5.774zm-1.98-2.216 1.956-.034c4.46-.04 8.126 3.543 8.166 8.008V14.19h-3.183a8.092 8.092 0 0 1-8.088-8.087v-3.08h1.15z"
+                    fill="#6FC98B"
+                />
+                <path fillRule="evenodd" clipRule="evenodd" d="M17.508 21.81v-8.744h2.25v8.744h-2.25z" fill="#6FC98B" />
+            </g>
+            <defs>
+                <clipPath id="4lvivnr41a">
+                    <path fill="#fff" transform="translate(3.898 3)" d="M0 0h30v30H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
+
+const LendingIcon = ({ size = 36, className, color = 'currentColor', ...rest }) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={classNames('text-txtSecondary dark:text-txtPrimary-dark', className)}
+            width={size}
+            height={size}
+            viewBox="0 0 24 24"
+            fill="none"
+        >
+            <g clipPath="url(#ss357g4jsa)">
+                <path d="M2.344 21.25h19.335M4.143 18.78H19.88" stroke="#30BF73" strokeWidth="1.5" />
+                <path
+                    d="m12.012 2.666.412-.626H11.6l.413.626zm9.486 6.253v.75l.413-1.377-.413.627zm-18.973 0-.412-.627.412 1.377v-.75zm15.206 0v-.75h-.75v.75h.75zm-11.48 0h.75v-.75h-.75v.75zM11.6 3.292l9.486 6.253.826-1.253-9.487-6.252-.825 1.252zm-8.66 6.253 9.486-6.253-.826-1.252-9.486 6.252.825 1.253zm14.792.124h3.767v-1.5h-3.767v1.5zm-15.206 0h3.727v-1.5H2.525v1.5zm2.977-.75v9.414h1.5V8.92h-1.5zm11.48 0v9.414h1.5V8.92h-1.5z"
+                    fill="#30BF73"
+                />
+                <path
+                    d="M12.023 15.26c-.524 0-.999-.085-1.425-.253a2.423 2.423 0 0 1-1.021-.742c-.255-.326-.391-.72-.409-1.183l.005-.005 1.248-.005.005.01c.032.22.111.413.236.581.126.165.301.294.527.387.226.093.51.14.85.14.35 0 .64-.041.865-.124.226-.086.393-.204.5-.355a.874.874 0 0 0 .161-.521v-.01a.798.798 0 0 0-.285-.64c-.186-.162-.53-.301-1.032-.42l-.8-.182a4.46 4.46 0 0 1-1.167-.43 1.97 1.97 0 0 1-.72-.667c-.162-.269-.243-.59-.243-.962v-.011c0-.441.117-.82.35-1.14.236-.319.557-.564.962-.736a3.48 3.48 0 0 1 1.387-.264c.527 0 .993.092 1.398.274.405.18.727.434.967.764.24.326.368.711.382 1.156v.005l-1.247.005-.005-.01a1.14 1.14 0 0 0-.237-.613 1.234 1.234 0 0 0-.516-.382 1.913 1.913 0 0 0-.726-.129c-.312 0-.573.045-.785.134-.211.09-.37.208-.478.355a.801.801 0 0 0-.161.484v.01c0 .159.04.3.123.425.086.126.219.237.398.334.183.097.423.18.72.253l.801.182c.717.165 1.264.407 1.64.726.376.319.564.769.564 1.35v.01c0 .473-.125.874-.376 1.204-.25.326-.591.574-1.021.742a3.878 3.878 0 0 1-1.435.253zm-.302.881V6.836h.624v9.305h-.624z"
+                    fill={color}
+                />
+                <path fill={color} d="M11.52 6.836h1.151v9.305H11.52z" />
+            </g>
+            <defs>
+                <clipPath id="ss357g4jsa">
                     <path fill="#fff" transform="translate(2 2)" d="M0 0h20v20H0z" />
                 </clipPath>
             </defs>
@@ -1837,6 +1911,8 @@ export {
     CloseIcon,
     ContactIcon,
     CopyIcon,
+    EarningIcon,
+    LendingIcon,
     FacebookIcon,
     FireIcon,
     FutureAdvanceIcon,
