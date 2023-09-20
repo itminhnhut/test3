@@ -75,7 +75,7 @@ const InterestEstimate = ({ assetId }) => {
 
     const renderInterestCard = useCallback(
         ({ numberOfDays, title1, title2, type = 'dayInterestPercent' }) => {
-            const allowAmount = userTotalBalance > STAKING_RANGE[asset?.id]?.max ? STAKING_RANGE[asset?.id]?.max : userTotalBalance;
+            const allowAmount = Math.min(+userTotalBalance, STAKING_RANGE[asset?.id]?.max);
             const dayInterestPercent = getDayInterestPercent(APY_PERCENT[asset?.assetCode]);
             return (
                 <Card className="md:!px-8 !py-6">
