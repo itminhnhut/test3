@@ -184,11 +184,11 @@ export const NAV_DATA = [
                 child_lv2: []
             },
             {
-                key: 'earning',
-                title: 'Earning',
-                localized: 'earning',
+                key: 'earn',
+                title: 'Earn',
+                localized: 'earn',
                 isNew: false,
-                url: '/earning',
+                url: '/earn',
                 child_lv2: []
             },
             {

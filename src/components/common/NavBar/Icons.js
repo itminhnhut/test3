@@ -22,7 +22,7 @@ import {
     ProfitStats as profit_stats,
     FutureNFTIcon as nft_wallet,
     NFTIcon as nft,
-    EarningIcon as earning,
+    EarningIcon as earn,
     LendingIcon as lending,
 } from '../../svg/SvgIcon';
 
@@ -49,6 +49,6 @@ export default {
     profit_stats,
     nft_wallet,
     nft,
-    earning,
+    earn,
     lending
 };
