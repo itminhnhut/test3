@@ -437,7 +437,7 @@
         "today_trading": "Khối lượng giao dịch hôm nay:",
         "claim_now": "Nhận thưởng ngay",
         "claim_success": "Chức mừng bạn đã nhận được",
-        "volume_tooltip": "KLGD ngày bao gồm cả VNDC và USDT Futures và sẽ được tự động cài đặt lại vào 0h sáng mỗi ngày",
+        "volume_tooltip": "KLGD ngày bao gồm cả {{quoteAsset}} và USDT Futures và sẽ được tự động cài đặt lại vào 0h sáng mỗi ngày",
         "start": "Bắt đầu",
         "back_to_trading": "Tiếp tục giao dịch",
         "reward_desc_trading": "KLGD hôm nay chưa đủ để nhận thưởng mốc kế tiếp, vui lòng giao dịch thêm mức khối lượng là {{vol}} để nhận {{value}}.",
