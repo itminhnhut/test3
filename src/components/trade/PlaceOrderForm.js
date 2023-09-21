@@ -699,7 +699,7 @@ const PlaceOrderForm = ({ symbol, orderBook, exchangeConfig }) => {
                         <ButtonV2
                             onClick={confirmModal}
                             disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
-                            className={isBuy ? 'bg-teal' : '!bg-red'}
+                            variants={!isBuy ? 'red' : 'primary'}
                         >
                             {t(orderSide)} {base}
                         </ButtonV2>

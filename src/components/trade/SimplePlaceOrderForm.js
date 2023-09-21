@@ -646,7 +646,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook, exchangeConfig }) => {
                 onClick={() => !disabled && confirmModal(_orderSide)}
                 disabled={disabled}
                 loading={placing && side.current === _orderSide}
-                className={_orderSide === ExchangeOrderEnum.Side.BUY ? 'bg-teal' : '!bg-red'}
+                variants={_orderSide === ExchangeOrderEnum.Side.SELL ? 'red' : 'primary'}
             >
                 {t(_orderSide)} {base}
             </ButtonV2>
