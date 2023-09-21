@@ -51,8 +51,8 @@ const LendingTable = ({ data, page, loading, onPage }) => {
 
     // ** get data
     const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
-    const getAsset = (assetId) => {
-        return assetConfigs.find((asset) => asset.id === assetId);
+    const getAsset = (assetCode) => {
+        return assetConfigs.find((asset) => asset.assetCode === assetCode);
     };
 
     // ** render
@@ -68,49 +68,49 @@ const LendingTable = ({ data, page, loading, onPage }) => {
     const renderTable = useCallback(() => {
         const columns = [
             {
-                key: 'currency',
-                dataIndex: 'currency',
+                key: 'loanCoin',
+                dataIndex: 'loanCoin',
                 title: renderTitle(t('lending:lending:table:assets')),
                 align: 'left',
                 width: 189,
                 render: (value) => (
                     <section className="flex flex-row items-center">
-                        <AssetLogo assetId={value} />
-                        <span className="ml-2">{getAsset(39)?.assetCode}</span>
+                        <AssetLogo assetId={getAsset(value)?.id} />
+                        <span className="ml-2">{getAsset(value)?.assetCode}</span>
                     </section>
                 )
             },
             {
-                key: 'money_use',
-                dataIndex: 'money_use',
+                key: 'minLimit',
+                dataIndex: 'minLimit',
                 title: renderTitle(t('lending:lending:table:minimum'), 'Đơn vị: VND'),
                 align: 'left',
-                width: 205,
-                render: (value) => <div>{formatNumber(value, getAsset(39)?.assetDigit)}</div>
+                minWidth: 205,
+                render: (value) => <div>{formatNumber(value)}</div>
             },
             {
-                key: 'created_at',
-                dataIndex: 'created_at',
+                key: 'maxLimit',
+                dataIndex: 'maxLimit',
                 title: renderTitle(t('lending:lending:table:maximum'), 'Đơn vị: VND'),
                 align: 'left',
                 width: 205,
-                render: (value) => <div className="font-normal">2</div>
+                render: (value) => <div className="font-normal">{formatNumber(value)}</div>
             },
             {
-                key: 'created_at2',
-                dataIndex: 'created_at',
+                key: '_7dHourlyInterestRate',
+                dataIndex: '_7dDailyInterestRate',
                 title: renderTitle(t('lending:lending:table:7days'), 'Lãi suất theo giờ/theo năm'),
                 align: 'left',
-                width: 205,
-                render: (value) => <div className="font-normal">2</div>
+                minWidth: 205,
+                render: (value, data) => <div className="font-normal">{`${value}/${data._180dDailyInterestRate}`}</div>
             },
             {
-                key: 'created_at3',
-                dataIndex: 'created_at',
+                key: '_30dHourlyInterestRate',
+                dataIndex: '_30dDailyInterestRate',
                 title: renderTitle(t('lending:lending:table:30days'), 'Lãi suất theo giờ/theo năm'),
                 align: 'left',
-                width: 206,
-                render: (value) => <div className="font-normal">2</div>
+                minWidth: 206,
+                render: (value, data) => <div className="font-normal">{`${value}/${data._180dDailyInterestRate}`}</div>
             },
             {
                 key: '',
@@ -138,7 +138,7 @@ const LendingTable = ({ data, page, loading, onPage }) => {
                 isMobile={isMobile}
                 scroll={{ x: true }}
                 className=""
-                data={data.result || []}
+                data={data || []}
                 rowKey={(item) => `${item?.key}`}
                 pagingClassName="!border-0 !py-8"
                 pagingPrevNext={{
@@ -160,7 +160,7 @@ const LendingTable = ({ data, page, loading, onPage }) => {
         <>
             <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">{renderTable()}</section>
             {/* Tạo khoản vay  */}
-            <ModalRegisterLoan isModal={isModal} onClose={handleToggleModal} />
+            <ModalRegisterLoan isModal={!isModal} onClose={handleToggleModal} />
         </>
     );
 };

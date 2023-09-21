@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 
 // ** next
 import dynamic from 'next/dynamic';
@@ -8,6 +8,7 @@ import { useTranslation, Trans } from 'next-i18next';
 import { WalletType } from 'redux/actions/const';
 import { setTransferModal } from 'redux/actions/utils';
 import { useSelector, useDispatch } from 'react-redux';
+import { formatNumber } from 'redux/actions/utils';
 
 //** components
 import Chip from 'components/common/V2/Chip';
@@ -22,10 +23,11 @@ import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
 
 // ** Third party
 import classNames from 'classnames';
+import { find } from 'lodash';
 
 // ** Dynamic
 const ConfirmLoan = dynamic(() => import('./ConfirmLoan'), { ssr: false });
-const AssetFilter = dynamic(() => import('components/screens/Lending/components/AssetFilter'), { ssr: false });
+const AssetLendingFilter = dynamic(() => import('components/screens/Lending/components/AssetLendingFilter'), { ssr: false });
 
 // ** CONSTANTS
 import { BORROWING_TERM, PROFITS, LTV } from 'components/screens/Lending/constants';
@@ -69,10 +71,31 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
     const onChangeAsset = (value, key) => setFilter((prev) => ({ ...prev, [key]: value }));
 
     // ** get data
+    const wallets = useSelector((state) => state.wallet.SPOT);
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
+
     const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
     const getAsset = (assetId) => {
         return assetConfigs.find((asset) => asset.id === assetId);
     };
+
+    const tempFromAssetList = useMemo(() => {
+        return Object.keys(wallets)?.map((key) => {
+            const curAssetWalletData = wallets[key];
+            return {
+                // assetId: key,
+                ...find(assetConfig, { id: +key }),
+                available: curAssetWalletData.value - curAssetWalletData.locked_value,
+                ...curAssetWalletData
+            };
+        });
+    }, []);
+
+    const totalSPOT = useMemo(() => {
+        return tempFromAssetList?.find((asset) => asset.assetCode === filter.lendingMargin?.assetCode);
+    }, [filter.lendingMargin?.id]);
+
+    console.log('totalSPOT', totalSPOT);
 
     // ** render
     const renderProfit = () => {
@@ -196,13 +219,14 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
 
     const renderValueToken = ({ asset, onchange, key, assetCode }) => {
         return (
-            <AssetFilter
+            <AssetLendingFilter
                 asset={asset}
                 assetCode={assetCode}
                 className="h-6"
                 wrapperLabel="h-6"
                 onChangeAsset={(e) => onchange(e, key)}
                 labelClassName="mr-2"
+                labelAsset="Chọn tài sản ký quỹ"
                 wrapperClassName="w-max right-[-12px] !left-[auto]"
                 containerClassName={classNames({ '!z-[auto]': key === 'lendingMargin' })}
             />
@@ -255,7 +279,9 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                         <section className="flex flex-row justify-between mb-[14px]">
                             <div className="dark:text-gray-4 text-gray-15">Số lượng ký quỹ</div>
                             <section className="flex flex-row gap-1 items-center">
-                                <div>Khả dụng: 10 BTC</div>
+                                <div>
+                                    Khả dụng: {formatNumber(totalSPOT?.available, totalSPOT?.assetDigit) || '-'} {totalSPOT?.assetCode}
+                                </div>
                                 <AddCircleColorIcon
                                     size={16}
                                     onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }))}
@@ -299,7 +325,7 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                         </section>
                         {renderProfit()}
                         {renderLTV()}
-                        {/* {renderRules()} */}
+                        {renderRules()}
                         <ButtonV2 className="mt-10" disabled={!true}>
                             Vay ngay
                         </ButtonV2>
