@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next';
 
 import FetchApi from 'utils/fetch-api';
 
-import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_DETAIL_COLLECTION } from 'redux/actions/apis';
+import { API_GET_COLLECTION, API_GET_NFT_LIST, API_GET_DETAIL_COLLECTION } from 'redux/actions/apis';
 
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
@@ -91,7 +91,7 @@ const Filter = ({ isDark }) => {
         try {
             setIsLoading(true);
             const { data } = await FetchApi({
-                url: API_GET_LIST_NFT,
+                url: API_GET_NFT_LIST,
                 params: {
                     category: filter.tab,
                     ...(filter?.tier.length > 0 && { tier: filter?.tier.join(',') }),

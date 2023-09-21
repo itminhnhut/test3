@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import dynamic from 'next/dynamic';
 
@@ -28,9 +28,9 @@ const Contents = dynamic(() => import('components/screens/NFT/Components/Detail/
     ssr: false
 });
 
-const History = dynamic(() => import('components/screens/NFT/Components/Detail/History'), {
-    ssr: false
-});
+// const History = dynamic(() => import('components/screens/NFT/Components/Detail/History'), {
+//     ssr: false
+// });
 
 const index = ({ idNFT }) => {
     const {
@@ -58,9 +58,9 @@ const index = ({ idNFT }) => {
         idNFT && handleDetailNFT();
     }, [idNFT]);
 
-    const renderHistory = useCallback(() => {
-        return <History idNFT={idNFT} />;
-    }, [idNFT]);
+    // const renderHistory = useCallback(() => {
+    //     return <History idNFT={idNFT} />;
+    // }, [idNFT]);
 
     return (
         <MaldivesLayout>
@@ -79,10 +79,10 @@ const index = ({ idNFT }) => {
                             <Effective effective={detail?.[`effective_${language}`] || []} dark={isDark} />
                         </section>
                     </section>
-                    <section className="mt-[60px]">
+                    {/* <section className="mt-[60px]">
                         <h3 className="text-2xl font-semibold text-gray-15 dark:text-gray-4">{t('nft:history:title')}</h3>
                         <section className="mt-4">{renderHistory()}</section>
-                    </section>
+                    </section> */}
                 </article>
             </main>
         </MaldivesLayout>

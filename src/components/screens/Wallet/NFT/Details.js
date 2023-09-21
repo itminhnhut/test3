@@ -9,7 +9,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import FetchApi from 'utils/fetch-api';
 import toast from 'utils/toast';
 
-import { API_GET_DETAIL_NFT, API_POST_ACTIVE_NFT, API_GET_CHECK_NFT } from 'redux/actions/apis';
+import { API_GET_DETAIL_OWNER_NFT, API_POST_ACTIVE_NFT, API_GET_CHECK_NFT } from 'redux/actions/apis';
 
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
@@ -70,7 +70,7 @@ const WalletDetail = ({ idNFT }) => {
     //** call api detail NFT
     const handleDetailNFT = async () => {
         try {
-            const { data } = await FetchApi({ url: API_GET_DETAIL_NFT, params: { id: idNFT } });
+            const { data } = await FetchApi({ url: API_GET_DETAIL_OWNER_NFT, params: { id: idNFT } });
             setDetail(data);
         } catch (error) {
             console.error(error);

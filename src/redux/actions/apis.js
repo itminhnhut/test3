@@ -1,4 +1,3 @@
-
 const API_PREFIX = `/api/v1/`;
 const API_V2_PREFIX = `/api/v2/`;
 const API_V3_PREFIX = `/api/v3/`;
@@ -376,17 +375,18 @@ export const API_MARKETING_EVENT = API_PREFIX + 'marketing/event';
 // Staking statics
 export const API_HISTORY_STAKING_DAILY_OVERVIEW = API_V3_PREFIX + 'wallet/history/staking-daily/overview';
 
-
 // Insurance
 export const API_AUTH_INSURANCE = API_V3_PREFIX + 'auth/oauth-insurance';
-export const API_USER_INSURANCE_HISTORY = API_PREFIX + 'user/insurance'
-export const API_CONFIG_INSURANCE_RULE = `${INSURANCE_API_URL}/insurance/v1/get-insurance-rule`
+export const API_USER_INSURANCE_HISTORY = API_PREFIX + 'user/insurance';
+export const API_CONFIG_INSURANCE_RULE = `${INSURANCE_API_URL}/insurance/v1/get-insurance-rule`;
 
 // ** NFT
-export const API_GET_LIST_NFT = API_V3_PREFIX + 'nft';
+export const API_GET_LIST_OWNER_NFT = API_V3_PREFIX + 'nft/list-owner';
+export const API_GET_NFT_LIST = API_V3_PREFIX + 'nft/list';
 export const API_GET_COLLECTION = API_V3_PREFIX + 'nft/collection';
 export const API_GET_DETAIL_COLLECTION = API_V3_PREFIX + 'nft/collection_detail';
 export const API_GET_DETAIL_NFT = API_V3_PREFIX + 'nft/detail';
+export const API_GET_DETAIL_OWNER_NFT = API_V3_PREFIX + 'nft/detail-owner';
 export const API_GET_HISTORY_NFT = API_V3_PREFIX + 'nft/history';
 export const API_GET_SUMMARY_NFT = API_V3_PREFIX + 'nft/summary';
 export const API_POST_ACTIVE_NFT = API_V3_PREFIX + 'nft/active';
