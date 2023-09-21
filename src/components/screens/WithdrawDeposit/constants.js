@@ -9,6 +9,15 @@ import { Trans } from 'next-i18next';
 // time in seconds
 export const REPORT_ABLE_TIME = 5 * 60 * 1000;
 
+export const MIN_TIP = 2000;
+
+export const VNST_MIN_TIP_RANGE = {
+    min: 2e3, // 2,000
+    max: 20e3 // 20,000
+};
+
+export const FEE_PERCENT = 0.02 / 100; // 0.02%
+
 export const DisputedType = {
     REJECTED: 1,
     REPORT: 2,
@@ -43,13 +52,13 @@ export const TranferreredType = {
 export const ALLOWED_ASSET = {
     39: 'VNST',
     72: 'VNDC',
-    22: 'USDT',
+    22: 'USDT'
 };
 
 export const ALLOWED_ASSET_ID = {
     VNST: 39,
     VNDC: 72,
-    USDT: 22,
+    USDT: 22
 };
 
 export const TABS = [
@@ -326,3 +335,15 @@ export const statusFilter = [
         localized: 'common:disputing'
     }
 ];
+
+export const getMinFee = ({ amount, assetId }) => {
+    const isVnst = +assetId === ALLOWED_ASSET_ID['VNST'];
+
+    if (isVnst) {
+        // VNST fee = [2k -> 20k]
+        const minFee = +amount * FEE_PERCENT;
+        return Math.min(Math.max(VNST_MIN_TIP_RANGE.min, minFee), VNST_MIN_TIP_RANGE.max);
+    }
+
+    return MIN_TIP;
+};
