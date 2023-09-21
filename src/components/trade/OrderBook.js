@@ -19,7 +19,6 @@ import { SET_SPOT_SELECTED_ORDER } from 'redux/actions/types';
 import { RefCurrency, exponentialToDecimal, formatNumber, getFilter, getSymbolString } from 'redux/actions/utils';
 import { handleTickSize } from 'utils/MarketDepthMerger';
 import LastPrice from '../markets/LastPrice';
-
 import dynamic from 'next/dynamic';
 
 const OrderBookAll = dynamic(() => import('components/svg/OrderBookAll'), { ssr: false });
@@ -31,9 +30,8 @@ const initHoverData = {
     side: null
 };
 
-const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
+const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals, exchangeConfig }) => {
     const { t } = useTranslation(['common', 'spot']);
-    const { base, quote } = symbol;
     const dispatch = useDispatch();
     const setSelectedOrder = (order) => {
         dispatch({
@@ -42,7 +40,6 @@ const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
         });
     };
     const quoteAsset = useSelector((state) => state.user.quoteAsset) || 'USDT';
-    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     const router = useRouter();
     const popover = useRef(null);
 
@@ -54,6 +51,8 @@ const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
     const [height, setHeight] = useState(0);
     const ref = useRef(null);
     const lastPrice = useRef(0);
+    const base = exchangeConfig?.baseAsset;
+    const quote = exchangeConfig?.quoteAsset;
 
     useEffect(() => {
         if (ref.current) {
@@ -63,7 +62,7 @@ const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
 
     useAsync(async () => {
         // Get symbol list
-        const _orderBook = await getOrderBook(getSymbolString(symbol));
+        const _orderBook = await getOrderBook(symbol);
         setOrderBook((prev) => ({ ...prev, ..._orderBook, loading: false }));
     }, [symbol]);
 
@@ -85,12 +84,12 @@ const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
     useEffect(() => {
         const event = PublicSocketEvent.SPOT_DEPTH_UPDATE + 'order_book';
         Emitter.on(PublicSocketEvent.SPOT_TICKER_UPDATE, async (data) => {
-            if (data?.s === `${symbol.base}${symbol.quote}`) {
+            if (data?.s === symbol) {
                 lastPrice.current = data?.p;
             }
         });
         Emitter.on(event, async (data) => {
-            if (data?.symbol === `${symbol.base}${symbol.quote}`) {
+            if (data?.symbol === symbol) {
                 setOrderBook((prev) => ({ ...prev, ...data, loading: false }));
             }
         });
@@ -106,9 +105,8 @@ const OrderBook = ({ symbol, layoutConfig, parentState, isPro, decimals }) => {
     }, [symbol]);
 
     useEffect(() => {
-        if (exchangeConfig.length <= 0) return;
-        const currentExchangeConfig = exchangeConfig.find((e) => e.symbol === getSymbolString(symbol));
-        const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, currentExchangeConfig || []);
+        if (!exchangeConfig) return;
+        const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, exchangeConfig || []);
         if (!priceFilter) return;
         const result = [];
         for (let i = 0; i < 5; i++) {

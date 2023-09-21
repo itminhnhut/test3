@@ -1439,8 +1439,8 @@ export function formatStringNumber(value, digits = 0) {
     const formatedNumber = formatPrice(value, digits);
 
     const isZero = !value || formatedNumber === 'NaN';
-    if(isZero) return +digits === 0 ? 0 : `0.${'0'.repeat(digits)}`
-    return formatedNumber
+    if (isZero) return +digits === 0 ? 0 : `0.${'0'.repeat(digits)}`;
+    return formatedNumber;
 }
 
 export const convertDateToMs = (date = 0, type = 'startOf') => {
