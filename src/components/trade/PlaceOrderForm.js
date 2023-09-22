@@ -29,9 +29,10 @@ import { useAsync } from 'react-use';
 let initPrice = '';
 
 const fee = 1.001;
-const PlaceOrderForm = ({ symbol, orderBook }) => {
+const PlaceOrderForm = ({ symbol, orderBook, exchangeConfig }) => {
     const dispatch = useDispatch();
-    const { base, quote } = symbol;
+    const base = exchangeConfig?.baseAsset;
+    const quote = exchangeConfig?.quoteAsset;
     const { t } = useTranslation();
     const QuantityMode = [
         {
@@ -57,7 +58,6 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
     const [quoteQty, setQuoteQty] = useState('');
     const [price, setPrice] = useState();
     const [symbolTicker, setSymbolTicker] = useState(null);
-    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     const [showAlert, setShowAlert] = useState(false);
     const isChangeSlider = useRef(false);
     const alert = useRef({
@@ -83,7 +83,7 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
 
     useAsync(async () => {
         if (symbol) {
-            const newSymbolTicker = await getMarketWatch(getSymbolString(symbol));
+            const newSymbolTicker = await getMarketWatch(symbol);
             setSymbolTicker(newSymbolTicker?.[0]);
         }
     }, [symbol]);
@@ -92,9 +92,9 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
         Emitter.on(PublicSocketEvent.SPOT_TICKER_UPDATE, async (data) => {
             setSymbolTicker(data);
         });
-        return function cleanup() {
-            Emitter.off(PublicSocketEvent.SPOT_TICKER_UPDATE);
-        };
+        // return function cleanup() {
+        //     Emitter.off(PublicSocketEvent.SPOT_TICKER_UPDATE);
+        // };
     }, [Emitter]);
 
     useEffect(() => {
@@ -116,7 +116,7 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
         }
     }, [selectedOrder]);
 
-    const currentExchangeConfig = exchangeConfig.find((e) => e.symbol === getSymbolString(symbol));
+    const currentExchangeConfig = exchangeConfig
     const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, currentExchangeConfig || []);
     const quantityFilter = getFilter(ExchangeOrderEnum.Filter.LOT_SIZE, currentExchangeConfig || []);
     const minNotionalFilter = getFilter(ExchangeOrderEnum.Filter.MIN_NOTIONAL, currentExchangeConfig || []);
@@ -564,7 +564,7 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
             <div className="tabs justify-start mb-4">
                 {tabs.map((tab, index) => {
                     return (
-                        <div className="px-2 w-1/2 !m-0">
+                        <div key={index} className="px-2 w-1/2 !m-0">
                             <div className={`tab-item  ${orderType === tab ? 'active' : ''}`} key={index}>
                                 <a
                                     className={'tab-link text-txtSecondary dark:text-txtSecondary-dark ' + (orderType === tab ? 'active' : '')}
@@ -699,7 +699,7 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
                         <ButtonV2
                             onClick={confirmModal}
                             disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
-                            className={isBuy ? 'bg-teal' : '!bg-red'}
+                            variants={!isBuy ? 'red' : 'primary'}
                         >
                             {t(orderSide)} {base}
                         </ButtonV2>
@@ -750,7 +750,7 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
                 message={alert.current.message}
                 notes={alert.current.notes}
             />
-            
+
             <div className="py-6 px-4 spot-place-orders-container rounded h-full overflow-auto">
                 <h3 className="font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark mb-6">{t('spot:place_order')}</h3>
                 {_renderOrderSide()}
