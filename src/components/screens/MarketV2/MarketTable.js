@@ -127,7 +127,7 @@ const MarketTable = ({
     // Render Handler
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
-            if (subTab[restProps.subTabIndex].key === 'vnst' && item.key === 'exchange') return null // vnst chua co exchange
+            // if (subTab[restProps.subTabIndex].key === 'vnst' && item.key === 'exchange') return null // vnst chua co exchange
             const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null
             return (
                 <div

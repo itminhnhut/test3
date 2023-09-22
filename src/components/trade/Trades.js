@@ -9,13 +9,11 @@ import { formatNumber, formatTime, getSymbolString, getDecimalPrice, getDecimalQ
 
 let temp = [];
 const Trades = (props) => {
-    const { publicSocket, symbol, layoutConfig, isPro, decimals } = props;
+    const { publicSocket, symbol, layoutConfig, isPro, decimals, exchangeConfig } = props;
     const router = useRouter();
     const [recentTrade, setRecentTrade] = useState([]);
     const [loading, setLoading] = useState(true);
     const { t } = useTranslation('common');
-    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
-    const { base, quote } = symbol;
 
     const [height, setHeight] = useState(0);
     const ref = useRef(null);
@@ -30,7 +28,7 @@ const Trades = (props) => {
     const MAX_LENGTH = Math.round((height - 80) / 20);
 
     const fetchRecentTrade = async () => {
-        const newRecentTrade = await getRecentTrade(getSymbolString(symbol));
+        const newRecentTrade = await getRecentTrade(symbol);
         temp = newRecentTrade || [];
         temp = temp.slice(0, MAX_LENGTH);
         setRecentTrade(temp);
@@ -46,7 +44,7 @@ const Trades = (props) => {
     };
 
     const updateRecent = (data) => {
-        if (data?.s === `${symbol.base}${symbol.quote}`) {
+        if (data?.s === symbol) {
             setLoading(false);
             temp.unshift(data);
             temp = temp.slice(0, MAX_LENGTH);
@@ -56,7 +54,7 @@ const Trades = (props) => {
 
     useEffect(() => {
         if (publicSocket) {
-            publicSocket.emit('subscribe:recent_trade', getSymbolString(symbol));
+            publicSocket.emit('subscribe:recent_trade', symbol);
             publicSocket.removeListener(PublicSocketEvent.SPOT_RECENT_TRADE_ADD, updateRecent);
             publicSocket.on(PublicSocketEvent.SPOT_RECENT_TRADE_ADD, updateRecent);
         }
@@ -74,10 +72,10 @@ const Trades = (props) => {
             <h3 className="font-semibold text-sm mb-4 text-txtPrimary dark:text-txtPrimary-dark">{t('trades')}</h3>
             <div className="flex justify-between items-center mb-4">
                 <div className="flex flex-1 justify-start text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium">
-                    {t('common:price')} ({quote})
+                    {t('common:price')} ({exchangeConfig?.quoteAsset})
                 </div>
                 <div className="flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium">
-                    {t('common:quantity')} ({base})
+                    {t('common:quantity')} ({exchangeConfig?.baseAsset})
                 </div>
                 <div className="flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium">{t('common:time')}</div>
             </div>

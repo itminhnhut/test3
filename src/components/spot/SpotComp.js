@@ -21,12 +21,13 @@ import Trades from 'components/trade/Trades';
 import { PublicSocketEvent } from 'redux/actions/const';
 import Emitter from 'redux/actions/emitter';
 import { getMarketWatch, postSymbolViews } from 'redux/actions/market';
-import { getSymbolString, getDecimalPrice, getDecimalQty } from 'redux/actions/utils';
+import { getSymbolString, getDecimalPrice, getDecimalQty, convertSymbol } from 'redux/actions/utils';
 import find from 'lodash/find';
 import useDarkMode from 'hooks/useDarkMode';
 import classNames from 'classnames';
 import { spotGridKey, layoutPro, layoutSimple, initSpotSetting, spotSettingKey } from './_spotLayout';
 import { DragHandleArea, RemoveItemArea, ResizeHandleArea } from 'components/common/ReactGridItem';
+import { getPairConfigSpot } from 'redux/selectors';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -34,12 +35,13 @@ const SpotComp = () => {
     const router = useRouter();
     const { id, timeframe, indicator, layout } = router.query;
     const publicSocket = useSelector((state) => state.socket.publicSocket);
-    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     const user = useSelector((state) => state.auth?.user) || null;
 
     const [layoutConfig, setLayoutConfig] = useState(() => (layout === SPOT_LAYOUT_MODE.PRO ? layoutPro : layoutSimple));
     const [layoutMode, setLayoutMode] = useState(() => (layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE));
     const [symbol, setSymbol] = useState(symbolFromUrl);
+    const exchangeConfig = useSelector((state) => getPairConfigSpot(state, getSymbolString(symbol)));
+    const formatSymbol = getSymbolString(symbol)
     const isPro = layoutMode === SPOT_LAYOUT_MODE.PRO;
 
     // compact state
@@ -142,19 +144,19 @@ const SpotComp = () => {
 
     useAsync(async () => {
         if (symbol) {
-            const [newSymbolTicker] = await getMarketWatch(getSymbolString(symbol));
+            const [newSymbolTicker] = await getMarketWatch(formatSymbol);
             Emitter.emit(PublicSocketEvent.SPOT_TICKER_UPDATE, newSymbolTicker);
         }
     }, [symbol]);
 
     useEffect(() => {
         if (symbol) {
-            subscribeExchangeSocket(getSymbolString(symbol));
+            subscribeExchangeSocket(formatSymbol);
         }
 
         return function cleanup() {
             if (symbol) {
-                unsubscribeExchangeSocket(getSymbolString(symbol));
+                unsubscribeExchangeSocket(formatSymbol);
             }
         };
     }, [publicSocket, symbol]);
@@ -169,10 +171,9 @@ const SpotComp = () => {
     };
 
     const decimals = useMemo(() => {
-        const config = exchangeConfig.find((rs) => rs.symbol === symbol?.base + symbol?.quote);
         return {
-            price: getDecimalPrice(config),
-            qty: getDecimalQty(config)
+            price: getDecimalPrice(exchangeConfig),
+            qty: getDecimalQty(exchangeConfig)
         };
     }, [exchangeConfig, symbol]);
 
@@ -302,7 +303,14 @@ const SpotComp = () => {
                                         <DragHandleArea height={20} />
                                     </>
                                 )}
-                                <Trades isPro={isPro} symbol={symbol} publicSocket={publicSocket} layoutConfig={tradesLayout} decimals={decimals} />
+                                <Trades
+                                    isPro={isPro}
+                                    symbol={formatSymbol}
+                                    publicSocket={publicSocket}
+                                    layoutConfig={tradesLayout}
+                                    decimals={decimals}
+                                    exchangeConfig={exchangeConfig}
+                                />
                             </div>
                         )}
                         {componentSetting[spotSettingKey.ORDER_FORM] && (
@@ -318,7 +326,7 @@ const SpotComp = () => {
                                 )}
                             >
                                 {!isPro ? (
-                                    <SimplePlaceOrderForm symbol={symbol} orderBook={state.orderBook} />
+                                    <SimplePlaceOrderForm symbol={formatSymbol} orderBook={state.orderBook} exchangeConfig={exchangeConfig} />
                                 ) : (
                                     <>
                                         <RemoveItemArea
@@ -326,7 +334,7 @@ const SpotComp = () => {
                                         />
 
                                         <DragHandleArea height={24} />
-                                        <PlaceOrderForm symbol={symbol} orderBook={state.orderBook} />
+                                        <PlaceOrderForm symbol={formatSymbol} orderBook={state.orderBook} exchangeConfig={exchangeConfig} />
                                     </>
                                 )}
                             </div>
@@ -345,7 +353,10 @@ const SpotComp = () => {
                                 )}
                             >
                                 {isPro && (
-                                    <RemoveItemArea className="!z-30" onClick={() => onLayoutSettingChangeHandler({ ...componentSetting, [spotSettingKey.ORDER_LIST]: false })} />
+                                    <RemoveItemArea
+                                        className="!z-30"
+                                        onClick={() => onLayoutSettingChangeHandler({ ...componentSetting, [spotSettingKey.ORDER_LIST]: false })}
+                                    />
                                 )}
                                 <SpotOrderList isPro={isPro} />
                             </div>
@@ -370,7 +381,14 @@ const SpotComp = () => {
                                         <DragHandleArea height={20} />
                                     </>
                                 )}
-                                <OrderBook isPro={isPro} symbol={symbol} parentState={setState} layoutConfig={orderBookLayout} decimals={decimals} />
+                                <OrderBook
+                                    isPro={isPro}
+                                    symbol={formatSymbol}
+                                    parentState={setState}
+                                    layoutConfig={orderBookLayout}
+                                    decimals={decimals}
+                                    exchangeConfig={exchangeConfig}
+                                />
                             </div>
                         )}
                     </ReactGridLayout>

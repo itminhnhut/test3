@@ -70,7 +70,7 @@ export default class {
     }
 
     subscribeBars(symbolInfo, resolution, updateCb, uid, resetCache) {
-        const symbol = convertSymbol(symbolInfo.symbol);
+        const symbol = symbolInfo.exchange === 'NAMI_SPOT' ? symbolInfo.symbol : convertSymbol(symbolInfo.symbol);
         socket.emit(symbolInfo.exchange === 'NAMI_SPOT' ? 'subscribe:recent_trade' : 'subscribe:futures:ticker', symbol);
         try {
             lastSymbol = symbol;
