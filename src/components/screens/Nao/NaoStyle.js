@@ -68,6 +68,14 @@ export const ButtonNao = styled.div.attrs(({ disabled, variant, active = true })
     })
 }))``;
 
+export const ButtonNaoV2 = styled.button.attrs(({ active, variant }) => ({
+    className: classNames('px-4 py-2 text-sm rounded-md', {
+        'font-semibold text-teal bg-teal/10': active,
+        'bg-gray-13 dark:bg-dark-4 text-txtSecondary dark:text-txtSecondary-dark': !active,
+        '!bg-teal !text-white font-semibold': variant==='primary' && !active
+    })
+}))``;
+
 export const BackgroundHeader = styled.div.attrs({
     className: 'relative z-[9]'
 })`

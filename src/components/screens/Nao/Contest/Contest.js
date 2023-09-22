@@ -298,6 +298,38 @@ export const seasons = [
         total_weekly_rewards: '50,000,000 VNDC',
         quoteAsset: 'VNDC',
         // time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
+        active: false,
+        top_ranks_per: 20,
+        top_ranks_week: 20,
+        top_ranks_team: 10,
+        lastUpdated: true
+    },
+    {
+        season: 13,
+        start: '2023-08-06T17:00:00.000Z',
+        end: '2023-09-03T17:00:00.000Z',
+        time_to_create: { start: '2023-08-04T17:00:00.000Z', end: '2023-11-18T17:00:00.000Z' },
+        contest_id: 16,
+        title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 10', en: 'NAO Futures VNDC – Nami Championship Season 10' },
+        title: { vi: 'NAO Futures VNDC', en: 'NAO Futures VNDC' },
+        title_champion: { vi: 'Nami Championship mùa 10', en: 'Nami Championship Season 10' },
+        minVolumeInd: {
+            vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để được xếp hạng',
+            en: 'Traders need to meet the Basic Conditions to be ranked. For details',
+            isHtml: false
+        },
+        rules: {
+            vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-9-t8-2023',
+            en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-9-august-2023'
+        },
+        weekly_contest_time: {
+            start: '2023-08-06T17:00:00.000Z',
+            end: '2023-09-03T17:00:00.000Z'
+        },
+        total_rewards: '600,000,000 VNDC',
+        total_weekly_rewards: '50,000,000 VNDC',
+        quoteAsset: 'VNDC',
+        // time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
         active: true,
         top_ranks_per: 20,
         top_ranks_week: 20,
@@ -337,6 +369,7 @@ const Contest = (props) => {
     const [data, setData] = useState([]);
     const [loadingSpecial, setLoadingSpecial] = useState(initState.loadingSpecial);
     const showPnl = ![9, 10, 11, 12, 13, 14, 15].includes(props?.contest_id);
+
     const user = useSelector((state) => state.auth.user) || null;
     // const userID = props?.contest_id >= 13 ? 'code' : 'onus_user_id';
     const userID = user?.onus_user_id ? 'onus_user_id' : 'code';
@@ -438,7 +471,8 @@ const Contest = (props) => {
         const urlParams = new URLSearchParams(queryString);
         return {
             individual: !showPnl ? 'volume' : urlParams.get('individual') !== 'pnl' ? 'volume' : 'pnl',
-            team: !showPnl ? 'volume' : urlParams.get('team') !== 'pnl' ? 'volume' : 'pnl'
+            team: !showPnl ? 'volume' : urlParams.get('team') !== 'pnl' ? 'volume' : 'pnl',
+            weekly: !showPnl ? 'volume' : urlParams.get('weekly') !== 'pnl' ? 'volume' : 'pnl'
         };
     }, [props?.contest_id]);
 
@@ -491,7 +525,9 @@ const Contest = (props) => {
                     />
                 )}
 
-                {props.top_ranks_week && <ContestWeekRanks {...props} lastUpdatedTime={lastUpdatedTime} userID={userID} />}
+                {props.top_ranks_week && (
+                    <ContestWeekRanks {...props} showPnl={showPnl} lastUpdatedTime={lastUpdatedTime} userID={userID} sort={params.weekly} />
+                )}
 
                 {props.top_ranks_per && (
                     <ContestPerRanks

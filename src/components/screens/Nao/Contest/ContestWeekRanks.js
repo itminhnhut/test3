@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { TextLiner, CardNao, Table, Column, getColor, renderPnl, Tooltip, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, Table, Column, getColor, renderPnl, Tooltip, capitalize, ImageNao, ButtonNao, ButtonNaoV2 } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
@@ -13,6 +13,8 @@ import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import RePagination from 'components/common/ReTable/RePagination';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import { addDays, endOfDay, endOfWeek } from 'date-fns';
+import useUpdateEffect from 'hooks/useUpdateEffect';
+import { useRouter } from 'next/router';
 
 const ContestWeekRanks = ({
     previous,
@@ -23,9 +25,12 @@ const ContestWeekRanks = ({
     top_ranks_week,
     userID,
     minVolumeInd,
-    weekly_contest_time: { start, end }
+    weekly_contest_time: { start, end },
+    showPnl,
+    sort
 }) => {
     const [tab, setTab] = useState(0);
+    const [type, setType] = useState(sort);
     const [quoteAsset, setQuoteAsset] = useState(q);
     const {
         t,
@@ -43,6 +48,7 @@ const ContestWeekRanks = ({
     const limit = isMobile ? 10 : 20;
     const rank = 'individual_rank_volume';
     const checked = useRef(false);
+    const router = useRouter();
 
     useEffect(() => {
         setPage(1);
@@ -84,11 +90,20 @@ const ContestWeekRanks = ({
         }
     };
 
-    const onFilter = (key) => {
-        if (tab === key) return;
-        setLoading(true);
-        getRanks(key);
-        setTab(key);
+    const onFilter = (key, value) => {
+        switch (key) {
+            case 'tab':
+                if (tab === value) return;
+                setLoading(true);
+                getRanks(key);
+                setTab(key);
+                break;
+            case 'type':
+                setType(value);
+                break;
+            default:
+                break;
+        }
     };
 
     const renderName = (data, item) => {
@@ -134,6 +149,14 @@ const ContestWeekRanks = ({
         }
     }, [previous]);
 
+    useUpdateEffect(() => {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        urlParams.set('weekly', type === 'pnl' ? 'pnl' : 'volume');
+        const url = `/${router.locale}/contest${router.query.season ? '/' + router.query.season : ''}?${urlParams.toString()}`;
+        window.history.replaceState(null, null, url);
+    }, [type]);
+
     const weeks = useMemo(() => {
         return getWeeksInRange(new Date(start), new Date(end));
     }, [start]);
@@ -146,10 +169,10 @@ const ContestWeekRanks = ({
             const end = new Date(weeks.weeks[i].end).getTime();
             if (now > start && now < end && !checked.current && !previous) {
                 checked.current = true;
-                onFilter(i);
+                onFilter('tab', i);
             }
             rs.push(
-                <TabItem key={i} isActive={tab === i} V2 value={i} onClick={() => onFilter(i)} className="!px-0 space-x-1">
+                <TabItem key={i} isActive={tab === i} V2 value={i} onClick={() => onFilter('tab', i)} className="!px-0 space-x-1">
                     <span>{t('nao:contest:week', { value: i + 1 })}</span>
                     <span className="lowercase">({now < start ? t('nao:coming_soon_2') : now > start && now < end ? t('nao:going_on') : t('nao:ended')})</span>
                 </TabItem>
@@ -177,6 +200,16 @@ const ContestWeekRanks = ({
                         <QuestionMarkIcon isFilled size={16} />
                     </div>
                 </div>
+                {showPnl && (
+                    <div className="flex items-center space-x-2 text-sm">
+                        <ButtonNaoV2 active={type === 'volume'} onClick={() => onFilter('type', 'volume')}>
+                            {t('nao:contest:volume')}
+                        </ButtonNaoV2>
+                        <ButtonNaoV2 active={type === 'pnl'} onClick={() => onFilter('type', 'pnl')}>
+                            {t('nao:contest:per_pnl')}
+                        </ButtonNaoV2>
+                    </div>
+                )}
             </div>
 
             <div className="pt-6 sm:pt-8 text-sm sm:text-base">

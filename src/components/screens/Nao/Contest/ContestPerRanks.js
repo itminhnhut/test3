@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import {
     TextLiner,
     CardNao,
-    ButtonNao,
+    ButtonNaoV2,
     Table,
     Column,
     getColor,
@@ -44,7 +44,7 @@ const ContestPerRanks = ({
     userID,
     top_ranks_week
 }) => {
-    const [tab, setTab] = useState(sort);
+    const [type, setType] = useState(sort);
     const [quoteAsset, setQuoteAsset] = useState(q);
     const {
         t,
@@ -70,11 +70,11 @@ const ContestPerRanks = ({
 
     useEffect(() => {
         getRanks(sort);
-        setTab(sort);
+        setType(sort);
     }, [contest_id]);
 
     useEffect(() => {
-        if (mount.current) getRanks(tab);
+        if (mount.current) getRanks(type);
     }, [quoteAsset]);
 
     const onReadMore = () => {
@@ -84,16 +84,16 @@ const ContestPerRanks = ({
         });
     };
 
-    const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
+    const rank = type === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
 
-    const getRanks = async (tab) => {
-        const _rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
+    const getRanks = async (type) => {
+        const _rank = type === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
         // if (Date.now() < new Date('2022-07-07T17:00:00.000Z').getTime()) {
         //     return
         // }
         try {
             const { data: originalData, status } = await fetchApi({
-                url: tab === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
+                url: type === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
                 params: { contest_id, quoteAsset }
             });
             const data = originalData?.users;
@@ -116,21 +116,19 @@ const ContestPerRanks = ({
     };
 
     const onFilter = (key) => {
-        if (tab === key) return;
+        if (type === key) return;
         setLoading(true);
         getRanks(key);
-        setTab(key);
+        setType(key);
     };
 
     useUpdateEffect(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        const team = urlParams.get('team') !== 'pnl' ? 'volume' : 'pnl';
-        urlParams.set('individual', tab === 'pnl' ? 'pnl' : 'volume');
-        urlParams.set('team', team);
+        urlParams.set('individual', type === 'pnl' ? 'pnl' : 'volume');
         const url = `/${router.locale}/contest${router.query.season ? '/' + router.query.season : ''}?${urlParams.toString()}`;
         window.history.replaceState(null, null, url);
-    }, [tab]);
+    }, [type]);
 
     const renderName = (data, item) => {
         return (
@@ -194,27 +192,13 @@ const ContestPerRanks = ({
                     )}
                 </div>
                 {showPnl && (
-                    <div className="flex items-center gap-3">
-                        <ButtonNao
-                            onClick={() => onFilter('volume')}
-                            className={`px-4 py-2 !rounded-md ${
-                                tab === 'volume'
-                                    ? 'font-semibold'
-                                    : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
-                            }`}
-                        >
+                    <div className="flex items-center space-x-2 text-sm">
+                        <ButtonNaoV2 active={type === 'volume'} onClick={() => onFilter('volume')}>
                             {t('nao:contest:volume')}
-                        </ButtonNao>
-                        <ButtonNao
-                            onClick={() => onFilter('pnl')}
-                            className={`px-4 py-2 !rounded-md   ${
-                                tab === 'pnl'
-                                    ? 'font-semibold'
-                                    : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
-                            }`}
-                        >
+                        </ButtonNaoV2>
+                        <ButtonNaoV2 active={type === 'pnl'} onClick={() => onFilter('pnl')}>
                             {t('nao:contest:per_pnl')}
-                        </ButtonNao>
+                        </ButtonNaoV2>
                     </div>
                 )}
             </div>
@@ -260,7 +244,7 @@ const ContestPerRanks = ({
                                         {formatNumber(item?.time, 2)} {t('common:hours')}
                                     </span>
                                 </div>
-                                {tab === 'pnl' ? (
+                                {type === 'pnl' ? (
                                     <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
                                         <span className={`font-semibold ${getColor(item.pnl)}`}>
@@ -339,9 +323,9 @@ const ContestPerRanks = ({
                                         </div>
                                         <div className="flex items-center justify-between pt-3">
                                             <label className="text-txtSecondary dark:text-txtSecondary-dark">
-                                                {t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
+                                                {t(`nao:contest:${type === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
                                             </label>
-                                            {tab === 'pnl' ? (
+                                            {type === 'pnl' ? (
                                                 <span className={`text-right ${getColor(item?.pnl)}`}>
                                                     {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
                                                 </span>
@@ -394,7 +378,7 @@ const ContestPerRanks = ({
                             fieldName="time"
                             suffix={t('common:hours')}
                         />
-                        {tab === 'pnl' ? (
+                        {type === 'pnl' ? (
                             <Column
                                 maxWidth={100}
                                 minWidth={80}
