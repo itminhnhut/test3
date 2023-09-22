@@ -7,13 +7,14 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
-import _ from 'lodash';
+import _, { isFunction } from 'lodash';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import CheckCircle from 'components/svg/CheckCircle';
 import CrossCircle from 'components/svg/CrossCircle';
 import { WarningFilledIcon, RemoveCircleIcon } from 'components/svg/SvgIcon';
 import { IconArrowOnus } from 'components/common/Icons';
+import { QUOTE_ASSET } from 'constants/constants';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-xl sm:text-2xl font-semibold w-max text-txtPrimary dark:text-txtPrimary-dark'
@@ -72,7 +73,7 @@ export const ButtonNaoV2 = styled.button.attrs(({ active, variant }) => ({
     className: classNames('px-4 py-2 text-sm rounded-md', {
         'font-semibold text-teal bg-teal/10': active,
         'bg-gray-13 dark:bg-dark-4 text-txtSecondary dark:text-txtSecondary-dark': !active,
-        '!bg-teal !text-white font-semibold': variant==='primary' && !active
+        '!bg-teal !text-white font-semibold': variant === 'primary' && !active
     })
 }))``;
 
@@ -587,4 +588,27 @@ export const VoteStatus = ({ iconClassName = '', className = '', status, statusT
         }
     };
     return <div className={`flex space-x-1 sm:space-x-2 items-center ${className}`}>{renderStatus()}</div>;
+};
+
+export const ConvertedMassTooltip = ({ id, detail, label }) => {
+    const currency = Object.entries(QUOTE_ASSET).map(([key, value]) => ({ key, value }));
+    return (
+        <>
+            {isFunction(label) ? label() : label}
+            <Tooltip id={id} className={'!max-w-max'}>
+                <div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark mb-3">Khối lượng quy đổi gồm</div>
+                    {Object.keys(detail).map((key) => {
+                        const quoteAsset = currency.find((c) => String(c.value) === String(key));
+                        return (
+                            <div key={key} className="flex items-center space-x-2">
+                                <span className="font-semibold">{formatNumber(detail[key])}</span>
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{quoteAsset.key}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </Tooltip>
+        </>
+    );
 };

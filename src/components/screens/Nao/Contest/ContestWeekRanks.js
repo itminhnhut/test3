@@ -1,9 +1,21 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { TextLiner, CardNao, Table, Column, getColor, renderPnl, Tooltip, capitalize, ImageNao, ButtonNao, ButtonNaoV2 } from 'components/screens/Nao/NaoStyle';
+import {
+    TextLiner,
+    CardNao,
+    Table,
+    Column,
+    getColor,
+    renderPnl,
+    Tooltip,
+    capitalize,
+    ImageNao,
+    ConvertedMassTooltip,
+    ButtonNaoV2
+} from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
-import { API_CONTEST_GET_RANK_WEEKLY_VOLUME } from 'redux/actions/apis';
+import { API_CONTEST_GET_RANK_WEEKLY_PNL, API_CONTEST_GET_RANK_WEEKLY_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { formatNumber, getS3Url, formatTime } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
@@ -15,6 +27,7 @@ import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import { addDays, endOfDay, endOfWeek } from 'date-fns';
 import useUpdateEffect from 'hooks/useUpdateEffect';
 import { useRouter } from 'next/router';
+import classNames from 'classnames';
 
 const ContestWeekRanks = ({
     previous,
@@ -27,10 +40,13 @@ const ContestWeekRanks = ({
     minVolumeInd,
     weekly_contest_time: { start, end },
     showPnl,
-    sort
+    sort,
+    converted_mass
 }) => {
-    const [tab, setTab] = useState(0);
-    const [type, setType] = useState(sort);
+    const [filter, setFilter] = useState({
+        weekly: 0,
+        type: sort
+    });
     const [quoteAsset, setQuoteAsset] = useState(q);
     const {
         t,
@@ -56,8 +72,8 @@ const ContestWeekRanks = ({
     }, [isMobile]);
 
     useEffect(() => {
-        getRanks(tab);
-    }, [contest_id]);
+        getRanks();
+    }, [contest_id, filter]);
 
     const onReadMore = () => {
         setPageSize((old) => {
@@ -66,11 +82,11 @@ const ContestWeekRanks = ({
         });
     };
 
-    const getRanks = async (tab) => {
+    const getRanks = async () => {
         try {
             const { data: originalData, status } = await fetchApi({
-                url: API_CONTEST_GET_RANK_WEEKLY_VOLUME,
-                params: { contestId: contest_id, quoteAsset, weekId: tab + 1 }
+                url: filter.type === 'volume' ? API_CONTEST_GET_RANK_WEEKLY_VOLUME : API_CONTEST_GET_RANK_WEEKLY_PNL,
+                params: { contestId: contest_id, quoteAsset, weekId: filter.weekly + 1 }
             });
             const data = originalData?.users;
             setTotal(data.length);
@@ -91,19 +107,8 @@ const ContestWeekRanks = ({
     };
 
     const onFilter = (key, value) => {
-        switch (key) {
-            case 'tab':
-                if (tab === value) return;
-                setLoading(true);
-                getRanks(key);
-                setTab(key);
-                break;
-            case 'type':
-                setType(value);
-                break;
-            default:
-                break;
-        }
+        setLoading(true);
+        setFilter({ ...filter, [key]: value });
     };
 
     const renderName = (data, item) => {
@@ -145,17 +150,17 @@ const ContestWeekRanks = ({
     useEffect(() => {
         if (previous) {
             checked.current = false;
-            setTab(0);
+            setFilter({ ...filter, weekly: 0 });
         }
     }, [previous]);
 
     useUpdateEffect(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        urlParams.set('weekly', type === 'pnl' ? 'pnl' : 'volume');
+        urlParams.set('weekly', filter.type === 'pnl' ? 'pnl' : 'volume');
         const url = `/${router.locale}/contest${router.query.season ? '/' + router.query.season : ''}?${urlParams.toString()}`;
         window.history.replaceState(null, null, url);
-    }, [type]);
+    }, [filter.type]);
 
     const weeks = useMemo(() => {
         return getWeeksInRange(new Date(start), new Date(end));
@@ -169,17 +174,17 @@ const ContestWeekRanks = ({
             const end = new Date(weeks.weeks[i].end).getTime();
             if (now > start && now < end && !checked.current && !previous) {
                 checked.current = true;
-                onFilter('tab', i);
+                onFilter('weekly', i);
             }
             rs.push(
-                <TabItem key={i} isActive={tab === i} V2 value={i} onClick={() => onFilter('tab', i)} className="!px-0 space-x-1">
+                <TabItem key={i} isActive={filter.type === i} V2 value={i} onClick={() => onFilter('weekly', i)} className="!px-0 space-x-1">
                     <span>{t('nao:contest:week', { value: i + 1 })}</span>
                     <span className="lowercase">({now < start ? t('nao:coming_soon_2') : now > start && now < end ? t('nao:going_on') : t('nao:ended')})</span>
                 </TabItem>
             );
         }
         return rs;
-    }, [weeks, tab, previous]);
+    }, [weeks, filter.type, previous]);
 
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
@@ -202,10 +207,10 @@ const ContestWeekRanks = ({
                 </div>
                 {showPnl && (
                     <div className="flex items-center space-x-2 text-sm">
-                        <ButtonNaoV2 active={type === 'volume'} onClick={() => onFilter('type', 'volume')}>
+                        <ButtonNaoV2 active={filter.type === 'volume'} onClick={() => onFilter('type', 'volume')}>
                             {t('nao:contest:volume')}
                         </ButtonNaoV2>
-                        <ButtonNaoV2 active={type === 'pnl'} onClick={() => onFilter('type', 'pnl')}>
+                        <ButtonNaoV2 active={filter.type === 'pnl'} onClick={() => onFilter('type', 'pnl')}>
                             {t('nao:contest:per_pnl')}
                         </ButtonNaoV2>
                     </div>
@@ -218,65 +223,77 @@ const ContestWeekRanks = ({
             </div>
 
             <div className="border-b border-divider dark:border-divider-dark pt-8 sm:pt-12 mb-6 sm:mb-8 w-full">
-                <Tabs tab={tab} className="text-sm sm:text-base space-x-6">
+                <Tabs tab={filter.weekly} className="text-sm sm:text-base space-x-6">
                     {renderWeeksTab()}
                 </Tabs>
             </div>
 
             <div className="text-txtSecondary dark:text-txtSecondary-dark mb-6 sm:mb-8 text-sm sm:text-base">
-                {t('common:time')}: {`${formatTime(weeks.weeks[tab].start, 'dd/MM/yyyy')} - ${formatTime(addDays(weeks.weeks[tab].end, 1), 'dd/MM/yyyy')}`}
+                {t('common:time')}:{' '}
+                {`${formatTime(weeks.weeks[filter.weekly].start, 'dd/MM/yyyy')} - ${formatTime(addDays(weeks.weeks[filter.weekly].end, 1), 'dd/MM/yyyy')}`}
             </div>
 
             {top3.length > 0 && (
                 <div className="flex flex-wrap gap-3 sm:gap-6 text-sm sm:text-base">
-                    {top3.map((item, index) => (
-                        <CardNao key={index} className="!p-4 sm:!p-5">
-                            <div className="flex items-center justify-between gap-2">
-                                <div className="flex items-center space-x-4">
-                                    <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
-                                        <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
-                                    </div>
-                                    <div className="sm:space-y-[2px] flex flex-col" style={{ wordBreak: 'break-word' }}>
-                                        <div className="flex items-center gap-2 text-lg font-semibold capitalize">
-                                            <span>{capitalize(item?.name)}</span>
-                                            {item?.is_onus_master && <TickFbIcon size={16} />}
-                                        </div>
-                                        <span className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">{item?.[userID]}</span>
-                                    </div>
-                                </div>
-                                <div className="text-5xl sm:text-6xl font-semibold pb-0 italic">{item?.[rank] > 0 ? `#${index + 1}` : '-'}</div>
-                            </div>
-                            <div className="h-0 w-full my-4"></div>
-                            <div className="flex flex-col mt-auto space-y-1 rounded-lg">
+                    {top3.map((item, index) => {
+                        const idTooltip = `${item?.code}_${item?.user_id}`;
+                        return (
+                            <CardNao key={index} className="!p-4 sm:!p-5">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
-                                    <span className="font-semibold">
-                                        {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                    </span>
+                                    <div className="flex items-center space-x-4">
+                                        <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
+                                            <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
+                                        </div>
+                                        <div className="sm:space-y-[2px] flex flex-col" style={{ wordBreak: 'break-word' }}>
+                                            <div className="flex items-center gap-2 text-lg font-semibold capitalize">
+                                                <span>{capitalize(item?.name)}</span>
+                                                {item?.is_onus_master && <TickFbIcon size={16} />}
+                                            </div>
+                                            <span className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">{item?.[userID]}</span>
+                                        </div>
+                                    </div>
+                                    <div className="text-5xl sm:text-6xl font-semibold pb-0 italic">{item?.[rank] > 0 ? `#${index + 1}` : '-'}</div>
                                 </div>
-                                <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</div>
-                                    <span className="font-semibold">
-                                        {formatNumber(item?.time, 2)} {t('common:hours')}
-                                    </span>
-                                </div>
-                                {tab === 'pnl' ? (
-                                    <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
-                                        <span className={`font-semibold ${getColor(item.pnl)}`}>
-                                            {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}
-                                            {formatNumber(item?.pnl, 2, 0, true)}%
+                                <div className="h-0 w-full my-4"></div>
+                                <div className="flex flex-col mt-auto space-y-1 rounded-lg">
+                                    <div className="flex items-center justify-between gap-2">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                            {t('nao:contest:volume')} {quoteAsset}
+                                        </div>
+                                        <span
+                                            data-tip=""
+                                            data-for={idTooltip}
+                                            className={classNames('font-semibold', {
+                                                'border-dashed border-b dark:border-gray-7 border-gray-1': converted_mass
+                                            })}
+                                        >
+                                            {formatNumber(item?.total_volume, 0)}
                                         </span>
                                     </div>
-                                ) : (
                                     <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_trades')}</div>
-                                        <span className={`font-semibold`}>{formatNumber(item?.total_order)}</span>
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</div>
+                                        <span className="font-semibold">
+                                            {formatNumber(item?.time, 2)} {t('common:hours')}
+                                        </span>
                                     </div>
-                                )}
-                            </div>
-                        </CardNao>
-                    ))}
+                                    {filter.type === 'pnl' ? (
+                                        <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
+                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
+                                            <span className={`font-semibold ${getColor(item.pnl_rate)}`}>
+                                                {item?.pnl_rate !== 0 && item?.pnl_rate > 0 ? '+' : ''}
+                                                {formatNumber(item?.pnl_rate, 2, 0, true)}%
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
+                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_trades')}</div>
+                                            <span className={`font-semibold`}>{formatNumber(item?.total_order)}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </CardNao>
+                        );
+                    })}
                 </div>
             )}
             {width <= 640 ? (
@@ -339,11 +356,11 @@ const ContestWeekRanks = ({
                                         </div>
                                         <div className="flex items-center justify-between pt-3">
                                             <label className="text-txtSecondary dark:text-txtSecondary-dark">
-                                                {t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
+                                                {t(`nao:contest:${filter.type === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
                                             </label>
-                                            {tab === 'pnl' ? (
-                                                <span className={`text-right ${getColor(item?.pnl)}`}>
-                                                    {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
+                                            {filter.type === 'pnl' ? (
+                                                <span className={`text-right ${getColor(item?.pnl_rate)}`}>
+                                                    {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl_rate, 2, 0, true)}%`}
                                                 </span>
                                             ) : (
                                                 <span className={`text-right`}>{formatNumber(item?.total_order)}</span>
@@ -381,7 +398,7 @@ const ContestWeekRanks = ({
                             minWidth={150}
                             align="right"
                             className=""
-                            title={`${t('nao:contest:volume')} (${quoteAsset})`}
+                            title={`${t('nao:contest:volume')} ${quoteAsset}`}
                             decimal={0}
                             fieldName="total_volume"
                         />
@@ -394,7 +411,7 @@ const ContestWeekRanks = ({
                             fieldName="time"
                             suffix={t('common:hours')}
                         />
-                        {tab === 'pnl' ? (
+                        {filter.type === 'pnl' ? (
                             <Column
                                 maxWidth={120}
                                 minWidth={100}

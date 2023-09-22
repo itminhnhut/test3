@@ -334,7 +334,8 @@ export const seasons = [
         top_ranks_per: 20,
         top_ranks_week: 20,
         top_ranks_team: 10,
-        lastUpdated: true
+        lastUpdated: true,
+        converted_mass: true
     }
 ];
 
