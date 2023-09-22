@@ -15,7 +15,7 @@ import NoData from 'components/common/V2/TableV2/NoData';
 import fetchAPI from 'utils/fetch-api';
 import { SUGGESTED_SYMBOLS } from '../FavoritePairs';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
-import { searchSort } from 'redux/actions/utils';
+import { convertSymbol, searchSort } from 'redux/actions/utils';
 import useDebounce from 'hooks/useDebounce';
 import { QUOTE_ASSET } from 'constants/constants';
 
@@ -53,9 +53,10 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         const { data } = await fetchAPI({
             url: API_GET_FUTURES_MARKET_WATCH
         });
+
         if (data) {
             const dataSource = pairConfigs.map((item) => {
-                let tickerDraw = data.find((rs) => rs.s === item.pair);
+                let tickerDraw = data.find((rs) => convertSymbol(rs.s) === convertSymbol(item.pair));
 
                 let ticker = tickerDraw;
                 if (tickerDraw) {
@@ -69,6 +70,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                     priceChangePercent: ticker?.priceChangePercent || 0
                 };
             });
+
             setDataTable(dataSource);
         }
     };

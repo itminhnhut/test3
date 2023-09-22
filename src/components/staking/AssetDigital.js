@@ -10,6 +10,7 @@ import { getS3Url } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 import { ASSET_DIGITAL } from 'constants/staking';
+import AssetLogo from 'components/wallet/AssetLogo';
 
 const AssetDigitalStaking = ({ isMobile }) => {
     const auth = useSelector((state) => state.auth?.user);
@@ -54,21 +55,23 @@ const AssetDigitalStaking = ({ isMobile }) => {
             return (
                 <section
                     key={`asset-digital-${item.title}`}
-                    className="h-full lg:h-[589px] w-full
+                    className="h-full lg:h-[463px] w-full
                     border-[1px] dark:border-[#222940] dark:bg-dark-4 bg-white border-[#dcdfe6] rounded-xl border-solid
-                    px-5 lg:px-[60px] py-10 lg:py-[80px] flex flex-col justify-center items-center
+                    px-5 py-10 flex flex-col justify-center items-center
                     first:mt-[88px] lg:first:mt-0
                     "
                 >
-                    <Image width={isMobile ? 80 : 120} height={isMobile ? 80 : 120} src={getS3Url(item.imgSrc)} />
-                    <div className="uppercase text-[20px] lg:text-3xl font-semibold text-green-2 mt-6 lg:mt-7">{item.title}</div>
+                    <div className="w-20 h-20 min-w-[80px] min-h-[80px]">
+                        <Image width={80} height={80} src={getS3Url(item.imgSrc)} />
+                    </div>
+                    <div className="uppercase text-xl lg:text-2xl font-semibold text-green-2 mt-6 lg:mt-7">{item.title}</div>
                     <div className="uppercase text-gray-15 dark:text-gray-4 mt-1 lg:mt-2 text-sm lg:text-base">{item.subText}</div>
                     <div
                         className="border-t border-divider dark:border-divider-dark
                             divide-y divide-divider dark:divide-divider-dark space-y-3 w-full my-5 lg:my-7"
                     />
                     <div className="text-gray-15 dark:text-gray-4 text-sm lg:text-base">{item.content[language]}</div>
-                    <div className="text-[20px] lg:text-3xl font-semibold text-green-2 mg-1 lg:mt-2 mb-6 lg:mb-10">{item.percent}%</div>
+                    <div className="text-xl lg:text-2xl font-semibold text-green-2 mg-1 lg:mt-2 mb-6 lg:mb-10">{item.percent}%</div>
                     {renderBtnAssetDigital(item)}
                 </section>
             );
@@ -77,7 +80,7 @@ const AssetDigitalStaking = ({ isMobile }) => {
 
     return (
         <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
-            <section className="flex flex-col gap-y-4 lg:gap-y-0 lg:flex-row lg:gap-[80px] justify-between px-0 lg:px-[108px] relative z-20">
+            <section className="flex flex-col gap-y-4 lg:gap-y-0 lg:flex-row lg:gap-[40px] justify-between px-0 lg:px-[58px] relative z-20">
                 {renderAssetDigital}
             </section>
         </section>

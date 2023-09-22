@@ -181,7 +181,7 @@ const APYInterestChart = ({ amount, currencyId, currencyDayInterest }) => {
     );
 
     const apyByMonth = useMemo(() => {
-        const allowAmount = amount > STAKING_RANGE[currencyId].max ? STAKING_RANGE[currencyId].max : amount;
+        const allowAmount = Math.min(STAKING_RANGE[currencyId].max, +amount);
         const month = hoverData.index + 1;
         return getApyByDay({ allowAmount, amount, percentPerDay: currencyDayInterest, numberOfDays: MONTHS_TO_DAYS[month] || month * 30 });
     }, [hoverData.index, currencyDayInterest, currencyId, amount]);

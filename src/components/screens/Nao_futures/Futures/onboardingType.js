@@ -7,6 +7,7 @@ export const PromotionName = {
     ONBOARDING_5USDT: 'ONBOARDING_5USDT',
     ONBOARDING_10K: 'ONBOARDING_10K',
     ONBOARDING_100K: 'ONBOARDING_100K',
+    ONBOARDING_20K: 'ONBOARDING_20K',
 }
 
 export const PromotionStatus = {

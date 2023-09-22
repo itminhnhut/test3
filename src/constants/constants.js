@@ -282,7 +282,7 @@ export const INSURANCE_STATE = {
 };
 
 export const QUOTE_ASSET = {
-    USDT: 22,
+    VNST: 39,
     VNDC: 72,
-    VNST: 39
+    USDT: 22,
 }

@@ -29,7 +29,6 @@ const InterestEstimate = ({ assetId }) => {
     }, [assetConfigs, assetId]);
 
     const userTotalBalance = ALLOW_WALLETS.reduce((totalBalance, walletType) => (totalBalance += allWallet?.[walletType]?.[asset?.id]?.value ?? 0), 0);
-    console.log(' asset?.assetDigit:', asset?.assetDigit);
 
     const renderAvailableBalance = useCallback(
         () => (
@@ -37,7 +36,7 @@ const InterestEstimate = ({ assetId }) => {
                 <Tooltip place="top" className={`max-w-[360px] !px-6 !py-3`} effect="solid" isV3 id="balance_description">
                     <div className="max-w-[300px] text-sm z-50">{t('staking:statics.interest.balance_description')}</div>
                 </Tooltip>
-                <div className="text-txtSecondary dark:text-txtSecondary-dark flex items-center space-x-3 mb-[50px]">
+                <div className="text-txtSecondary dark:text-txtSecondary-dark flex items-center space-x-3 mb-6 md:mb-[50px] md:text-base text-sm">
                     <div className="nami-underline-dotted" data-tip="" data-for="balance_description">
                         {t('staking:statics.interest.balance')}
                     </div>
@@ -48,14 +47,16 @@ const InterestEstimate = ({ assetId }) => {
                 </div>
                 <div className="flex flex-wrap items-end justify-between">
                     <div className="flex md:mb-0 mb-6 items-center space-x-6">
-                        <div className="p-[14px] flex-1 flex items-center justify-center rounded-full bg-gray-13 dark:bg-dark-2">
-                            <Image src={getS3Url('/images/staking/ic_staking.png')} width={36} height={36} />
+                        <div className="min-w-[48px] min-h-[48px] w-12 h-12 md:w-16 md:h-16  flex-1 flex items-center justify-center rounded-full bg-gray-13 dark:bg-dark-2">
+                            <div className=" w-6 h-6 md:w-9 flex items-center justify-center md:h-9">
+                                <Image src={getS3Url('/images/staking/ic_staking.png')} width={36} height={36} />
+                            </div>
                         </div>
                         <div className="space-y-1 ">
-                            <div className="text-4xl font-semibold">
+                            <div className="text-xl md:text-4xl break-words font-semibold">
                                 {isHideBalance ? SECRET_STRING : formatBalance(userTotalBalance, asset?.assetDigit)} {asset?.assetCode}
                             </div>
-                            <div>
+                            <div className="md:text-base text-sm">
                                 {t('staking:statics.interest.apy_interest')}{' '}
                                 <span className="text-green-3 dark:text-green-2 font-semibold">{APY_PERCENT[asset?.assetCode]}%</span>
                             </div>
@@ -63,7 +64,7 @@ const InterestEstimate = ({ assetId }) => {
                     </div>
                     <div className="w-full md:w-auto">
                         <Link className="w-full" href={`${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=BUY&assetId=${asset?.assetCode || 'VNDC'}`}>
-                            <ButtonV2 className="md:w-[120px]">{t('staking:statics.interest.deposit_now')}</ButtonV2>
+                            <ButtonV2 className="md:w-[120px] !text-sm md:!text-base">{t('staking:statics.interest.deposit_now')}</ButtonV2>
                         </Link>
                     </div>
                 </div>
@@ -73,30 +74,36 @@ const InterestEstimate = ({ assetId }) => {
     );
 
     const renderInterestCard = useCallback(
-        ({ numberOfDays, title, type = 'dayInterestPercent' }) => {
-            const allowAmount = userTotalBalance > STAKING_RANGE[asset?.id]?.max ? STAKING_RANGE[asset?.id]?.max : userTotalBalance;
+        ({ numberOfDays, title1, title2, type = 'dayInterestPercent' }) => {
+            const allowAmount = Math.min(+userTotalBalance, STAKING_RANGE[asset?.id]?.max);
             const dayInterestPercent = getDayInterestPercent(APY_PERCENT[asset?.assetCode]);
             return (
                 <Card className="md:!px-8 !py-6">
-                    <div className="mb-4 text-txtSecondary dark:text-txtSecondary-dark">
-                        {title}
-                        <span className="text-green-3 dark:text-green-2 font-semibold ml-2">
+                    <div className="mb-2 md:mb-4 flex items-center justify-between">
+                        <span className="text-txtSecondary text-sm md:text-base dark:text-txtSecondary-dark">{title1}</span>
+                        <span className="text-green-3 dark:text-green-2 font-semibold ml-2 md:text-lg">
                             {type === 'dayInterestPercent' ? dayInterestPercent : type === 'yearInterestPercent' ? APY_PERCENT[asset?.assetCode] : ''}%
                         </span>
                     </div>
-                    <div className="text-2xl font-semibold">
-                        {isHideBalance
-                            ? SECRET_STRING
-                            : formatBalance(
-                                  getApyByDay({
-                                      allowAmount,
-                                      amount: userTotalBalance,
-                                      numberOfDays: numberOfDays,
-                                      percentPerDay: dayInterestPercent
-                                  })?.interestAmount,
-                                  asset?.assetDigit
-                              )}
-                        <span className="ml-1">{asset?.assetCode}</span>
+                    <div className="flex items-center justify-between">
+                        <span className="text-txtSecondary text-sm md:text-base dark:text-txtSecondary-dark">{title2}</span>
+                        <div className="flex items-center md:text-lg font-semibold ">
+                            <span>
+                                {isHideBalance
+                                    ? SECRET_STRING
+                                    : formatBalance(
+                                          getApyByDay({
+                                              allowAmount,
+                                              amount: userTotalBalance,
+                                              numberOfDays: numberOfDays,
+                                              percentPerDay: dayInterestPercent
+                                          })?.interestAmount,
+                                          asset?.assetDigit
+                                      )}
+                            </span>
+
+                            <span className="ml-1">{asset?.assetCode}</span>
+                        </div>
                     </div>
                 </Card>
             );
@@ -110,14 +117,16 @@ const InterestEstimate = ({ assetId }) => {
                 {renderInterestCard({
                     numberOfDays: 1,
                     type: 'dayInterestPercent',
-                    title: t('staking:statics.interest.daily_interest')
+                    title1: t('staking:statics.interest.daily_interest_rate'),
+                    title2: t('staking:statics.interest.daily_interest')
                 })}
             </div>
             <div className="w-full md:w-1/2 p-3">
                 {renderInterestCard({
                     numberOfDays: 365,
                     type: 'yearInterestPercent',
-                    title: t('staking:statics.interest.annual_interest')
+                    title1: t('staking:statics.interest.annual_interest_rate'),
+                    title2: t('staking:statics.interest.annual_interest')
                 })}
             </div>
         </div>

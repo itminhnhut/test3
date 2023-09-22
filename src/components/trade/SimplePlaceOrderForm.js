@@ -24,8 +24,9 @@ let initPrice = '';
 
 const fee = 1.001;
 
-const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
-    const { base, quote } = symbol;
+const SimplePlaceOrderForm = ({ symbol, orderBook, exchangeConfig }) => {
+    const base = exchangeConfig?.baseAsset;
+    const quote = exchangeConfig?.quoteAsset;
     const { t } = useTranslation();
     const QuantityMode = [
         {
@@ -54,7 +55,6 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     const [sellPrice, setSellPrice] = useState();
     // const [initialPrice, setInitialPrice] = useState();
     const [symbolTicker, setSymbolTicker] = useState(null);
-    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
 
     const unitConfig = useSelector((state) => getUnit(state, quote));
     const [isUseQuoteQuantity, setIsUseQuoteQuantity] = useState(false);
@@ -87,7 +87,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
 
     useAsync(async () => {
         if (symbol) {
-            const newSymbolTicker = await getMarketWatch(getSymbolString(symbol));
+            const newSymbolTicker = await getMarketWatch(symbol);
             setSymbolTicker(newSymbolTicker?.[0]);
         }
     }, [symbol]);
@@ -100,14 +100,14 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         Emitter.on(PublicSocketEvent.SPOT_TICKER_UPDATE, async (data) => {
             setSymbolTicker(data);
         });
-        return function cleanup() {
-            Emitter.off(PublicSocketEvent.SPOT_TICKER_UPDATE);
-        };
+        // return function cleanup() {
+        //     Emitter.off(PublicSocketEvent.SPOT_TICKER_UPDATE);
+        // };
     }, [Emitter]);
 
     useEffect(() => {
-        if (initPrice !== symbolTicker?.b) {
-            initPrice = symbolTicker?.b;
+        if (initPrice !== symbolTicker?.s) {
+            initPrice = symbolTicker?.s;
             setBuyPrice(+symbolTicker?.p);
             setSellPrice(+symbolTicker?.p);
             setBuyQuantity('');
@@ -142,7 +142,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         }
     }, [orderBook]);
 
-    const currentExchangeConfig = exchangeConfig.find((e) => e.symbol === getSymbolString(symbol));
+    const currentExchangeConfig = exchangeConfig;
     const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, currentExchangeConfig || []);
     const quantityFilter = getFilter(ExchangeOrderEnum.Filter.LOT_SIZE, currentExchangeConfig || []);
     const minNotionalFilter = getFilter(ExchangeOrderEnum.Filter.MIN_NOTIONAL, currentExchangeConfig || []);
@@ -646,7 +646,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                 onClick={() => !disabled && confirmModal(_orderSide)}
                 disabled={disabled}
                 loading={placing && side.current === _orderSide}
-                className={_orderSide === ExchangeOrderEnum.Side.BUY ? 'bg-teal' : '!bg-red'}
+                variants={_orderSide === ExchangeOrderEnum.Side.SELL ? 'red' : 'primary'}
             >
                 {t(_orderSide)} {base}
             </ButtonV2>

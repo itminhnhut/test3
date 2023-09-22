@@ -6,20 +6,26 @@ import { useSelector } from 'react-redux';
 import Header from 'components/staking/statistic/Header';
 import TabV2 from 'components/common/V2/TabV2';
 import Spinner from 'components/svg/Spinner';
+import DefaultMobileView from 'components/common/DefaultMobileView';
+import { useWindowSize } from 'utils/customHooks';
 
 const InterestEstimate = dynamic(() => import('components/staking/statistic/InterestEstimate', { ssr: false }));
 const NotAuth = dynamic(() => import('components/staking/statistic/NotAuth', { ssr: false }));
 const HistoryStaking = dynamic(() => import('components/staking/statistic/History', { ssr: false }));
 
 export const ASSET = {
+    VNST: 39,
     VNDC: 72,
     USDT: 22
 };
 const ASSET_TABS = Object.keys(ASSET).map((assetCode) => ({ children: assetCode, key: ASSET[assetCode] }));
 
 const index = () => {
-    const [assetId, setAssetId] = useState(ASSET.VNDC);
+    const [assetId, setAssetId] = useState(ASSET.VNST);
     const { loadingUser, user: isAuth } = useSelector((state) => state.auth);
+
+    const { width } = useWindowSize();
+    const isMobile = width < 830;
 
     const toggleAsset = (newAssetId) => setAssetId(newAssetId);
 
@@ -45,13 +51,17 @@ const index = () => {
     }, [assetId, loadingUser, isAuth]);
 
     return (
-        <MaldivesLayout>
-            <main className="bg-gray-13 dark:bg-shadow">
-                <div className="max-w-screen-v3 2xl:max-w-screen-xxl pt-20 pb-[120px] mx-auto px-4 md:px-0">
-                    <Header />
-                    {renderPage()}
-                </div>
-            </main>
+        <MaldivesLayout hideFooter={isMobile ? true : false}>
+            {isMobile ? (
+                <DefaultMobileView />
+            ) : (
+                <main className="bg-gray-13 dark:bg-shadow">
+                    <div className="max-w-screen-v3 2xl:max-w-screen-xxl pt-20 pb-[120px] mx-auto v3:px-0 px-4">
+                        <Header />
+                        {renderPage()}
+                    </div>
+                </main>
+            )}
         </MaldivesLayout>
     );
 };

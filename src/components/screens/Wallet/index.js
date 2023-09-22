@@ -116,7 +116,7 @@ const Wallet = () => {
             const _wallet =
                 walletType === WalletType.SPOT
                     ? assetConfig.filter((o) => o.walletTypes?.[walletType])
-                    : assetConfig.filter((o) => ['VNDC', 'NAMI', 'NAC', 'USDT'].includes(o?.assetCode));
+                    : assetConfig.filter((o) => ['VNDC', 'NAMI', 'NAC', 'USDT', 'VNST'].includes(o?.assetCode));
             _wallet &&
                 _wallet.forEach((item) => {
                     const originWallet = allWallet?.[item.id];
@@ -179,8 +179,10 @@ const Wallet = () => {
 
     const reNewUsdRate = async () => {
         const usdRate = await getUsdRate();
-        console.log('usdRate:', usdRate)
-        usdRate && setState({ usdRate });
+        if (usdRate) {
+            usdRate[39] = usdRate[72]
+            setState({ usdRate });
+        }
     };
 
     const { width } = useWindowSize();

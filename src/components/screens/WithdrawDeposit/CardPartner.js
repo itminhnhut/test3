@@ -69,9 +69,9 @@ const CardPartner = () => {
         []
     );
 
-    let canSubmit = true;
+    let cannotSubmit = false;
     if (!isAutoSuggest) {
-        canSubmit === !partner || loadingPartner || (!partnerBank && side === SIDE.BUY);
+        cannotSubmit = !Boolean(partner) || loadingPartner || (!Boolean(partnerBank) && side === SIDE.BUY);
     }
 
     return (
@@ -147,7 +147,7 @@ const CardPartner = () => {
                     </div>
                 </div>
 
-                <ButtonBuySell canSubmit={canSubmit} />
+                <ButtonBuySell cannotSubmit={cannotSubmit} />
             </Card>
             <ModalBankDefault
                 banks={sortBy(accountBanks || [], [(o) => -o.isDefault])}

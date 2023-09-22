@@ -42,7 +42,7 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
             .catch((err) => console.error(err));
     }, [typeCurrency]);
 
-    const precision = typeCurrency === ALLOWED_ASSET_ID.USDT ? 4 : 0
+    const precision = typeCurrency === ALLOWED_ASSET_ID.USDT ? 4 : 0;
 
     const [dataDw, setDataDw] = useState({ totalWithdraw: null, totalDeposit: null });
     const [loadingDataDW, setLoadingDataDW] = useState(false);
@@ -80,11 +80,7 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
             <div className={isMobile ? 'p-4 text-gray-1 dark:text-gray-7 rounded-xl bg-gray-13 dark:bg-dark-4' : 'pt-4'}>
                 <span>{t('transaction-history:modal_detail.volume')}</span>
                 <div className="text-base md:text-2xl font-semibold text-gray-15 dark:text-gray-4 mt-2 md:mt-4">
-                    {loadingOverview ? (
-                        <Skeletor width={isMobile ? 80 : 150} height={20} />
-                    ) : (
-                        formatNanNumber(totalVolume, precision)
-                    )}
+                    {loadingOverview ? <Skeletor width={isMobile ? 80 : 150} height={20} /> : formatNanNumber(totalVolume, precision)}
                 </div>
                 <div className="mt-1 md:mt-2">{loadingOverview ? <Skeletor width={isMobile ? 60 : 150} height={12} /> : swapValue}</div>
             </div>
@@ -244,13 +240,6 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
                         </CardFill>
                         <CardFill className={'flex-auto'}>{renderOtherSummary()}</CardFill>
                     </div>
-                    {/* <div className=" text-gray-1 dark:text-gray-7 mt-8 rounded-xl flex px-6 py-3 bg-gray-13 dark:bg-dark-4">
-                        {renderSumVolumns()}
-                        <div className="vertical-divider"></div>
-                        {renderSumPnl()}
-                        <div className="vertical-divider"></div>
-                        {renderOtherSummary()}
-                    </div> */}
                 </>
             )}
             <ModalShare
@@ -259,8 +248,6 @@ const FeaturedStats = ({ className, isMobile, dataOverview, loadingOverview, typ
                 onBackdropCb={() => setOpenModalShare(null)}
                 totalPnl={dataOverview?.totalPnl?.value}
                 totalMargin={dataOverview?.totalMargin?.value}
-                // totalPnl={123}
-                // totalMargin={100000}
                 typeCurrency={typeCurrency}
                 timeFilter={timeFilter}
                 firstTimeTrade={firstTimeTrade}
@@ -285,16 +272,6 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
     const [isShowTotalPnl, setIsShowTotalPnl] = useState(true);
     const [isShowRate, setIsShowRate] = useState(true);
     const [loading, setLoading] = useState(false);
-
-    // const list = [
-    //     { name: t('common:save'), icon: <SaveAltIcon size={28} />, event: 'save' },
-    //     { name: 'Facebook', icon: <FacebookIcon size={28} />, event: 'facebook' },
-    //     { name: 'Twitter', icon: <TwitterIcon size={28} />, event: 'twitter' },
-    //     { name: 'Telegram', icon: <TelegramIcon size={28} />, event: 'telegram' },
-    //     { name: 'Reddit', icon: <RedditIcon size={28} />, event: 'reddit' },
-    //     { name: 'LinkedIn', icon: <LinkedInIcon size={28} />, event: 'linkedIn' },
-    //     { name: 'Discord', icon: <DiscordIcon size={28} />, event: 'linkedIn' }
-    // ];
 
     const saveFile = (file, name) => {
         const a = document.createElement('a');
@@ -337,7 +314,6 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
             <ModalV2
                 loading={loading}
                 isVisible={isVisible}
-                // isVisible={true}
                 onBackdropCb={onBackdropCb}
                 className={`${!isMobile && '!max-w-[488px] !min-w-[488px] '} !dark:bg-dark-4`}
                 wrapClassName={!isMobile && 'dark:!bg-dark-4'}
@@ -371,7 +347,7 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                                 className="mr-12"
                                 boxContainerClassName="w-4 h-4"
                                 labelClassName="tracking-normal text-gray-15 dark:text-gray-4"
-                                label={t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? 'VNDC' : 'USDT' })}
+                                label={t('portfolio:cumulative_pnl', { asset: ALLOWED_ASSET?.[typeCurrency] })}
                                 onChange={() => setIsShowTotalPnl((prev) => !prev)}
                                 active={isShowTotalPnl}
                                 sizeCheckIcon={12}
@@ -416,7 +392,7 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                                     className="mr-12"
                                     boxContainerClassName="w-5 h-5"
                                     labelClassName="tracking-normal text-gray-15 dark:text-gray-4 !text-base"
-                                    label={t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? 'VNDC' : 'USDT' })}
+                                    label={t('portfolio:cumulative_pnl', { asset: ALLOWED_ASSET?.[typeCurrency] })}
                                     onChange={() => setIsShowTotalPnl((prev) => !prev)}
                                     active={isShowTotalPnl}
                                     sizeCheckIcon={20}
@@ -433,20 +409,6 @@ const ModalShare = ({ isVisible, onBackdropCb, totalPnl, totalMargin, typeCurren
                             <ButtonV2 className="mt-10" onClick={onDownLoad}>
                                 {t('common:save')}
                             </ButtonV2>
-
-                            {/* <div className="mt-10 text-2xl font-semibold">{t('common:luckydraw.share')}</div>
-                            <div className="flex items-center justify-start flex-wrap gap-4 mt-6">
-                                {list.map((item, key) => (
-                                    <div
-                                        onClick={() => handleShareAction(item.event)}
-                                        key={key}
-                                        className="first:cursor-pointer flex flex-col items-center min-w-[58px]"
-                                    >
-                                        <CardFill className="!p-2 !rounded-md">{item.icon}</CardFill>
-                                        <span className="mt-2 text-xs text-txtSecondary dark:text-txtSecondary-dark">{item.name}</span>
-                                    </div>
-                                ))}
-                            </div> */}
                         </div>
                     </div>
                 )}
@@ -492,7 +454,7 @@ const ImageShare = ({
                 </div>
                 <div className={`h-11 w-full flex items-center justify-center transition-all duration-75`}>
                     <div className={`${!isShowTotalPnl && 'hidden'} flex flex-col items-center justify-center`}>
-                        <div>{t('portfolio:cumulative_pnl', { asset: typeCurrency === 72 ? 'VNDC' : 'USDT' })}</div>
+                        <div>{t('portfolio:cumulative_pnl', { asset: ALLOWED_ASSET?.[typeCurrency] })}</div>
                         <div className="text-gray-4 text-sm font-semibold">
                             {!negative && '+'}
                             {formatNanNumber(totalPnl, typeCurrency === ALLOWED_ASSET_ID.USDT ? 4 : 0)}

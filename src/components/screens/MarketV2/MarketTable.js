@@ -127,6 +127,7 @@ const MarketTable = ({
     // Render Handler
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
+            // if (subTab[restProps.subTabIndex].key === 'vnst' && item.key === 'exchange') return null // vnst chua co exchange
             const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null
             return (
                 <div
@@ -154,7 +155,7 @@ const MarketTable = ({
                         <div className="absolute left-1/2 bottom-0 w-[40px] h-[2px] bg-dominant -translate-x-1/2" />}
                 </div>);
         });
-    }, [currentTheme, restProps.tabIndex, restProps.tabLabelCount]);
+    }, [currentTheme, restProps.tabIndex, restProps.tabLabelCount, restProps.subTabIndex]);
 
     const renderSubTab = useCallback(() => {
         return subTab.map((item, index) => {
@@ -167,7 +168,7 @@ const MarketTable = ({
                     className={classNames('h-[44px] flex items-center text-sm sm:text-base px-4 cursor-pointer select-none', {
                         'font-semibold dark:text-txtPrimary-dark text-txtPrimary bg-bgSegmentActive dark:bg-bgSegmentActive-dark': restProps.subTabIndex === index,
                         'font-normal bg-bgSegmentInactive dark:bg-bgSegmentInactive-dark dark:text-txtSecondary-dark text-txtSecondary': restProps.subTabIndex !== index,
-                        'border-r border-divider dark:border-divider-dark': index === 0
+                        'border-r border-divider dark:border-divider-dark': (index + 1) !== subTab.length
                     })}
                 >
                     {item.localized ? t(item.localized) : <span className="uppercase">{item.key}</span>}
@@ -252,7 +253,7 @@ const MarketTable = ({
         const translater = (key) => {
             switch (key) {
                 case 'pair':
-                    return <span className='pl-10 sm:pl-14'>{language === 'vi' ? 'Cặp' : 'Pair'}</span>;
+                    return <span className=''>{language === 'vi' ? 'Cặp' : 'Pair'}</span>;
                 case 'last_price':
                     return language === 'vi' ? 'Giá gần nhất' : 'Last Price';
                 case 'change_24h':
@@ -319,7 +320,7 @@ const MarketTable = ({
                     {dataSource.slice(0, mobileLimit).map((e, index) => {
                         const basedata = data?.[index]
                         return (
-                            <div className={classNames('w-full flex flex-1 justify-between items-center font-normal text-xs gap-2', { '': index !== 0, '': index === 0 })}>
+                            <div key={e.pair} className={classNames('w-full flex flex-1 justify-between items-center font-normal text-xs gap-2', { '': index !== 0, '': index === 0 })}>
                                 <div className='w-full flex flex-col justify-center items-start'>
                                     {index === 0 ? <div className='mb-4'>{translater('pair')} / {translater('volume_24h')} </div> : null}
                                     <div className='flex h-[64px] items-center gap-4'>
@@ -536,12 +537,12 @@ const MarketTable = ({
                     {t('common:market')}
                 </div>
                 <div
-                    className="flex flex-row-reverse sm:flex-row items-center sm:space-x-4 justify-between sm:justify-end">
+                    className="flex flex-col-reverse sm:flex-row items-end sm:items-center sm:space-x-4 sm:justify-end gap-4 sm:gap-0">
                     <div
                         className="flex items-center border border-divider dark:border-divider-dark overflow-hidden rounded-md">
                         {renderSubTab()}
                     </div>
-                    <div className="w-[calc(100vw-196px)] sm:w-[368px]">
+                    <div className="w-full sm:w-[368px]">
                         <InputV2
                             value={restProps.search}
                             onChange={(value) => parentState({ search: value, type: 0 })}

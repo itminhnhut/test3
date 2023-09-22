@@ -265,8 +265,8 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                 onMouseOver={() => {
                     !isShowModalInfo && setActivePairList(true);
                 }}
-                onMouseLeave={() => setActivePairList(false)}
-                onBlur={() => setActivePairList(false)}
+                onMouseLeave={() => activePairList && setActivePairList(false)}
+                // onBlur={() => setActivePairList(false)}
             >
                 <div className="relative z-10 flex items-center gap-1">
                     <span className="text-[22px] font-semibold leading-[30px]">
@@ -340,6 +340,8 @@ const ModalPerpetual = ({ isShowModalInfo, onBackdropCb, t, symbol, pairListMode
     const assetToken = useSelector((state) => getAssetConfig(state, pairConfig?.quoteAssetId));
     const pairPrice = useSelector((state) => getMarketWatch(state, convertSymbol(curConfigPair)));
     const timesync = useSelector((state) => state.utils.timesync);
+
+    useEffect(() => {setCurConfigPair(symbol)}, [symbol])
 
     const decimals = useMemo(() => {
         return {

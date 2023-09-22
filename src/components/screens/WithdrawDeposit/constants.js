@@ -5,9 +5,19 @@ import { PATHS } from 'constants/paths';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { Trans } from 'next-i18next';
+import { roundByExactDigit } from 'redux/actions/utils';
 
 // time in seconds
 export const REPORT_ABLE_TIME = 5 * 60 * 1000;
+
+export const MIN_TIP = 2000;
+
+export const VNST_MIN_TIP_RANGE = {
+    min: 2e3, // 2,000
+    max: 20e3 // 20,000
+};
+
+export const FEE_PERCENT = 0.02 / 100; // 0.02%
 
 export const DisputedType = {
     REJECTED: 1,
@@ -326,3 +336,15 @@ export const statusFilter = [
         localized: 'common:disputing'
     }
 ];
+
+export const getMinFee = ({ amount, assetId }) => {
+    const isVnst = +assetId === ALLOWED_ASSET_ID['VNST'];
+
+    if (isVnst) {
+        // VNST fee = [2k -> 20k]
+        const minFee = +amount * FEE_PERCENT;
+        return roundByExactDigit(Math.min(Math.max(VNST_MIN_TIP_RANGE.min, minFee), VNST_MIN_TIP_RANGE.max), 0);
+    }
+
+    return MIN_TIP;
+};

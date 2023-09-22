@@ -46,7 +46,7 @@ export default ({ className, typeCurrency, setTypeCurrency, isMobile }) => {
             {Object.keys(ALLOWED_ASSET_ID).map((assetCode) => (
                 <button
                     onClick={() => setTypeCurrency(ALLOWED_ASSET_ID?.[assetCode])}
-                    className={`border border-divider dark:border-divider-dark first:rounded-l-md last:rounded-r-md px-4 md:px-9 py-2 md:py-3 ${
+                    className={`border border-divider dark:border-divider-dark first:rounded-l-md last:rounded-r-md px-4 py-3 ${
                         typeCurrency === ALLOWED_ASSET_ID?.[assetCode] ? 'font-semibold bg-gray-12 dark:bg-dark-2 ' : 'text-gray-7 border-r-none'
                     }`}
                 >

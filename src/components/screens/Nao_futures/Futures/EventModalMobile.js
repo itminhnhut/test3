@@ -11,6 +11,7 @@ import { Errors, PromotionStatus, PromotionName } from 'components/screens/Nao_f
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { useRef } from 'react';
 import { useWindowSize } from 'utils/customHooks';
+import { CURRENCY } from 'constants/constants';
 
 const EventModalMobile = ({ visible, onClose, campaign }) => {
     const {
@@ -49,7 +50,10 @@ const EventModalMobile = ({ visible, onClose, campaign }) => {
             });
             if (status === ApiStatus.SUCCESS && data) {
                 if (data?.status === PromotionStatus.CLAIMED) {
-                    const quoteAsset = data.promotion_name === PromotionName.ONBOARDING_5USDT ? 'USDT' : 'VNDC';
+                    const quoteAsset = Object.keys(CURRENCY).reduce((acc, val) => {
+                        if (CURRENCY[val] === (data?.currency || campaign?.[0]?.currency)) acc = val;
+                        return acc;
+                    }, 'VNDC');
                     context.alert.show(
                         'success',
                         t('futures:mobile:title_on_boarding'),
@@ -91,7 +95,7 @@ const EventModalMobile = ({ visible, onClose, campaign }) => {
 const Background = styled.div.attrs({
     className: 'h-full w-full !rounded-[20px] select-none p-6 flex items-end'
 })`
-    background-image: ${({ language, xs }) => `url(${getS3Url(`/images/screen/futures/onboarding/bg_event_100k${xs ? '_xs' : ''}_${language}_v2.png`)})`};
+    background-image: ${({ language, xs }) => `url(${getS3Url(`/images/screen/futures/onboarding/bg_event_20k${xs ? '_xs' : ''}_${language}.png`)})`};
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
