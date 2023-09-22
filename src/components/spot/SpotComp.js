@@ -41,7 +41,7 @@ const SpotComp = () => {
     const [layoutMode, setLayoutMode] = useState(() => (layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE));
     const [symbol, setSymbol] = useState(symbolFromUrl);
     const exchangeConfig = useSelector((state) => getPairConfigSpot(state, getSymbolString(symbol)));
-    const formatSymbol = exchangeConfig?.liquidityBroker === 'BINANCE_SPOT' ? convertSymbol(getSymbolString(symbol)) : getSymbolString(symbol);
+    const formatSymbol = getSymbolString(symbol)
     const isPro = layoutMode === SPOT_LAYOUT_MODE.PRO;
 
     // compact state

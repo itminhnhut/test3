@@ -274,7 +274,7 @@ const Market = () => {
             } else if (subTab[state.subTabIndex].key === 'usdt' && state.exchangeMarket) {
                 watch = state.exchangeMarket.filter(e => e.q === 'USDT')
             } else {
-                watch = []
+                watch = state.exchangeMarket.filter(e => e.q === 'VNST')
             }
         }
 
