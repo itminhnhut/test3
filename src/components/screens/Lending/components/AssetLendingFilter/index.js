@@ -29,7 +29,8 @@ const AssetLendingFilter = ({
     wrapperClassName = '',
     labelClassName = '',
     containerClassName = '',
-    labelAsset = ''
+    labelAsset = '',
+    data = []
 }) => {
     const { t } = useTranslation();
 
@@ -43,13 +44,13 @@ const AssetLendingFilter = ({
 
     // ** useMemo
     const filterAssets = useMemo(() => {
-        const rs = sortBy(filterSearch(assetConfigs, ['assetCode', 'assetName'], search), [
+        const rs = sortBy(filterSearch(data, ['assetCode', 'assetName'], search), [
             function (asset) {
                 return asset?.assetCode;
             }
         ]).filter((f) => f.id !== assetCode);
         return rs;
-    }, [assetConfigs, search, assetCode]);
+    }, [data, search, assetCode]);
 
     // ** render
     const rowRenderer = useCallback(
@@ -134,9 +135,9 @@ const AssetLendingFilter = ({
                 ) : (
                     <>
                         <div className="dark:!text-gray-4 !text-gray-15 !text-base font-semibold px-4 mb-4">Tìm kiếm gần đây</div>
-                        <List width={400} height={280} rowCount={filterAssets.length} rowHeight={60} rowRenderer={rowRenderer} />
+                        <List width={400} height={180} rowCount={filterAssets.length} rowHeight={60} rowRenderer={rowRenderer} />
                         <div className="dark:!text-gray-4 !text-gray-15 !text-base font-semibold px-4 my-4">Danh sách tài sản ký quỹ</div>
-                        <List width={400} height={280} rowCount={filterAssets.length} rowHeight={60} rowRenderer={rowRenderer} />
+                        <List width={400} height={180} rowCount={filterAssets.length} rowHeight={60} rowRenderer={rowRenderer} />
                     </>
                 )}
             </PopoverSelect>

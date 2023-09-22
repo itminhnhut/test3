@@ -103,4 +103,26 @@ const STATUS_EN = [
     { title: 'Lệnh đã thanh toán', value: '2' }
 ];
 
-export { FAQ, TABS, BORROWING_TERM, PROFITS, LTV, HISTORY_TAB, STATUS_VI, STATUS_EN };
+const LOANABLE = 'loanable';
+const COLLATERAL = 'collateral';
+const DEFAULT_LOANABLE_ASSET = 'VNST';
+const DEFAULT_COLLATERAL_ASSET = 'BNB';
+const ALLOW_LTV_TOOLTIP = ['ltv_initial', 'ltv_margin', 'ltv_liquidate'];
+const PERCENT = 100;
+
+export {
+    FAQ,
+    LTV,
+    TABS,
+    PERCENT,
+    PROFITS,
+    LOANABLE,
+    STATUS_VI,
+    STATUS_EN,
+    COLLATERAL,
+    HISTORY_TAB,
+    BORROWING_TERM,
+    ALLOW_LTV_TOOLTIP,
+    DEFAULT_LOANABLE_ASSET,
+    DEFAULT_COLLATERAL_ASSET
+};

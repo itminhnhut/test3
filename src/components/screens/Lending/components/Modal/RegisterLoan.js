@@ -1,14 +1,16 @@
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState, useMemo, useEffect } from 'react';
 
-// ** next
+// ** Next
 import dynamic from 'next/dynamic';
 import { useTranslation, Trans } from 'next-i18next';
 
+// * Context
+import { useLoanableList, useCollateralList } from 'components/screens/Lending/Context';
+
 // ** Redux
 import { WalletType } from 'redux/actions/const';
-import { setTransferModal } from 'redux/actions/utils';
 import { useSelector, useDispatch } from 'react-redux';
-import { formatNumber } from 'redux/actions/utils';
+import { formatNumber, setTransferModal } from 'redux/actions/utils';
 
 //** components
 import Chip from 'components/common/V2/Chip';
@@ -30,7 +32,20 @@ const ConfirmLoan = dynamic(() => import('./ConfirmLoan'), { ssr: false });
 const AssetLendingFilter = dynamic(() => import('components/screens/Lending/components/AssetLendingFilter'), { ssr: false });
 
 // ** CONSTANTS
-import { BORROWING_TERM, PROFITS, LTV } from 'components/screens/Lending/constants';
+import {
+    LTV,
+    PROFITS,
+    PERCENT,
+    LOANABLE,
+    COLLATERAL,
+    BORROWING_TERM,
+    ALLOW_LTV_TOOLTIP,
+    DEFAULT_LOANABLE_ASSET,
+    DEFAULT_COLLATERAL_ASSET
+} from 'components/screens/Lending/constants';
+
+// loanable: { assetCode: 'VNST', assetName: 'VNST', id: 39 },
+// collateral: { assetCode: 'BNB', assetName: 'BNB', id: 40 }
 
 // ** INIT DATA
 const INIT_DATA = {
@@ -38,12 +53,11 @@ const INIT_DATA = {
     rule: false,
     isConfirm: false,
     filter: {
-        lendingAsset: { assetCode: 'VNST', assetName: 'VNST', id: 39 },
-        lendingMargin: { assetCode: 'BNB', assetName: 'BNB', id: 40 }
-    }
+        loanable: {},
+        collateral: {}
+    },
+    selectLoanAsset: { loanable: [], collateral: [] }
 };
-
-const ALLOW_LTV_TOOLTIP = ['ltv_initial', 'ltv_margin', 'ltv_liquidate'];
 
 const ModalRegisterLoan = ({ isModal, onClose }) => {
     const {
@@ -51,13 +65,27 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
         i18n: { language }
     } = useTranslation();
 
+    // ** useRedux
     const dispatch = useDispatch();
 
+    const wallets = useSelector((state) => state.wallet.SPOT);
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
+
+    // ** useContext
+    const { loanCoin, loanable } = useLoanableList();
+    const { collateralCoin, collateral } = useCollateralList();
+
     // ** useState
-    const [borrowingTerm, setBorrowingTerm] = useState(INIT_DATA.borrowing_term);
     const [rule, setRule] = useState(INIT_DATA.rule);
-    const [isConfirm, setIsConfirm] = useState(INIT_DATA.false);
     const [filter, setFilter] = useState(INIT_DATA.filter);
+    const [isConfirm, setIsConfirm] = useState(INIT_DATA.false);
+    const [borrowingTerm, setBorrowingTerm] = useState(INIT_DATA.borrowing_term);
+    const [selectLoanAsset, setSelectLoanAsset] = useState(INIT_DATA.selectLoanAsset);
+
+    useEffect(() => {
+        handleSelectLoanAsset(loanCoin, LOANABLE, loanable); // ** get data select loanable
+        handleSelectLoanAsset(collateralCoin, COLLATERAL, collateral); // ** get data select collateral
+    }, []);
 
     // ** handle
     const handleToggleConfirm = () => setIsConfirm((prev) => !prev);
@@ -68,17 +96,38 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
         [borrowingTerm]
     );
     const onChangeRule = () => setRule((prev) => !prev);
-    const onChangeAsset = (value, key) => setFilter((prev) => ({ ...prev, [key]: value }));
 
-    // ** get data
-    const wallets = useSelector((state) => state.wallet.SPOT);
-    const assetConfig = useSelector((state) => state.utils.assetConfig);
-
-    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
-    const getAsset = (assetId) => {
-        return assetConfigs.find((asset) => asset.id === assetId);
+    const onChangeAsset = (value, key) => {
+        if (value) {
+            setFilter((prev) => ({ ...prev, [key]: value }));
+        } else {
+            getDefaultSelect({ data: selectLoanAsset?.[key], key, keyDefault: key === LOANABLE ? DEFAULT_LOANABLE_ASSET : DEFAULT_COLLATERAL_ASSET });
+        }
     };
 
+    // ** handle data select loan asset
+    const handleSelectLoanAsset = (data, key, dataLoanAsset) => {
+        const keyFind = key === LOANABLE ? 'loanCoin' : 'collateralCoin';
+        const rs = tempFromAssetList.reduce((prev, cur) => {
+            if (data.includes(cur.assetCode)) {
+                const rsByKey = dataLoanAsset?.find((f) => f?.[keyFind] === cur.assetCode);
+                prev = [...prev, { config: rsByKey, ...cur }];
+            }
+            return prev;
+        }, []);
+
+        // ** set data select
+        setSelectLoanAsset((prev) => ({ ...prev, [key]: rs }));
+        getDefaultSelect({ data: rs, key, keyDefault: key === LOANABLE ? DEFAULT_LOANABLE_ASSET : DEFAULT_COLLATERAL_ASSET });
+    };
+
+    // ** get data default select
+    const getDefaultSelect = ({ data, key, keyDefault }) => {
+        const rsByAssetCode = data?.find((f) => f?.assetCode === keyDefault);
+        setFilter((prev) => ({ ...prev, [key]: rsByAssetCode }));
+    };
+
+    // ** get data
     const tempFromAssetList = useMemo(() => {
         return Object.keys(wallets)?.map((key) => {
             const curAssetWalletData = wallets[key];
@@ -89,14 +138,13 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                 ...curAssetWalletData
             };
         });
-    }, []);
+    }, [wallets]);
 
     const totalSPOT = useMemo(() => {
-        return tempFromAssetList?.find((asset) => asset.assetCode === filter.lendingMargin?.assetCode);
-    }, [filter.lendingMargin?.id]);
+        return tempFromAssetList?.find((asset) => asset.assetCode === filter.collateral?.assetCode);
+    }, [filter.collateral?.id, tempFromAssetList]);
 
-    console.log('totalSPOT', totalSPOT);
-
+    console.log(useSelector((state) => console.log(state)));
     // ** render
     const renderProfit = () => {
         return (
@@ -113,11 +161,17 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
         );
     };
 
+    // ** handle total ltv
+    const totalLTV = useMemo(() => {
+        const { initialLTV = 0, marginCallLTV = 0, liquidationLTV = 0 } = filter.collateral?.config || {};
+        return { initialLTV, marginCallLTV, liquidationLTV };
+    }, [filter.collateral?.assetCode]);
+
     const renderLTV = () => {
         const data = {
-            ltv_initial: 75,
-            ltv_margin: 85,
-            ltv_liquidate: 95
+            ltv_initial: totalLTV.initialLTV * PERCENT,
+            ltv_margin: totalLTV.marginCallLTV * PERCENT,
+            ltv_liquidate: totalLTV.liquidationLTV * PERCENT
         };
         return (
             <section className="flex flex-row mt-4">
@@ -218,8 +272,10 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
     };
 
     const renderValueToken = ({ asset, onchange, key, assetCode }) => {
+        const data = key === LOANABLE ? selectLoanAsset.loanable : selectLoanAsset.collateral;
         return (
             <AssetLendingFilter
+                data={data}
                 asset={asset}
                 assetCode={assetCode}
                 className="h-6"
@@ -228,7 +284,7 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                 labelClassName="mr-2"
                 labelAsset="Chọn tài sản ký quỹ"
                 wrapperClassName="w-max right-[-12px] !left-[auto]"
-                containerClassName={classNames({ '!z-[auto]': key === 'lendingMargin' })}
+                containerClassName={classNames({ '!z-[auto]': key === COLLATERAL })}
             />
         );
     };
@@ -265,14 +321,19 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                             suffix={
                                 <label htmlFor="search_events">
                                     {renderValueToken({
-                                        asset: filter?.lendingAsset,
+                                        asset: filter?.loanable,
                                         onchange: onChangeAsset,
-                                        key: 'lendingAsset',
-                                        assetCode: filter?.lendingMargin?.id
+                                        key: LOANABLE,
+                                        assetCode: filter?.collateral?.id
                                     })}
                                 </label>
                             }
-                            prefix={<span className="mt-1 text-xs font-normal absolute bottom-0 left-0">Tối thiểu: 10,000. Tối đa: 10,000,000,000</span>}
+                            prefix={
+                                <span className="mt-1 text-xs font-normal absolute bottom-0 left-0">
+                                    Tối thiểu: {formatNumber(filter.loanable?.config?.minLimit, filter.loanable?.config?.assetDigit)} . Tối đa:
+                                    {formatNumber(filter.loanable?.config?.maxLimit, filter.loanable?.config?.assetDigit)}
+                                </span>
+                            }
                         />
                     </section>
                     <section className="mt-8">
@@ -296,12 +357,18 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                             suffix={
                                 <label htmlFor="search_events">
                                     {renderValueToken({
-                                        asset: filter?.lendingMargin,
+                                        asset: filter?.collateral,
                                         onchange: onChangeAsset,
-                                        key: 'lendingMargin',
-                                        assetCode: filter?.lendingAsset?.id
+                                        key: COLLATERAL,
+                                        assetCode: filter?.loanable?.id
                                     })}
                                 </label>
+                            }
+                            prefix={
+                                <span className="mt-1 text-xs font-normal absolute bottom-0 left-0">
+                                    Tối thiểu: {formatNumber(filter.collateral?.config?.minLimit || 0, filter.collateral.config?.assetDigit)} . Tối đa:
+                                    {formatNumber(filter.collateral?.config?.maxLimit, filter.collateral.config?.assetDigit)}
+                                </span>
                             }
                         />
                     </section>
@@ -309,7 +376,7 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                         <div
                             data-tip=""
                             data-for="loan_term"
-                            className="dark:text-gray-4 text-gray-15 border-b border-darkBlue-5 border-dashed cursor-pointer w-max"
+                            className="dark:text-gray-4 text-gray-15 border-b border-darkBlue-5 border-dashed cursor-pointer w-max mt-8"
                         >
                             Thời hạn vay
                         </div>

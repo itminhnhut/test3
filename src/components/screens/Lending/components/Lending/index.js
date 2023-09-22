@@ -28,9 +28,7 @@ const initState = {
     search: '',
     page: 1,
     loading: false,
-    data: {
-        result: []
-    }
+    data: []
 };
 
 const Lending = () => {
@@ -65,7 +63,8 @@ const Lending = () => {
 
     // ** ussEffect
     useEffect(() => {
-        getLoanCrypto();
+        const id = setTimeout(() => getLoanCrypto(), 500);
+        return () => clearTimeout(id);
     }, [filter.search]);
 
     // ** handle
