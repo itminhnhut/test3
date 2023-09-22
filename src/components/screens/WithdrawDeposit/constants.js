@@ -5,6 +5,7 @@ import { PATHS } from 'constants/paths';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { Trans } from 'next-i18next';
+import { roundByExactDigit } from 'redux/actions/utils';
 
 // time in seconds
 export const REPORT_ABLE_TIME = 5 * 60 * 1000;
@@ -342,7 +343,7 @@ export const getMinFee = ({ amount, assetId }) => {
     if (isVnst) {
         // VNST fee = [2k -> 20k]
         const minFee = +amount * FEE_PERCENT;
-        return Math.min(Math.max(VNST_MIN_TIP_RANGE.min, minFee), VNST_MIN_TIP_RANGE.max);
+        return roundByExactDigit(Math.min(Math.max(VNST_MIN_TIP_RANGE.min, minFee), VNST_MIN_TIP_RANGE.max), 0);
     }
 
     return MIN_TIP;

@@ -5,9 +5,6 @@ import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatBalanceFiat, formatNanNumber } from 'redux/actions/utils';
 import { setFee } from 'redux/actions/withdrawDeposit';
-import { ALLOWED_ASSET_ID, MIN_TIP, VNST_MIN_TIP_RANGE, getMinFee } from './constants';
-
-const FEE_PERCENT = 0.02 / 100;
 
 const RCMD_TIPS_LENGTH = 3;
 
