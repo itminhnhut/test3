@@ -6,6 +6,8 @@ import { useSelector } from 'react-redux';
 import Header from 'components/staking/statistic/Header';
 import TabV2 from 'components/common/V2/TabV2';
 import Spinner from 'components/svg/Spinner';
+import DefaultMobileView from 'components/common/DefaultMobileView';
+import { useWindowSize } from 'utils/customHooks';
 
 const InterestEstimate = dynamic(() => import('components/staking/statistic/InterestEstimate', { ssr: false }));
 const NotAuth = dynamic(() => import('components/staking/statistic/NotAuth', { ssr: false }));
@@ -22,16 +24,19 @@ const index = () => {
     const [assetId, setAssetId] = useState(ASSET.VNST);
     const { loadingUser, user: isAuth } = useSelector((state) => state.auth);
 
+    const { width } = useWindowSize();
+    const isMobile = width < 830;
+
     const toggleAsset = (newAssetId) => setAssetId(newAssetId);
 
     const renderPage = useCallback(() => {
-        // if (loadingUser)
-        //     return (
-        //         <div className="flex justify-center items-center ">
-        //             <Spinner size={40} />
-        //         </div>
-        //     );
-        // if (!isAuth) return <NotAuth />;
+        if (loadingUser)
+            return (
+                <div className="flex justify-center items-center ">
+                    <Spinner size={40} />
+                </div>
+            );
+        if (!isAuth) return <NotAuth />;
         return (
             <section>
                 <TabV2 wrapperClassName="!gap-3" chipClassName="bg-gray-12" activeTabKey={assetId} onChangeTab={toggleAsset} tabs={ASSET_TABS} />
@@ -46,13 +51,17 @@ const index = () => {
     }, [assetId, loadingUser, isAuth]);
 
     return (
-        <MaldivesLayout>
-            <main className="bg-gray-13 dark:bg-shadow">
-                <div className="max-w-screen-v3 2xl:max-w-screen-xxl pt-20 pb-[120px] mx-auto v3:px-0 px-4">
-                    <Header />
-                    {renderPage()}
-                </div>
-            </main>
+        <MaldivesLayout hideFooter={isMobile ? true : false}>
+            {isMobile ? (
+                <DefaultMobileView />
+            ) : (
+                <main className="bg-gray-13 dark:bg-shadow">
+                    <div className="max-w-screen-v3 2xl:max-w-screen-xxl pt-20 pb-[120px] mx-auto v3:px-0 px-4">
+                        <Header />
+                        {renderPage()}
+                    </div>
+                </main>
+            )}
         </MaldivesLayout>
     );
 };
