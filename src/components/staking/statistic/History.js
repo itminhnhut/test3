@@ -296,7 +296,7 @@ const HistoryStaking = ({ assetId }) => {
                         {renderDateOptions}
                         <DatePickerV2
                             hasShadow
-                            position="right"
+                            position={"right"}
                             initDate={filter.range}
                             month={isMobile ? 1 : 2}
                             onChange={handleChangeDate}
