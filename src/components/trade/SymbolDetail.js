@@ -25,7 +25,6 @@ const SymbolDetail = (props) => {
     const [symbolTicker, setSymbolTicker] = useState(null);
     const [isInfoAsset, setIsInfoAsset] = useState(false);
     const [favoriteId, setFavoriteId] = useState('');
-    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     const [showSymbolList, setShowSymbolList] = useState(false);
 
     const ref = React.useRef(null);
@@ -78,7 +77,7 @@ const SymbolDetail = (props) => {
             return (
                 <>
                     <span className="text-txtPrimary dark:text-txtPrimary-dark font-medium text-xl">
-                        {symbolTicker?.b}/{symbolTicker?.q}
+                        {symbol?.base}/{symbol?.quote}
                     </span>
                     <div className="cursor-pointer ml-2" onClick={handleToggleModal}>
                         <BxsInfoCircleV2 size={16} color="currentColor" />
@@ -94,7 +93,7 @@ const SymbolDetail = (props) => {
                         onMouseLeave={() => setShowSymbolList(false)}
                     >
                         <span className="text-txtPrimary dark:text-txtPrimary-dark font-medium text-lg">
-                            {symbolTicker?.b}/{symbolTicker?.q}
+                            {symbol?.base}/{symbol?.quote}
                         </span>
                         <ChevronDown size={16} className="ml-1" />
                         <div className="cursor-pointer ml-2" onClick={handleToggleModal}>
@@ -129,7 +128,7 @@ const SymbolDetail = (props) => {
                             <RefCurrency price={symbolTicker?.p} quoteAsset={symbolTicker.q} />
                         </span>
                     </div>
-                    <Detail symbolTicker={symbolTicker} exchangeConfig={exchangeConfig} symbol={symbol} t={t} decimals={decimals} />
+                    <Detail symbolTicker={symbolTicker} symbol={symbol} t={t} decimals={decimals} />
                 </div>
             </div>
             <ModalAssetInfo id={symbolTicker?.['bi']} open={isInfoAsset} onCloseModal={handleToggleModal} />
@@ -137,7 +136,8 @@ const SymbolDetail = (props) => {
     );
 };
 
-const Detail = ({ symbolTicker, t, decimals }) => {
+const Detail = ({ symbolTicker, t, decimals, symbol }) => {
+
     return (
         <InfoSlider gutter={16} containerClassName="gap-6">
             {/* <div className="flex items-center w-full h-full gap-6 relative no-scrollbar"> */}
@@ -155,13 +155,13 @@ const Detail = ({ symbolTicker, t, decimals }) => {
             </div>
             <div className="flex flex-col min-w-max space-y-1">
                 <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
-                    {t('volume')} 24h ({symbolTicker?.b})
+                    {t('volume')} 24h ({symbol?.base})
                 </div>
                 <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vb, 2)}</div>
             </div>
             <div className="2xl:flex flex-col min-w-max space-y-1">
                 <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
-                    {t('volume')} 24h ({symbolTicker?.q})
+                    {t('volume')} 24h ({symbol?.quote})
                 </div>
                 <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vq, 2)}</div>
             </div>

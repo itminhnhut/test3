@@ -3,7 +3,7 @@ import TradingInputV2 from 'components/trade/TradingInputV2';
 import Card from './components/common/Card';
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckCircleIcon, SyncAltIcon } from 'components/svg/SvgIcon';
-import { formatBalanceFiat, getExactBalanceFiat, formatNanNumber } from 'redux/actions/utils';
+import { formatBalanceFiat, getExactBalanceFiat, formatNanNumber, roundByExactDigit } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Skeletor from 'components/common/Skeletor';
 import { useRouter } from 'next/router';
@@ -13,16 +13,16 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { PATHS } from 'constants/paths';
 import { useTranslation } from 'next-i18next';
 import useGetPartner from './hooks/useGetPartner';
-import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from './constants';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID, getMinFee } from './constants';
 import Tooltip from 'components/common/Tooltip';
 import { find } from 'lodash';
 import RecommendAmount from './components/RecommendAmount';
 import TabV2 from 'components/common/V2/TabV2';
 import { SET_ALLOWED_SUBMIT_ORDER } from 'redux/actions/types';
 import { setFee } from 'redux/actions/withdrawDeposit';
-import { MIN_TIP } from 'redux/actions/const';
 import PopoverCurrency from './PopoverCurrency';
 import AssetLogo from 'components/wallet/AssetLogo';
+import TipInput from './TipInput';
 
 const CardInput = () => {
     const { t } = useTranslation();
@@ -30,7 +30,6 @@ const CardInput = () => {
     const { fee, partner, accountBank, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
 
-    // const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
     const router = useRouter();
     const { side, assetId } = router.query;
 
@@ -43,7 +42,7 @@ const CardInput = () => {
     const assetConfig = useMemo(() => {
         return find(configs, { id: +assetId });
     }, [configs, assetId]);
-    // const { assetCode = '' } = assetConfig;
+
     const assetCode = assetConfig?.assetCode || '';
 
     const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
@@ -51,9 +50,9 @@ const CardInput = () => {
     useEffect(() => {
         if (minimumAllowed) {
             setState({ amount: minimumAllowed });
-            if (side === SIDE.SELL) dispatch(setFee(MIN_TIP));
+            // if (side === SIDE.SELL) dispatch(setFee(MIN_TIP));
         }
-    }, [minimumAllowed]);
+    }, [minimumAllowed, assetId]);
 
     const { data: limitWithdraw, loading: loadingLimitWithdraw } = useFetchApi(
         { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: ALLOWED_ASSET_ID['VNDC'] } },
@@ -67,6 +66,9 @@ const CardInput = () => {
         error
     } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
+    const quoteAmount = state.amount * (rate || 1);
+    const minFee = getMinFee({ amount: quoteAmount, assetId });
+
     useGetPartner({ assetId, side, amount: state.amount, rate, assetConfig });
 
     const availableAsset = useMemo(
@@ -75,7 +77,7 @@ const CardInput = () => {
         [wallets, assetId, assetCode]
     );
 
-    const onMaxHandler = () => {
+    const maxAbleAmount = useMemo(() => {
         let max = maximumAllowed;
         if (rate && max > limitWithdraw?.remain / rate) {
             max = limitWithdraw?.remain / rate;
@@ -83,7 +85,11 @@ const CardInput = () => {
         if (availableAsset < max) {
             max = availableAsset;
         }
-        setState({ amount: formatBalanceFiat(max, assetCode) });
+        return roundByExactDigit(max, assetConfig?.assetDigit);
+    }, [maximumAllowed, limitWithdraw?.remain, rate, availableAsset, assetConfig?.assetDigit]);
+
+    const onMaxHandler = () => {
+        setState({ amount: maxAbleAmount });
     };
 
     const [hasRendered, setHasRendered] = useState(false);
@@ -141,89 +147,32 @@ const CardInput = () => {
             return { isValid: true, msg: '', isError: false };
         }
 
-        if (side === SIDE.SELL && (!fee || fee < MIN_TIP))
-            return {
-                isValid: false,
-                msg: t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' })
-            };
+        if (side === SIDE.SELL) {
+            if (!fee || fee < minFee)
+                return {
+                    isValid: false,
+                    msg: t('dw_partner:error.min_amount', { amount: formatBalanceFiat(minFee), asset: 'VND' }),
+                    isError: true
+                };
 
-        if (fee && (fee + '').length > 21) {
-            return {
-                isValid: false,
-                msg: t('wallet:errors.invalid_insufficient_balance')
-            };
-        }
-
-        // const maxTip = state.amount * rate - 50000;
-        const maxTip = state.amount * rate;
-        if (side === 'SELL' && +fee > maxTip) {
-            return {
-                isValid: false,
-                msg: t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' })
-            };
+            if (+fee > +quoteAmount && +state.amount >= minimumAllowed)
+                return {
+                    isValid: false,
+                    msg: t('dw_partner:error.max_amount', { amount: formatBalanceFiat(quoteAmount), asset: 'VND' }),
+                    isError: true
+                };
         }
 
         return { isValid: true, msg: '', isError: false };
-    }, [fee, side]);
-
-    // const [tipValidator, setTipValidator] = useState({ isValid: true, msg: '', isError: false });
-
-    // const validateTip = (tipAmount) => {
-    //     let isValid = true;
-    //     let msg = '';
-
-    //     if (!hasRendered) {
-    //         return setTipValidator({ isValid, msg, isError: !isValid });
-    //     }
-
-    //     if (tipAmount && (tipAmount + '').length > 21) {
-    //         isValid = false;
-    //         msg = t('dw_partner:error.invalid_amount');
-    //     }
-
-    //     if (side === SIDE.SELL && (!tipAmount || tipAmount < MIN_TIP)) {
-    //         isValid = false;
-    //         msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' });
-    //     }
-
-    //     // const maxTip = state.amount * rate - 50000;
-    //     const maxTip = state.amount * rate;
-    //     if (side === 'SELL' && +tipAmount > maxTip) {
-    //         isValid = false;
-    //         msg = t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' });
-    //     }
-
-    //     setTipValidator({ isValid, msg, isError: !isValid });
-    // };
-
-    const handleChangeTip = (input = '') => {
-        const numberValue = input.value;
-        dispatch(setFee(numberValue));
-        // setState({ fee: numberValue });
-        // validateTip(numberValue);
-    };
-
-    // useEffect(() => {
-    //     validateTip(fee);
-    // }, [state.amount, rate]);
-
-    const amountWillReceived = state.amount * rate; //+ (side === SIDE.BUY ? +fee : -fee);
+    }, [fee, quoteAmount, side, state.amount, minFee, minimumAllowed]);
 
     useEffect(() => {
-        let isCanSubmitOrder = true;
-        isCanSubmitOrder =
-            !tipValidator?.isValid ||
-            // !partner ||
-            // loadingPartner ||
-            validator?.isError ||
-            // (!partnerBank && side === SIDE.BUY) ||
-            (side === SIDE.SELL && (+state.amount > availableAsset || +state.amount > limitWithdraw?.remain / rate || !accountBank));
-
+        const isSubmitAble = tipValidator?.isError || validator?.isError || (side === SIDE.SELL && (+state.amount > maxAbleAmount || !accountBank));
         dispatch({
             type: SET_ALLOWED_SUBMIT_ORDER,
-            payload: isCanSubmitOrder
+            payload: isSubmitAble
         });
-    }, [tipValidator, validator, side, state.amount, fee, availableAsset, limitWithdraw, rate, accountBank]);
+    }, [tipValidator, validator, side, state.amount, maxAbleAmount, accountBank]);
 
     return (
         <>
@@ -260,11 +209,7 @@ const CardInput = () => {
                         {side === SIDE.SELL && (
                             <div className="flex space-x-1 text-sm font-semibold items-center">
                                 <div className="txtSecond-3">{t('common:available_balance')}:</div>
-                                <button
-                                    disabled={+state.amount === maximumAllowed || +state.amount === availableAsset || loadingRate}
-                                    className="font-semibold"
-                                    onClick={onMaxHandler}
-                                >
+                                <button disabled={+state.amount === maxAbleAmount || loadingRate} className="font-semibold" onClick={onMaxHandler}>
                                     {formatBalanceFiat(availableAsset, assetCode)} {assetCode}
                                 </button>
                             </div>
@@ -274,12 +219,15 @@ const CardInput = () => {
                         <div className="w-3/4 xsm:flex-1 p-1">
                             <TradingInputV2
                                 id="TradingInputV2"
-                                value={loadingRate ? '' : state.amount}
+                                value={state.amount}
                                 allowNegative={false}
                                 thousandSeparator={true}
                                 containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
                                 inputClassName="!text-left !ml-0"
-                                onValueChange={({ value }) => setState({ amount: value })}
+                                onValueChange={({ value }) => {
+                                    console.log('value:', value);
+                                    setState({ amount: value });
+                                }}
                                 validator={validator}
                                 errorTooltip={false}
                                 decimalScale={assetConfig?.assetDigit || 0}
@@ -294,7 +242,7 @@ const CardInput = () => {
                                             <div className="flex items-center space-x-2">
                                                 <ButtonV2
                                                     variants="text"
-                                                    disabled={+state.amount === maximumAllowed || +state.amount === availableAsset || loadingRate}
+                                                    disabled={+state.amount === maxAbleAmount || loadingRate}
                                                     onClick={onMaxHandler}
                                                     className="uppercase font-semibold text-teal !h-10 "
                                                 >
@@ -312,51 +260,9 @@ const CardInput = () => {
                 </div>
                 <RecommendAmount amount={state.amount} setAmount={(value) => setState({ amount: value })} loadingRate={loadingRate} />
 
-                {side === SIDE.SELL && (
-                    <>
-                        <TradingInputV2
-                            id="TradingInputV2"
-                            label={
-                                <h1
-                                    data-tip={t('dw_partner:partner_bonus_tooltip')}
-                                    data-for="partner_bonus_tooltip"
-                                    className="txtSecond-3 border-b border-dashed border-darkBlue-5 w-fit"
-                                >
-                                    {t('dw_partner:partner_bonus')}
-                                </h1>
-                            }
-                            value={fee || ''}
-                            allowNegative={false}
-                            thousandSeparator={true}
-                            containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
-                            inputClassName="!text-left !ml-0"
-                            onValueChange={handleChangeTip}
-                            validator={tipValidator}
-                            errorTooltip={false}
-                            decimalScale={0}
-                            allowedDecimalSeparators={[',', '.']}
-                            clearAble
-                            placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
-                            errorEmpty
-                            onFocus={handleFocusInput}
-                            renderTail={<span className="txtSecond-4">VND</span>}
-                        />
-                        <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 2,000 VND</div>
-                        <div className="flex items-center gap-3 mb-4 flex-wrap">
-                            <TabV2
-                                //  chipClassName="!bg-white hover:!bg-gray-6"
-                                variants="suggestion"
-                                isOverflow={true}
-                                activeTabKey={+fee}
-                                onChangeTab={(key) => handleChangeTip({ value: key })}
-                                tabs={[MIN_TIP, 5000, 10000, 20000].map((suggestItem) => ({
-                                    key: suggestItem,
-                                    children: formatNanNumber(suggestItem, 0)
-                                }))}
-                            />
-                        </div>
-                    </>
-                )}
+                {/* TIP AMOUNT INPUT */}
+                {side === SIDE.SELL && <TipInput tipValidator={tipValidator} minFee={minFee} handleFocusInput={handleFocusInput} />}
+                {/* TIP AMOUNT INPUT */}
 
                 <div className="space-y-2">
                     <div className="flex items-center justify-between ">
@@ -420,7 +326,7 @@ const CardInput = () => {
                             {loadingRate ? (
                                 <Skeletor width="70px" />
                             ) : (
-                                <div className=" max-w-[150px] truncate">{formatNanNumber(amountWillReceived < 0 ? 0 : amountWillReceived, 'VNDC')}</div>
+                                <div className=" max-w-[150px] truncate">{formatNanNumber(quoteAmount < 0 ? 0 : quoteAmount, 'VNDC')}</div>
                             )}
 
                             <div className="">VND</div>

@@ -16,7 +16,7 @@ import ModalOtp from './components/ModalOtp';
 import ModalProcessSuggestPartner from './ModalProcessSuggestPartner';
 import toast from 'utils/toast';
 
-const ButtonBuySell = ({ canSubmit }) => {
+const ButtonBuySell = ({ cannotSubmit }) => {
     const {
         t,
         i18n: { language }
@@ -31,7 +31,7 @@ const ButtonBuySell = ({ canSubmit }) => {
         showProcessSuggestPartner: null
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
-    const { fee, input, loadingPartner, isCanSubmitOrder, modal: modalProps } = useSelector((state) => state.withdrawDeposit);
+    const { fee, input, loadingPartner, modal: modalProps, isCanSubmitOrder } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
     const { side, assetId } = router.query;
     const configs = useSelector((state) => state.utils.assetConfig);
@@ -86,7 +86,7 @@ const ButtonBuySell = ({ canSubmit }) => {
             <ButtonV2
                 loading={loadingConfirm || loadingPartner}
                 onClick={handleSubmitOrder}
-                disabled={!isCanSubmitOrder || !canSubmit}
+                disabled={!isCanSubmitOrder || cannotSubmit}
                 className="disabled:cursor-default mt-10"
             >
                 {t(`common:${side.toLowerCase()}`) + ` ${assetCode}`}

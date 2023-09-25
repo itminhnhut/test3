@@ -4,6 +4,10 @@ export const getPairConfig = createSelector([(state) => state.futures?.pairConfi
     return pairConfigs?.find((rs) => rs.pair === pair);
 });
 
+export const getPairConfigSpot = createSelector([(state) => state.utils.exchangeConfig, (exchangeConfig, symbol) => symbol], (exchangeConfig, symbol) => {
+    return exchangeConfig?.find((rs) => rs.symbol === symbol);
+});
+
 export const getAssetConfig = createSelector([(state) => state.utils?.assetConfig, (assetConfig, id) => id], (assetConfig, id) => {
     return assetConfig?.find((rs) => rs.id === id);
 });

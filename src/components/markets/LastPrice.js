@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Emitter from 'src/redux/actions/emitter';
 import { PublicSocketEvent } from 'src/redux/actions/const';
 import { useAsync } from 'react-use';
-import { getSymbolString, getDecimalPrice, getDecimalQty, formatNumber } from 'redux/actions/utils';
+import { getSymbolString, getDecimalPrice, getDecimalQty, formatNumber, convertSymbol } from 'redux/actions/utils';
 import { getMarketWatch } from 'redux/actions/market';
 import { useRouter } from 'next/router';
 import { PulseLoader } from 'react-spinners';
@@ -14,21 +14,25 @@ const LastPrice = (props) => {
     const { symbol, colored, exchangeConfig } = props;
     const router = useRouter();
     const [symbolTicker, setSymbolTicker] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const decimals = useMemo(() => {
-        const config = exchangeConfig.find((rs) => rs.symbol === `${symbol.base}${symbol.quote}`);
-        return { price: getDecimalPrice(config) };
+        return { price: getDecimalPrice(exchangeConfig) };
     }, [exchangeConfig, symbol]);
 
-    useAsync(async () => {
+    useEffect(() => {
         // Get symbol list
-        setLoading(true);
-        const result = await getMarketWatch(getSymbolString(symbol));
-        if (result) {
-            await setSymbolTicker(result?.[0]);
-        }
-        setLoading(false);
+        const initTicker = async () => {
+            setLoading(true);
+            try {
+                const result = await getMarketWatch(symbol);
+                if (result) setSymbolTicker(result?.[0]);
+            } catch (error) {
+            } finally {
+                setLoading(false);
+            }
+        };
+        initTicker();
     }, [symbol]);
 
     const handleRouteChange = () => {
@@ -37,15 +41,15 @@ const LastPrice = (props) => {
 
     useEffect(() => {
         Emitter.on(PublicSocketEvent.SPOT_TICKER_UPDATE, async (data) => {
-            if (data?.s === `${symbol.base}${symbol.quote}`) {
+            if (data?.s === symbol) {
                 setLoading(false);
                 setSymbolTicker(data);
             }
         });
-        router.events.on('routeChangeStart', handleRouteChange);
+        // router.events.on('routeChangeStart', handleRouteChange);
         return function cleanup() {
             Emitter.off(PublicSocketEvent.SPOT_TICKER_UPDATE);
-            router.events.off('routeChangeStart', handleRouteChange);
+            // router.events.off('routeChangeStart', handleRouteChange);
         };
     }, [Emitter, symbol]);
 

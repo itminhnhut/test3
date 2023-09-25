@@ -24,7 +24,7 @@ import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import { useSelector } from 'react-redux';
 
 const ListRankings = dynamic(() => import('./ListRankings'));
-const currencies = [
+const defaultCurrencies = [
     { label: 'VNDC', value: 'VNDC' },
     { label: 'USDT', value: 'USDT' }
 ];
@@ -182,7 +182,11 @@ export const seasons = [
         top_ranks_per: 20,
         top_ranks_team: 10,
         lastUpdated: true,
-        hasTabCurrency: true
+        hasTabCurrency: true,
+        currencies: [
+            { label: 'VNDC', value: 'VNDC' },
+            { label: 'USDT', value: 'USDT' },
+        ]
     },
     {
         season: 9,
@@ -208,7 +212,11 @@ export const seasons = [
         top_ranks_per: 20,
         top_ranks_team: 10,
         lastUpdated: true,
-        hasTabCurrency: true
+        hasTabCurrency: true,
+        currencies: [
+            { label: 'VNDC', value: 'VNDC' },
+            { label: 'USDT', value: 'USDT' },
+        ]
     },
     {
         season: 10,
@@ -486,7 +494,7 @@ const Contest = (props) => {
                         params={params}
                         sort={params.team}
                         showPnl={showPnl}
-                        currencies={currencies}
+                        currencies={props.currencies || defaultCurrencies}
                         userID={userID}
                     />
                 )}
@@ -500,7 +508,7 @@ const Contest = (props) => {
                         params={params}
                         sort={params.individual}
                         showPnl={showPnl}
-                        currencies={currencies}
+                        currencies={props.currencies || defaultCurrencies}
                         userID={userID}
                     />
                 )}
@@ -512,7 +520,7 @@ const Contest = (props) => {
                         params={params}
                         sort={params.team}
                         showPnl={showPnl}
-                        currencies={currencies}
+                        currencies={props.currencies || defaultCurrencies}
                         userID={userID}
                     />
                 )}
@@ -574,7 +582,7 @@ const Contest = (props) => {
                                         ref={refInfo}
                                         onShowDetail={onShowDetail}
                                         onShowInvitations={onShowInvitations}
-                                        currencies={currencies}
+                                        currencies={props.currencies || defaultCurrencies}
                                         userID={userID}
                                     />
                                     {props?.season == SEASON_SPECIAL ? (
