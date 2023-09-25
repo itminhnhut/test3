@@ -177,14 +177,14 @@ const ContestWeekRanks = ({
                 onFilter('weekly', i);
             }
             rs.push(
-                <TabItem key={i} isActive={filter.type === i} V2 value={i} onClick={() => onFilter('weekly', i)} className="!px-0 space-x-1">
+                <TabItem key={i} isActive={filter.weekly === i} V2 value={i} onClick={() => onFilter('weekly', i)} className="!px-0 space-x-1">
                     <span>{t('nao:contest:week', { value: i + 1 })}</span>
                     <span className="lowercase">({now < start ? t('nao:coming_soon_2') : now > start && now < end ? t('nao:going_on') : t('nao:ended')})</span>
                 </TabItem>
             );
         }
         return rs;
-    }, [weeks, filter.type, previous]);
+    }, [weeks, filter.weekly, previous]);
 
     const renderVolume = (item, className = '') => {
         return <VolumeTooltip item={item} className={className} tooltip={converted_vol} />;
