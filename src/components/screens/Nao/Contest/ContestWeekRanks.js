@@ -9,7 +9,7 @@ import {
     Tooltip,
     capitalize,
     ImageNao,
-    ConvertedMassTooltip,
+    VolumeTooltip,
     ButtonNaoV2
 } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
@@ -41,7 +41,7 @@ const ContestWeekRanks = ({
     weekly_contest_time: { start, end },
     showPnl,
     sort,
-    converted_mass
+    converted_vol
 }) => {
     const [filter, setFilter] = useState({
         weekly: 0,
@@ -186,6 +186,10 @@ const ContestWeekRanks = ({
         return rs;
     }, [weeks, filter.type, previous]);
 
+    const renderVolume = (item, className = '') => {
+        return <VolumeTooltip item={item} className={className} tooltip={converted_vol} />;
+    };
+
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
@@ -260,15 +264,7 @@ const ContestWeekRanks = ({
                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">
                                             {t('nao:contest:volume')} {quoteAsset}
                                         </div>
-                                        <span
-                                            data-tip=""
-                                            data-for={idTooltip}
-                                            className={classNames('font-semibold', {
-                                                'border-dashed border-b dark:border-gray-7 border-gray-1': converted_mass
-                                            })}
-                                        >
-                                            {formatNumber(item?.total_volume, 0)}
-                                        </span>
+                                        {renderVolume(item)}
                                     </div>
                                     <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</div>
@@ -343,14 +339,14 @@ const ContestWeekRanks = ({
                                         </div>
                                         <div className="h-8"></div>
                                         <div className="flex items-center justify-between">
-                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
-                                            <span className="text-right">
-                                                {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                            </span>
+                                            <label className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                {t('nao:contest:volume')} {quoteAsset}
+                                            </label>
+                                            {renderVolume(item, 'text-right')}
                                         </div>
                                         <div className="flex items-center justify-between pt-3">
                                             <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</label>
-                                            <span className="text-right">
+                                            <span className="text-right font-semibold">
                                                 {formatNumber(item?.time, 2)} {t('common:hours')}
                                             </span>
                                         </div>
@@ -359,11 +355,11 @@ const ContestWeekRanks = ({
                                                 {t(`nao:contest:${filter.type === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
                                             </label>
                                             {filter.type === 'pnl' ? (
-                                                <span className={`text-right ${getColor(item?.pnl_rate)}`}>
+                                                <span className={`text-right font-semibold ${getColor(item?.pnl_rate)}`}>
                                                     {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl_rate, 2, 0, true)}%`}
                                                 </span>
                                             ) : (
-                                                <span className={`text-right`}>{formatNumber(item?.total_order)}</span>
+                                                <span className={`text-right font-semibold`}>{formatNumber(item?.total_order)}</span>
                                             )}
                                         </div>
                                     </div>
@@ -401,6 +397,7 @@ const ContestWeekRanks = ({
                             title={`${t('nao:contest:volume')} ${quoteAsset}`}
                             decimal={0}
                             fieldName="total_volume"
+                            cellRender={(data, item) => renderVolume(item)}
                         />
                         <Column
                             minWidth={150}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import classNames from 'classnames';
-import { CardNao, ButtonNao, Table, Column, getColor, renderPnl, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
+import { CardNao, ButtonNao, Table, Column, getColor, renderPnl, VolumeTooltip, ImageNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_GROUP_MEMBER, API_CONTEST_CANCEL_INVITE, API_CONTEST_POST_ACCEPT_INVITATION } from 'redux/actions/apis';
@@ -27,7 +27,7 @@ const statusGroup = {
     ENABLE: 1
 };
 
-const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules, userID, showPnl }) => {
+const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules, userID, showPnl, converted_vol }) => {
     const quoteAsset = rowData?.quoteAsset ?? 'VNDC';
     const context = useContext(AlertContext);
     const { t } = useTranslation();
@@ -244,6 +244,10 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
         }
     };
 
+    const renderVolume = (item, className) => {
+        return <VolumeTooltip item={item} className={className} tooltip={converted_vol} />;
+    };
+
     const renderName = (data, item) => {
         return (
             <div className="flex items-center space-x-2">
@@ -409,9 +413,10 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     <div className="h-0 sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-5 my-1.5 sm:my-0"></div>
                                     <div className="flex flex-row sm:flex-col gap-1 justify-between items-center">
                                         <label className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6 whitespace-nowrap">
-                                            {t('nao:contest:volume')} ({quoteAsset})
+                                            {t('nao:contest:volume')} {quoteAsset}
                                         </label>
-                                        <span className="font-semibold break-all text-right">{formatNumber(dataSource?.total_volume, 0)}</span>
+                                        {renderVolume(dataSource, 'break-all text-right')}
+                                        {/* <span className="font-semibold ">{formatNumber(dataSource?.total_volume, 0)}</span> */}
                                     </div>
                                 </div>
                             </CardNao>
@@ -482,10 +487,11 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                                 <span className="text-right font-semibold">{formatNumber(item?.total_order, 0)}</span>
                                                             </div>
                                                             <div className="flex items-center justify-between leading-6">
-                                                                <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
-                                                                <span className="text-right font-semibold">
-                                                                    {formatNumber(item?.total_volume, 0)} {quoteAsset}
-                                                                </span>
+                                                                <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                                    {t('nao:contest:volume')} {quoteAsset}
+                                                                </div>
+                                                                {renderVolume(item, 'text-right')}
+                                                                {/* <span className="text-right font-semibold">{formatNumber(item?.total_volume, 0)}</span> */}
                                                             </div>
                                                             {!previous && (
                                                                 <div className="flex items-center justify-between leading-6">
@@ -549,9 +555,10 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 minWidth={150}
                                 align="right"
                                 className="font-semibold"
-                                title={`${t('nao:contest:volume')} (${quoteAsset})`}
+                                title={`${t('nao:contest:volume')} ${quoteAsset}`}
                                 decimal={0}
                                 fieldName="total_volume"
+                                cellRender={(data, item) => renderVolume(item)}
                             />
                             <Column
                                 minWidth={150}

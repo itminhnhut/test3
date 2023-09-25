@@ -1,5 +1,5 @@
 import React, { useEffect, useState, forwardRef, useMemo, useImperativeHandle } from 'react';
-import { CardNao, TextLiner, ButtonNao, Tooltip, capitalize, TabsNao, TabItemNao, ButtonNaoV2 } from 'components/screens/Nao/NaoStyle';
+import { CardNao, TextLiner, ButtonNao, Tooltip, capitalize, TabsNao, TabItemNao, ButtonNaoV2, VolumeTooltip } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import fetchApi from 'utils/fetch-api';
@@ -86,7 +86,8 @@ const ContestInfo = forwardRef(
             userID,
             weekly_contest_time,
             top_ranks_week,
-            top_ranks_team
+            top_ranks_team,
+            converted_vol
         },
         ref
     ) => {
@@ -327,7 +328,6 @@ const ContestInfo = forwardRef(
                                 </div>
                             </div>
                             {/* )} */}
-
                             <div className="flex items-center justify-between md:space-x-8 flex-wrap md:flex-nowrap gap-3 md:gap-0">
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:total_pnl')}</label>
@@ -365,9 +365,10 @@ const ContestInfo = forwardRef(
                                 </div>
                                 <div className="flex items-center justify-between w-full md:w-1/2 my-1">
                                     <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</label>
-                                    <div className="font-semibold text-right">
+                                    <VolumeTooltip suffix={quoteAsset} item={userData} className={'text-right'} tooltip={converted_vol} />
+                                    {/* <div className="font-semibold ">
                                         {userData?.total_volume ? formatNumber(userData?.total_volume, 0, 0, true) + ` ${quoteAsset}` : '-'}
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 

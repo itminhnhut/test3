@@ -11,7 +11,8 @@ import {
     capitalize,
     ImageNao,
     TabsNao,
-    TabItemNao
+    TabItemNao,
+    VolumeTooltip
 } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
@@ -41,7 +42,8 @@ const ContestTeamRanks = ({
     showPnl,
     currencies,
     hasTabCurrency,
-    top_ranks_week
+    top_ranks_week,
+    converted_vol
 }) => {
     const [type, setType] = useState(sort);
     const [quoteAsset, setQuoteAsset] = useState(q);
@@ -151,6 +153,10 @@ const ContestTeamRanks = ({
         return <div className="text-teal font-semibold text-sm sm:text-base cursor-pointer">{t('nao:contest:details')}</div>;
     };
 
+    const renderVolume = (item, className = '') => {
+        return <VolumeTooltip item={item} className={className} tooltip={converted_vol} />;
+    };
+
     const renderRank = (data, item) => {
         const _rank = data || '-';
         return (
@@ -247,7 +253,7 @@ const ContestTeamRanks = ({
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark">
                                         {t('nao:contest:volume')} {quoteAsset}
                                     </div>
-                                    <span className="font-semibold">{formatNumber(item?.total_volume, 0)}</span>
+                                    {renderVolume(item)}
                                 </div>
                                 {type === 'pnl' ? (
                                     <div className="flex items-center justify-between gap-2 mt-2 sm:mt-4">
@@ -323,7 +329,7 @@ const ContestTeamRanks = ({
                                                 <label className="text-txtSecondary dark:text-txtSecondary-dark">
                                                     {t('nao:contest:volume')} {quoteAsset}
                                                 </label>
-                                                <span className="text-right font-semibold">{formatNumber(item?.total_volume, 0)}</span>
+                                                {renderVolume(item, 'text-right')}
                                             </div>
                                             <div className="flex items-center justify-between pt-3">
                                                 <label className="text-txtSecondary dark:text-txtSecondary-dark">
@@ -390,6 +396,7 @@ const ContestTeamRanks = ({
                             title={`${t('nao:contest:volume')} ${quoteAsset}`}
                             decimal={0}
                             fieldName="total_volume"
+                            cellRender={(data, item) => renderVolume(item)}
                         />
 
                         {type === 'pnl' ? (

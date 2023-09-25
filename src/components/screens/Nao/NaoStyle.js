@@ -15,6 +15,7 @@ import CrossCircle from 'components/svg/CrossCircle';
 import { WarningFilledIcon, RemoveCircleIcon } from 'components/svg/SvgIcon';
 import { IconArrowOnus } from 'components/common/Icons';
 import { QUOTE_ASSET } from 'constants/constants';
+import { useSelector } from 'react-redux';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-xl sm:text-2xl font-semibold w-max text-txtPrimary dark:text-txtPrimary-dark'
@@ -590,25 +591,47 @@ export const VoteStatus = ({ iconClassName = '', className = '', status, statusT
     return <div className={`flex space-x-1 sm:space-x-2 items-center ${className}`}>{renderStatus()}</div>;
 };
 
-export const ConvertedMassTooltip = ({ id, detail, label }) => {
+export const VolumeTooltip = ({ item, tooltip, className, suffix }) => {
+    const { t } = useTranslation();
     const currency = Object.entries(QUOTE_ASSET).map(([key, value]) => ({ key, value }));
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
+    const detail = item?.detail_volume ?? {};
+    const idTooltip = `${item?.code}_${item?.user_id}`;
+
     return (
         <>
-            {isFunction(label) ? label() : label}
-            <Tooltip id={id} className={'!max-w-max'}>
-                <div>
-                    <div className="text-txtSecondary dark:text-txtSecondary-dark mb-3">Khối lượng quy đổi gồm</div>
-                    {Object.keys(detail).map((key) => {
-                        const quoteAsset = currency.find((c) => String(c.value) === String(key));
-                        return (
-                            <div key={key} className="flex items-center space-x-2">
-                                <span className="font-semibold">{formatNumber(detail[key])}</span>
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{quoteAsset.key}</span>
-                            </div>
-                        );
-                    })}
-                </div>
-            </Tooltip>
+            {tooltip && (
+                <Tooltip id={idTooltip} className={'!max-w-max'}>
+                    <div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark mb-3">{t('nao:contest:converted_volume')}</div>
+                        {Object.keys(detail).map((key) => {
+                            const quoteAsset = currency.find((c) => String(c.value) === String(key));
+                            const decimal = assetConfig.find((rs) => String(rs.id) === String(key))?.assetDigit ?? 0;
+                            return (
+                                <div key={key} className="flex items-center space-x-2">
+                                    <span className="font-semibold">{formatNumber(detail[key], decimal)}</span>
+                                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{quoteAsset.key}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </Tooltip>
+            )}
+            <span
+                data-tip=""
+                data-for={idTooltip}
+                onClick={(e) => e.stopPropagation()}
+                className={classNames(
+                    'font-semibold flex items-center space-x-1',
+                    {
+                        'border-dashed border-b dark:border-gray-7 border-gray-1': tooltip
+                    },
+                    className
+                )}
+            >
+                <span>{formatNumber(item?.total_volume, 0)}</span>
+                {suffix && <div>{isFunction(suffix) ? suffix() : suffix}</div>}
+            </span>
         </>
     );
 };
