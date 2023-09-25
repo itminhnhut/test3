@@ -308,7 +308,7 @@ export const seasons = [
         season: 13,
         start: '2023-10-01T17:00:00.000Z',
         end: '2023-10-29T17:00:00.000Z',
-        time_to_create: { start: '2023-09-24T17:00:00.000Z', end: '2023-10-10T17:00:00.000Z' },
+        time_to_create: { start: '2023-09-26T17:00:00.000Z', end: '2023-10-10T17:00:00.000Z' },
         contest_id: 16,
         title_detail: { vi: 'NAO Futures VNST – Nami Championship mùa 10', en: 'NAO Futures VNST – Nami Championship Season 10' },
         title: { vi: 'NAO Futures VNST', en: 'NAO Futures VNST' },
@@ -319,8 +319,8 @@ export const seasons = [
             isHtml: false
         },
         rules: {
-            vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-vndc-nami-championship-mua-9-t8-2023',
-            en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-vndc-nami-championship-season-9-august-2023'
+            vi: 'https://nami.exchange/vi/support/announcement/su-kien/khoi-tranh-giai-dau-nao-futures-nami-championship-mua-10-t10-2023',
+            en: 'https://nami.exchange/support/announcement/events/launching-nao-futures-nami-championship-season-10-october-2023'
         },
         weekly_contest_time: {
             start: '2023-10-01T17:00:00.000Z',
@@ -329,7 +329,6 @@ export const seasons = [
         total_rewards: '1,000,000,000 VNST',
         total_weekly_rewards: '40,000,000 VNST & 40,000 NAO',
         quoteAsset: 'VNDC',
-        // time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
         active: true,
         top_ranks_per: 20,
         top_ranks_week: 20,
