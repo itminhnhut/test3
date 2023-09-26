@@ -1,4 +1,28 @@
-/* eslint-disable */
+import MadivesLayout from 'components/common/layouts/MaldivesLayout';
+import GhostArticle from 'components/screens/GhostArticle';
+import { PATH_WITH_GHOST_ARTICLE_ID } from 'constants/constants';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import React from 'react';
+
+const index = ({ locale }) => {
+    return (
+        <MadivesLayout>
+            <GhostArticle id={PATH_WITH_GHOST_ARTICLE_ID[locale]['terms-of-service']} />
+        </MadivesLayout>
+    );
+};
+
+export const getStaticProps = async ({ locale }) => {
+    return {
+        props: {
+            locale,
+            ...(await serverSideTranslations(locale, ['404', 'footer', 'navbar', 'common']))
+        }
+    };
+};
+export default index;
+
+/* 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import { useWindowSize } from 'utils/customHooks';
@@ -1163,7 +1187,7 @@ const Terms = () => {
                     )}
                     {language === 'vi' && (
                         <div className="text-left">
-                            {/* Overview */}
+                           
                             <div>
                                 <p>
                                     Các Điều khoản Sử dụng Nami.Exchange này được ký kết giữa bạn (sau đây được gọi là &ldquo;bạn&rdquo; hoặc &ldquo;của
@@ -1200,7 +1224,7 @@ const Terms = () => {
                                 </Paragraph>
                             </div>
 
-                            {/* Terms 1*/}
+                           
                             <Title1>I. Định nghĩa</Title1>
                             <ol className="list-decimal ml-3 space-y-4">
                                 <li>
@@ -1269,7 +1293,7 @@ const Terms = () => {
                                 </li>
                             </ol>
 
-                            {/* Privacy */}
+                
                             <Title1>II. Các quy định chung</Title1>
                             <Title2>1. Giới thiệu về các Điều khoản này</Title2>
                             <Title3>a. Quan hệ hợp đồng</Title3>
@@ -2198,3 +2222,4 @@ export const getStaticProps = async ({ locale }) => ({
     }
 });
 export default Terms;
+*/

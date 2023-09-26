@@ -1,3 +1,6 @@
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { PATHS } from './paths';
+
 export const EMPTY_VALUE = '--';
 
 export const ONE_DAY = 86400000;
@@ -284,5 +287,20 @@ export const INSURANCE_STATE = {
 export const QUOTE_ASSET = {
     VNST: 39,
     VNDC: 72,
-    USDT: 22,
-}
+    USDT: 22
+};
+
+export const PATH_WITH_GHOST_ARTICLE_ID = {
+    [LANGUAGE_TAG.EN]: {
+        'terms-of-service': '64e7338c7022fbae9d5e3997',
+        'terms-of-futures': '64e7344d7022fbae9d5e39a9',
+        licences: '64e735fe7022fbae9d5e39db',
+        privacy: '64e735027022fbae9d5e39c3'
+    },
+    [LANGUAGE_TAG.VI]: {
+        'terms-of-service': '64e732d37022fbae9d5e3986',
+        'terms-of-futures': '64e734127022fbae9d5e39a1',
+        licences: '64e735547022fbae9d5e39c9',
+        privacy: '64e734a37022fbae9d5e39b3'
+    }
+};
