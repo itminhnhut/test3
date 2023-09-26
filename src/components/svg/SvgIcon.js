@@ -1838,6 +1838,30 @@ const TimeIcon = ({ size = 16 }) => {
     );
 };
 
+const RightTopArrowCircleIcon = ({ size = 20 }) => {
+    return (
+        <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M10.002 2.25a7.702 7.702 0 0 0-5.486 2.267c-3.024 3.025-3.024 7.947 0 10.972a7.705 7.705 0 0 0 5.486 2.268 7.704 7.704 0 0 0 5.486-2.268c3.025-3.024 3.025-7.946 0-10.972a7.703 7.703 0 0 0-5.486-2.267zm4.39 12.142a6.166 6.166 0 0 1-4.39 1.813c-1.66 0-3.22-.644-4.389-1.813a6.215 6.215 0 0 1 0-8.778 6.163 6.163 0 0 1 4.39-1.812c1.66 0 3.22.643 4.389 1.812a6.215 6.215 0 0 1 0 8.778z"
+                fill="#47CC85"
+            />
+            <path d="M9.583 9.324 7.09 11.818l1.097 1.097 2.494-2.493 1.648 1.647V7.676H7.936l1.647 1.648z" fill="#47CC85" />
+        </svg>
+    );
+};
+
+const RightDownArrowCircleIcon = ({ size = 20 }) => {
+    return (
+        <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M9.997 2.25a7.703 7.703 0 0 0-5.486 2.267c-3.025 3.025-3.025 7.947 0 10.973a7.704 7.704 0 0 0 5.486 2.268 7.704 7.704 0 0 0 5.486-2.268c3.025-3.025 3.025-7.947 0-10.973A7.703 7.703 0 0 0 9.997 2.25zm4.39 12.142a6.165 6.165 0 0 1-4.39 1.813 6.164 6.164 0 0 1-4.389-1.813 6.214 6.214 0 0 1 0-8.778 6.163 6.163 0 0 1 4.39-1.812c1.66 0 3.219.643 4.388 1.812a6.214 6.214 0 0 1 0 8.778z"
+                fill="#47CC85"
+            />
+            <path d="M8.183 7.09 7.086 8.187 9.58 10.68l-1.65 1.648h4.395V7.936l-1.648 1.647L8.183 7.09z" fill="#47CC85" />
+        </svg>
+    );
+};
+
 export {
     AddCircleColorIcon,
     AddCircleIcon,
@@ -1936,5 +1960,7 @@ export {
     RedditIconV2,
     BoltCircleIcon,
     RocketIcon,
-    TimeIcon
+    TimeIcon,
+    RightTopArrowCircleIcon,
+    RightDownArrowCircleIcon
 };

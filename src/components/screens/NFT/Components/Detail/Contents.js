@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // ** NEXT
 import { useRouter } from 'next/router';
@@ -12,7 +12,10 @@ import Tooltip from 'components/common/Tooltip';
 import { WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
 import { WrapperStatus } from 'components/screens/NFT/Components/Lists/CardItems';
 import { LIST_TIER, TABS, STATUS } from 'components/screens/NFT/Constants';
-import { BoltCircleIcon, RocketIcon, TimeIcon } from 'components/svg/SvgIcon';
+import ModalV2 from 'components/common/V2/ModalV2';
+
+// ** SvgIcon
+import { BoltCircleIcon, RocketIcon, TimeIcon, IconClose } from 'components/svg/SvgIcon';
 
 // ** Third party
 import styled from 'styled-components';
@@ -24,20 +27,26 @@ const DEFAULT_PATH_NAME = '/nft';
 
 const Contents = ({ detail, wallet, isDark }) => {
     const router = useRouter();
+    const [isDots, setISDots] = useState(false);
 
     const {
         t,
         i18n: { language }
     } = useTranslation();
 
+    // ** useEffect
     useEffect(() => {
         [...document.querySelectorAll('.main-text')].map((element, key) => {
-            console.log('----', element?.clientWidth, element?.scrollWidth, element?.clientHeight, element?.scrollHeight);
+            if (element?.clientHeight < element?.scrollHeight) {
+                setISDots((prev) => !prev);
+            }
         });
     }, [detail]);
 
+    // ** handle data
     const collection_description = language === 'en' ? detail?.collection?.description_en : detail?.collection?.description_vi;
 
+    // ** handle router
     const handleRouterCollection = (nft_collection) => {
         router.push(
             {
@@ -100,15 +109,18 @@ const Contents = ({ detail, wallet, isDark }) => {
                     </div>
                     <section className="text-gray-15 dark:text-gray-4">
                         <div className="font-semibold">{detail?.nft_collection_name}</div>
-                        <WrapperCollection isDark={isDark} isLanguage={language === 'en'}>
+                        <WrapperCollection isDots={isDots}>
                             <div className="container">
                                 <div className="main-text">
-                                    {/* {collection_description} */}
-                                    Ocean Eyes là bộ sưu tập đầu tiên của Nami Infinity. Đây là bộ sưu tập thể hiện cho tầm nhìn và niềm khát khao, hy vọng của
-                                    cộng đồng Nami khi đứng trước
+                                    {collection_description}
                                     <span
-                                        data-class={t('nft:collection:read_more')}
-                                        className="dark:bg-dark-4 bg-dark-13 cursor-pointer font-semibold text-sm ml-1 dark:after:text-green-2 after:text-green-3"
+                                        data-text-read-more={t('nft:collection:read_more')}
+                                        data-text-dots={isDots ? '...' : ''}
+                                        className={classNames(
+                                            'dark:bg-dark-4 bg-dark-13 cursor-pointer font-semibold text-sm ml-1 dark:after:text-green-2 after:text-green-3',
+                                            'relative bottom-[0] right-[0] leading-[1.2em]',
+                                            { '!absolute': isDots }
+                                        )}
                                         onClick={() => handleRouterCollection(detail?.nft_collection)}
                                     ></span>
                                 </div>
@@ -138,22 +150,12 @@ const WrapperCollection = styled.section`
         position: relative;
     }
 
-    /* this will replace the ellipsis */
-    .main-text span {
-        position: absolute;
-        /* position at the bottom right */
-        top: 1.2em; /* height of one line */
-        right: 0;
-        padding: 2px 4px;
-    }
-
     .main-text span:before {
-        //  content: '...'; /* the dots*/
+        content: attr(data-text-dots);
     }
 
-    /* the text after the dots */
     .main-text span:after {
-        // content: attr(data-class);
+        content: attr(data-text-read-more);
     }
 `;
 

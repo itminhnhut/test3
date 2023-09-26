@@ -35,6 +35,10 @@ const Contents = dynamic(() => import('components/screens/NFT/Components/Detail/
     ssr: false
 });
 
+const ModalImage = dynamic(() => import('components/screens/NFT/Components/Modal/Image'), {
+    ssr: false
+});
+
 const index = ({ idNFT }) => {
     const {
         t,
@@ -45,6 +49,10 @@ const index = ({ idNFT }) => {
     const isDark = currentTheme === THEME_MODE.DARK;
 
     const [detail, setDetail] = useState();
+    const [isToggleImage, setIsToggleImage] = useState(false);
+
+    // ** handle
+    const handleToggleImage = () => setIsToggleImage((prev) => !prev);
 
     //** call api detail NFT
     const handleDetailNFT = async () => {
@@ -64,20 +72,21 @@ const index = ({ idNFT }) => {
     return (
         <MaldivesLayout>
             <main className="bg-white dark:bg-shadow">
-                <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px] gap-20 flex flex-row mt-20">
+                <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px] gap-10 flex flex-row mt-20">
                     <section className="w-full">
                         <Contents detail={detail} isDark={isDark} />
                         <Description detail={detail} />
                         <Effective effective={detail?.[`effective_${language}`] || []} dark={isDark} />
                     </section>
                     <section className="border-divider dark:border-dark rounded-xl p-4 border-[1px] max-h-max">
-                        <WrapperImage className="w-full max-w-[401px] max-h-[401px]">
+                        <WrapperImage className="w-full max-w-[401px] max-h-[401px] cursor-pointer" onClick={handleToggleImage}>
                             {detail?.image ? <img width={401} height={401} src={detail?.image} /> : null}
                         </WrapperImage>
                         <Button className="mt-6">{t('nft:detail:get_rewarded_now')}</Button>
                     </section>
                 </article>
             </main>
+            <ModalImage onClose={handleToggleImage} isModal={isToggleImage} image={detail?.image} name={detail?.name} />
         </MaldivesLayout>
     );
 };

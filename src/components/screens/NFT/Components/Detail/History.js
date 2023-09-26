@@ -1,15 +1,21 @@
 import React, { useState, useCallback, useEffect, memo } from 'react';
-import { useWindowSize } from 'react-use';
 
+// ** Next
 import { useTranslation } from 'next-i18next';
 
+// ** utils
 import FetchApi from 'utils/fetch-api';
 
+// ** Redux
 import { API_GET_HISTORY_NFT } from 'redux/actions/apis';
 import { formatTime } from 'redux/actions/utils';
 
+// ** Components
 import TableV2 from 'components/common/V2/TableV2';
+import { RightTopArrowCircleIcon, RightDownArrowCircleIcon } from 'components/svg/SvgIcon';
 
+// ** Third party
+import { useWindowSize } from 'react-use';
 import styled from 'styled-components';
 
 const initState = {
@@ -23,7 +29,6 @@ const initState = {
 };
 
 const LIMIT = 50;
-
 const EVENT = {
     CREATE: { vi: 'Mint', en: 'Mint' },
     GIVE: { vi: 'Chuyển', en: 'Transfer' },
@@ -83,6 +88,17 @@ const History = memo(({ idNFT }) => {
         return row?.new_status?.owner || 'Infinity';
     };
 
+    const renderEvent = (value) => {
+        return (
+            <section className="flex flex-row items-center gap-2">
+                <section className="dark:bg-dark-2 bg-dark-12 w-[30px] h-[30px] rounded-full flex justify-center items-center">
+                    {value === 'CREATE' ? <RightDownArrowCircleIcon /> : <RightTopArrowCircleIcon />}
+                </section>
+                <div>{EVENT?.[value]?.[language] || ''}</div>
+            </section>
+        );
+    };
+
     const renderTable = useCallback(() => {
         const columns = [
             {
@@ -91,7 +107,7 @@ const History = memo(({ idNFT }) => {
                 title: t('nft:history:event'),
                 align: 'left',
                 maxWidth: 302,
-                render: (value) => <div>{EVENT?.[value]?.[language] || ''}</div>
+                render: (value) => renderEvent(value)
             },
             {
                 key: 'from',
@@ -129,7 +145,7 @@ const History = memo(({ idNFT }) => {
                 loading={loading}
                 columns={columns}
                 scroll={{ x: true }}
-                className="border-[1px] rounded-xl border-divider dark:border-divider-dark"
+                className="border-[1px] rounded-xl border-divider dark:border-divider-dark mt-12"
                 data={dataHistory?.data || []}
                 rowKey={(item) => `${item?.key}`}
                 pagingClassName="!border-0 !py-8"
