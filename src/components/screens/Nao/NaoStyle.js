@@ -635,3 +635,17 @@ export const VolumeTooltip = ({ item, tooltip, className, suffix }) => {
         </>
     );
 };
+
+export const CPnl = ({ item, isTotal, className }) => {
+    const value = isTotal ? item?.total_pnl : item?.pnl;
+    const prefix = value !== 0 && value > 0 ? '+' : '';
+    const suffix = isTotal ? '' : '%';
+    const decimal = isTotal ? 0 : 2;
+    return (
+        <span className={`font-semibold ${getColor(value)} ${className}`}>
+            {prefix}
+            {formatNumber(value, decimal, 0, true)}
+            {suffix}
+        </span>
+    );
+};

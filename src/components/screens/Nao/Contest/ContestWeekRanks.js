@@ -10,6 +10,7 @@ import {
     capitalize,
     ImageNao,
     VolumeTooltip,
+    CPnl,
     ButtonNaoV2
 } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
@@ -28,6 +29,7 @@ import { addDays, endOfDay, endOfWeek } from 'date-fns';
 import useUpdateEffect from 'hooks/useUpdateEffect';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import { debounce } from 'lodash';
 
 const ContestWeekRanks = ({
     previous,
@@ -41,7 +43,8 @@ const ContestWeekRanks = ({
     weekly_contest_time: { start, end },
     showPnl,
     sort,
-    converted_vol
+    converted_vol,
+    isTotalPnl
 }) => {
     const [filter, setFilter] = useState({
         weekly: 0,
@@ -65,6 +68,7 @@ const ContestWeekRanks = ({
     const rank = 'individual_rank_volume';
     const checked = useRef(false);
     const router = useRouter();
+    const timer = useRef();
 
     useEffect(() => {
         setPage(1);
@@ -72,7 +76,10 @@ const ContestWeekRanks = ({
     }, [isMobile]);
 
     useEffect(() => {
-        getRanks();
+        clearTimeout(timer.current);
+        timer.current = setTimeout(() => {
+            getRanks();
+        }, 100);
     }, [contest_id, filter]);
 
     const onReadMore = () => {
@@ -150,9 +157,9 @@ const ContestWeekRanks = ({
     useEffect(() => {
         if (previous) {
             checked.current = false;
-            setFilter({ ...filter, weekly: 0 });
+            setFilter({ ...filter, weekly: 0, type: sort });
         }
-    }, [previous]);
+    }, [previous, sort]);
 
     useUpdateEffect(() => {
         const queryString = window.location.search;
@@ -215,7 +222,7 @@ const ContestWeekRanks = ({
                             {t('nao:contest:volume')}
                         </ButtonNaoV2>
                         <ButtonNaoV2 active={filter.type === 'pnl'} onClick={() => onFilter('type', 'pnl')}>
-                            {t('nao:contest:per_pnl')}
+                            {isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
                         </ButtonNaoV2>
                     </div>
                 )}
@@ -240,7 +247,6 @@ const ContestWeekRanks = ({
             {top3.length > 0 && (
                 <div className="flex flex-wrap gap-3 sm:gap-6 text-sm sm:text-base">
                     {top3.map((item, index) => {
-                        const idTooltip = `${item?.code}_${item?.user_id}`;
                         return (
                             <CardNao key={index} className="!p-4 sm:!p-5">
                                 <div className="flex items-center justify-between gap-2">
@@ -274,11 +280,10 @@ const ContestWeekRanks = ({
                                     </div>
                                     {filter.type === 'pnl' ? (
                                         <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
-                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
-                                            <span className={`font-semibold ${getColor(item.pnl_rate)}`}>
-                                                {item?.pnl_rate !== 0 && item?.pnl_rate > 0 ? '+' : ''}
-                                                {formatNumber(item?.pnl_rate, 2, 0, true)}%
-                                            </span>
+                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                {isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
+                                            </div>
+                                            <CPnl item={item} isTotal={isTotalPnl} />
                                         </div>
                                     ) : (
                                         <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
@@ -352,12 +357,10 @@ const ContestWeekRanks = ({
                                         </div>
                                         <div className="flex items-center justify-between pt-3">
                                             <label className="text-txtSecondary dark:text-txtSecondary-dark">
-                                                {t(`nao:contest:${filter.type === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
+                                                {t(`nao:contest:${filter.type === 'pnl' ? (isTotalPnl ? 'pnl' : 'per_pnl') : 'total_trades'}`)}
                                             </label>
                                             {filter.type === 'pnl' ? (
-                                                <span className={`text-right font-semibold ${getColor(item?.pnl_rate)}`}>
-                                                    {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl_rate, 2, 0, true)}%`}
-                                                </span>
+                                                <CPnl item={item} isTotal={isTotalPnl} className={'text-right'} />
                                             ) : (
                                                 <span className={`text-right font-semibold`}>{formatNumber(item?.total_order)}</span>
                                             )}
@@ -414,9 +417,9 @@ const ContestWeekRanks = ({
                                 minWidth={100}
                                 align="right"
                                 className=""
-                                title={t('nao:contest:per_pnl')}
-                                fieldName="pnl"
-                                cellRender={renderPnl}
+                                title={isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
+                                fieldName={isTotalPnl ? 'total_pnl' : 'pnl'}
+                                cellRender={(data, item) => (isTotalPnl ? <CPnl item={item} isTotal /> : renderPnl(data))}
                             />
                         ) : (
                             <Column

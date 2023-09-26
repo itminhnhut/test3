@@ -12,7 +12,8 @@ import {
     ImageNao,
     TabsNao,
     TabItemNao,
-    VolumeTooltip
+    VolumeTooltip,
+    CPnl
 } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
@@ -43,7 +44,8 @@ const ContestTeamRanks = ({
     currencies,
     hasTabCurrency,
     top_ranks_week,
-    converted_vol
+    converted_vol,
+    isTotalPnl
 }) => {
     const [type, setType] = useState(sort);
     const [quoteAsset, setQuoteAsset] = useState(q);
@@ -214,7 +216,7 @@ const ContestTeamRanks = ({
                             {t('nao:contest:volume')}
                         </ButtonNaoV2>
                         <ButtonNaoV2 active={type === 'pnl'} onClick={() => onFilter('pnl')}>
-                            {t('nao:contest:per_pnl')}
+                            {isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
                         </ButtonNaoV2>
                     </div>
                 )}
@@ -257,11 +259,10 @@ const ContestTeamRanks = ({
                                 </div>
                                 {type === 'pnl' ? (
                                     <div className="flex items-center justify-between gap-2 mt-2 sm:mt-4">
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
-                                        <span className={`font-semibold ${getColor(item.pnl)}`}>
-                                            {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}
-                                            {formatNumber(item?.pnl, 2, 0, true)}%
-                                        </span>
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                            {isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
+                                        </div>
+                                        <CPnl item={item} isTotal={isTotalPnl} />
                                     </div>
                                 ) : (
                                     <div className="flex items-center justify-between gap-2 mt-2 sm:mt-4">
@@ -333,12 +334,10 @@ const ContestTeamRanks = ({
                                             </div>
                                             <div className="flex items-center justify-between pt-3">
                                                 <label className="text-txtSecondary dark:text-txtSecondary-dark">
-                                                    {t(`nao:contest:${type === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
+                                                    {t(`nao:contest:${type === 'pnl' ? (isTotalPnl ? 'pnl' : 'per_pnl') : 'total_trades'}`)}
                                                 </label>
                                                 {type === 'pnl' ? (
-                                                    <span className={`text-right font-semibold ${getColor(item?.pnl)}`}>
-                                                        {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
-                                                    </span>
+                                                    <CPnl item={item} isTotal={isTotalPnl} className={'text-right'} />
                                                 ) : (
                                                     <span className={`text-right font-semibold`}>{formatNumber(item?.total_order)}</span>
                                                 )}
@@ -405,9 +404,9 @@ const ContestTeamRanks = ({
                                 minWidth={100}
                                 align="right"
                                 className=""
-                                title={t('nao:contest:per_pnl')}
-                                fieldName="pnl"
-                                cellRender={renderPnl}
+                                title={isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
+                                fieldName={isTotalPnl ? 'total_pnl' : 'pnl'}
+                                cellRender={(data, item) => (isTotalPnl ? <CPnl item={item} isTotal /> : renderPnl(data))}
                             />
                         ) : (
                             <Column
