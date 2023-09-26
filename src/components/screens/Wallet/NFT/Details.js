@@ -1,18 +1,24 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
+// ** Next
 import dynamic from 'next/dynamic';
-
 import { useTranslation } from 'next-i18next';
 
+// ** Hooks
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
+// ** Utils
 import FetchApi from 'utils/fetch-api';
 import toast from 'utils/toast';
 
+// ** Redux
 import { API_GET_DETAIL_OWNER_NFT, API_POST_ACTIVE_NFT, API_GET_CHECK_NFT } from 'redux/actions/apis';
 
+// ** Components
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import { TABS } from 'components/screens/NFT/Constants';
 
 import styled from 'styled-components';
 
@@ -43,8 +49,14 @@ const initState = {
         go_next: true
     },
     isTransfer: false,
-    isUse: false
+    isUse: false,
+    tab: 'info'
 };
+
+const TAB_DETAILS = [
+    { label: { vi: 'Thông tin', en: 'Info' }, value: 1 },
+    { label: { vi: 'Lịch sử', en: 'History' }, value: 2 }
+];
 
 const WalletDetail = ({ idNFT }) => {
     const {
@@ -55,17 +67,20 @@ const WalletDetail = ({ idNFT }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
+    // ** useState
+    const [tab, setTabs] = useState(initState.tab);
     const [detail, setDetail] = useState();
-
     const [isUse, setIsUse] = useState(initState.isUse);
     const [isTransfer, setIsTransfer] = useState(initState.isTransfer);
-
     const [isLoading, setIsLoading] = useState(initState.loading);
-
     const [statusCodeNFT, setStatusCodeNFT] = useState();
 
+    // ** handle modal events
     const handleModalUse = () => setIsUse((prev) => !prev);
     const handleModalTransfer = () => setIsTransfer((prev) => !prev);
+
+    // ** handle tabs
+    const handleTab = (tab) => setTabs(tab);
 
     //** call api detail NFT
     const handleDetailNFT = async () => {
@@ -176,12 +191,33 @@ const WalletDetail = ({ idNFT }) => {
         return <History idNFT={idNFT} />;
     }, [idNFT, detail?.status]);
 
+    const renderA1 = () => {
+        return (
+            <Tabs isDark tab={tab} className="gap-6 border-b border-divider dark:border-divider-dark justify-between">
+                <section className="flex gap-6">
+                    {TAB_DETAILS?.map((item, idx) => (
+                        <TabItem
+                            key={item.label?.[language]}
+                            className="!text-left !px-0 !text-base "
+                            value={item.value}
+                            onClick={(isClick) => isClick && handleTab(item.value)}
+                            isActive={item.value === tab}
+                        >
+                            {item.label?.[language]}
+                        </TabItem>
+                    ))}
+                </section>
+            </Tabs>
+        );
+    };
+
     return (
         <MaldivesLayout>
             <main className="bg-white dark:bg-shadow">
                 <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px] mt-20 gap-20 flex flex-row">
                     <section className="w-full">
                         <Contents detail={detail} wallet={true} isDark={isDark} />
+                        {renderA1()}
                     </section>
                     <section className="border-divider dark:border-dark rounded-xl p-4 border-[1px] max-h-max">
                         {renderImage()}
