@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import {
     TextLiner,
     CardNao,
-    ButtonNao,
+    ButtonNaoV2,
     Table,
     Column,
     getColor,
@@ -11,7 +11,9 @@ import {
     capitalize,
     ImageNao,
     TabsNao,
-    TabItemNao
+    TabItemNao,
+    VolumeTooltip,
+    CPnl
 } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
@@ -28,6 +30,7 @@ import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/No
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import RePagination from 'components/common/ReTable/RePagination';
 import useUpdateEffect from 'hooks/useUpdateEffect';
+import classNames from 'classnames';
 
 const ContestPerRanks = ({
     previous,
@@ -42,9 +45,11 @@ const ContestPerRanks = ({
     currencies,
     hasTabCurrency,
     userID,
-    top_ranks_week
+    top_ranks_week,
+    converted_vol,
+    isTotalPnl
 }) => {
-    const [tab, setTab] = useState(sort);
+    const [type, setType] = useState(sort);
     const [quoteAsset, setQuoteAsset] = useState(q);
     const {
         t,
@@ -70,11 +75,11 @@ const ContestPerRanks = ({
 
     useEffect(() => {
         getRanks(sort);
-        setTab(sort);
+        setType(sort);
     }, [contest_id]);
 
     useEffect(() => {
-        if (mount.current) getRanks(tab);
+        if (mount.current) getRanks(type);
     }, [quoteAsset]);
 
     const onReadMore = () => {
@@ -84,16 +89,16 @@ const ContestPerRanks = ({
         });
     };
 
-    const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
+    const rank = type === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
 
-    const getRanks = async (tab) => {
-        const _rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
+    const getRanks = async (type) => {
+        const _rank = type === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
         // if (Date.now() < new Date('2022-07-07T17:00:00.000Z').getTime()) {
         //     return
         // }
         try {
             const { data: originalData, status } = await fetchApi({
-                url: tab === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
+                url: type === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
                 params: { contest_id, quoteAsset }
             });
             const data = originalData?.users;
@@ -116,21 +121,19 @@ const ContestPerRanks = ({
     };
 
     const onFilter = (key) => {
-        if (tab === key) return;
+        if (type === key) return;
         setLoading(true);
         getRanks(key);
-        setTab(key);
+        setType(key);
     };
 
     useUpdateEffect(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        const team = urlParams.get('team') !== 'pnl' ? 'volume' : 'pnl';
-        urlParams.set('individual', tab === 'pnl' ? 'pnl' : 'volume');
-        urlParams.set('team', team);
+        urlParams.set('individual', type === 'pnl' ? 'pnl' : 'volume');
         const url = `/${router.locale}/contest${router.query.season ? '/' + router.query.season : ''}?${urlParams.toString()}`;
         window.history.replaceState(null, null, url);
-    }, [tab]);
+    }, [type]);
 
     const renderName = (data, item) => {
         return (
@@ -168,6 +171,10 @@ const ContestPerRanks = ({
         );
     };
 
+    const renderVolume = (item, className = '') => {
+        return <VolumeTooltip item={item} className={className} tooltip={converted_vol} />;
+    };
+
     const dataFilter = dataSource.slice((page - 1) * pageSize, page * pageSize);
 
     return (
@@ -194,27 +201,13 @@ const ContestPerRanks = ({
                     )}
                 </div>
                 {showPnl && (
-                    <div className="flex items-center gap-3">
-                        <ButtonNao
-                            onClick={() => onFilter('volume')}
-                            className={`px-4 py-2 !rounded-md ${
-                                tab === 'volume'
-                                    ? 'font-semibold'
-                                    : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
-                            }`}
-                        >
+                    <div className="flex items-center space-x-2 text-sm">
+                        <ButtonNaoV2 active={type === 'volume'} onClick={() => onFilter('volume')}>
                             {t('nao:contest:volume')}
-                        </ButtonNao>
-                        <ButtonNao
-                            onClick={() => onFilter('pnl')}
-                            className={`px-4 py-2 !rounded-md   ${
-                                tab === 'pnl'
-                                    ? 'font-semibold'
-                                    : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
-                            }`}
-                        >
-                            {t('nao:contest:per_pnl')}
-                        </ButtonNao>
+                        </ButtonNaoV2>
+                        <ButtonNaoV2 active={type === 'pnl'} onClick={() => onFilter('pnl')}>
+                            {isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
+                        </ButtonNaoV2>
                     </div>
                 )}
             </div>
@@ -250,9 +243,9 @@ const ContestPerRanks = ({
                             <div className="flex flex-col mt-auto space-y-1 rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                                        {t('nao:contest:volume')} ( {quoteAsset})
+                                        {t('nao:contest:volume')} {quoteAsset}
                                     </div>
-                                    <span className="font-semibold">{formatNumber(item?.total_volume, 0)}</span>
+                                    {renderVolume(item)}
                                 </div>
                                 <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</div>
@@ -260,13 +253,12 @@ const ContestPerRanks = ({
                                         {formatNumber(item?.time, 2)} {t('common:hours')}
                                     </span>
                                 </div>
-                                {tab === 'pnl' ? (
+                                {type === 'pnl' ? (
                                     <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
-                                        <span className={`font-semibold ${getColor(item.pnl)}`}>
-                                            {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}
-                                            {formatNumber(item?.pnl, 2, 0, true)}%
-                                        </span>
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                            {isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
+                                        </div>
+                                        <CPnl item={item} isTotal={isTotalPnl} />
                                     </div>
                                 ) : (
                                     <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4">
@@ -329,24 +321,22 @@ const ContestPerRanks = ({
                                             <label className="text-txtSecondary dark:text-txtSecondary-dark">
                                                 {t('nao:contest:volume')} ({quoteAsset})
                                             </label>
-                                            <span className="text-right">{formatNumber(item?.total_volume, 0)}</span>
+                                            {renderVolume(item, 'text-right')}
                                         </div>
                                         <div className="flex items-center justify-between pt-3">
                                             <label className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</label>
-                                            <span className="text-right">
+                                            <span className="text-right font-semibold">
                                                 {formatNumber(item?.time, 2)} {t('common:hours')}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between pt-3">
                                             <label className="text-txtSecondary dark:text-txtSecondary-dark">
-                                                {t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
+                                                {t(`nao:contest:${type === 'pnl' ? (isTotalPnl ? 'pnl' : 'per_pnl') : 'total_trades'}`)}
                                             </label>
-                                            {tab === 'pnl' ? (
-                                                <span className={`text-right ${getColor(item?.pnl)}`}>
-                                                    {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
-                                                </span>
+                                            {type === 'pnl' ? (
+                                                <CPnl item={item} isTotal={isTotalPnl} className={'text-right'} />
                                             ) : (
-                                                <span className={`text-right`}>{formatNumber(item?.total_order)}</span>
+                                                <span className={`text-right font-semibold`}>{formatNumber(item?.total_order)}</span>
                                             )}
                                         </div>
                                     </div>
@@ -381,9 +371,10 @@ const ContestPerRanks = ({
                             minWidth={120}
                             align="right"
                             className=""
-                            title={`${t('nao:contest:volume')} (${quoteAsset})`}
+                            title={`${t('nao:contest:volume')} ${quoteAsset}`}
                             decimal={0}
                             fieldName="total_volume"
+                            cellRender={(data, item) => renderVolume(item)}
                         />
                         <Column
                             minWidth={120}
@@ -394,15 +385,15 @@ const ContestPerRanks = ({
                             fieldName="time"
                             suffix={t('common:hours')}
                         />
-                        {tab === 'pnl' ? (
+                        {type === 'pnl' ? (
                             <Column
-                                maxWidth={100}
-                                minWidth={80}
+                                maxWidth={200}
+                                minWidth={isTotalPnl ? 200 : 100}
                                 align="right"
                                 className=""
-                                title={t('nao:contest:per_pnl')}
-                                fieldName="pnl"
-                                cellRender={renderPnl}
+                                title={isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
+                                fieldName={isTotalPnl ? 'total_pnl' : 'pnl'}
+                                cellRender={(data, item) => (isTotalPnl ? <CPnl item={item} isTotal={isTotalPnl} /> : renderPnl(data))}
                             />
                         ) : (
                             <Column

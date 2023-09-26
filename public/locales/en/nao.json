@@ -265,7 +265,8 @@
         "personal_achievements_note": "Note: Monthly statistics are calculated from the start of the tournament, weekly statistics are calculated from 00:00 every Monday (UTC+7)",
         "team_avatar": "Team avatar",
         "drag_drop": "Drag and drop an image or click to upload an image",
-        "format_support": "Image format support"
+        "format_support": "Image format support",
+        "converted_volume": "The converted volume includes"
     },
     "year_summary": {
         "title": "NAO Futures {{version}} Achievements",
