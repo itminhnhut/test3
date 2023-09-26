@@ -387,8 +387,8 @@ const ContestPerRanks = ({
                         />
                         {type === 'pnl' ? (
                             <Column
-                                maxWidth={100}
-                                minWidth={80}
+                                maxWidth={200}
+                                minWidth={isTotalPnl ? 200 : 100}
                                 align="right"
                                 className=""
                                 title={isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}

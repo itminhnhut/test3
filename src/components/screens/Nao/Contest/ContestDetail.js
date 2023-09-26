@@ -574,7 +574,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             />
                             <Column
                                 visible={!isPending.group && showPnl}
-                                minWidth={100}
+                                minWidth={isTotalPnl ? 200 : 100}
                                 align="right"
                                 className="font-semibold"
                                 title={isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}

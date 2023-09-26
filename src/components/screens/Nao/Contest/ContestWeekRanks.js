@@ -191,7 +191,7 @@ const ContestWeekRanks = ({
             );
         }
         return rs;
-    }, [weeks, filter.weekly, previous]);
+    }, [weeks, filter, previous]);
 
     const renderVolume = (item, className = '') => {
         return <VolumeTooltip item={item} className={className} tooltip={converted_vol} />;
@@ -413,8 +413,8 @@ const ContestWeekRanks = ({
                         />
                         {filter.type === 'pnl' ? (
                             <Column
-                                maxWidth={120}
-                                minWidth={100}
+                                maxWidth={200}
+                                minWidth={isTotalPnl ? 200 : 100}
                                 align="right"
                                 className=""
                                 title={isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
