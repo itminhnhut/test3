@@ -150,24 +150,24 @@ const WalletDetail = ({ idNFT }) => {
     };
 
     const renderImage = () => {
-        if (detail?.category === 1 && detail?.status !== 0) {
-            return (
-                <WrapperImage className="w-[100vw] max-w-[550px] max-h-[550px]">
-                    <img width={550} height={550} src={detail?.image} />
-                </WrapperImage>
-            );
-        }
-        if (detail?.category === 2 && detail?.status !== 0 && !detail?.transferable) {
-            return (
-                <WrapperImage className="w-[100vw] max-w-[550px] max-h-[550px]">
-                    <img width={550} height={550} src={detail?.image} />
-                </WrapperImage>
-            );
-        }
+        // if (detail?.category === 1 && detail?.status !== 0) {
+        //     return (
+        //         <WrapperImage className="w-[100vw] max-w-[401px] max-h-[401px]">
+        //             <img width={401} height={401} src={detail?.image} />
+        //         </WrapperImage>
+        //     );
+        // }
+        // if (detail?.category === 2 && detail?.status !== 0 && !detail?.transferable) {
+        //     return (
+        //         <WrapperImage className="w-[100vw] max-w-[550px] max-h-[550px]">
+        //             <img width={550} height={550} src={detail?.image} />
+        //         </WrapperImage>
+        //     );
+        // }
 
         return detail?.image ? (
-            <WrapperImage className="w-[100vw] max-w-[614px] max-h-[614px]">
-                <img width={614} height={614} src={detail?.image} />
+            <WrapperImage className="w-[100vw] max-w-[401px] max-h-[401px]">
+                <img width={401} height={401} src={detail?.image} />
             </WrapperImage>
         ) : null;
     };
@@ -179,8 +179,15 @@ const WalletDetail = ({ idNFT }) => {
     return (
         <MaldivesLayout>
             <main className="bg-white dark:bg-shadow">
-                <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px]">
-                    <header className="mt-20">
+                <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px] mt-20 gap-20 flex flex-row">
+                    <section className="w-full">
+                        <Contents detail={detail} wallet={true} isDark={isDark} />
+                    </section>
+                    <section className="border-divider dark:border-dark rounded-xl p-4 border-[1px] max-h-max">
+                        {renderImage()}
+                        {detail?.category === 1 ? renderVoucher(detail) : renderNFT(detail)}
+                    </section>
+                    {/* <header className="mt-20">
                         <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">{t('nft:detail.title')}</h1>
                     </header>
                     <section className="mt-8 flex flex-row gap-4">
@@ -195,7 +202,7 @@ const WalletDetail = ({ idNFT }) => {
                     <section className="mt-[60px]">
                         <h3 className="text-2xl font-semibold text-gray-15 dark:text-gray-4">{t('nft:history:title')}</h3>
                         <section className="mt-4">{renderHistory()}</section>
-                    </section>
+                    </section> */}
                 </article>
                 <Use
                     isModal={isUse}

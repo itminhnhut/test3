@@ -14,20 +14,20 @@ const Effective = ({ effective, dark }) => {
     const renderEffective = useMemo(() => {
         return (
             <WrapperContent className="mt-4">
-                <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4">{t('nft:detail:features')}</h3>
-                <selection className="w-full rounded-xl mt-3 flex flex-col gap-3 h-[96px] overflow-y-auto">
+                <h3 className="font-semibold text-[18px] text-gray-15 dark:text-gray-4 mt-12">{t('nft:detail:features')}</h3>
+                <selection className="w-full rounded-xl mt-3 flex flex-col gap-3">
                     {effective.length > 0
                         ? effective?.map((value) => {
                               const isHtml = REGEX_HTML.test(value);
                               return !isHtml ? (
-                                  <selection className="flex flex-row items-center">
+                                  <selection className="flex flex-row items-center" key={`effective_${value}`}>
                                       <div>
                                           <CheckCircle2Icon />
                                       </div>
                                       <p className="ml-2 dark:text-gray-4 text-gray-15">{value}</p>
                                   </selection>
                               ) : (
-                                  <selection className="flex flex-row items-center">
+                                  <selection className="flex flex-row items-center" key={`effective_html_${value}`}>
                                       <div>
                                           <CheckCircle2Icon />
                                       </div>
@@ -45,7 +45,7 @@ const Effective = ({ effective, dark }) => {
 };
 
 const WrapperContent = styled.section.attrs(() => ({
-    className: 'bg-white border-[1px] border-divider border-solid dark:border-0 dark:bg-dark-4 px-4 py-4 rounded-xl'
+    className: ''
 }))``;
 
 export default Effective;

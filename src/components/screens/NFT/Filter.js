@@ -1,45 +1,50 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 
+// ** NEXT
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-
 import { useTranslation } from 'next-i18next';
 
+// ** Utils
 import FetchApi from 'utils/fetch-api';
 
+// ** Redux
+import { useSelector } from 'react-redux';
 import { API_GET_COLLECTION, API_GET_NFT_LIST, API_GET_DETAIL_COLLECTION } from 'redux/actions/apis';
 
+// ** Components
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
-
 import { TABS } from 'components/screens/NFT/Constants';
 
+// ** Third party
 import { HelpIcon } from 'components/svg/SvgIcon';
-
+import { ChevronRight } from 'react-feather';
 import classNames from 'classnames';
 import styled from 'styled-components';
+import colors from 'styles/colors';
+import Image from 'next/image';
 
 // ** Dynamic
 const NotAuth = dynamic(() => import('./Components/Page/NoAuth'), { ssr: false });
 const SkeletonCard = dynamic(() => import('./Components/Page/SkeletonCard'), { ssr: false });
-
 const CardItems = dynamic(() => import('./Components/Lists/CardItems'), { ssr: false });
-
 const AllFilters = dynamic(() => import('./Components/Lists/AllFilters'), { ssr: false });
-const CategoryFilter = dynamic(() => import('./Components/Lists/CategoryFilter'), { ssr: false });
-const CollectionFilter = dynamic(() => import('./Components/Lists/CollectionFilter'), { ssr: false });
 const TierFilter = dynamic(() => import('./Components/Lists/TierFilter'), { ssr: false });
-
+const CategoryFilter = dynamic(() => import('./Components/Lists/CategoryFilter'), { ssr: false });
+const HeaderNFT = dynamic(() => import('components/screens/NFT/Components/Header'), { ssr: false });
+const CollectionFilter = dynamic(() => import('./Components/Lists/CollectionFilter'), { ssr: false });
 const ModalInfoInfinity = dynamic(() => import('components/screens/Wallet/NFT/Components/Modal/InfoInfinity'), { ssr: false });
 
+// ** Default
 const DEFAULT_PATH_NAME = '/nft';
-
 const DEFAULT_FILTER = {
     tab: 2,
     grid: 4
 };
 
-const iniData = {
+// ** initData
+const initData = {
     tier: [],
     search: '',
     isOpen: false,
@@ -54,7 +59,7 @@ const Filter = ({ isDark }) => {
 
     const [data, setData] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-    const [filter, setFilter] = useState(iniData);
+    const [filter, setFilter] = useState(initData);
     const [isLoading, setIsLoading] = useState(false);
     const [dataCollection, setDataCollection] = useState();
     const [detailCollection, setDetailCollection] = useState();
@@ -135,7 +140,7 @@ const Filter = ({ isDark }) => {
 
                 setFilter((prev) => ({ ...prev, collection: [nft_collection], isShowCollection: false }));
             } else {
-                setFilter((prev) => ({ ...prev, ...iniData }));
+                setFilter((prev) => ({ ...prev, ...initData }));
             }
         }
     }, [router.query, dataCollection]);
@@ -144,12 +149,13 @@ const Filter = ({ isDark }) => {
     useEffect(() => {
         if (!filter.isShowCollection) {
             handleGetDetailCollection();
+        } else {
+            setDetailCollection(null);
         }
     }, [filter.isShowCollection]);
 
     useEffect(() => {
         const { tab = DEFAULT_FILTER.tab, grid = DEFAULT_FILTER.grid } = router.query;
-
         setFilter((prev) => ({ ...prev, tab: +tab, grid: +grid }));
     }, [router.query]);
 
@@ -228,20 +234,20 @@ const Filter = ({ isDark }) => {
     }, [isLoading, isDark, data, filter.isShowCollection, filter.grid, filter.isOpen, filter.category]);
 
     const renderHeader = useCallback(() => {
-        if (filter.isShowCollection) {
-            return (
-                <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 `">
-                    <header className="mt-10 flex flex-row items-center gap-x-2">
-                        <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">Nami Infinity</h1>
-                        <div className="cursor-pointer" onClick={handleToggleModal}>
-                            <HelpIcon size={24} color="currentColor" />
-                        </div>
-                    </header>
-                </section>
-            );
-        }
+        // if (filter.isShowCollection) {
+        //     return (
+        //         <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
+        //             <header className="mt-12 flex flex-row items-center gap-x-2">
+        //                 <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">Nami Infinity</h1>
+        //                 <div className="cursor-pointer" onClick={handleToggleModal}>
+        //                     <HelpIcon size={24} color="currentColor" />
+        //                 </div>
+        //             </header>
+        //         </section>
+        //     );
+        // }
 
-        if (detailCollection?._id) {
+        if (detailCollection?._id && !filter.isShowCollection) {
             const { name, thumbnail, banner, total_nft } = detailCollection;
             return (
                 <section className="m-auto px-4 mb-[60px]">
@@ -265,6 +271,25 @@ const Filter = ({ isDark }) => {
                     </section>
                     <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                         <section className="px-4 mt-[124px] text-gray-15 dark:text-gray-4">{detailCollection?.[`description_${language}`]}</section>
+                        <section className="px-4 mt-6 text-gray-15 dark:text-gray-4 bg-dark-13 dark:bg-dark-4 p-4 gap-3 justify-between flex flex-row rounded-xl items-center">
+                            <section className="w-full flex flex-row gap-3 items-center">
+                                <section className="flex justify-center p-[13px] rounded-full bg-dark-2">
+                                    <Image src="/images/nft/collection/ic_launchpad.png" width={32} height={32} />
+                                </section>
+                                <section className="flex flex-col gap-1">
+                                    <div className="font-semibold dark:text-green-2 text-green-3">{t('nft:collection:reward_system')}</div>
+                                    <div>{t('nft:collection:reward_content', { name })}</div>
+                                </section>
+                            </section>
+                            <Link href="#">
+                                <a target="_blank">
+                                    <section className="dark:text-green-2 text-green-3 text-base font-semibold flex flex-row gap-2 whitespace-nowrap items-center cursor-pointer">
+                                        <p>{t('nft:collection:go_event')}</p>
+                                        <ChevronRight size={16} color={isDark ? colors.green[2] : colors.green[3]} />
+                                    </section>
+                                </a>
+                            </Link>
+                        </section>
                     </article>
                 </section>
             );
@@ -273,20 +298,26 @@ const Filter = ({ isDark }) => {
 
     return (
         <>
+            {filter?.isShowCollection ? <HeaderNFT /> : null}
             {renderHeader()}
             <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px]">
-                <Tabs isDark tab={filter.tab} className="mt-8 gap-6 border-b border-divider dark:border-divider-dark">
-                    {TABS?.map((item, idx) => (
-                        <TabItem
-                            key={item.label}
-                            className="!text-left !px-0 !text-base "
-                            value={item.value}
-                            onClick={(isClick) => isClick && handleTab(item.value)}
-                            isActive={item.value === filter.tab}
-                        >
-                            {item.label}
-                        </TabItem>
-                    ))}
+                <Tabs isDark tab={filter.tab} className="mt-12 gap-6 border-b border-divider dark:border-divider-dark justify-between">
+                    <section className="flex gap-6">
+                        {TABS?.map((item, idx) => (
+                            <TabItem
+                                key={item.label}
+                                className="!text-left !px-0 !text-base "
+                                value={item.value}
+                                onClick={(isClick) => isClick && handleTab(item.value)}
+                                isActive={item.value === filter.tab}
+                            >
+                                {item.label}
+                            </TabItem>
+                        ))}
+                    </section>
+                    <p className="cursor-pointer font-semibold dark:text-green-2 text-green-3" onClick={handleToggleModal}>
+                        {t('nft:read_more')}
+                    </p>
                 </Tabs>
                 <section className="mt-8 flex flex-row gap-x-3">
                     <AllFilters filter={filter} onChangeToggle={handleToggle} onChangeGird={handleSelectGrid} onChangeSearch={handleChangInput} />

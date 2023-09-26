@@ -3,6 +3,7 @@ module.exports = {
         locales: ['vi', 'en'],
         defaultLocale: 'en',
         keySeparator: '.',
-        localeDetection: false,
+        localeDetection: false
     },
+    reloadOnPrerender: true
 };

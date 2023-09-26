@@ -11,6 +11,7 @@
     "detail": {
         "title": "Thông tin chi tiết",
         "type": "Loại",
+        "total": "Tổng phát hành",
         "exp": "Hạn sử dụng",
         "des": "Mô tả",
         "features": "Tính năng",
@@ -19,7 +20,14 @@
             "CASHBACK": "<0>Giảm {{- value}}% phí giao dịch trong vòng {{- week}} ngày<0>",
             "APY_BOOSTER": "<0>APY Booster {{- value}}% trong {{- day}} ngày<0>"
         },
-        "tooltip_exp": "Sau khi NFT hết hạn, bạn sẽ không thể kích hoạt các lợi ích đi kèm"
+        "tooltip_exp": "Sau khi NFT hết hạn, bạn sẽ không thể kích hoạt các lợi ích đi kèm",
+        "get_rewarded_now": "Nhận thưởng ngay"
+    },
+    "collection": {
+        "read_more": "Xem thêm",
+        "reward_system": "Hệ thống phần thưởng",
+        "reward_content": "Hoàn thành các sự kiện để nhận thêm phần thưởng hấp dẫn từ bộ sưu tập {{name}}",
+        "go_event": "Đến trang Sự kiện"
     },
     "history": {
         "title": "Lịch sử",
@@ -51,5 +59,7 @@
         "9000": "Nami ID không hợp lệ",
         "code_error_format": "Nami ID chưa đúng định dạng"
     },
-    "read_more": "Tìm hiểu thêm về Nami Infinity"
+    "read_more": "Tìm hiểu thêm về Nami Infinity",
+    "wallet_no_data": "Bạn hiện không có NFT",
+    "to_nft": "Đến NFT Infinity"
 }

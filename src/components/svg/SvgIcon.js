@@ -1804,6 +1804,40 @@ const CheckCircle2Icon = ({ size = '16' }) => {
     );
 };
 
+const BoltCircleIcon = ({ size = 16 }) => {
+    return (
+        <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M7.999 1.332a6.674 6.674 0 0 0-6.667 6.667 6.674 6.674 0 0 0 6.667 6.666A6.674 6.674 0 0 0 14.665 8 6.674 6.674 0 0 0 8 1.332zm-.667 10.667V8.665H4.665l4-4.666v3.333h2.667l-4 4.667z"
+                fill="#8694B3"
+            />
+        </svg>
+    );
+};
+
+const RocketIcon = ({ size = 16 }) => {
+    return (
+        <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.462 6.846a1.333 1.333 0 1 0 0-2.666 1.333 1.333 0 0 0 0 2.666z" fill="#0C0E14" />
+            <path
+                d="M10.523 10.56s1.903-1.903 2.554-2.552c2.042-2.042 1.02-6.128 1.02-6.128S10.012.86 7.97 2.902C6.443 4.428 5.426 5.48 5.426 5.48s-2.562-.536-4.094.996l8.17 8.17c1.532-1.532 1.02-4.086 1.02-4.086zM9.52 4.57a1.332 1.332 0 1 1 0 1.885 1.333 1.333 0 0 1 0-1.885zM1.98 13.978s2 0 3.334-1.334l-2-2c-1.334.667-1.334 3.334-1.334 3.334z"
+                fill="#768394"
+            />
+        </svg>
+    );
+};
+
+const TimeIcon = ({ size = 16 }) => {
+    return (
+        <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M8.167 1.332A6.674 6.674 0 0 0 1.5 7.999a6.674 6.674 0 0 0 6.667 6.666A6.674 6.674 0 0 0 14.833 8a6.674 6.674 0 0 0-6.666-6.667zM12 8.665H7.5V4h1.333v3.333H12v1.333z"
+                fill="#8694B3"
+            />
+        </svg>
+    );
+};
+
 export {
     AddCircleColorIcon,
     AddCircleIcon,
@@ -1899,5 +1933,8 @@ export {
     MediumIconV2,
     DiscordIconV2,
     FbIconV2,
-    RedditIconV2
+    RedditIconV2,
+    BoltCircleIcon,
+    RocketIcon,
+    TimeIcon
 };

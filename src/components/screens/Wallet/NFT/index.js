@@ -194,6 +194,7 @@ const NFTWallet = () => {
                     isDark={isDark}
                     grid={filter.grid}
                     isOpen={filter.isOpen}
+                    tab={filter.wallet}
                     noResult={filter.search.length > 0}
                     showCollection={filter.isShowCollection}
                 />
