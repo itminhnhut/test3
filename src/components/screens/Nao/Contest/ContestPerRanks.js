@@ -20,7 +20,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_RANK_MEMBERS_PNL, API_CONTEST_GET_RANK_MEMBERS_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { formatNumber, getS3Url, getLoginUrl } from 'redux/actions/utils';
+import { formatNumber, getS3Url, getLoginUrl, convertSymbol } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
@@ -74,13 +74,17 @@ const ContestPerRanks = ({
     }, [isMobile]);
 
     useEffect(() => {
-        getRanks(sort);
+        setLoading(true);
         setType(sort);
     }, [contest_id]);
 
     useEffect(() => {
-        if (mount.current) getRanks(type);
-    }, [quoteAsset]);
+        getRanks(type);
+    }, [quoteAsset, type]);
+
+    useEffect(() => {
+        setQuoteAsset(q);
+    }, [q]);
 
     const onReadMore = () => {
         setPageSize((old) => {
@@ -99,7 +103,7 @@ const ContestPerRanks = ({
         try {
             const { data: originalData, status } = await fetchApi({
                 url: type === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
-                params: { contest_id, quoteAsset }
+                params: { contest_id, quoteAsset: convertSymbol(quoteAsset) }
             });
             const data = originalData?.users;
             setTotal(data.length);
@@ -123,7 +127,6 @@ const ContestPerRanks = ({
     const onFilter = (key) => {
         if (type === key) return;
         setLoading(true);
-        getRanks(key);
         setType(key);
     };
 

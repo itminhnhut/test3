@@ -328,7 +328,7 @@ export const seasons = [
         },
         total_rewards: '1,000,000,000 VNST',
         total_weekly_rewards: '40,000,000 VNST & 40,000 NAO',
-        quoteAsset: 'VNDC',
+        quoteAsset: 'VNST',
         active: true,
         top_ranks_per: 20,
         top_ranks_week: 20,
