@@ -366,8 +366,8 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                             }
                             prefix={
                                 <span className="mt-1 text-xs font-normal absolute bottom-0 left-0">
-                                    Tối thiểu: {formatNumber(filter.collateral?.config?.minLimit || 0, filter.collateral.config?.assetDigit)} . Tối đa:
-                                    {formatNumber(filter.collateral?.config?.maxLimit, filter.collateral.config?.assetDigit)}
+                                    Tối thiểu: {formatNumber(filter?.collateral?.config?.minLimit || 0, filter?.collateral?.config?.assetDigit)} . Tối đa:
+                                    {formatNumber(filter?.collateral?.config?.maxLimit, filter?.collateral?.config?.assetDigit)}
                                 </span>
                             }
                         />

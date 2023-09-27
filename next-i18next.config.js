@@ -4,6 +4,6 @@ module.exports = {
         defaultLocale: 'en',
         keySeparator: '.',
         localeDetection: false
-    }
-    // reloadOnPrerender: true
+    },
+    reloadOnPrerender: true
 };

@@ -93,14 +93,14 @@ const HISTORY_TAB = [
 ];
 
 const STATUS_VI = [
-    { title: 'All', value: null },
-    { title: 'Lệnh thanh lý', value: '1' },
-    { title: 'Lệnh đã thanh toán', value: '2' }
+    { title: 'Tất cả', value: 'CLOSED' },
+    { title: 'Thanh lý', value: 'LIQUIDATED' },
+    { title: 'Đã thanh toán', value: 'REPAID' }
 ];
 const STATUS_EN = [
-    { title: 'All', value: null },
-    { title: 'Lệnh thanh lý', value: '1' },
-    { title: 'Lệnh đã thanh toán', value: '2' }
+    { title: 'All', value: 'CLOSED' },
+    { title: 'Thanh lý', value: 'LIQUIDATED' },
+    { title: 'Đã thanh toán', value: 'REPAID' }
 ];
 
 const LOANABLE = 'loanable';
@@ -109,11 +109,25 @@ const DEFAULT_LOANABLE_ASSET = 'VNST';
 const DEFAULT_COLLATERAL_ASSET = 'BNB';
 const ALLOW_LTV_TOOLTIP = ['ltv_initial', 'ltv_margin', 'ltv_liquidate'];
 const PERCENT = 100;
+const YEAR = 365;
+const HOUR = 24;
+const MILLISECOND = 1;
+
+const LOAN_HISTORY_STATUS = {
+    ONGOING: { vi: 'Bình thường', en: 'Bình thường' },
+    OVERDUE: { vi: 'Trả chậm', en: 'Trả chậm' },
+    LTV_LIQUIDATED: { vi: 'ltv thanh lý', en: 'ltv thanh lý' },
+    DEADLINE_LIQUIDATED: { vi: 'Hết hạn', en: 'Hết hạn' },
+    REPAID: { vi: 'Hoàn tiền', en: 'Hoàn tiền' }
+};
 
 export {
     FAQ,
     LTV,
+    HOUR,
+    YEAR,
     TABS,
+    MILLISECOND,
     PERCENT,
     PROFITS,
     LOANABLE,
@@ -123,6 +137,7 @@ export {
     HISTORY_TAB,
     BORROWING_TERM,
     ALLOW_LTV_TOOLTIP,
+    LOAN_HISTORY_STATUS,
     DEFAULT_LOANABLE_ASSET,
     DEFAULT_COLLATERAL_ASSET
 };

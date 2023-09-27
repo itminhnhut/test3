@@ -18,6 +18,7 @@ import sortBy from 'lodash/sortBy';
 import classNames from 'classnames';
 import { List } from 'react-virtualized';
 import { useTranslation } from 'next-i18next';
+import styled from 'styled-components';
 
 const AssetFilter = ({
     asset,
@@ -29,7 +30,8 @@ const AssetFilter = ({
     wrapperClassName = '',
     labelClassName = '',
     containerClassName = '',
-    labelAsset = ''
+    labelAsset = '',
+    data = false
 }) => {
     const { t } = useTranslation();
 
@@ -43,13 +45,17 @@ const AssetFilter = ({
 
     // ** useMemo
     const filterAssets = useMemo(() => {
-        const rs = sortBy(filterSearch(assetConfigs, ['assetCode', 'assetName'], search), [
+        let rsData = assetConfigs;
+        if (data) {
+            rsData = data;
+        }
+        const rs = sortBy(filterSearch(rsData, ['assetCode', 'assetName'], search), [
             function (asset) {
                 return asset?.assetCode;
             }
         ]).filter((f) => f.id !== assetCode);
         return rs;
-    }, [assetConfigs, search, assetCode]);
+    }, [search, assetCode, data]);
 
     // ** render
     const rowRenderer = useCallback(
@@ -132,11 +138,16 @@ const AssetFilter = ({
                 {!filterAssets?.length ? (
                     <NoResult text={t('common:no_results_found')} />
                 ) : (
-                    <List width={400} height={280} rowCount={filterAssets.length} rowHeight={60} rowRenderer={rowRenderer} />
+                    <WrapperList width={400} height={280} rowCount={filterAssets.length} rowHeight={60} rowRenderer={rowRenderer} />
                 )}
             </PopoverSelect>
         </section>
     );
 };
+
+const WrapperList = styled(List)`
+    max-height: ${(props) => props.height}px;
+    height: max-content !important;
+`;
 
 export default React.memo(AssetFilter);

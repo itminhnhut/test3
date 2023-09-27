@@ -30,7 +30,7 @@ const CONTENT = {
 
 // ** iniData
 const iniData = {
-    tab: 'lending'
+    tab: 'history'
 };
 
 const TAB_ALLOW = ['lending', 'loan', 'history'];
