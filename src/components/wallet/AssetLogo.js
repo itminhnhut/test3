@@ -21,7 +21,7 @@ const AssetLogo = (props) => {
             if (useNextImg) {
                 return <Image src={logoUrl} width={`${logoSize}`} height={`${logoSize}`} alt={alt || ''} />; // <img src={logoUrl} width={`${logoSize}`} height={`${logoSize}`} />;
             }
-            return <img src={logoUrl} alt="" style={{ minWidth: logoSize, borderRadius: '50%' }} width={logoSize} height={logoSize} />;
+            return <img className='token_logo' src={logoUrl} alt="" style={{ minWidth: logoSize, borderRadius: '50%' }} width={logoSize} height={logoSize} />;
         }
         return null;
         // return <img src="/images/icon/ic_exchange_unknown.png" style={{ minWidth: logoSize }} width={logoSize} height={logoSize} alt="" />;

@@ -1118,7 +1118,7 @@ input:-webkit-autofill {
 }
 
 .mySwiper {
-    .swiper-slide img {
+    .swiper-slide img:not(.token_logo) {
         display: block !important;
         width: 100% !important;
         height: 100% !important;
