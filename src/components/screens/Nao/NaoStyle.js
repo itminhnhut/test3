@@ -7,13 +7,15 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
-import _ from 'lodash';
+import _, { isFunction } from 'lodash';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import CheckCircle from 'components/svg/CheckCircle';
 import CrossCircle from 'components/svg/CrossCircle';
 import { WarningFilledIcon, RemoveCircleIcon } from 'components/svg/SvgIcon';
 import { IconArrowOnus } from 'components/common/Icons';
+import { QUOTE_ASSET } from 'constants/constants';
+import { useSelector } from 'react-redux';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-xl sm:text-2xl font-semibold w-max text-txtPrimary dark:text-txtPrimary-dark'
@@ -65,6 +67,14 @@ export const ButtonNao = styled.div.attrs(({ disabled, variant, active = true })
         'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': variant === ButtonNaoVariants.SECONDARY || active === false,
         'bg-red-2 text-white': variant === ButtonNaoVariants.DANGER,
         '!bg-gray-12 dark:!bg-dark-2 text-txtDisabled dark:text-txtDisabled-dark': disabled
+    })
+}))``;
+
+export const ButtonNaoV2 = styled.button.attrs(({ active, variant }) => ({
+    className: classNames('px-4 py-2 text-sm rounded-md', {
+        'font-semibold text-teal bg-teal/10': active,
+        'bg-gray-13 dark:bg-dark-4 text-txtSecondary dark:text-txtSecondary-dark': !active,
+        '!bg-teal !text-white font-semibold': variant === 'primary' && !active
     })
 }))``;
 
@@ -579,4 +589,63 @@ export const VoteStatus = ({ iconClassName = '', className = '', status, statusT
         }
     };
     return <div className={`flex space-x-1 sm:space-x-2 items-center ${className}`}>{renderStatus()}</div>;
+};
+
+export const VolumeTooltip = ({ item, tooltip, className, suffix }) => {
+    const { t } = useTranslation();
+    const currency = Object.entries(QUOTE_ASSET).map(([key, value]) => ({ key, value }));
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
+    const detail = item?.detail_volume ?? {};
+    const idTooltip = `${item?.code}_${item?.user_id}`;
+
+    return (
+        <>
+            {tooltip && (
+                <Tooltip id={idTooltip} className={'!max-w-max'}>
+                    <div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark mb-3">{t('nao:contest:converted_volume')}</div>
+                        {Object.keys(detail).map((key) => {
+                            const quoteAsset = currency.find((c) => String(c.value) === String(key));
+                            const decimal = assetConfig.find((rs) => String(rs.id) === String(key))?.assetDigit ?? 0;
+                            return (
+                                <div key={key} className="flex items-center space-x-2">
+                                    <span className="font-semibold">{formatNumber(detail[key], decimal)}</span>
+                                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{quoteAsset.key}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </Tooltip>
+            )}
+            <span
+                data-tip=""
+                data-for={idTooltip}
+                onClick={(e) => e.stopPropagation()}
+                className={classNames(
+                    'font-semibold flex items-center space-x-1',
+                    {
+                        'border-dashed border-b dark:border-gray-7 border-gray-1': tooltip
+                    },
+                    className
+                )}
+            >
+                <span>{formatNumber(item?.total_volume, 0)}</span>
+                {suffix && <div>{isFunction(suffix) ? suffix() : suffix}</div>}
+            </span>
+        </>
+    );
+};
+
+export const CPnl = ({ item, isTotal, className }) => {
+    const value = isTotal ? item?.total_pnl : item?.pnl;
+    const prefix = value !== 0 && value > 0 ? '+' : '';
+    const suffix = isTotal ? '' : '%';
+    const decimal = isTotal ? 0 : 2;
+    return (
+        <span className={`font-semibold ${getColor(value)} ${className}`}>
+            {prefix}
+            {formatNumber(value, decimal, 0, true)}
+            {suffix}
+        </span>
+    );
 };

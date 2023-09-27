@@ -239,6 +239,7 @@ export const API_CONTEST_GET_RANK_MEMBERS_PNL = API_PREFIX + 'event/futures-cont
 export const API_CONTEST_GET_RANK_MEMBERS_VOLUME = API_PREFIX + 'event/futures-contest/rank-member-volume';
 export const API_CONTEST_GET_USER_DETAIL = API_PREFIX + 'event/futures-contest/user-info';
 export const API_CONTEST_GET_RANK_WEEKLY_VOLUME = API_PREFIX + 'event/weekly-futures-contest/individual-rank-volume';
+export const API_CONTEST_GET_RANK_WEEKLY_PNL = API_PREFIX + 'event/weekly-futures-contest/individual-rank-pnl';
 
 export const API_CONTEST_GET_RANK_GROUP_PNL = API_PREFIX + 'event/futures-contest/group-pnl';
 export const API_CONTEST_GET_RANK_GROUP_VOLUME = API_PREFIX + 'event/futures-contest/group-volume';
