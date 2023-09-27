@@ -54,7 +54,7 @@ const initState = {
     },
     isTransfer: false,
     isUse: false,
-    tab: 'history'
+    tab: 'info'
 };
 
 const TAB_DETAILS = [
@@ -208,7 +208,7 @@ const WalletDetail = ({ idNFT }) => {
             <>
                 <Tabs isDark tab={tab} className="mt-6 gap-6 border-b border-divider dark:border-divider-dark justify-between">
                     <section className="flex gap-6">
-                        {TAB_DETAILS?.map((item, idx) => (
+                        {TAB_DETAILS?.map((item) => (
                             <TabItem
                                 key={item.label?.[language]}
                                 className="!text-left !px-0 !text-base "
@@ -231,7 +231,7 @@ const WalletDetail = ({ idNFT }) => {
             <main className="bg-white dark:bg-shadow">
                 <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px] mt-20 gap-10 flex flex-row">
                     <section className="w-full">
-                        <Contents detail={detail} wallet={true} isDark={isDark} />
+                        <Contents detail={detail} wallet isDark={isDark} />
                         <section>{renderTabs()}</section>
                     </section>
                     <section className="border-divider dark:border-dark rounded-xl p-4 border-[1px] max-h-max">
