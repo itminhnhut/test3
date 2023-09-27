@@ -16,6 +16,7 @@ import { CheckCircleIcon } from 'components/svg/SvgIcon';
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import AssetFilter from 'components/screens/TransactionHistory/TransactionFilter/AssetFilter';
 
 const Tables = ({ language, t, commisionConfig, id1, id2 }) => {
     return (
@@ -26,7 +27,7 @@ const Tables = ({ language, t, commisionConfig, id1, id2 }) => {
     );
 };
 
-export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }) => {
+export const TableFilter = ({ config, filter, setFilter, resetParentCode, type, resetPagination }) => {
     const DatePicker = ({ item, filter, key }) => {
         const data = filter?.[key] || {};
         return (
@@ -64,7 +65,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
                 name="customer"
                 keyExpr="value"
                 popoverPanelClassName="top-auto"
-                className={classNames('!h-11', item.childClassName)}
+                className={classNames(item.selectClassName)}
                 value={data?.value || item.values[0]?.value}
                 options={item.values}
                 popoverClassName="w-[240px]"
@@ -74,6 +75,16 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
                 optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
             />
         );
+    };
+
+    const onChangeAsset = (key, value) => {
+        resetPagination?.();
+        setFilter((old) => ({ ...old, [key]: { ...old[key], value } }));
+    };
+    const AssetFilterFunc = ({ item, filter, key }) => {
+        const data = filter?.[key] || {};
+        // only use when setFilter is React setState function due to useCallback cache
+        return <AssetFilter asset={data.value} labelClassName="hidden" className={item.className} setAsset={(value) => onChangeAsset(key, value)} />;
     };
 
     const Reset = ({ item }) => {
@@ -88,7 +99,8 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
         dateRange: (data) => DatePicker(data),
         input: (data) => Input(data),
         select: (data) => Select(data),
-        reset: (data) => Reset(data)
+        reset: (data) => Reset(data),
+        assetFilter: (data) => AssetFilterFunc(data)
     };
 
     const onChange = (value, key) => {
@@ -99,6 +111,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
         if (key === 'search') {
             resetParentCode();
         }
+        resetPagination?.();
     };
 
     const renderFilter = useCallback(

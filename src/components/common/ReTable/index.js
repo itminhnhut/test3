@@ -430,7 +430,6 @@ const ReTableWrapperV2 = styled.div`
             min-height: ${({ height, empty }) => empty && `${height - 70}px`};
         }
         ${({ rcTableContent }) => (rcTableContent ? { ...rcTableContent } : '')};
-
     }
 
     .rc-table-cell-fix-left,
@@ -486,7 +485,8 @@ const ReTableWrapperV2 = styled.div`
                     min-height: ${({ height }) => `${height}px`};
                     width: 8px !important;
                     left: ${({ unsetLeft }) => (unsetLeft === true ? 'unset' : '8px')} !important;
-                    box-shadow: ${({ isDark, shadowWithFixedCol }) => (shadowWithFixedCol !== false && (isDark ? '-12px 0 20px 0 rgba(0, 0, 0, 0.9)' : '-12px 0 20px 0 rgba(0, 0, 0, 0.2)'))} !important;
+                    box-shadow: ${({ isDark, shadowWithFixedCol }) =>
+                        shadowWithFixedCol !== false && (isDark ? '-12px 0 20px 0 rgba(0, 0, 0, 0.9)' : '-12px 0 20px 0 rgba(0, 0, 0, 0.2)')} !important;
                 }
             }
         }
@@ -524,7 +524,7 @@ const ReTableWrapperV2 = styled.div`
         }
     }
     .rc-table-ping-left tbody::after {
-        box-shadow: ${({ isDark }) => (isDark ? '20px 0px 20px 0px rgba(0,0,0,0.9)' : '')} // '12px 0 20px 0 rgba(0, 0, 0, 0.3)')};
+        box-shadow: ${({ isDark }) => (isDark ? '20px 0px 20px 0px rgba(0,0,0,0.9)' : '')}; // '12px 0 20px 0 rgba(0, 0, 0, 0.3)')};
         left: -40px !important;
     }
 
@@ -572,7 +572,7 @@ const ReTableWrapperV2 = styled.div`
         tbody tr {
             &:hover td {
                 background: ${({ useRowHover, isDark, empty }) =>
-        !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.hover.DEFAULT) : undefined)} !important;
+                    !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.hover.DEFAULT) : undefined)} !important;
                 cursor: ${({ useRowHover }) => (useRowHover ? 'pointer' : 'normal')} !important;
                 .divide-divider-dark > :not([hidden]) ~ :not([hidden]) {
                     border-color: ${({ isDark }) => (isDark ? colors.dark[1] : colors.white)};

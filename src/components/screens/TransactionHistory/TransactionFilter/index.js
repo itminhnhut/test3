@@ -6,9 +6,9 @@ import AssetFilter from './AssetFilter';
 import CategoryFilter from './CategoryFilter';
 import { isFilterEmpty } from '..';
 
-export const FilterWrapper = ({ children, label, className }) => (
+export const FilterWrapper = ({ children, label, className, labelClassName }) => (
     <div className={classNames('text-txtSecondary dark:text-txtSecondary-dark w-full', className)}>
-        <div className="text-sm mb-3">{label}</div>
+        <div className={classNames('text-sm mb-3', labelClassName)}>{label}</div>
         {children}
     </div>
 );

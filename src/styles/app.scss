@@ -999,6 +999,38 @@ input[type='number'] {
     }
 }
 
+.rc-table-content {
+    .border-bottom {
+        &:last-of-type{
+            td {
+                border-bottom: none !important;
+            }
+        }
+        td {
+            @apply border-b border-divider dark:border-divider-dark #{!important};
+        }
+    }
+}
+
+.expandable-table {
+    .rc-table-content{
+        .expanded, .rc-table-row-level-1{
+            @apply bg-dark-12 dark:bg-dark-2;
+            td {
+                border-bottom: none;
+            }
+        }
+        .rc-table-row-level-1 {
+            + .rc-table-row-level-0 {
+                td {
+                    @apply border-divider dark:border-divider-dark;
+                    border-top: 1px solid;
+                }
+            }
+        }
+    }
+}
+
 // Marquee text
 .marquee {
     overflow: hidden;

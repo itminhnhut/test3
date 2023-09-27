@@ -10,12 +10,15 @@ import { X } from 'react-feather';
 import NoResult from 'components/screens/Support/NoResult';
 import { CheckCircleIcon } from 'components/svg/SvgIcon';
 import { filterSearch } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
 
-const AssetFilter = ({ asset, setAsset, t }) => {
+const AssetFilter = ({ asset, setAsset, label, labelClassName, className }) => {
     const popoverRef = useRef(null);
     const [search, setSearch] = useState('');
     const { user: auth } = useSelector((state) => state.auth) || null;
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
+    const {t} = useTranslation();
+    const _label = label ?? t('transaction-history:filter.asset_type');
 
     const fitlerAssets = useMemo(() => {
         return sortBy(filterSearch(assetConfigs, ['assetCode', 'assetName'], search), [
@@ -30,7 +33,7 @@ const AssetFilter = ({ asset, setAsset, t }) => {
             const currentAsset = fitlerAssets[index];
             const isAssetChosen = asset && asset?.id === currentAsset?.id;
             return (
-                <div style={style}>
+                <div style={style} key={key}>
                     <div
                         onClick={() => {
                             if (isAssetChosen) return;
@@ -38,7 +41,6 @@ const AssetFilter = ({ asset, setAsset, t }) => {
                             setTimeout(() => setSearch(''), 100);
                             setAsset(currentAsset);
                         }}
-                        key={key}
                         className={classNames('flex items-center justify-between px-4 py-3 hover:bg-hover dark:hover:bg-hover-dark ', {
                             'text-txtPrimary dark:text-txtPrimary-dark': isAssetChosen,
                             'cursor-pointer ': !isAssetChosen
@@ -58,11 +60,12 @@ const AssetFilter = ({ asset, setAsset, t }) => {
     );
 
     return (
-        <FilterWrapper label={t('transaction-history:filter.asset_type')}>
+        <FilterWrapper label={_label} labelClassName={labelClassName}>
             <PopoverSelect
                 containerClassName="!z-40"
                 className="min-w-[400px] rounded-xl !left-0 !translate-x-0"
                 hideChevron={Boolean(asset)}
+                labelClassName={className}
                 labelValue={() => (
                     <div
                         className={classNames(
@@ -73,7 +76,7 @@ const AssetFilter = ({ asset, setAsset, t }) => {
                         )}
                     >
                         {!asset ? (
-                            t('transaction-history:filter.all')
+                            t('common:all')
                         ) : (
                             <>
                                 <div className="flex items-center  space-x-2">

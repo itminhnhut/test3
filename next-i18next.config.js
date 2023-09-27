@@ -5,7 +5,7 @@ const i18n = {
     keySeparator: '.',
     localeDetection: false,
     // only open on dev
-    // reloadOnPrerender: true,
+    reloadOnPrerender: true,
 };
 
 module.exports = { i18n };
