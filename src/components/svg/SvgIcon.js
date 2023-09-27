@@ -1862,6 +1862,21 @@ const RightDownArrowCircleIcon = ({ size = 20 }) => {
     );
 };
 
+const MoneyNFTIcon = ({ size = 16 }) => {
+    return (
+        <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M14 2.668H2a.666.666 0 0 0-.666.667v9.333c0 .369.298.667.667.667h12a.666.666 0 0 0 .666-.667V3.335a.666.666 0 0 0-.666-.667zm-.666 7.333a2 2 0 0 0-2 2H4.667a2 2 0 0 0-2-2v-4a2 2 0 0 0 2-2h6.667a2 2 0 0 0 2 2v4z"
+                fill="#8694B3"
+            />
+            <path
+                d="M8 5.332a2.67 2.67 0 0 0-2.666 2.667 2.67 2.67 0 0 0 2.667 2.666A2.67 2.67 0 0 0 10.667 8a2.67 2.67 0 0 0-2.666-2.667zm0 4a1.335 1.335 0 0 1-1.333-1.333 1.335 1.335 0 0 1 2.667 0c0 .735-.598 1.333-1.333 1.333z"
+                fill="#8694B2"
+            />
+        </svg>
+    );
+};
+
 export {
     AddCircleColorIcon,
     AddCircleIcon,
@@ -1962,5 +1977,6 @@ export {
     RocketIcon,
     TimeIcon,
     RightTopArrowCircleIcon,
-    RightDownArrowCircleIcon
+    RightDownArrowCircleIcon,
+    MoneyNFTIcon
 };

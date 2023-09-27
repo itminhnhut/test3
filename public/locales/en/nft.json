@@ -22,7 +22,9 @@
             "APY_BOOSTER": "<0>APY Booster {{- value}}% trong {{- day}} ngày<0>"
         },
         "tooltip_exp": "After NFT expires, you will not be able to activate the bundled benefits",
-        "get_rewarded_now": "Get Rewarded Now"
+        "get_rewarded_now": "Get Rewarded Now",
+        "fee_refund": "Fee refund",
+        "tooltip_fee_refund": "Futures fee transaction refunded after activating Blue Tang"
     },
     "collection": {
         "read_more": "Read more",

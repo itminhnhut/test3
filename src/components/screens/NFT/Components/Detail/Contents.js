@@ -6,16 +6,16 @@ import { useTranslation } from 'next-i18next';
 
 // ** Redux
 import { formatTime, formatNumber } from 'redux/actions/utils';
+import { useSelector } from 'react-redux';
 
 // ** Components
 import Tooltip from 'components/common/Tooltip';
 import { WrapperLevelItems } from 'components/screens/NFT/Components/Lists/CardItems';
 import { WrapperStatus } from 'components/screens/NFT/Components/Lists/CardItems';
 import { LIST_TIER, TABS, STATUS } from 'components/screens/NFT/Constants';
-import ModalV2 from 'components/common/V2/ModalV2';
 
 // ** SvgIcon
-import { BoltCircleIcon, RocketIcon, TimeIcon, IconClose } from 'components/svg/SvgIcon';
+import { BoltCircleIcon, RocketIcon, TimeIcon, MoneyNFTIcon } from 'components/svg/SvgIcon';
 
 // ** Third party
 import styled from 'styled-components';
@@ -33,6 +33,8 @@ const Contents = ({ detail, wallet, isDark }) => {
         t,
         i18n: { language }
     } = useTranslation();
+
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
 
     // ** useEffect
     useEffect(() => {
@@ -57,12 +59,41 @@ const Contents = ({ detail, wallet, isDark }) => {
         );
     };
 
+    const renderFeeRefund = () => {
+        const symbol = assetConfig.find((f) => f.id === detail?.asset) || {};
+        const assetName = symbol?.assetName;
+        const total = formatNumber(detail?.re_fee || 0, symbol?.assetDigit, 0, true);
+        const totalMax = formatNumber(detail?.max || 0, symbol?.assetDigit, 0, true);
+
+        return (
+            <section className="dark:text-gray-7 text-gray-1 flex flex-row items-center">
+                <MoneyNFTIcon />
+                <span
+                    data-tip={t('nft:detail:tooltip_fee_refund')}
+                    data-for={'fee_refund'}
+                    className="ml-2 mr-1 text-gray-1 dark:text-gray-7 border-b border-darkBlue-5 border-dashed cursor-pointer"
+                >
+                    {t('nft:detail:fee_refund')}:
+                </span>
+                <section className="flex flex-row">
+                    <span className="font-semibold text-green-3 dark:text-green-2">
+                        {total} {assetName}
+                    </span>
+                    /
+                    <span className="font-semibold text-gray-15 dark:text-gray-4">
+                        {totalMax} {assetName}
+                    </span>
+                </section>
+            </section>
+        );
+    };
+
     const renderContent = () => {
         if (!detail?._id) return;
 
         const tier = LIST_TIER.find((item) => item.active === detail?.tier);
         const category = TABS.find((item) => item.value === detail?.category);
-        const expired_time = detail?.expired_time ? formatTime(new Date(detail?.expired_time), 'HH:mm:ss dd/MM/yyyy') : '-';
+        const expired_time = detail?.expired_time ? formatTime(new Date(detail?.expired_time), 'HH:mm:ss dd/MM/yyyy') : null;
 
         return (
             <section>
@@ -91,7 +122,7 @@ const Contents = ({ detail, wallet, isDark }) => {
                         <span className="font-semibold text-gray-15 dark:text-gray-4">{formatNumber(detail?.quantity || 0)}</span>
                     </section>
 
-                    <section className="dark:text-gray-7 text-gray-1 flex flex-row items-center">
+                    <section className={classNames('dark:text-gray-7 text-gray-1 flex flex-row items-center', { hidden: !expired_time })}>
                         <TimeIcon />
                         <span
                             data-tip={t('nft:detail:tooltip_exp')}
@@ -102,6 +133,7 @@ const Contents = ({ detail, wallet, isDark }) => {
                         </span>
                         <span className="font-semibold text-gray-15 dark:text-gray-4">{expired_time} (UTC+7)</span>
                     </section>
+                    {wallet && detail?.re_fee > 0 ? renderFeeRefund() : null}
                 </section>
                 <section className="mt-8 dark:bg-dark-4 bg-dark-13 p-4 rounded-xl flex flex-row items-center gap-3">
                     <div className="w-full max-w-[68px] max-h-[68px]">
@@ -129,6 +161,7 @@ const Contents = ({ detail, wallet, isDark }) => {
                     </section>
                 </section>
                 <Tooltip id={'exp'} place="top" effect="solid" isV3 className="max-w-[300px]" />
+                <Tooltip id={'fee_refund'} place="top" effect="solid" isV3 className="max-w-[300px]" />
             </section>
         );
     };

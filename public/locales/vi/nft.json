@@ -21,7 +21,9 @@
             "APY_BOOSTER": "<0>APY Booster {{- value}}% trong {{- day}} ngày<0>"
         },
         "tooltip_exp": "Sau khi NFT hết hạn, bạn sẽ không thể kích hoạt các lợi ích đi kèm",
-        "get_rewarded_now": "Nhận thưởng ngay"
+        "get_rewarded_now": "Nhận thưởng ngay",
+        "fee_refund": "Phí đã hoàn",
+        "tooltip_fee_refund": "Phí giao dịch Futures đã hoàn lại sau khi kích hoạt Blue Tang"
     },
     "collection": {
         "read_more": "Xem thêm",
