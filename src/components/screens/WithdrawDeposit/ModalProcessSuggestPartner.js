@@ -2,32 +2,37 @@ import { useTranslation } from 'next-i18next';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { ApiStatus, MIN_TIP, UserSocketEvent } from 'redux/actions/const';
+import { ApiStatus, UserSocketEvent } from 'redux/actions/const';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { useRouter } from 'next/router';
 import FetchApi from 'utils/fetch-api';
-import MCard from 'components/common/MCard';
 import { CountdownClock } from './components/common/CircleCountdown';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { API_CANCEL_AUTO_SUGGEST_ORDER, API_CONTINUE_AUTO_SUGGEST_ORDER, API_GET_ORDER_DETAILS, API_GET_ORDER_PRICE } from 'redux/actions/apis';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ModalLoading from 'components/common/ModalLoading';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { formatNumber } from 'utils/reference-utils';
-import TradingInputV2 from 'components/trade/TradingInputV2';
 import useFetchApi from 'hooks/useFetchApi';
-import TabV2 from 'components/common/V2/TabV2';
-import { formatBalanceFiat, formatNanNumber, getS3Url } from 'redux/actions/utils';
-import { setFee } from 'redux/actions/withdrawDeposit';
+import { formatBalanceFiat, getS3Url } from 'redux/actions/utils';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import Tooltip from 'components/common/Tooltip';
-import { ALLOWED_ASSET, ALLOWED_ASSET_ID } from './constants';
-import { find } from 'lodash';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID, getMinFee } from './constants';
+import find from 'lodash/find';
+import TipInput from './TipInput';
 
 const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb }) => {
     const { fee } = useSelector((state) => state.withdrawDeposit);
     const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
-    const [state, setState] = useState({ side: SIDE.BUY, countdownTime: null, timeExpire: null, baseQty: 0, baseAssetId: ALLOWED_ASSET_ID['VNDC'], displayingId: '' });
+    const [state, setState] = useState({
+        side: SIDE.BUY,
+        countdownTime: null,
+        timeExpire: null,
+        quoteQty: 0,
+        baseQty: 0,
+        baseAssetId: ALLOWED_ASSET_ID['VNDC'],
+        displayingId: ''
+    });
     const router = useRouter();
     const [currentTheme] = useDarkMode();
 
@@ -41,8 +46,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
 
     useEffect(() => {
         if (!showProcessSuggestPartner) return;
-        const { side, countdownTime, timeExpire, baseQty, baseAssetId, displayingId } = showProcessSuggestPartner;
-        setState({ side, countdownTime, timeExpire, baseQty, baseAssetId, displayingId });
+        const { side, countdownTime, timeExpire, quoteQty, baseQty, baseAssetId, displayingId } = showProcessSuggestPartner;
+        setState({ side, countdownTime, timeExpire, quoteQty, baseQty, baseAssetId, displayingId });
     }, [showProcessSuggestPartner]);
 
     const [isAwaitSocketNotFoundPartner, setIsAwaitSocketNotFoundPartner] = useState(false);
@@ -54,6 +59,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
     const [isErrorContinue, setIsErrorContinue] = useState('');
 
     const { t } = useTranslation();
+
+    const minFee = getMinFee({ amount: state.quoteQty, assetId: state.baseAssetId });
 
     const userSocket = useSelector((state) => state.socket.userSocket);
 
@@ -118,8 +125,6 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 }
             });
 
-            console.log(t(`dw_partner:alert_suggest_${status.toLowerCase().trim()}`, { displayingId: state?.displayingId }));
-
             if (status === ApiStatus.SUCCESS && data) {
                 const { side, countdownTime, timeExpire, displayingId } = data;
                 setIsNotFoundPartner(false);
@@ -161,51 +166,25 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
         }, 5000);
     };
 
-    // Tip handle:
-    const { side, assetId } = router.query;
-    const dispatch = useDispatch();
-    const {
-        data: rate,
-        loading: loadingRate,
-        error
-    } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
+    const tipValidator = useMemo(() => {
+        if (state.side === SIDE.SELL) {
+            if (!fee || fee < minFee)
+                return {
+                    isValid: false,
+                    msg: t('dw_partner:error.min_amount', { amount: formatBalanceFiat(minFee), asset: 'VND' }),
+                    isError: true
+                };
 
-    const [tipValidator, setTipValidator] = useState({ isValid: true, msg: '', isError: false });
-
-    const validateTip = (tipAmount) => {
-        let isValid = true;
-        let msg = '';
-
-        if (tipAmount && (tipAmount + '').length > 21) {
-            isValid = false;
-            msg = t('dw_partner:error.invalid_amount');
+            if (+fee > +state.quoteQty)
+                return {
+                    isValid: false,
+                    msg: t('dw_partner:error.max_amount', { amount: formatBalanceFiat(+state.quoteQty), asset: 'VND' }),
+                    isError: true
+                };
         }
 
-        if (!tipAmount || tipAmount < MIN_TIP) {
-            isValid = false;
-            msg = t('dw_partner:error.min_amount', { amount: formatBalanceFiat(MIN_TIP), asset: 'VND' });
-        }
-
-        // const maxTip = state.amount * rate - 50000;
-        const maxTip = state.baseQty * rate;
-        if (side === 'SELL' && +tipAmount > maxTip) {
-            isValid = false;
-            msg = t('dw_partner:error.max_amount', { amount: formatBalanceFiat(maxTip), asset: 'VND' });
-        }
-
-        setTipValidator({ isValid, msg, isError: !isValid });
-    };
-
-    const handleChangeTip = (input = '') => {
-        const numberValue = input.value;
-        dispatch(setFee(numberValue));
-        // setState({ fee: numberValue });
-        validateTip(numberValue);
-    };
-
-    useEffect(() => {
-        validateTip(fee);
-    }, [state.baseQty, rate]);
+        return { isValid: true, msg: '', isError: false };
+    }, [fee, state.side, state.quoteQty, minFee]);
 
     return (
         <>
@@ -276,7 +255,7 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 message={t('dw_partner:keep_looking_for_partner_des')}
                 isButton={true}
                 customButton={
-                    <ButtonV2 disabled={state.side === SIDE.SELL && !tipValidator?.isValid} loading={isLoadingContinue} onClick={handleContinueFindPartner}>
+                    <ButtonV2 disabled={state.side === SIDE.SELL && tipValidator.isError} loading={isLoadingContinue} onClick={handleContinueFindPartner}>
                         {t('common:continue')}
                     </ButtonV2>
                 }
@@ -284,46 +263,8 @@ const ModalProcessSuggestPartner = ({ showProcessSuggestPartner, onBackdropCb })
                 {state.side === SIDE.SELL && (
                     <div className="w-full mt-6">
                         <Tooltip place={'right'} className={`max-w-[360px] !w-auto !px-6 !py-3 !mr-4`} effect="solid" isV3 id="partner_bonus_tooltip" />
-                        <TradingInputV2
-                            id="TradingInputV2"
-                            label={
-                                <h1
-                                    data-tip={t('dw_partner:partner_bonus_tooltip')}
-                                    data-for="partner_bonus_tooltip"
-                                    className="txtSecond-3 border-b border-dashed border-darkBlue-5 w-fit"
-                                >
-                                    {t('dw_partner:partner_bonus')}
-                                </h1>
-                            }
-                            value={fee}
-                            allowNegative={false}
-                            thousandSeparator={true}
-                            containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
-                            inputClassName="!text-left !ml-0"
-                            onValueChange={handleChangeTip}
-                            validator={tipValidator}
-                            errorTooltip={false}
-                            decimalScale={0}
-                            allowedDecimalSeparators={[',', '.']}
-                            clearAble
-                            placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
-                            errorEmpty
-                            renderTail={<span className="txtSecond-4">VND</span>}
-                        />
-                        <div className="txtSecond-5 !text-xs mb-4 mt-2">{t('common:min')}: 2,000 VND</div>
-                        <div className="flex items-center gap-3 mb-4 flex-wrap">
-                            <TabV2
-                                //  chipClassName="!bg-white hover:!bg-gray-6"
-                                variants="suggestion"
-                                isOverflow={true}
-                                activeTabKey={+fee}
-                                onChangeTab={(key) => handleChangeTip({ value: key })}
-                                tabs={[MIN_TIP, 5000, 10000, 20000].map((suggestItem) => ({
-                                    key: suggestItem,
-                                    children: formatNanNumber(suggestItem, 0)
-                                }))}
-                            />
-                        </div>
+                        <TipInput tipValidator={tipValidator} minFee={minFee} handleFocusInput={() => {}} />
+
                         <CollapseV2
                             key={`collapse_${state.displayingId}`}
                             // divLabelClassname="w-full justify-between"

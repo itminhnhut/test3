@@ -441,7 +441,7 @@
         "today_trading": "Today's trading volume:",
         "claim_now": "Claim Now",
         "claim_success": "Congratulations, you have received",
-        "volume_tooltip": "Daily volume includes both VNDC and USDT Futures and will automatically reset at 00:00 everyday (UTC+7)",
+        "volume_tooltip": "Daily volume includes both {{quoteAsset}} and USDT Futures and will automatically reset at 00:00 everyday (UTC+7)",
         "start": "Start",
         "back_to_trading": "Back to trading",
         "reward_desc_trading": "Trading volume is not enough to claim next reward, please trade an additional volume of {{vol}} for {{value}} bonus.",

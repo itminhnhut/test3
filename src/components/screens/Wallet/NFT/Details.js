@@ -1,19 +1,25 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
+// ** Next
 import dynamic from 'next/dynamic';
-
 import { useTranslation } from 'next-i18next';
 
+// ** Hooks
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
+// ** Utils
 import FetchApi from 'utils/fetch-api';
 import toast from 'utils/toast';
 
-import { API_GET_DETAIL_NFT, API_POST_ACTIVE_NFT, API_GET_CHECK_NFT } from 'redux/actions/apis';
+// ** Redux
+import { API_GET_DETAIL_OWNER_NFT, API_POST_ACTIVE_NFT, API_GET_CHECK_NFT } from 'redux/actions/apis';
 
+// ** Components
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
+// ** Third party
 import styled from 'styled-components';
 
 const Use = dynamic(() => import('./Components/Modal/Use'), { ssr: false });
@@ -34,6 +40,10 @@ const History = dynamic(() => import('components/screens/NFT/Components/Detail/H
     ssr: false
 });
 
+const ModalImage = dynamic(() => import('components/screens/NFT/Components/Modal/Image'), {
+    ssr: false
+});
+
 const initState = {
     loading: false,
     page: 1,
@@ -43,8 +53,14 @@ const initState = {
         go_next: true
     },
     isTransfer: false,
-    isUse: false
+    isUse: false,
+    tab: 'history'
 };
+
+const TAB_DETAILS = [
+    { label: { vi: 'Thông tin', en: 'Info' }, value: 'info' },
+    { label: { vi: 'Lịch sử', en: 'History' }, value: 'history' }
+];
 
 const WalletDetail = ({ idNFT }) => {
     const {
@@ -55,22 +71,27 @@ const WalletDetail = ({ idNFT }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
+    // ** useState
+    const [tab, setTabs] = useState(initState.tab);
     const [detail, setDetail] = useState();
-
     const [isUse, setIsUse] = useState(initState.isUse);
     const [isTransfer, setIsTransfer] = useState(initState.isTransfer);
-
     const [isLoading, setIsLoading] = useState(initState.loading);
-
     const [statusCodeNFT, setStatusCodeNFT] = useState();
+    const [isToggleImage, setIsToggleImage] = useState(false);
 
+    // ** handle modal events
     const handleModalUse = () => setIsUse((prev) => !prev);
     const handleModalTransfer = () => setIsTransfer((prev) => !prev);
+
+    // ** handle
+    const handleTab = (tab) => setTabs(tab);
+    const handleToggleImage = () => setIsToggleImage((prev) => !prev);
 
     //** call api detail NFT
     const handleDetailNFT = async () => {
         try {
-            const { data } = await FetchApi({ url: API_GET_DETAIL_NFT, params: { id: idNFT } });
+            const { data } = await FetchApi({ url: API_GET_DETAIL_OWNER_NFT, params: { id: idNFT } });
             setDetail(data);
         } catch (error) {
             console.error(error);
@@ -150,51 +171,72 @@ const WalletDetail = ({ idNFT }) => {
     };
 
     const renderImage = () => {
-        if (detail?.category === 1 && detail?.status !== 0) {
-            return (
-                <WrapperImage className="w-[100vw] max-w-[550px] max-h-[550px]">
-                    <img width={550} height={550} src={detail?.image} />
-                </WrapperImage>
-            );
-        }
-        if (detail?.category === 2 && detail?.status !== 0 && !detail?.transferable) {
-            return (
-                <WrapperImage className="w-[100vw] max-w-[550px] max-h-[550px]">
-                    <img width={550} height={550} src={detail?.image} />
-                </WrapperImage>
-            );
-        }
+        // if (detail?.category === 1 && detail?.status !== 0) {
+        //     return (
+        //         <WrapperImage className="w-[100vw] max-w-[401px] max-h-[401px]">
+        //             <img width={401} height={401} src={detail?.image} />
+        //         </WrapperImage>
+        //     );
+        // }
+        // if (detail?.category === 2 && detail?.status !== 0 && !detail?.transferable) {
+        //     return (
+        //         <WrapperImage className="w-[100vw] max-w-[550px] max-h-[550px]">
+        //             <img width={550} height={550} src={detail?.image} />
+        //         </WrapperImage>
+        //     );
+        // }
 
         return detail?.image ? (
-            <WrapperImage className="w-[100vw] max-w-[614px] max-h-[614px]">
-                <img width={614} height={614} src={detail?.image} />
+            <WrapperImage className="w-[100vw] max-w-[401px] max-h-[401px] cursor-pointer" onClick={handleToggleImage}>
+                <img width={401} height={401} src={detail?.image} />
             </WrapperImage>
         ) : null;
     };
 
-    const renderHistory = useCallback(() => {
-        return <History idNFT={idNFT} />;
-    }, [idNFT, detail?.status]);
+    const LIST_CONTENT = {
+        info: (
+            <>
+                <Description detail={detail} />
+                <Effective effective={detail?.[`effective_${language}`] || []} dark={isDark} />
+            </>
+        ),
+        history: <History idNFT={idNFT} />
+    };
+
+    const renderTabs = useCallback(() => {
+        return (
+            <>
+                <Tabs isDark tab={tab} className="mt-6 gap-6 border-b border-divider dark:border-divider-dark justify-between">
+                    <section className="flex gap-6">
+                        {TAB_DETAILS?.map((item, idx) => (
+                            <TabItem
+                                key={item.label?.[language]}
+                                className="!text-left !px-0 !text-base "
+                                value={item.value}
+                                onClick={(isClick) => isClick && handleTab(item.value)}
+                                isActive={item.value === tab}
+                            >
+                                {item.label?.[language]}
+                            </TabItem>
+                        ))}
+                    </section>
+                </Tabs>
+                {LIST_CONTENT?.[tab]}
+            </>
+        );
+    }, [tab, detail]);
 
     return (
         <MaldivesLayout>
             <main className="bg-white dark:bg-shadow">
-                <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px]">
-                    <header className="mt-20">
-                        <h1 className="font-semibold text-4xl text-gray-15 dark:text-gray-4">{t('nft:detail.title')}</h1>
-                    </header>
-                    <section className="mt-8 flex flex-row gap-4">
-                        {renderImage()}
-                        <section className="w-full">
-                            <Contents detail={detail} wallet={true} isDark={isDark} />
-                            <Description detail={detail} />
-                            <Effective effective={detail?.[`effective_${language}`] || []} dark={isDark} />
-                            {detail?.category === 1 ? renderVoucher(detail) : renderNFT(detail)}
-                        </section>
+                <article className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 mb-[120px] mt-20 gap-10 flex flex-row">
+                    <section className="w-full">
+                        <Contents detail={detail} wallet={true} isDark={isDark} />
+                        <section>{renderTabs()}</section>
                     </section>
-                    <section className="mt-[60px]">
-                        <h3 className="text-2xl font-semibold text-gray-15 dark:text-gray-4">{t('nft:history:title')}</h3>
-                        <section className="mt-4">{renderHistory()}</section>
+                    <section className="border-divider dark:border-dark rounded-xl p-4 border-[1px] max-h-max">
+                        {renderImage()}
+                        {detail?.category === 1 ? renderVoucher(detail) : renderNFT(detail)}
                     </section>
                 </article>
                 <Use
@@ -207,6 +249,7 @@ const WalletDetail = ({ idNFT }) => {
                 />
                 <Transfer isModal={isTransfer} isDark={isDark} onCloseModal={handleModalTransfer} detail={detail} idNFT={idNFT} />
             </main>
+            <ModalImage onClose={handleToggleImage} isModal={isToggleImage} image={detail?.image} name={detail?.name} />
         </MaldivesLayout>
     );
 };

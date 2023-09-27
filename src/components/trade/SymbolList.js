@@ -10,11 +10,12 @@ import { useAsync, useInterval } from 'react-use';
 import SymbolListItem from 'components/markets/SymbolListItem';
 import { CATEGORY_SPOT_SIGNAL, TRADING_MODE } from 'redux/actions/const';
 import { getMarketWatch } from 'redux/actions/market';
-import { getExchange24hPercentageChange } from 'redux/actions/utils';
+import { convertSymbol, getExchange24hPercentageChange } from 'redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from '../../styles/colors';
 import { favoriteAction } from 'redux/actions/user';
 import NoData from 'components/common/V2/TableV2/NoData';
+import { CURRENCY } from 'constants/constants';
 
 const SymbolList = (props) => {
     const { query } = useRouter();
@@ -362,28 +363,20 @@ const SymbolList = (props) => {
                             />
                         </div>
                     )}
-                    <a
-                        className={
-                            'min-w-9 text-center text-sm cursor-pointer ' +
-                            (activeTab === 'USDT'
-                                ? 'active text-teal border-mint font-semibold'
-                                : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')
-                        }
-                        onClick={() => setActiveTab('USDT')}
-                    >
-                        USDT
-                    </a>
-                    <a
-                        className={
-                            'min-w-9 text-center text-sm cursor-pointer ' +
-                            (activeTab === 'VNDC'
-                                ? 'active text-teal border-mint font-semibold'
-                                : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')
-                        }
-                        onClick={() => setActiveTab('VNDC')}
-                    >
-                        VNDC
-                    </a>
+                    {Object.keys(CURRENCY).map((key) => (
+                        <div
+                            key={key}
+                            className={
+                                'min-w-9 text-center text-sm cursor-pointer ' +
+                                (activeTab === key
+                                    ? 'active text-teal border-mint font-semibold'
+                                    : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')
+                            }
+                            onClick={() => setActiveTab(key)}
+                        >
+                            {key}
+                        </div>
+                    ))}
                 </div>
                 {activeTab !== 'favorite' && renderList()}
                 {activeTab === 'favorite' && renderFav()}

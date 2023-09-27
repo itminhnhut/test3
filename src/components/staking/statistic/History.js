@@ -18,6 +18,7 @@ import { endOfDay, startOfDay, subDays, getTime, isValid } from 'date-fns';
 
 import styled from 'styled-components';
 import classNames from 'classnames';
+import Skeletor from 'components/common/Skeletor';
 
 const newDate = new Date();
 
@@ -177,8 +178,8 @@ const HistoryStaking = ({ assetId }) => {
     };
 
     const totalProfit = useMemo(() => {
-        return `${formatNumber(dataOverview.totalProfit?.value, asset?.assetDigit)} ${asset?.assetCode}`;
-    }, [assetId, dataOverview.totalProfit?.value]);
+        return `${formatNumber(dataOverview.totalProfit?.value, asset?.assetDigit)} ${asset?.assetCode || ''}`;
+    }, [asset, dataOverview.totalProfit?.value]);
 
     const handleChangeRanger = (item) => {
         setRange(item.value);
@@ -207,7 +208,7 @@ const HistoryStaking = ({ assetId }) => {
         return DATE_OPTIONS.map((item) => {
             const isActive = item.value === range;
             return (
-                <Chip onClick={() => handleChangeRanger(item)} selected={isActive} key={item.value}>
+                <Chip variants="filter3" onClick={() => handleChangeRanger(item)} selected={isActive} key={item.value}>
                     {item.title?.[language]}
                 </Chip>
             );
@@ -267,7 +268,7 @@ const HistoryStaking = ({ assetId }) => {
                 loading={loading}
                 columns={columns}
                 scroll={{ x: true }}
-                className="border-t border-divider dark:border-divider-dark"
+                className="border border-transparent dark:border-divider-dark bg-white dark:bg-transparent rounded-xl"
                 data={dataHistory?.result || []}
                 rowKey={(item) => `${item?.key}`}
                 pagingClassName="!border-0 !py-8"
@@ -288,23 +289,20 @@ const HistoryStaking = ({ assetId }) => {
 
     return (
         <section>
-            <h2 className="font-semibold text-2xl mt-[60px]">{t('staking:statics:history.title')}</h2>
-            <section className="rounded-xl border border-divider dark:border-divider-dark bg-white dark:bg-transparent mt-8">
-                <section className="flex flex-col lg:flex-row my-8 ml-6 mr-[21px] h-full lg:h-[62px] items-center">
-                    <section className="w-full lg:w-2/5">
-                        <div className=" text-txtSecondary dark:text-txtSecondary-dark ">{t('staking:statics:history.profit_received')}</div>
-                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold mt-2 text-2xl">{totalProfit}</div>
-                    </section>
-                    <section className="w-full mt-2 lg:mt-0 lg:w-3/5 flex  lg:flex-nowrap flex-wrap flex-row items-center gap-2 lg:gap-x-2 justify-start lg:justify-end">
+            <div className="mt-[60px]">
+                <div className="flex items-center -m-2 flex-wrap justify-between ">
+                    <h2 className="font-semibold p-2 text-2xl ">{t('staking:statics:history.statistics')}</h2>
+                    <section className="flex p-2 lg:flex-nowrap flex-wrap flex-row items-center gap-2 lg:gap-x-2 justify-start lg:justify-end">
                         {renderDateOptions}
                         <DatePickerV2
                             hasShadow
-                            position="right"
+                            position={"right"}
                             initDate={filter.range}
                             month={isMobile ? 1 : 2}
                             onChange={handleChangeDate}
                             text={
                                 <Chip
+                                    variants="filter3"
                                     selected={range === RANGE_CUSTOM}
                                     className={classNames({
                                         'text-teal border-teal bg-teal/[.1] !font-semibold': range === RANGE_CUSTOM
@@ -315,8 +313,17 @@ const HistoryStaking = ({ assetId }) => {
                             }
                         />
                     </section>
+                </div>
+            </div>
+            <section className="mt-8 space-y-8">
+                <section className="rounded-xl px-8 py-6 bg-white dark:bg-dark-4 flex justify-between items-center">
+                    <div className=" text-txtSecondary dark:text-txtSecondary-dark text-sm lg:text-base">{t('staking:statics:history.profit_received')}</div>
+                    <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-lg">{totalProfit}</div>
                 </section>
-                <section>{renderTable()}</section>
+                <section className="space-y-4">
+                    <h3 className="font-semibold text-lg">{t('staking:statics:history.title')}</h3>
+                    <section className="">{renderTable()}</section>
+                </section>
             </section>
         </section>
     );

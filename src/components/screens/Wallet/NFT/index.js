@@ -9,7 +9,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import FetchApi from 'utils/fetch-api';
 
-import { API_GET_COLLECTION, API_GET_LIST_NFT, API_GET_SUMMARY_NFT } from 'redux/actions/apis';
+import { API_GET_COLLECTION, API_GET_LIST_OWNER_NFT, API_GET_SUMMARY_NFT } from 'redux/actions/apis';
 
 import Chip from 'components/common/V2/Chip';
 
@@ -87,7 +87,7 @@ const NFTWallet = () => {
         try {
             setIsLoading(true);
             const { data } = await FetchApi({
-                url: API_GET_LIST_NFT,
+                url: API_GET_LIST_OWNER_NFT,
                 params: {
                     category: TAB_STATUS?.[filter.wallet],
                     ...(filter?.tier.length > 0 && { tier: filter?.tier.join(',') }),
@@ -194,6 +194,7 @@ const NFTWallet = () => {
                     isDark={isDark}
                     grid={filter.grid}
                     isOpen={filter.isOpen}
+                    tab={filter.wallet}
                     noResult={filter.search.length > 0}
                     showCollection={filter.isShowCollection}
                 />

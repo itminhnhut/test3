@@ -30,7 +30,7 @@ const initTickets = [
     { vol_condition: 500000000, time: '2023-04-26T14:40:00.157+00:00', ticket_code: 'abc123', value: 50000, can_receive: false },
     { vol_condition: 1000000000, time: '2023-04-26T14:40:00.157+00:00', ticket_code: 'abc123', value: 100000, can_receive: false }
 ];
-
+const quoteAsset = 'VNST';
 const DailyLuckydraw = memo(({ visible, onClose }) => {
     const router = useRouter();
     const {
@@ -107,7 +107,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                     emitWebViewEvent(
                         JSON.stringify({
                             type: 'lucky_daily',
-                            ticket: { ...dataSource?.[active], total_reward: data?.total_reward, unit: 'VNDC' },
+                            ticket: { ...dataSource?.[active], total_reward: data?.total_reward, unit: quoteAsset },
                             bg: getS3Url(`/images/screen/futures/luckdraw/bg_claimed_mb_v2.png`)
                         })
                     );
@@ -143,7 +143,7 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
 
     const renderItem = (rs, idx, count, reverse, length) => {
         return (
-            <div key={idx} className={`pt-1 relative ticket_${idx}${reverse ? '_reverse' : ''}`}>
+            <div key={idx} className={`${reverse ? 'pt-[6px]' : 'pt-1'} relative ticket_${idx}${reverse ? '_reverse' : ''}`}>
                 <div className="relative -bottom-2">
                     <div
                         className={classNames(`h-[3px] flex items-center bg-dark-2 relative ticket_line`, {
@@ -266,8 +266,8 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                     {!isAuth
                         ? t('common:luckydraw:login_trade')
                         : t(`common:luckydraw:${claimedAll ? 'reward_desc_trading_over' : can_receive.current ? 'reward_desc' : 'reward_desc_trading'}`, {
-                              vol: formatNumber(dataSource?.[active + 1]?.vol_condition - metadata.current) + ' VNDC',
-                              value: formatNumber(dataSource?.[active + 1]?.value || 0) + ' VNDC'
+                              vol: formatNumber(dataSource?.[active + 1]?.vol_condition - metadata.current) + ` ${quoteAsset}`,
+                              value: formatNumber(dataSource?.[active + 1]?.value || 0) + ` ${quoteAsset}`
                           })}
                 </span>
             </>
@@ -296,12 +296,14 @@ const DailyLuckydraw = memo(({ visible, onClose }) => {
                 >
                     <span
                         data-for="volume_tooltip"
-                        data-tip={t('common:luckydraw:volume_tooltip')}
+                        data-tip={t('common:luckydraw:volume_tooltip', { quoteAsset })}
                         className="text-white border-dashed border-b border-divider cursor-pointer"
                     >
                         {t('common:luckydraw:vol_trade')}
                     </span>
-                    <span className="text-teal font-semibold">{formatNumber(metadata.current)} VNDC</span>
+                    <span className="text-teal font-semibold">
+                        {formatNumber(metadata.current)} {quoteAsset}
+                    </span>
                 </div>
             </>
         );
@@ -476,7 +478,9 @@ const ModalClaim = ({ onClose, visible, ticket, total_reward, isMobile }) => {
                             })}
                         >
                             <span className="text-white">{t('common:luckydraw:claim_success')}</span>
-                            <span className="text-3xl sm:text-5xl text-teal">{formatNumber(total_reward)} VNDC</span>
+                            <span className="text-3xl sm:text-5xl text-teal">
+                                {formatNumber(total_reward)} {quoteAsset}
+                            </span>
                         </div>
                     </div>
                 </div>

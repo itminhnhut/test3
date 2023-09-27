@@ -10,7 +10,7 @@ export const LOCAL_STORAGE_KEY = {
     SPOT_SETTING_LAYOUT: 'settingLayoutSpot',
     FUTURE_GRID_LAYOUT: 'gridLayoutFutures',
     FUTURE_SETTING_LAYOUT: 'settingLayoutFutures',
-    ACCEPT_PURCHASE_INSURANCE_ALERT:'acceptPurchaseInsuranceAlert'
+    ACCEPT_PURCHASE_INSURANCE_ALERT: 'acceptPurchaseInsuranceAlert'
 };
 
 const TokenConfigNetwork = {
@@ -999,7 +999,5 @@ export const PartnerReasonDisputed = {
     TIME_OUT: 1,
     USER_DISPUTED: 2
 };
-
-export const MIN_TIP = 2000;
 
 export const NON_LOGIN_KEY = 'non-login-layouts';

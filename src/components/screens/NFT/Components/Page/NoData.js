@@ -1,7 +1,9 @@
+import Button from 'components/common/V2/ButtonV2/Button';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
 
-const NoData = () => {
+const NoData = ({ isWallet }) => {
     const { t } = useTranslation();
 
     return (
@@ -12,7 +14,16 @@ const NoData = () => {
             <div className="hidden dark:block">
                 <NoDataDarkIcon />
             </div>
-            <div className="text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark mt-1">{t('common:no_data')}</div>
+            {!isWallet ? (
+                <div className="text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark mt-1">{t('common:no_data')}</div>
+            ) : (
+                <>
+                    <div className="mb-4">{t('nft:wallet_no_data')}</div>
+                    <Link href="/nft">
+                        <Button>{t('nft:to_nft')}</Button>
+                    </Link>
+                </>
+            )}
         </div>
     );
 };

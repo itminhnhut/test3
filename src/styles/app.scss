@@ -1148,3 +1148,33 @@ input:-webkit-autofill {
     border-bottom-color: transparent !important;
     border-left-color: transparent !important;
 }
+
+.mySwiper {
+    .swiper-slide img {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+    .swiper-pagination {
+        position: relative !important;
+        bottom: 0 !important;
+
+        .swiper-pagination-bullet {
+            @apply w-1 h-1 md:w-2 md:h-2 #{!important};
+            opacity: 0.4;
+            border-radius: 900px !important;
+            background-color: #8694b2 !important;
+        }
+        .swiper-pagination-bullet-active {
+            @apply w-6 h-1 md:w-10 md:h-2 #{!important};
+            opacity: 1;
+            border-radius: 900px !important;
+            background-color: #47cc85 !important;
+        }
+    }
+}
+
+.max-h-max {
+    height: max-content;
+}

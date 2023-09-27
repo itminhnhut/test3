@@ -106,7 +106,7 @@ const DeskStakingHistoryWrapper = styled.div`
 
 const getAssets = createSelector([(state) => state.utils, (utils, params) => params], (utils, params) => {
     const assets = {};
-    const arr = [1, 72, 86, 447, 22];
+    const arr = [1, 72, 86, 447, 22, 39];
     arr.map((id) => {
         const asset = utils.assetConfig.find((rs) => rs.id === id);
         if (asset) {
@@ -282,6 +282,9 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                 <div className="mt-4 mb:mt-6">
                     <div className="-m-2 mb:-mx-8 mb:-my-3 flex flex-wrap items-center">
                         <div className="w-full mb:w-1/2 p-2 mb:px-8 mb:py-3">
+                            <EstimateInterest assetId={39} logoPath={`/images/coins/64/${39}.png`} />
+                        </div>
+                        <div className="w-full mb:w-1/2 p-2 mb:px-8 mb:py-3">
                             <EstimateInterest assetId={447} logoPath="/images/nao/ic_nao.png" />
                         </div>
                         <div className="w-full mb:w-1/2 p-2 mb:px-8 mb:py-3">
@@ -329,6 +332,11 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                         </div>
                                     </div>
                                     <div className="pt-6 mb:pt-8 flex flex-col space-y-4 mb:space-y-6">
+                                        {!isNaN(+item.interest?.[39]) ? (
+                                            <div className="w-full mb:p-0.5">
+                                                <HistoryInterest item={item} assetId={39} logoPath={`/images/coins/64/${39}.png`} />
+                                            </div>
+                                        ) : null}
                                         <div className="w-full mb:p-0.5">
                                             <HistoryInterest item={item} assetId={447} logoPath="/images/nao/ic_nao.png" />
                                         </div>
@@ -559,6 +567,11 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                                     {t('nao:pool:equivalent')} ${formatNumber(sumUSDT, 4)}
                                                 </div>
                                                 <div className="mt-1 flex flex-col space-y-4">
+                                                    {!isNaN(+item.interest?.[39]) ? (
+                                                        <div className="w-full py-0.5">
+                                                            <HistoryInterest item={item} assetId={39} logoPath={`/images/coins/64/${39}.png`} />
+                                                        </div>
+                                                    ) : null}
                                                     <div className="w-full py-0.5">
                                                         <HistoryInterest item={item} assetId={447} logoPath="/images/nao/ic_nao.png" />
                                                     </div>

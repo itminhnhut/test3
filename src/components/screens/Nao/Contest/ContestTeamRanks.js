@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
     TextLiner,
     CardNao,
-    ButtonNao,
+    ButtonNaoV2,
     Table,
     Column,
     getColor,
@@ -11,7 +11,9 @@ import {
     capitalize,
     ImageNao,
     TabsNao,
-    TabItemNao
+    TabItemNao,
+    VolumeTooltip,
+    CPnl
 } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
@@ -41,9 +43,11 @@ const ContestTeamRanks = ({
     showPnl,
     currencies,
     hasTabCurrency,
-    top_ranks_week
+    top_ranks_week,
+    converted_vol,
+    isTotalPnl
 }) => {
-    const [tab, setTab] = useState(sort);
+    const [type, setType] = useState(sort);
     const [quoteAsset, setQuoteAsset] = useState(q);
     const {
         t,
@@ -69,29 +73,27 @@ const ContestTeamRanks = ({
     useEffect(() => {
         setLoading(true);
         getRanks(sort);
-        setTab(sort);
+        setType(sort);
     }, [contest_id]);
 
     useEffect(() => {
-        if (mount.current) getRanks(tab);
+        if (mount.current) getRanks(type);
     }, [quoteAsset]);
 
     useUpdateEffect(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        const individual = urlParams.get('individual') !== 'pnl' ? 'volume' : 'pnl';
-        urlParams.set('individual', individual);
-        urlParams.set('team', tab === 'pnl' ? 'pnl' : 'volume');
+        urlParams.set('team', type === 'pnl' ? 'pnl' : 'volume');
         const url = `/${router.locale}/contest${router.query.season ? '/' + router.query.season : ''}?${urlParams.toString()}`;
         window.history.replaceState(null, null, url);
-    }, [tab]);
+    }, [type]);
 
-    const rank = tab === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
-    const getRanks = async (tab) => {
-        const _rank = tab === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
+    const rank = type === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
+    const getRanks = async (type) => {
+        const _rank = type === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
         try {
             const { data: originalData, status } = await fetchApi({
-                url: tab === 'pnl' ? API_CONTEST_GET_RANK_GROUP_PNL : API_CONTEST_GET_RANK_GROUP_VOLUME,
+                url: type === 'pnl' ? API_CONTEST_GET_RANK_GROUP_PNL : API_CONTEST_GET_RANK_GROUP_VOLUME,
                 params: { contest_id, quoteAsset }
             });
             let data = originalData?.groups;
@@ -114,10 +116,10 @@ const ContestTeamRanks = ({
     };
 
     const onFilter = (key) => {
-        if (tab === key) return;
+        if (type === key) return;
         setLoading(true);
         getRanks(key);
-        setTab(key);
+        setType(key);
     };
 
     const onReadMore = () => {
@@ -153,6 +155,10 @@ const ContestTeamRanks = ({
         return <div className="text-teal font-semibold text-sm sm:text-base cursor-pointer">{t('nao:contest:details')}</div>;
     };
 
+    const renderVolume = (item, className = '') => {
+        return <VolumeTooltip item={item} className={className} tooltip={converted_vol} />;
+    };
+
     const renderRank = (data, item) => {
         const _rank = data || '-';
         return (
@@ -185,10 +191,10 @@ const ContestTeamRanks = ({
             <div className="flex justify-between flex-wrap gap-4">
                 <div className="flex items-center space-x-4">
                     <TextLiner className="!text-txtPrimary dark:!text-txtPrimary-dark">
-                    {t(`nao:contest:${top_ranks_week ? 'monthly_team_ranking' : 'team_ranking'}`)}
-                    {/* {t('nao:contest:team_ranking')} */}
+                        {t(`nao:contest:${top_ranks_week ? 'monthly_team_ranking' : 'team_ranking'}`)}
+                        {/* {t('nao:contest:team_ranking')} */}
                     </TextLiner>
-                    
+
                     {minVolumeTeam && (
                         <div className="text-txtPrimary dark:text-txtPrimary-dark cursor-pointer" data-tip={''} data-for="tooltip-team-rank">
                             <QuestionMarkIcon size={16} isFilled />
@@ -205,27 +211,13 @@ const ContestTeamRanks = ({
                     )}
                 </div>
                 {showPnl && (
-                    <div className="flex items-center gap-3 text-sm">
-                        <ButtonNao
-                            onClick={() => onFilter('volume')}
-                            className={`px-4 py-2 !rounded-md ${
-                                tab === 'volume'
-                                    ? 'font-semibold'
-                                    : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
-                            }`}
-                        >
+                    <div className="flex items-center space-x-2 text-sm">
+                        <ButtonNaoV2 active={type === 'volume'} onClick={() => onFilter('volume')}>
                             {t('nao:contest:volume')}
-                        </ButtonNao>
-                        <ButtonNao
-                            onClick={() => onFilter('pnl')}
-                            className={`px-4 py-2 !rounded-md ${
-                                tab === 'pnl'
-                                    ? 'font-semibold'
-                                    : '!bg-transparent border border-divider dark:border-divider-dark text-txtSemiPrimary dark:text-txtSecondary-dark'
-                            }`}
-                        >
-                            {t('nao:contest:per_pnl')}
-                        </ButtonNao>
+                        </ButtonNaoV2>
+                        <ButtonNaoV2 active={type === 'pnl'} onClick={() => onFilter('pnl')}>
+                            {isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
+                        </ButtonNaoV2>
                     </div>
                 )}
             </div>
@@ -261,17 +253,16 @@ const ContestTeamRanks = ({
                             <div className="rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                                        {t('nao:contest:volume')} ({quoteAsset})
+                                        {t('nao:contest:volume')} {quoteAsset}
                                     </div>
-                                    <span className="font-semibold">{formatNumber(item?.total_volume, 0)}</span>
+                                    {renderVolume(item)}
                                 </div>
-                                {tab === 'pnl' ? (
+                                {type === 'pnl' ? (
                                     <div className="flex items-center justify-between gap-2 mt-2 sm:mt-4">
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
-                                        <span className={`font-semibold ${getColor(item.pnl)}`}>
-                                            {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}
-                                            {formatNumber(item?.pnl, 2, 0, true)}%
-                                        </span>
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                            {isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
+                                        </div>
+                                        <CPnl item={item} isTotal={isTotalPnl} />
                                     </div>
                                 ) : (
                                     <div className="flex items-center justify-between gap-2 mt-2 sm:mt-4">
@@ -281,7 +272,7 @@ const ContestTeamRanks = ({
                                 )}
                             </div>
                             <div className="py-2 sm:py-3 text-teal font-semibold text-center">
-                                <span onClick={() => onShowDetail(item, tab, quoteAsset)} className="cursor-pointer">
+                                <span onClick={() => onShowDetail(item, type, quoteAsset)} className="cursor-pointer">
                                     {t('nao:contest:details')}
                                 </span>
                             </div>
@@ -295,7 +286,7 @@ const ContestTeamRanks = ({
                         {Array.isArray(dataSource) && dataSource?.length > 0 ? (
                             dataSource?.slice((page - 1) * pageSize, page * pageSize).map((item, index) => {
                                 return (
-                                    <CardNao onClick={() => onShowDetail(item, tab, quoteAsset)} key={index} className="mt-3 !p-4">
+                                    <CardNao onClick={() => onShowDetail(item, type, quoteAsset)} key={index} className="mt-3 !p-4">
                                         <div className="text-sm flex-1">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center space-x-2">
@@ -337,24 +328,22 @@ const ContestTeamRanks = ({
                                             </div>
                                             <div className="flex items-center justify-between pt-3">
                                                 <label className="text-txtSecondary dark:text-txtSecondary-dark">
-                                                    {t('nao:contest:volume')} ({quoteAsset})
+                                                    {t('nao:contest:volume')} {quoteAsset}
                                                 </label>
-                                                <span className="text-right font-semibold">{formatNumber(item?.total_volume, 0)}</span>
+                                                {renderVolume(item, 'text-right')}
                                             </div>
                                             <div className="flex items-center justify-between pt-3">
                                                 <label className="text-txtSecondary dark:text-txtSecondary-dark">
-                                                    {t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
+                                                    {t(`nao:contest:${type === 'pnl' ? (isTotalPnl ? 'pnl' : 'per_pnl') : 'total_trades'}`)}
                                                 </label>
-                                                {tab === 'pnl' ? (
-                                                    <span className={`text-right font-semibold ${getColor(item?.pnl)}`}>
-                                                        {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
-                                                    </span>
+                                                {type === 'pnl' ? (
+                                                    <CPnl item={item} isTotal={isTotalPnl} className={'text-right'} />
                                                 ) : (
                                                     <span className={`text-right font-semibold`}>{formatNumber(item?.total_order)}</span>
                                                 )}
                                             </div>
                                             <div
-                                                onClick={() => onShowDetail(item, tab, quoteAsset)}
+                                                onClick={() => onShowDetail(item, type, quoteAsset)}
                                                 className="text-sm font-semibold text-teal py-2 cursor-pointer select-none text-center"
                                             >
                                                 {t('nao:contest:details')}
@@ -382,7 +371,7 @@ const ContestTeamRanks = ({
                         loading={loading}
                         noItemsMessage={t('nao:contest:no_rank')}
                         dataSource={dataSource.slice((page - 1) * 10, page * 10)}
-                        onRowClick={(e) => onShowDetail(e, tab, quoteAsset)}
+                        onRowClick={(e) => onShowDetail(e, type, quoteAsset)}
                     >
                         <Column
                             minWidth={50}
@@ -403,20 +392,21 @@ const ContestTeamRanks = ({
                             minWidth={150}
                             align="right"
                             className=""
-                            title={`${t('nao:contest:volume')} (${quoteAsset})`}
+                            title={`${t('nao:contest:volume')} ${quoteAsset}`}
                             decimal={0}
                             fieldName="total_volume"
+                            cellRender={(data, item) => renderVolume(item)}
                         />
 
-                        {tab === 'pnl' ? (
+                        {type === 'pnl' ? (
                             <Column
-                                maxWidth={120}
-                                minWidth={100}
+                                maxWidth={200}
+                                minWidth={isTotalPnl ? 200 : 100}
                                 align="right"
                                 className=""
-                                title={t('nao:contest:per_pnl')}
-                                fieldName="pnl"
-                                cellRender={renderPnl}
+                                title={isTotalPnl ? t('nao:contest:pnl') : t('nao:contest:per_pnl')}
+                                fieldName={isTotalPnl ? 'total_pnl' : 'pnl'}
+                                cellRender={(data, item) => (isTotalPnl ? <CPnl item={item} isTotal /> : renderPnl(data))}
                             />
                         ) : (
                             <Column

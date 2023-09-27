@@ -11,6 +11,12 @@ const APYInterestChart = dynamic(() => import('./APYInterestChart'), { ssr: fals
 
 const STAKING_CURRENCIES = [
     {
+        value: 39,
+        code: 'VNST',
+        dayInterestPercent: getDayInterestPercent(APY_PERCENT['VNST']),
+        title: <AssetItem assetCode="VNST" assetId={39} />
+    },
+    {
         value: 72,
         code: 'VNDC',
         dayInterestPercent: getDayInterestPercent(APY_PERCENT['VNDC']),
@@ -21,7 +27,7 @@ const STAKING_CURRENCIES = [
         code: 'USDT',
         dayInterestPercent: getDayInterestPercent(APY_PERCENT['USDT']),
         title: <AssetItem assetCode="USDT" assetId={22} />
-    }
+    },
 ];
 
 const initState = {
