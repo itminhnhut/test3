@@ -1619,7 +1619,7 @@ const FbIconV2 = ({ size = 24 }) => {
     const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
     return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#oht9hldeia)">
+            <g clipPath="url(#oht9hldeia)">
                 <path
                     d="M24 12.073a12 12 0 1 0-13.875 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.67 4.532-4.67.9.014 1.798.092 2.687.235v2.954H15.83a1.734 1.734 0 0 0-1.955 1.875v2.25H17.2l-.532 3.469h-2.8v8.385A12 12 0 0 0 24 12.073z"
                     fill={defaultColor}
@@ -1744,7 +1744,7 @@ const IconClose = ({ size = 24 }) => {
     const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1e1e1e';
     return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#t4hjmotora)">
+            <g clipPath="url(#t4hjmotora)">
                 <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill={defaultColor} />
             </g>
             <defs>

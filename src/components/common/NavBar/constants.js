@@ -58,20 +58,12 @@ export const NAV_DATA = [
                 child_lv1: []
             },
             {
-                key: 4,
-                title: 'Staking',
-                localized: 'staking',
-                isNew: false,
-                url: '/staking',
-                child_lv1: []
-            },
-            {
                 key: 5,
                 title: 'Nami Insurance',
                 localized: 'nami_insurance',
                 isNew: false,
                 notSameOrigin: true,
-                isTarget:true,
+                isTarget: true,
                 url: INSURANCE_URL + '/buy-covered',
                 child_lv2: []
             },
@@ -171,6 +163,38 @@ export const NAV_DATA = [
                 isNew: false,
                 url: '/contest?individual=volume&team=volume',
                 child_lv1: []
+            }
+        ]
+    },
+    {
+        key: 'Finance',
+        title: 'Finance',
+        localized: 'finance',
+        // hide: true,
+        isNew: true,
+        url: '/',
+        child_lv1: [
+            {
+                key: 'Staking',
+                title: 'Staking',
+                localized: 'staking',
+                isNew: false,
+                url: '/staking',
+                child_lv1: []
+            },
+            {
+                key: 'lending',
+                title: 'Lending',
+                localized: 'lending',
+                isNew: false,
+                url: '/lending'
+            },
+            {
+                key: 'Earn',
+                title: 'Earn',
+                localized: 'earn',
+                isNew: false,
+                url: '/earn'
             }
         ]
     },

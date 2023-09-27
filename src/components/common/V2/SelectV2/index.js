@@ -15,6 +15,7 @@ const SelectV2 = ({
     position = 'bottom',
     optionClassName,
     wrapperClassName,
+    labelClassName = '',
     activeIcon
 }) => {
     const title = useMemo(() => {
@@ -27,7 +28,7 @@ const SelectV2 = ({
                 <>
                     <Popover.Button className={classNames('w-full h-11 sm:h-12 bg-gray-10 dark:bg-dark-2 rounded-md px-3', className)}>
                         <div className="flex items-center justify-between">
-                            <div className="w-full text-left whitespace-nowrap">{title}</div>
+                            <div className={classNames('w-full text-left whitespace-nowrap', labelClassName)}>{title}</div>
                             <ChevronDown
                                 className={classNames('transition-all', {
                                     '!rotate-0': open
@@ -81,7 +82,7 @@ const SelectV2 = ({
                                                     close();
                                                 }}
                                             >
-                                                <span>{item?.[displayExpr] ?? ''}</span>
+                                                <div>{item?.[displayExpr] ?? ''}</div>
                                                 {value === item?.[keyExpr] ? activeIcon : undefined}
                                             </div>
                                         );

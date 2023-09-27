@@ -410,12 +410,7 @@ const Futures = ({ integrate, orderId, symbol }) => {
                                             onClick={() => setLayoutFutures({ ...componentLayoutFutures, [futuresLayoutKey.marginRatio]: false })}
                                         />
                                         <DragHandleArea height={32} />
-                                        <FuturesMarginRatioVndc
-                                            pairConfig={pairConfig}
-                                            pairPrice={pairPrice}
-                                            auth={auth}
-                                            decimals={decimals}
-                                        />
+                                        <FuturesMarginRatioVndc pairConfig={pairConfig} pairPrice={pairPrice} auth={auth} decimals={decimals} />
                                     </GridItem>
                                 )}
                             </GridLayout>

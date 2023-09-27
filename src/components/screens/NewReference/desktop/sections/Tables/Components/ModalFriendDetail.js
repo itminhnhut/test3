@@ -42,6 +42,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
     }, [options]);
 
     const handleTotal = (type, value) => {
+        console.log(type);
         const symbol = assetConfig.find((f) => f.id === type) || {};
         return formatNumber(value || 0, symbol?.assetDigit, 0, true);
     };

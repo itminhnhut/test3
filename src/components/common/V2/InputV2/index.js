@@ -118,12 +118,9 @@ const InputV2 = forwardRef(
                     {canPaste ? (
                         <span
                             onClick={paste}
-                            className={classNames(
-                                'text-green-3 dark:text-green-2 hover:!text-green-4 font-semibold cursor-pointer select-none',
-                                {
-                                    ' pl-2  border-l border-divider dark:border-divider-dark': allowClear && !!value
-                                }
-                            )}
+                            className={classNames('text-green-3 dark:text-green-2 hover:!text-green-4 font-semibold cursor-pointer select-none', {
+                                ' pl-2  border-l border-divider dark:border-divider-dark': allowClear && !!value
+                            })}
                         >
                             {t('common:paste')}
                         </span>

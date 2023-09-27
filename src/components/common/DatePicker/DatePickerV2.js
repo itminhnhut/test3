@@ -25,6 +25,7 @@ const DatePickerV2 = ({
     position,
     wrapperClassname,
     wrapperClassNameDate,
+    wrapperClassNameContent,
     text,
     colorX = '#e2e8f0',
     onClickOutside,
@@ -158,7 +159,7 @@ const DatePickerV2 = ({
                     )}
                     onClick={() => onHandleClick('show_modal')}
                 >
-                    <div className="flex flex-1 items-center justify-between">
+                    <div className={classNames('flex flex-1 items-center justify-between', wrapperClassNameContent)}>
                         <div
                             className={classNames(
                                 'px-2 leading-5',

@@ -1,0 +1,45 @@
+{
+    "header": {
+        "title": "Vay Crypto",
+        "des": "Nhận khoản vay tức thời với tài sản đảm bảo là tiền mã hoá. Các tài sản vay có thể được giao dịch trên thị trường Giao Ngay và Phái Sinh của Nami Exchange hoặc rút ra."
+    },
+    "FAQ": {
+        "title": "Câu hỏi thường gặp"
+    },
+    "crypto": {
+        "lending": {
+            "title": "Thị trường vay",
+            "place_search": "Tìm kiếm tài sản vay",
+            "button": "Tìm"
+        }
+    },
+    "tabs": {
+        "info": "Thông tin về Nami Lending"
+    },
+    "lending": {
+        "table": {
+            "assets": "Tài sản vay",
+            "minimum": "Hạn mức tối thiểu",
+            "maximum": "Hạn mức tối đa",
+            "7days": "Tỷ giá trong 7 ngày",
+            "30days": "Tỷ giá trong 30 ngày",
+            "active": "Vay ngay"
+        },
+        "rule": "Tôi đồng ý với <0>Thoả thuận và Điều khoản Dịch vụ Nami Lending</0>",
+        "ltv": {
+            "ltv_initial": "<primary>Tỷ lệ LTV ban đầu <secondary> (Số lượng tài sản vay/Số lượng ký quỹ)</secondary></primary>xác định số coin ban đầu có thể vay. Tỷ lệ LTV ban đầu có thể thay đổi đối với các tài sản đảm bảo khác nhau.",
+            "ltv_margin": "<primary>Nếu tỷ lệ LTV <secondary>[Số lượng tài sản vay (gốc + lãi)/Số lượng ký quỹ]</secondary></primary> đạt ngưỡng giới hạn, bạn sẽ được yêu cầu thêm tài sản đảm bảo vào lệnh vay.",
+            "ltv_liquidate": "<primary>Nếu tỷ lệ LTV <secondary>[Số lượng tài sản vay (gốc + lãi)/Số lượng ký quỹ]</secondary></primary> đạt ngưỡng giới hạn, sàn sẽ thanh lý tài sản đảm bảo để hoàn trả toàn bộ khoản vay và lãi vay."
+        }
+    },
+    "history": {
+        "table": {
+            "time": "Thời gian",
+            "status": "Trạng thái",
+            "loan_asset": "Tài sản vay",
+            "margin_asset": "Tài sản ký quỹ",
+            "reset": "Đặt lại"
+        }
+    },
+    "not_auth": "<0>Register</0> now to start receive Daily Staking interest or <1>login</1> to check your statistics"
+}
