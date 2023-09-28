@@ -1,6 +1,7 @@
-import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback } from 'react';
 
 // ** NEXT
+import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 
 // ** components
@@ -16,9 +17,10 @@ import Copy from 'components/svg/Copy';
 
 // ** hooks
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import useCollateralPrice from 'components/screens/Lending/hooks/useCollateralPrice';
 
 // ** Constants
-import { LOAN_HISTORY_STATUS, PERCENT } from 'components/screens/Lending/constants';
+import { LOAN_HISTORY_STATUS } from 'components/screens/Lending/constants';
 
 // ** Context
 import { getAssetConfig } from 'components/screens/Lending/Context';
@@ -33,8 +35,7 @@ import styled from 'styled-components';
 import { useWindowSize } from 'react-use';
 import { Check } from 'react-feather';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import dynamic from 'next/dynamic';
-import useCollateralPrice from '../../hooks/useCollateralPrice';
+import Countdown from 'react-countdown';
 
 // ** dynamic
 const ModalAdjustMargin = dynamic(() => import('components/screens/Lending/components/Modal/AdjustMargin'), { ssr: false });
@@ -50,38 +51,47 @@ const INIT_DATA = {
 const REPAYMENT = [
     {
         title: { vi: 'Tổng dư nợ', en: 'Tổng dư nợ' },
-        asset: 'token'
+        asset: 'total_debt',
+        classNames: 'w-[198px]'
+    },
+    {
+        title: { vi: 'Tổng ký quỹ ban đầu', en: 'Tổng ký quỹ ban đầu' },
+        asset: 'collateral_amount',
+        classNames: 'w-[216px]'
     },
     {
         title: { vi: 'LTV hiện tại', en: 'LTV hiện tại' },
-        asset: 'percent'
-    },
-    {
-        title: { vi: 'LTV Dừng ký quỹ', en: 'LTV Dừng ký quỹ' },
-        asset: 'percent'
+        asset: 'percent',
+        classNames: 'w-[198px]'
     },
     {
         title: { vi: 'LTV Thanh lý', en: 'LTV Thanh lý' },
-        asset: 'percent'
+        asset: 'percent',
+        classNames: 'w-[175px]'
     }
 ];
 
 const ADJUST = [
     {
-        title: { vi: 'Ký quỹ ban đầu', en: 'Ký quỹ ban đầu' },
-        asset: 'token'
+        title: { vi: 'Thời gian vay', en: 'Thời gian vay' },
+        asset: 'formatDate',
+        classNames: 'w-[198px]'
+    },
+    {
+        title: { vi: 'Thời gian hết hạn', en: 'Thời gian hết hạn' },
+        asset: 'formatDate',
+        key: 'expired',
+        classNames: 'w-[216px]'
     },
     {
         title: { vi: 'Thời hạn vay', en: 'Thời hạn vay' },
-        asset: 'date'
+        asset: 'formatDate',
+        classNames: 'w-[198px]'
     },
     {
-        title: { vi: 'Thời gian bắt đầu', en: 'Thời gian bắt đầu' },
-        asset: 'formatDate'
-    },
-    {
-        title: { vi: 'Thời gian kết thúc', en: 'Thời gian kết thúc' },
-        asset: 'formatDate'
+        title: { vi: 'LTV gọi ký quỹ', en: 'LTV gọi ký quỹ' },
+        asset: 'formatDate',
+        classNames: 'w-[175px]'
     }
 ];
 
@@ -169,7 +179,8 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     const renderAsset = (data, type, idAssetCode = null) => {
         const rs = ((data, type) => {
             switch (type) {
-                case 'token':
+                case 'total_debt':
+                case 'collateral_amount':
                     return `${data} ${assetById?.[idAssetCode]?.assetCode}`;
                 case 'percent':
                     return `${data}%`;
@@ -190,67 +201,127 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         return { total: total, symbol: symbol };
     };
 
-    const renderRepayment = (options) => {
-        const { totalDebt, loanCoin, marginCallLTV, liquidationLTV, totalCollateralAmount } = options;
-        const rsTotalDebt = handleTotalAsset(totalDebt, loanCoin); //** Tổng dư nợ */
-        const LTV = formatNumber(totalDebt / totalCollateralAmount / PERCENT, 0);
-        // console.log('useCollateralPrice', useCollateralPrice({ collateral }));
-        const totalRepayment = [rsTotalDebt.total, LTV, marginCallLTV, liquidationLTV];
-
+    const renderer = ({ days, hours, minutes, seconds }) => {
         return (
-            <section className="grid grid-cols-4 h-[72px] w-max gap-4">
+            <span>
+                còn {days}d {hours}h {minutes}m {seconds}s
+            </span>
+        );
+    };
+
+    const renderRepayment = (options) => {
+        const { totalDebt, loanCoin, liquidationLTV, totalCollateralAmount, collateralCoin, collateralAmount, _id } = options;
+        const rsTotalDebt = handleTotalAsset(totalDebt, loanCoin); //** Tổng dư nợ */
+        const rsCollateralAmount = handleTotalAsset(collateralAmount, collateralCoin);
+
+        const marketPrice = useCollateralPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
+        const LTV = formatNumber(totalDebt / (totalCollateralAmount * marketPrice?.data));
+
+        const totalRepayment = [rsTotalDebt.total, rsCollateralAmount.total, LTV, liquidationLTV];
+        return (
+            <section className="flex flex-row h-[72px] w-max">
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 w-[195px] h-[72px] whitespace-nowrap">
+                    <div>ID khoản vay</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                        <div>#{substring(_id)}</div>
+                        <CopyToClipboard onCopy={onCopy} className="cursor-pointer inline-block">
+                            {copied ? <Check size={16} color={colors.teal} /> : <Copy />}
+                        </CopyToClipboard>
+                    </div>
+                </section>
                 {REPAYMENT?.map((item, key) => {
+                    const assetId = null;
+                    if (item?.asset === 'total_debt') {
+                        assetId = rsTotalDebt.symbol.id;
+                    }
+                    if (item?.asset === 'collateral_amount') {
+                        assetId = rsCollateralAmount.symbol.id;
+                    }
+
                     return (
-                        <section className={classNames('flex flex-row items-center', { 'gap-1': item?.asset === 'token' })}>
-                            {item?.asset === 'token' ? <AssetLogo assetId={rsTotalDebt.symbol.id} /> : null}
+                        <section
+                            className={classNames(
+                                'flex flex-row items-center',
+                                {
+                                    'gap-1': ['total_debt', 'collateral_amount'].includes(item?.asset)
+                                },
+                                item?.classNames
+                            )}
+                        >
+                            {['total_debt', 'collateral_amount'].includes(item?.asset) ? <AssetLogo assetId={assetId} /> : null}
                             <section className="flex flex-col">
                                 <div className="text-gray-1 dark:text-gray-7">{item.title?.[language]}</div>
-                                <div className="dark:text-gray-4 text-gray-15 font-semibold">
-                                    {renderAsset(totalRepayment?.[key], item.asset, rsTotalDebt.symbol.id)}
-                                </div>
+                                <div className="dark:text-gray-4 text-gray-15 font-semibold">{renderAsset(totalRepayment?.[key], item.asset, assetId)}</div>
                             </section>
                         </section>
                     );
                 })}
+                <section className="flex flex-row items-center w-[162px] ml-6">
+                    <ButtonV2 onClick={handleToggleAdjustModal}>Điều chỉnh ký quỹ</ButtonV2>
+                </section>
             </section>
         );
     };
 
     const renderAdjust = (options) => {
-        const { collateralAmount, collateralCoin, createdAt, liquidationTime } = options;
-        const rsCollateralAmount = handleTotalAsset(collateralAmount, collateralCoin); //
-
-        const totalRepayment = [rsCollateralAmount.total, 7, createdAt, liquidationTime];
+        const { createdAt, liquidationTime, expirationTime, status } = options;
+        const totalRepayment = [createdAt, liquidationTime, expirationTime, createdAt];
         return (
-            <section className="grid grid-cols-4 h-[72px] w-max gap-4">
+            <section className="flex flex-row h-[72px] w-max">
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 w-[195px] h-[72px]">
+                    <div>Trạng thái</div>
+                    <div
+                        className={classNames('font-semibold text-green-2 dark:text-green-3', {
+                            '!text-yellow-2': LOAN_HISTORY_STATUS?.[status] !== 'REPAID'
+                        })}
+                    >
+                        {LOAN_HISTORY_STATUS?.[status]?.[language]}
+                    </div>
+                </section>
                 {ADJUST?.map((item, key) => {
+                    if (item?.key === 'expired' && status === 'DEADLINE_LIQUIDATED') {
+                        const isActive = formatTime(liquidationTime, 'dd/MM/yyyy') !== formatTime(new Date(), 'dd/MM/yyyy');
+                        const rs = isActive ? (
+                            renderAsset(totalRepayment?.[key], item.asset)
+                        ) : (
+                            <Countdown date={Date.parse(expirationTime)} renderer={renderer} />
+                        );
+                        return (
+                            <section className={classNames('flex flex-row items-center', item?.classNames)}>
+                                <section className="flex flex-col">
+                                    <div className="text-gray-1 dark:text-gray-7">{item.title?.[language]}</div>
+                                    <div className="dark:text-gray-4 text-gray-15 font-semibold">{rs}</div>
+                                </section>
+                            </section>
+                        );
+                    }
                     return (
-                        <section className={classNames('flex flex-row items-center', { 'gap-1': item?.asset === 'token' })}>
-                            {item?.asset === 'token' ? <AssetLogo assetId={rsCollateralAmount.symbol.id} /> : null}
+                        <section className={classNames('flex flex-row items-center', item?.classNames)}>
                             <section className="flex flex-col">
                                 <div className="text-gray-1 dark:text-gray-7">{item.title?.[language]}</div>
-                                <div className="dark:text-gray-4 text-gray-15 font-semibold">
-                                    {renderAsset(totalRepayment?.[key], item.asset, rsCollateralAmount.symbol.id)}
-                                </div>
+                                <div className="dark:text-gray-4 text-gray-15 font-semibold">{renderAsset(totalRepayment?.[key], item.asset)}</div>
                             </section>
                         </section>
                     );
                 })}
+                <section className="flex flex-row items-center w-[162px] ml-6">
+                    <ButtonV2 onClick={handleToggleAdjustModal}>Điều chỉnh ký quỹ</ButtonV2>
+                </section>
             </section>
         );
     };
 
     const renderTable = useCallback(() => {
         const columns = [
-            {
-                key: '_id',
-                dataIndex: '_id',
+            // {
+            //     key: '_id',
+            //     dataIndex: '_id',
 
-                title: t('lending:lending:table:assets'),
-                align: 'left',
-                width: 176,
-                render: (value, options) => renderIdStatus(options)
-            },
+            //     title: t('lending:lending:table:assets'),
+            //     align: 'left',
+            //     width: 176,
+            //     render: (value, options) => renderIdStatus(options)
+            // },
             {
                 key: 'money_use',
                 dataIndex: 'money_use',
@@ -258,25 +329,24 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 align: 'left',
                 width: 205,
                 render: (value, options) => renderLTV(options)
-            },
-            {
-                key: '',
-                dataIndex: '',
-                align: 'right',
-                width: 205,
-                render: () => (
-                    <section className="flex flex-col items-center gap-3">
-                        <ButtonV2 onClick={handleToggleLoadRepaymentModal}>Trả khoản vay</ButtonV2>
-                        {/* className={classNames('', { a: 'dark:!text-gray-7 !text-gray-1' })} */}
-                        <ButtonV2 onClick={handleToggleAdjustModal}>Điều chỉnh ký quỹ</ButtonV2>
-                    </section>
-                )
             }
+            // {
+            //     key: '',
+            //     dataIndex: '',
+            //     align: 'right',
+            //     width: 205,
+            //     render: () => (
+            //         <section className="flex flex-col items-center gap-3 w-[162px]">
+            //             <ButtonV2 onClick={handleToggleLoadRepaymentModal}>Trả khoản vay</ButtonV2>
+            //             {/* className={classNames('', { a: 'dark:!text-gray-7 !text-gray-1' })} */}
+            //             <ButtonV2 onClick={handleToggleAdjustModal}>Điều chỉnh ký quỹ</ButtonV2>
+            //         </section>
+            //     )
+            // }
         ];
 
         return (
             <WrapperTable
-                sort={['created_at2', 'created_at3']}
                 skip={0}
                 useRowHover
                 height={350}
@@ -326,6 +396,7 @@ const WrapperTable = styled(TableV2).attrs(({ ...props }) => ({
             tr td {
                 padding-top: 12px;
                 padding-bottom: 12px;
+                border-color: ${(props) => (props.isDark ? colors.divider.dark : colors.divider.DEFAULT)} !important;
             }
         }
         .rc-table-thead {

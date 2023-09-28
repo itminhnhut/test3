@@ -36,7 +36,7 @@ const initState = {
     page: 1,
     loading: false,
     overview: { currency: 'USD' },
-    loan: { status: 'ACTIVE' },
+    loan: { status: 'ACTIVE', limit: 10 },
     data: {}
 };
 
