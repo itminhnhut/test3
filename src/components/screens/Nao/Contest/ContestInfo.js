@@ -1,9 +1,9 @@
-import React, { useEffect, useState, forwardRef, useMemo, useImperativeHandle } from 'react';
+import React, { useEffect, useState, forwardRef, useMemo, useImperativeHandle, useRef } from 'react';
 import { CardNao, TextLiner, ButtonNao, Tooltip, capitalize, TabsNao, TabItemNao, ButtonNaoV2, VolumeTooltip } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import fetchApi from 'utils/fetch-api';
-import { formatNumber } from 'redux/actions/utils';
+import { convertSymbol, formatNumber } from 'redux/actions/utils';
 import { API_CONTEST_GET_USER_DETAIL, API_CONTEST_GET_INVITES } from 'redux/actions/apis';
 import CreateTeamModal from 'components/screens/Nao/Contest/season2/CreateTeamModal';
 import { ApiStatus } from 'redux/actions/const';
@@ -103,6 +103,11 @@ const ContestInfo = forwardRef(
         const [quoteAsset, setQuoteAsset] = useState(q);
         const [tabIndex, setTabIndex] = useState(0);
         const [isLoading, setIsLoading] = useState(false);
+        const timer_timeout = useRef();
+
+        useEffect(() => {
+            setQuoteAsset(q);
+        }, [q]);
 
         useImperativeHandle(ref, () => ({
             onGetInfo: getData
@@ -126,7 +131,10 @@ const ContestInfo = forwardRef(
 
         useEffect(() => {
             if (user) {
-                getData();
+                clearTimeout(timer_timeout.current);
+                timer_timeout.current = setTimeout(() => {
+                    getData();
+                }, 100);
             }
         }, [user, contest_id, quoteAsset, tabIndex, week]);
 
@@ -141,7 +149,7 @@ const ContestInfo = forwardRef(
                 const { data, status } = await fetchApi({
                     url: API_CONTEST_GET_USER_DETAIL,
                     options: { method: 'GET' },
-                    params: { contest_id: contest_id, quoteAsset, week_id }
+                    params: { contest_id: contest_id, quoteAsset: convertSymbol(quoteAsset), week_id }
                 });
                 if (status === ApiStatus.SUCCESS) {
                     if (data?.pnl_rate) data.pnl = data.pnl_rate;

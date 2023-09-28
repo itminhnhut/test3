@@ -20,7 +20,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_RANK_GROUP_PNL, API_CONTEST_GET_RANK_GROUP_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { getS3Url, formatNumber } from 'redux/actions/utils';
+import { getS3Url, formatNumber, convertSymbol } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
@@ -64,6 +64,7 @@ const ContestTeamRanks = ({
     const lastUpdatedTime = useRef(null);
     const mount = useRef(false);
     const isMobile = width <= 640;
+    const timer = useRef();
 
     useEffect(() => {
         setPage(1);
@@ -71,14 +72,17 @@ const ContestTeamRanks = ({
     }, [isMobile]);
 
     useEffect(() => {
+        setQuoteAsset(q);
+    }, [q]);
+
+    useEffect(() => {
         setLoading(true);
-        getRanks(sort);
         setType(sort);
     }, [contest_id]);
 
     useEffect(() => {
-        if (mount.current) getRanks(type);
-    }, [quoteAsset]);
+        getRanks(type);
+    }, [quoteAsset, type]);
 
     useUpdateEffect(() => {
         const queryString = window.location.search;
@@ -94,7 +98,7 @@ const ContestTeamRanks = ({
         try {
             const { data: originalData, status } = await fetchApi({
                 url: type === 'pnl' ? API_CONTEST_GET_RANK_GROUP_PNL : API_CONTEST_GET_RANK_GROUP_VOLUME,
-                params: { contest_id, quoteAsset }
+                params: { contest_id, quoteAsset: convertSymbol(quoteAsset) }
             });
             let data = originalData?.groups;
             setTotal(data.length);
@@ -118,7 +122,6 @@ const ContestTeamRanks = ({
     const onFilter = (key) => {
         if (type === key) return;
         setLoading(true);
-        getRanks(key);
         setType(key);
     };
 

@@ -18,7 +18,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_RANK_WEEKLY_PNL, API_CONTEST_GET_RANK_WEEKLY_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { formatNumber, getS3Url, formatTime } from 'redux/actions/utils';
+import { formatNumber, getS3Url, formatTime, convertSymbol } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import TickFbIcon from 'components/svg/TickFbIcon';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
@@ -76,6 +76,10 @@ const ContestWeekRanks = ({
     }, [isMobile]);
 
     useEffect(() => {
+        setQuoteAsset(q);
+    }, [q]);
+
+    useEffect(() => {
         clearTimeout(timer.current);
         timer.current = setTimeout(() => {
             getRanks();
@@ -93,7 +97,7 @@ const ContestWeekRanks = ({
         try {
             const { data: originalData, status } = await fetchApi({
                 url: filter.type === 'volume' ? API_CONTEST_GET_RANK_WEEKLY_VOLUME : API_CONTEST_GET_RANK_WEEKLY_PNL,
-                params: { contestId: contest_id, quoteAsset, weekId: filter.weekly + 1 }
+                params: { contestId: contest_id, quoteAsset: convertSymbol(quoteAsset), weekId: filter.weekly + 1 }
             });
             const data = originalData?.users;
             setTotal(data.length);

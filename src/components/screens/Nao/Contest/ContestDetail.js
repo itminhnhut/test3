@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_GROUP_MEMBER, API_CONTEST_CANCEL_INVITE, API_CONTEST_POST_ACCEPT_INVITATION } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { getS3Url, formatNumber } from 'redux/actions/utils';
+import { getS3Url, formatNumber, convertSymbol } from 'redux/actions/utils';
 import useWindowSize from 'hooks/useWindowSize';
 import Skeletor from 'components/common/Skeletor';
 import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
@@ -50,7 +50,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 params: {
                     contest_id: contest_id,
                     displaying_id: id,
-                    quoteAsset: quoteAsset
+                    quoteAsset: convertSymbol(quoteAsset)
                 }
             });
             if (data && status === ApiStatus.SUCCESS) {
