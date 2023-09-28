@@ -34,7 +34,7 @@ const HeaderNFT = ({ isMobile }) => {
                     clickable: true
                 }}
                 modules={[Pagination, Autoplay]}
-                className="mySwiper"
+                className="mySwiper mySwiper_nft"
                 loop={true}
                 speed={3000}
                 centeredSlides={!!isMobile}
