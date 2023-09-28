@@ -1389,7 +1389,8 @@ export const saveFile = (file, name) => {
 };
 
 export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
-export const roundByExactDigit = (value, digit) => Math.floor(value * Math.pow(10, digit)) / Math.pow(10, digit);
+export const roundByExactDigit = (value, digit = 0) => Math.floor(value * Math.pow(10, digit)) / Math.pow(10, digit);
+export const ceilByExactDegit = (value, digit = 0) => Math.ceil(value * Math.pow(10, digit)) / Math.pow(10, digit);
 
 export const searchSort = (Arr = [], fieldNames = [], strSearch) => {
     const formatStr = (e) => {

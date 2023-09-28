@@ -28,7 +28,7 @@ const ModalRegisterLoan = dynamic(() => import('components/screens/Lending/compo
 const LIMIT = 10;
 
 const INIT_DATA = {
-    isModal: false
+    loanAsset: null
 };
 
 const LendingTable = ({ data, page, loading, onPage }) => {
@@ -44,16 +44,7 @@ const LendingTable = ({ data, page, loading, onPage }) => {
     const isMobile = width < 830;
 
     // ** useState
-    const [isModal, setIsModal] = useState(INIT_DATA.isModal);
-
-    // ** handle
-    const handleToggleModal = () => setIsModal((prev) => !prev);
-
-    // ** get data
-    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
-    const getAsset = (assetCode) => {
-        return assetConfigs.find((asset) => asset.assetCode === assetCode);
-    };
+    const [loanAsset, setLoanAsset] = useState(INIT_DATA.loanAsset);
 
     // ** render
     const renderTitle = (title, content) => {
@@ -75,8 +66,8 @@ const LendingTable = ({ data, page, loading, onPage }) => {
                 width: 189,
                 render: (value) => (
                     <section className="flex flex-row items-center">
-                        <AssetLogo assetId={getAsset(value)?.id} />
-                        <span className="ml-2">{getAsset(value)?.assetCode}</span>
+                        <AssetLogo useNextImg assetCode={value} />
+                        <span className="ml-2">{value}</span>
                     </section>
                 )
             },
@@ -117,11 +108,13 @@ const LendingTable = ({ data, page, loading, onPage }) => {
                 dataIndex: '',
                 align: 'right',
                 width: 205,
-                render: () => (
-                    <div className="dark:text-green-2 text-green-3 font-semibold text-center" onClick={handleToggleModal}>
-                        {t('lending:lending:table:active')}
-                    </div>
-                )
+                render: (_, data) => {
+                    return (
+                        <div className="dark:text-green-2 text-green-3 font-semibold text-center" onClick={() => setLoanAsset(data?.loanCoin)}>
+                            {t('lending:lending:table:active')}
+                        </div>
+                    );
+                }
             }
         ];
 
@@ -160,7 +153,7 @@ const LendingTable = ({ data, page, loading, onPage }) => {
         <>
             <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">{renderTable()}</section>
             {/* Tạo khoản vay  */}
-            <ModalRegisterLoan isModal={!isModal} onClose={handleToggleModal} />
+            <ModalRegisterLoan isModal={Boolean(loanAsset)} loanAsset={loanAsset} onClose={() => setLoanAsset(null)} />
         </>
     );
 };

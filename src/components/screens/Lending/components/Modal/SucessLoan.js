@@ -16,14 +16,17 @@ import { CheckCircleIcon } from 'components/svg/SvgIcon';
 
 // ** Third party
 import colors from 'styles/colors';
+import { useRouter } from 'next/router';
 
 const DATA2 = { vi: 'Tài sản ký quỹ', en: 'Tài sản ký quỹ' };
 
-const SucessLoan = ({ isModal, onClose }) => {
+const SucessLoan = ({ isModal, onClose, collateralCoin, collateralAmount }) => {
     const {
         t,
         i18n: { language }
     } = useTranslation();
+
+    const router = useRouter();
 
     return (
         <ModalV2
@@ -48,11 +51,32 @@ const SucessLoan = ({ isModal, onClose }) => {
                 <section className="dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex w-full">
                     <section className="flex justify-between w-full">
                         <div className="dark:text-gray-7 text-gray-1">{DATA2?.[language]}</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold">0.368 BTC</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold">
+                            {collateralAmount || 0.368} {collateralCoin || 'BTC'}
+                        </div>
                     </section>
                 </section>
             </section>
-            <ButtonV2 className="mt-10">Xem khoản vay đang mở</ButtonV2>
+            <ButtonV2
+                onClick={() => {
+                    router.replace(
+                        {
+                            pathname: router.pathname,
+                            query: {
+                                tab: 'loan'
+                            }
+                        },
+                        undefined,
+                        {
+                            shallow: false
+                        }
+                    );
+                    onClose();
+                }}
+                className="mt-10"
+            >
+                Xem khoản vay đang mở
+            </ButtonV2>
         </ModalV2>
     );
 };
