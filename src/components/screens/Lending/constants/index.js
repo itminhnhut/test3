@@ -68,15 +68,15 @@ const TABS = [
 ];
 
 const BORROWING_TERM = [
-    { vi: '7 ngày', en: '7 days', key: 7 },
-    { vi: '30 ngày', en: '30 days', key: 30 }
+    { vi: '7 ngày', en: '7 days', day: 7 },
+    { vi: '30 ngày', en: '30 days', day: 30 }
 ];
 
-const PROFITS = [
-    { title: { vi: 'Lãi suất theo năm', en: 'Lãi suất theo năm' }, asset: '%', key: 'profit_yearn' },
-    { title: { vi: 'Lãi suất hằng ngày', en: 'Lãi suất hằng ngày' }, asset: '%', key: 'profit_daily' },
-    { title: { vi: 'Lãi ước tính theo giờ', en: 'Lãi ước tính theo giờ' }, asset: 'VNDC', key: 'profit_hours' },
-    { title: { vi: 'Lãi ước tính theo kỳ hạn', en: 'Lãi ước tính theo kỳ hạn' }, asset: 'VNDC', key: 'profit_term' }
+const INTEREST = [
+    { title: { vi: 'Lãi suất theo năm', en: 'Lãi suất theo năm' }, asset: '%', key: 'interest_year' },
+    { title: { vi: 'Lãi suất hằng ngày', en: 'Lãi suất hằng ngày' }, asset: '%', key: 'interest_daily' },
+    { title: { vi: 'Lãi ước tính theo giờ', en: 'Lãi ước tính theo giờ' }, asset: 'VNDC', key: 'interest_hours' },
+    { title: { vi: 'Lãi ước tính theo kỳ hạn', en: 'Lãi ước tính theo kỳ hạn' }, asset: 'VNDC', key: 'interest_term' }
 ];
 
 const LTV = [
@@ -122,6 +122,11 @@ const LOAN_HISTORY_STATUS = {
     REPAID: { vi: 'Hoàn tiền', en: 'Hoàn tiền' }
 };
 
+const REGISTER_HANDLE_TYPE = {
+    FROM_MAIN_MODAL: 'fromMainModal',
+    FROM_CONFIRM_MODAL: 'fromConfirmModal'
+};
+
 export {
     FAQ,
     LTV,
@@ -129,7 +134,7 @@ export {
     YEAR,
     TABS,
     PERCENT,
-    PROFITS,
+    INTEREST,
     LOANABLE,
     STATUS_VI,
     STATUS_EN,
@@ -141,5 +146,6 @@ export {
     ALLOW_LTV_TOOLTIP,
     LOAN_HISTORY_STATUS,
     DEFAULT_LOANABLE_ASSET,
-    DEFAULT_COLLATERAL_ASSET
+    DEFAULT_COLLATERAL_ASSET,
+    REGISTER_HANDLE_TYPE
 };

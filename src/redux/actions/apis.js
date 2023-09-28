@@ -410,3 +410,4 @@ export const API_HISTORY_LOAN = API_V3_PREFIX + 'wallet/history/loan';
 export const API_LOAN_ASSETS = API_V3_PREFIX + 'wallet/history/loan/loanable-assets';
 export const API_LOAN_COLLATERAL_ASSETS = API_V3_PREFIX + 'wallet/history/loan/collateral-assets';
 export const API_OVERVIEW_LOAN = API_V3_PREFIX + 'wallet/history/loan/overview';
+export const API_GET_PAIR_PRICE = API_V3_PREFIX + 'wallet/history/price';

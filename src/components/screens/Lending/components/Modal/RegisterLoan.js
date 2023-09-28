@@ -8,9 +8,9 @@ import { useTranslation, Trans } from 'next-i18next';
 import { useLoanableList, useCollateralList } from 'components/screens/Lending/Context';
 
 // ** Redux
-import { WalletType } from 'redux/actions/const';
+import { PublicSocketEvent, WalletType } from 'redux/actions/const';
 import { useSelector, useDispatch } from 'react-redux';
-import { formatNumber, setTransferModal } from 'redux/actions/utils';
+import { formatNumber, getLoginUrl, roundByExactDigit, setTransferModal } from 'redux/actions/utils';
 
 //** components
 import Chip from 'components/common/V2/Chip';
@@ -25,41 +25,51 @@ import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
 
 // ** Third party
 import classNames from 'classnames';
-import { find } from 'lodash';
 
 // ** Dynamic
-const ConfirmLoan = dynamic(() => import('./ConfirmLoan'), { ssr: false });
+const ModalConfirmLoan = dynamic(() => import('./ConfirmLoan'), { ssr: false });
 const AssetLendingFilter = dynamic(() => import('components/screens/Lending/components/AssetLendingFilter'), { ssr: false });
 
 // ** CONSTANTS
 import {
     LTV,
-    PROFITS,
+    INTEREST,
     PERCENT,
     LOANABLE,
     COLLATERAL,
     BORROWING_TERM,
     ALLOW_LTV_TOOLTIP,
     DEFAULT_LOANABLE_ASSET,
-    DEFAULT_COLLATERAL_ASSET
+    DEFAULT_COLLATERAL_ASSET,
+    REGISTER_HANDLE_TYPE
 } from 'components/screens/Lending/constants';
 
-// loanable: { assetCode: 'VNST', assetName: 'VNST', id: 39 },
-// collateral: { assetCode: 'BNB', assetName: 'BNB', id: 40 }
+import TradingInputV2 from 'components/trade/TradingInputV2';
+import useRegisterLoan from '../../hooks/useRegisterLoan';
+import useLoanInput from '../../hooks/useLoanInput';
+import { createSelector } from 'reselect';
+import AuthSelector from 'redux/selectors/authSelectors';
 
 // ** INIT DATA
 const INIT_DATA = {
-    borrowing_term: 7,
-    rule: false,
+    loanTerm: 7,
+    isAcceptRule: false,
     isConfirm: false,
     filter: {
         loanable: {},
         collateral: {}
     },
-    selectLoanAsset: { loanable: [], collateral: [] }
+    typingField: LOANABLE,
+    collateralInput: '',
+    loanInput: ''
 };
 
-const ModalRegisterLoan = ({ isModal, onClose }) => {
+const getSpotAvailable = createSelector([(state) => state.wallet?.SPOT, (utils, params) => params], (wallet, params) => {
+    const _avlb = wallet?.[params.assetId];
+    return _avlb ? Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0) : 0;
+});
+
+const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     const {
         t,
         i18n: { language }
@@ -68,104 +78,185 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
     // ** useRedux
     const dispatch = useDispatch();
 
-    const wallets = useSelector((state) => state.wallet.SPOT);
-    const assetConfig = useSelector((state) => state.utils.assetConfig);
+    const assetConfig = useSelector((state) => state.utils.assetConfig) || [];
+    const isAuth = useSelector(AuthSelector.isAuthSelector);
 
     // ** useContext
-    const { loanCoin, loanable } = useLoanableList();
-    const { collateralCoin, collateral } = useCollateralList();
+    const { loanable: loanAssetList } = useLoanableList();
+    const { collateral: collateralAssetList } = useCollateralList();
 
     // ** useState
-    const [rule, setRule] = useState(INIT_DATA.rule);
-    const [filter, setFilter] = useState(INIT_DATA.filter);
-    const [isConfirm, setIsConfirm] = useState(INIT_DATA.false);
-    const [borrowingTerm, setBorrowingTerm] = useState(INIT_DATA.borrowing_term);
-    const [selectLoanAsset, setSelectLoanAsset] = useState(INIT_DATA.selectLoanAsset);
-
-    useEffect(() => {
-        handleSelectLoanAsset(loanCoin, LOANABLE, loanable); // ** get data select loanable
-        handleSelectLoanAsset(collateralCoin, COLLATERAL, collateral); // ** get data select collateral
-    }, []);
-
-    // ** handle
-    const handleToggleConfirm = () => setIsConfirm((prev) => !prev);
-    const handleBorrowingTermClick = useCallback(
-        (value) => {
-            setBorrowingTerm(value);
-        },
-        [borrowingTerm]
-    );
-    const onChangeRule = () => setRule((prev) => !prev);
-
-    const onChangeAsset = (value, key) => {
-        if (value) {
-            setFilter((prev) => ({ ...prev, [key]: value }));
-        } else {
-            getDefaultSelect({ data: selectLoanAsset?.[key], key, keyDefault: key === LOANABLE ? DEFAULT_LOANABLE_ASSET : DEFAULT_COLLATERAL_ASSET });
-        }
-    };
-
-    // ** handle data select loan asset
-    const handleSelectLoanAsset = (data, key, dataLoanAsset) => {
-        const keyFind = key === LOANABLE ? 'loanCoin' : 'collateralCoin';
-        const rs = tempFromAssetList.reduce((prev, cur) => {
-            if (data.includes(cur.assetCode)) {
-                const rsByKey = dataLoanAsset?.find((f) => f?.[keyFind] === cur.assetCode);
-                prev = [...prev, { config: rsByKey, ...cur }];
+    const [refetchCollateralPrice, setRefetchCollateralPrice] = useState(false);
+    const [state, set] = useState(INIT_DATA);
+    const { isAcceptRule, typingField, filter, isConfirm, loanTerm, collateralInput, loanInput } = state;
+    const setState = (newState) => set((prevState) => ({ ...prevState, ...newState }));
+    const setFilter = (newFilter) =>
+        setState({
+            filter: {
+                ...filter,
+                ...newFilter
             }
-            return prev;
-        }, []);
-
-        // ** set data select
-        setSelectLoanAsset((prev) => ({ ...prev, [key]: rs }));
-        getDefaultSelect({ data: rs, key, keyDefault: key === LOANABLE ? DEFAULT_LOANABLE_ASSET : DEFAULT_COLLATERAL_ASSET });
-    };
-
-    // ** get data default select
-    const getDefaultSelect = ({ data, key, keyDefault }) => {
-        const rsByAssetCode = data?.find((f) => f?.assetCode === keyDefault);
-        setFilter((prev) => ({ ...prev, [key]: rsByAssetCode }));
-    };
-
-    // ** get data
-    const tempFromAssetList = useMemo(() => {
-        return Object.keys(wallets)?.map((key) => {
-            const curAssetWalletData = wallets[key];
-            return {
-                // assetId: key,
-                ...find(assetConfig, { id: +key }),
-                available: curAssetWalletData.value - curAssetWalletData.locked_value,
-                ...curAssetWalletData
-            };
         });
-    }, [wallets]);
 
-    const totalSPOT = useMemo(() => {
-        return tempFromAssetList?.find((asset) => asset.assetCode === filter.collateral?.assetCode);
-    }, [filter.collateral?.id, tempFromAssetList]);
-
-    console.log(useSelector((state) => console.log(state)));
-    // ** render
-    const renderProfit = () => {
-        return (
-            <section className="flex flex-col gap-3 mt-8">
-                {PROFITS.map((profit, key) => {
-                    return (
-                        <section className="flex justify-between" key={`profit_${key}_${profit.title?.[language]}`}>
-                            <div className="dark:text-gray-7 text-gray-1">{profit.title?.[language]}</div>
-                            <div className="dark:text-gray-4 text-gray-15 font-semibold">- {profit.asset}</div>
-                        </section>
-                    );
-                })}
-            </section>
-        );
-    };
+    // ** collateral wallet balance
+    const collateralAvailable = useSelector((state) => getSpotAvailable(state, { assetId: filter.collateral?.id }));
 
     // ** handle total ltv
     const totalLTV = useMemo(() => {
         const { initialLTV = 0, marginCallLTV = 0, liquidationLTV = 0 } = filter.collateral?.config || {};
         return { initialLTV, marginCallLTV, liquidationLTV };
     }, [filter.collateral?.assetCode]);
+
+    // ** use custom Hooks
+    const { loanValue, collateralValue, minCollateralAmount, validator } = useLoanInput({
+        collateral: filter?.collateral,
+        loanable: filter?.loanable,
+        initialLTV: totalLTV.initialLTV,
+        typingField,
+        collateralInput,
+        loanInput,
+        collateralAvailable,
+        refetch: refetchCollateralPrice
+    });
+
+    const { registerLoan } = useRegisterLoan({
+        loanValue,
+        collateralValue,
+        loanCoin: filter?.loanable?.assetCode,
+        collateralCoin: filter?.collateral?.assetCode,
+        loanTerm,
+        typingField
+    });
+
+    const handleRegisterLoan = async (type) => {
+        switch (type) {
+            case REGISTER_HANDLE_TYPE.FROM_CONFIRM_MODAL:
+                return await registerLoan();
+
+            case REGISTER_HANDLE_TYPE.FROM_MAIN_MODAL:
+                onToggleConfirm();
+                setRefetchCollateralPrice((prev) => !prev);
+                return;
+            default:
+                break;
+        }
+    };
+
+    // ** loan term interest rate per Day and per Hour
+    const termDailyInterestRate = +filter.loanable?.config?.[`_${loanTerm}dDailyInterestRate`];
+    const termHourlyInterestRate = +filter.loanable?.config?.[`_${loanTerm}dHourlyInterestRate`];
+
+    // loan interest
+    const loanInterest = useMemo(
+        () => ({
+            annualInterestPercent: termDailyInterestRate * 100 * 365,
+            dailyInterestPercent: termDailyInterestRate * 100,
+            hourInterestAmount: loanValue * termHourlyInterestRate,
+            dayInterestAmount: loanValue * termDailyInterestRate,
+            termInterestAmount: loanValue * termDailyInterestRate * loanTerm
+        }),
+        [termDailyInterestRate, termHourlyInterestRate, loanValue]
+    );
+
+    const assetConfigByCode = useMemo(() => {
+        return assetConfig?.length && assetConfig.reduce((prevObj, asset) => ({ ...prevObj, [asset?.assetCode]: asset }), {});
+    }, [assetConfig]);
+
+    const assetList = useMemo(() => {
+        const generateAssets = ({ loanConfigAssets, assetCodeKey }) => {
+            const mappedAssets = loanConfigAssets.map((loanConfig) => {
+                const assetCode = loanConfig?.[assetCodeKey];
+                const asset = assetConfigByCode?.[assetCode];
+                return {
+                    ...asset,
+                    config: loanConfig
+                };
+            });
+            return mappedAssets;
+        };
+
+        const loanList = generateAssets({ loanConfigAssets: loanAssetList, assetCodeKey: 'loanCoin' });
+        const collateralList = generateAssets({ loanConfigAssets: collateralAssetList, assetCodeKey: 'collateralCoin' });
+
+        return { [LOANABLE]: loanList, [COLLATERAL]: collateralList };
+    }, [assetConfigByCode, loanAssetList, collateralAssetList]);
+
+    // ** handle
+    const onToggleConfirm = () => setState({ isConfirm: !isConfirm });
+    const onLoanTermClick = (value) => {
+        setState({ loanTerm: value });
+    };
+    const onChangeRule = () => setState({ isAcceptRule: !isAcceptRule });
+
+    const getDefaultAsset = useCallback(
+        ({ assetKey }) => {
+            const defaultAssetCode = assetKey === LOANABLE ? loanAsset || DEFAULT_LOANABLE_ASSET : DEFAULT_COLLATERAL_ASSET;
+            const assetFound = assetList[assetKey].find((asset) => asset?.assetCode === defaultAssetCode);
+            return assetFound;
+        },
+        [assetList, loanAsset]
+    );
+    useEffect(() => {
+        const settingDefaultAsset = () => {
+            const loanAsset = getDefaultAsset({ assetKey: LOANABLE });
+            const collateralAsset = getDefaultAsset({ assetKey: COLLATERAL });
+            setFilter({ [LOANABLE]: loanAsset, [COLLATERAL]: collateralAsset });
+        };
+
+        settingDefaultAsset();
+    }, [getDefaultAsset, assetList]);
+
+    const onChangeAsset = (value, key) => {
+        if ([LOANABLE, COLLATERAL].includes(key)) {
+            if (value) {
+                setFilter({ [key]: value });
+            } else {
+                const defaultAsset = getDefaultAsset({ assetKey: key });
+                setFilter({ [key]: defaultAsset });
+            }
+        }
+    };
+
+    const onChangeAssetAmount = ({ value, field }) => {
+        if (field === LOANABLE) {
+            setState({ loanInput: value });
+        } else setState({ collateralInput: value });
+    };
+
+    const confirmLoanInfor = useMemo(() => {
+        return {
+            loanValue,
+            collateralValue,
+            loanable: filter.loanable,
+            collateral: filter.collateral,
+            loanTerm,
+            loanInterest
+        };
+    }, [loanValue, collateralValue, filter.loanable, filter.collateral, loanTerm, loanInterest]);
+
+    const isError = !isAcceptRule || validator[COLLATERAL]().isError || validator[LOANABLE]().isError;
+
+    // ** render
+    const renderInterest = () => {
+        const interestRate = {
+            interest_year: `${loanInterest.annualInterestPercent.toFixed(5)}%`,
+            interest_daily: `${loanInterest.dailyInterestPercent.toFixed(5)}%`,
+            interest_hours: `${formatNumber(loanInterest.hourInterestAmount, filter?.loanable?.assetDigit || 0)} ${filter?.loanable?.assetCode}`,
+            interest_term: `${formatNumber(loanInterest.termInterestAmount, filter?.loanable?.assetDigit || 0)} ${filter?.loanable?.assetCode}`
+        };
+        return (
+            <section className="flex flex-col gap-3 mt-8">
+                {INTEREST.map((interest, key) => {
+                    return (
+                        <section className="flex justify-between" key={`interest_${key}_${interest.title?.[language]}`}>
+                            <div className="dark:text-gray-7 text-gray-1">{interest.title?.[language]}</div>
+                            <div className="dark:text-gray-4 text-gray-15 font-semibold">{interestRate[interest.key]}</div>
+                        </section>
+                    );
+                })}
+            </section>
+        );
+    };
 
     const renderLTV = () => {
         const data = {
@@ -196,7 +287,7 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                 <CheckBox
                     isV3
                     onChange={onChangeRule}
-                    active={rule}
+                    active={isAcceptRule}
                     className="h-full"
                     labelClassName="!text-base"
                     boxContainerClassName="w-6 h-6"
@@ -237,57 +328,57 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
     };
 
     const renderTooltipLTV = () => {
-        return (
-            <>
-                {ALLOW_LTV_TOOLTIP.map((item, key) => {
-                    return (
-                        <Tooltip
-                            isV3
-                            place="top"
-                            id={item}
-                            effect="solid"
-                            className={classNames(
-                                'max-w-[511px] dark:after:!border-t-[#2e333d] after:!border-t-[#e1e2e3]  !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1  dark:!text-gray-7 !text-gray-1 !text-sm',
-                                {
-                                    'after:!left-[8%]': key === 0,
-                                    'after:!left-[84%]': key === 2
-                                }
-                            )}
-                            overridePosition={({ top }) => {
-                                return { left: 32, top };
-                            }}
-                        >
-                            <Trans
-                                i18nKey={`lending:lending:ltv:${item}`}
-                                components={{
-                                    primary: <div className="flex" />,
-                                    secondary: <p className="text-green-3 hover:text-green-4 ml-1" />
-                                }}
-                            />
-                        </Tooltip>
-                    );
-                })}
-            </>
-        );
+        return ALLOW_LTV_TOOLTIP.map((item, key) => {
+            return (
+                <Tooltip
+                    isV3
+                    place="top"
+                    id={item}
+                    effect="solid"
+                    className={classNames(
+                        'max-w-[511px] dark:after:!border-t-[#2e333d] after:!border-t-[#e1e2e3]  !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1  dark:!text-gray-7 !text-gray-1 !text-sm',
+                        {
+                            'after:!left-[8%]': key === 0,
+                            'after:!left-[84%]': key === 2
+                        }
+                    )}
+                    overridePosition={({ top }) => {
+                        return { left: 32, top };
+                    }}
+                >
+                    <Trans
+                        i18nKey={`lending:lending:ltv:${item}`}
+                        components={{
+                            primary: <div className="flex" />,
+                            secondary: <p className="text-green-3 hover:text-green-4 ml-1" />
+                        }}
+                    />
+                </Tooltip>
+            );
+        });
     };
 
-    const renderValueToken = ({ asset, onchange, key, assetCode }) => {
-        const data = key === LOANABLE ? selectLoanAsset.loanable : selectLoanAsset.collateral;
-        return (
-            <AssetLendingFilter
-                data={data}
-                asset={asset}
-                assetCode={assetCode}
-                className="h-6"
-                wrapperLabel="h-6"
-                onChangeAsset={(e) => onchange(e, key)}
-                labelClassName="mr-2"
-                labelAsset="Chọn tài sản ký quỹ"
-                wrapperClassName="w-max right-[-12px] !left-[auto]"
-                containerClassName={classNames({ '!z-[auto]': key === COLLATERAL })}
-            />
-        );
-    };
+    const renderValueToken = useCallback(
+        ({ asset, onChange, assetListKey, assetCode }) => {
+            return (
+                <AssetLendingFilter
+                    assets={assetList[assetListKey]}
+                    assetListKey={assetListKey}
+                    asset={asset}
+                    assetCode={assetCode}
+                    className="h-6"
+                    wrapperLabel="h-6 !p-0 !bg-transparent"
+                    onChangeAsset={(e) => onChange(e, assetListKey)}
+                    labelClassName="mr-2"
+                    labelAsset="Chọn tài sản ký quỹ"
+                    wrapperClassName="w-max right-[-12px] !left-[auto]"
+                    containerClassName={classNames({ '!z-[auto]': assetListKey === COLLATERAL })}
+                    isAuth={isAuth}
+                />
+            );
+        },
+        [assetList, isAuth]
+    );
 
     // **
     return (
@@ -295,7 +386,10 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
             <ModalV2
                 isVisible={isModal}
                 className="w-[596px] overflow-auto no-scrollbar"
-                onBackdropCb={onClose}
+                onBackdropCb={() => {
+                    onClose();
+                    setState(INIT_DATA);
+                }}
                 wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
                 customHeader={() => (
                     <div className="flex justify-end mb-6">
@@ -313,35 +407,48 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                     {renderTooltipLTV()}
                     <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Tạo lệnh vay</p>
                     <section className="mt-6">
-                        <InputV2
-                            allowClear
+                        <TradingInputV2
+                            clearAble
                             label="Tôi muốn vay"
-                            showDividerSuffix={false}
+                            labelClassName="font-semibold inline-block !text-base !text-txtPrimary dark:!text-txtPrimary-dark"
+                            thousandSeparator={true}
+                            decimalScale={filter?.loanable?.assetDigit}
+                            errorTooltip={false}
+                            inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
                             placeholder="Nhập số lượng tài sản bạn muốn vay"
-                            suffix={
+                            validator={validator[LOANABLE]()}
+                            value={loanValue}
+                            onValueChange={({ value }) => {
+                                onChangeAssetAmount({ value, field: LOANABLE });
+                            }}
+                            onFocus={() => setState({ typingField: LOANABLE })}
+                            renderTail={
                                 <label htmlFor="search_events">
                                     {renderValueToken({
                                         asset: filter?.loanable,
-                                        onchange: onChangeAsset,
-                                        key: LOANABLE,
+                                        onChange: onChangeAsset,
+                                        assetListKey: LOANABLE,
                                         assetCode: filter?.collateral?.id
                                     })}
                                 </label>
                             }
-                            prefix={
-                                <span className="mt-1 text-xs font-normal absolute bottom-0 left-0">
-                                    Tối thiểu: {formatNumber(filter.loanable?.config?.minLimit, filter.loanable?.config?.assetDigit)} . Tối đa:
-                                    {formatNumber(filter.loanable?.config?.maxLimit, filter.loanable?.config?.assetDigit)}
+                            textDescription={
+                                <span>
+                                    Tối thiểu: {formatNumber(filter.loanable?.config?.minLimit, filter.loanable?.assetDigit)} . Tối đa:
+                                    {formatNumber(filter.loanable?.config?.maxLimit, filter.loanable?.assetDigit)}
                                 </span>
                             }
                         />
                     </section>
                     <section className="mt-8">
-                        <section className="flex flex-row justify-between mb-[14px]">
-                            <div className="dark:text-gray-4 text-gray-15">Số lượng ký quỹ</div>
-                            <section className="flex flex-row gap-1 items-center">
-                                <div>
-                                    Khả dụng: {formatNumber(totalSPOT?.available, totalSPOT?.assetDigit) || '-'} {totalSPOT?.assetCode}
+                        <section className="flex flex-row justify-between mb-2 text-txtPrimary  dark:text-txtPrimary-dark">
+                            <div className="font-semibold">Số lượng ký quỹ</div>
+                            <section className="flex text-sm flex-row gap-1 items-center">
+                                <div className="space-x-1">
+                                    <span className="dark:text-txtSecondary-dark text-txtSecondary">Khả dụng:</span>
+                                    <span className="font-semibold ">
+                                        {formatNumber(collateralAvailable, filter.collateral?.assetDigit) || '-'} {filter.collateral?.assetCode}
+                                    </span>
                                 </div>
                                 <AddCircleColorIcon
                                     size={16}
@@ -350,26 +457,35 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                                 />
                             </section>
                         </section>
-                        <InputV2
-                            allowClear
-                            showDividerSuffix={false}
+                        <TradingInputV2
+                            clearAble
                             placeholder="Nhập số lượng tài sản đảm bảo"
-                            suffix={
+                            thousandSeparator={true}
+                            decimalScale={filter?.collateral?.assetDigit}
+                            inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
+                            errorTooltip={false}
+                            validator={validator[COLLATERAL]()}
+                            value={collateralValue}
+                            onValueChange={({ value }) => {
+                                onChangeAssetAmount({ value, field: COLLATERAL });
+                            }}
+                            renderTail={
                                 <label htmlFor="search_events">
                                     {renderValueToken({
                                         asset: filter?.collateral,
-                                        onchange: onChangeAsset,
-                                        key: COLLATERAL,
+                                        onChange: onChangeAsset,
+                                        assetListKey: COLLATERAL,
                                         assetCode: filter?.loanable?.id
                                     })}
                                 </label>
                             }
-                            prefix={
-                                <span className="mt-1 text-xs font-normal absolute bottom-0 left-0">
-                                    Tối thiểu: {formatNumber(filter?.collateral?.config?.minLimit || 0, filter?.collateral?.config?.assetDigit)} . Tối đa:
-                                    {formatNumber(filter?.collateral?.config?.maxLimit, filter?.collateral?.config?.assetDigit)}
+                            textDescription={
+                                <span>
+                                    Tối thiểu: {formatNumber(minCollateralAmount, filter.collateral?.assetDigit)} . Tối đa:
+                                    {formatNumber(filter.collateral?.config?.maxLimit, filter.collateral?.assetDigit)}
                                 </span>
                             }
+                            onFocus={() => setState({ typingField: COLLATERAL })}
                         />
                     </section>
                     <section>
@@ -382,24 +498,45 @@ const ModalRegisterLoan = ({ isModal, onClose }) => {
                         </div>
                         <section className="flex flex-row gap-4 w-max mt-4">
                             {BORROWING_TERM.map((term) => {
-                                const isActive = term.key === borrowingTerm;
+                                const isActive = term.day === loanTerm;
                                 return (
-                                    <Chip onClick={() => handleBorrowingTermClick(term.key)} selected={isActive} key={term?.[language]}>
+                                    <Chip onClick={() => onLoanTermClick(term.day)} selected={isActive} key={term?.[language]}>
                                         {term?.[language]}
                                     </Chip>
                                 );
                             })}
                         </section>
-                        {renderProfit()}
+                        {renderInterest()}
                         {renderLTV()}
                         {renderRules()}
-                        <ButtonV2 className="mt-10" disabled={!true}>
-                            Vay ngay
-                        </ButtonV2>
+                        {!isAuth ? (
+                            <ButtonV2
+                                onClick={() => {
+                                    window.open(getLoginUrl('sso', 'login'), '_self');
+                                }}
+                                className="mt-10"
+                            >
+                                {t('common:sign_in')}
+                            </ButtonV2>
+                        ) : (
+                            <ButtonV2 onClick={() => handleRegisterLoan(REGISTER_HANDLE_TYPE.FROM_MAIN_MODAL)} className="mt-10" disabled={isError}>
+                                Vay ngay
+                            </ButtonV2>
+                        )}
                     </section>
                 </section>
             </ModalV2>
-            <ConfirmLoan isModal={isConfirm} onClose={handleToggleConfirm} />
+            <ModalConfirmLoan
+                onSuccessClose={() => {
+                    onClose();
+                    setState(INIT_DATA);
+                }}
+                registerLoan={() => handleRegisterLoan(REGISTER_HANDLE_TYPE.FROM_CONFIRM_MODAL)}
+                refetchPrice={refetchCollateralPrice}
+                isOpen={isConfirm}
+                onClose={onToggleConfirm}
+                loanInfor={confirmLoanInfor}
+            />
         </>
     );
 };

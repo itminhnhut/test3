@@ -23,7 +23,7 @@ const PopoverSelect = (props, ref) => {
                         {props.labelValue && isFunction(props.labelValue) ? props.labelValue() : props.labelValue}
                     </div>
                     {!props.hideChevron && (
-                        <div className="text-txtSecondary dark:text-gray-7">
+                        <div className={classNames('text-txtSecondary dark:text-gray-7', props.chevronClassName)}>
                             <SvgIcon
                                 size={16}
                                 name="chevron_down"
