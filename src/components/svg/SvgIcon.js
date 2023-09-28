@@ -1877,6 +1877,36 @@ const MoneyNFTIcon = ({ size = 16 }) => {
     );
 };
 
+export const PriceAlertIcon = (props) => {
+    return (
+        <svg {...props} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M7.962 4.2a.72.72 0 0 0-.72.72v2.974a.72.72 0 0 0 1.44 0V4.92a.719.719 0 0 0-.72-.72zm.003 5.693h-.01c-.53 0-.955.43-.955.96s.434.96.965.96a.96.96 0 1 0 0-1.92zm0 0h-.01c-.53 0-.955.43-.955.96s.434.96.965.96a.96.96 0 1 0 0-1.92zm-.003-1.28c.399 0 .72-.321.72-.72V4.92a.719.719 0 1 0-1.44 0v2.974c0 .398.324.72.72.72zm.003 1.28h-.01c-.53 0-.955.43-.955.96s.434.96.965.96a.96.96 0 1 0 0-1.92zm-.003-1.28c.399 0 .72-.321.72-.72V4.92a.719.719 0 1 0-1.44 0v2.974c0 .398.324.72.72.72z"
+                fill="#FFC632"
+            />
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M8 14.8A6.8 6.8 0 1 0 8 1.2a6.8 6.8 0 0 0 0 13.6zM8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                fill="#FFC632"
+            />
+        </svg>
+    );
+};
+
+export const PriceAlertV2Icon = ({ size = 16, ...props }) => {
+    return (
+        <svg {...props} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M8 1.332a6.67 6.67 0 0 0-6.666 6.667 6.67 6.67 0 0 0 6.667 6.666A6.67 6.67 0 0 0 14.667 8a6.67 6.67 0 0 0-6.666-6.667zm.667 10H7.334V9.999h1.333v1.333zm0-2.667H7.334v-4h1.333v4z"
+                fill="#FFC632"
+            />
+        </svg>
+    );
+};
+
 export {
     AddCircleColorIcon,
     AddCircleIcon,
