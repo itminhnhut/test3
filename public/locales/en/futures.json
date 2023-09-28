@@ -459,6 +459,9 @@
             "order": "order",
             "preview": "Preview",
             "close_orders_success": "Close orders successfully"
+        },
+        "warning": {
+            "understood": "I have understood"
         }
     },
     "orders_history": "Order History",
