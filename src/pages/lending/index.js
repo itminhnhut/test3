@@ -7,6 +7,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import { PORTAL_MODAL_ID } from 'constants/constants';
 
 // ** Dynamic components
 const HeaderLending = dynamic(() => import('components/screens/Lending/Header'), { ssr: true });
@@ -21,17 +22,15 @@ const Lending = () => {
     const isMobile = width < 830;
 
     return (
-        <>
-            <MaldivesLayout>
-                <main className="bg-dark-13 dark:bg-dark-dark">
-                    <HeaderLending />
-                    <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
-                        <CryptoLending />
-                        <FQALending isDark={isDark} />
-                    </section>
-                </main>
-            </MaldivesLayout>
-        </>
+        <MaldivesLayout>
+            <main className="bg-dark-13 dark:bg-dark-dark">
+                <HeaderLending />
+                <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
+                    <CryptoLending />
+                    <FQALending isDark={isDark} />
+                </section>
+            </main>
+        </MaldivesLayout>
     );
 };
 
