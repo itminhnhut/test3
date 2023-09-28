@@ -318,8 +318,8 @@ export const seasons = [
         end: '2023-10-29T17:00:00.000Z',
         time_to_create: { start: '2023-09-26T17:00:00.000Z', end: '2023-10-10T17:00:00.000Z' },
         contest_id: 16,
-        title_detail: { vi: 'NAO Futures VNST – Nami Championship mùa 10', en: 'NAO Futures VNST – Nami Championship Season 10' },
-        title: { vi: 'NAO Futures VNST', en: 'NAO Futures VNST' },
+        title_detail: { vi: 'NAO Futures – Nami Championship mùa 10', en: 'NAO Futures – Nami Championship Season 10' },
+        title: { vi: 'NAO Futures', en: 'NAO Futures' },
         title_champion: { vi: 'Nami Championship mùa 10', en: 'Nami Championship Season 10' },
         minVolumeInd: {
             vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để được xếp hạng',
