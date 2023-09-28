@@ -332,10 +332,11 @@ const PriceAlert = ({ pairConfig }) => {
         context.alert.show('warning', 'Cảnh báo giá', t('error:futures:NETWORK_ERROR'), null, onConfirm, null, {
             hideCloseButton: true,
             confirmTitle: t('futures:mobile:warning:understood'),
-            noUseOutside: true
+            noUseOutside: true,
+            customIcon: <PriceAlertIcon size={80} />
         });
     };
-    
+
     if (!pairConfig?.isLowLiquidity) return null;
     return <PriceAlertIcon onClick={showAlert} />;
 };
