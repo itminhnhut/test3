@@ -1,11 +1,13 @@
 import React from 'react';
 
+// ** NEXT
 import dynamic from 'next/dynamic';
-
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
+// ** Hooks
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
+// ** Components
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
 // ** dynamic components

@@ -239,6 +239,7 @@ export const API_CONTEST_GET_RANK_MEMBERS_PNL = API_PREFIX + 'event/futures-cont
 export const API_CONTEST_GET_RANK_MEMBERS_VOLUME = API_PREFIX + 'event/futures-contest/rank-member-volume';
 export const API_CONTEST_GET_USER_DETAIL = API_PREFIX + 'event/futures-contest/user-info';
 export const API_CONTEST_GET_RANK_WEEKLY_VOLUME = API_PREFIX + 'event/weekly-futures-contest/individual-rank-volume';
+export const API_CONTEST_GET_RANK_WEEKLY_PNL = API_PREFIX + 'event/weekly-futures-contest/individual-rank-pnl';
 
 export const API_CONTEST_GET_RANK_GROUP_PNL = API_PREFIX + 'event/futures-contest/group-pnl';
 export const API_CONTEST_GET_RANK_GROUP_VOLUME = API_PREFIX + 'event/futures-contest/group-volume';
@@ -381,10 +382,12 @@ export const API_USER_INSURANCE_HISTORY = API_PREFIX + 'user/insurance';
 export const API_CONFIG_INSURANCE_RULE = `${INSURANCE_API_URL}/insurance/v1/get-insurance-rule`;
 
 // ** NFT
-export const API_GET_LIST_NFT = API_V3_PREFIX + 'nft';
+export const API_GET_LIST_OWNER_NFT = API_V3_PREFIX + 'nft/list-owner';
+export const API_GET_NFT_LIST = API_V3_PREFIX + 'nft/list';
 export const API_GET_COLLECTION = API_V3_PREFIX + 'nft/collection';
 export const API_GET_DETAIL_COLLECTION = API_V3_PREFIX + 'nft/collection_detail';
 export const API_GET_DETAIL_NFT = API_V3_PREFIX + 'nft/detail';
+export const API_GET_DETAIL_OWNER_NFT = API_V3_PREFIX + 'nft/detail-owner';
 export const API_GET_HISTORY_NFT = API_V3_PREFIX + 'nft/history';
 export const API_GET_SUMMARY_NFT = API_V3_PREFIX + 'nft/summary';
 export const API_POST_ACTIVE_NFT = API_V3_PREFIX + 'nft/active';
@@ -406,4 +409,5 @@ export const GOOGLE_OAUTH_CALLBACK = API_V3_PREFIX + 'auth/callback/google';
 export const API_HISTORY_LOAN = API_V3_PREFIX + 'wallet/history/loan';
 export const API_LOAN_ASSETS = API_V3_PREFIX + 'wallet/history/loan/loanable-assets';
 export const API_LOAN_COLLATERAL_ASSETS = API_V3_PREFIX + 'wallet/history/loan/collateral-assets';
+export const API_OVERVIEW_LOAN = API_V3_PREFIX + 'wallet/history/loan/overview';
 export const API_GET_PAIR_PRICE = API_V3_PREFIX + 'wallet/history/price';

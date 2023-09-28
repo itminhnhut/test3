@@ -15,7 +15,7 @@ import styled from 'styled-components';
 const NoData = dynamic(() => import('components/screens/NFT/Components/Page/NoData'), { ssr: false });
 const NoResult = dynamic(() => import('components/screens/NFT/Components/Page/NoResult'), { ssr: false });
 
-const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDark, noResult }) => {
+const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDark, noResult, tab = null }) => {
     const {
         t,
         i18n: { language }
@@ -79,9 +79,9 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                         id={item._id}
                     >
                         <section className={classNames('max-h-[394px]', { 'max-h-[189px]': grid === 6 })}>
-                            <img width={394} height={394} src={item.image} className="rounded-t-xl" />
+                            <img width={394} height={394} src={item.image} className={classNames('rounded-t-xl', { 'rounded-xl': grid === 6 })} />
                         </section>
-                        <section className={classNames('h-auto mx-5 my-5', { '!mx-4 !my-4': grid === 6 })}>
+                        <section className={classNames('h-auto mx-5 my-5', { '!mx-4 !my-4 hidden': grid === 6 })}>
                             {renderTitle(item)}
                             <Tooltip isV3 place="top" effect="solid" id={item?.name} className={classNames('max-w-[394px]', { 'max-w-[189px]': grid === 6 })} />
                             <p
@@ -134,7 +134,7 @@ const CardItems = ({ listNFT, isOpen, grid, showCollection, wallet = false, isDa
                 </WrapperItems>
             );
         }
-        return noResult ? <NoResult /> : <NoData />;
+        return noResult ? <NoResult /> : <NoData isWallet={wallet && tab === 'WNFT'} />;
     };
     return <>{renderCard()}</>;
 };

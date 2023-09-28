@@ -92,6 +92,11 @@ const filterFeeAsset = [
         ratio: '0.06'
     },
     {
+        id: WalletCurrency.VNST,
+        label: 'VNST',
+        ratio: '0.06'
+    },
+    {
         id: WalletCurrency.USDT,
         label: 'USDT',
         ratio: '0.06'
@@ -280,7 +285,8 @@ const NaoPerformance = memo(({}) => {
                     72: [],
                     22: [],
                     1: [],
-                    447: []
+                    447: [],
+                    39: []
                 };
                 const users = [];
                 const labels = [];
@@ -292,6 +298,7 @@ const NaoPerformance = memo(({}) => {
                     users.push([date, e.userCount]);
                     fees['72'].push([date, e.feeRevenueVndc]);
                     fees['22'].push([date, e.feeRevenueUsdt]);
+                    fees['39'].push([date, e.feeRevenueVnst]);
                 }
                 setDataChartVolume(volumes);
                 setDataChartOrder(trades);
@@ -311,7 +318,7 @@ const NaoPerformance = memo(({}) => {
             const { data } = await fetchApi({
                 url: API_GET_REFERENCE_CURRENCY,
                 params: {
-                    base: 'VNDC,USDT',
+                    base: 'VNST,VNDC,USDT',
                     quote: 'USD'
                 }
             });
@@ -516,7 +523,7 @@ const NaoPerformance = memo(({}) => {
                     const isUSD = currency === 22;
                     const isMonetary = type !== 'chart_users' && type !== 'chart_total_orders';
                     const titleText = t(`nao:onus_performance:${type}`);
-                    let currencyText = isMonetary ? (isUSD ? 'USDT' : 'VNDC') : '';
+                    let currencyText = isMonetary ? assetCodeFromId(currency) : '';
 
                     const body = `${formatNumber(y, isUSD ? 4 : 0)} ${currencyText}`;
                     const fiatUSD = isMonetary ? `$${formatNumber(y * (_referencePrice[`${assetCodeFromId(currency)}/USD`] || 1 / 23400), 4)}` : '';
@@ -552,26 +559,36 @@ const NaoPerformance = memo(({}) => {
                         days={days}
                         textPopoverClassName="sm:text-sm text-gray-15"
                     />
-                    <div className="order-first gap-2 flex gap-last">
+                    <div className="order-first gap-2 flex gap-last max-w-[calc(100%-32px)] overflow-x-auto no-scrollbar">
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center px-4 text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
-                                { '!border-teal !bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
+                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
+                                { '!border-teal !bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNST }
                             )}
-                            onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
+                            onClick={() => handleChangeMarginCurrency(WalletCurrency.VNST)}
                         >
-                            Futures VNDC
+                            VNST
                         </button>
                         <button
                             type="BUTTON"
                             className={classNames(
-                                'flex flex-col justify-center px-4 text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
+                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
+                                { '!border-teal !bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
+                            )}
+                            onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
+                        >
+                            VNDC
+                        </button>
+                        <button
+                            type="BUTTON"
+                            className={classNames(
+                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
                                 { '!border-teal !bg-teal/10 bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.USDT }
                             )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
                         >
-                            Futures USDT
+                            USDT
                         </button>
                     </div>
                 </div>

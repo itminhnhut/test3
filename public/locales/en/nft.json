@@ -12,6 +12,7 @@
     "detail": {
         "title": "Detail",
         "type": "Type",
+        "total": "Total supply",
         "exp": "Expiration time",
         "des": "Description",
         "features": "Features",
@@ -20,7 +21,16 @@
             "CASHBACK": "<0>Giảm {{- value}}% phí giao dịch trong vòng {{- week}} ngày<0>",
             "APY_BOOSTER": "<0>APY Booster {{- value}}% trong {{- day}} ngày<0>"
         },
-        "tooltip_exp": "After NFT expires, you will not be able to activate the bundled benefits"
+        "tooltip_exp": "After NFT expires, you will not be able to activate the bundled benefits",
+        "get_rewarded_now": "Get Rewarded Now",
+        "fee_refund": "Fee refund",
+        "tooltip_fee_refund": "Futures fee transaction refunded after activating Blue Tang"
+    },
+    "collection": {
+        "read_more": "Read more",
+        "reward_system": "Reward system",
+        "reward_content": "Complete events to achieve other rewards for free from the {{name}} collection",
+        "go_event": "Go to Event"
     },
     "history": {
         "title": "History",
@@ -52,5 +62,7 @@
         "9000": "Nami ID not valid",
         "code_error_format": "Nami ID is incorrectly formatted"
     },
-    "read_more": "Read more about Nami Infinity"
+    "read_more": "Read more about Nami Infinity",
+    "wallet_no_data": "No NFT found",
+    "to_nft": "To NFT Infinity"
 }

@@ -370,7 +370,6 @@ export const WalletCurrency = {
     AUCTION: 371,
 
     NAO: 447,
-    VNST: 39
 };
 
 export function assetCodeFromId(assetId) {
