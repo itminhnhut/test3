@@ -7,7 +7,7 @@ const calcCollateralAmount = ({ loanAmount, initLTV, collateralToLoanPrice, digi
 const calcLoanAmount = ({ collateralAmount, initLTV, collateralToLoanPrice }) => collateralAmount * initLTV * collateralToLoanPrice;
 
 const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typingField, initialLTV, collateralAvailable, refetch }) => {
-    const { data: collateralPrice } = useCollateralPrice({ collateral, loanable, refetch });
+    const { data: collateralPrice } = useCollateralPrice({ collateralAssetCode: collateral?.assetCode, loanableAssetCode: loanable?.assetCode, refetch });
 
     const isTypingLoanField = typingField === LOANABLE;
 
