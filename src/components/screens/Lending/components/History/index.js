@@ -26,7 +26,6 @@ import { HISTORY_TAB } from 'components/screens/Lending/constants';
 import pickBy from 'lodash/pickBy';
 
 import { STATUS_VI, STATUS_EN, MILLISECOND } from 'components/screens/Lending/constants';
-import { useCollateralList } from '../../Context';
 
 // ** dynamic
 const HistoryTable = dynamic(() => import('./Table'), { ssr: false });
@@ -61,6 +60,8 @@ const initState = {
         }
     }
 };
+
+const TAB_STATUS = { info: 'CLOSED', reject: 'LIQUIDATED' };
 
 const History = () => {
     const {
@@ -113,7 +114,6 @@ const History = () => {
 
     const isAuth = useAuh();
 
-    console.log(isAuth);
     // ** useState
     const [tab, setTab] = useState(initState.tab);
     const [page, setPage] = useState(initState.page);
@@ -125,7 +125,7 @@ const History = () => {
     useEffect(() => {
         const id = setTimeout(() => getOrderLoan(), 500);
         return () => clearTimeout(id);
-    }, [useMemoizeArgs(filter)]);
+    }, [useMemoizeArgs(filter), tab]);
 
     useEffect(() => {
         const isEqual = JSON.stringify(initState.filters) === JSON.stringify(filter);
@@ -150,7 +150,8 @@ const History = () => {
                     collateralCoin: filter?.collateralCoin?.assetCode,
                     loanCoin: filter?.loanCoin?.assetCode,
                     from: formatDate(filter?.time, 'startDate'),
-                    to: formatDate(filter?.time, 'endDate')
+                    to: formatDate(filter?.time, 'endDate'),
+                    status: TAB_STATUS?.[filter.status] || 'CLOSED'
                 }
             });
 
@@ -202,6 +203,7 @@ const History = () => {
                         <HistoryTable
                             data={data}
                             page={page}
+                            tab={tab}
                             filter={filter}
                             onPage={setPage}
                             configFilter={filters}

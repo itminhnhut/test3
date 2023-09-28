@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 
 // ** NEXT
 import dynamic from 'next/dynamic';
@@ -52,7 +52,7 @@ const INIT_DATA = {
 
 const substring = (str, start = 10, end = -4) => (String(str).length > 10 ? `${String(str).substr(0, start)}...${String(str).substr(end)}` : str);
 
-const HistoryTable = ({ data, page, loading, onPage, filter, onFilter, configFilter, onReset }) => {
+const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, configFilter, onReset }) => {
     const {
         t,
         i18n: { language }
@@ -152,7 +152,7 @@ const HistoryTable = ({ data, page, loading, onPage, filter, onFilter, configFil
                         labelAsset="Chọn tài sản"
                         onChangeAsset={(e) => onChange(e, key)}
                         wrapperClassName="w-max right-[0] !left-[auto]"
-                        className="!w-[168px] text-base !text-gray-15 dark:!text-gray-7 !h-12"
+                        className={classNames('!w-[168px] text-base !text-gray-15 dark:!text-gray-7 !h-12', { '!w-[295px]': tab === 'reject' })}
                     />
                 );
             case 'reset':
@@ -169,6 +169,7 @@ const HistoryTable = ({ data, page, loading, onPage, filter, onFilter, configFil
     const renderTitle = () => {
         return Object.keys(configFilter).map((key) => {
             const data = configFilter[key];
+            if (tab === 'reject' && key === 'status') return;
             return (
                 <section>
                     <div className={classNames('dark:text-gray-7 text-gray-1 text-sm', { 'invisible h-5': !data.title })}>{data?.title}</div>
@@ -184,7 +185,7 @@ const HistoryTable = ({ data, page, loading, onPage, filter, onFilter, configFil
         return { total: total, symbol: symbol };
     };
 
-    const renderContent = (value) => {
+    const renderContentTab = (value) => {
         const { _id, createdAt, totalDebt, loanCoin, collateralAmount, collateralCoin, loanTerm, hourlyInterestRate, status } = value;
         const rsTotalDebt = handleTotalAsset(totalDebt, loanCoin); //** tổng dư nợ */
         const rsCollateralAmount = handleTotalAsset(collateralAmount, collateralCoin); //** Tổng ký quỹ ban đầu */
@@ -203,7 +204,11 @@ const HistoryTable = ({ data, page, loading, onPage, filter, onFilter, configFil
                 </section>
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px]">
                     <div>Trạng thái</div>
-                    <div className="dark:text-gray-7 text-gray-1 font-semibold flex flex-row gap-1 items-center">
+                    <div
+                        className={classNames('dark:text-gray-7 text-gray-1 font-semibold flex flex-row gap-1 items-center', {
+                            'dark:!text-green-2 !text-green-3': status === 'REPAID'
+                        })}
+                    >
                         {LOAN_HISTORY_STATUS?.[status]?.[language]}
                     </div>
                 </section>
@@ -242,6 +247,90 @@ const HistoryTable = ({ data, page, loading, onPage, filter, onFilter, configFil
                 </section>
             </section>
         );
+    };
+
+    const renderContentTabReject = (value) => {
+        const { _id, collateralAmount, collateralCoin, createdAt, liquidationTime, status, interest, liquidationFee, loanCoin } = value;
+        const rsCollateralAmount = handleTotalAsset(collateralAmount, collateralCoin); //** Tổng ký quỹ ban đầu */
+        const rsLiquidationFree = handleTotalAsset(interest * liquidationFee, loanCoin); //** Tổng ký quỹ ban đầu */
+
+        return (
+            <section className="flex flex-row gap-6 py-4">
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[162px] whitespace-nowrap">
+                    <div>ID khoản vay</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                        <div>#{substring(_id)}</div>
+                        <CopyToClipboard onCopy={onCopy} className="cursor-pointer inline-block">
+                            {copied ? <Check size={16} color={colors.teal} /> : <Copy />}
+                        </CopyToClipboard>
+                    </div>
+                </section>
+                <section className="flex flex-row items-center gap-2 min-w-[214px]">
+                    <AssetLogo assetId={rsCollateralAmount.symbol.id} />
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>Tổng ký quỹ ban đầu</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                            {rsCollateralAmount.total} {collateralCoin}
+                        </div>
+                    </section>
+                </section>
+                <section className="flex flex-row items-center gap-2 min-w-[204px]">
+                    <AssetLogo assetId={rsLiquidationFree.symbol.id} />
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>Phí thanh lý</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                            {rsLiquidationFree.total} {loanCoin}
+                        </div>
+                    </section>
+                </section>
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[180px]">
+                    <div>Thời gian vay</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                        {formatTime(createdAt, 'HH:mm:ss dd/MM/yyyy')}
+                    </div>
+                </section>
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[180px]">
+                    <div>Thời gian thanh lý</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                        {formatTime(liquidationTime, 'HH:mm:ss dd/MM/yyyy')}
+                    </div>
+                </section>
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] whitespace-nowrap">
+                    <div>Nguyên nhân thanh lý</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                        {LOAN_HISTORY_STATUS?.[status]?.[language]}
+                    </div>
+                </section>
+                {/* <section className="flex flex-row items-center gap-2 min-w-[162px]">
+                    <AssetLogo assetId={rsCollateralAmount.symbol.id} />
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>Ký quỹ ban đầu</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                            {rsCollateralAmount.total} {collateralCoin}
+                        </div>
+                    </section>
+                </section>
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[72px]">
+                    <div>Kỳ hạn</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">{loanTerm} ngày</div>
+                </section>
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[72px]">
+                    <div>Lãi suất năm</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">{formatNumber(interestRate)}%</div>
+                </section>
+
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[180px]">
+                    <div>Thời gian vay</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                        {formatTime(createdAt, 'HH:mm:ss dd/MM/yyyy')}
+                    </div>
+                </section> */}
+            </section>
+        );
+    };
+
+    const renderContent = (value) => {
+        return tab !== 'reject' ? renderContentTab(value) : renderContentTabReject(value);
     };
 
     const renderTable = useCallback(() => {
@@ -284,7 +373,7 @@ const HistoryTable = ({ data, page, loading, onPage, filter, onFilter, configFil
                 }}
             />
         );
-    }, [data?.result, loading, isDark, filter]);
+    }, [data?.result, loading, isDark, filter, tab]);
 
     return <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">{renderTable()}</section>;
 };
