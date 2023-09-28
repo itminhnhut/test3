@@ -6,9 +6,8 @@ import { ceilByExactDegit, formatNumber, roundByExactDigit } from 'redux/actions
 const calcCollateralAmount = ({ loanAmount, initLTV, collateralToLoanPrice, digit = 0 }) => loanAmount / initLTV / collateralToLoanPrice;
 const calcLoanAmount = ({ collateralAmount, initLTV, collateralToLoanPrice }) => collateralAmount * initLTV * collateralToLoanPrice;
 
-const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typingField, initialLTV, collateralAvailable }) => {
-    console.log('collateralAvailable:', collateralAvailable);
-    const { data: collateralPrice } = useCollateralPrice({ collateral, loanable });
+const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typingField, initialLTV, collateralAvailable, refetch }) => {
+    const { data: collateralPrice } = useCollateralPrice({ collateral, loanable, refetch });
 
     const isTypingLoanField = typingField === LOANABLE;
 

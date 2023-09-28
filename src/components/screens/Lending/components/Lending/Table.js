@@ -89,19 +89,26 @@ const LendingTable = ({ data, page, loading, onPage }) => {
             },
             {
                 key: '_7dHourlyInterestRate',
-                dataIndex: '_7dDailyInterestRate',
+                dataIndex: '_7dHourlyInterestRate',
                 title: renderTitle(t('lending:lending:table:7days'), 'Lãi suất theo giờ/theo năm'),
                 align: 'left',
                 minWidth: 205,
-                render: (value, data) => <div className="font-normal">{`${value}/${data._180dDailyInterestRate}`}</div>
+                render: (value, data) => {
+                    const interestRate = +value * 100;
+                    return <div className="font-normal">{`${interestRate?.toFixed(5)}% / ${(interestRate * 24 * 365)?.toFixed(5)}%`}</div>;
+                }
             },
             {
                 key: '_30dHourlyInterestRate',
-                dataIndex: '_30dDailyInterestRate',
+                dataIndex: '_30dHourlyInterestRate',
                 title: renderTitle(t('lending:lending:table:30days'), 'Lãi suất theo giờ/theo năm'),
                 align: 'left',
                 minWidth: 206,
-                render: (value, data) => <div className="font-normal">{`${value}/${data._180dDailyInterestRate}`}</div>
+                render: (value, data) => {
+                    console.log('data:', data)
+                    const interestRate = +value * 100;
+                    return <div className="font-normal">{`${interestRate?.toFixed(5)}% / ${(interestRate * 24 * 365)?.toFixed(5)}%`}</div>;
+                }
             },
             {
                 key: '',

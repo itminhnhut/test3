@@ -40,7 +40,8 @@ import {
     BORROWING_TERM,
     ALLOW_LTV_TOOLTIP,
     DEFAULT_LOANABLE_ASSET,
-    DEFAULT_COLLATERAL_ASSET
+    DEFAULT_COLLATERAL_ASSET,
+    REGISTER_HANDLE_TYPE
 } from 'components/screens/Lending/constants';
 
 import TradingInputV2 from 'components/trade/TradingInputV2';
@@ -85,6 +86,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     const { collateral: collateralAssetList } = useCollateralList();
 
     // ** useState
+    const [refetchCollateralPrice, setRefetchCollateralPrice] = useState(false);
     const [state, set] = useState(INIT_DATA);
     const { isAcceptRule, typingField, filter, isConfirm, loanTerm, collateralInput, loanInput } = state;
     const setState = (newState) => set((prevState) => ({ ...prevState, ...newState }));
@@ -113,7 +115,8 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
         typingField,
         collateralInput,
         loanInput,
-        collateralAvailable
+        collateralAvailable,
+        refetch: refetchCollateralPrice
     });
 
     const { registerLoan } = useRegisterLoan({
@@ -124,6 +127,20 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
         loanTerm,
         typingField
     });
+
+    const handleRegisterLoan = async (type) => {
+        switch (type) {
+            case REGISTER_HANDLE_TYPE.FROM_CONFIRM_MODAL:
+                return await registerLoan();
+
+            case REGISTER_HANDLE_TYPE.FROM_MAIN_MODAL:
+                onToggleConfirm();
+                setRefetchCollateralPrice((prev) => !prev);
+                return;
+            default:
+                break;
+        }
+    };
 
     // ** loan term interest rate per Day and per Hour
     const termDailyInterestRate = +filter.loanable?.config?.[`_${loanTerm}dDailyInterestRate`];
@@ -222,8 +239,8 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     // ** render
     const renderInterest = () => {
         const interestRate = {
-            interest_year: `${loanInterest.annualInterestPercent.toFixed(5)} %`,
-            interest_daily: `${loanInterest.dailyInterestPercent.toFixed(5)} %`,
+            interest_year: `${loanInterest.annualInterestPercent.toFixed(5)}%`,
+            interest_daily: `${loanInterest.dailyInterestPercent.toFixed(5)}%`,
             interest_hours: `${formatNumber(loanInterest.hourInterestAmount, filter?.loanable?.assetDigit || 0)} ${filter?.loanable?.assetCode}`,
             interest_term: `${formatNumber(loanInterest.termInterestAmount, filter?.loanable?.assetDigit || 0)} ${filter?.loanable?.assetCode}`
         };
@@ -502,13 +519,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                                 {t('common:sign_in')}
                             </ButtonV2>
                         ) : (
-                            <ButtonV2
-                                onClick={() => {
-                                    onToggleConfirm();
-                                }}
-                                className="mt-10"
-                                disabled={isError}
-                            >
+                            <ButtonV2 onClick={() => handleRegisterLoan(REGISTER_HANDLE_TYPE.FROM_MAIN_MODAL)} className="mt-10" disabled={isError}>
                                 Vay ngay
                             </ButtonV2>
                         )}
@@ -520,7 +531,8 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                     onClose();
                     setState(INIT_DATA);
                 }}
-                registerLoan={registerLoan}
+                registerLoan={() => handleRegisterLoan(REGISTER_HANDLE_TYPE.FROM_CONFIRM_MODAL)}
+                refetchPrice={refetchCollateralPrice}
                 isOpen={isConfirm}
                 onClose={onToggleConfirm}
                 loanInfor={confirmLoanInfor}

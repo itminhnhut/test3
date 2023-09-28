@@ -109,6 +109,10 @@ const DEFAULT_LOANABLE_ASSET = 'VNST';
 const DEFAULT_COLLATERAL_ASSET = 'BNB';
 const ALLOW_LTV_TOOLTIP = ['ltv_initial', 'ltv_margin', 'ltv_liquidate'];
 const PERCENT = 100;
+const REGISTER_HANDLE_TYPE = {
+    FROM_MAIN_MODAL: 'fromMainModal',
+    FROM_CONFIRM_MODAL: 'fromConfirmModal'
+};
 
 export {
     FAQ,
@@ -124,5 +128,6 @@ export {
     BORROWING_TERM,
     ALLOW_LTV_TOOLTIP,
     DEFAULT_LOANABLE_ASSET,
-    DEFAULT_COLLATERAL_ASSET
+    DEFAULT_COLLATERAL_ASSET,
+    REGISTER_HANDLE_TYPE
 };
