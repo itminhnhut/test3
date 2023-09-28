@@ -18,7 +18,7 @@ import Copy from 'components/svg/Copy';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 // ** Constants
-import { LOAN_HISTORY_STATUS } from 'components/screens/Lending/constants';
+import { LOAN_HISTORY_STATUS, PERCENT } from 'components/screens/Lending/constants';
 
 // ** Context
 import { getAssetConfig } from 'components/screens/Lending/Context';
@@ -34,6 +34,7 @@ import { useWindowSize } from 'react-use';
 import { Check } from 'react-feather';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import dynamic from 'next/dynamic';
+import useCollateralPrice from '../../hooks/useCollateralPrice';
 
 // ** dynamic
 const ModalAdjustMargin = dynamic(() => import('components/screens/Lending/components/Modal/AdjustMargin'), { ssr: false });
@@ -190,9 +191,11 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     };
 
     const renderRepayment = (options) => {
-        const { totalDebt, loanCoin, marginCallLTV, liquidationLTV } = options;
+        const { totalDebt, loanCoin, marginCallLTV, liquidationLTV, totalCollateralAmount } = options;
         const rsTotalDebt = handleTotalAsset(totalDebt, loanCoin); //** Tổng dư nợ */
-        const totalRepayment = [rsTotalDebt.total, 80, marginCallLTV, liquidationLTV];
+        const LTV = formatNumber(totalDebt / totalCollateralAmount / PERCENT, 0);
+        // console.log('useCollateralPrice', useCollateralPrice({ collateral }));
+        const totalRepayment = [rsTotalDebt.total, LTV, marginCallLTV, liquidationLTV];
 
         return (
             <section className="grid grid-cols-4 h-[72px] w-max gap-4">
