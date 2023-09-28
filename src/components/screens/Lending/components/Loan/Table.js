@@ -8,15 +8,23 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import TableV2 from 'components/common/V2/TableV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
+// ** Utils
+import { substring } from 'utils';
+
 // ** svg
 import Copy from 'components/svg/Copy';
 
 // ** hooks
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
+// ** Constants
+import { LOAN_HISTORY_STATUS } from 'components/screens/Lending/constants';
+
+// ** Context
+import { getAssetConfig } from 'components/screens/Lending/Context';
+
 // ** Redux
 import { formatNumber, formatTime } from 'redux/actions/utils';
-import { useSelector } from 'react-redux';
 
 // ** Third party
 import colors from 'styles/colors';
@@ -88,6 +96,8 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     const { width } = useWindowSize();
     const isMobile = width < 830;
 
+    const { assetConfig, assetById } = getAssetConfig();
+
     // ** useState
     const [isAdjustModal, setIsAdjustModal] = useState(INIT_DATA.isModal);
     const [isLoadRepaymentModal, setIsLoadRepaymentModal] = useState(INIT_DATA.isModal);
@@ -103,10 +113,11 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     };
 
     // ** get data
-    const assetConfigs = useSelector((state) => state.utils?.assetConfig) || [];
     const getAsset = (assetId) => {
-        return assetConfigs.find((asset) => asset.id === assetId);
+        return assetConfig.find((asset) => asset.id === assetId);
     };
+
+    console.log('--render--', data.result);
 
     // ** render
     const renderTitle = (title, content) => {
@@ -118,13 +129,14 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         );
     };
 
-    const renderIdStatus = ({ value }) => {
+    const renderIdStatus = (options) => {
+        const { _id, status } = options;
         return (
             <section className="flex flex-col">
-                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px]">
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] whitespace-nowrap">
                     <div>ID khoản vay</div>
                     <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
-                        <div>#1231242</div>
+                        <div>#{substring(_id)}</div>
                         <CopyToClipboard onCopy={onCopy} className="cursor-pointer inline-block">
                             {copied ? <Check size={16} color={colors.teal} /> : <Copy />}
                         </CopyToClipboard>
@@ -137,33 +149,33 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                             '!text-yellow-2': 1
                         })}
                     >
-                        Gọi ký quỹ
+                        {LOAN_HISTORY_STATUS?.[status]?.[language]}
                     </div>
                 </section>
             </section>
         );
     };
 
-    const renderLTV = ({ value }) => {
+    const renderLTV = (options) => {
         return (
             <>
-                {renderRepayment()}
-                {renderAdjust()}
+                {renderRepayment(options)}
+                {renderAdjust(options)}
             </>
         );
     };
 
-    const renderAsset = (data, type) => {
+    const renderAsset = (data, type, idAssetCode = null) => {
         const rs = ((data, type) => {
             switch (type) {
                 case 'token':
-                    return `${formatNumber(data)} ${getAsset(39)?.assetCode}`;
+                    return `${data} ${assetById?.[idAssetCode]?.assetCode}`;
                 case 'percent':
                     return `${data}%`;
                 case 'date':
                     return `${data} ${language === 'vi' ? 'ngày' : 'ngày'}`;
                 case 'formatDate':
-                    return formatTime(data, 'dd/MM/yyyy HH:mm:ss');
+                    return formatTime(data, 'HH:mm:ss dd/MM/yyyy');
                 default:
                     '-';
             }
@@ -171,17 +183,28 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         return rs;
     };
 
-    const renderRepayment = () => {
-        const totalRepayment = [60000000, 80, 85, 95];
+    const handleTotalAsset = (data, asset) => {
+        const symbol = assetConfig.find((f) => f.assetCode === asset) || {};
+        const total = formatNumber(data || 0, symbol?.assetDigit, 0, true);
+        return { total: total, symbol: symbol };
+    };
+
+    const renderRepayment = (options) => {
+        const { totalDebt, loanCoin, marginCallLTV, liquidationLTV } = options;
+        const rsTotalDebt = handleTotalAsset(totalDebt, loanCoin); //** Tổng dư nợ */
+        const totalRepayment = [rsTotalDebt.total, 80, marginCallLTV, liquidationLTV];
+
         return (
             <section className="grid grid-cols-4 h-[72px] w-max gap-4">
                 {REPAYMENT?.map((item, key) => {
                     return (
                         <section className={classNames('flex flex-row items-center', { 'gap-1': item?.asset === 'token' })}>
-                            {item?.asset === 'token' ? <AssetLogo assetId={72} /> : null}
+                            {item?.asset === 'token' ? <AssetLogo assetId={rsTotalDebt.symbol.id} /> : null}
                             <section className="flex flex-col">
                                 <div className="text-gray-1 dark:text-gray-7">{item.title?.[language]}</div>
-                                <div className="dark:text-gray-4 text-gray-15 font-semibold">{renderAsset(totalRepayment?.[key], item.asset)}</div>
+                                <div className="dark:text-gray-4 text-gray-15 font-semibold">
+                                    {renderAsset(totalRepayment?.[key], item.asset, rsTotalDebt.symbol.id)}
+                                </div>
                             </section>
                         </section>
                     );
@@ -190,17 +213,22 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         );
     };
 
-    const renderAdjust = () => {
-        const totalRepayment = [600, 7, '2023-09-05T17:00:00.000Z', '2023-09-05T17:00:00.000Z'];
+    const renderAdjust = (options) => {
+        const { collateralAmount, collateralCoin, createdAt, liquidationTime } = options;
+        const rsCollateralAmount = handleTotalAsset(collateralAmount, collateralCoin); //
+
+        const totalRepayment = [rsCollateralAmount.total, 7, createdAt, liquidationTime];
         return (
             <section className="grid grid-cols-4 h-[72px] w-max gap-4">
                 {ADJUST?.map((item, key) => {
                     return (
                         <section className={classNames('flex flex-row items-center', { 'gap-1': item?.asset === 'token' })}>
-                            {item?.asset === 'token' ? <AssetLogo assetId={22} /> : null}
+                            {item?.asset === 'token' ? <AssetLogo assetId={rsCollateralAmount.symbol.id} /> : null}
                             <section className="flex flex-col">
                                 <div className="text-gray-1 dark:text-gray-7">{item.title?.[language]}</div>
-                                <div className="dark:text-gray-4 text-gray-15 font-semibold">{renderAsset(totalRepayment?.[key], item.asset)}</div>
+                                <div className="dark:text-gray-4 text-gray-15 font-semibold">
+                                    {renderAsset(totalRepayment?.[key], item.asset, rsCollateralAmount.symbol.id)}
+                                </div>
                             </section>
                         </section>
                     );
@@ -212,13 +240,13 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     const renderTable = useCallback(() => {
         const columns = [
             {
-                key: 'currency',
-                dataIndex: 'currency',
+                key: '_id',
+                dataIndex: '_id',
 
                 title: t('lending:lending:table:assets'),
                 align: 'left',
                 width: 176,
-                render: (value) => renderIdStatus({ value })
+                render: (value, options) => renderIdStatus(options)
             },
             {
                 key: 'money_use',
@@ -226,7 +254,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 title: renderTitle(t('lending:lending:table:minimum'), 'Đơn vị: VND'),
                 align: 'left',
                 width: 205,
-                render: (value) => renderLTV({ value })
+                render: (value, options) => renderLTV(options)
             },
             {
                 key: '',

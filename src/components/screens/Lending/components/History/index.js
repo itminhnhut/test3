@@ -19,7 +19,7 @@ import FetchApi from 'utils/fetch-api';
 // ** Hooks
 import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
-// ** constants
+// ** Constants
 import { HISTORY_TAB } from 'components/screens/Lending/constants';
 
 // ** Third party

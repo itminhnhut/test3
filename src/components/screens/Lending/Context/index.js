@@ -113,8 +113,22 @@ const useAuh = () => {
     if (context === undefined) {
         throw new Error('LoanableList must be used within a LendingContext');
     }
-
     return context?.auth;
 };
 
-export { LendingContext, LendingProvider, useLoanableList, useCollateralList, useAuh, useAssets };
+const getAssetConfig = () => {
+    const context = useContext(LendingContext);
+    if (context === undefined) {
+        throw new Error('LoanableList must be used within a LendingContext');
+    }
+    const assetById = context?.assetConfig.reduce(
+        (prev, cur) => {
+            prev = { ...prev, [cur.id]: { ...cur } };
+            return prev;
+        },
+        [{}]
+    );
+    return { assetConfig: context?.assetConfig, assetById };
+};
+
+export { LendingContext, LendingProvider, useLoanableList, useCollateralList, useAuh, useAssets, getAssetConfig };

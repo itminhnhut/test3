@@ -1,7 +1,8 @@
-import { useState, createContext } from 'react';
+import { useState, useEffect } from 'react';
 
 // ** NEXT
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 // ** components
@@ -30,7 +31,7 @@ const CONTENT = {
 
 // ** iniData
 const iniData = {
-    tab: 'history'
+    tab: 'loan'
 };
 
 const TAB_ALLOW = ['lending', 'loan', 'history'];
@@ -41,10 +42,24 @@ const CryptoLending = () => {
         i18n: { language }
     } = useTranslation();
 
+    // ** useRouter
+    const router = useRouter();
+
+    // ** useState
     const [tab, setTab] = useState(iniData.tab);
 
+    // ** useEffect
+    useEffect(() => {
+        const { tab: tabQuery = iniData.tab } = router.query;
+        if (tab !== tabQuery) {
+            setTab(tabQuery);
+        }
+    }, [router.query]);
+
+    // ** Handle
     const handleTab = (tab) => setTab(tab);
 
+    //** Render
     const renderTabContent = () => {
         return (
             <TabContent className="mt-8" active={TAB_ALLOW.includes(tab)}>

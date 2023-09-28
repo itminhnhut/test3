@@ -18,12 +18,15 @@ import { useAssets } from 'components/screens/Lending/Context';
 import { CheckCircleIcon } from 'components/svg/SvgIcon';
 import Copy from 'components/svg/Copy';
 
-// ** hooks
+// ** Hooks
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 // ** Redux
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
+
+// ** Utils
+import { substring } from 'utils';
 
 // ** Third party
 import { Check } from 'react-feather';
@@ -33,7 +36,7 @@ import classNames from 'classnames';
 import colors from 'styles/colors';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-// ** constants
+// ** Constants
 import { PERCENT, YEAR, LOAN_HISTORY_STATUS, HOUR } from 'components/screens/Lending/constants';
 
 // ** dynamic
@@ -50,7 +53,7 @@ const INIT_DATA = {
     }
 };
 
-const substring = (str, start = 10, end = -4) => (String(str).length > 10 ? `${String(str).substr(0, start)}...${String(str).substr(end)}` : str);
+// const substring = (str, start = 10, end = -4) => (String(str).length > 10 ? `${String(str).substr(0, start)}...${String(str).substr(end)}` : str);
 
 const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, configFilter, onReset }) => {
     const {
@@ -119,10 +122,10 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                         colorX="#8694b2"
                         initDate={rsFilter?.value}
                         wrapperClassname="!w-full"
-                        position={data?.position || 'center'}
-                        wrapperClassNameDate="dark:!text-gray-4 !text-gray-15 !text-base !font-normal"
                         wrapperClassNameContent="!h-6"
+                        position={data?.position || 'center'}
                         onChange={(e) => onChange(e?.selection, key)}
+                        wrapperClassNameDate="dark:!text-gray-4 !text-gray-15 !text-base !font-normal"
                     />
                 );
             case 'select':
@@ -144,14 +147,14 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
             case 'select_assets':
                 return (
                     <AssetFilter
-                        wrapperLabel="h-12 dark:!text-gray-4 !text-gray-15 !text-base"
                         assetCode={assetCode}
-                        asset={valueAssetByKey}
                         data={dataAssetByKey}
                         labelClassName="mr-2"
+                        asset={valueAssetByKey}
                         labelAsset="Chọn tài sản"
                         onChangeAsset={(e) => onChange(e, key)}
                         wrapperClassName="w-max right-[0] !left-[auto]"
+                        wrapperLabel="h-12 dark:!text-gray-4 !text-gray-15 !text-base"
                         className={classNames('!w-[168px] text-base !text-gray-15 dark:!text-gray-7 !h-12', { '!w-[295px]': tab === 'reject' })}
                     />
                 );
@@ -187,7 +190,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
 
     const renderContentTab = (value) => {
         const { _id, createdAt, totalDebt, loanCoin, collateralAmount, collateralCoin, loanTerm, hourlyInterestRate, status } = value;
-        const rsTotalDebt = handleTotalAsset(totalDebt, loanCoin); //** tổng dư nợ */
+        const rsTotalDebt = handleTotalAsset(totalDebt, loanCoin); //** Tổng dư nợ */
         const rsCollateralAmount = handleTotalAsset(collateralAmount, collateralCoin); //** Tổng ký quỹ ban đầu */
         const interestRate = hourlyInterestRate * HOUR * YEAR * PERCENT;
 
@@ -252,7 +255,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
     const renderContentTabReject = (value) => {
         const { _id, collateralAmount, collateralCoin, createdAt, liquidationTime, status, interest, liquidationFee, loanCoin } = value;
         const rsCollateralAmount = handleTotalAsset(collateralAmount, collateralCoin); //** Tổng ký quỹ ban đầu */
-        const rsLiquidationFree = handleTotalAsset(interest * liquidationFee, loanCoin); //** Tổng ký quỹ ban đầu */
+        const rsLiquidationFree = handleTotalAsset(interest * liquidationFee, loanCoin);
 
         return (
             <section className="flex flex-row gap-6 py-4">
@@ -301,30 +304,6 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                         {LOAN_HISTORY_STATUS?.[status]?.[language]}
                     </div>
                 </section>
-                {/* <section className="flex flex-row items-center gap-2 min-w-[162px]">
-                    <AssetLogo assetId={rsCollateralAmount.symbol.id} />
-                    <section className="dark:text-gray-7 text-gray-1">
-                        <div>Ký quỹ ban đầu</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
-                            {rsCollateralAmount.total} {collateralCoin}
-                        </div>
-                    </section>
-                </section>
-                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[72px]">
-                    <div>Kỳ hạn</div>
-                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">{loanTerm} ngày</div>
-                </section>
-                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[72px]">
-                    <div>Lãi suất năm</div>
-                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">{formatNumber(interestRate)}%</div>
-                </section>
-
-                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[180px]">
-                    <div>Thời gian vay</div>
-                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
-                        {formatTime(createdAt, 'HH:mm:ss dd/MM/yyyy')}
-                    </div>
-                </section> */}
             </section>
         );
     };

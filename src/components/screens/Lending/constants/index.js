@@ -103,15 +103,16 @@ const STATUS_EN = [
     { title: 'Đã thanh toán', value: 'REPAID' }
 ];
 
+const HOUR = 24;
+const YEAR = 365;
+const PERCENT = 100;
+const MILLISECOND = 1;
+const STATUS_CODE = 200;
 const LOANABLE = 'loanable';
 const COLLATERAL = 'collateral';
 const DEFAULT_LOANABLE_ASSET = 'VNST';
 const DEFAULT_COLLATERAL_ASSET = 'BNB';
 const ALLOW_LTV_TOOLTIP = ['ltv_initial', 'ltv_margin', 'ltv_liquidate'];
-const PERCENT = 100;
-const YEAR = 365;
-const HOUR = 24;
-const MILLISECOND = 1;
 
 const LOAN_HISTORY_STATUS = {
     ONGOING: { vi: 'Bình thường', en: 'Bình thường' },
@@ -127,13 +128,14 @@ export {
     HOUR,
     YEAR,
     TABS,
-    MILLISECOND,
     PERCENT,
     PROFITS,
     LOANABLE,
     STATUS_VI,
     STATUS_EN,
     COLLATERAL,
+    MILLISECOND,
+    STATUS_CODE,
     HISTORY_TAB,
     BORROWING_TERM,
     ALLOW_LTV_TOOLTIP,
