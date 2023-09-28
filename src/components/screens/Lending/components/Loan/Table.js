@@ -146,7 +146,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                     <div>Trạng thái</div>
                     <div
                         className={classNames('font-semibold text-green-2 dark:text-green-3', {
-                            '!text-yellow-2': 1
+                            '!text-yellow-2': LOAN_HISTORY_STATUS?.[status] !== 'REPAID'
                         })}
                     >
                         {LOAN_HISTORY_STATUS?.[status]?.[language]}
