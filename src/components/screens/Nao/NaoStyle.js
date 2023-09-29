@@ -16,6 +16,7 @@ import { WarningFilledIcon, RemoveCircleIcon } from 'components/svg/SvgIcon';
 import { IconArrowOnus } from 'components/common/Icons';
 import { QUOTE_ASSET } from 'constants/constants';
 import { useSelector } from 'react-redux';
+import AvatarFrame from 'components/common/AvatarFrame';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-xl sm:text-2xl font-semibold w-max text-txtPrimary dark:text-txtPrimary-dark'
@@ -488,13 +489,15 @@ export const ImageNao = ({ src, fallBack, ...props }) => {
     }, [src]);
 
     return (
-        <img
-            src={image}
-            {...props}
-            onError={(e) => {
-                if (e.type === 'error') setImage(fallBackSrc);
-            }}
-        />
+        <AvatarFrame {...props}>
+            <img
+                src={image}
+                {...props}
+                onError={(e) => {
+                    if (e.type === 'error') setImage(fallBackSrc);
+                }}
+            />
+        </AvatarFrame>
     );
 };
 

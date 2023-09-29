@@ -137,6 +137,7 @@ const ContestTeamRanks = ({
             <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
+                        frame={item?.avatar_frame}
                         className="object-cover rounded-[50%] min-w-[1.5rem] min-h-[1.5rem] max-w-[1.5rem] max-h-[1.5rem]"
                         src={item?.avatar}
                         width="32"
@@ -239,8 +240,8 @@ const ContestTeamRanks = ({
                         <CardNao key={index} className="!p-4 sm:!p-5 ">
                             <div className="flex items-center justify-between gap-2">
                                 <div className="flex items-center space-x-4">
-                                    <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
-                                        <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
+                                    <div className="min-w-[4rem] min-h-[4rem] rounded-[50%] p-1 ring-[1.5px] ring-teal flex items-center justify-center">
+                                        <ImageNao frame={item?.avatar_frame} className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
                                     </div>
                                     <div className="space-y-1 flex flex-col" style={{ wordBreak: 'break-word' }}>
                                         <div className="flex items-center gap-2 font-semibold ">
@@ -294,6 +295,7 @@ const ContestTeamRanks = ({
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center space-x-2">
                                                     <ImageNao
+                                                        frame={item?.avatar_frame}
                                                         className="rounded-[50%] object-cover w-9 h-9 flex-shrink-0"
                                                         src={item?.avatar}
                                                         width="36"
