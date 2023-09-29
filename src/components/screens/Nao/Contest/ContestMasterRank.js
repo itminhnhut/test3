@@ -81,6 +81,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
             <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
+                        frame={item?.avatar_frame}
                         className="object-cover rounded-[50%] min-w-[1.5rem] min-h-[1.5rem] max-w-[1.5rem] max-h-[1.5rem]"
                         src={item?.avatar}
                         width="32"
@@ -108,14 +109,10 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
             <div className="w-6 h-6 flex-shrink-0 text-center relative font-SourceCodePro">
                 {data && data <= top_ranks_master ? (
                     <>
-                        <img
-                            src={getS3Url("/images/nao/contest/ic_top_teal.png")}
-                            className="w-6 h-6"
-                            width="24"
-                            height="24"
-                            alt=""
-                        />
-                        <span className='font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white'>{_rank}</span>
+                        <img src={getS3Url('/images/nao/contest/ic_top_teal.png')} className="w-6 h-6" width="24" height="24" alt="" />
+                        <span className="font-bold text-[0.625rem] leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute text-white">
+                            {_rank}
+                        </span>
                     </>
                 ) : (
                     <span>{_rank}</span>
@@ -176,8 +173,8 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                             className="!p-5 !bg-transparent border border-divider dark:border-divider-dark"
                         >
                             <div className="flex items-center space-x-3">
-                                <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
-                                    <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
+                                <div className="min-w-[4rem] min-h-[4rem] rounded-[50%] p-1 ring-[1.5px] ring-teal flex items-center justify-center">
+                                    <ImageNao frame={item?.avatar_frame} className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
                                 </div>
                                 <div>
                                     <div className="flex items-center space-x-2">
@@ -223,6 +220,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-3">
                                             <ImageNao
+                                                frame={item?.avatar_frame}
                                                 className="rounded-[50%] object-cover w-9 h-9 flex-shrink-0"
                                                 src={item?.avatar}
                                                 width="36"

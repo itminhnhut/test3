@@ -49,6 +49,7 @@ import { useDispatch } from 'react-redux';
 import { getMe } from 'redux/actions/user';
 import { ShareIcon } from 'components/svg/SvgIcon';
 import styled from 'styled-components';
+import AvatarFrame from 'components/common/AvatarFrame';
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact'
@@ -291,13 +292,15 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                             <div className="w-full flex justify-between items-center">
                                 <div className="flex gap-4 items-center mb-10">
                                     <div className="flex relative items-center">
-                                        <Image
-                                            width="80"
-                                            height="80"
-                                            objectFit="fill"
-                                            className="rounded-full"
-                                            src={user?.avatar || '/images/default_avatar.png'}
-                                        />
+                                        <AvatarFrame className="w-20 h-20" frame={user?.avatar_frame}>
+                                            <Image
+                                                width="80"
+                                                height="80"
+                                                objectFit="fill"
+                                                className="rounded-full"
+                                                src={user?.avatar || '/images/default_avatar.png'}
+                                            />
+                                        </AvatarFrame>
                                         {/* <img src={user?.avatar || '/images/default_avatar.png'} className="h-full w-20 h-20 rounded-full object-fit" /> */}
 
                                     </div>
