@@ -3,14 +3,15 @@ import { useCallback, useState, useMemo, useEffect } from 'react';
 // ** Next
 import dynamic from 'next/dynamic';
 import { useTranslation, Trans } from 'next-i18next';
+import Link from 'next/link';
 
 // * Context
 import { useLoanableList, useCollateralList } from 'components/screens/Lending/Context';
 
 // ** Redux
-import { WalletType } from 'redux/actions/const';
-import { useSelector, useDispatch } from 'react-redux';
-import { dwLinkBuilder, formatNumber, getLoginUrl, setTransferModal } from 'redux/actions/utils';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
+import AuthSelector from 'redux/selectors/authSelectors';
 
 //** components
 import Chip from 'components/common/V2/Chip';
@@ -18,6 +19,7 @@ import Tooltip from 'components/common/Tooltip';
 import CheckBox from 'components/common/CheckBox';
 import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import TradingInputV2 from 'components/trade/TradingInputV2';
 
 // ** svg
 import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
@@ -28,6 +30,10 @@ import classNames from 'classnames';
 // ** Dynamic
 const ModalConfirmLoan = dynamic(() => import('./ConfirmLoan'), { ssr: false });
 const AssetLendingFilter = dynamic(() => import('components/screens/Lending/components/AssetLendingFilter'), { ssr: false });
+
+// ** Custom hooks
+import useRegisterLoan from '../../hooks/useRegisterLoan';
+import useLoanInput from '../../hooks/useLoanInput';
 
 // ** CONSTANTS
 import {
@@ -43,15 +49,11 @@ import {
     REGISTER_HANDLE_TYPE
 } from 'components/screens/Lending/constants';
 
-import TradingInputV2 from 'components/trade/TradingInputV2';
-import useRegisterLoan from '../../hooks/useRegisterLoan';
-import useLoanInput from '../../hooks/useLoanInput';
-import { createSelector } from 'reselect';
-import AuthSelector from 'redux/selectors/authSelectors';
-import Link from 'next/link';
-import { PATHS } from 'constants/paths';
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+
+// ** UTILS
+import { dwLinkBuilder, formatNumber, getLoginUrl } from 'redux/actions/utils';
 
 // ** INIT DATA
 const INIT_DATA = {
@@ -77,9 +79,6 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
         t,
         i18n: { language }
     } = useTranslation();
-
-    // ** useRedux
-    const dispatch = useDispatch();
 
     const assetConfig = useSelector((state) => state.utils.assetConfig) || [];
     const isAuth = useSelector(AuthSelector.isAuthSelector);
