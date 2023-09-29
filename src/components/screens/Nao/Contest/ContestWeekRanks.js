@@ -65,7 +65,7 @@ const ContestWeekRanks = ({
     const [pageSize, setPageSize] = useState(limit);
     const isMobile = width <= 640;
     const limit = isMobile ? 10 : 20;
-    const rank = 'individual_rank_volume';
+    const rank = filter.type === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
     const checked = useRef(false);
     const router = useRouter();
     const timer = useRef();
