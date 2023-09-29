@@ -19,6 +19,10 @@ import classNames from 'classnames';
 import { List } from 'react-virtualized';
 import { useTranslation } from 'next-i18next';
 import { COLLATERAL } from '../../constants';
+import { useLocalStorage } from 'react-use';
+import { LOCAL_STORAGE_KEY } from 'redux/actions/const';
+
+const MAX_SEARCH_LIST_LENGTH = 3;
 
 const AssetLendingFilter = ({
     asset,
@@ -39,11 +43,15 @@ const AssetLendingFilter = ({
 
     const wallets = useSelector((state) => state.wallet?.SPOT);
 
+    // ** Local Storage
+    const [localPreviousSearch, setLocalPreviousSearch] = useLocalStorage(LOCAL_STORAGE_KEY.LENDING_SEARCH_LIST, []);
+
     // ** useRef
     const popoverRef = useRef(null);
 
     // ** useState
     const [search, setSearch] = useState('');
+    const [previousSearchList, setPreviousSearchList] = useState(localPreviousSearch);
 
     // ** useMemo
     const filterAssets = useMemo(() => {
@@ -67,20 +75,31 @@ const AssetLendingFilter = ({
 
     // ** render
     const rowRenderer = useCallback(
-        ({ index, key, style, rowKey }) => {
-            const currentAsset = filterAssets[index];
+        ({ index, key, style, rowKey, list }) => {
+            const currentAsset = list[index];
             const isAssetChosen = asset && asset?.id === currentAsset?.id;
 
             return (
-                <div style={style}>
+                <div key={key} style={style}>
                     <div
                         onClick={() => {
                             if (isAssetChosen) return;
+
                             popoverRef?.current?.close();
                             setTimeout(() => setSearch(''), 100);
                             onChangeAsset(currentAsset);
+
+                            // save to search list only for collateral list
+                            if (assetListKey === COLLATERAL) {
+                                const copySearchList = JSON.parse(JSON.stringify(previousSearchList));
+                                const existAsset = copySearchList.find((asset) => asset?.id === currentAsset?.id);
+                                if (existAsset) return;
+
+                                const newSearchList = [currentAsset, ...copySearchList].slice(0, MAX_SEARCH_LIST_LENGTH);
+                                setPreviousSearchList(newSearchList);
+                                setLocalPreviousSearch(newSearchList);
+                            }
                         }}
-                        key={key}
                         className={classNames('flex items-center justify-between px-4 py-3 hover:bg-hover dark:hover:bg-hover-dark ', {
                             'text-txtPrimary dark:text-txtPrimary-dark': isAssetChosen,
                             'cursor-pointer ': !isAssetChosen
@@ -103,7 +122,7 @@ const AssetLendingFilter = ({
                 </div>
             );
         },
-        [filterAssets, search, asset, assetListKey]
+        [search, asset, assetListKey]
     );
 
     return (
@@ -139,27 +158,25 @@ const AssetLendingFilter = ({
                     <NoResult text={t('common:no_results_found')} />
                 ) : (
                     <>
-                        {!Boolean(search) && isAuth && (
+                        {!Boolean(search) && isAuth && assetListKey === COLLATERAL && previousSearchList.length > 0 && (
                             <>
                                 <div className="dark:!text-gray-4 !text-gray-15 !text-base font-semibold px-4 mb-4">Tìm kiếm gần đây</div>
                                 <List
-                                    hehe="haha"
                                     width={400}
                                     height={180}
-                                    rowCount={filterAssets.length}
+                                    rowCount={previousSearchList.length}
                                     rowHeight={60}
-                                    rowRenderer={(props) => rowRenderer({ ...props })}
+                                    rowRenderer={(props) => rowRenderer({ ...props, list: previousSearchList })}
                                 />
                             </>
                         )}
                         <div className="dark:!text-gray-4 !text-gray-15 !text-base font-semibold px-4 my-4">Danh sách tài sản ký quỹ</div>
                         <List
-                            hehe="hehe"
                             width={400}
                             height={180}
                             rowCount={filterAssets.length}
                             rowHeight={60}
-                            rowRenderer={(props) => rowRenderer({ ...props, rowKey: 'collateralAsset' })}
+                            rowRenderer={(props) => rowRenderer({ ...props, rowKey: 'collateralAsset', list: filterAssets })}
                         />
                     </>
                 )}
