@@ -8,16 +8,15 @@ import { useTranslation, Trans } from 'next-i18next';
 import { useLoanableList, useCollateralList } from 'components/screens/Lending/Context';
 
 // ** Redux
-import { PublicSocketEvent, WalletType } from 'redux/actions/const';
+import { WalletType } from 'redux/actions/const';
 import { useSelector, useDispatch } from 'react-redux';
-import { formatNumber, getLoginUrl, roundByExactDigit, setTransferModal } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber, getLoginUrl, setTransferModal } from 'redux/actions/utils';
 
 //** components
 import Chip from 'components/common/V2/Chip';
 import Tooltip from 'components/common/Tooltip';
 import CheckBox from 'components/common/CheckBox';
 import ModalV2 from 'components/common/V2/ModalV2';
-import InputV2 from 'components/common/V2/InputV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 // ** svg
@@ -49,6 +48,10 @@ import useRegisterLoan from '../../hooks/useRegisterLoan';
 import useLoanInput from '../../hooks/useLoanInput';
 import { createSelector } from 'reselect';
 import AuthSelector from 'redux/selectors/authSelectors';
+import Link from 'next/link';
+import { PATHS } from 'constants/paths';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 // ** INIT DATA
 const INIT_DATA = {
@@ -450,11 +453,11 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                                         {formatNumber(collateralAvailable, filter.collateral?.assetDigit) || '-'} {filter.collateral?.assetCode}
                                     </span>
                                 </div>
-                                <AddCircleColorIcon
-                                    size={16}
-                                    onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }))}
-                                    className="cursor-pointer"
-                                />
+                                <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, filter.collateral?.assetCode)} passHref>
+                                    <a className="inline-block">
+                                        <AddCircleColorIcon size={16} className="cursor-pointer" />
+                                    </a>
+                                </Link>
                             </section>
                         </section>
                         <TradingInputV2
