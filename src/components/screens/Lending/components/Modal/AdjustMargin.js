@@ -116,12 +116,6 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
         return (total_current_LTV * PERCENT).toFixed(0);
     }, [useMemoizeArgs(dataCollateral), pairPrice?.lastPrice]);
 
-    // ** useMemo
-    const infoAdjustMargin = useMemo(() => {
-        const { infoDet, infoCollateralAmount, initialLTV, totalAdjusted, adjusted_LTV } = state;
-        return { infoDet, infoCollateralAmount, totalAdjusted, initialLTV, adjusted_LTV };
-    }, [useMemoizeArgs(state)]);
-
     const adjustedLTV = useMemo(() => {
         return (state.totalDebt / (state.totalAdjusted * pairPrice?.lastPrice || 0)) * PERCENT;
     }, [amount, state.totalDebt, state.totalAdjusted, pairPrice?.lastPrice]);
@@ -143,7 +137,7 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
 
     const handleAmountChange = (value) => {
         if (+value < 0 || +value > collateralAvailable) {
-            setError('2132312');
+            setError('value > collateralAvailable');
             dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: value });
             return;
         }
@@ -218,10 +212,10 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
     };
 
     const totalAdjusted = useMemo(() => {
-        const total = formatNumber(infoAdjustMargin?.totalAdjusted, infoAdjustMargin?.infoCollateralAmount?.assetDigit);
-        const assetCode = infoAdjustMargin?.infoCollateralAmount?.assetCode;
+        const total = formatNumber(state?.totalAdjusted, state?.infoCollateralAmount?.assetDigit);
+        const assetCode = state?.infoCollateralAmount?.assetCode;
         return { total, assetCode };
-    }, [infoAdjustMargin?.totalAdjusted, infoAdjustMargin?.infoCollateralAmount?.assetDigit]);
+    }, [state?.totalAdjusted, state?.infoCollateralAmount?.assetDigit]);
 
     const renderSubtractMargin = () => {
         return (
@@ -232,7 +226,7 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                 <section className="flex flex-col gap-3 mt-6">
                     <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
                         <div>LTV ban đầu</div>
-                        <div className="dark:text-gray-4 font-semibold">{infoAdjustMargin?.initialLTV * PERCENT}%</div>
+                        <div className="dark:text-gray-4 font-semibold">{state?.initialLTV * PERCENT}%</div>
                     </section>
                     <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
                         <div>LTV Hiện tại</div>
@@ -348,14 +342,14 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                             <section className="flex flex-row justify-between">
                                 <section className="dark:text-gray-7 text-gray-1">Tổng dư nợ</section>
                                 <section className="text-gray-15 font-semibold dark:text-gray-4">
-                                    {infoAdjustMargin?.infoDet?.total} {infoAdjustMargin?.infoDet?.assetCode}
+                                    {state?.infoDet?.total} {state?.infoDet?.assetCode}
                                 </section>
                             </section>
                             <div className="h-[1px] dark:bg-divider-dark bg-divider my-3" />
                             <section className="flex flex-row justify-between">
                                 <section className="dark:text-gray-7 text-gray-1">Tổng ký quỹ</section>
                                 <section className="text-gray-15 font-semibold dark:text-gray-4">
-                                    {infoAdjustMargin?.infoCollateralAmount?.total} {infoAdjustMargin?.infoCollateralAmount?.assetCode}
+                                    {state?.infoCollateralAmount?.total} {state?.infoCollateralAmount?.assetCode}
                                 </section>
                             </section>
                         </section>
@@ -375,7 +369,7 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                 adjustedLTV={adjustedLTV}
                 totalAdjusted={totalAdjusted}
                 dispatchReducer={dispatchReducer}
-                initialLTV={infoAdjustMargin?.initialLTV}
+                initialLTV={state?.initialLTV}
                 isConfirmAdjust={state.modal?.isConfirmAdjust}
                 onCloseAdjustMargin={handleCloseConfirmAdjustMargin}
             />

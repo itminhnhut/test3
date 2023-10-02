@@ -186,22 +186,28 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         );
     };
 
-    const renderDeadline = ({ status, expirationTime, liquidationTime }) => {
-        if (status === 'DEADLINE_LIQUIDATED') {
-            const currentTime = moment(new Date());
-            const expTime = moment(new Date(expirationTime));
-            const isActive = currentTime <= expTime;
+    const renderer = ({ days, hours, minutes, seconds }) => {
+        return (
+            <span>
+                còn {days}d {hours}h {minutes}m {seconds}s
+            </span>
+        );
+    };
 
-            const rs = isActive ? formatTime(liquidationTime, 'HH:mm:ss dd/MM/yyyy') : <Countdown date={Date.parse(liquidationTime)} renderer={renderer} />;
-            return (
-                <section className={classNames('flex flex-row items-center', item?.classNames)}>
-                    <section className="flex flex-col">
-                        <div className="text-gray-1 dark:text-gray-7">Thời hạn thanh lý</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{rs}</div>
-                    </section>
+    const renderDeadline = ({ expirationTime, liquidationTime }) => {
+        const currentTime = moment(new Date());
+        const expTime = moment(new Date(expirationTime));
+        const isActive = currentTime <= expTime;
+
+        const rs = isActive ? formatTime(liquidationTime, 'HH:mm:ss dd/MM/yyyy') : <Countdown date={Date.parse(liquidationTime)} renderer={renderer} />;
+        return (
+            <section className="flex flex-row items-center">
+                <section className="flex flex-col">
+                    <div className="text-gray-1 dark:text-gray-7">Thời hạn thanh lý</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold">{rs}</div>
                 </section>
-            );
-        }
+            </section>
+        );
     };
 
     const renderCol3 = (options) => {

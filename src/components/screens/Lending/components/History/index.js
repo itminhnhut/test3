@@ -172,7 +172,7 @@ const History = () => {
 
     const handleChangeFilter = (value, key) => {
         if (key === 'loanCoin' || key === 'collateralCoin') {
-            setFilter((prev) => ({ ...prev, [key]: !value?.assetName ? null : { assetName: value?.assetName, assetCode: value?.assetCode } }));
+            setFilter((prev) => ({ ...prev, [key]: !value?.assetName ? null : { assetName: value?.assetName, assetCode: value?.assetCode, id: value?.id } }));
         } else {
             setFilter((prev) => ({ ...prev, [key]: value }));
         }
