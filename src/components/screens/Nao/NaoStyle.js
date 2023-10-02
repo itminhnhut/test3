@@ -640,10 +640,18 @@ export const VolumeTooltip = ({ item, tooltip, className, suffix }) => {
 };
 
 export const CPnl = ({ item, isTotal, className }) => {
+    const user = useSelector((state) => state.auth.user) || null;
     const value = isTotal ? item?.total_pnl : item?.pnl;
     const prefix = value !== 0 && value > 0 ? '+' : '';
     const suffix = isTotal ? '' : '%';
     const decimal = isTotal ? 0 : 2;
+
+    const isMe = useMemo(() => {
+        if (!user) return false;
+        return item?.members?.find((i) => i?.code === user?.code) || user?.code === item?.code;
+    }, [user, item]);
+
+    if (isTotal && Number(value) < 0 && !isMe) return <span>-</span>;
     return (
         <span className={`font-semibold ${getColor(value)} ${className}`}>
             {prefix}
