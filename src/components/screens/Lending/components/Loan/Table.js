@@ -31,7 +31,7 @@ import { totalAsset } from 'components/screens/Lending/utils';
 import { getAssetConfig } from 'components/screens/Lending/Context';
 
 // ** Redux
-import { formatNumber, formatTime } from 'redux/actions/utils';
+import { formatTime } from 'redux/actions/utils';
 import { API_HISTORY_LOAN } from 'redux/actions/apis';
 
 // ** Third party

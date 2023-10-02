@@ -23,7 +23,7 @@ import { STATUS_CODE } from 'components/screens/Lending/constants';
 import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 // ** Context
-import { getAssetConfig, useAuh } from 'components/screens/Lending/Context';
+import { getAssetConfig, useAuth } from 'components/screens/Lending/Context';
 import classNames from 'classnames';
 
 // ** dynamic
@@ -56,7 +56,7 @@ const Loan = () => {
     } = useTranslation();
 
     // ** useContext
-    const isAuth = useAuh();
+    const isAuth = useAuth();
     const { assetConfig } = getAssetConfig();
 
     // ** useState
