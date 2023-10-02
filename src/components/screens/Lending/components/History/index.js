@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next';
 import Chip from 'components/common/V2/Chip';
 
 // * Context
-import { useAuh } from 'components/screens/Lending/Context';
+import { useAuth } from 'components/screens/Lending/Context';
 
 // ** Redux
 import { API_HISTORY_LOAN } from 'redux/actions/apis';
@@ -112,7 +112,7 @@ const History = () => {
         }
     };
 
-    const isAuth = useAuh();
+    const isAuth = useAuth();
 
     // ** useState
     const [tab, setTab] = useState(initState.tab);

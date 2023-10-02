@@ -22,9 +22,8 @@ import colors from 'styles/colors';
 // ** Dynamic
 const SucessLoan = dynamic(() => import('./SucessLoan'), { ssrc: false });
 
-const DATA = [{ vi: 'LTV Hiện tại', en: 'LTV Hiện tại' }, { vi: 'LTV đã điều chỉnh' }, { vi: 'Tổng ký quỹ đã điều chỉnh', en: 'Tổng ký quỹ đã điều chỉnh' }];
-
-const ConfirmMargin = ({ isModal, onClose }) => {
+const ConfirmAdjustMargin = ({ isModal, onClose, tab, currentLTV, adjustedLTV, totalAdjusted }) => {
+    console.log('totalAdjusted', totalAdjusted());
     const {
         t,
         i18n: { language }
@@ -36,8 +35,7 @@ const ConfirmMargin = ({ isModal, onClose }) => {
     // ** handle
     const handleToggleModal = () => setIsModalConfirm((prev) => !prev);
 
-    // ** handle
-    const total = ['85%', '55%', '2 BTC'];
+    const handleSubmitConfirm = () => {};
 
     return (
         <>
@@ -57,21 +55,27 @@ const ConfirmMargin = ({ isModal, onClose }) => {
                     </div>
                 )}
             >
-                <div className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Xác nhận thêm ký quỹ</div>
+                <div className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{tab === 'add' ? 'Xác nhận thêm ký quỹ' : 'Xác nhận Bớt ký quỹ'}</div>
                 <section className="mt-6 dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex flex-col gap-4">
-                    {DATA?.map((item, key) => {
-                        return (
-                            <section className="flex flex-row justify-between" key={`modal_confirm_loan_${key}_${total?.[key]}`}>
-                                <div className="dark:text-gray-7 text-gray-1">{item?.[language]}</div>
-                                <div className="dark:text-gray-4 text-gray-15 font-semibold">{total?.[key]}</div>
-                            </section>
-                        );
-                    })}
+                    <section className="flex flex-row justify-between">
+                        <div className="dark:text-gray-7 text-gray-1">LTV Hiện tại</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{currentLTV}%</div>
+                    </section>
+                    <section className="flex flex-row justify-between">
+                        <div className="dark:text-gray-7 text-gray-1">LTV đã điều chỉnh</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{adjustedLTV.toFixed(0)}%</div>
+                    </section>
+                    <section className="flex flex-row justify-between">
+                        <div className="dark:text-gray-7 text-gray-1">Tổng ký quỹ đã điều chỉnh</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{`${totalAdjusted().total} ${totalAdjusted().assetCode}`}</div>
+                    </section>
                 </section>
-                <ButtonV2 className="mt-10">Xác nhận</ButtonV2>
+                <ButtonV2 className="mt-10" onClick={handleSubmitConfirm}>
+                    Xác nhận
+                </ButtonV2>
             </ModalV2>
             <SucessLoan isModal={isModalConfirm} onClose={handleToggleModal} />
         </>
     );
 };
-export default ConfirmMargin;
+export default ConfirmAdjustMargin;
