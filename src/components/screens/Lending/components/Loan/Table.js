@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useContext } from 'react';
 
 // ** NEXT
 import dynamic from 'next/dynamic';
@@ -28,7 +28,8 @@ import FetchApi from 'utils/fetch-api';
 import { totalAsset } from 'components/screens/Lending/utils';
 
 // ** Context
-import { getAssetConfig } from 'components/screens/Lending/Context';
+import { getAssetConfig, LendingContext } from 'components/screens/Lending/Context';
+import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
 
 // ** Redux
 import { formatTime } from 'redux/actions/utils';
@@ -116,6 +117,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
 
     // ** useContent
     const { assetConfig, assetById } = getAssetConfig();
+    const { dispatchReducer } = useContext(LendingContext);
 
     // ** useState
     const [dataCollateral, setDataCollateral] = useState({});
@@ -144,10 +146,14 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     // ** handle
     const handleToggleAdjustModal = ({ id, collateralAsset }) => {
         handleLoanOrderDetail(id, collateralAsset);
-        setIsAdjustModal((prev) => !prev);
+        dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN });
     };
     const handleToggleLoadRepaymentModal = () => setIsLoadRepaymentModal((prev) => !prev);
-    const handleCloseAdjustModal = () => setIsAdjustModal((prev) => !prev);
+
+    const handleCloseAdjustModal = () => {
+        dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN });
+        dispatchReducer({ type: actions.RESET_AMOUNT });
+    };
 
     const onCopy = () => {
         setCopied(true);
@@ -209,7 +215,9 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         const rsTotalDebt = totalAsset(totalDebt, loanCoin); //** Tổng dư nợ */
         const rsCollateralAmount = totalAsset(collateralAmount, collateralCoin);
 
-        const marketPrice = useCollateralPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
+        // const marketPrice = useCollateralPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
+        const marketPrice = 1410;
+
         const LTV = ((totalDebt / (totalCollateralAmount * marketPrice?.data)) * PERCENT).toFixed(0);
         const totalLiquidationLTV = (liquidationLTV * PERCENT).toFixed(0);
 

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useMemo, useContext, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useMemo, useContext, useCallback, useReducer } from 'react';
 
 // ** Redux
 import { useSelector } from 'react-redux';
@@ -6,6 +6,8 @@ import { API_LOAN_ASSETS, API_LOAN_COLLATERAL_ASSETS, API_GET_PAIR_PRICE } from 
 
 // ** Utils
 import FetchApi from 'utils/fetch-api';
+
+import reducer from './reducers';
 
 import { LOANABLE, COLLATERAL, STATUS_CODE } from 'components/screens/Lending/constants';
 import useMemoizeArgs from 'hooks/useMemoizeArgs';
@@ -18,12 +20,27 @@ const initData = {
     pairPrice: {}
 };
 
+const INIT_DATA_REDUCER = {
+    infoDet: { total: 0, assetCode: '' },
+    infoCollateralAmount: { total: 0, assetCode: '', assetDigit: '' },
+    totalAdjusted: 0,
+    marketPrice: 0,
+    amount: '',
+    modal: {
+        isAdjust: false,
+        isConfirmAdjust: false,
+        isSuccess: false
+    }
+};
+
 const LendingContext = createContext();
 
 const LendingProvider = ({ children }) => {
     // ** useRedux
     const assetConfig = useSelector((state) => state.utils.assetConfig);
     const auth = useSelector((state) => state.auth?.user);
+
+    const [state, dispatchReducer] = useReducer(reducer, INIT_DATA_REDUCER);
 
     const [loanAsset, setLoanAsset] = useState(initData.loanAsset);
     const [pairPrice, setPairPrice] = useState({});
@@ -63,7 +80,6 @@ const LendingProvider = ({ children }) => {
             const url = `${API_GET_PAIR_PRICE}/${symbol}`;
             try {
                 const { data, statusCode } = await FetchApi({ url });
-                console.log('data', data);
                 if (statusCode === STATUS_CODE) {
                     setPairPrice(data);
                 }
@@ -79,7 +95,10 @@ const LendingProvider = ({ children }) => {
         handleLoanAsset();
     }, [auth]);
 
-    const value = useMemo(() => ({ loanAsset, assetConfig, auth, pairPrice, handlePairPrice }), [loanAsset, assetConfig, auth, pairPrice]);
+    const value = useMemo(
+        () => ({ loanAsset, assetConfig, auth, pairPrice, handlePairPrice, state, dispatchReducer }),
+        [loanAsset, assetConfig, auth, pairPrice, state]
+    );
 
     return <LendingContext.Provider value={value}>{children}</LendingContext.Provider>;
 };

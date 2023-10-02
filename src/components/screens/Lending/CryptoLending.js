@@ -81,7 +81,7 @@ const CryptoLending = () => {
                             isActive={item.value === tab}
                         >
                             {item.label?.[language]}
-                            {item.value === 'loan' && <span className="ml-1">(2)</span>}
+                            {/* {item.value === 'loan' && <span className="ml-1">{count.current}</span>} */}
                         </TabItem>
                     ))}
                 </div>
