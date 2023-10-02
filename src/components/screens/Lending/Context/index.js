@@ -29,7 +29,8 @@ const INIT_DATA_REDUCER = {
     modal: {
         isAdjust: false,
         isConfirmAdjust: false,
-        isSuccess: false
+        isSuccess: false,
+        inCancel: false
     }
 };
 

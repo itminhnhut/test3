@@ -41,19 +41,6 @@ const reducer = (state, action) => {
         case actions.RESET_AMOUNT: {
             return { ...state, amount: '' };
         }
-        case actions.RESET_DATA: {
-            // const method = action.method;
-            // const amount = +action.amount;
-            // const getCurrentAdjusted = state?.current?.totalAdjusted;
-            // let totalAdjusted = method === 'add' ? getCurrentAdjusted + amount : getCurrentAdjusted - amount;
-            // if (action.amount === 0) {
-            //     totalAdjusted = getCurrentAdjusted;
-            // }
-            // return {
-            //     ...state,
-            //     totalAdjusted
-            // };
-        }
         case actions.TOGGLE_MODAL_ADJUST_MARGIN:
             return {
                 ...state,
@@ -80,9 +67,24 @@ const reducer = (state, action) => {
                 modal: {
                     isAdjust: false,
                     isConfirmAdjust: false,
-                    isSuccess: false
+                    isSuccess: false,
+                    isCancel: false
                 }
             };
+        case actions.TOGGLE_MODAL_CANCEL: {
+            const isCancel = action.isCancel;
+            const isAdjust = action.isAdjust;
+
+            return {
+                ...state,
+                modal: {
+                    isAdjust,
+                    isConfirmAdjust: false,
+                    isSuccess: false,
+                    isCancel
+                }
+            };
+        }
         default:
             return { ...state, current: { totalAdjusted: totalCollateralAmount } };
     }

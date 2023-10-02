@@ -1,4 +1,4 @@
-import { useState, useReducer, useEffect, useMemo, useCallback, useContext } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 
 // ** next
 import { useTranslation } from 'next-i18next';
@@ -33,12 +33,14 @@ import { PERCENT } from '../../constants';
 import useDebounce from 'hooks/useDebounce';
 import { formatNumber } from 'utils/reference-utils';
 
+// ** Dynamic components
+const ConfirmAdjustMargin = dynamic(() => import('./ConfirmAdjustMargin'), { ssr: false });
+const AdjustCancel = dynamic(() => import('./AdjustCancel'), { ssr: false });
+
 const MARGIN = [
     { title: { vi: 'Thêm ký quỹ', en: 'Thêm ký quỹ' }, key: 'add' },
     { title: { vi: 'Bớt ký quỹ', en: 'Bớt ký quỹ' }, key: 'subtract' }
 ];
-
-const ConfirmAdjustMargin = dynamic(() => import('./ConfirmAdjustMargin'), { ssr: false });
 
 const DEFAULT_VALUE = '-';
 
@@ -378,6 +380,7 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                 isConfirmAdjust={state.modal?.isConfirmAdjust}
                 onCloseAdjustMargin={handleCloseConfirmAdjustMargin}
             />
+            <AdjustCancel />
         </>
     );
 };

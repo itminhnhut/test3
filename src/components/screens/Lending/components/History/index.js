@@ -121,6 +121,7 @@ const History = () => {
     const [isLoading, setIsLoading] = useState(initState.loading);
     const [filter, setFilter] = useState(initState.filter);
 
+    console.log('filter', filter);
     // ** useState
     useEffect(() => {
         const id = setTimeout(() => getOrderLoan(), 500);
@@ -151,7 +152,7 @@ const History = () => {
                     loanCoin: filter?.loanCoin?.assetCode,
                     from: formatDate(filter?.time, 'startDate'),
                     to: formatDate(filter?.time, 'endDate'),
-                    status: TAB_STATUS?.[filter.status] || 'CLOSED'
+                    status: filter.status
                 }
             });
 
