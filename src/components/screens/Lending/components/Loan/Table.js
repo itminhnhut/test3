@@ -1,4 +1,4 @@
-import { useState, useCallback, useContext } from 'react';
+import { useState, useCallback, useContext, useEffect } from 'react';
 
 // ** NEXT
 import dynamic from 'next/dynamic';
@@ -18,7 +18,6 @@ import Copy from 'components/svg/Copy';
 
 // ** hooks
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import useCollateralPrice from 'components/screens/Lending/hooks/useCollateralPrice';
 
 // ** Constants
 import { LOAN_HISTORY_STATUS, PERCENT, STATUS_CODE } from 'components/screens/Lending/constants';
@@ -28,12 +27,12 @@ import FetchApi from 'utils/fetch-api';
 import { totalAsset } from 'components/screens/Lending/utils';
 
 // ** Context
-import { getAssetConfig, LendingContext, usePairPrice } from 'components/screens/Lending/Context';
+import { LendingContext } from 'components/screens/Lending/Context';
 import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
 
 // ** Redux
 import { formatTime } from 'redux/actions/utils';
-import { API_HISTORY_LOAN } from 'redux/actions/apis';
+import { API_HISTORY_LOAN, API_GET_PAIR_PRICE } from 'redux/actions/apis';
 
 // ** Third party
 import colors from 'styles/colors';
@@ -44,6 +43,7 @@ import { Check } from 'react-feather';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Countdown from 'react-countdown';
 import moment from 'moment-timezone';
+import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 // ** dynamic
 const ModalAdjustMargin = dynamic(() => import('components/screens/Lending/components/Modal/AdjustMargin'), { ssr: false });
@@ -69,12 +69,24 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     const isMobile = width < 830;
 
     // ** useContent
-    const { assetConfig, assetById } = getAssetConfig();
-    const { getPairPrice, pairPrice } = usePairPrice();
     const { dispatchReducer, state } = useContext(LendingContext);
 
     // ** useState
     const [dataCollateral, setDataCollateral] = useState({});
+    const [pairPrice, setPairPrice] = useState();
+
+    useEffect(() => {
+        const promise = [];
+        data?.result?.map((v) => {
+            const symbol = v?.collateralCoin + v?.loanCoin;
+            const url = `${API_GET_PAIR_PRICE}/${symbol}`;
+            promise.push(FetchApi({ url }));
+        });
+        Promise.all(promise).then((rs) => {
+            const data = rs?.map((value) => value?.data);
+            setPairPrice(data);
+        });
+    }, [useMemoizeArgs(data?.result)]);
 
     // ** handle
     const handleLoanOrderDetail = async (id, collateralAsset) => {
@@ -223,14 +235,11 @@ const LoanTable = ({ data, page, loading, onPage }) => {
             </section>
         );
     };
-    const renderCol4 = async (options) => {
+    const renderCol4 = (options) => {
         const { collateralCoin, loanCoin, totalDebt, totalCollateralAmount, loanTerm } = options;
-
-        // const a = getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
-        // Promise.all([a]).then((rs) => console.log(rs));
-
-        const marketPrice = useCollateralPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
-        const LTV = ((totalDebt / (totalCollateralAmount * marketPrice?.data)) * PERCENT).toFixed(0); // ** LTV hiện tại */
+        const coin = collateralCoin + loanCoin;
+        const marketPrice = pairPrice?.find((f) => f.symbol === coin);
+        const LTV = ((totalDebt / (totalCollateralAmount * marketPrice?.lastPrice)) * PERCENT).toFixed(0); // ** LTV hiện tại */
         return (
             <section className="flex flex-col h-[128px] w-max">
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] whitespace-nowrap">
@@ -372,7 +381,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 }}
             />
         );
-    }, [data?.result, loading, isDark]);
+    }, [useMemoizeArgs(data?.result), loading, isDark, useMemoizeArgs(pairPrice)]);
 
     return (
         <>
