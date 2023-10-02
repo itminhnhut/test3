@@ -1,5 +1,4 @@
 import useFetchApi from 'hooks/useFetchApi';
-import React from 'react';
 import { API_GET_PAIR_PRICE } from 'redux/actions/apis';
 
 const useCollateralPrice = ({ collateralAssetCode, loanableAssetCode, refetch }) => {

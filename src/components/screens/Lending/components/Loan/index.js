@@ -7,6 +7,9 @@ import { useTranslation } from 'next-i18next';
 // ** Redux
 import { API_HISTORY_LOAN, API_OVERVIEW_LOAN } from 'redux/actions/apis';
 
+// ** Components
+import Tooltip from 'components/common/Tooltip';
+
 // ** Utils
 import FetchApi from 'utils/fetch-api';
 
@@ -20,14 +23,20 @@ import { STATUS_CODE } from 'components/screens/Lending/constants';
 import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 // ** Context
-import { getAssetConfig, useAuh } from 'components/screens/Lending/Context';
+import { getAssetConfig, useAuth } from 'components/screens/Lending/Context';
+import classNames from 'classnames';
 
 // ** dynamic
 const LoanTable = dynamic(() => import('./Table'), { ssr: false });
 const NotAuth = dynamic(() => import('components/screens/Lending/components/NotAuth'), { ssr: false });
 
 const ASSETS = [
-    { title: { vi: 'Thời gian xử lý trung bình', en: 'Thời gian xử lý trung bình' }, asset: 'USD' },
+    {
+        asset: 'USD',
+        nameTooltip: 'totalDebt',
+        contentTooltip: { vi: 'ss', en: 'ss' },
+        title: { vi: 'Thời gian xử lý trung bình', en: 'Thời gian xử lý trung bình' }
+    },
     { title: { vi: 'Tổng giá trị tài sản ký quỹ', en: 'Tổng giá trị tài sản ký quỹ' }, asset: 'USD' }
 ];
 
@@ -36,7 +45,7 @@ const initState = {
     page: 1,
     loading: false,
     overview: { currency: 'USD' },
-    loan: { status: 'ACTIVE' },
+    loan: { status: 'ACTIVE', limit: 10 },
     data: {}
 };
 
@@ -47,7 +56,7 @@ const Loan = () => {
     } = useTranslation();
 
     // ** useContext
-    const isAuth = useAuh();
+    const isAuth = useAuth();
     const { assetConfig } = getAssetConfig();
 
     // ** useState
@@ -118,7 +127,15 @@ const Loan = () => {
                         {ASSETS?.map((item, key) => {
                             return (
                                 <section className="dark:bg-dark-4 bg-white rounded-xl px-8 py-6" key={`loan_${key}_${item.title?.[language]}`}>
-                                    <div className="dark:text-gay-7 text-gray-1">{item.title?.[language]}</div>
+                                    <div
+                                        data-tip={item?.nameTooltip ? item?.contentTooltip?.[language] : null}
+                                        data-for={item?.nameTooltip || null}
+                                        className={classNames('dark:text-gay-7 text-gray-1', {
+                                            'border-b border-darkBlue-5 border-dashed cursor-pointer w-fit': item?.nameTooltip
+                                        })}
+                                    >
+                                        {item.title?.[language]}
+                                    </div>
                                     <section className="flex flex-row gap-1 mt-4 text-gray-15 text-2xl font-semibold dark:text-gray-4">
                                         <div>{formatNumber(totalOverview?.[key], getAssetBycCode?.assetDigit)}</div>
                                         <div>{overView.currency}</div>
@@ -131,6 +148,7 @@ const Loan = () => {
                     <section className="mt-8">
                         <LoanTable data={data} page={page} loading={loading} onPage={setPage} />
                     </section>
+                    <Tooltip id={'totalDebt'} place="top" effect="solid" isV3 className="max-w-[300px]" />
                 </section>
             )}
         </>

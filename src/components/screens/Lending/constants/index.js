@@ -115,11 +115,11 @@ const DEFAULT_COLLATERAL_ASSET = 'BNB';
 const ALLOW_LTV_TOOLTIP = ['ltv_initial', 'ltv_margin', 'ltv_liquidate'];
 
 const LOAN_HISTORY_STATUS = {
-    ONGOING: { vi: 'Bình thường', en: 'Bình thường' },
-    OVERDUE: { vi: 'Trả chậm', en: 'Trả chậm' },
-    LTV_LIQUIDATED: { vi: 'ltv thanh lý', en: 'ltv thanh lý' },
-    DEADLINE_LIQUIDATED: { vi: 'Hết hạn', en: 'Hết hạn' },
-    REPAID: { vi: 'Hoàn tiền', en: 'Hoàn tiền' }
+    ONGOING: { vi: 'Bình thường', en: 'Bình thường', contentTooltip: { vi: 'Bình thường', en: 'Bình thường' } },
+    OVERDUE: { vi: 'Trả chậm', en: 'Trả chậm', contentTooltip: { vi: 'Trả chậm', en: 'Trả chậm' } },
+    LTV_LIQUIDATED: { vi: 'ltv thanh lý', en: 'ltv thanh lý', contentTooltip: { vi: 'ltv thanh lý', en: 'ltv thanh lý' } },
+    DEADLINE_LIQUIDATED: { vi: 'Hết hạn', en: 'Hết hạn', contentTooltip: { vi: 'Hết hạn', en: 'Hết hạn' } },
+    REPAID: { vi: 'Hoàn tiền', en: 'Hoàn tiền', contentTooltip: { vi: 'Hoàn tiền', en: 'Hoàn tiền' } }
 };
 
 const REGISTER_HANDLE_TYPE = {

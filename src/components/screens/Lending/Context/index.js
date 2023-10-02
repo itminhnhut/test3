@@ -1,19 +1,21 @@
-import React, { createContext, useState, useEffect, useMemo, useContext } from 'react';
+import React, { createContext, useState, useEffect, useMemo, useContext, useCallback } from 'react';
 
 // ** Redux
 import { useSelector } from 'react-redux';
-import { API_LOAN_ASSETS, API_LOAN_COLLATERAL_ASSETS } from 'redux/actions/apis';
+import { API_LOAN_ASSETS, API_LOAN_COLLATERAL_ASSETS, API_GET_PAIR_PRICE } from 'redux/actions/apis';
 
 // ** Utils
 import FetchApi from 'utils/fetch-api';
 
-import { LOANABLE, COLLATERAL } from 'components/screens/Lending/constants';
+import { LOANABLE, COLLATERAL, STATUS_CODE } from 'components/screens/Lending/constants';
+import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 const initData = {
     loanAsset: {
         loanable: [],
         collateral: []
-    }
+    },
+    pairPrice: {}
 };
 
 const LendingContext = createContext();
@@ -24,6 +26,7 @@ const LendingProvider = ({ children }) => {
     const auth = useSelector((state) => state.auth?.user);
 
     const [loanAsset, setLoanAsset] = useState(initData.loanAsset);
+    const [pairPrice, setPairPrice] = useState({});
 
     const handleLoanAsset = () => {
         const apiLoanable = FetchApi({
@@ -52,12 +55,31 @@ const LendingProvider = ({ children }) => {
             .catch((error) => console.error(error));
     };
 
+    // ** PAIR_PRICE
+    const handlePairPrice = useCallback(
+        async ({ collateralAssetCode, loanableAssetCode }) => {
+            if (!collateralAssetCode || !collateralAssetCode) return;
+            const symbol = collateralAssetCode + loanableAssetCode;
+            const url = `${API_GET_PAIR_PRICE}/${symbol}`;
+            try {
+                const { data, statusCode } = await FetchApi({ url });
+                console.log('data', data);
+                if (statusCode === STATUS_CODE) {
+                    setPairPrice(data);
+                }
+            } catch (error) {
+                throw new Error('error handling pair price', error);
+            }
+        },
+        [useMemoizeArgs(pairPrice)]
+    );
+
     useEffect(() => {
         if (!auth) return;
         handleLoanAsset();
     }, [auth]);
 
-    const value = useMemo(() => ({ loanAsset, assetConfig, auth }), [loanAsset, assetConfig, auth]);
+    const value = useMemo(() => ({ loanAsset, assetConfig, auth, pairPrice, handlePairPrice }), [loanAsset, assetConfig, auth, pairPrice]);
 
     return <LendingContext.Provider value={value}>{children}</LendingContext.Provider>;
 };
@@ -99,6 +121,29 @@ const handleSelectLoanAsset = (data, key, dataLoanAsset) => {
     return rs;
 };
 
+const usePairPrice = () => {
+    const context = useContext(LendingContext);
+    if (context === undefined) {
+        throw new Error('LoanableList must be used within a LendingContext');
+    }
+
+    const getPairPrice = (data) => {
+        context.handlePairPrice(data);
+    };
+    return { getPairPrice: (data) => getPairPrice(data), pairPrice: context.pairPrice };
+};
+
+const getNewPairPrice = () => {
+    const context = useContext(LendingContext);
+    if (context === undefined) {
+        throw new Error('LoanableList must be used within a LendingContext');
+    }
+    const getPairPrice = (data) => {
+        context.handlePairPrice(data);
+    };
+    return { getPairPrice: (data) => getPairPrice(data) };
+};
+
 const useAssets = () => {
     const { loanCoin, loanable } = useLoanableList();
     const { collateralCoin, collateral } = useCollateralList();
@@ -108,7 +153,7 @@ const useAssets = () => {
     return { assetLoanable: rsLoanable, assetCollateral: rsCollateral };
 };
 
-const useAuh = () => {
+const useAuth = () => {
     const context = useContext(LendingContext);
     if (context === undefined) {
         throw new Error('LoanableList must be used within a LendingContext');
@@ -131,4 +176,4 @@ const getAssetConfig = () => {
     return { assetConfig: context?.assetConfig, assetById };
 };
 
-export { LendingContext, LendingProvider, useLoanableList, useCollateralList, useAuh, useAssets, getAssetConfig };
+export { LendingContext, LendingProvider, useLoanableList, useCollateralList, useAuth, useAssets, getAssetConfig, usePairPrice, getNewPairPrice };
