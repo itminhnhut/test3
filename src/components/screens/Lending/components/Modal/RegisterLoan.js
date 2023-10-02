@@ -315,16 +315,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                     return { left: 32, top };
                 }}
             >
-                <>
-                    <div>
-                        Mỗi thời hạn vay có thời gian trả chậm cho phép, phí trả chậm trong trường hợp này bằng 3 lần lãi vay. Thời gian trả chậm cho phép:
-                    </div>
-                    <ul className="list-disc px-4">
-                        <li>Kỳ hạn 7 ngày: Trả chậm tối đa 72h</li>
-                        <li>Kỳ hạn 30 ngày: Trả chậm tối đa 168h</li>
-                    </ul>
-                    <div>Nếu vượt quá thời gian trả chậm cho phép, sàn sẽ thanh lý tài sản ký quỹ của user với phí thanh lý là 2% của tổng dư nợ.</div>
-                </>
+                <div dangerouslySetInnerHTML={{ __html: t('lending:lending.modal.loan_term_description') }} />
             </Tooltip>
         );
     };
@@ -407,17 +398,17 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                 <section>
                     {renderTooltip()}
                     {renderTooltipLTV()}
-                    <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Tạo lệnh vay</p>
+                    <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{t('lending:lending.modal.title')} </p>
                     <section className="mt-6">
                         <TradingInputV2
                             clearAble
-                            label="Tôi muốn vay"
+                            label={t('lending:lending.modal.loan_input.label')}
                             labelClassName="font-semibold inline-block !text-base !text-txtPrimary dark:!text-txtPrimary-dark"
                             thousandSeparator={true}
                             decimalScale={filter?.loanable?.assetDigit}
                             errorTooltip={false}
                             inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
-                            placeholder="Nhập số lượng tài sản bạn muốn vay"
+                            placeholder={t('lending:lending.modal.loan_input.placeholder')}
                             validator={validator[LOANABLE]()}
                             value={loanValue}
                             onValueChange={({ value }) => {
@@ -436,18 +427,22 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                             }
                             textDescription={
                                 <span>
-                                    Tối thiểu: {formatNumber(filter.loanable?.config?.minLimit, filter.loanable?.assetDigit)} . Tối đa:
-                                    {formatNumber(filter.loanable?.config?.maxLimit, filter.loanable?.assetDigit)}
+                                    {t('lending:lending.modal.input_description.min_max', {
+                                        min: formatNumber(filter.loanable?.config?.minLimit, filter.loanable?.assetDigit),
+                                        max: formatNumber(filter.loanable?.config?.maxLimit, filter.loanable?.assetDigit)
+                                    })}
                                 </span>
                             }
                         />
                     </section>
                     <section className="mt-8">
                         <section className="flex flex-row justify-between mb-2 text-txtPrimary  dark:text-txtPrimary-dark">
-                            <div className="font-semibold">Số lượng ký quỹ</div>
+                            <div className="font-semibold">{t('lending:lending.modal.collateral_input.label')}</div>
                             <section className="flex text-sm flex-row gap-1 items-center">
                                 <div className="space-x-1">
-                                    <span className="dark:text-txtSecondary-dark text-txtSecondary">Khả dụng:</span>
+                                    <span className="dark:text-txtSecondary-dark text-txtSecondary">
+                                        {t('lending:lending.modal.collateral_input.available')}
+                                    </span>
                                     <span className="font-semibold ">
                                         {formatNumber(collateralAvailable, filter.collateral?.assetDigit) || '-'} {filter.collateral?.assetCode}
                                     </span>
@@ -461,7 +456,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                         </section>
                         <TradingInputV2
                             clearAble
-                            placeholder="Nhập số lượng tài sản đảm bảo"
+                            placeholder={t('lending:lending.modal.collateral_input.placeholder')}
                             thousandSeparator={true}
                             decimalScale={filter?.collateral?.assetDigit}
                             inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
@@ -483,8 +478,10 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                             }
                             textDescription={
                                 <span>
-                                    Tối thiểu: {formatNumber(minCollateralAmount, filter.collateral?.assetDigit)} . Tối đa:
-                                    {formatNumber(filter.collateral?.config?.maxLimit, filter.collateral?.assetDigit)}
+                                    {t('lending:lending.modal.input_description.min_max', {
+                                        min: formatNumber(minCollateralAmount, filter.collateral?.assetDigit),
+                                        max: formatNumber(filter.collateral?.config?.maxLimit, filter.collateral?.assetDigit)
+                                    })}
                                 </span>
                             }
                             onFocus={() => setState({ typingField: COLLATERAL })}
@@ -494,9 +491,9 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                         <div
                             data-tip=""
                             data-for="loan_term"
-                            className="dark:text-gray-4 text-gray-15 border-b border-darkBlue-5 border-dashed cursor-pointer w-max mt-8"
+                            className="dark:text-gray-4 font-semibold text-gray-15 border-b border-darkBlue-5 border-dashed cursor-pointer w-max mt-8"
                         >
-                            Thời hạn vay
+                            {t('lending:lending.modal.loan_term')}
                         </div>
                         <section className="flex flex-row gap-4 w-max mt-4">
                             {BORROWING_TERM.map((term) => {
