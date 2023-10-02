@@ -29,6 +29,7 @@ const CONTENT = {
     history: <ContentHistory />
 };
 
+const DEFAULT_PATH_NAME = '/lending';
 // ** iniData
 const iniData = {
     tab: 'loan'
@@ -57,7 +58,20 @@ const CryptoLending = () => {
     }, [router.query]);
 
     // ** Handle
-    const handleTab = (tab) => setTab(tab);
+    const handleTab = (tab) => {
+        const { tab: tabQuery = iniData.tab } = router.query;
+        if (tabQuery) {
+            router.push(
+                {
+                    pathname: DEFAULT_PATH_NAME,
+                    query: { tab }
+                },
+                DEFAULT_PATH_NAME
+            );
+        } else {
+            setTab(tab);
+        }
+    };
 
     //** Render
     const renderTabContent = () => {

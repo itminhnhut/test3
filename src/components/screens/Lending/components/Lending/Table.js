@@ -105,7 +105,6 @@ const LendingTable = ({ data, page, loading, onPage }) => {
                 align: 'left',
                 minWidth: 206,
                 render: (value, data) => {
-                    console.log('data:', data);
                     const interestRate = +value * 100;
                     return <div className="font-normal">{`${interestRate?.toFixed(5)}% / ${(interestRate * 24 * 365)?.toFixed(5)}%`}</div>;
                 }

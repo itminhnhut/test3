@@ -28,7 +28,7 @@ import FetchApi from 'utils/fetch-api';
 import { totalAsset } from 'components/screens/Lending/utils';
 
 // ** Context
-import { getAssetConfig, LendingContext } from 'components/screens/Lending/Context';
+import { getAssetConfig, LendingContext, usePairPrice } from 'components/screens/Lending/Context';
 import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
 
 // ** Redux
@@ -70,6 +70,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
 
     // ** useContent
     const { assetConfig, assetById } = getAssetConfig();
+    const { getPairPrice, pairPrice } = usePairPrice();
     const { dispatchReducer, state } = useContext(LendingContext);
 
     // ** useState
@@ -222,8 +223,11 @@ const LoanTable = ({ data, page, loading, onPage }) => {
             </section>
         );
     };
-    const renderCol4 = (options) => {
+    const renderCol4 = async (options) => {
         const { collateralCoin, loanCoin, totalDebt, totalCollateralAmount, loanTerm } = options;
+
+        // const a = getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
+        // Promise.all([a]).then((rs) => console.log(rs));
 
         const marketPrice = useCollateralPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
         const LTV = ((totalDebt / (totalCollateralAmount * marketPrice?.data)) * PERCENT).toFixed(0); // ** LTV hiện tại */

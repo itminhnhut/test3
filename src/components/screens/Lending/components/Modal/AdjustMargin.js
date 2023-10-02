@@ -185,7 +185,6 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
         return { isValid: !Boolean(err), msg: err, isError: Boolean(err) };
     }, [error]);
 
-    console.log('state', state);
     // ** render
     const renderAddMargin = () => {
         return (

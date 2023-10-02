@@ -121,7 +121,6 @@ const History = () => {
     const [isLoading, setIsLoading] = useState(initState.loading);
     const [filter, setFilter] = useState(initState.filter);
 
-    console.log('filter', filter);
     // ** useState
     useEffect(() => {
         const id = setTimeout(() => getOrderLoan(), 500);
