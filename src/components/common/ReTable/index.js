@@ -412,6 +412,9 @@ const ReTableWrapperV2 = styled.div`
         height: ${({ rowHeight }) => rowHeight ?? '52px'};
         /* max-height: 52px; */
     }
+    .rc-table .rc-table-placeholder td {
+        height: 100%;
+    }
 
     .rc-table thead td,
     .rc-table thead th,

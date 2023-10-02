@@ -5,6 +5,9 @@ import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { WalletCurrency } from 'utils/reference-utils';
 import { useEarnCtx } from '../../context/EarnContext';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { getLoginUrl } from 'redux/actions/utils';
 
 
 const Token = ({ symbol }) => {
@@ -19,10 +22,17 @@ const Token = ({ symbol }) => {
 const HotPool = ({ pool }) => {
 
     const {asset, rewardAsset, duration, apr} = pool;
+    const { user: auth } = useSelector((state) => state.auth) || null;
     const { setPoolInfo } = useEarnCtx();
-    const {t} = useTranslation();
+    const { t } = useTranslation();
+    const router = useRouter();
     const onClick = () => {
-        setPoolInfo(pool);
+        if (auth) {
+            setPoolInfo(pool);
+        } else {
+            const url = getLoginUrl('sso', 'login');
+            router.push(url);
+        }
     };
 
     return (
@@ -38,7 +48,7 @@ const HotPool = ({ pool }) => {
             <div className="flex justify-between mt-4">
                 <div className="">
                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mb-1">{t('earn:apr')}</div>
-                    <div className="font-semibold text-teal">{apr} %</div>
+                    <div className="font-semibold text-teal">{+(apr * 100).toFixed(2)} %</div>
                 </div>
                 <div className="">
                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mb-1">{t('earn:period')}</div>

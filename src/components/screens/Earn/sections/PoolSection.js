@@ -60,7 +60,7 @@ const PoolSection = ({ pool_list }) => {
         return {
             key: pool.key,
             period: `${pool.duration} ${pool.duration > 1 ? t('common:days') : t('common:day')}`,
-            APR: `${pool.apr}%`,
+            APR: `${+(pool.apr * 100).toFixed(2)}%`,
             coin: (
                 <div className="ml-12 flex space-x-4 items-center">
                     <span className="text-base font-semibold">{t('earn:receive')}</span>
@@ -110,7 +110,7 @@ const PoolSection = ({ pool_list }) => {
 
     const openDepositModal = (pool) => {
         if (auth) {
-            setPoolInfo(pool);
+           setPoolInfo(pool);
         } else {
             const url = getLoginUrl('sso', 'login');
             router.push(url);
@@ -141,8 +141,8 @@ const PoolSection = ({ pool_list }) => {
                     key: asset.id,
                     coin: <Token symbol={asset.asset} balance={userBalance} />,
                     APR: showRange({
-                        min: asset.minAPR,
-                        max: asset.maxAPR,
+                        min: +(asset.minAPR * 100).toFixed(2),
+                        max: +(asset.maxAPR * 100).toFixed(2),
                         separator: '~',
                         postFix: {
                             plural: `%`,
@@ -228,7 +228,7 @@ const PoolSection = ({ pool_list }) => {
                         setExpandedRows((old) => ({ ...old, [record.key]: expanded }));
                     }
                 }}
-                emptyText={<NoData text={t('earn:table:no_data')} isSearch />}
+                emptyText={<NoData text={t('earn:table:no_data')} isSearch={!!debouncedFilter} />}
                 rowClassName={(record) => classNames('border-bottom', expandedRows[record.key] && 'expanded')}
                 tableStyle={{
                     rowHeight: '72px',

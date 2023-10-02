@@ -140,7 +140,7 @@ const HistorySection = ({ assetList, rewardList }) => {
         reset: {
             type: 'reset',
             title: t('common:reset'),
-            buttonClassName: '!text-gray-15 dark:!text-gray-7 font-semibold text-base w-auto',
+            buttonClassName: '!text-gray-15 dark:!text-gray-7 font-semibold text-base w-full',
             childClassName: 'justify-end'
         }
     };
@@ -224,6 +224,7 @@ const HistorySection = ({ assetList, rewardList }) => {
                     hasNext: data?.hasNext,
                     onChangeNextPrev: (offset) => setPage((old) => old + offset)
                 }}
+                showPaging={data?.hasNext || page !== 0}
                 loading={loading}
                 columns={columns}
                 data={dataTable}

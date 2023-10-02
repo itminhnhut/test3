@@ -29,7 +29,8 @@ import {
     API_REFRESH_TOKEN,
     API_USER_REFERRAL,
     API_WITHDRAW_ONCHAIN,
-    API_GET_VIP
+    API_GET_VIP,
+    API_EARN_WALLET
 } from './apis';
 import Axios from 'axios';
 import { SET_THEME, SET_USER } from './types';
@@ -202,24 +203,17 @@ export function getUserFuturesBalance(isNao = false) {
     };
 }
 
-export function getUserEarnedBalance(walletType) {
+export function getUserEarnBalance() {
     return async (dispatch) => {
         try {
-            const { data } = await Axios.get(`/api/v1/earn/${walletType}/summary`);
-            let result;
-
-            if (data && data.status === ApiStatus.SUCCESS) {
-                const balanceData = find(data?.data, { currency: 1 });
-                const estimateData = find(data?.data, { currency: 72 });
-
-                if (balanceData) {
-                    result = { value: balanceData?.summary?.total_balance, locked_value: 0, estimate: estimateData };
-                }
-
+            const { message, data } = await fetchAPI({
+                url: API_EARN_WALLET,
+            });
+            if (message === ApiStatus.SUCCESS) {
                 dispatch({
                     type: types.UPDATE_WALLET,
-                    walletType: walletType,
-                    payload: result
+                    walletType: WalletType.EARN,
+                    payload: data
                 });
             }
         } catch (e) {}

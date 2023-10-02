@@ -5,7 +5,7 @@ import AddCircle from 'components/svg/AddCircle';
 import TradingInput from 'components/trade/TradingInput';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { ONE_DAY } from 'constants/constants';
-import { format as formatDate } from 'date-fns';
+import { format as formatDate, startOfTomorrow } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { getAssetFromCode } from 'redux/actions/utils';
@@ -13,18 +13,26 @@ import { WalletCurrency, formatNumber } from 'utils/reference-utils';
 import CheckBox from 'components/common/CheckBox';
 import Button from 'components/common/V2/ButtonV2/Button';
 import FetchApi from 'utils/fetch-api';
-import { API_DEPOSIT_EARN, API_GET_MARKET_WATCH, API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
+import { API_DEPOSIT_EARN, API_GET_MARKET_WATCH } from 'redux/actions/apis';
 import toast from 'utils/toast';
 import useQuery from 'hooks/useQuery';
 import { useRouter } from 'next/router';
+import Tooltip from 'components/common/Tooltip';
 
 const formatDateTime = (date = 0) => {
     return formatDate(date, 'hh:mm dd/MM/yyyy');
 };
 
-const getCurrentPeriod = (start = 0, duration = 0) => {
-    return Math.floor((Date.now() - start) / duration);
+const getUTCToday = () => {
+    const now = new Date();
+    const d = now.getUTCDate();
+    const m = now.getUTCMonth();
+    const y = now.getUTCFullYear();
+    const utcToday = Date.UTC(y, m, d);
+    return utcToday;
 };
+
+const suspendDuration = 1800000 // 30 minutes
 
 const Token = ({ symbol }) => {
     return (
@@ -35,8 +43,8 @@ const Token = ({ symbol }) => {
     );
 };
 
-const EarnModal = ({ onClose, pool }) => {
-    const { asset, rewardAsset, accumulatedAmount, totalSupply, duration, apr, min, max, subscriptionStartTime, payPeriod, id } = pool;
+const EarnModal = ({ onClose, pool, isSuspending }) => {
+    const { asset, rewardAsset, accumulatedAmount, totalSupply, duration, apr, min, max, id } = pool;
     const { t } = useTranslation();
     const assetInfo = getAssetFromCode(asset);
     const rewardInfo = getAssetFromCode(rewardAsset);
@@ -44,24 +52,31 @@ const EarnModal = ({ onClose, pool }) => {
     const [autoRenew, setAutoRenew] = useState(true);
     const [agree, setAgree] = useState(false);
     const userBalance = useSelector((state) => state?.wallet?.SPOT?.[WalletCurrency[asset]]?.value) || 0;
-    const { data: quote } = useQuery([API_GET_MARKET_WATCH, asset, rewardAsset], async () => {
+    const { data: spotList } = useQuery([API_GET_MARKET_WATCH], async () => {
         const { data } = await FetchApi({
             url: API_GET_MARKET_WATCH,
-            params: { symbol: asset + rewardAsset }
         });
-        return data?.p || 0;
+        return data;
     });
+    const quote = useMemo(() => {
+        const tokenPair = spotList?.find((pair) => {
+            return pair.b === asset && pair.q === rewardAsset;
+        })
+        return tokenPair?.p || 0;
+    }, [spotList, asset, rewardAsset])
     const router = useRouter();
 
     const poolLoad = +((accumulatedAmount * 100) / totalSupply).toFixed(2);
     const availableSize = totalSupply - accumulatedAmount;
 
-    const startAt = subscriptionStartTime * 1000;
-    const profitAt = subscriptionStartTime;
-    const _duration = duration * ONE_DAY;
-    const endAt = subscriptionStartTime + duration * payPeriod * ONE_DAY;
-    const currentPeriod = getCurrentPeriod(subscriptionStartTime, _duration);
+    const utcToday = getUTCToday();
+    const subcribeAt = utcToday + ONE_DAY;
+    const profitAt = subcribeAt + ONE_DAY;
+    const endAt = profitAt + ONE_DAY;
+
+
     const maxDeposit = Math.min(max, availableSize);
+    const isSoldOut = availableSize < min;
 
     const validation = useMemo(() => {
         let isValid = true;
@@ -81,7 +96,13 @@ const EarnModal = ({ onClose, pool }) => {
         return { isValid, msg, isError: !isValid };
     }, [depositAmount, min, maxDeposit, userBalance]);
 
-    const canDeposit = !validation.isError && depositAmount && agree;
+    const canDeposit = !isSoldOut && !validation.isError && depositAmount && agree;
+    let systemMsg = ''
+    if (isSoldOut) {
+        systemMsg = t('earn:deposit_modal:full_pool')
+    } else if (isSuspending) {
+        systemMsg = t('earn:deposit_modal:full_pool');
+    }
 
     const deposit = async () => {
         if (!canDeposit) {
@@ -125,10 +146,10 @@ const EarnModal = ({ onClose, pool }) => {
             pathname: '/withdraw-deposit/crypto',
             query: {
                 side: 'BUY',
-                assetId: asset,
+                assetId: asset
             }
         });
-    }
+    };
 
     return (
         <ModalV2 isVisible={true} onBackdropCb={onClose} className="max-w-[800px]">
@@ -141,7 +162,17 @@ const EarnModal = ({ onClose, pool }) => {
 
             <div className="grid grid-cols-2 gap-x-6 mt-6">
                 <div className="">
-                    <div className="bg-bgContainer dark:bg-bgContainer-dark rounded-xl p-4 flex flex-col space-y-4">
+                    <Tooltip
+                        className="w-[calc(50%-2.75rem)] after:!left-6"
+                        isV3
+                        id="apr-tooltip"
+                        place="top"
+                        effect="solid"
+                        overridePosition={({ left, top }) => ({ left: 32, top: top })}
+                    >
+                        {t('earn:deposit_modal:apr_tooltip')}
+                    </Tooltip>
+                    <div className="bg-gray-13 dark:bg-dark-4 rounded-xl p-4 flex flex-col space-y-4">
                         <div className="flex justify-between space-x-2">
                             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:pool_size')}:</div>
                             <div className="font-semibold text-right">
@@ -155,8 +186,14 @@ const EarnModal = ({ onClose, pool }) => {
                             </div>
                         </div>
                         <div className="flex justify-between space-x-2">
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:apr')}:</div>
-                            <div className="font-semibold text-right">{apr * 100}%</div>
+                            <div
+                                className="text-txtSecondary dark:text-txtSecondary-dark border-b border-dashed border-gray-1 dark:border-gray-7"
+                                data-tip=""
+                                data-for="apr-tooltip"
+                            >
+                                {t('earn:deposit_modal:apr')}:
+                            </div>
+                            <div className="font-semibold text-right">{+(apr * 100).toFixed(2)}%</div>
                         </div>
                         <div className="flex justify-between space-x-2">
                             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:period')}:</div>
@@ -165,6 +202,12 @@ const EarnModal = ({ onClose, pool }) => {
                             </div>
                         </div>
                     </div>
+                    {systemMsg && (
+                        <div className="mt-2 flex items-center">
+                            <ErrorTriggersIcon />
+                            <span>{systemMsg}</span>
+                        </div>
+                    )}
 
                     <div className="h-6"></div>
 
@@ -192,13 +235,25 @@ const EarnModal = ({ onClose, pool }) => {
                         clearAble
                     />
 
+                    <Tooltip
+                        className="w-[calc(50%-2.75rem)] after:!left-6"
+                        isV3
+                        id="renew-tooltip"
+                        place="top"
+                        effect="solid"
+                        overridePosition={({ left, top }) => ({ left: 32, top: top })}
+                    >
+                        {t('earn:deposit_modal:renew_tooltip')}
+                    </Tooltip>
                     <div className="mt-4 flex space-x-4">
-                        <span className="font-semibold">{t('earn:deposit_modal:auto_renew')}</span>
+                        <span className="font-semibold border-b border-dashed border-gray-1 dark:border-gray-7" data-tip="" data-for="renew-tooltip">
+                            {t('earn:deposit_modal:auto_renew')}
+                        </span>
                         <SwitchV2 checked={autoRenew} onChange={setAutoRenew} />
                     </div>
                 </div>
 
-                <div className="bg-bgContainer dark:bg-bgContainer-dark rounded-xl p-4">
+                <div className="bg-gray-13 dark:bg-dark-4 rounded-xl p-4">
                     <div className="font-semibold">{t('earn:deposit_modal:summary')}</div>
                     <div className="h-4"></div>
 
@@ -223,35 +278,38 @@ const EarnModal = ({ onClose, pool }) => {
                         <div className="border-l border-gray-1 dark:border-gray-7 border-dashed h-full absolute"></div>
                         <div className="flex flex-col space-y-4">
                             <div className="relative">
-                                <div className="bg-bgContainer dark:bg-bgContainer-dark absolute h-1/2 w-2 -left-1"></div>
+                                <div className="bg-gray-13 dark:bg-dark-4 absolute h-1/2 w-2 -left-1"></div>
                                 <div className="rounded-full bg-teal w-2 h-2 absolute -left-1 top-1/2 -translate-y-1/2"></div>
                                 <div className="flex justify-between space-x-2 items-center flex-1 ml-2">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:starts_at')}:</div>
-                                    <div className="font-semibold text-right">{formatDateTime(subscriptionStartTime)}</div>
+                                    <div className="font-semibold text-right">{formatDateTime(subcribeAt)}</div>
                                 </div>
                             </div>
                             <div className="relative">
                                 <div className="rounded-full bg-teal w-2 h-2 absolute -left-1 top-1/2 -translate-y-1/2"></div>
                                 <div className="flex justify-between space-x-2 items-center flex-1 ml-2">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:profits_at')}:</div>
-                                    <div className="font-semibold text-right">{formatDateTime(subscriptionStartTime)}</div>
+                                    <div className="font-semibold text-right">{formatDateTime(profitAt)}</div>
                                 </div>
                             </div>
                             <div className="relative">
+                                {!autoRenew && <div className="bg-gray-13 dark:bg-dark-4 absolute h-1/2 w-2 -left-1 bottom-0"></div>}
                                 <div className="rounded-full bg-teal w-2 h-2 absolute -left-1 top-1/2 -translate-y-1/2"></div>
                                 <div className="flex justify-between space-x-2 items-center flex-1 ml-2">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:ends_at')}:</div>
                                     <div className="font-semibold text-right">{formatDateTime(endAt)}</div>
                                 </div>
                             </div>
-                            <div className="relative">
-                                <div className="bg-bgContainer dark:bg-bgContainer-dark absolute h-1/2 w-2 -left-1 bottom-0"></div>
-                                <div className="rounded-full bg-teal w-2 h-2 absolute -left-1 top-1/2 -translate-y-1/2"></div>
-                                <div className="flex justify-between space-x-2 items-center flex-1 ml-2">
-                                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:renews_at')}:</div>
-                                    <div className="font-semibold text-right">{formatDateTime(endAt)}</div>
+                            {autoRenew && (
+                                <div className="relative">
+                                    <div className="bg-gray-13 dark:bg-dark-4 absolute h-1/2 w-2 -left-1 bottom-0"></div>
+                                    <div className="rounded-full bg-teal w-2 h-2 absolute -left-1 top-1/2 -translate-y-1/2"></div>
+                                    <div className="flex justify-between space-x-2 items-center flex-1 ml-2">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:renews_at')}:</div>
+                                        <div className="font-semibold text-right">{formatDateTime(endAt)}</div>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>

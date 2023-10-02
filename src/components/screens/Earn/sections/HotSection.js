@@ -13,8 +13,18 @@ const HotSection = ({ pools }) => {
         centered: true,
         loop: true,
         spacing: 16,
-        slideChanged: (slide) => setActiveItem(slide.details().relativeSlide)
-
+        slideChanged: (slide) => setActiveItem(slide.details().relativeSlide),
+        breakpoints: {
+            '(max-width: 992px)': {
+                slidesPerView: 2
+            },
+            '(max-width: 768px)': {
+                slidesPerView: 1.5
+            },
+            '(max-width: 480px)': {
+                slidesPerView: 1
+            }
+        }
     });
     const { t } = useTranslation();
 

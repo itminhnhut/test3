@@ -24,7 +24,7 @@ const Earn = ({ pool_list, hotPools, assetList, rewardList }) => {
 
 export const getServerSideProps = async (ctx) => {
     const { locale } = ctx;
-    await i18n.reloadResources(locale, ['common', 'navbar', 'earn']);
+    await i18n.reloadResources(locale, ['common', 'navbar', 'earn', 'wallet']);
 
     const hotPools = [];
     const pool_list = [];
@@ -90,7 +90,7 @@ export const getServerSideProps = async (ctx) => {
 
     return {
         props: {
-            ...(await serverSideTranslations(locale, ['common', 'navbar', 'earn'])),
+            ...(await serverSideTranslations(locale, ['common', 'navbar', 'earn', 'wallet'])),
             hotPools,
             pool_list,
             assetList: Object.keys(assetMap),

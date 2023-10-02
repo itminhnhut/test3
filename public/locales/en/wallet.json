@@ -163,11 +163,50 @@
         "cancelled_notice": "Cancelled {{ action }} Order#{{ id }}",
         "cancel_failure": "Can not cancel {{ action }} Order#{{ id }}, Please contact to support for information."
     },
+    "my_assets": "My assets",
     "earn_table": {
         "redeem_history": "Redeem History",
         "earning": "{{ action }}",
         "accruing_interest": "Accruing Interest",
         "apy": "Annual Interest Rate (APY)"
+    },
+    "earn_wallet": {
+        "pool_list": "Pool list",
+        "table": {
+            "coin": "Coin",
+            "apr": "Estimated APR",
+            "period": "Period",
+            "amount": "Amount",
+            "action": "Action",
+            "no_data": "No asset found",
+            "receive": "Receive",
+            "transactions": "transactions",
+            "transaction": "transaction",
+            "order_detail": "Order detail"
+        },
+        "position": {
+            "title": "Order detail",
+            "description": "Deposit {{asset}} to earn {{reward}}",
+            "apr": "APR",
+            "period": "Period",
+            "estimated_profit": "Estimated profit",
+            "unclaimed_profit": "Unclaimed profit",
+            "unclaimed_tooltip": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsa nesciunt ex",
+            "non_renewal": "Non-renewal",
+            "suspending": "Suspending",
+            "renewal": "Auto subcription",
+            "subcribed_at": "Subcribed at",
+            "profited_at": "Profited at",
+            "renew_at": "Renew at",
+            "auto_renew": "Auto subcribe",
+            "auto_renew_tooltip": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsa nesciunt ex quidem nam in ad at possimus! Optio, ipsa accusamus est quae vitae id fugit suscipit similique, consequatur ducimus voluptate.",
+            "suspending_desc": "You could not perform any earn action from {{from}} to {{to}} everyday due to system suspend.",
+            "claim": "Claim",
+            "claim_success": "Claimed reward success",
+            "redeem": "Redeem",
+            "redeem_success": "Redeem assets success",
+            "error": "Something went wrong, try again later!"
+        }
     },
     "futures_overview": "Trading Futures with leverage up to X125.<br/>Transfer funds to your Nami Futures Wallet to start trading.",
     "nao_overview": "Trading Futures with leverage up to x125.<br/>Transfer funds to your NAO Futures Wallet to start trading.",

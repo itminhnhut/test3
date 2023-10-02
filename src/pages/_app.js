@@ -11,11 +11,11 @@ import { getFuturesConfigs } from 'redux/actions/futures';
 import { getAssetConfig, getExchangeConfig, getUsdRate } from 'redux/actions/market';
 import { getPaymentConfigs } from 'redux/actions/payment';
 import { SET_LOADING_USER, SET_USD_RATE } from 'redux/actions/types';
-import { getWallet, setTheme } from 'redux/actions/user';
+import { getUserEarnBalance, getWallet, setTheme } from 'redux/actions/user';
 import Head from 'src/components/common/Head';
 import Tracking from 'src/components/common/Tracking';
 import initPublicSocket from 'src/redux/actions/publicSocket';
-import { getMe, getUserFuturesBalance, getVip, getUserPartnersBalance, getBalance } from 'src/redux/actions/user';
+import { getMe, getUserFuturesBalance, getVip, getUserPartnersBalance, getBalance } from 'redux/actions/user';
 import initUserSocket from 'src/redux/actions/userSocket';
 import { useStore } from 'src/redux/store';
 import 'src/styles/app.scss';
@@ -204,6 +204,7 @@ const App = ({ Component, pageProps }) => {
                 }
                 store.dispatch(getUserFuturesBalance(router.pathname.includes('mobile')));
                 store.dispatch(getUserPartnersBalance());
+                store.dispatch(getUserEarnBalance()); // wallet EARN
                 store.dispatch(getBalance(9, WalletType.NAO_FUTURES)); // wallet NAO FUTURES
                 store.dispatch(getBalance(10, WalletType.INSURANCE)); // wallet INSURANCE
             }
