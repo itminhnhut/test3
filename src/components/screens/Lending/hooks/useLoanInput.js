@@ -2,13 +2,14 @@ import React, { useMemo } from 'react';
 import useCollateralPrice from './useCollateralPrice';
 import { COLLATERAL, LOANABLE } from '../constants';
 import { ceilByExactDegit, formatNumber, roundByExactDigit } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
 
 const calcCollateralAmount = ({ loanAmount, initLTV, collateralToLoanPrice, digit = 0 }) => loanAmount / initLTV / collateralToLoanPrice;
 const calcLoanAmount = ({ collateralAmount, initLTV, collateralToLoanPrice }) => collateralAmount * initLTV * collateralToLoanPrice;
 
 const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typingField, initialLTV, collateralAvailable, refetch }) => {
     const { data: collateralPrice } = useCollateralPrice({ collateralAssetCode: collateral?.assetCode, loanableAssetCode: loanable?.assetCode, refetch });
-
+    const { t } = useTranslation();
     const isTypingLoanField = typingField === LOANABLE;
 
     const loanAmount = calcLoanAmount({
@@ -74,7 +75,7 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
                     return {
                         isValid: false,
                         isError: true,
-                        msg: `Số lượng muốn thế chấp vượt quá số dư`
+                        msg: t('lending:lending.modal.input_description.insufficient_balance')
                     };
                 }
 

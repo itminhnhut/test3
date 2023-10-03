@@ -3,22 +3,23 @@ import { useCallback, useState, useMemo, useEffect } from 'react';
 // ** Next
 import dynamic from 'next/dynamic';
 import { useTranslation, Trans } from 'next-i18next';
+import Link from 'next/link';
 
 // * Context
 import { useLoanableList, useCollateralList } from 'components/screens/Lending/Context';
 
 // ** Redux
-import { PublicSocketEvent, WalletType } from 'redux/actions/const';
-import { useSelector, useDispatch } from 'react-redux';
-import { formatNumber, getLoginUrl, roundByExactDigit, setTransferModal } from 'redux/actions/utils';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
+import AuthSelector from 'redux/selectors/authSelectors';
 
 //** components
 import Chip from 'components/common/V2/Chip';
 import Tooltip from 'components/common/Tooltip';
 import CheckBox from 'components/common/CheckBox';
 import ModalV2 from 'components/common/V2/ModalV2';
-import InputV2 from 'components/common/V2/InputV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import TradingInputV2 from 'components/trade/TradingInputV2';
 
 // ** svg
 import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
@@ -29,6 +30,10 @@ import classNames from 'classnames';
 // ** Dynamic
 const ModalConfirmLoan = dynamic(() => import('./ConfirmLoan'), { ssr: false });
 const AssetLendingFilter = dynamic(() => import('components/screens/Lending/components/AssetLendingFilter'), { ssr: false });
+
+// ** Custom hooks
+import useRegisterLoan from '../../hooks/useRegisterLoan';
+import useLoanInput from '../../hooks/useLoanInput';
 
 // ** CONSTANTS
 import {
@@ -44,11 +49,12 @@ import {
     REGISTER_HANDLE_TYPE
 } from 'components/screens/Lending/constants';
 
-import TradingInputV2 from 'components/trade/TradingInputV2';
-import useRegisterLoan from '../../hooks/useRegisterLoan';
-import useLoanInput from '../../hooks/useLoanInput';
-import { createSelector } from 'reselect';
-import AuthSelector from 'redux/selectors/authSelectors';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+
+// ** UTILS
+import { dwLinkBuilder, formatNumber, getLoginUrl } from 'redux/actions/utils';
+import { getSpotAvailable } from '../../utils/selector';
 
 // ** INIT DATA
 const INIT_DATA = {
@@ -64,19 +70,11 @@ const INIT_DATA = {
     loanInput: ''
 };
 
-const getSpotAvailable = createSelector([(state) => state.wallet?.SPOT, (utils, params) => params], (wallet, params) => {
-    const _avlb = wallet?.[params.assetId];
-    return _avlb ? Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0) : 0;
-});
-
 const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     const {
         t,
         i18n: { language }
     } = useTranslation();
-
-    // ** useRedux
-    const dispatch = useDispatch();
 
     const assetConfig = useSelector((state) => state.utils.assetConfig) || [];
     const isAuth = useSelector(AuthSelector.isAuthSelector);
@@ -313,16 +311,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                     return { left: 32, top };
                 }}
             >
-                <>
-                    <div>
-                        Mỗi thời hạn vay có thời gian trả chậm cho phép, phí trả chậm trong trường hợp này bằng 3 lần lãi vay. Thời gian trả chậm cho phép:
-                    </div>
-                    <ul className="list-disc px-4">
-                        <li>Kỳ hạn 7 ngày: Trả chậm tối đa 72h</li>
-                        <li>Kỳ hạn 30 ngày: Trả chậm tối đa 168h</li>
-                    </ul>
-                    <div>Nếu vượt quá thời gian trả chậm cho phép, sàn sẽ thanh lý tài sản ký quỹ của user với phí thanh lý là 2% của tổng dư nợ.</div>
-                </>
+                <div dangerouslySetInnerHTML={{ __html: t('lending:lending.modal.loan_term_description') }} />
             </Tooltip>
         );
     };
@@ -405,17 +394,17 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                 <section>
                     {renderTooltip()}
                     {renderTooltipLTV()}
-                    <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Tạo lệnh vay</p>
+                    <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{t('lending:lending.modal.title')} </p>
                     <section className="mt-6">
                         <TradingInputV2
                             clearAble
-                            label="Tôi muốn vay"
+                            label={t('lending:lending.modal.loan_input.label')}
                             labelClassName="font-semibold inline-block !text-base !text-txtPrimary dark:!text-txtPrimary-dark"
                             thousandSeparator={true}
                             decimalScale={filter?.loanable?.assetDigit}
                             errorTooltip={false}
                             inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
-                            placeholder="Nhập số lượng tài sản bạn muốn vay"
+                            placeholder={t('lending:lending.modal.loan_input.placeholder')}
                             validator={validator[LOANABLE]()}
                             value={loanValue}
                             onValueChange={({ value }) => {
@@ -434,32 +423,34 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                             }
                             textDescription={
                                 <span>
-                                    Tối thiểu: {formatNumber(filter.loanable?.config?.minLimit, filter.loanable?.assetDigit)} . Tối đa:
-                                    {formatNumber(filter.loanable?.config?.maxLimit, filter.loanable?.assetDigit)}
+                                    {t('lending:lending.modal.input_description.min_max', {
+                                        min: formatNumber(filter.loanable?.config?.minLimit, filter.loanable?.assetDigit),
+                                        max: formatNumber(filter.loanable?.config?.maxLimit, filter.loanable?.assetDigit)
+                                    })}
                                 </span>
                             }
                         />
                     </section>
                     <section className="mt-8">
                         <section className="flex flex-row justify-between mb-2 text-txtPrimary  dark:text-txtPrimary-dark">
-                            <div className="font-semibold">Số lượng ký quỹ</div>
+                            <div className="font-semibold">{t('lending:lending.modal.collateral_input.label')}</div>
                             <section className="flex text-sm flex-row gap-1 items-center">
                                 <div className="space-x-1">
-                                    <span className="dark:text-txtSecondary-dark text-txtSecondary">Khả dụng:</span>
+                                    <span className="dark:text-txtSecondary-dark text-txtSecondary">{t('common:available_balance')}</span>
                                     <span className="font-semibold ">
                                         {formatNumber(collateralAvailable, filter.collateral?.assetDigit) || '-'} {filter.collateral?.assetCode}
                                     </span>
                                 </div>
-                                <AddCircleColorIcon
-                                    size={16}
-                                    onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }))}
-                                    className="cursor-pointer"
-                                />
+                                <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, filter.collateral?.assetCode)} passHref>
+                                    <a className="inline-block">
+                                        <AddCircleColorIcon size={16} className="cursor-pointer" />
+                                    </a>
+                                </Link>
                             </section>
                         </section>
                         <TradingInputV2
                             clearAble
-                            placeholder="Nhập số lượng tài sản đảm bảo"
+                            placeholder={t('lending:lending.modal.collateral_input.placeholder')}
                             thousandSeparator={true}
                             decimalScale={filter?.collateral?.assetDigit}
                             inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
@@ -481,8 +472,10 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                             }
                             textDescription={
                                 <span>
-                                    Tối thiểu: {formatNumber(minCollateralAmount, filter.collateral?.assetDigit)} . Tối đa:
-                                    {formatNumber(filter.collateral?.config?.maxLimit, filter.collateral?.assetDigit)}
+                                    {t('lending:lending.modal.input_description.min_max', {
+                                        min: formatNumber(minCollateralAmount, filter.collateral?.assetDigit),
+                                        max: formatNumber(filter.collateral?.config?.maxLimit, filter.collateral?.assetDigit)
+                                    })}
                                 </span>
                             }
                             onFocus={() => setState({ typingField: COLLATERAL })}
@@ -492,9 +485,9 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                         <div
                             data-tip=""
                             data-for="loan_term"
-                            className="dark:text-gray-4 text-gray-15 border-b border-darkBlue-5 border-dashed cursor-pointer w-max mt-8"
+                            className="dark:text-gray-4 font-semibold text-gray-15 border-b border-darkBlue-5 border-dashed cursor-pointer w-max mt-8"
                         >
-                            Thời hạn vay
+                            {t('lending:lending.modal.loan_term')}
                         </div>
                         <section className="flex flex-row gap-4 w-max mt-4">
                             {BORROWING_TERM.map((term) => {
