@@ -57,8 +57,10 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose }) => {
     } = useTranslation();
 
     const dispatch = useDispatch();
-    const { assetByCode } = getAssetConfig();
-    // const debouncePercentage = useDebounce()
+    const assetConfig = useSelector((state) => state.utils.assetConfig) || [];
+    const assetByCode = useMemo(() => {
+        return assetConfig?.length && assetConfig.reduce((prevObj, asset) => ({ ...prevObj, [asset?.assetCode]: asset }), {});
+    }, [assetConfig]);
 
     const { totalDebt, initialLTV, totalCollateralAmount, collateralCoin, loanCoin, price: collateralPriceToLoanCoin, _id: loanId } = dataCollateral;
 

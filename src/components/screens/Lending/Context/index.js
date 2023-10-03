@@ -195,9 +195,7 @@ const getAssetConfig = () => {
         [{}]
     );
 
-    const assetByCode = context?.assetConfig?.reduce((prevObj, asset) => ({ ...prevObj, [asset?.assetCode]: asset }), {});
-
-    return { assetConfig: context?.assetConfig, assetById, assetByCode };
+    return { assetConfig: context?.assetConfig, assetById };
 };
 
 export { LendingContext, LendingProvider, useLoanableList, useCollateralList, useAuth, useAssets, getAssetConfig, usePairPrice, getNewPairPrice };
