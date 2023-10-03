@@ -51,7 +51,7 @@ const DebtInfor = ({
             <section className="flex flex-row justify-between ">
                 <div className="text-txtSecondary dark:text-txtSecondary-dark">Số lượng cần trả</div>
                 <div className="font-semibold">
-                    {formatNumber(repayAmount, isLoanRepay ? loanCoinDigit : collateralCoinDigit)} {isLoanRepay ? loanCoin : collateralCoin}
+                    {formatNumber(repayAmount || 0, isLoanRepay ? loanCoinDigit : collateralCoinDigit)} {isLoanRepay ? loanCoin : collateralCoin}
                 </div>
             </section>
         </section>

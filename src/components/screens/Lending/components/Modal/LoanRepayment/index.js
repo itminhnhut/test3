@@ -27,6 +27,7 @@ import useRepayLoan from 'components/screens/Lending/hooks/useRepayLoan';
 import { getCurrentLTV, getReceiveCollateral } from 'components/screens/Lending/utils';
 import { PERCENT } from 'components/screens/Lending/constants';
 import PercentageInput from './PercentageInput';
+import ModalCancelLoanRepayment from './CancelLoanRepayment';
 
 export const REPAY_TAB = {
     LOAN: 'loan',
@@ -47,10 +48,11 @@ const INIT_STATE = {
     },
     typingField: INPUT_FIELD.PERCENTAGE,
     tab: REPAY_TAB.LOAN,
-    isShowConfirm: false
+    isShowConfirm: false,
+    isShowConfirmCancel: false
 };
 
-const LoanRepayment = ({ dataCollateral, isOpen, onClose }) => {
+const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal }) => {
     const {
         t,
         i18n: { language }
@@ -78,7 +80,6 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose }) => {
 
     // neu user su dung input = percentage thi amount repay phai * percentage de lay so du so thap phan!
     const repayInLoanAmount = isTypingAmountField ? state.input.amount : totalDebt * (state.input.percentage / PERCENT);
-    const percentageValue = isTypingAmountField ? ((state.input.amount || 0) / totalDebt) * PERCENT : state.input.percentage;
 
     // amount repay in loanCoin and collateralCoin
     const repayAmount = {
@@ -175,7 +176,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose }) => {
     const handleToggleConfirmModal = () => setState({ isShowConfirm: !state.isShowConfirm });
 
     const onChangeRepayTypeHandler = (newTab) => {
-        setState({ tab: newTab, input: INIT_STATE.input });
+        setState({ tab: newTab });
     };
 
     const onHandleAddMoreBalance = () => {
@@ -210,6 +211,15 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose }) => {
         };
     }, [loanCoinAvailable, repayInLoanAmount, isLoanRepay]);
 
+    const onHandleCloseRepaymentModal = (forceClose = false) => {
+        if (!forceClose && +repayInLoanAmount > 0) {
+            setState({ isShowConfirmCancel: true });
+            return;
+        }
+        setState(INIT_STATE);
+        onCloseRepaymentModal();
+    };
+
     const isDisableRepayButton = !repayInLoanAmount || +repayInLoanAmount === 0 || validator.isError;
 
     return (
@@ -217,16 +227,13 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose }) => {
             <ModalV2
                 isVisible={isOpen}
                 className="w-[800px] overflow-auto no-scrollbar"
-                onBackdropCb={() => {
-                    onClose();
-                    setState(INIT_STATE);
-                }}
+                onBackdropCb={onHandleCloseRepaymentModal}
                 wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
                 customHeader={() => (
                     <div className="flex justify-end mb-6">
                         <div
                             className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
-                            onClick={onClose}
+                            onClick={onHandleCloseRepaymentModal}
                         >
                             <IconClose />
                         </div>
@@ -301,6 +308,8 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose }) => {
                                     onHandlerInputChange('percentage', value);
                                     setState({ typingField: 'percentage' });
                                 }}
+                                isTypingAmountField={isTypingAmountField}
+                                percentageFormat={(state.input.amount || 0) / totalDebt}
                             />
                         </section>
                     </section>
@@ -313,12 +322,18 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose }) => {
                 </ButtonV2>
             </ModalV2>
 
+            <ModalCancelLoanRepayment
+                isOpen={state.isShowConfirmCancel}
+                onClose={() => setState({ isShowConfirmCancel: false })}
+                onConfirm={() => onHandleCloseRepaymentModal(true)}
+            />
+
             <ModalConfirmLoanRepayment
                 repaymentData={repaymentDataProps}
                 repayLoan={onRepayHandler}
                 isModal={state.isShowConfirm}
                 onClose={handleToggleConfirmModal}
-                onCloseMainModal={onClose}
+                onCloseMainModal={onCloseRepaymentModal}
             />
         </>
     );
