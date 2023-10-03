@@ -90,21 +90,21 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     };
 
     // ** useState
-    const [isLoadRepaymentModal, setIsLoadRepaymentModal] = useState(INIT_DATA.isModal);
-
+    const [isOpenRepaymentModal, setIsOpenRepaymentModal] = useState(INIT_DATA.isModal);
     const [copied, setCopied] = useState(false);
 
-    // ** handle
+    // ** handle modal
     const handleToggleAdjustModal = ({ id, collateralAsset }) => {
         handleLoanOrderDetail(id, collateralAsset);
         dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN });
     };
     const onOpenRepayment = ({ id, collateralAsset }) => {
-        handleLoanOrderDetail(id, collateralAsset);
         setIsOpenRepaymentModal(true);
+        handleLoanOrderDetail(id, collateralAsset);
     };
-    const onCloseRepayment = () => setIsOpenRepaymentModal(false);
 
+    // ** handle modal
+    const onCloseRepayment = () => setIsOpenRepaymentModal((prev) => !prev);
     const handleCloseAdjustModal = () => {
         if (state.amount > 0) {
             dispatchReducer({ type: actions.TOGGLE_MODAL_CANCEL, isCancel: true, isAdjust: false });
