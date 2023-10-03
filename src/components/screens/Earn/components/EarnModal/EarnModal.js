@@ -13,7 +13,7 @@ import { WalletCurrency, formatNumber } from 'utils/reference-utils';
 import CheckBox from 'components/common/CheckBox';
 import Button from 'components/common/V2/ButtonV2/Button';
 import FetchApi from 'utils/fetch-api';
-import { API_DEPOSIT_EARN, API_GET_MARKET_WATCH } from 'redux/actions/apis';
+import { API_DEPOSIT_EARN, API_GET_MARKET_WATCH, API_GET_USD_RATE } from 'redux/actions/apis';
 import toast from 'utils/toast';
 import useQuery from 'hooks/useQuery';
 import { useRouter } from 'next/router';
@@ -74,38 +74,25 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
             const { value = 0, locked_value = 0 } = userAsset;
             return value - locked_value;
         }) || 0;
-    const { data: spotList } = useQuery([API_GET_MARKET_WATCH], async () => {
+    const { data: usdRate } = useQuery([API_GET_USD_RATE], async () => {
         const { data } = await FetchApi({
-            url: API_GET_MARKET_WATCH
+            url: API_GET_USD_RATE
         });
+        if (data) {
+            data[39] = data[72];
+        }
         return data;
     });
     const quote = useMemo(() => {
-
-        const serverQuotes = ['VNDC', 'VNST', 'USDT'];
         if (asset === rewardAsset) {
             return 1;
         }
 
-        // const isBaseStabled = serverQuotes.includes(asset);
-        // const isQuoteStabled = serverQuotes.includes(rewardAsset);
+        const assetPrice = usdRate?.[WalletCurrency[asset]] || 0;
+        const rewardPrice = usdRate?.[WalletCurrency[rewardAsset]] || 0;
 
-        // if (isBaseStabled && isQuoteStabled && asset !== 'USDT' && rewardAsset !== 'USDT') {
-        //     return 1
-        // }
-
-        // if (serverQuotes.includes(asset)) {
-        //     const tokenPair = spotList?.find((pair) => {
-        //         return pair.b === asset && pair.q === 'VNDC';
-        //     });
-        //     return tokenPair?.p || 0;
-        // }
-
-        const tokenPair = spotList?.find((pair) => {
-            return pair.b === asset && pair.q === rewardAsset;
-        });
-        return tokenPair?.p || 0;
-    }, [spotList, asset, rewardAsset]);
+        return rewardPrice === 0 ? 1 : assetPrice / rewardPrice;
+    }, [usdRate, asset, rewardAsset]);
     const router = useRouter();
 
     const poolLoad = +((accumulatedAmount * 100) / totalSupply).toFixed(2);

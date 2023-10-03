@@ -82,7 +82,7 @@ const SuccessModal = ({ onClose, pool, estimatedReward, depositAmount, autoRenew
 
             <div className="h-10"></div>
             <Button className="w-full" onClick={goToWallet}>
-                {t('earn:deposit_modal:confirm')}
+                {t('earn:deposit_modal:go_to_wallet')}
             </Button>
         </ModalV2>
     );
