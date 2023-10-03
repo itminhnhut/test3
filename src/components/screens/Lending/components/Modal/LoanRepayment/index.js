@@ -26,6 +26,7 @@ import RepaymentInformation from './RepaymentInformation';
 import useRepayLoan from 'components/screens/Lending/hooks/useRepayLoan';
 import { getCurrentLTV, getReceiveCollateral } from 'components/screens/Lending/utils';
 import { PERCENT } from 'components/screens/Lending/constants';
+import PercentageInput from './PercentageInput';
 
 export const REPAY_TAB = {
     LOAN: 'loan',
@@ -56,8 +57,10 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose }) => {
     } = useTranslation();
 
     const dispatch = useDispatch();
-    const { assetByCode } = getAssetConfig();
-    // const debouncePercentage = useDebounce()
+    const assetConfig = useSelector((state) => state.utils.assetConfig) || [];
+    const assetByCode = useMemo(() => {
+        return assetConfig?.length && assetConfig.reduce((prevObj, asset) => ({ ...prevObj, [asset?.assetCode]: asset }), {});
+    }, [assetConfig]);
 
     const { totalDebt, initialLTV, totalCollateralAmount, collateralCoin, loanCoin, price: collateralPriceToLoanCoin, _id: loanId } = dataCollateral;
 
@@ -207,7 +210,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose }) => {
         };
     }, [loanCoinAvailable, repayInLoanAmount, isLoanRepay]);
 
-    const isDisableRepayButton = !repayInLoanAmount || validator.isError;
+    const isDisableRepayButton = !repayInLoanAmount || +repayInLoanAmount === 0 || validator.isError;
 
     return (
         <>
@@ -292,14 +295,10 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose }) => {
                                     onFocus={() => setState({ typingField: 'amount' })}
                                 />
                             </div>
-                            <InputSlider
-                                axis="x"
-                                labelSuffix="%"
-                                useLabel
-                                positionLabel="top"
-                                x={percentageValue}
-                                onChange={({ x }) => {
-                                    onHandlerInputChange('percentage', x);
+                            <PercentageInput
+                                tab={state.tab}
+                                onHandlerInputChange={(value) => {
+                                    onHandlerInputChange('percentage', value);
                                     setState({ typingField: 'percentage' });
                                 }}
                             />

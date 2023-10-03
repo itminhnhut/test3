@@ -56,7 +56,7 @@ const ConfirmLoanRepayment = ({ repaymentData, isModal, onClose, onCloseMainModa
         try {
             const repayResponse = await repayLoan();
             if (repayResponse?.message === ApiStatus.SUCCESS || repayResponse?.data) {
-                onClose()
+                onClose();
                 onCloseMainModal();
                 setTimeout(() => handleToggleModal(), 250);
                 setRepayData(repayResponse?.data);
@@ -112,7 +112,16 @@ const ConfirmLoanRepayment = ({ repaymentData, isModal, onClose, onCloseMainModa
             </ModalV2>
             <AlertModalV2
                 onConfirm={() => {
-                    router.push('/lending');
+                    router.replace(
+                        {
+                            pathname: router.pathname,
+                            query: {
+                                tab: 'history',
+                                action: ''
+                            }
+                        },
+                        undefined
+                    );
                 }}
                 textButton="Xem lịch sử thanh toán"
                 message="Trả khoản vay thành công"
