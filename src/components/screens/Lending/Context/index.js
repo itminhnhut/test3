@@ -97,10 +97,8 @@ const LendingProvider = ({ children }) => {
         handleLoanAsset();
     }, [auth]);
 
-    const value = useMemo(
-        () => ({ loanAsset, assetConfig, auth, pairPrice, handlePairPrice, state, dispatchReducer }),
-        [loanAsset, assetConfig, auth, pairPrice, state]
-    );
+    const cache_value = useMemo(() => true, [useMemoizeArgs(loanAsset), useMemoizeArgs(assetConfig), useMemoizeArgs(auth), useMemoizeArgs(pairPrice)]);
+    const value = useMemo(() => ({ loanAsset, assetConfig, auth, pairPrice, handlePairPrice, state, dispatchReducer }), [cache_value]);
 
     return <LendingContext.Provider value={value}>{children}</LendingContext.Provider>;
 };
@@ -195,9 +193,7 @@ const getAssetConfig = () => {
         [{}]
     );
 
-    const assetByCode = context?.assetConfig?.reduce((prevObj, asset) => ({ ...prevObj, [asset?.assetCode]: asset }), {});
-
-    return { assetConfig: context?.assetConfig, assetById, assetByCode };
+    return { assetConfig: context?.assetConfig, assetById };
 };
 
 export { LendingContext, LendingProvider, useLoanableList, useCollateralList, useAuth, useAssets, getAssetConfig, usePairPrice, getNewPairPrice };

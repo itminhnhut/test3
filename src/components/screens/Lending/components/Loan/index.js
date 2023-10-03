@@ -58,9 +58,11 @@ const Loan = () => {
         i18n: { language }
     } = useTranslation();
 
+    // ** useRedux
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
+
     // ** useContext
     const isAuth = useAuth();
-    const { assetConfig } = getAssetConfig();
     const { dispatchReducer, state } = useContext(LendingContext);
 
     const isRefetch = state.isRefetch;
