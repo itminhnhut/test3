@@ -1,11 +1,10 @@
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 // ** NEXT
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 
 // ** components
-import AssetLogo from 'components/wallet/AssetLogo';
 import SelectV2 from 'components/common/V2/SelectV2';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -16,28 +15,15 @@ import { useAssets } from 'components/screens/Lending/Context';
 
 // ** svg
 import { CheckCircleIcon } from 'components/svg/SvgIcon';
-import Copy from 'components/svg/Copy';
 
 // ** Hooks
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
-// ** Redux
-import { formatNumber, formatTime } from 'redux/actions/utils';
-import { useSelector } from 'react-redux';
-
-// ** Utils
-import { substring } from 'utils';
-
 // ** Third party
-import { Check } from 'react-feather';
 import { useWindowSize } from 'react-use';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import colors from 'styles/colors';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-
-// ** Constants
-import { PERCENT, YEAR, LOAN_HISTORY_STATUS, HOUR } from 'components/screens/Lending/constants';
 
 // ** Dynamic
 const AssetFilter = dynamic(() => import('components/screens/Lending/components/AssetFilter', { ssr: false }));
@@ -57,8 +43,6 @@ const INIT_DATA = {
     }
 };
 
-// const substring = (str, start = 10, end = -4) => (String(str).length > 10 ? `${String(str).substr(0, start)}...${String(str).substr(end)}` : str);
-
 const DISABLE_STATUS = ['reject', 'repay', 'adjust'];
 
 const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, configFilter, onReset }) => {
@@ -72,9 +56,6 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
 
     const { width } = useWindowSize();
     const isMobile = width < 830;
-
-    // ** useRedux
-    const assetConfig = useSelector((state) => state.utils.assetConfig);
 
     // ** useContext
     const { assetLoanable, assetCollateral } = useAssets();
@@ -192,85 +173,6 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
         });
     };
 
-    const handleTotalAsset = (data, asset) => {
-        const symbol = assetConfig.find((f) => f.assetCode === asset) || {};
-        const total = formatNumber(data || 0, symbol?.assetDigit, 0, true);
-        return { total: total, symbol: symbol };
-    };
-
-    const renderContentTabAdjust = (value) => {
-        const { _id, orderId, metadata, detail, collateralCoin } = value;
-
-        const totalCollateralAmount = detail?.totalCollateralAmount;
-        const LTV = detail?.LTV;
-
-        const initialCollateral = handleTotalAsset(totalCollateralAmount?.from, collateralCoin);
-        const adjustCollateral = handleTotalAsset(totalCollateralAmount?.to, collateralCoin);
-
-        const type = metadata?.payment?.amount < 0 ? 'Bớt ký quỹ' : 'Thêm ký quỹ';
-
-        return (
-            <section className="flex flex-row gap-6 py-4">
-                <WrapperSection className=" whitespace-nowrap">
-                    <div>ID khoản vay</div>
-                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
-                        <div>#{substring(orderId)}</div>
-                        <CopyToClipboard onCopy={onCopy} text={orderId} className="cursor-pointer inline-block">
-                            {copied === orderId ? <Check size={16} color={colors.teal} /> : <Copy />}
-                        </CopyToClipboard>
-                    </div>
-                </WrapperSection>
-                <WrapperSection className="min-w-[162px] whitespace-nowrap">
-                    <div>ID lệnh ký quỹ</div>
-                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
-                        <div>#{substring(_id)}</div>
-                        <CopyToClipboard onCopy={onCopy} text={_id} className="cursor-pointer inline-block">
-                            {copied === _id ? <Check size={16} color={colors.teal} /> : <Copy />}
-                        </CopyToClipboard>
-                    </div>
-                </WrapperSection>
-                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 min-w-[162px] whitespace-nowrap">
-                    <div>Loại ký quỹ</div>
-                    <div className="dark:text-green-2 text-green-3 font-semibold">{type}</div>
-                </section>
-
-                <section className="flex flex-row items-center gap-2 min-w-[204px]">
-                    <AssetLogo assetId={initialCollateral.symbol.id} />
-                    <section className="dark:text-gray-7 text-gray-1">
-                        <div>Ký quỹ ban đầu</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
-                            {initialCollateral.total} {initialCollateral.symbol.assetCode}
-                        </div>
-                    </section>
-                </section>
-
-                <section className="flex flex-row items-center gap-2 min-w-[204px]">
-                    <AssetLogo assetId={adjustCollateral.symbol.id} />
-                    <section className="dark:text-gray-7 text-gray-1">
-                        <div>Ký quỹ ban đầu</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
-                            {adjustCollateral.total} {adjustCollateral.symbol.assetCode}
-                        </div>
-                    </section>
-                </section>
-
-                <section className="flex flex-row items-center gap-2 min-w-[204px]">
-                    <section className="dark:text-gray-7 text-gray-1">
-                        <div>LTV trước điều chỉnh</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">{(LTV?.from * PERCENT).toFixed(0)}%</div>
-                    </section>
-                </section>
-
-                <section className="flex flex-row items-center gap-2 min-w-[204px]">
-                    <section className="dark:text-gray-7 text-gray-1">
-                        <div>LTV sau điều chỉnh</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">{(LTV?.to * PERCENT).toFixed(0)}%</div>
-                    </section>
-                </section>
-            </section>
-        );
-    };
-
     const templateContent = {
         loan: (value) => <TemplateLoanContent value={value} onCopy={onCopy} copied={copied} />,
         adjust: (value) => <TemplateAdjustContent value={value} onCopy={onCopy} copied={copied} />,
@@ -327,10 +229,6 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
 
     return <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">{renderTable()}</section>;
 };
-
-const WrapperSection = styled.section.attrs(({ className }) => ({
-    className: classNames('flex flex-col justify-center dark:text-gray-7 text-gray-1', className)
-}))``;
 
 const WrapperTable = styled(TableV2).attrs(({ ...props }) => ({
     className: classNames(props)
