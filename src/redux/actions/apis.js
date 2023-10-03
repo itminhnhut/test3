@@ -405,3 +405,4 @@ export const API_DEPOSIT_CRYPTO = API_V3_PREFIX + 'payment/transfer-off-chain';
 export const GOOGLE_OAUTH_CALLBACK = API_V3_PREFIX + 'auth/callback/google';
 
 export const API_GET_COUNTRY = API_PREFIX + 'user/country';
+export const API_BLOG_FUTURES = API_PREFIX + 'blog/futures';

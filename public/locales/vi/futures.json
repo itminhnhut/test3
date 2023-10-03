@@ -21,7 +21,7 @@
         "contracts": "Hợp đồng",
         "difference": "Giới hạn khoảng cách tối thiểu",
         "difference_description": "Khoảng cách tuyệt đối gần nhất mà tài sản được hỗ trợ bảo hiểm đối với hợp đồng Bull và Bear",
-        "min_margin":"Q-Cover tối thiểu/tối đa",
+        "min_margin": "Q-Cover tối thiểu/tối đa",
         "min_max_margin_ratio": "Tỷ lệ ký quỹ tối thiểu/tối đa",
         "min_max_margin_ratio_description": "Giá trị ký quỹ = Tỷ lệ ký quỹ x Q-Cover",
         "condition_buy_cover": "Vị thế không đủ điều kiện được hỗ trợ bảo hiểm. Xem thêm quy định giao dịch",
@@ -560,5 +560,7 @@
         "save": "Lưu cài đặt",
         "futures_fee": "Phí {{value}} Futures"
     },
-    "trading_rules_tooltip": "Áp dụng cho cả NAMI Futures và NAO Futures"
+    "trading_rules_tooltip": "Áp dụng cho cả NAMI Futures và NAO Futures",
+    "read_more": "Tìm hiểu thêm",
+    "close_all_blog": "Đóng tất cả"
 }

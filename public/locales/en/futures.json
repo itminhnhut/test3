@@ -558,5 +558,7 @@
         "save": "Save",
         "futures_fee": "{{value}} Futures fee"
     },
-    "trading_rules_tooltip": "Applies to both NAMI Futures and NAO Futures"
+    "trading_rules_tooltip": "Applies to both NAMI Futures and NAO Futures",
+    "read_more": "Read more",
+    "close_all_blog": "Close all"
 }
