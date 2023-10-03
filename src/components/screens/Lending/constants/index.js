@@ -104,6 +104,7 @@ const STATUS_EN = [
 ];
 
 const HOUR = 24;
+const LIMIT = 10;
 const YEAR = 365;
 const PERCENT = 100;
 const MILLISECOND = 1;
@@ -112,6 +113,7 @@ const LOANABLE = 'loanable';
 const COLLATERAL = 'collateral';
 const DEFAULT_LOANABLE_ASSET = 'VNST';
 const DEFAULT_COLLATERAL_ASSET = 'BNB';
+const FORMAT_HH_MM_SS = 'HH:mm:ss dd/MM/yyyy';
 const ALLOW_LTV_TOOLTIP = ['ltv_initial', 'ltv_margin', 'ltv_liquidate'];
 
 const LOAN_HISTORY_STATUS = {
@@ -132,6 +134,7 @@ export {
     LTV,
     HOUR,
     YEAR,
+    LIMIT,
     TABS,
     PERCENT,
     INTEREST,
@@ -143,9 +146,10 @@ export {
     STATUS_CODE,
     HISTORY_TAB,
     BORROWING_TERM,
+    FORMAT_HH_MM_SS,
     ALLOW_LTV_TOOLTIP,
     LOAN_HISTORY_STATUS,
+    REGISTER_HANDLE_TYPE,
     DEFAULT_LOANABLE_ASSET,
-    DEFAULT_COLLATERAL_ASSET,
-    REGISTER_HANDLE_TYPE
+    DEFAULT_COLLATERAL_ASSET
 };

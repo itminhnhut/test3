@@ -17,7 +17,7 @@ import FetchApi from 'utils/fetch-api';
 import { formatNumber } from 'src/redux/actions/utils';
 
 // ** Constants
-import { STATUS_CODE } from 'components/screens/Lending/constants';
+import { LIMIT, STATUS_CODE } from 'components/screens/Lending/constants';
 
 // ** Hooks
 import useMemoizeArgs from 'hooks/useMemoizeArgs';
@@ -48,7 +48,7 @@ const initState = {
     page: 1,
     loading: false,
     overview: { currency: 'USD' },
-    loan: { status: 'ACTIVE', limit: 10 },
+    loan: { status: 'ACTIVE' },
     data: {}
 };
 
@@ -85,7 +85,9 @@ const Loan = () => {
         const apiLoanOrders = FetchApi({
             url: API_HISTORY_LOAN,
             params: {
-                ...initState.loan
+                ...initState.loan,
+                limit: LIMIT,
+                skip: (page - 1) * LIMIT
             },
             options: {
                 method: 'GET'
@@ -112,7 +114,7 @@ const Loan = () => {
     // ** useEffect
     useEffect(() => {
         handleAPI();
-    }, []);
+    }, [page]);
 
     useEffect(() => {
         if (isRefetch) {

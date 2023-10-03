@@ -29,11 +29,9 @@ const CONTENT = {
     history: <ContentHistory />
 };
 
-const DEFAULT_PATH_NAME = '/lending';
-
 // ** initData
 const initData = {
-    tab: 'lending'
+    tab: 'history'
 };
 
 const TAB_ALLOW = ['lending', 'loan', 'history'];
@@ -64,10 +62,11 @@ const CryptoLending = () => {
         if (tabQuery) {
             router.push(
                 {
-                    pathname: DEFAULT_PATH_NAME,
+                    pathname: router.pathname,
                     query: { tab }
                 },
-                DEFAULT_PATH_NAME
+                router.pathname,
+                { scroll: false }
             );
         } else {
             setTab(tab);
