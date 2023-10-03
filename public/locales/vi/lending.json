@@ -16,6 +16,10 @@
     "tabs": {
         "info": "Thông tin về Nami Lending"
     },
+    "repayment": {
+        "loan": "Dùng tài sản vay",
+        "collateral": "Dùng tài sản ký quỹ"
+    },
     "lending": {
         "table": {
             "assets": "Tài sản vay",
@@ -24,6 +28,25 @@
             "7days": "Tỷ giá trong 7 ngày",
             "30days": "Tỷ giá trong 30 ngày",
             "active": "Vay ngay"
+        },
+        "modal": {
+            "title": "Vay",
+            "loan_input": {
+                "label": "Tôi muốn vay",
+                "placeholder": "Nhập số lượng"
+            },
+            "collateral_input": {
+                "label": "Số lượng ký quỹ",
+                "placeholder": "Nhập số lượng"
+            },
+            "input_description": {
+                "min_max": "Tối thiểu: {{min}}. Tối đa: {{max}}",
+                "error_min_loan": "Số lượng tối thiểu là {{min}} ",
+                "insufficient_balance": "Số dư không khả dụng"
+            },
+            "loan_term": "Thời hạn vay",
+
+            "loan_term_description": "Mỗi thời hạn vay có thời gian trả chậm cho phép, phí trả chậm trong trường hợp này bằng 3 lần lãi vay. Thời gian trả chậm cho phép:<ul class=\"list-disc px-4\"><li>Kỳ hạn 7 ngày: trả chậm tối đa 72h</li><li>Kỳ hạn 30 ngày: trả chậm tối đa 168h</li></ul> Nếu vượt quá thời gian trả chậm cho phép, tài sản ký quỹ của bạn sẽ bị thanh lý với phí thanh lý là 2% trên tổng dư nợ."
         },
         "rule": "Tôi đồng ý với <0>Thoả thuận và Điều khoản Dịch vụ Nami Lending</0>",
         "ltv": {

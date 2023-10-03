@@ -16,6 +16,10 @@
     "tabs": {
         "info": "Thông tin về Nami Lending"
     },
+    "repayment": {
+        "loan": "Borrowing Asset",
+        "collateral": "Collateral Asset"
+    },
     "lending": {
         "table": {
             "assets": "Tài sản vay",
@@ -24,6 +28,25 @@
             "7days": "Tỷ giá trong 7 ngày",
             "30days": "Tỷ giá trong 30 ngày",
             "active": "Vay ngay"
+        },
+        "modal": {
+            "title": "Borrow",
+            "loan_input": {
+                "label": "I want to borrow",
+                "placeholder": "Enter amount"
+            },
+            "collateral_input": {
+                "label": "Collateral amount",
+                "placeholder": "Enter amount"
+            },
+            "input_description": {
+                "min_max": "Min: {{min}}. Max: {{max}}",
+                "error_min_loan": "Minimum amount is {{min}} ",
+                "insufficient_balance": "Insufficient balance"
+            },
+            "loan_term": "Loan term",
+
+            "loan_term_description": "Each loan term has an allowable late payment period, the late payment fee in this case is equal to 3 times the loan interest. Allowedlate payment time:<ul class=\"list-disc px-4\"><li>7 days term: up to 72 hours</li><li>30 days term: up to 168 hours</li></ul>If you exceed the allowed late payment period, your collateral will be liquidated with a liquidation fee of 2% of the total debt."
         },
         "rule": "Tôi đồng ý với <0>Thoả thuận và Điều khoản Dịch vụ Nami Lending</0>",
         "ltv": {

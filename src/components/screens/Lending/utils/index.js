@@ -2,17 +2,7 @@
 import { formatNumber } from 'redux/actions/utils';
 import { getAssetConfig } from 'components/screens/Lending/Context';
 
-const totalAsset2 = (total, asset, assetConfig) => {
-    if (!total || !asset) return;
-
-    const symbol = assetConfig?.find((f) => f?.assetCode === asset) || {};
-    const rsTotal = formatNumber(total || 0, symbol?.assetDigit, 0, true);
-
-    return { total: rsTotal, symbol: symbol };
-};
-
 // ** Context
-
 const totalAsset = (total, asset) => {
     if (!total || !asset) return;
 
@@ -24,4 +14,12 @@ const totalAsset = (total, asset) => {
     return { total: rsTotal, symbol: symbol };
 };
 
-export { totalAsset, totalAsset2 };
+const getCurrentLTV = ({ totalDebtLeft, totalCollateralLeft, collateralPrice }) => {
+    return totalDebtLeft / (totalCollateralLeft * collateralPrice);
+};
+
+const getReceiveCollateral = ({ repayAmount, totalDebt, totalCollateralAmount, marginUsed }) => {
+    return ((repayAmount / totalDebt) * totalCollateralAmount - marginUsed) * 0.95;
+};
+
+export { totalAsset, getCurrentLTV, getReceiveCollateral };

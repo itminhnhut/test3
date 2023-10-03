@@ -90,17 +90,21 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     };
 
     // ** useState
-    const [isLoadRepaymentModal, setIsLoadRepaymentModal] = useState(INIT_DATA.isModal);
-
+    const [isOpenRepaymentModal, setIsLoadRepaymentModal] = useState(INIT_DATA.isModal);
     const [copied, setCopied] = useState(false);
 
-    // ** handle
+    // ** handle modal
     const handleToggleAdjustModal = ({ id, collateralAsset }) => {
         handleLoanOrderDetail(id, collateralAsset);
         dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN });
     };
-    const handleToggleLoadRepaymentModal = () => setIsLoadRepaymentModal((prev) => !prev);
+    const onOpenRepayment = ({ id, collateralAsset }) => {
+        handleLoanOrderDetail(id, collateralAsset);
+        setIsOpenRepaymentModal(true);
+    };
 
+    // ** handle modal
+    const onCloseRepayment = () => setIsLoadRepaymentModal((prev) => !prev);
     const handleCloseAdjustModal = () => {
         if (state.amount > 0) {
             dispatchReducer({ type: actions.TOGGLE_MODAL_CANCEL, isCancel: true, isAdjust: false });
@@ -280,7 +284,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
             <section className="flex flex-col h-[128px] w-max">
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1  h-[72px] whitespace-nowrap">
                     <section className="flex flex-row items-center w-[162px] ml-6">
-                        <ButtonV2 onClick={handleToggleLoadRepaymentModal}>Trả khoản vay</ButtonV2>
+                        <ButtonV2 onClick={() => onOpenRepayment({ id: _id })}>Trả khoản vay</ButtonV2>
                     </section>
                 </section>
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1  h-[72px] whitespace-nowrap">
@@ -377,7 +381,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         <>
             <section className="rounded-b-2xl bg-white dark:bg-dark-4">{renderTable()}</section>
             <ModalAdjustMargin onClose={handleCloseAdjustModal} dataCollateral={dataCollateral} />
-            <ModalLoanRepayment isModal={isLoadRepaymentModal} onClose={handleToggleLoadRepaymentModal} />
+            <ModalLoanRepayment dataCollateral={dataCollateral} isOpen={isOpenRepaymentModal} onClose={onCloseRepayment} />
         </>
     );
 };
