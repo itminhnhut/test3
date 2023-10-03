@@ -45,6 +45,7 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
     const handleToggleModal = () => {
         dispatchReducer({ type: actions.TOGGLE_MODAL_RESET });
         dispatchReducer({ type: actions.RESET_AMOUNT });
+        dispatchReducer({ type: actions.REFETCH });
     };
 
     const handleSubmitConfirm = async () => {

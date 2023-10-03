@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 // ** NEXT
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 
 // ** components
 import Chip from 'components/common/V2/Chip';
@@ -11,7 +12,7 @@ import Chip from 'components/common/V2/Chip';
 import { useAuth } from 'components/screens/Lending/Context';
 
 // ** Redux
-import { API_HISTORY_LOAN } from 'redux/actions/apis';
+import { API_HISTORY_LOAN, API_HISTORY_LOAN_ADJUST } from 'redux/actions/apis';
 
 // ** Utils
 import FetchApi from 'utils/fetch-api';
@@ -20,12 +21,10 @@ import FetchApi from 'utils/fetch-api';
 import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 // ** Constants
-import { HISTORY_TAB } from 'components/screens/Lending/constants';
+import { STATUS_VI, STATUS_EN, MILLISECOND, HISTORY_TAB } from 'components/screens/Lending/constants';
 
 // ** Third party
 import pickBy from 'lodash/pickBy';
-
-import { STATUS_VI, STATUS_EN, MILLISECOND } from 'components/screens/Lending/constants';
 
 // ** dynamic
 const HistoryTable = dynamic(() => import('./Table'), { ssr: false });
@@ -61,13 +60,17 @@ const initState = {
     }
 };
 
-const TAB_STATUS = { info: 'CLOSED', reject: 'LIQUIDATED' };
+const TAB_STATUS = { loan: 'CLOSED', reject: 'LIQUIDATED', adjust: 'ADJUST_MARGIN', repay: 'REPAY' };
+const ALLOW_ADJUST = ['adjust', 'repay'];
 
 const History = () => {
     const {
         t,
         i18n: { language }
     } = useTranslation();
+
+    // ** useRouter
+    const router = useRouter();
 
     const filters = {
         time: {
@@ -134,6 +137,13 @@ const History = () => {
         }
     }, [tab]);
 
+    useEffect(() => {
+        const { action = initState.tab } = router.query;
+        if (action !== tab) {
+            setTab(action);
+        }
+    }, [router.query]);
+
     // ** handle format date
     const formatDate = (value, type) => {
         if (type === 'startDate') return value?.startDate ? new Date(value?.startDate).getTime() : null;
@@ -141,17 +151,19 @@ const History = () => {
     };
     // ** handle API
     const getOrderLoan = async () => {
+        const NOT_ALLOW = ['time', 'action', 'status'];
         try {
             setIsLoading(true);
             const { data } = await FetchApi({
-                url: API_HISTORY_LOAN,
+                url: ALLOW_ADJUST?.includes(tab) ? API_HISTORY_LOAN_ADJUST : API_HISTORY_LOAN,
                 params: {
-                    ...pickBy(filter, (value, key) => value !== '' && key !== 'time'),
+                    ...pickBy(filter, (value, key) => value !== '' && !NOT_ALLOW.includes(key)),
                     collateralCoin: filter?.collateralCoin?.assetCode,
                     loanCoin: filter?.loanCoin?.assetCode,
                     from: formatDate(filter?.time, 'startDate'),
                     to: formatDate(filter?.time, 'endDate'),
-                    status: filter.status
+                    ...(ALLOW_ADJUST?.includes(tab) ? { action: TAB_STATUS?.[tab] } : { status: TAB_STATUS?.[tab] })
+                    // status: TAB_STATUS?.[tab]
                 }
             });
 
@@ -167,7 +179,22 @@ const History = () => {
 
     // ** handle
     const handleChangeTab = (tab) => {
-        setTab(tab);
+        const { action = initState.tab } = router.query;
+        if (action) {
+            router.push(
+                {
+                    pathname: router.pathname,
+                    query: {
+                        tab: 'history',
+                        action: tab
+                    }
+                },
+                router.pathname
+            );
+        } else {
+            setTab(tab || 'loan');
+        }
+        // setTab(tab);
     };
 
     const handleChangeFilter = (value, key) => {

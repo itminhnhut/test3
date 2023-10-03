@@ -1,4 +1,4 @@
-import { useState, useCallback, useContext, useEffect } from 'react';
+import { useState, useCallback, useContext } from 'react';
 
 // ** NEXT
 import dynamic from 'next/dynamic';
@@ -32,7 +32,7 @@ import { globalActionTypes as actions } from 'components/screens/Lending/Context
 
 // ** Redux
 import { formatTime } from 'redux/actions/utils';
-import { API_HISTORY_LOAN, API_GET_PAIR_PRICE } from 'redux/actions/apis';
+import { API_HISTORY_LOAN } from 'redux/actions/apis';
 
 // ** Third party
 import colors from 'styles/colors';
@@ -73,20 +73,6 @@ const LoanTable = ({ data, page, loading, onPage }) => {
 
     // ** useState
     const [dataCollateral, setDataCollateral] = useState({});
-    const [pairPrice, setPairPrice] = useState();
-
-    useEffect(() => {
-        const promise = [];
-        data?.result?.map((v) => {
-            const symbol = v?.collateralCoin + v?.loanCoin;
-            const url = `${API_GET_PAIR_PRICE}/${symbol}`;
-            promise.push(FetchApi({ url }));
-        });
-        Promise.all(promise).then((rs) => {
-            const data = rs?.map((value) => value?.data);
-            setPairPrice(data);
-        });
-    }, [useMemoizeArgs(data?.result)]);
 
     // ** handle
     const handleLoanOrderDetail = async (id, collateralAsset) => {
@@ -124,8 +110,8 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         }
     };
 
-    const onCopy = () => {
-        setCopied(true);
+    const onCopy = (value) => {
+        setCopied(value);
     };
 
     const render_Col_Id_Status = (options) => {
@@ -136,8 +122,8 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                     <div>ID khoản vay</div>
                     <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
                         <div>#{substring(_id)}</div>
-                        <CopyToClipboard onCopy={onCopy} className="cursor-pointer inline-block">
-                            {copied ? <Check size={16} color={colors.teal} /> : <Copy />}
+                        <CopyToClipboard onCopy={onCopy} text={_id} className="cursor-pointer inline-block">
+                            {copied === _id ? <Check size={16} color={colors.teal} /> : <Copy />}
                         </CopyToClipboard>
                     </div>
                 </section>
@@ -242,10 +228,8 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         );
     };
     const renderCol4 = (options) => {
-        const { collateralCoin, loanCoin, totalDebt, totalCollateralAmount, loanTerm } = options;
-        const coin = collateralCoin + loanCoin;
-        const marketPrice = pairPrice?.find((f) => f.symbol === coin);
-        const LTV = ((totalDebt / (totalCollateralAmount * marketPrice?.lastPrice)) * PERCENT).toFixed(0); // ** LTV hiện tại */
+        const { collateralCoin, loanCoin, totalDebt, totalCollateralAmount, loanTerm, price } = options;
+        const LTV = ((totalDebt / (totalCollateralAmount * price)) * PERCENT).toFixed(0); // ** LTV hiện tại */
         return (
             <section className="flex flex-col h-[128px] w-max">
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] whitespace-nowrap">
@@ -387,7 +371,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 }}
             />
         );
-    }, [useMemoizeArgs(data?.result), loading, isDark, useMemoizeArgs(pairPrice)]);
+    }, [useMemoizeArgs(data?.result), loading, isDark, copied]);
 
     return (
         <>

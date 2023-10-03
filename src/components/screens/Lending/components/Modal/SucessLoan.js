@@ -62,7 +62,8 @@ const SucessLoan = ({ isModal, onClose, tab, adjustedLTV, totalAdjusted }) => {
                         {
                             pathname: router.pathname,
                             query: {
-                                tab: 'history'
+                                tab: 'history',
+                                action: 'adjust'
                             }
                         },
                         undefined,

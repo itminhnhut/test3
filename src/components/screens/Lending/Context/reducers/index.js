@@ -6,6 +6,7 @@ const reducer = (state, action) => {
             const { dataCollateral = {}, rsTotalDebt, rsTotalCollateralAmount } = action?.data || {};
             const { totalDebt, totalCollateralAmount, initialLTV } = dataCollateral;
             return {
+                ...state,
                 infoDet: { total: rsTotalDebt?.total, assetCode: rsTotalDebt?.symbol?.assetCode },
                 infoCollateralAmount: {
                     total: rsTotalCollateralAmount?.total,
@@ -15,9 +16,7 @@ const reducer = (state, action) => {
                 totalDebt,
                 totalAdjusted: totalCollateralAmount,
                 initialLTV,
-                current: { totalAdjusted: totalCollateralAmount },
-                modal: { ...state.modal },
-                amount: state.amount
+                current: { totalAdjusted: totalCollateralAmount }
             };
         }
 
@@ -74,7 +73,6 @@ const reducer = (state, action) => {
         case actions.TOGGLE_MODAL_CANCEL: {
             const isCancel = action.isCancel;
             const isAdjust = action.isAdjust;
-
             return {
                 ...state,
                 modal: {
@@ -84,6 +82,9 @@ const reducer = (state, action) => {
                     isCancel
                 }
             };
+        }
+        case actions.REFETCH: {
+            return { ...state, isRefetch: !state.isRefetch };
         }
         default:
             return { ...state, current: { totalAdjusted: totalCollateralAmount } };

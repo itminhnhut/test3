@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 
 // ** Next
 import dynamic from 'next/dynamic';
@@ -23,7 +23,10 @@ import { STATUS_CODE } from 'components/screens/Lending/constants';
 import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 // ** Context
-import { getAssetConfig, useAuth } from 'components/screens/Lending/Context';
+import { getAssetConfig, useAuth, LendingContext } from 'components/screens/Lending/Context';
+import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
+
+// ** Third party
 import classNames from 'classnames';
 
 // ** dynamic
@@ -58,6 +61,9 @@ const Loan = () => {
     // ** useContext
     const isAuth = useAuth();
     const { assetConfig } = getAssetConfig();
+    const { dispatchReducer, state } = useContext(LendingContext);
+
+    const isRefetch = state.isRefetch;
 
     // ** useState
     const [page, setPage] = useState(initState.page);
@@ -65,8 +71,7 @@ const Loan = () => {
     const [overView, setOverView] = useState(initState.data);
     const [loading, setLoading] = useState(initState.loading);
 
-    // ** useEffect
-    useEffect(() => {
+    const handleAPI = () => {
         setLoading(true);
         const apiOverView = FetchApi({
             url: API_OVERVIEW_LOAN,
@@ -103,7 +108,18 @@ const Loan = () => {
             .finally(() => {
                 setLoading(false);
             });
+    };
+    // ** useEffect
+    useEffect(() => {
+        handleAPI();
     }, []);
+
+    useEffect(() => {
+        if (isRefetch) {
+            handleAPI();
+            dispatchReducer({ type: actions.REFETCH });
+        }
+    }, [isRefetch]);
 
     // ** get asset by code
     const getAssetBycCode = useMemo(() => {

@@ -30,9 +30,10 @@ const CONTENT = {
 };
 
 const DEFAULT_PATH_NAME = '/lending';
-// ** iniData
-const iniData = {
-    tab: 'loan'
+
+// ** initData
+const initData = {
+    tab: 'lending'
 };
 
 const TAB_ALLOW = ['lending', 'loan', 'history'];
@@ -47,11 +48,11 @@ const CryptoLending = () => {
     const router = useRouter();
 
     // ** useState
-    const [tab, setTab] = useState(iniData.tab);
+    const [tab, setTab] = useState(initData.tab);
 
     // ** useEffect
     useEffect(() => {
-        const { tab: tabQuery = iniData.tab } = router.query;
+        const { tab: tabQuery = initData.tab } = router.query;
         if (tab !== tabQuery) {
             setTab(tabQuery);
         }
@@ -59,7 +60,7 @@ const CryptoLending = () => {
 
     // ** Handle
     const handleTab = (tab) => {
-        const { tab: tabQuery = iniData.tab } = router.query;
+        const { tab: tabQuery = initData.tab } = router.query;
         if (tabQuery) {
             router.push(
                 {

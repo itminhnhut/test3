@@ -31,7 +31,8 @@ const INIT_DATA_REDUCER = {
         isConfirmAdjust: false,
         isSuccess: false,
         inCancel: false
-    }
+    },
+    isRefetch: false
 };
 
 const LendingContext = createContext();
