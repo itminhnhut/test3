@@ -29,7 +29,7 @@ import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
 // ** Third party
 import classNames from 'classnames';
 import useMemoizeArgs from 'hooks/useMemoizeArgs';
-import { PERCENT } from '../../constants';
+import { PERCENT } from '../../../constants';
 import useDebounce from 'hooks/useDebounce';
 import { formatNumber } from 'utils/reference-utils';
 

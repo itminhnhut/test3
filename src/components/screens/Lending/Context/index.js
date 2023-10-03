@@ -97,8 +97,10 @@ const LendingProvider = ({ children }) => {
         handleLoanAsset();
     }, [auth]);
 
-    const cache_value = useMemo(() => true, [useMemoizeArgs(loanAsset), useMemoizeArgs(assetConfig), useMemoizeArgs(auth), useMemoizeArgs(pairPrice)]);
-    const value = useMemo(() => ({ loanAsset, assetConfig, auth, pairPrice, handlePairPrice, state, dispatchReducer }), [cache_value]);
+    const value = useMemo(
+        () => ({ loanAsset, assetConfig, auth, pairPrice, handlePairPrice, state, dispatchReducer }),
+        [useMemoizeArgs(loanAsset), useMemoizeArgs(assetConfig), useMemoizeArgs(auth), useMemoizeArgs(pairPrice), useMemoizeArgs(state)]
+    );
 
     return <LendingContext.Provider value={value}>{children}</LendingContext.Provider>;
 };

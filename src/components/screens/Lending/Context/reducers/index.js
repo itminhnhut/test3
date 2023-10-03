@@ -7,16 +7,16 @@ const reducer = (state, action) => {
             const { totalDebt, totalCollateralAmount, initialLTV } = dataCollateral;
             return {
                 ...state,
+                totalDebt,
+                initialLTV,
+                totalAdjusted: totalCollateralAmount,
+                current: { totalAdjusted: totalCollateralAmount },
                 infoDet: { total: rsTotalDebt?.total, assetCode: rsTotalDebt?.symbol?.assetCode },
                 infoCollateralAmount: {
                     total: rsTotalCollateralAmount?.total,
                     assetDigit: rsTotalCollateralAmount?.symbol?.assetDigit,
                     assetCode: rsTotalCollateralAmount?.symbol?.assetCode
-                },
-                totalDebt,
-                totalAdjusted: totalCollateralAmount,
-                initialLTV,
-                current: { totalAdjusted: totalCollateralAmount }
+                }
             };
         }
 

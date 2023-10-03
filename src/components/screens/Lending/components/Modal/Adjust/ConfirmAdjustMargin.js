@@ -24,10 +24,10 @@ import { IconClose } from 'components/svg/SvgIcon';
 
 //** components
 import ModalV2 from 'components/common/V2/ModalV2';
-import { PERCENT } from '../../constants';
+import { PERCENT } from '../../../constants';
 
 // ** Dynamic
-const SucessLoan = dynamic(() => import('./SucessLoan'), { ssrc: false });
+const SucessLoan = dynamic(() => import('../SucessLoan'), { ssrc: false });
 
 const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, currentLTV, adjustedLTV, totalAdjusted, initialLTV, id, amount }) => {
     const {
