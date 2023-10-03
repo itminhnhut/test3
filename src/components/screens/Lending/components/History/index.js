@@ -21,7 +21,7 @@ import FetchApi from 'utils/fetch-api';
 import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 // ** Constants
-import { STATUS_VI, STATUS_EN, MILLISECOND, HISTORY_TAB } from 'components/screens/Lending/constants';
+import { STATUS_VI, STATUS_EN, MILLISECOND, HISTORY_TAB, LIMIT } from 'components/screens/Lending/constants';
 
 // ** Third party
 import pickBy from 'lodash/pickBy';
@@ -35,7 +35,7 @@ const initState = {
     page: 1,
     loading: false,
     data: {},
-    filter: { status: 'CLOSED', limit: 10, from: null, to: null, loanCoin: null, collateralCoin: null },
+    filter: { status: 'CLOSED', from: null, to: null, loanCoin: null, collateralCoin: null },
     filters: {
         time: {
             value: {
@@ -60,7 +60,7 @@ const initState = {
     }
 };
 
-const TAB_STATUS = { loan: 'CLOSED', reject: 'LIQUIDATED', adjust: 'ADJUST_MARGIN', repay: 'REPAY' };
+const TAB_STATUS = { adjust: 'ADJUST_MARGIN', repay: 'REPAY' };
 const ALLOW_ADJUST = ['adjust', 'repay'];
 
 const History = () => {
@@ -126,14 +126,15 @@ const History = () => {
 
     // ** useState
     useEffect(() => {
-        const id = setTimeout(() => getOrderLoan(), 500);
+        const id = setTimeout(() => getOrderLoan(), 300);
         return () => clearTimeout(id);
-    }, [useMemoizeArgs(filter), tab]);
+    }, [useMemoizeArgs(filter), tab, page]);
 
     useEffect(() => {
         const isEqual = JSON.stringify(initState.filters) === JSON.stringify(filter);
         if (!isEqual) {
             setFilter(initState.filter);
+            setPage(initState.page);
         }
     }, [tab]);
 
@@ -162,8 +163,9 @@ const History = () => {
                     loanCoin: filter?.loanCoin?.assetCode,
                     from: formatDate(filter?.time, 'startDate'),
                     to: formatDate(filter?.time, 'endDate'),
-                    ...(ALLOW_ADJUST?.includes(tab) ? { action: TAB_STATUS?.[tab] } : { status: TAB_STATUS?.[tab] })
-                    // status: TAB_STATUS?.[tab]
+                    limit: LIMIT,
+                    skip: (page - 1) * LIMIT,
+                    ...(ALLOW_ADJUST?.includes(tab) ? { action: TAB_STATUS?.[tab] } : { status: tab === 'reject' ? 'LIQUIDATED' : filter?.status })
                 }
             });
 
@@ -189,12 +191,12 @@ const History = () => {
                         action: tab
                     }
                 },
-                router.pathname
+                router.pathname,
+                { scroll: false }
             );
         } else {
             setTab(tab || 'loan');
         }
-        // setTab(tab);
     };
 
     const handleChangeFilter = (value, key) => {
@@ -203,6 +205,7 @@ const History = () => {
         } else {
             setFilter((prev) => ({ ...prev, [key]: value }));
         }
+        setPage(initState.page);
     };
 
     const handleResetFilter = () => setFilter(initState.filter);

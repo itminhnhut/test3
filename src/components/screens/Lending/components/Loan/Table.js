@@ -232,7 +232,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         );
     };
     const renderCol4 = (options) => {
-        const { collateralCoin, loanCoin, totalDebt, totalCollateralAmount, loanTerm, price } = options;
+        const { totalDebt, totalCollateralAmount, loanTerm, price } = options;
         const LTV = ((totalDebt / (totalCollateralAmount * price)) * PERCENT).toFixed(0); // ** LTV hiện tại */
         return (
             <section className="flex flex-col h-[128px] w-max">
