@@ -87,8 +87,8 @@ const LTV = [
 
 const HISTORY_TAB = [
     { title: { vi: 'Vay', en: 'Vay' }, key: 'loan' },
+    { title: { vi: 'Thanh toán', en: 'Thanh toán' }, key: 'repay' },
     { title: { vi: 'Điều chỉnh ký quỹ', en: 'Điều chỉnh ký quỹ' }, key: 'adjust' },
-    { title: { vi: 'Thanh toán', en: 'Thanh toán' }, key: 'payment' },
     { title: { vi: 'Thanh lý', en: 'Thanh lý' }, key: 'reject' }
 ];
 

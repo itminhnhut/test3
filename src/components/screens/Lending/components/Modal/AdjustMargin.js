@@ -1,99 +1,46 @@
-import { useState, useReducer, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 
 // ** next
 import { useTranslation } from 'next-i18next';
+import dynamic from 'next/dynamic';
 
 // ** Redux
 import { WalletType } from 'redux/actions/const';
 import { setTransferModal } from 'redux/actions/utils';
 import { useSelector, useDispatch } from 'react-redux';
-import AssetLogo from 'components/wallet/AssetLogo';
+import { createSelector } from 'reselect';
 
 // ** Utils
 import { totalAsset } from 'components/screens/Lending/utils';
 
 // ** Context
-import { usePairPrice } from 'components/screens/Lending/Context';
+import { usePairPrice, LendingContext } from 'components/screens/Lending/Context';
+import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
 
 //** components
 import ModalV2 from 'components/common/V2/ModalV2';
+import AssetLogo from 'components/wallet/AssetLogo';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TradingInputV2 from 'components/trade/TradingInputV2';
 
 // ** svg
 import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
 
+// ** Third party
 import classNames from 'classnames';
-import dynamic from 'next/dynamic';
 import useMemoizeArgs from 'hooks/useMemoizeArgs';
 import { PERCENT } from '../../constants';
 import useDebounce from 'hooks/useDebounce';
 import { formatNumber } from 'utils/reference-utils';
-import { createSelector } from 'reselect';
+
+// ** Dynamic components
+const ConfirmAdjustMargin = dynamic(() => import('./ConfirmAdjustMargin'), { ssr: false });
+const AdjustCancel = dynamic(() => import('./AdjustCancel'), { ssr: false });
 
 const MARGIN = [
     { title: { vi: 'Thêm ký quỹ', en: 'Thêm ký quỹ' }, key: 'add' },
     { title: { vi: 'Bớt ký quỹ', en: 'Bớt ký quỹ' }, key: 'subtract' }
 ];
-
-const ConfirmAdjustMargin = dynamic(() => import('./ConfirmAdjustMargin'), { ssr: false });
-
-const reducer = (state, action) => {
-    const { totalDebt, loanCoin, totalCollateralAmount, collateralCoin, initialLTV } = action?.data || {};
-
-    const rsTotalDebt = totalAsset(totalDebt, loanCoin);
-    const rsTotalCollateralAmount = totalAsset(totalCollateralAmount, collateralCoin);
-
-    switch (action.type) {
-        case 'update':
-            return {
-                totalDebt,
-                infoDet: { total: rsTotalDebt?.total, assetCode: rsTotalDebt?.symbol?.assetCode },
-                infoCollateralAmount: {
-                    total: rsTotalCollateralAmount?.total,
-                    assetDigit: rsTotalCollateralAmount?.symbol?.assetDigit,
-                    assetCode: rsTotalCollateralAmount?.symbol?.assetCode
-                },
-                totalAdjusted: totalCollateralAmount,
-                initialLTV,
-                current: { totalAdjusted: totalCollateralAmount },
-                isModalAdjust: action.tab
-            };
-        case 'update_total_adjusted': {
-            const method = action.method;
-            const amount = +action.amount;
-            const getCurrentAdjusted = state?.current?.totalAdjusted;
-
-            let totalAdjusted = method === 'add' ? getCurrentAdjusted + amount : getCurrentAdjusted - amount;
-            if (action.amount === 0) {
-                totalAdjusted = getCurrentAdjusted;
-            }
-            return {
-                ...state,
-                totalAdjusted
-            };
-        }
-        case 'open_modal_confirm_adjust': {
-            return {
-                ...state,
-                isModalAdjust: !state?.isModalAdjust,
-                isModalConfirmAdjust: !state?.isModalConfirmAdjust
-            };
-        }
-        default:
-            return { ...state, current: { totalAdjusted: totalCollateralAmount } };
-    }
-};
-
-const DEBOUNCE_TIME = 300;
-const INIT_DATA = {
-    infoDet: { total: 0, assetCode: '' },
-    infoCollateralAmount: { total: 0, assetCode: '', assetDigit: '' },
-    totalAdjusted: 0,
-    marketPrice: 0,
-    isModalAdjust: false,
-    isModalConfirmAdjust: false
-};
 
 const DEFAULT_VALUE = '-';
 
@@ -102,9 +49,11 @@ const getSpotAvailable = createSelector([(state) => state.wallet?.SPOT, (utils, 
     return _avlb ? Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0) : 0;
 });
 
+const DEBOUNCE_TIME = 300;
+
 const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
     // ** useReducer
-    const [state, dispatchReducer] = useReducer(reducer, INIT_DATA);
+    const { state, dispatchReducer } = useContext(LendingContext);
 
     const dispatch = useDispatch();
 
@@ -120,21 +69,26 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
 
     //**  useState
     const [tab, setTab] = useState('add');
-    const [isConfirmModal, setIsConfirmModal] = useState(false);
     const [error, setError] = useState('');
 
-    const [amount, setAmount] = useState('');
+    const amount = useMemo(() => {
+        return state?.amount;
+    }, [state?.amount]);
+
     const debounceAmount = useDebounce(amount, DEBOUNCE_TIME);
 
     const { collateralCoin, loanCoin, totalDebt, totalCollateralAmount } = dataCollateral || {};
     const total_current_LTV = totalDebt / (totalCollateralAmount * pairPrice?.lastPrice);
 
+    const rsTotalDebt = totalAsset(totalDebt, loanCoin);
+    const rsTotalCollateralAmount = totalAsset(totalCollateralAmount, collateralCoin);
+
     // ** useEffect
     useEffect(() => {
         if (dataCollateral) {
-            dispatchReducer({ type: 'update', data: dataCollateral, tab: isModal });
+            dispatchReducer({ type: actions.UPDATE, data: { dataCollateral, rsTotalDebt, rsTotalCollateralAmount } });
             // ** reset amount
-            setAmount('');
+            dispatchReducer({ type: actions.RESET_AMOUNT });
         }
     }, [useMemoizeArgs(dataCollateral), tab]);
 
@@ -155,26 +109,18 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
     }, [collateralAvailable, amount]);
 
     useEffect(() => {
-        dispatchReducer({ type: 'update_total_adjusted', amount: amount || 0, method: tab });
+        dispatchReducer({ type: actions.UPDATE_TOTAL_ADJUSTED, amount: amount || 0, method: tab });
     }, [debounceAmount]);
 
     const current_LTV = useMemo(() => {
         return (total_current_LTV * PERCENT).toFixed(0);
     }, [useMemoizeArgs(dataCollateral), pairPrice?.lastPrice]);
 
-    // ** useMemo
-    const infoAdjustMargin = useMemo(() => {
-        const { infoDet, infoCollateralAmount, initialLTV, totalAdjusted, adjusted_LTV } = state;
-        return { infoDet, infoCollateralAmount, totalAdjusted, initialLTV, adjusted_LTV };
-    }, [useMemoizeArgs(state)]);
-
     const adjustedLTV = useMemo(() => {
         return (state.totalDebt / (state.totalAdjusted * pairPrice?.lastPrice || 0)) * PERCENT;
     }, [amount, state.totalDebt, state.totalAdjusted, pairPrice?.lastPrice]);
 
     // ** handle
-    const handleToggle = () => setIsConfirmModal((prev) => !prev);
-
     const handleTab = (tab) => {
         setTab(tab);
     };
@@ -185,19 +131,20 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
     };
 
     const handleSubmit = () => {
-        dispatchReducer({ type: 'open_modal_confirm_adjust' });
+        dispatchReducer({ type: actions.TOGGLE_MODAL_CONFIRM_ADJUST }); //** open modal confirm */
+        getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin }); //** update market price */
     };
 
     const handleAmountChange = (value) => {
         if (+value < 0 || +value > collateralAvailable) {
-            setError('2132312');
-            setAmount(value);
+            setError('value > collateralAvailable');
+            dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: value });
             return;
         }
         if (!value) {
-            setAmount('');
+            dispatchReducer({ type: actions.RESET_AMOUNT });
         } else {
-            setAmount(value);
+            dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: value });
         }
     };
 
@@ -207,7 +154,7 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
 
     const validationSubtract = () => {
         const Initial_LTV = state.initialLTV * PERCENT;
-        return current_LTV > Initial_LTV && adjustedLTV >= Initial_LTV;
+        return current_LTV < Initial_LTV && adjustedLTV <= Initial_LTV && validationAdd();
     };
 
     const isSubmitted = useMemo(() => {
@@ -215,7 +162,9 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
     }, [tab, amount]);
 
     const handleCloseConfirmAdjustMargin = () => {
-        dispatchReducer({ type: 'open_modal_confirm_adjust' });
+        setTimeout(() => {
+            dispatchReducer({ type: actions.TOGGLE_MODAL_CONFIRM_ADJUST });
+        }, 100);
     };
 
     const validator = useMemo(() => {
@@ -249,8 +198,8 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                         <div className="dark:text-gray-4 font-semibold flex flex-row gap-1">
                             {amount > 0 ? (
                                 <>
-                                    <span>{formatNumber(infoAdjustMargin?.totalAdjusted, infoAdjustMargin?.infoCollateralAmount.assetDigit)}</span>
-                                    <span> {infoAdjustMargin?.infoCollateralAmount.assetCode}</span>
+                                    <span>{totalAdjusted.total}</span>
+                                    <span>{totalAdjusted.assetCode}</span>
                                 </>
                             ) : (
                                 DEFAULT_VALUE
@@ -262,11 +211,11 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
         );
     };
 
-    const totalAdjusted = () => {
-        const a = formatNumber(infoAdjustMargin?.totalAdjusted, infoAdjustMargin?.infoCollateralAmount.assetDigit);
-        const b = infoAdjustMargin?.infoCollateralAmount.assetCode;
-        return { total: a, assetCode: b };
-    };
+    const totalAdjusted = useMemo(() => {
+        const total = formatNumber(state?.totalAdjusted, state?.infoCollateralAmount?.assetDigit);
+        const assetCode = state?.infoCollateralAmount?.assetCode;
+        return { total, assetCode };
+    }, [state?.totalAdjusted, state?.infoCollateralAmount?.assetDigit]);
 
     const renderSubtractMargin = () => {
         return (
@@ -277,7 +226,7 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                 <section className="flex flex-col gap-3 mt-6">
                     <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
                         <div>LTV ban đầu</div>
-                        <div className="dark:text-gray-4 font-semibold">{infoAdjustMargin?.initialLTV * 100}%</div>
+                        <div className="dark:text-gray-4 font-semibold">{state?.initialLTV * PERCENT}%</div>
                     </section>
                     <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
                         <div>LTV Hiện tại</div>
@@ -292,8 +241,8 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                         <div className="dark:text-gray-4 font-semibold flex flex-row gap-1">
                             {amount > 0 ? (
                                 <>
-                                    <span>{formatNumber(infoAdjustMargin?.totalAdjusted, infoAdjustMargin?.infoCollateralAmount.assetDigit)}</span>
-                                    <span> {infoAdjustMargin?.infoCollateralAmount.assetCode}</span>
+                                    <span>{totalAdjusted.total}</span>
+                                    <span>{totalAdjusted.assetCode}</span>
                                 </>
                             ) : (
                                 DEFAULT_VALUE
@@ -327,7 +276,6 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                         />
                     </section>
                 </section>
-                {/* <InputV2 placeholder="Nhập số lượng tài sản" className="mt-4" onChange={(e) => handleAmountChange(e)} value={value1} error={error && error} /> */}
                 <TradingInputV2
                     id="amount_input"
                     value={amount || ''}
@@ -356,7 +304,7 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
     return (
         <>
             <ModalV2
-                isVisible={state.isModalAdjust}
+                isVisible={state.modal?.isAdjust}
                 className="w-[800px] overflow-auto no-scrollbar"
                 onBackdropCb={handleCloseModal}
                 wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
@@ -394,14 +342,14 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                             <section className="flex flex-row justify-between">
                                 <section className="dark:text-gray-7 text-gray-1">Tổng dư nợ</section>
                                 <section className="text-gray-15 font-semibold dark:text-gray-4">
-                                    {infoAdjustMargin?.infoDet?.total} {infoAdjustMargin?.infoDet?.assetCode}
+                                    {state?.infoDet?.total} {state?.infoDet?.assetCode}
                                 </section>
                             </section>
                             <div className="h-[1px] dark:bg-divider-dark bg-divider my-3" />
                             <section className="flex flex-row justify-between">
                                 <section className="dark:text-gray-7 text-gray-1">Tổng ký quỹ</section>
                                 <section className="text-gray-15 font-semibold dark:text-gray-4">
-                                    {infoAdjustMargin?.infoCollateralAmount?.total} {infoAdjustMargin?.infoCollateralAmount?.assetCode}
+                                    {state?.infoCollateralAmount?.total} {state?.infoCollateralAmount?.assetCode}
                                 </section>
                             </section>
                         </section>
@@ -415,12 +363,17 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
             </ModalV2>
             <ConfirmAdjustMargin
                 tab={tab}
-                onClose={handleCloseConfirmAdjustMargin}
+                amount={amount}
+                id={dataCollateral?._id}
                 currentLTV={current_LTV}
                 adjustedLTV={adjustedLTV}
                 totalAdjusted={totalAdjusted}
-                isModal={state.isModalConfirmAdjust}
+                dispatchReducer={dispatchReducer}
+                initialLTV={state?.initialLTV}
+                isConfirmAdjust={state.modal?.isConfirmAdjust}
+                onCloseAdjustMargin={handleCloseConfirmAdjustMargin}
             />
+            <AdjustCancel />
         </>
     );
 };

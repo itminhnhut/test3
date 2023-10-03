@@ -29,9 +29,11 @@ const CONTENT = {
     history: <ContentHistory />
 };
 
-// ** iniData
-const iniData = {
-    tab: 'loan'
+const DEFAULT_PATH_NAME = '/lending';
+
+// ** initData
+const initData = {
+    tab: 'lending'
 };
 
 const TAB_ALLOW = ['lending', 'loan', 'history'];
@@ -46,18 +48,31 @@ const CryptoLending = () => {
     const router = useRouter();
 
     // ** useState
-    const [tab, setTab] = useState(iniData.tab);
+    const [tab, setTab] = useState(initData.tab);
 
     // ** useEffect
     useEffect(() => {
-        const { tab: tabQuery = iniData.tab } = router.query;
+        const { tab: tabQuery = initData.tab } = router.query;
         if (tab !== tabQuery) {
             setTab(tabQuery);
         }
     }, [router.query]);
 
     // ** Handle
-    const handleTab = (tab) => setTab(tab);
+    const handleTab = (tab) => {
+        const { tab: tabQuery = initData.tab } = router.query;
+        if (tabQuery) {
+            router.push(
+                {
+                    pathname: DEFAULT_PATH_NAME,
+                    query: { tab }
+                },
+                DEFAULT_PATH_NAME
+            );
+        } else {
+            setTab(tab);
+        }
+    };
 
     //** Render
     const renderTabContent = () => {
@@ -81,7 +96,7 @@ const CryptoLending = () => {
                             isActive={item.value === tab}
                         >
                             {item.label?.[language]}
-                            {item.value === 'loan' && <span className="ml-1">(2)</span>}
+                            {/* {item.value === 'loan' && <span className="ml-1">{count.current}</span>} */}
                         </TabItem>
                     ))}
                 </div>

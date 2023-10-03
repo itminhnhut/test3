@@ -1,7 +1,8 @@
 // ** Context
-import { getAssetConfig } from 'components/screens/Lending/Context';
 import { formatNumber } from 'redux/actions/utils';
+import { getAssetConfig } from 'components/screens/Lending/Context';
 
+// ** Context
 const totalAsset = (total, asset) => {
     if (!total || !asset) return;
 
@@ -14,7 +15,7 @@ const totalAsset = (total, asset) => {
 };
 
 const getCurrentLTV = ({ totalDebtLeft, totalCollateralLeft, collateralPrice }) => {
-    return (totalDebtLeft / (totalCollateralLeft * collateralPrice));
+    return totalDebtLeft / (totalCollateralLeft * collateralPrice);
 };
 
 const getReceiveCollateral = ({ repayAmount, totalDebt, totalCollateralAmount, marginUsed }) => {

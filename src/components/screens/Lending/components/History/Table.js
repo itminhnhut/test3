@@ -55,6 +55,8 @@ const INIT_DATA = {
 
 // const substring = (str, start = 10, end = -4) => (String(str).length > 10 ? `${String(str).substr(0, start)}...${String(str).substr(end)}` : str);
 
+const DISABLE_STATUS = ['reject', 'repay', 'adjust'];
+
 const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, configFilter, onReset }) => {
     const {
         t,
@@ -82,9 +84,13 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
         setDataAssets({ loanable: assetLoanable, collateral: assetCollateral });
     }, [filter]);
 
+    useEffect(() => {
+        copied?.length > 0 && setCopied(false);
+    }, [tab]);
+
     // ** handle
-    const onCopy = () => {
-        setCopied(true);
+    const onCopy = (value) => {
+        setCopied(value);
     };
 
     const onChange = (value, key) => {
@@ -155,7 +161,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                         onChangeAsset={(e) => onChange(e, key)}
                         wrapperClassName="w-max right-[0] !left-[auto]"
                         wrapperLabel="h-12 dark:!text-gray-4 !text-gray-15 !text-base"
-                        className={classNames('!w-[168px] text-base !text-gray-15 dark:!text-gray-7 !h-12', { '!w-[295px]': tab === 'reject' })}
+                        className={classNames('!w-[168px] text-base !text-gray-15 dark:!text-gray-7 !h-12', { '!w-[295px]': DISABLE_STATUS.includes(tab) })}
                     />
                 );
             case 'reset':
@@ -172,7 +178,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
     const renderTitle = () => {
         return Object.keys(configFilter).map((key) => {
             const data = configFilter[key];
-            if (tab === 'reject' && key === 'status') return;
+            if (tab !== 'loan' && key === 'status') return;
             return (
                 <section>
                     <div className={classNames('dark:text-gray-7 text-gray-1 text-sm', { 'invisible h-5': !data.title })}>{data?.title}</div>
@@ -200,8 +206,8 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                     <div>ID khoản vay</div>
                     <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
                         <div>#{substring(_id)}</div>
-                        <CopyToClipboard onCopy={onCopy} className="cursor-pointer inline-block">
-                            {copied ? <Check size={16} color={colors.teal} /> : <Copy />}
+                        <CopyToClipboard onCopy={onCopy} text={_id} className="cursor-pointer inline-block">
+                            {copied === _id ? <Check size={16} color={colors.teal} /> : <Copy />}
                         </CopyToClipboard>
                     </div>
                 </section>
@@ -263,8 +269,8 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                     <div>ID khoản vay</div>
                     <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
                         <div>#{substring(_id)}</div>
-                        <CopyToClipboard onCopy={onCopy} className="cursor-pointer inline-block">
-                            {copied ? <Check size={16} color={colors.teal} /> : <Copy />}
+                        <CopyToClipboard onCopy={onCopy} text={_id} className="cursor-pointer inline-block">
+                            {copied === _id ? <Check size={16} color={colors.teal} /> : <Copy />}
                         </CopyToClipboard>
                     </div>
                 </section>
@@ -308,8 +314,155 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
         );
     };
 
+    const renderContentTabAdjust = (value) => {
+        const { _id, orderId, metadata, detail, collateralCoin } = value;
+
+        const totalCollateralAmount = detail?.totalCollateralAmount;
+        const LTV = detail?.LTV;
+
+        const initialCollateral = handleTotalAsset(totalCollateralAmount?.from, collateralCoin);
+        const adjustCollateral = handleTotalAsset(totalCollateralAmount?.to, collateralCoin);
+
+        const type = metadata?.payment?.amount < 0 ? 'Bớt ký quỹ' : 'Thêm ký quỹ';
+
+        return (
+            <section className="flex flex-row gap-6 py-4">
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[162px] whitespace-nowrap">
+                    <div>ID khoản vay</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                        <div>#{substring(orderId)}</div>
+                        <CopyToClipboard onCopy={onCopy} text={orderId} className="cursor-pointer inline-block">
+                            {copied === orderId ? <Check size={16} color={colors.teal} /> : <Copy />}
+                        </CopyToClipboard>
+                    </div>
+                </section>
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[162px] whitespace-nowrap">
+                    <div>ID lệnh ký quỹ</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                        <div>#{substring(_id)}</div>
+                        <CopyToClipboard onCopy={onCopy} text={_id} className="cursor-pointer inline-block">
+                            {copied === _id ? <Check size={16} color={colors.teal} /> : <Copy />}
+                        </CopyToClipboard>
+                    </div>
+                </section>
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[162px] whitespace-nowrap">
+                    <div>Loại ký quỹ</div>
+                    <div className="dark:text-green-2 text-green-3 font-semibold">{type}</div>
+                </section>
+
+                <section className="flex flex-row items-center gap-2 min-w-[204px]">
+                    <AssetLogo assetId={initialCollateral.symbol.id} />
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>Ký quỹ ban đầu</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                            {initialCollateral.total} {initialCollateral.symbol.assetCode}
+                        </div>
+                    </section>
+                </section>
+
+                <section className="flex flex-row items-center gap-2 min-w-[204px]">
+                    <AssetLogo assetId={adjustCollateral.symbol.id} />
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>Ký quỹ ban đầu</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                            {adjustCollateral.total} {adjustCollateral.symbol.assetCode}
+                        </div>
+                    </section>
+                </section>
+
+                <section className="flex flex-row items-center gap-2 min-w-[204px]">
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>LTV trước điều chỉnh</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">{(LTV?.from * PERCENT).toFixed(0)}%</div>
+                    </section>
+                </section>
+
+                <section className="flex flex-row items-center gap-2 min-w-[204px]">
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>LTV sau điều chỉnh</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">{(LTV?.to * PERCENT).toFixed(0)}%</div>
+                    </section>
+                </section>
+            </section>
+        );
+    };
+
+    const renderContentTabRepay = (value) => {
+        const { _id, orderId, metadata, detail, collateralCoin } = value;
+
+        const totalRepaid = handleTotalAsset(detail?.totalRepaid?.to, detail?.totalRepaid?.currency);
+
+        const repayCollateralAmount = handleTotalAsset(metadata?.repayCollateralAmount, collateralCoin);
+        const returnCollateralAmount = handleTotalAsset(metadata?.returnCollateralAmount, collateralCoin);
+
+        const type = metadata?.repayRate === 1 ? 'Toàn bộ' : 'Một phần';
+
+        return (
+            <section className="flex flex-row gap-6 py-4">
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[162px] whitespace-nowrap">
+                    <div>ID khoản vay</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                        <div>#{substring(orderId)}</div>
+                        <CopyToClipboard onCopy={onCopy} text={orderId} className="cursor-pointer inline-block">
+                            {copied === orderId ? <Check size={16} color={colors.teal} /> : <Copy />}
+                        </CopyToClipboard>
+                    </div>
+                </section>
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[162px] whitespace-nowrap">
+                    <div>ID lệnh ký quỹ</div>
+                    <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                        <div>#{substring(_id)}</div>
+                        <CopyToClipboard onCopy={onCopy} text={_id} className="cursor-pointer inline-block">
+                            {copied === _id ? <Check size={16} color={colors.teal} /> : <Copy />}
+                        </CopyToClipboard>
+                    </div>
+                </section>
+                <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] min-w-[150px] whitespace-nowrap">
+                    <div>Loại hoàn trả</div>
+                    <div className="dark:text-green-2 text-green-3 font-semibold">{type}</div>
+                </section>
+
+                <section className="flex flex-row items-center gap-2 min-w-[204px]">
+                    <AssetLogo assetId={totalRepaid.symbol.id} />
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>Tổng đã trả</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                            {totalRepaid.total} {totalRepaid.symbol.assetCode}
+                        </div>
+                    </section>
+                </section>
+
+                <section className="flex flex-row items-center gap-2 min-w-[204px]">
+                    <AssetLogo assetId={repayCollateralAmount.symbol.id} />
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>Tổng ký quỹ sử dụng</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                            {repayCollateralAmount.total} {collateralCoin}
+                        </div>
+                    </section>
+                </section>
+                <section className="flex flex-row items-center gap-2 min-w-[204px]">
+                    <AssetLogo assetId={returnCollateralAmount.symbol.id} />
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>Tổng ký quỹ hoàn trả</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
+                            {returnCollateralAmount.total} {collateralCoin}
+                        </div>
+                    </section>
+                </section>
+            </section>
+        );
+    };
+
+    const templateContent = {
+        reject: (value) => renderContentTabReject(value),
+        loan: (value) => renderContentTab(value),
+        adjust: (value) => renderContentTabAdjust(value),
+        repay: (value) => renderContentTabRepay(value)
+    };
+
     const renderContent = (value) => {
-        return tab !== 'reject' ? renderContentTab(value) : renderContentTabReject(value);
+        return templateContent?.[tab] && templateContent?.[tab].call(this, value);
     };
 
     const renderTable = useCallback(() => {
@@ -352,7 +505,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                 }}
             />
         );
-    }, [data?.result, loading, isDark, filter, tab]);
+    }, [data?.result, loading, isDark, filter, tab, copied]);
 
     return <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">{renderTable()}</section>;
 };
