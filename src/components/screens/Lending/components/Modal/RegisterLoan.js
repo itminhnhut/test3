@@ -54,6 +54,7 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 // ** UTILS
 import { dwLinkBuilder, formatNumber, getLoginUrl } from 'redux/actions/utils';
+import { getSpotAvailable } from '../../utils/selector';
 
 // ** INIT DATA
 const INIT_DATA = {
@@ -68,11 +69,6 @@ const INIT_DATA = {
     collateralInput: '',
     loanInput: ''
 };
-
-const getSpotAvailable = createSelector([(state) => state.wallet?.SPOT, (utils, params) => params], (wallet, params) => {
-    const _avlb = wallet?.[params.assetId];
-    return _avlb ? Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0) : 0;
-});
 
 const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     const {
@@ -440,9 +436,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                             <div className="font-semibold">{t('lending:lending.modal.collateral_input.label')}</div>
                             <section className="flex text-sm flex-row gap-1 items-center">
                                 <div className="space-x-1">
-                                    <span className="dark:text-txtSecondary-dark text-txtSecondary">
-                                        {t('lending:lending.modal.collateral_input.available')}
-                                    </span>
+                                    <span className="dark:text-txtSecondary-dark text-txtSecondary">{t('common:available_balance')}</span>
                                     <span className="font-semibold ">
                                         {formatNumber(collateralAvailable, filter.collateral?.assetDigit) || '-'} {filter.collateral?.assetCode}
                                     </span>

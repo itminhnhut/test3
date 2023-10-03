@@ -324,6 +324,7 @@ export function formatNumber(value, digits = 2, forceDigits = 0, acceptNegative 
     const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''}`;
     if (isNil(value) || (!acceptNegative && +value < 0)) return defaultValue;
     if (Math.abs(+value) <= 1e-6) return formatNumber2(value, forceDigits || digits);
+    if (Math.abs(+value) <= Math.pow(10, digits * -1)) return formatNumber2(value, forceDigits || digits);
     return numeral(+value).format(`0,0.${'0'.repeat(forceDigits)}${digits > 0 ? `[${'0'.repeat(digits)}]` : ''}`, Math.floor);
 }
 

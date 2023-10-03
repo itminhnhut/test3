@@ -13,4 +13,12 @@ const totalAsset = (total, asset) => {
     return { total: rsTotal, symbol: symbol };
 };
 
-export { totalAsset };
+const getCurrentLTV = ({ totalDebtLeft, totalCollateralLeft, collateralPrice }) => {
+    return (totalDebtLeft / (totalCollateralLeft * collateralPrice));
+};
+
+const getReceiveCollateral = ({ repayAmount, totalDebt, totalCollateralAmount, marginUsed }) => {
+    return ((repayAmount / totalDebt) * totalCollateralAmount - marginUsed) * 0.95;
+};
+
+export { totalAsset, getCurrentLTV, getReceiveCollateral };

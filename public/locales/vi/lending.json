@@ -16,6 +16,10 @@
     "tabs": {
         "info": "Thông tin về Nami Lending"
     },
+    "repayment": {
+        "loan": "Dùng tài sản vay",
+        "collateral": "Dùng tài sản ký quỹ"
+    },
     "lending": {
         "table": {
             "assets": "Tài sản vay",
@@ -33,7 +37,6 @@
             },
             "collateral_input": {
                 "label": "Số lượng ký quỹ",
-                "available": "Khả dụng: ",
                 "placeholder": "Nhập số lượng"
             },
             "input_description": {

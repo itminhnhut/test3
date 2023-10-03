@@ -16,6 +16,10 @@
     "tabs": {
         "info": "Thông tin về Nami Lending"
     },
+    "repayment": {
+        "loan": "Borrowing Asset",
+        "collateral": "Collateral Asset"
+    },
     "lending": {
         "table": {
             "assets": "Tài sản vay",
@@ -33,7 +37,6 @@
             },
             "collateral_input": {
                 "label": "Collateral amount",
-                "available": "Available: ",
                 "placeholder": "Enter amount"
             },
             "input_description": {

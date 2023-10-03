@@ -137,7 +137,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
 
     // ** useState
     const [isAdjustModal, setIsAdjustModal] = useState(INIT_DATA.isModal);
-    const [isLoadRepaymentModal, setIsLoadRepaymentModal] = useState(INIT_DATA.isModal);
+    const [isOpenRepaymentModal, setIsOpenRepaymentModal] = useState(INIT_DATA.isModal);
 
     const [copied, setCopied] = useState(false);
 
@@ -146,7 +146,11 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         handleLoanOrderDetail(id, collateralAsset);
         setIsAdjustModal((prev) => !prev);
     };
-    const handleToggleLoadRepaymentModal = () => setIsLoadRepaymentModal((prev) => !prev);
+    const onOpenRepayment = ({ id, collateralAsset }) => {
+        handleLoanOrderDetail(id, collateralAsset);
+        setIsOpenRepaymentModal(true);
+    };
+    const onCloseRepayment = () => setIsOpenRepaymentModal(false);
     const handleCloseAdjustModal = () => setIsAdjustModal((prev) => !prev);
 
     const onCopy = () => {
@@ -254,7 +258,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                     );
                 })}
                 <section className="flex flex-row items-center w-[162px] ml-6">
-                    <ButtonV2 onClick={handleToggleLoadRepaymentModal}>Trả khoản vay</ButtonV2>
+                    <ButtonV2 onClick={() => onOpenRepayment({ id: _id })}>Trả khoản vay</ButtonV2>
                 </section>
             </section>
         );
@@ -340,19 +344,6 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 width: 205,
                 render: (value, options) => renderLTV(options)
             }
-            // {
-            //     key: '',
-            //     dataIndex: '',
-            //     align: 'right',
-            //     width: 205,
-            //     render: () => (
-            //         <section className="flex flex-col items-center gap-3 w-[162px]">
-            //             <ButtonV2 onClick={handleToggleLoadRepaymentModal}>Trả khoản vay</ButtonV2>
-            //             {/* className={classNames('', { a: 'dark:!text-gray-7 !text-gray-1' })} */}
-            //             <ButtonV2 onClick={handleToggleAdjustModal}>Điều chỉnh ký quỹ</ButtonV2>
-            //         </section>
-            //     )
-            // }
         ];
 
         return (
@@ -389,7 +380,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         <>
             <section className="rounded-b-2xl bg-white dark:bg-dark-4">{renderTable()}</section>
             <ModalAdjustMargin isModal={isAdjustModal} onClose={handleCloseAdjustModal} dataCollateral={dataCollateral} />
-            <ModalLoanRepayment isModal={isLoadRepaymentModal} onClose={handleToggleLoadRepaymentModal} />
+            <ModalLoanRepayment dataCollateral={dataCollateral} isOpen={isOpenRepaymentModal} onClose={onCloseRepayment} />
         </>
     );
 };
