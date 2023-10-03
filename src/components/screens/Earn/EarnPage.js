@@ -18,6 +18,9 @@ import format from 'date-fns/format';
 import useIsomorphicLayoutEffect from 'hooks/useIsomorphicLayoutEffect';
 import Link from 'next/link';
 import SvgWallet from 'components/svg/Wallet';
+import Button from 'components/common/V2/ButtonV2/Button';
+import { useRouter } from 'next/router';
+import { getLoginUrl } from 'redux/actions/utils';
 
 const getUTCToday = () => {
     const now = new Date();
@@ -31,8 +34,8 @@ const suspendDuration = 1800000; // 30 min
 
 const LINKS = {
     BLOG: {
-        en: '/announcement/nami-news',
-        vi: '/announcement/tin-tuc-ve-nami'
+        en: '/support/announcement/nami-news',
+        vi: '/support/announcement/tin-tuc-ve-nami'
     }
 };
 
@@ -45,10 +48,8 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
     } = useTranslation();
     const { poolInfo, setPoolInfo } = useEarnCtx();
     const user = useSelector((state) => state.auth?.user || null);
-    const kyc_status = user?.kyc_status || 0;
     const [isSuspending, setIsSuspending] = useState(false);
-
-    const earnBlogLink = LINKS.BLOG[language] ?? '/';
+    const router = useRouter();
 
     const TABS = [
         {
@@ -65,6 +66,16 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
     const activeTab = TABS[tab];
 
     const closeModal = () => setPoolInfo(undefined);
+    const goToWallet = () => {
+        if (user) {
+            router.push('/wallet/earn');
+        } else {
+            const loginUrl = getLoginUrl('sso', 'login');
+            router.push(loginUrl);
+        }
+    }
+    const earnBlogLink = LINKS.BLOG[language] ?? '/';
+    const goToInfo = () => router.push(earnBlogLink);
 
     const today = getUTCToday();
     useIsomorphicLayoutEffect(() => {
@@ -80,6 +91,10 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
             timeout = setTimeout(() => {
                 setIsSuspending(false);
             }, today + ONE_DAY + suspendDuration / 2 - now);
+        } else {
+            timeout = setTimeout(() => {
+                setIsSuspending(true);
+            }, today + ONE_DAY - suspendDuration / 2 - now);
         }
         return () => {
             clearTimeout(timeout);
@@ -121,15 +136,16 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
                             <div className="flex space-x-6 items-center">
                                 {user && (
                                     <Link href="/wallet/earn" passHref>
-                                        <a className="cursor-pointer font-semibold text-teal whitespace-nowrap flex items-center space-x-2">
-                                            <SvgWallet />
-                                            <span>{t('earn:my_earn_wallet')}</span>
-                                        </a>
+                                        <a className="cursor-pointer font-semibold"></a>
                                     </Link>
                                 )}
-                                <Link href={earnBlogLink} passHref>
-                                    <a className="cursor-pointer font-semibold text-teal whitespace-nowrap">{t('earn:earn_blog')}</a>
-                                </Link>
+                                <Button variants="text" className="font-semibold flex items-center space-x-2" onClick={goToWallet}>
+                                    <SvgWallet />
+                                    <span>{t('earn:my_earn_wallet')}</span>
+                                </Button>
+                                <Button variants="text" className="font-semibold" onClick={goToInfo}>
+                                    {t('earn:earn_blog')}
+                                </Button>
                             </div>
                         </div>
                         <div className="mt-8">{activeTab.component}</div>
@@ -138,10 +154,7 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
                     <FAQSection />
                 </div>
 
-                {poolInfo && kyc_status != KYC_STATUS.APPROVED && <ModalNeedKyc onBackdropCb={closeModal} isOpenModalKyc={true} />}
-
                 {poolInfo &&
-                    kyc_status === KYC_STATUS.APPROVED &&
                     (skipWarning || !isSuspending ? (
                         <EarnModal pool={poolInfo} onClose={closeModal} isSuspending={isSuspending} />
                     ) : (

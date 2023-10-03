@@ -26,64 +26,26 @@ export const getServerSideProps = async (ctx) => {
     const { locale } = ctx;
     // await i18n.reloadResources(locale, ['common', 'navbar', 'earn', 'wallet']);
 
-    const hotPools = [];
-    const pool_list = [];
+    let hotPools = [];
+    let pool_list = [];
     const assetMap = {};
     const rewardMap = {};
     let hotCount = 5;
 
     try {
-        const { data: poolList } = await FetchApi({
+        const { data } = await FetchApi({
             url: API_GET_EARNING_POOLS,
             options: {
                 baseURL: process.env.API_URL || ''
-            },
-            params: {
-                skip: 0,
-                limit: 10
             }
         });
-        poolList.forEach((asset) => {
-            let minAPR = Number.MAX_SAFE_INTEGER,
-                maxAPR = 0,
-                minDuration = Number.MAX_SAFE_INTEGER,
-                maxDuration = 0;
-            assetMap[asset.asset] = true;
-            if (!asset?.projects?.length || !asset.isActive) {
-                return;
-            }
-            const pools = asset.projects.reduce((_poolList, project) => {
-                rewardMap[project.rewardAsset] = true;
+        if (!data) {
+            throw new Error('api error')
+        }
+        const { listAvailablePools, listHotPools } = data;
+        pool_list = listAvailablePools;
+        hotPools = listHotPools;
 
-                if (!project.isActive) {
-                    return _poolList;
-                }
-                minAPR = Math.min(project.apr, minAPR);
-                maxAPR = Math.max(project.apr, maxAPR);
-                minDuration = Math.min(project.duration, minDuration);
-                maxDuration = Math.max(project.duration, maxDuration);
-                const pool = {
-                    ...project,
-                    asset: asset.asset,
-                    key: project.id
-                };
-                if (hotCount && project.isHot) {
-                    hotPools.push(pool);
-                    hotCount--;
-                }
-                return [..._poolList, pool];
-            }, []);
-            pool_list.push({
-                id: asset._id,
-                isActive: asset.isActive,
-                asset: asset.asset,
-                minAPR,
-                maxAPR,
-                minDuration,
-                maxDuration,
-                pools
-            });
-        });
     } catch (error) {
         console.log('error:', error.message);
     }
@@ -91,7 +53,7 @@ export const getServerSideProps = async (ctx) => {
     return {
         props: {
             ...(await serverSideTranslations(locale, ['common', 'navbar', 'earn', 'wallet'])),
-            hotPools,
+            hotPools: hotPools,
             pool_list,
             assetList: Object.keys(assetMap),
             rewardList: Object.keys(rewardMap)

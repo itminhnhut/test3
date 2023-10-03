@@ -5,10 +5,6 @@ import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { WalletCurrency } from 'utils/reference-utils';
 import { useEarnCtx } from '../../context/EarnContext';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { getLoginUrl } from 'redux/actions/utils';
-
 
 const Token = ({ symbol }) => {
     return (
@@ -22,17 +18,10 @@ const Token = ({ symbol }) => {
 const HotPool = ({ pool }) => {
 
     const {asset, rewardAsset, duration, apr} = pool;
-    const { user: auth } = useSelector((state) => state.auth) || null;
     const { setPoolInfo } = useEarnCtx();
     const { t } = useTranslation();
-    const router = useRouter();
     const onClick = () => {
-        if (auth) {
-            setPoolInfo(pool);
-        } else {
-            const url = getLoginUrl('sso', 'login');
-            router.push(url);
-        }
+        setPoolInfo(pool);
     };
 
     return (

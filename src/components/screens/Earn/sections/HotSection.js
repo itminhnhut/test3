@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import HotPool from '../components/HotPool/HotPool';
 import { useKeenSlider } from 'keen-slider/react';
 import styled from 'styled-components';
@@ -24,7 +24,8 @@ const HotSection = ({ pools }) => {
             '(max-width: 480px)': {
                 slidesPerView: 1
             }
-        }
+        },
+
     });
     const { t } = useTranslation();
 
@@ -37,7 +38,7 @@ const HotSection = ({ pools }) => {
                         <button
                             key={idx}
                             onClick={() => slider.moveToSlideRelative(idx)}
-                            className={classNames('dot h-2 transition-all', activeItem === idx ? '!bg-teal w-10 rounded-3xl' : '!bg-gray-12 dark:!bg-gray-7 w-2 rounded-full')}
+                            className={classNames('dot h-1 transition-all', activeItem === idx ? '!bg-teal w-6 rounded-sm' : '!bg-gray-12 dark:!bg-gray-7 w-1 rounded-full')}
                         />
                     );
                 })}
@@ -48,6 +49,15 @@ const HotSection = ({ pools }) => {
     if (!pools?.length) {
         return null;
     }
+
+    useEffect(() => {
+        const interval = setInterval(function () {
+            slider?.next?.();
+        }, 6000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, [slider]);
 
     return (
         <div className="">
@@ -60,7 +70,7 @@ const HotSection = ({ pools }) => {
                         </div>
                     ))}
                 </div>
-                <div className="keen-slider__dots__wrapper">{renderDots()}</div>
+                <div className="mt-4">{renderDots()}</div>
             </div>
         </div>
     );

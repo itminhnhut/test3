@@ -28,6 +28,7 @@ import SvgChevronDown from 'components/svg/ChevronDown';
 import { WalletCurrency, formatNumber } from 'utils/reference-utils';
 import EarnPositionDetail from './OrderDetail';
 import { getUserEarnBalance } from 'redux/actions/user';
+import styled from 'styled-components';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -205,42 +206,44 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, marketWatch, isSma
                 </MCard>
 
                 <h3 className="mt-20 font-semibold text-2xl">{t('wallet:my_assets')}</h3>
-                <ExpandableTable
-                    className="bg-bgContainer dark:bg-bgContainer-dark border dark:border-none border-divider rounded-xl mt-8 expandable-table shadow-card_light"
-                    columns={columns}
-                    data={allAssetValue}
-                    expandable={{
-                        childrenColumnName: 'positions',
-                        expandIconColumnIndex: 4,
-                        expandIcon: ({ record, expanded, onExpand }) =>
-                            record.positions ? (
-                                <div
-                                    className="w-full"
-                                    onClick={(e) => {
-                                        if (!expanded) {
-                                            onExpand?.(record, e);
-                                        }
-                                    }}
-                                >
-                                    <SvgChevronDown size={24} color="currentColor" className={classNames('m-auto', expanded && '!rotate-0')} />
-                                </div>
-                            ) : (
-                                <div className="text-teal font-semibold" onClick={() => setPosition(record)}>
-                                    {t('wallet:earn_wallet:table:order_detail')}
-                                </div>
-                            ),
-                        expandRowByClick: true,
-                        onExpand: (expanded, record) => {
-                            setExpandedRows((old) => ({ ...old, [record.key]: expanded }));
-                        }
-                    }}
-                    emptyText={<NoData text={t('wallet:earn_wallet:table:no_data')} />}
-                    rowClassName={(record) => classNames('border-bottom', expandedRows[record.key] && 'expanded')}
-                    tableStyle={{
-                        rowHeight: '72px',
-                        fontSize: '1rem'
-                    }}
-                />
+                <TableWrapper>
+                    <ExpandableTable
+                        className="bg-bgContainer dark:bg-bgContainer-dark border dark:border-none border-divider rounded-xl mt-8 expandable-table shadow-card_light"
+                        columns={columns}
+                        data={allAssetValue}
+                        expandable={{
+                            childrenColumnName: 'positions',
+                            expandIconColumnIndex: 4,
+                            expandIcon: ({ record, expanded, onExpand }) =>
+                                record.positions ? (
+                                    <div
+                                        className="w-full"
+                                        onClick={(e) => {
+                                            if (!expanded) {
+                                                onExpand?.(record, e);
+                                            }
+                                        }}
+                                    >
+                                        <SvgChevronDown size={24} color="currentColor" className={classNames('m-auto', expanded && '!rotate-0')} />
+                                    </div>
+                                ) : (
+                                    <div className="text-teal font-semibold" onClick={() => setPosition(record)}>
+                                        {t('wallet:earn_wallet:table:order_detail')}
+                                    </div>
+                                ),
+                            expandRowByClick: true,
+                            onExpand: (expanded, record) => {
+                                setExpandedRows((old) => ({ ...old, [record.key]: expanded }));
+                            }
+                        }}
+                        emptyText={<NoData text={t('wallet:earn_wallet:table:no_data')} />}
+                        rowClassName={(record) => classNames('border-bottom', expandedRows[record.key] && 'expanded')}
+                        tableStyle={{
+                            rowHeight: '72px',
+                            fontSize: '1rem'
+                        }}
+                    />
+                </TableWrapper>
             </div>
             <div className="md:hidden">
                 <DefaultMobileView className="!px-0" />
@@ -250,6 +253,19 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, marketWatch, isSma
         </div>
     );
 };
+
+const TableWrapper = styled('div')`
+    .rc-table {
+        .rc-table-expanded-row-fixed {
+            min-height: 268px;
+        }
+        .rc-table-row-level-1 {
+            td {
+                height: 64px;
+            }
+        }
+    }
+`;
 
 const ROW_LOADING_SKELETON = {
     asset: <Skeletor width={65} />,

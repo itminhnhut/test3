@@ -47,10 +47,10 @@ const Token = ({ symbol }) => {
 const STATUS = {
     SUSPENDING: 'suspending',
     NON_RENEWAL: 'non_renewal',
-    RENEWAL: 'renewal',
-}
+    RENEWAL: 'renewal'
+};
 
-const suspendDuration = 1800000 // 30 min
+const suspendDuration = 1800000; // 30 min
 const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
     const {
         asset,
@@ -65,7 +65,8 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
         purchaseTime,
         rewardsEndDate,
         redeemDate,
-        canRedeemEarly
+        canRedeemEarly,
+        canReStake
     } = position;
     const { t } = useTranslation();
     const assetInfo = getAssetFromCode(asset);
@@ -81,16 +82,12 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
         });
         return tokenPair?.p || 1;
     }, [marketWatch, asset, rewardAsset]);
-    const estDailyReward = apr * quote * amount / 365
+    const estDailyReward = (apr * quote * amount) / 365;
 
     const today = getUTCToday();
-    const subcribeAt = today + ONE_DAY;
-    const profitAt = subcribeAt + ONE_DAY;
-    const endAt = profitAt + ONE_DAY;
 
     const now = Date.now();
     useIsomorphicLayoutEffect(() => {
-        const today = getUTCToday();
         let timeout;
         if (now < today + suspendDuration / 2) {
             setIsSuspending(true);
@@ -102,6 +99,10 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
             timeout = setTimeout(() => {
                 setIsSuspending(false);
             }, today + ONE_DAY + suspendDuration / 2 - now);
+        } else {
+            timeout = setTimeout(() => {
+                setIsSuspending(true);
+            }, today + ONE_DAY - suspendDuration / 2 - now);
         }
         return () => {
             clearTimeout(timeout);
@@ -115,7 +116,6 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
         return t('wallet:earn_wallet:position:suspending_desc', { from, to });
     }, [t]);
 
-
     const isEarly = now < redeemDate * 1000;
     const canRedeem = !isSuspending && depositAmount && (!isEarly || !!canRedeemEarly);
     const leftOverReward = rewardAmt - claimedAmount;
@@ -126,7 +126,7 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
         }
 
         try {
-            setIsLoading(true)
+            setIsLoading(true);
             const { message } = await FetchApi({
                 url: API_EARN_REDEEM,
                 options: {
@@ -141,7 +141,7 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
                     text: t('wallet:earn_wallet:position:redeem_success'),
                     type: 'success'
                 });
-                setDepositAmount(0)
+                setDepositAmount(0);
             } else {
                 toast({
                     text: t('wallet:earn_wallet:position:error'),
@@ -178,7 +178,7 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
                     text: t('wallet:earn_wallet:position:claim_success'),
                     type: 'success'
                 });
-                setClaimedAmount(rewardAmt)
+                setClaimedAmount(rewardAmt);
             } else {
                 toast({
                     text: t('wallet:earn_wallet:position:error'),
@@ -207,14 +207,13 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
                 }
             });
             if (message === 'ok') {
-                setAutoRenew(old => !old);
+                setAutoRenew((old) => !old);
             }
         } catch (error) {
-
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     const status = isSuspending ? STATUS.SUSPENDING : autoRenew ? STATUS.RENEWAL : STATUS.NON_RENEWAL;
     const Bagde = useMemo(() => {
@@ -315,16 +314,16 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
                 </div>
                 <div className="flex justify-between mt-4">
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:subcribed_at')}</div>
-                    <div className="font-semibold text-right">{formatDateTime(purchaseTime || subcribeAt)}</div>
+                    <div className="font-semibold text-right">{formatDateTime(purchaseTime)}</div>
                 </div>
                 <div className="flex justify-between mt-4">
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:profited_at')}</div>
-                    <div className="font-semibold text-right">{formatDateTime(rewardsEndDate || endAt)}</div>
+                    <div className="font-semibold text-right">{formatDateTime(rewardsEndDate)}</div>
                 </div>
                 {autoRenew && (
                     <div className="flex justify-between mt-4">
                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:renew_at')}</div>
-                        <div className="font-semibold text-right">{formatDateTime(rewardsEndDate || endAt)}</div>
+                        <div className="font-semibold text-right">{formatDateTime(rewardsEndDate)}</div>
                     </div>
                 )}
             </div>
@@ -342,11 +341,15 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
                     </>
                 ) : (
                     <>
-                        <div className="flex items-center font-semibold space-x-4">
-                            <span>{t('wallet:earn_wallet:position:auto_renew')}</span>
-                            <SwitchV2 processing={isLoading} checked={autoRenew} onChange={toggleAutoRenew} />
-                        </div>
-                        <div className="mt-4 text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:auto_renew_tooltip')}</div>
+                        {canReStake && (
+                            <>
+                                <div className="flex items-center font-semibold space-x-4">
+                                    <span>{t('wallet:earn_wallet:position:auto_renew')}</span>
+                                    <SwitchV2 processing={isLoading} checked={autoRenew} onChange={toggleAutoRenew} />
+                                </div>
+                                <div className="mt-4 text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:auto_renew_tooltip')}</div>
+                            </>
+                        )}
                     </>
                 )}
             </div>

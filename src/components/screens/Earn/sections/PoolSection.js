@@ -14,6 +14,8 @@ import { useSelector } from 'react-redux';
 import { useEarnCtx } from '../context/EarnContext';
 import { getAssetFromCode, getLoginUrl } from 'redux/actions/utils';
 import { useRouter } from 'next/router';
+import styled from 'styled-components';
+import Button from 'components/common/V2/ButtonV2/Button';
 
 const Token = ({ symbol, balance }) => {
     const isGroup = typeof balance !== 'undefined' && balance !== null;
@@ -24,9 +26,13 @@ const Token = ({ symbol, balance }) => {
             <AssetLogo assetId={WalletCurrency[symbol]} size={32} />
             <div className="">
                 <div className={classNames(isGroup && 'font-semibold')}>{symbol}</div>
-                {balance > 0 && (
+                {typeof balance === 'number' ? (
                     <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs">
                         {formatNumber(balance, assetInfo?.assetDigit || 0)} {symbol}
+                    </div>
+                ) : (
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs">
+                        {balance}
                     </div>
                 )}
             </div>
@@ -58,7 +64,7 @@ const PoolSection = ({ pool_list }) => {
     const userAssets = useSelector((state) => state?.wallet?.SPOT) || {};
     const toTableRow = (pool) => {
         return {
-            key: pool.key,
+            key: pool.id,
             period: `${pool.duration} ${pool.duration > 1 ? t('common:days') : t('common:day')}`,
             APR: `${+(pool.apr * 100).toFixed(2)}%`,
             coin: (
@@ -73,31 +79,33 @@ const PoolSection = ({ pool_list }) => {
 
     const columns = [
         {
-            title: t('earn:table:coin'),
+            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('earn:table:coin')}</div>,
             dataIndex: 'coin',
             key: 'coin',
-            width: 350,
+            width: 384,
             align: 'left'
         },
         {
-            title: t('earn:table:apr'),
+            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('earn:table:apr')}</div>,
             dataIndex: 'APR',
             key: 'APR',
             width: 'auto',
-            align: 'left'
+            align: 'left',
+            render: (val) => <div className="font-semibold text-teal">{val}</div>
         },
         {
-            title: t('earn:table:period'),
+            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('earn:table:period')}</div>,
             dataIndex: 'period',
             key: 'period',
             width: 'auto',
-            align: 'left'
+            align: 'left',
+            render: (val) => <div className="font-semibold">{val}</div>
         },
         {
-            title: t('earn:table:action'),
+            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('earn:table:action')}</div>,
             dataIndex: 'action',
             key: 'action',
-            width: 230,
+            width: 174,
             align: 'center'
         }
     ];
@@ -109,18 +117,13 @@ const PoolSection = ({ pool_list }) => {
     }, []);
 
     const openDepositModal = (pool) => {
-        if (auth) {
-           setPoolInfo(pool);
-        } else {
-            const url = getLoginUrl('sso', 'login');
-            router.push(url);
-        }
+        setPoolInfo(pool);
     };
 
     const filteredAssets = useMemo(() => {
         const dataTable = pool_list.reduce((list, asset) => {
             const isMatch = includes(asset.asset, debouncedFilter);
-            const userBalance = userAssets?.[WalletCurrency[asset.asset]]?.value || 0;
+            const userBalance = auth ? (userAssets?.[WalletCurrency[asset.asset]]?.value || 0) - (userAssets?.[WalletCurrency[asset.asset]]?.locked_value || 0) : `- ${asset.asset}`;
             const shouldShow = !onlyUserAssets || userBalance > 0;
             if (!shouldShow) {
                 return list;
@@ -128,8 +131,8 @@ const PoolSection = ({ pool_list }) => {
 
 
             const pools = isMatch
-                ? asset.pools.map(toTableRow)
-                : asset.pools.reduce((_list, pool) => {
+                ? asset.projects?.map(toTableRow)
+                : asset.projects?.reduce((_list, pool) => {
                       if (includes(pool.rewardAsset, debouncedFilter)) {
                           return [..._list, toTableRow(pool)];
                       }
@@ -138,11 +141,11 @@ const PoolSection = ({ pool_list }) => {
 
             if (pools.length) {
                 const poolGroup = {
-                    key: asset.id,
+                    key: asset._id,
                     coin: <Token symbol={asset.asset} balance={userBalance} />,
                     APR: showRange({
-                        min: +(asset.minAPR * 100).toFixed(2),
-                        max: +(asset.maxAPR * 100).toFixed(2),
+                        min: +(asset.minApr * 100).toFixed(2),
+                        max: +(asset.maxApr * 100).toFixed(2),
                         separator: '~',
                         postFix: {
                             plural: `%`,
@@ -172,19 +175,19 @@ const PoolSection = ({ pool_list }) => {
     return (
         <>
             <div className="flex space-x-8 justify-end">
-                {auth && (
-                    <CheckBox
-                        className=""
-                        boxContainerClassName="w-5 h-5"
-                        labelClassName="text-txtSecondary dark:text-txtSecondary-dark tracking-normal text-base"
-                        label={t('earn:my_assets_only')}
-                        onChange={() => setOnlyUserAssets((old) => !old)}
-                        active={onlyUserAssets}
-                    />
-                )}
+                <CheckBox
+                    className={classNames(!auth && '!cursor-not-allowed')}
+                    boxContainerClassName="!w-6 !h-6"
+                    labelClassName="text-txtSecondary dark:text-txtSecondary-dark tracking-normal text-base"
+                    label={t('earn:my_assets_only')}
+                    onChange={() => setOnlyUserAssets((old) => !old)}
+                    active={onlyUserAssets}
+                    isDisable={!auth}
+                    sizeCheckIcon={24}
+                />
                 <InputV2
                     className="pb-0"
-                    classNameDivInner="!bg-white dark:!bg-dark-2 border-none"
+                    classNameDivInner="!bg-white dark:!bg-dark-2 !w-[23rem]"
                     value={filter}
                     onChange={onSearch}
                     onClear={() => onSearch('')}
@@ -199,44 +202,59 @@ const PoolSection = ({ pool_list }) => {
                 />
             </div>
 
-            <ExpandableTable
-                className="bg-bgContainer dark:bg-bgContainer-dark rounded-xl mt-8 expandable-table"
-                columns={columns}
-                data={filteredAssets}
-                expandable={{
-                    childrenColumnName: 'pools',
-                    expandIconColumnIndex: 3,
-                    expandIcon: ({ record, expanded, onExpand }) =>
-                        record.pools ? (
-                            <div
-                                className="w-full"
-                                onClick={(e) => {
-                                    if (!expanded) {
-                                        onExpand?.(record, e);
-                                    }
-                                }}
-                            >
-                                <ChevronDown size={24} color="currentColor" className={classNames('m-auto', expanded && '!rotate-0')} />
-                            </div>
-                        ) : (
-                            <div className="text-teal font-semibold" onClick={() => openDepositModal(record?.raw)}>
-                                {t('earn:table:deposit')}
-                            </div>
-                        ),
-                    expandRowByClick: true,
-                    onExpand: (expanded, record) => {
-                        setExpandedRows((old) => ({ ...old, [record.key]: expanded }));
-                    }
-                }}
-                emptyText={<NoData text={t('earn:table:no_data')} isSearch={!!debouncedFilter} />}
-                rowClassName={(record) => classNames('border-bottom', expandedRows[record.key] && 'expanded')}
-                tableStyle={{
-                    rowHeight: '72px',
-                    fontSize: '1rem'
-                }}
-            />
+            <TableWrapper>
+                <ExpandableTable
+                    className="bg-bgContainer dark:bg-bgContainer-dark rounded-xl mt-8 expandable-table"
+                    columns={columns}
+                    data={filteredAssets}
+                    expandable={{
+                        childrenColumnName: 'pools',
+                        expandIconColumnIndex: 3,
+                        expandIcon: ({ record, expanded, onExpand }) =>
+                            record.pools ? (
+                                <div
+                                    className="w-full"
+                                    onClick={(e) => {
+                                        if (!expanded) {
+                                            onExpand?.(record, e);
+                                        }
+                                    }}
+                                >
+                                    <ChevronDown size={24} color="currentColor" className={classNames('m-auto', expanded && '!rotate-0')} />
+                                </div>
+                            ) : (
+                                <Button variants='text' className="font-semibold !text-xs md:!text-sm" onClick={() => openDepositModal(record?.raw)}>
+                                    {t('earn:table:deposit')}
+                                </Button>
+                            ),
+                        expandRowByClick: true,
+                        onExpand: (expanded, record) => {
+                            setExpandedRows((old) => ({ ...old, [record.key]: expanded }));
+                        }
+                    }}
+                    emptyText={<NoData text={t('earn:table:no_data')} isSearch={!!debouncedFilter} />}
+                    rowClassName={(record) => classNames('border-bottom', expandedRows[record.key] && 'expanded')}
+                    tableStyle={{
+                        rowHeight: '72px',
+                        fontSize: '1rem'
+                    }}
+                />
+            </TableWrapper>
         </>
     );
 };
+
+const TableWrapper = styled('div')`
+    .rc-table {
+        .rc-table-expanded-row-fixed {
+            min-height: 268px;
+        }
+        .rc-table-row-level-1 {
+            td {
+                height: 64px;
+            }
+        }
+    }
+`;
 
 export default PoolSection;

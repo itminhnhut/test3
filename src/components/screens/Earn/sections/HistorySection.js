@@ -9,6 +9,8 @@ import { formatNumber } from 'utils/reference-utils';
 import { getAssetFromCode } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import format from 'date-fns/format';
+import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 
 const columns = [
     {
@@ -79,7 +81,7 @@ const Cell = ({ asset = '', title, amount, children }) => {
     );
 };
 
-const HistorySection = ({ assetList, rewardList }) => {
+const HistorySection = () => {
     const { t } = useTranslation();
 
     const transactionTab = [
@@ -146,7 +148,7 @@ const HistorySection = ({ assetList, rewardList }) => {
     };
     const [filter, setFilter] = useState(configs);
     const [page, setPage] = useState(0);
-
+    const auth = useSelector((state) => state.auth.user || null);
 
 
     const { data, loading } = useFetchApi(
@@ -212,31 +214,39 @@ const HistorySection = ({ assetList, rewardList }) => {
 
     return (
         <div className="bg-bgContainer dark:bg-bgContainer-dark rounded-xl mt-8 p-6">
-            <div className="grid grid-cols-[repeat(2,minmax(0,2fr)),repeat(3,1fr),110px] w-full gap-x-3">
+            {auth && <div className="grid grid-cols-[repeat(2,minmax(0,2fr)),repeat(3,1fr),110px] w-full gap-x-3">
                 <TableFilter config={configs} filter={filter} setFilter={setFilter} resetPagination={() => setPage(0)} />
                 <div className="h-8"></div>
-            </div>
-
-            <TableV2
-                showHeader={false}
-                pagingPrevNext={{
-                    page,
-                    hasNext: data?.hasNext,
-                    onChangeNextPrev: (offset) => setPage((old) => old + offset)
-                }}
-                showPaging={data?.hasNext || page !== 0}
-                loading={loading}
-                columns={columns}
-                data={dataTable}
-                emptyText={<NoData text={t('earn:table:no_data')} />}
-                rowClassName="border-bottom"
-                tableStyle={{
-                    rowHeight: '96px',
-                    fontSize: '1rem'
-                }}
-            />
+            </div>}
+            <TableWrapper>
+                <TableV2
+                    showHeader={false}
+                    pagingPrevNext={{
+                        page,
+                        hasNext: data?.hasNext,
+                        onChangeNextPrev: (offset) => setPage((old) => old + offset)
+                    }}
+                    showPaging={data?.hasNext || page !== 0}
+                    loading={loading}
+                    columns={columns}
+                    data={dataTable}
+                    emptyText={<NoData text={t('earn:table:no_data')} />}
+                    rowClassName="border-bottom"
+                    tableStyle={{
+                        rowHeight: '96px',
+                        fontSize: '1rem'
+                    }}
+                    height={96}
+                />
+            </TableWrapper>
         </div>
     );
 };
+
+const TableWrapper = styled('div')`
+    .rc-table-expanded-row-fixed {
+        min-height: 268px;
+    }
+`;
 
 export default HistorySection;

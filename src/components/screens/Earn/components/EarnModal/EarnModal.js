@@ -8,7 +8,7 @@ import { ONE_DAY } from 'constants/constants';
 import { format as formatDate, startOfTomorrow } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import { getAssetFromCode } from 'redux/actions/utils';
+import { getAssetFromCode, getLoginUrl } from 'redux/actions/utils';
 import { WalletCurrency, formatNumber } from 'utils/reference-utils';
 import CheckBox from 'components/common/CheckBox';
 import Button from 'components/common/V2/ButtonV2/Button';
@@ -18,6 +18,12 @@ import toast from 'utils/toast';
 import useQuery from 'hooks/useQuery';
 import { useRouter } from 'next/router';
 import Tooltip from 'components/common/Tooltip';
+import { KYC_STATUS } from 'redux/actions/const';
+import ModalNeedKyc from 'components/common/ModalNeedKyc';
+import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
+import classNames from 'classnames';
+import ConfirmModal from '../ConfirmModal/ConfirmModal';
+import SuccessModal from '../SuccessModal/SuccessModal';
 
 const formatDateTime = (date = 0) => {
     return formatDate(date, 'hh:mm dd/MM/yyyy');
@@ -32,38 +38,74 @@ const getUTCToday = () => {
     return utcToday;
 };
 
-const suspendDuration = 1800000 // 30 minutes
-
-const Token = ({ symbol }) => {
+const Token = ({ symbol, className }) => {
     return (
-        <div className="flex space-x-2 items-center">
+        <div className={classNames('flex space-x-2 items-center', className)}>
             <AssetLogo assetId={WalletCurrency[symbol]} size={24} />
             <span className="font-semibold">{symbol}</span>
         </div>
     );
 };
 
+const MODAL = {
+    CONFIRM: 'CONFIRM',
+    SUCCESS: 'SUCCESS',
+    KYC: 'KYC'
+};
+
 const EarnModal = ({ onClose, pool, isSuspending }) => {
-    const { asset, rewardAsset, accumulatedAmount, totalSupply, duration, apr, min, max, id } = pool;
+    const { asset, rewardAsset, accumulatedAmount, totalSupply, duration, apr, min, max, id, renewable } = pool;
     const { t } = useTranslation();
     const assetInfo = getAssetFromCode(asset);
     const rewardInfo = getAssetFromCode(rewardAsset);
     const [depositAmount, setDepositAmount] = useState();
     const [autoRenew, setAutoRenew] = useState(true);
     const [agree, setAgree] = useState(false);
-    const userBalance = useSelector((state) => state?.wallet?.SPOT?.[WalletCurrency[asset]]?.value) || 0;
+    const [openModal, setOpenModal] = useState();
+    const auth = useSelector((state) => state?.auth?.user || null);
+    const kyc_status = auth?.kyc_status ?? KYC_STATUS.NO_KYC;
+
+    const userBalance =
+        useSelector((state) => {
+            const userAsset = state?.wallet?.SPOT?.[WalletCurrency[asset]];
+            if (!userAsset) {
+                return 0;
+            }
+            const { value = 0, locked_value = 0 } = userAsset;
+            return value - locked_value;
+        }) || 0;
     const { data: spotList } = useQuery([API_GET_MARKET_WATCH], async () => {
         const { data } = await FetchApi({
-            url: API_GET_MARKET_WATCH,
+            url: API_GET_MARKET_WATCH
         });
         return data;
     });
     const quote = useMemo(() => {
+
+        const serverQuotes = ['VNDC', 'VNST', 'USDT'];
+        if (asset === rewardAsset) {
+            return 1;
+        }
+
+        // const isBaseStabled = serverQuotes.includes(asset);
+        // const isQuoteStabled = serverQuotes.includes(rewardAsset);
+
+        // if (isBaseStabled && isQuoteStabled && asset !== 'USDT' && rewardAsset !== 'USDT') {
+        //     return 1
+        // }
+
+        // if (serverQuotes.includes(asset)) {
+        //     const tokenPair = spotList?.find((pair) => {
+        //         return pair.b === asset && pair.q === 'VNDC';
+        //     });
+        //     return tokenPair?.p || 0;
+        // }
+
         const tokenPair = spotList?.find((pair) => {
             return pair.b === asset && pair.q === rewardAsset;
-        })
+        });
         return tokenPair?.p || 0;
-    }, [spotList, asset, rewardAsset])
+    }, [spotList, asset, rewardAsset]);
     const router = useRouter();
 
     const poolLoad = +((accumulatedAmount * 100) / totalSupply).toFixed(2);
@@ -72,11 +114,12 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
     const utcToday = getUTCToday();
     const subcribeAt = utcToday + ONE_DAY;
     const profitAt = subcribeAt + ONE_DAY;
-    const endAt = profitAt + ONE_DAY;
-
+    const endAt = subcribeAt + duration * ONE_DAY;
 
     const maxDeposit = Math.min(max, availableSize);
-    const isSoldOut = availableSize < min;
+    const isSoldOut = availableSize < min || availableSize === 0;
+
+    const estimatedReward = (quote * apr * duration * +depositAmount) / 365;
 
     const validation = useMemo(() => {
         let isValid = true;
@@ -97,50 +140,14 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
     }, [depositAmount, min, maxDeposit, userBalance]);
 
     const canDeposit = !isSoldOut && !validation.isError && depositAmount && agree;
-    let systemMsg = ''
+    let systemMsg = '';
     if (isSoldOut) {
-        systemMsg = t('earn:deposit_modal:full_pool')
+        systemMsg = t('earn:deposit_modal:full_pool');
     } else if (isSuspending) {
         systemMsg = t('earn:deposit_modal:full_pool');
     }
 
-    const deposit = async () => {
-        if (!canDeposit) {
-            return;
-        }
-
-        try {
-            const { message } = await FetchApi({
-                url: API_DEPOSIT_EARN,
-                options: {
-                    method: 'POST',
-                    params: {
-                        asset,
-                        pool_id: id,
-                        amount: depositAmount,
-                        isRenew: autoRenew
-                    }
-                }
-            });
-            if (message === 'ok') {
-                toast({
-                    text: t('earn:deposit_modal:success'),
-                    type: 'success'
-                });
-                onClose();
-            } else {
-                toast({
-                    text: t('earn:deposit_modal:error'),
-                    type: 'error'
-                });
-            }
-        } catch (error) {
-            toast({
-                text: t('earn:deposit_modal:error'),
-                type: 'error'
-            });
-        }
-    };
+    const closeModal = () => setOpenModal(undefined);
     const buyToken = () => {
         router.push({
             pathname: '/withdraw-deposit/crypto',
@@ -149,6 +156,10 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                 assetId: asset
             }
         });
+    };
+    const login = () => {
+        const url = getLoginUrl('sso', 'login');
+        router.push(url);
     };
 
     return (
@@ -193,7 +204,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                             >
                                 {t('earn:deposit_modal:apr')}:
                             </div>
-                            <div className="font-semibold text-right">{+(apr * 100).toFixed(2)}%</div>
+                            <div className="font-semibold text-right text-teal">{+(apr * 100).toFixed(2)}%</div>
                         </div>
                         <div className="flex justify-between space-x-2">
                             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:period')}:</div>
@@ -215,8 +226,8 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                         <span className="font-semibold">{t('earn:deposit_modal:amount')}</span>
                         <div className="flex space-x-1 py-2 text-sm items-center">
                             <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:available')}:</span>
-                            <span className="font-semibold">{formatNumber(userBalance, asset.assetDigit || 0)}</span>
-                            <AddCircle onClick={buyToken} size={16} />
+                            <span className="font-semibold">{formatNumber(userBalance, asset?.assetDigit || 0)}</span>
+                            <AddCircle onClick={buyToken} size={16} className="cursor-pointer" />
                         </div>
                     </div>
                     <TradingInput
@@ -224,33 +235,44 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                         inputClassName="!text-left"
                         value={depositAmount}
                         onValueChange={({ value }) => setDepositAmount(value)}
-                        renderTail={<Token symbol={asset} />}
+                        renderTail={
+                            <div className="flex items-center">
+                                <Button className="pr-3" variants="text" onClick={() => setDepositAmount(userBalance)}>
+                                    MAX
+                                </Button>
+                                <Token symbol={asset} className="pl-3 border-l border-divider dark:border-divider-dark" />
+                            </div>
+                        }
                         placeholder={t('earn:deposit_modal:placeholder')}
                         allowedDecimalSeparators={[',', '.']}
                         decimalScale={assetInfo?.assetDigit || 0}
                         thousandSeparator={true}
                         validator={validation}
                         allowNegative={false}
+                        errorTooltip={false}
                         inputMode="decimal"
-                        clearAble
                     />
 
-                    <Tooltip
-                        className="w-[calc(50%-2.75rem)] after:!left-6"
-                        isV3
-                        id="renew-tooltip"
-                        place="top"
-                        effect="solid"
-                        overridePosition={({ left, top }) => ({ left: 32, top: top })}
-                    >
-                        {t('earn:deposit_modal:renew_tooltip')}
-                    </Tooltip>
-                    <div className="mt-4 flex space-x-4">
-                        <span className="font-semibold border-b border-dashed border-gray-1 dark:border-gray-7" data-tip="" data-for="renew-tooltip">
-                            {t('earn:deposit_modal:auto_renew')}
-                        </span>
-                        <SwitchV2 checked={autoRenew} onChange={setAutoRenew} />
-                    </div>
+                    {renewable && (
+                        <>
+                            <Tooltip
+                                className="w-[calc(50%-2.75rem)] after:!left-6"
+                                isV3
+                                id="renew-tooltip"
+                                place="top"
+                                effect="solid"
+                                overridePosition={({ left, top }) => ({ left: 32, top: top })}
+                            >
+                                {t('earn:deposit_modal:renew_tooltip')}
+                            </Tooltip>
+                            <div className="mt-4 flex space-x-4">
+                                <span className="font-semibold border-b border-dashed border-gray-1 dark:border-gray-7" data-tip="" data-for="renew-tooltip">
+                                    {t('earn:deposit_modal:auto_renew')}
+                                </span>
+                                <SwitchV2 checked={autoRenew} onChange={setAutoRenew} />
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 <div className="bg-gray-13 dark:bg-dark-4 rounded-xl p-4">
@@ -260,7 +282,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                     <div className="flex justify-between space-x-2">
                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:estimated_profit')}:</div>
                         <div className="font-semibold">
-                            {formatNumber((quote * apr * duration * +depositAmount) / 365, rewardInfo?.assetDigit ?? 0)} {rewardAsset}
+                            {formatNumber(estimatedReward, rewardInfo?.assetDigit ?? 0)} {rewardAsset}
                         </div>
                     </div>
                     <div className="flex justify-between space-x-2 mt-3">
@@ -336,9 +358,42 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
             />
 
             <div className="h-10"></div>
-            <Button className="w-full" disabled={!canDeposit} onClick={deposit}>
-                {t('earn:deposit_modal:deposit')}
-            </Button>
+            {auth ? (
+                kyc_status === KYC_STATUS.APPROVED ? (
+                    <Button className="w-full" disabled={!canDeposit} onClick={() => setOpenModal(MODAL.CONFIRM)}>
+                        {t('earn:deposit_modal:deposit')}
+                    </Button>
+                ) : (
+                    <Button className="w-full" onClick={() => setOpenModal(MODAL.KYC)}>
+                        {t('common:kyc_now')}
+                    </Button>
+                )
+            ) : (
+                <Button className="w-full" onClick={login}>
+                    {t('common:sign_in')}
+                </Button>
+            )}
+            <ModalNeedKyc onBackdropCb={closeModal} isOpenModalKyc={openModal === MODAL.KYC} />
+            {!isSuspending && openModal === MODAL.CONFIRM && (
+                <ConfirmModal
+                    pool={pool}
+                    autoRenew={autoRenew}
+                    depositAmount={depositAmount}
+                    estimatedReward={estimatedReward}
+                    onClose={closeModal}
+                    subcribeAt={subcribeAt}
+                    onConfirm={() => setOpenModal(MODAL.SUCCESS)}
+                />
+            )}
+            {openModal === MODAL.SUCCESS && (
+                <SuccessModal
+                    autoRenew={autoRenew}
+                    depositAmount={depositAmount}
+                    estimatedReward={estimatedReward}
+                    pool={pool}
+                    onClose={onClose}
+                />
+            )}
         </ModalV2>
     );
 };

@@ -54,10 +54,16 @@
         "min_deposit": "Minimum amount is",
         "max_deposit": "Maximum amount is",
         "insufficient": "Insufficient balance",
-        "terms": "By checking this box, you will agree to <a target=\"_blank\" href=\"/terms-of-service\" class=\"font-semibold text-teal cursor-pointer\">Nami Earn's terms of service.</a>",
+        "terms": "By checking this box, you will agree to <a target=\"_blank\" href=\"/terms-of-service\" class=\"font-semibold text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4 cursor-pointer\">Nami Earn's terms of service.</a>",
         "deposit": "Deposit",
         "success": "Deposited {{amount}}{{asset}} successfully!",
-        "error": "Opps! something wrong, try again."
+        "error": "Opps! something wrong, try again.",
+        "confirm_title": "Confirm order",
+        "deposit_amount": "Deposit amount",
+        "reward_asset": "Reward asset",
+        "confirm": "Confirm",
+        "success_title": "Deposit successfully",
+        "go_to_wallet": "Go to Earn wallet"
     },
     "history_table": {
         "type": "Transaction type",

@@ -13,7 +13,7 @@ const CheckBox = ({
     isDisable = false,
     sizeCheckIcon = 16
 }) => {
-    const onCheck = () => onChange && onChange();
+    const onCheck = () => !isDisable && onChange?.();
     return (
         <div onClick={onCheck} className={classNames('flex items-center select-none cursor-pointer space-x-3 w-max', className)}>
             <div

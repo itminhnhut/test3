@@ -54,10 +54,16 @@
         "min_deposit": "Hạn mức tối thiểu là",
         "max_deposit": "Hạn mức tối đa là",
         "insufficient": "Số dư không khả dụng",
-        "terms": "Bằng cách tiếp tục, bạn đã đọc và đồng ý với <a target=\"_blank\" href=\"/terms-of-service\" class=\"font-semibold text-teal cursor-pointer\">Thoả thuận và Điều khoản Dịch vụ Nami Earn.</a>",
+        "terms": "Bằng cách tiếp tục, bạn đã đọc và đồng ý với <a target=\"_blank\" href=\"/terms-of-service\" class=\"font-semibold text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4 cursor-pointer\">Thoả thuận và Điều khoản Dịch vụ Nami Earn.</a>",
         "deposit": "Gửi ngay",
         "success": "Đã gửi {{amount}}{{asset}} thành công!",
-        "error": "Opps! Đã có lỗi xảy ra, vui lòng thử lại sau."
+        "error": "Opps! Đã có lỗi xảy ra, vui lòng thử lại sau.",
+        "confirm_title": "Xác nhận lệnh gửi",
+        "deposit_amount": "Số lượng tài sản gửi",
+        "reward_asset": "Tài sản nhận lãi",
+        "confirm": "Xác nhận",
+        "success_title": "Gửi thành công",
+        "go_to_wallet": "Xem ví Earn của tôi"
     },
     "history_table": {
         "type": "Loại giao dịch",
