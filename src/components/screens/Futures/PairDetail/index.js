@@ -345,11 +345,10 @@ const PriceAlert = ({ pairConfig }) => {
         let isShowAlert = true;
         if (expire) {
             const diffTimeStamp = Date.now() - expire;
-            // const diffHours = diffTimeStamp / (1000 * 60 * 60);
-            // isShowAlert = diffHours >= 8;
-            const diffMinutes = diffTimeStamp / (1000 * 60);
-            console.log(`${pairConfig?.symbol}_${diffMinutes}_${formatDistanceToNow(+expire)}`);
-            isShowAlert = diffMinutes >= 5;
+            const diffHours = diffTimeStamp / (1000 * 60 * 60);
+            isShowAlert = diffHours >= 8;
+            // const diffMinutes = diffTimeStamp / (1000 * 60);
+            // isShowAlert = diffMinutes >= 5;
         }
         if (pairConfig?.isLowLiquidity && isShowAlert) setVisible(true);
     }, [pairConfig]);
