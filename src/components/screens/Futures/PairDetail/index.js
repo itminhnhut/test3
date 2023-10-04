@@ -366,15 +366,38 @@ const PriceAlert = ({ pairConfig }) => {
         setVisible(false);
     };
 
+    const message = `
+        <div class='flex flex-col text-left max-h-[200px] overflow-auto space-y-1 visible-scrollbar'>
+            <span>
+                ${t('futures:price_alert:message_1')}
+            </span>
+            <span>${t('futures:price_alert:message_2')}</span>
+            <ul class='list-disc pl-4'>
+                <li>
+                    ${t('futures:price_alert:message_2_1')}
+                </li>
+                <li>
+                    ${t('futures:price_alert:message_2_2')}
+                </li>
+                <li>
+                    ${t('futures:price_alert:message_2_3')}
+                </li>
+            </ul>
+            <span>
+                ${t('futures:price_alert:message_3')}
+            </span>
+        </div>
+    `;
+
     if (!pairConfig?.isLowLiquidity) return null;
     return (
         <>
             <AlertModalV2
                 isVisible={visible}
                 type="warning"
-                title="Warning title"
-                message="Lorem ipsum dolor sit amet consectetur. Interdum praesent tincidunt et convallis. Ornare neque id tortor."
-                textButton={t('futures:mobile:warning:understood')}
+                title={t('futures:price_alert:title')}
+                message={<div dangerouslySetInnerHTML={{ __html: message }} />}
+                textButton={t('futures:funding_history_tab:funding_warning_accept')}
                 onConfirm={onConfirm}
                 customIcon={<PriceAlertV2Icon size={80} />}
                 closeButton={false}

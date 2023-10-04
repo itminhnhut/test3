@@ -1146,3 +1146,11 @@ input:-webkit-autofill {
 .max-h-max {
     height: max-content;
 }
+
+.visible-scrollbar {
+    &::-webkit-scrollbar,
+    ::-webkit-scrollbar {
+        width: 4px !important;
+        display: block !important;
+    }
+}

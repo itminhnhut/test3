@@ -328,10 +328,33 @@ const PriceAlert = ({ pairConfig }) => {
         );
     };
 
+    const message = `
+        <div class='flex flex-col text-left max-h-[200px] overflow-auto space-y-1 visible-scrollbar'>
+            <span>
+                ${t('futures:price_alert:message_1')}
+            </span>
+            <span>${t('futures:price_alert:message_2')}</span>
+            <ul class='list-disc pl-4'>
+                <li>
+                    ${t('futures:price_alert:message_2_1')}
+                </li>
+                <li>
+                    ${t('futures:price_alert:message_2_2')}
+                </li>
+                <li>
+                    ${t('futures:price_alert:message_2_3')}
+                </li>
+            </ul>
+            <span>
+                ${t('futures:price_alert:message_3')}
+            </span>
+        </div>
+    `;
+
     const showAlert = () => {
-        context.alert.show('warning', 'Cảnh báo giá', t('error:futures:NETWORK_ERROR'), null, onConfirm, null, {
+        context.alert.show('warning', t('futures:price_alert:title'), message, null, onConfirm, null, {
             hideCloseButton: true,
-            confirmTitle: t('futures:mobile:warning:understood'),
+            confirmTitle: t('futures:funding_history_tab:funding_warning_accept'),
             noUseOutside: true,
             customIcon: <PriceAlertIcon size={80} />
         });
