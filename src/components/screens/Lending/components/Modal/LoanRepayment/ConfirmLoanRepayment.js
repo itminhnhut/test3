@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 // ** Next
 import { useTranslation } from 'next-i18next';
@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 
 // ** components
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import ModalV2 from 'components/common/V2/ModalV2';
 
 // ** Redux
 import { ApiStatus } from 'redux/actions/const';
@@ -15,8 +16,9 @@ import { formatNumber } from 'redux/actions/utils';
 // ** svg
 import { IconClose } from 'components/svg/SvgIcon';
 
-//** components
-import ModalV2 from 'components/common/V2/ModalV2';
+//** CONTEXT
+import { LendingContext } from 'components/screens/Lending/Context';
+import { globalActionTypes as lendingContextActions } from 'components/screens/Lending/Context/actions';
 
 // ** Dynamic
 const AlertModalV2 = dynamic(() => import('components/common/V2/ModalV2/AlertModalV2'), { ssrc: false });
@@ -37,10 +39,9 @@ const ConfirmLoanRepayment = ({ repaymentData, isModal, onClose, onCloseMainModa
         collateralAmountReceive
     } = repaymentData;
 
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation();
+    const { dispatchReducer } = useContext(LendingContext);
+
+    const { t, i18n } = useTranslation();
 
     const router = useRouter();
 
@@ -48,6 +49,7 @@ const ConfirmLoanRepayment = ({ repaymentData, isModal, onClose, onCloseMainModa
     const [isShowSuccessModal, setShowSuccessModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [repayData, setRepayData] = useState(null);
+
     // ** handle
     const handleToggleModal = () => setShowSuccessModal((prev) => !prev);
 
@@ -56,16 +58,35 @@ const ConfirmLoanRepayment = ({ repaymentData, isModal, onClose, onCloseMainModa
         try {
             const repayResponse = await repayLoan();
             if (repayResponse?.message === ApiStatus.SUCCESS || repayResponse?.data) {
+                // close het 2 modal
                 onClose();
                 onCloseMainModal();
+
+                // open success modal after 250ms
                 setTimeout(() => handleToggleModal(), 250);
+
                 setRepayData(repayResponse?.data);
+
+                // refetch lai lich su khoan vay
+                dispatchReducer({ type: lendingContextActions.REFETCH });
             }
         } catch (error) {
         } finally {
             setLoading(false);
         }
     };
+
+    const onHandleConfirmSuccess = () =>
+        router.replace(
+            {
+                pathname: router.pathname,
+                query: {
+                    tab: 'history',
+                    action: 'repay'
+                }
+            },
+            undefined
+        );
 
     return (
         <>
@@ -110,19 +131,10 @@ const ConfirmLoanRepayment = ({ repaymentData, isModal, onClose, onCloseMainModa
                     Xác nhận
                 </ButtonV2>
             </ModalV2>
+
+            {/* SUCCESS MODAL */}
             <AlertModalV2
-                onConfirm={() => {
-                    router.replace(
-                        {
-                            pathname: router.pathname,
-                            query: {
-                                tab: 'history',
-                                action: ''
-                            }
-                        },
-                        undefined
-                    );
-                }}
+                onConfirm={onHandleConfirmSuccess}
                 textButton="Xem lịch sử thanh toán"
                 message="Trả khoản vay thành công"
                 isVisible={isShowSuccessModal}

@@ -4,11 +4,15 @@ import { COLLATERAL, LOANABLE } from '../constants';
 import { ceilByExactDegit, formatNumber, roundByExactDigit } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 
-const calcCollateralAmount = ({ loanAmount, initLTV, collateralToLoanPrice, digit = 0 }) => loanAmount / initLTV / collateralToLoanPrice;
+const calcCollateralAmount = ({ loanAmount, initLTV, collateralToLoanPrice }) => loanAmount / initLTV / collateralToLoanPrice;
 const calcLoanAmount = ({ collateralAmount, initLTV, collateralToLoanPrice }) => collateralAmount * initLTV * collateralToLoanPrice;
 
 const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typingField, initialLTV, collateralAvailable, refetch }) => {
-    const { data: collateralPrice } = useCollateralPrice({ collateralAssetCode: collateral?.assetCode, loanableAssetCode: loanable?.assetCode, refetch });
+    const { data: collateralPrice, loading } = useCollateralPrice({
+        collateralAssetCode: collateral?.assetCode,
+        loanableAssetCode: loanable?.assetCode,
+        refetch
+    });
     const { t } = useTranslation();
     const isTypingLoanField = typingField === LOANABLE;
 
@@ -35,7 +39,7 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
             collateral?.assetDigit
         ) || 0;
 
-    const loanValue = isTypingLoanField ? loanInput : roundByExactDigit(loanAmount, 0) || '';
+    const loanValue = isTypingLoanField ? loanInput : ceilByExactDegit(loanAmount, 0) || '';
 
     const collateralValue = isTypingLoanField ? ceilByExactDegit(collateralAmount, collateral?.assetDigit) || '' : collateralInput;
 
@@ -109,7 +113,8 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
         loanValue,
         collateralValue,
         validator,
-        minCollateralAmount
+        minCollateralAmount,
+        loadingPrice: loading
     };
 };
 
