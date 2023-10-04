@@ -40,7 +40,7 @@ const RepayContent = ({ value, onCopy, copied }) => {
 
     return (
         <section className="flex flex-row gap-6 py-4">
-            <WrapperSection className="w-[162px] whitespace-nowrap">
+            <WrapperSection className="w-[190px] whitespace-nowrap">
                 <div>ID khoản vay</div>
                 <div className="dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center">
                     <div>#{substring(orderId)}</div>
@@ -49,7 +49,7 @@ const RepayContent = ({ value, onCopy, copied }) => {
                     </CopyToClipboard>
                 </div>
             </WrapperSection>
-            <WrapperSection className="w-[162px] whitespace-nowrap">
+            <WrapperSection className="w-[190px] whitespace-nowrap">
                 <div>ID lệnh ký quỹ</div>
                 <WrapperDetail>
                     <div>#{substring(_id)}</div>

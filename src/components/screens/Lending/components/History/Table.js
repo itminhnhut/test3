@@ -192,7 +192,6 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                 dataIndex: 'currency',
                 title: renderTitle(),
                 align: 'left',
-                width: 189,
                 render: (value, option) => renderContent(option)
             }
         ];
@@ -242,9 +241,15 @@ const WrapperTable = styled(TableV2).attrs(({ ...props }) => ({
         //     display: flex;
         //     flex-direction: row;
         // }
+        .rc-table-tbody {
+            tr td {
+                border-color: ${(props) => (props.isDark ? colors.divider.dark : colors.divider.DEFAULT)} !important;
+            }
+        }
         .rc-table-thead {
             tr th {
-                max-height: 112px;
+                height: 132px;
+                max-height: max-content;
                 display: flex;
                 flex-direction: row;
                 gap: 12px;
@@ -255,6 +260,7 @@ const WrapperTable = styled(TableV2).attrs(({ ...props }) => ({
                 div > span {
                     margin-top: 24px;
                 }
+                border-bottom-width: 0 !important;
             }
         }
     }

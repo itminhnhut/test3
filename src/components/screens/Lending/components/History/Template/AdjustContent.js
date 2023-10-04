@@ -44,7 +44,7 @@ const AdjustContent = ({ value, onCopy, copied }) => {
 
     return (
         <section className="flex flex-row gap-6 py-4">
-            <WrapperSection className="w-[180px] whitespace-nowrap">
+            <WrapperSection className="w-[190px] whitespace-nowrap">
                 <div>ID khoản vay</div>
                 <WrapperDetail>
                     <div>#{substring(orderId)}</div>
@@ -53,7 +53,7 @@ const AdjustContent = ({ value, onCopy, copied }) => {
                     </CopyToClipboard>
                 </WrapperDetail>
             </WrapperSection>
-            <WrapperSection className="w-[180px] whitespace-nowrap">
+            <WrapperSection className="w-[190px] whitespace-nowrap">
                 <div>ID lệnh ký quỹ</div>
                 <WrapperDetail>
                     <div>#{substring(_id)}</div>

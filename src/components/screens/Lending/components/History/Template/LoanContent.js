@@ -39,7 +39,7 @@ const LoanContent = ({ value, onCopy, copied }) => {
     const interestRate = hourlyInterestRate * HOUR * YEAR * PERCENT;
     return (
         <section className="flex flex-row gap-6 py-4">
-            <WrapperSection className="w-[180px] whitespace-nowrap">
+            <WrapperSection className="w-[190px]">
                 <div>ID khoản vay</div>
                 <WrapperDetail>
                     <div>#{substring(_id)}</div>
@@ -48,7 +48,7 @@ const LoanContent = ({ value, onCopy, copied }) => {
                     </CopyToClipboard>
                 </WrapperDetail>
             </WrapperSection>
-            <WrapperSection className="w-[100px]">
+            <WrapperSection className="w-[150px]">
                 <div>Trạng thái</div>
                 <WrapperDetail
                     className={classNames({
@@ -58,7 +58,7 @@ const LoanContent = ({ value, onCopy, copied }) => {
                     {LOAN_HISTORY_STATUS?.[status]?.[language]}
                 </WrapperDetail>
             </WrapperSection>
-            <section className="flex flex-row items-center gap-2 w-[180px]">
+            <section className="flex flex-row items-center gap-2 whitespace-nowrap w-[200px]">
                 <AssetLogo assetId={rsTotalDebt?.symbol.id} />
                 <section className="dark:text-gray-7 text-gray-1">
                     <div>Tổng dư nợ</div>
@@ -67,7 +67,7 @@ const LoanContent = ({ value, onCopy, copied }) => {
                     </WrapperDetail>
                 </section>
             </section>
-            <section className="flex flex-row items-center gap-2 w-[180px]">
+            <section className="flex flex-row items-center gap-2 whitespace-nowrap w-[200px]">
                 <AssetLogo assetId={rsCollateralAmount?.symbol.id} />
                 <section className="dark:text-gray-7 text-gray-1">
                     <div>Ký quỹ ban đầu</div>
@@ -76,7 +76,7 @@ const LoanContent = ({ value, onCopy, copied }) => {
                     </WrapperDetail>
                 </section>
             </section>
-            <WrapperSection className="w-[72px]">
+            <WrapperSection className="w-[70px]">
                 <div>Kỳ hạn</div>
                 <WrapperDetail>{loanTerm} ngày</WrapperDetail>
             </WrapperSection>
@@ -85,7 +85,7 @@ const LoanContent = ({ value, onCopy, copied }) => {
                 <WrapperDetail>{formatNumber(interestRate)}%</WrapperDetail>
             </WrapperSection>
 
-            <WrapperSection className="w-[180px]">
+            <WrapperSection className="w-max">
                 <div>Thời gian vay</div>
                 <WrapperDetail>{formatTime(createdAt, 'HH:mm:ss dd/MM/yyyy')}</WrapperDetail>
             </WrapperSection>
@@ -94,11 +94,11 @@ const LoanContent = ({ value, onCopy, copied }) => {
 };
 
 const WrapperSection = styled.section.attrs(({ className }) => ({
-    className: classNames('flex flex-col justify-center dark:text-gray-7 text-gray-1', className)
+    className: classNames('flex flex-col justify-center dark:text-gray-7 text-gray-1 whitespace-nowrap', className)
 }))``;
 
 const WrapperDetail = styled.section.attrs(({ className }) => ({
-    className: classNames('dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center', className)
+    className: classNames('dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center whitespace-nowrap', className)
 }))``;
 
 export default LoanContent;

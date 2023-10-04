@@ -119,9 +119,10 @@ const ALLOW_LTV_TOOLTIP = ['ltv_initial', 'ltv_margin', 'ltv_liquidate'];
 const LOAN_HISTORY_STATUS = {
     ONGOING: { vi: 'Bình thường', en: 'Bình thường', contentTooltip: { vi: 'Bình thường', en: 'Bình thường' } },
     OVERDUE: { vi: 'Trả chậm', en: 'Trả chậm', contentTooltip: { vi: 'Trả chậm', en: 'Trả chậm' } },
-    LTV_LIQUIDATED: { vi: 'ltv thanh lý', en: 'ltv thanh lý', contentTooltip: { vi: 'ltv thanh lý', en: 'ltv thanh lý' } },
+    LTV_LIQUIDATED: { vi: 'chạm ltv thanh lý', en: 'chạm ltv thanh lý', contentTooltip: { vi: 'chạm ltv thanh lý', en: 'chạm ltv thanh lý' } },
     DEADLINE_LIQUIDATED: { vi: 'Hết hạn', en: 'Hết hạn', contentTooltip: { vi: 'Hết hạn', en: 'Hết hạn' } },
-    REPAID: { vi: 'Hoàn tiền', en: 'Hoàn tiền', contentTooltip: { vi: 'Hoàn tiền', en: 'Hoàn tiền' } }
+    REPAID: { vi: 'Đã trả', en: 'Đã trả', contentTooltip: { vi: 'Đã trả', en: 'Đã trả' } },
+    ACCRUING_INTEREST: { vi: 'Đang tính lãi', en: 'Đang tính lãi', contentTooltip: { vi: 'Đang tính lãi', en: 'Đang tính lãi' } }
 };
 
 const REGISTER_HANDLE_TYPE = {
