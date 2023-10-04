@@ -561,6 +561,6 @@
         "futures_fee": "Phí {{value}} Futures"
     },
     "trading_rules_tooltip": "Áp dụng cho cả NAMI Futures và NAO Futures",
-    "read_more": "Tìm hiểu thêm",
+    "read_more": "Xem thêm",
     "close_all_blog": "Đóng tất cả"
 }
