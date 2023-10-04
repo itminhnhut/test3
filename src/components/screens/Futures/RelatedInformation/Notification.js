@@ -90,11 +90,11 @@ const index = memo(({ platform, symbol }) => {
             : dataSource.filter((item) => {
                   const time = expire[item.id];
                   const diffTimeStamp = now - time;
-                  // const diffHours = diffTimeStamp / (1000 * 60 * 60);
-                  // isShowAlert = diffHours >= 8;
-                  const diffMinutes = diffTimeStamp / (1000 * 60);
-                  if (time) console.log(`${symbol}_${item.id}_${diffMinutes}`);
-                  return diffMinutes >= 5 || !time;
+                  const diffHours = diffTimeStamp / (1000 * 60 * 60);
+                  isShowAlert = diffHours >= 8 || !time;
+                  //   const diffMinutes = diffTimeStamp / (1000 * 60);
+                  //   if (time) console.log(`${symbol}_${item.id}_${diffMinutes}`);
+                  //   return diffMinutes >= 5 || !time;
               });
         setDataFilter(_dataFilter);
     }, [dataSource]);
