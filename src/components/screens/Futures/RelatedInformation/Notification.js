@@ -61,7 +61,7 @@ const index = memo(({ platform, symbol }) => {
     }, [language, symbol]);
 
     useInterval(() => {
-        if (platform === PLATFORM.NAO) return;
+        if (platform === PLATFORM.NAO || dataFilter.length < 2) return;
         clearTimeout(timer.current);
         if (list.current) {
             list.current.style.transition = 'all 0.3s linear 0s';
@@ -70,7 +70,7 @@ const index = memo(({ platform, symbol }) => {
         timer.current = setTimeout(() => {
             setIndex(index + 1 >= dataFilter.length ? 0 : index + 1);
         }, 300);
-    }, 4000);
+    }, 5000);
 
     const initPosition = () => {
         if (!list.current) return;
@@ -206,9 +206,9 @@ const NAOFutures = ({ dataFilter, index, setIndex, onHidden }) => {
     };
 
     const redirect = (item) => {
-        const uri = `/${language}/support/announcement/${
-            language === 'vi' ? 'thong-bao' : 'announcement'
-        }/${item?.slug}?theme=dark&source=app&head=false&title=${item?.title}`;
+        const uri = `/${language}/support/announcement/${language === 'vi' ? 'thong-bao' : 'announcement'}/${
+            item?.slug
+        }?theme=dark&source=app&head=false&title=${item?.title}`;
         emitWebViewEvent(encodeUrlFromApp(uri));
     };
 
@@ -223,7 +223,7 @@ const NAOFutures = ({ dataFilter, index, setIndex, onHidden }) => {
                     slidesPerView={1}
                     spaceBetween={16}
                     autoplay={{
-                        delay: 3000,
+                        delay: 5000,
                         disableOnInteraction: false
                     }}
                     onSlideChange={({ realIndex }) => setIndex(realIndex)}
