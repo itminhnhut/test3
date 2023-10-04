@@ -55,7 +55,7 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 // ** UTILS
 import { dwLinkBuilder, formatNumber, getLoginUrl } from 'redux/actions/utils';
 import { getSpotAvailable } from '../../utils/selector';
-
+import Spinner from 'components/svg/Spinner';
 // ** INIT DATA
 const INIT_DATA = {
     loanTerm: 7,
@@ -106,7 +106,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     }, [filter.collateral?.assetCode]);
 
     // ** use custom Hooks
-    const { loanValue, collateralValue, minCollateralAmount, validator } = useLoanInput({
+    const { loanValue, collateralValue, minCollateralAmount, validator, loadingPrice } = useLoanInput({
         collateral: filter?.collateral,
         loanable: filter?.loanable,
         initialLTV: totalLTV.initialLTV,
@@ -461,14 +461,14 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                                 onChangeAssetAmount({ value, field: COLLATERAL });
                             }}
                             renderTail={
-                                <label htmlFor="search_events">
+                                <div className="">
                                     {renderValueToken({
                                         asset: filter?.collateral,
                                         onChange: onChangeAsset,
                                         assetListKey: COLLATERAL,
                                         assetCode: filter?.loanable?.id
                                     })}
-                                </label>
+                                </div>
                             }
                             textDescription={
                                 <span>

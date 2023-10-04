@@ -18,7 +18,9 @@ import { CheckCircleIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import { useRouter } from 'next/router';
 
-const SucessLoan = ({ isModal, onClose, tab, adjustedLTV, totalAdjusted }) => {
+const DATA2 = { vi: 'Tài sản ký quỹ', en: 'Tài sản ký quỹ' };
+
+const SucessLoan = ({ isModal, onClose, collateralCoin, collateralAmount }) => {
     const {
         t,
         i18n: { language }
@@ -45,14 +47,13 @@ const SucessLoan = ({ isModal, onClose, tab, adjustedLTV, totalAdjusted }) => {
         >
             <section className="flex flex-col items-center">
                 <CheckCircleIcon size={80} color={colors.teal} />
-                <div className="dark:text-gray-4 text-gray-15 mt-6 mb-4">{tab === 'add' ? 'Thêm ký quỹ thành công' : 'Bớt ký quỹ thành công'}</div>
-                <div className="dark:text-txtPrimary-dark text-txtPrimary font-semibold text-2xl">
-                    {totalAdjusted?.total} {totalAdjusted?.assetCode}
-                </div>
-                <section className="dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex w-full mt-6">
+                <div className="dark:text-gray-4 text-gray-15 mt-6 mb-4">Vay thành công</div>
+                <section className="dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex w-full">
                     <section className="flex justify-between w-full">
-                        <div className="dark:text-gray-7 text-gray-1">LTV đã điều chỉnh</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{adjustedLTV?.toFixed(0)}%</div>
+                        <div className="dark:text-gray-7 text-gray-1">{DATA2?.[language]}</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold">
+                            {collateralAmount || 0.368} {collateralCoin || 'BTC'}
+                        </div>
                     </section>
                 </section>
             </section>
@@ -62,8 +63,7 @@ const SucessLoan = ({ isModal, onClose, tab, adjustedLTV, totalAdjusted }) => {
                         {
                             pathname: router.pathname,
                             query: {
-                                tab: 'history',
-                                action: 'adjust'
+                                tab: 'loan'
                             }
                         },
                         undefined,
@@ -73,9 +73,9 @@ const SucessLoan = ({ isModal, onClose, tab, adjustedLTV, totalAdjusted }) => {
                     );
                     onClose();
                 }}
-                className="mt-10 dark:bg-green-2 bg-green-3 font-semibold"
+                className="mt-10"
             >
-                Xem lịch sử điều chỉnh ký quỹ
+                Xem khoản vay đang mở
             </ButtonV2>
         </ModalV2>
     );

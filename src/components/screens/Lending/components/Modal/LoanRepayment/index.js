@@ -78,8 +78,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
     // ** loan asset balance
     const loanCoinAvailable = useSelector((state) => getSpotAvailable(state, { assetId: loanCoinConfig?.id }));
 
-    // neu user su dung input = percentage thi amount repay phai * percentage de lay so du so thap phan!
-    const repayInLoanAmount = isTypingAmountField ? state.input.amount : totalDebt * (state.input.percentage / PERCENT);
+    const repayInLoanAmount = +state.input.amount;
 
     // amount repay in loanCoin and collateralCoin
     const repayAmount = {
@@ -89,7 +88,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
 
     // ki quy da su dung
     const marginUsed = {
-        [REPAY_TAB.LOAN]: 0, //
+        [REPAY_TAB.LOAN]: 0, // tra bang tai san vay luon = 0
         [REPAY_TAB.COLLATERAL]: repayInLoanAmount / collateralPriceToLoanCoin
     }?.[state.tab];
 
@@ -151,8 +150,8 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
 
             // gia tri cua field con lai
             const otherValue = {
-                percentage: ceilByExactDegit((+inputValue / totalDebt) * PERCENT, 0), // field "percentage" lam tron len
-                amount: roundByExactDigit((totalDebt * inputValue) / PERCENT, 0) // field "amount" lam tron xuong
+                percentage: roundByExactDigit((inputValue / totalDebt) * PERCENT, 0), // field "percentage" lam tron xuong
+                amount: ceilByExactDegit((totalDebt * inputValue) / PERCENT, 0) // field "amount" lam tron len
             }[otherField];
 
             if (inputField === 'amount' && +inputValue > totalDebt) {
@@ -168,10 +167,6 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
         },
         [totalDebt]
     );
-
-    // useEffect(() => {
-    //     let timeout = setTimeout(() => {}, 250);
-    // }, [onHandlerInputChange, state.typingField]);
 
     const handleToggleConfirmModal = () => setState({ isShowConfirm: !state.isShowConfirm });
 
@@ -233,7 +228,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
                     <div className="flex justify-end mb-6">
                         <div
                             className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
-                            onClick={onHandleCloseRepaymentModal}
+                            onClick={(e) => onHandleCloseRepaymentModal()}
                         >
                             <IconClose />
                         </div>
@@ -280,6 +275,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
                                 <TradingInputV2
                                     containerClassName="!bg-gray-12 dark:!bg-dark-2"
                                     clearAble
+                                    allowNegative={false}
                                     placeholder={t('lending:lending.modal.collateral_input.placeholder')}
                                     thousandSeparator={true}
                                     inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
@@ -309,7 +305,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
                                     setState({ typingField: 'percentage' });
                                 }}
                                 isTypingAmountField={isTypingAmountField}
-                                percentageFormat={(state.input.amount || 0) / totalDebt}
+                                percentageFormat={state.input.percentage}
                             />
                         </section>
                     </section>
