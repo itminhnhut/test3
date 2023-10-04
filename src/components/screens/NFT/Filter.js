@@ -249,6 +249,8 @@ const Filter = ({ isDark }) => {
 
         if (detailCollection?._id && !filter.isShowCollection) {
             const { name, thumbnail, banner, total_nft } = detailCollection;
+            const linkEvent = detailCollection?.[`link_${language}`] || '#';
+
             return (
                 <section className="m-auto px-4 mb-[60px]">
                     <section>
@@ -281,8 +283,8 @@ const Filter = ({ isDark }) => {
                                     <div>{t('nft:collection:reward_content', { name })}</div>
                                 </section>
                             </section>
-                            <Link href="#">
-                                <a target="_blank">
+                            <Link href={linkEvent}>
+                                <a target="_blank" className={classNames({ hidden: linkEvent === '#' })}>
                                     <section className="dark:text-green-2 text-green-3 text-base font-semibold flex flex-row gap-2 whitespace-nowrap items-center cursor-pointer">
                                         <p>{t('nft:collection:go_event')}</p>
                                         <ChevronRight size={16} color={isDark ? colors.green[2] : colors.green[3]} />

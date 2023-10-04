@@ -96,7 +96,7 @@ export default function AccountLayout({ children, type }) {
             <div className="bg-gray-13 dark:bg-dark">
                 <Container className="mal-container px-4">
                     <div className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between">
-                        <AccountAvatar currentAvatar={auth?.user?.avatar} />
+                        <AccountAvatar avatar_frame={auth?.user?.avatar_frame} currentAvatar={auth?.user?.avatar} />
                         <div className="mt-6 md:mt-0 md:ml-4 flex-1 flex flex-col md:flex-row justify-between items-center w-full">
                             <div className="text-center mb:text-left">
                                 <div className="mb-2 flex items-center">

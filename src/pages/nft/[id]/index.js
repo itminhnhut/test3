@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // ** Next
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -38,6 +39,10 @@ const Contents = dynamic(() => import('components/screens/NFT/Components/Detail/
 const ModalImage = dynamic(() => import('components/screens/NFT/Components/Modal/Image'), {
     ssr: false
 });
+
+// ** Default
+const LINK_EVENT_VI = 'https://nami.exchange/vi/events';
+const LINK_EVENT_EN = 'https://nami.exchange/events';
 
 const index = ({ idNFT }) => {
     const {
@@ -82,7 +87,11 @@ const index = ({ idNFT }) => {
                         <WrapperImage className="w-full max-w-[401px] max-h-[401px] cursor-pointer" onClick={handleToggleImage}>
                             {detail?.image ? <img width={401} height={401} src={detail?.image} /> : null}
                         </WrapperImage>
-                        <Button className="mt-6">{t('nft:detail:get_rewarded_now')}</Button>
+                        <Link href={language === 'en' ? LINK_EVENT_EN : LINK_EVENT_VI}>
+                            <a target="_blank">
+                                <Button className="mt-6">{t('nft:detail:get_rewarded_now')}</Button>
+                            </a>
+                        </Link>
                     </section>
                 </article>
             </main>

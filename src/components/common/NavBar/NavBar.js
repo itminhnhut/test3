@@ -49,6 +49,7 @@ import { useGoogleOneTapLogin } from '@react-oauth/google';
 import FetchApi from 'utils/fetch-api';
 import qs from 'qs';
 import toast from 'utils/toast';
+import AvatarFrame from '../AvatarFrame';
 
 const DailyLuckydraw = dynamic(() => import('components/screens/DailyLuckydraw'));
 // ** Dynamic
@@ -502,7 +503,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     };
 
     const renderUserControl = useCallback(() => {
-        const { avatar, code, kyc_status, partner_type } = auth;
+        const { avatar, code, kyc_status, partner_type, avatar_frame } = auth;
         const isLocking = kyc_status === KYC_STATUS.LOCKING;
         const isNotVerified = [KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(kyc_status);
         const isVerified = kyc_status >= KYC_STATUS.APPROVED;
@@ -539,13 +540,15 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">
-                                <img
-                                    width={48}
-                                    height={48}
-                                    className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover"
-                                    src={avatar || DefaultAvatar}
-                                    alt="avatar_user"
-                                />
+                                <AvatarFrame frame={avatar_frame}>
+                                    <img
+                                        width={48}
+                                        height={48}
+                                        className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover"
+                                        src={avatar || DefaultAvatar}
+                                        alt="avatar_user"
+                                    />
+                                </AvatarFrame>
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username whitespace-normal"> {auth?.name || auth?.email || auth?.code}</div>

@@ -404,6 +404,7 @@ export const API_DEPOSIT_CRYPTO = API_V3_PREFIX + 'payment/transfer-off-chain';
 
 // auth
 export const GOOGLE_OAUTH_CALLBACK = API_V3_PREFIX + 'auth/callback/google';
+export const API_GET_COUNTRY = API_PREFIX + 'user/country';
 
 // ** Lending
 export const API_HISTORY_LOAN = API_V3_PREFIX + 'wallet/history/loan';

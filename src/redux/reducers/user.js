@@ -19,7 +19,8 @@ export const initialState = {
         questions: [],
     },
     referral: {},
-    vip: null
+    vip: null,
+    country: null
 };
 
 export default (state = initialState, { type, payload }) => {
@@ -330,6 +331,9 @@ export default (state = initialState, { type, payload }) => {
         }
         case types.SET_VIP: {
             return {...state, vip: payload}
+        }
+        case types.SET_IP_COUNTRY: {
+            return {...state, country: payload}
         }
         default:
             return state;
