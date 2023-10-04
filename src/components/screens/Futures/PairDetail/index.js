@@ -153,7 +153,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                                 '!text-red': pairPrice?.priceChangePercent < 0
                             })}
                         >
-                            <span> {formatNumber(roundTo(_priceChangeVndc || 0, 2), 0, 0, true)}</span>
+                            <span>{formatNumber(roundTo(_priceChangeVndc || 0, decimals?.price), decimals?.price, 0, true)}</span>
                             <PriceChangePercent priceChangePercent={pairPrice?.priceChangePercent} className="ml-1" />
                         </div>
                     );
