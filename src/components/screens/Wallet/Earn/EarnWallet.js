@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { formatStringNumber, formatNumber as formatWallet, setTransferModal } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { PartnersIcon, PortfolioIcon } from 'components/svg/SvgIcon';
+import { EarningIcon, PartnersIcon, PortfolioIcon } from 'components/svg/SvgIcon';
 
 import { SECRET_STRING } from 'utils';
 
@@ -29,6 +29,7 @@ import { WalletCurrency, formatNumber } from 'utils/reference-utils';
 import EarnPositionDetail from './OrderDetail';
 import { getUserEarnBalance } from 'redux/actions/user';
 import styled from 'styled-components';
+import Button from 'components/common/V2/ButtonV2/Button';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -53,31 +54,27 @@ const Token = ({ symbol, subText }) => {
     );
 };
 
-const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, marketWatch, isSmallScreen, isHideAsset, setIsHideAsset }) => {
+const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isHideAsset, setIsHideAsset }) => {
     // Init State
     const [expandedRows, setExpandedRows] = useState({});
     const [position, setPosition] = useState();
 
-    // Rdx
-    const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
-
     // Use Hooks
     const [currentTheme] = useDarkMode();
-    const { width } = useWindowSize();
     const {
         t,
-        i18n: { language }
     } = useTranslation();
     const dispatch = useDispatch();
 
     // table
     const columns = [
         {
-            title: t('wallet:earn_wallet:table:coin'),
+            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('wallet:earn_wallet:table:coin')}</div>,
             dataIndex: 'coin',
             key: 'coin',
-            width: 350,
+            width: 384,
             align: 'left',
+            classNames: 'font-semibold md',
             render: (_, record) => {
                 if (record.positions) {
                     const txCount = record.positions?.length || 0;
@@ -95,7 +92,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, marketWatch, isSma
             }
         },
         {
-            title: t('wallet:earn_wallet:table:apr'),
+            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('wallet:earn_wallet:table:apr')}</div>,
             dataIndex: 'apr',
             key: 'apr',
             width: 'auto',
@@ -112,11 +109,11 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, marketWatch, isSma
                         break;
                     }
                 }
-                return <div className="text-teal">{render}</div>;
+                return <div className="text-green-3 dark:text-green-2 font-semibold">{render}</div>;
             }
         },
         {
-            title: t('wallet:earn_wallet:table:period'),
+            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('wallet:earn_wallet:table:period')}</div>,
             dataIndex: 'duration',
             key: 'duration',
             width: 'auto',
@@ -137,7 +134,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, marketWatch, isSma
             }
         },
         {
-            title: t('wallet:earn_wallet:table:amount'),
+            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('wallet:earn_wallet:table:amount')}</div>,
             dataIndex: 'amount',
             key: 'amount',
             width: 'auto',
@@ -152,10 +149,10 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, marketWatch, isSma
             }
         },
         {
-            title: t('wallet:earn_wallet:table:action'),
+            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('wallet:earn_wallet:table:action')}</div>,
             dataIndex: 'action',
             key: 'action',
-            width: 230,
+            width: 174,
             align: 'center'
         }
     ];
@@ -164,7 +161,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, marketWatch, isSma
         return (
             <div className="mt-[24px] md:mt-12 flex items-center justify-between">
                 <div className="hidden md:flex rounded-full bg-gray-13 dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
-                    <PartnersIcon size={32} />
+                    <EarningIcon size={32} />
                 </div>
                 <div>
                     <div className="t-common-v2">{isHideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)} BTC</div>
@@ -227,9 +224,9 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, marketWatch, isSma
                                         <SvgChevronDown size={24} color="currentColor" className={classNames('m-auto', expanded && '!rotate-0')} />
                                     </div>
                                 ) : (
-                                    <div className="text-teal font-semibold" onClick={() => setPosition(record)}>
+                                    <Button variants='text' className="sm:!text-sm !p-0" onClick={() => setPosition(record)}>
                                         {t('wallet:earn_wallet:table:order_detail')}
-                                    </div>
+                                    </Button>
                                 ),
                             expandRowByClick: true,
                             onExpand: (expanded, record) => {
@@ -249,7 +246,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, marketWatch, isSma
                 <DefaultMobileView className="!px-0" />
             </div>
 
-            {position && <EarnPositionDetail onClose={closePositionModal} position={position} marketWatch={marketWatch} />}
+            {position && <EarnPositionDetail onClose={closePositionModal} position={position} usdRate={usdRate} />}
         </div>
     );
 };

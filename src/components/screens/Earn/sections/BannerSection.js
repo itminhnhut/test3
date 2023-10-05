@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next';
 const Feature = ({ children }) => {
     return (
         <div className="flex text-teal text-base space-x-2 items-center font-semibold">
-            <CheckCircle size={20} />
+            <CheckCircle size={24} />
             <span>{children}</span>
         </div>
     );

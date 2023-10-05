@@ -514,6 +514,8 @@ const Wallet = () => {
                                 stakingRefPrice={state.stakingRefPrice}
                                 farmingEstBtc={state.farmingEstBtc}
                                 farmingRefPrice={state.farmingRefPrice}
+                                earnEstBtc={state.earnEstBtc}
+                                earnRefPrice={state.earnRefPrice}
                                 isSmallScreen={isSmallScreen}
                                 isHideAsset={isHideAsset}
                                 setIsHideAsset={setIsHideAsset}

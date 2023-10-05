@@ -192,6 +192,9 @@
             "estimated_profit": "Estimated profit",
             "unclaimed_profit": "Unclaimed profit",
             "unclaimed_tooltip": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsa nesciunt ex",
+            "deposited": "Deposited",
+            "claimed_profit": "Claimed profit",
+            "equivalent_claimed_profit": "Claimed profit (in exchange rate)",
             "non_renewal": "Non-renewal",
             "suspending": "Suspending",
             "renewal": "Auto subcription",
@@ -205,6 +208,9 @@
             "claim_success": "Claimed reward success",
             "redeem": "Redeem",
             "redeem_success": "Redeem assets success",
+            "early_redeem": "Early redeem",
+            "early_redeem_note": "You will lose all your rewards in this period if you still process. Your deposited assets will be decreased by corresponding amount of claimed rewards",
+            "go_to_history": "Go to Earn history",
             "error": "Something went wrong, try again later!"
         }
     },
@@ -213,6 +219,7 @@
     "partners_overview": "Introduce Nami to your friends - Earn unlimited passive income.",
     "staking_overview": "Staking NAMI to receive bonus interest up to 50%/year.",
     "farming_overview": "Farming NAMI and get many potential tokens.",
+    "earn_overview": "Lorem ipsum dolor sit amet consectetur. Porttitor ut lobortis",
     "push_order": "Push Order",
     "notes": {
         "common": "Please carefully check the information about the token, the token network before transferring the token. Only send {{ tokenName }} to this address, sending any other tokens may result in the loss of tokens.",

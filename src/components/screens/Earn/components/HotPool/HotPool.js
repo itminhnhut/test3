@@ -9,7 +9,7 @@ import { useEarnCtx } from '../../context/EarnContext';
 const Token = ({ symbol }) => {
     return (
         <div className="flex space-x-2 items-center">
-            <AssetLogo assetId={WalletCurrency[symbol]} size={32} />
+            <AssetLogo assetId={WalletCurrency[symbol]} size={24} />
             <span className="font-semibold">{symbol}</span>
         </div>
     );

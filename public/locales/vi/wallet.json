@@ -194,11 +194,14 @@
             "estimated_profit": "Lãi ước tính theo ngày",
             "unclaimed_profit": "Lãi chưa nhận",
             "unclaimed_tooltip": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsa nesciunt ex",
+            "deposited": "Tổng tài sản Earn gốc",
+            "claimed_profit": "Lãi đã nhận",
+            "equivalent_claimed_profit": "Lãi đã nhận (quy đổi)",
             "non_renewal": "Không gia hạn",
             "suspending": "Đang bảo trì",
             "renewal": "Tự động gia hạn",
             "subcribed_at": "Ngày đăng ký",
-            "profited_at": "Ngày đăng ký",
+            "profited_at": "Kết thúc tính lãi",
             "renew_at": "Tự động gia hạn",
             "auto_renew": "Tự động gia hạn",
             "auto_renew_tooltip": "Tự động gia hạn có thể giúp bạn không phải nhớ ngày tháng và đăng ký lại theo cách thủ công, cũng như đảm bảo bạn không bỏ lỡ các cơ hội stake hiện có.",
@@ -207,6 +210,9 @@
             "claim_success": "Nhận lãi thành công",
             "redeem": "Rút",
             "redeem_success": "Rút tài sản thành công",
+            "early_redeem": "Rút trước kỳ hạn",
+            "early_redeem_note": "Trường hợp rút trước hạn sẽ bị mất số lượng phần thưởng đã nhận trước đó. Toàn bộ tiền lãi đã nhận sẽ bị trừ vào số lượng rút với giá trị tương ứng.",
+            "go_to_history": "Xem lịch sử Earn",
             "error": "Đã có lỗi xảy ra, vui lòng thử lại sau!"
         }
     },
@@ -214,6 +220,7 @@
     "nao_overview": "Giao dịch hợp đồng tương lai với đòn bẩy lên đến X125.<br/>Chuyển VNDC hoặc USDT vào ví NAO Futures để bắt đầu giao dịch.",
     "partners_overview": "Giới thiệu Nami đến bạn bè - Thêm thu nhập không giới hạn.",
     "staking_overview": "Stake NAMI để nhận lãi thưởng lên đến 50%/năm.",
+    "earn_overview": "Earn đi chờ chi",
     "farming_overview": "Farm NAMI và nhận nhiều token tiềm năng.",
     "push_order": "Đẩy lệnh",
     "notes": {

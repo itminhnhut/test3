@@ -1,27 +1,12 @@
-import React, { memo, useMemo, useState } from 'react';
-import SwitchV2 from 'components/common/V2/SwitchV2';
-import ModalV2 from 'components/common/V2/ModalV2';
-import AddCircle from 'components/svg/AddCircle';
-import TradingInput from 'components/trade/TradingInput';
-import AssetLogo from 'components/wallet/AssetLogo';
-import { ONE_DAY } from 'constants/constants';
-import { format as formatDate, startOfTomorrow } from 'date-fns';
+import React from 'react';
+import { format as formatDate } from 'date-fns';
 import { useTranslation } from 'next-i18next';
-import { useSelector } from 'react-redux';
-import { getAssetFromCode, getLoginUrl } from 'redux/actions/utils';
-import { WalletCurrency, formatNumber } from 'utils/reference-utils';
-import CheckBox from 'components/common/CheckBox';
-import Button from 'components/common/V2/ButtonV2/Button';
-import FetchApi from 'utils/fetch-api';
-import { API_DEPOSIT_EARN, API_GET_MARKET_WATCH } from 'redux/actions/apis';
-import toast from 'utils/toast';
-import useQuery from 'hooks/useQuery';
+import { getAssetFromCode } from 'redux/actions/utils';
+import { formatNumber } from 'utils/reference-utils';
+import ModalV2 from 'components/common/V2/ModalV2';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import { useRouter } from 'next/router';
-import Tooltip from 'components/common/Tooltip';
-import { KYC_STATUS } from 'redux/actions/const';
-import ModalNeedKyc from 'components/common/ModalNeedKyc';
-import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
-import classNames from 'classnames';
+import Button from 'components/common/V2/ButtonV2/Button';
 
 
 const formatDateTime = (date = 0) => {
@@ -29,16 +14,13 @@ const formatDateTime = (date = 0) => {
 };
 
 
-const SuccessModal = ({ onClose, pool, estimatedReward, depositAmount, autoRenew }) => {
+const SuccessModal = ({ onClose, pool, estimatedReward, depositAmount }) => {
     const { asset, rewardAsset, duration, apr } = pool;
     const { t } = useTranslation();
-    const router = useRouter();
     const assetInfo = getAssetFromCode(asset);
     const rewardInfo = getAssetFromCode(rewardAsset);
+    const router = useRouter();
 
-    const goToWallet = async () => {
-        router.push('/wallet/earn')
-    };
 
     return (
         <ModalV2 isVisible={true} onBackdropCb={onClose} className="max-w-[488px]">
@@ -81,7 +63,13 @@ const SuccessModal = ({ onClose, pool, estimatedReward, depositAmount, autoRenew
             </div>
 
             <div className="h-10"></div>
-            <Button className="w-full" onClick={goToWallet}>
+            {/* <HrefButton className="w-full" variants="primary" href="/wallet/earn">
+                {t('earn:deposit_modal:go_to_wallet')}
+            </HrefButton> */}
+            <Button className="w-full" variants="primary" onClick={() => {
+                onClose?.();
+                router.push('/wallet/earn');
+            }} >
                 {t('earn:deposit_modal:go_to_wallet')}
             </Button>
         </ModalV2>

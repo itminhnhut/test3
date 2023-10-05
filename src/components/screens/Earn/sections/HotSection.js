@@ -38,7 +38,10 @@ const HotSection = ({ pools }) => {
                         <button
                             key={idx}
                             onClick={() => slider.moveToSlideRelative(idx)}
-                            className={classNames('dot h-1 transition-all', activeItem === idx ? '!bg-teal w-6 rounded-sm' : '!bg-gray-12 dark:!bg-gray-7 w-1 rounded-full')}
+                            className={classNames(
+                                'dot h-1 transition-all',
+                                activeItem === idx ? '!bg-teal w-6 rounded-sm' : '!bg-bgBtnV2-tonal dark:!bg-bgBtnV2-tonal_dark w-1 rounded-full'
+                            )}
                         />
                     );
                 })}

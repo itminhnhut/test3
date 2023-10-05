@@ -68,7 +68,7 @@ const PoolSection = ({ pool_list }) => {
             period: `${pool.duration} ${pool.duration > 1 ? t('common:days') : t('common:day')}`,
             APR: `${+(pool.apr * 100).toFixed(2)}%`,
             coin: (
-                <div className="ml-12 flex space-x-4 items-center">
+                <div className="ml-10 flex space-x-4 items-center">
                     <span className="text-base font-semibold">{t('earn:receive')}</span>
                     <Token symbol={pool.rewardAsset} />
                 </div>
@@ -91,7 +91,7 @@ const PoolSection = ({ pool_list }) => {
             key: 'APR',
             width: 'auto',
             align: 'left',
-            render: (val) => <div className="font-semibold text-teal">{val}</div>
+            render: (val) => <div className="font-semibold text-green-2 dark:text-green-3">{val}</div>
         },
         {
             title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('earn:table:period')}</div>,
@@ -187,7 +187,7 @@ const PoolSection = ({ pool_list }) => {
                 />
                 <InputV2
                     className="pb-0"
-                    classNameDivInner="!bg-white dark:!bg-dark-2 !w-[23rem]"
+                    classNameDivInner="!bg-gray-12 dark:!bg-dark-2 !w-[23rem]"
                     value={filter}
                     onChange={onSearch}
                     onClear={() => onSearch('')}

@@ -24,6 +24,7 @@ import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
 import classNames from 'classnames';
 import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import SuccessModal from '../SuccessModal/SuccessModal';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 
 const formatDateTime = (date = 0) => {
     return formatDate(date, 'hh:mm dd/MM/yyyy');
@@ -91,7 +92,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
         const assetPrice = usdRate?.[WalletCurrency[asset]] || 0;
         const rewardPrice = usdRate?.[WalletCurrency[rewardAsset]] || 0;
 
-        return rewardPrice === 0 ? 1 : assetPrice / rewardPrice;
+        return rewardPrice === 0 ? 0 : assetPrice / rewardPrice;
     }, [usdRate, asset, rewardAsset]);
     const router = useRouter();
 
@@ -129,9 +130,9 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
     const canDeposit = !isSoldOut && !validation.isError && depositAmount && agree;
     let systemMsg = '';
     if (isSoldOut) {
-        systemMsg = t('earn:deposit_modal:full_pool');
+        systemMsg = t('earn:deposit_modal:pool_full');
     } else if (isSuspending) {
-        systemMsg = t('earn:deposit_modal:full_pool');
+        systemMsg = t('earn:deposit_modal:suspending');
     }
 
     const closeModal = () => setOpenModal(undefined);
@@ -143,10 +144,6 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                 assetId: asset
             }
         });
-    };
-    const login = () => {
-        const url = getLoginUrl('sso', 'login');
-        router.push(url);
     };
 
     return (
@@ -201,9 +198,9 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                         </div>
                     </div>
                     {systemMsg && (
-                        <div className="mt-2 flex items-center">
+                        <div className="mt-2 flex items-center text-red space-x-1">
                             <ErrorTriggersIcon />
-                            <span>{systemMsg}</span>
+                            <span className="text-sm">{systemMsg}</span>
                         </div>
                     )}
 
@@ -211,11 +208,13 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
 
                     <div className="flex justify-between items-center">
                         <span className="font-semibold">{t('earn:deposit_modal:amount')}</span>
-                        <div className="flex space-x-1 py-2 text-sm items-center">
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:available')}:</span>
-                            <span className="font-semibold">{formatNumber(userBalance, asset?.assetDigit || 0)}</span>
-                            <AddCircle onClick={buyToken} size={16} className="cursor-pointer" />
-                        </div>
+                        {auth && (
+                            <div className="flex space-x-1 py-2 text-sm items-center">
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:available')}:</span>
+                                <span className="font-semibold">{formatNumber(userBalance, asset?.assetDigit || 0)}</span>
+                                <AddCircle onClick={buyToken} size={16} className="cursor-pointer" />
+                            </div>
+                        )}
                     </div>
                     <TradingInput
                         containerClassName="mt-2"
@@ -224,7 +223,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                         onValueChange={({ value }) => setDepositAmount(value)}
                         renderTail={
                             <div className="flex items-center">
-                                <Button className="pr-3" variants="text" onClick={() => setDepositAmount(userBalance)}>
+                                <Button className="pr-3" variants="text" onClick={() => setDepositAmount(Math.min(userBalance, maxDeposit))}>
                                     MAX
                                 </Button>
                                 <Token symbol={asset} className="pl-3 border-l border-divider dark:border-divider-dark" />
@@ -356,9 +355,9 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                     </Button>
                 )
             ) : (
-                <Button className="w-full" onClick={login}>
+                <HrefButton className="w-full" variants="primary" href={getLoginUrl('sso')}>
                     {t('common:sign_in')}
-                </Button>
+                </HrefButton>
             )}
             <ModalNeedKyc onBackdropCb={closeModal} isOpenModalKyc={openModal === MODAL.KYC} />
             {!isSuspending && openModal === MODAL.CONFIRM && (
@@ -378,7 +377,11 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                     depositAmount={depositAmount}
                     estimatedReward={estimatedReward}
                     pool={pool}
-                    onClose={onClose}
+                    onClose={() => {
+                        // don't use onClose() real quick. It will produce a bug
+                        setOpenModal(undefined);
+                        setTimeout(onClose);
+                    }}
                 />
             )}
         </ModalV2>

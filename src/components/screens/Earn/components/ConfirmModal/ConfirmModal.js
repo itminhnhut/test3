@@ -9,6 +9,8 @@ import Button from 'components/common/V2/ButtonV2/Button';
 import FetchApi from 'utils/fetch-api';
 import { API_DEPOSIT_EARN } from 'redux/actions/apis';
 import toast from 'utils/toast';
+import { useDispatch } from 'react-redux';
+import { getUserEarnBalance } from 'redux/actions/user';
 
 const formatDateTime = (date = 0) => {
     return formatDate(date, 'hh:mm dd/MM/yyyy');
@@ -18,8 +20,10 @@ const formatDateTime = (date = 0) => {
 const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount, subcribeAt, autoRenew }) => {
     const { asset, rewardAsset, duration, apr, id } = pool;
     const { t } = useTranslation();
+    const [isLoading, setIsLoading] = useState(false);
     const assetInfo = getAssetFromCode(asset);
     const rewardInfo = getAssetFromCode(rewardAsset);
+    const dispatch = useDispatch();
 
 
     const profitAt = subcribeAt + ONE_DAY;
@@ -27,7 +31,12 @@ const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount
 
     const deposit = async () => {
 
+        if(isLoading) {
+            return
+        }
+
         try {
+            setIsLoading(true);
             const { message } = await FetchApi({
                 url: API_DEPOSIT_EARN,
                 options: {
@@ -41,11 +50,9 @@ const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount
                 }
             });
             if (message === 'ok') {
-                toast({
-                    text: t('earn:deposit_modal:success'),
-                    type: 'success'
-                });
+                dispatch(getUserEarnBalance());
                 onConfirm?.();
+
             } else {
                 toast({
                     text: t('earn:deposit_modal:error'),
@@ -57,11 +64,13 @@ const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount
                 text: t('earn:deposit_modal:error'),
                 type: 'error'
             });
+        } finally {
+            setIsLoading(false)
         }
     };
 
     return (
-        <ModalV2 isVisible={true} onBackdropCb={onClose} className="max-w-[488px]">
+        <ModalV2 isVisible={true} onBackdropCb={isLoading ? null : onClose} className="max-w-[488px]">
             <div className="font-semibold text-2xl">{t('earn:deposit_modal:confirm_title')}</div>
 
             <div className="h-6"></div>
@@ -119,7 +128,7 @@ const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount
             </div>
 
             <div className="h-10"></div>
-            <Button className="w-full" onClick={deposit}>
+            <Button className="w-full" onClick={deposit} loading={isLoading} >
                 {t('earn:deposit_modal:confirm')}
             </Button>
         </ModalV2>

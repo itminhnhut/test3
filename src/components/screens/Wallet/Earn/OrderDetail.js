@@ -22,6 +22,8 @@ import { ChevronRight, Clock } from 'react-feather';
 import classNames from 'classnames';
 import useIsomorphicLayoutEffect from 'hooks/useIsomorphicLayoutEffect';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import RedeemConfirm from './RedeemConfirm';
 
 const formatDateTime = (date = 0) => {
     return formatDate(date, 'hh:mm dd/MM/yyyy');
@@ -50,8 +52,14 @@ const STATUS = {
     RENEWAL: 'renewal'
 };
 
+const MODAL = {
+    REDEEM_CONFIRM: 'REDEEM_CONFIRM',
+    REDEEM_WARNING: 'REDEEM_WARNING',
+    REDEEM_SUCCESS: 'REDEEM_SUCCESS'
+};
+
 const suspendDuration = 1800000; // 30 min
-const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
+const EarnPositionDetail = ({ onClose, position, usdRate }) => {
     const {
         asset,
         rewardAsset,
@@ -64,7 +72,7 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
         _id,
         purchaseTime,
         rewardsEndDate,
-        redeemDate,
+        redeemDate = 0,
         canRedeemEarly,
         canReStake
     } = position;
@@ -75,14 +83,20 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
     const [depositAmount, setDepositAmount] = useState(amount);
     const [claimedAmount, setClaimedAmount] = useState(withdrewAmt);
     const [isLoading, setIsLoading] = useState(false);
+    const [modal, setModal] = useState();
     const [isSuspending, setIsSuspending] = useState(false);
+    const router = useRouter();
     const quote = useMemo(() => {
-        const tokenPair = marketWatch?.find((pair) => {
-            return pair.b === asset && pair.q === rewardAsset;
-        });
-        return tokenPair?.p || 1;
-    }, [marketWatch, asset, rewardAsset]);
-    const estDailyReward = (apr * quote * amount) / 365;
+        if (asset === rewardAsset) {
+            return 1;
+        }
+
+        const assetPrice = usdRate?.[WalletCurrency[asset]] || 0;
+        const rewardPrice = usdRate?.[WalletCurrency[rewardAsset]] || 0;
+
+        return rewardPrice === 0 ? 1 : assetPrice / rewardPrice;
+    }, [usdRate, asset, rewardAsset]);
+    const estDailyReward = (apr * quote * depositAmount) / 365;
 
     const today = getUTCToday();
 
@@ -120,42 +134,22 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
     const canRedeem = !isSuspending && depositAmount && (!isEarly || !!canRedeemEarly);
     const leftOverReward = rewardAmt - claimedAmount;
     const canClaim = !isSuspending && leftOverReward > 0 && !isLoading;
-    const redeem = async () => {
-        if (!canRedeem || isLoading) {
+
+    const redeem = () => {
+        if (!canRedeem) {
             return;
         }
 
-        try {
-            setIsLoading(true);
-            const { message } = await FetchApi({
-                url: API_EARN_REDEEM,
-                options: {
-                    method: 'POST',
-                    params: {
-                        _id
-                    }
-                }
-            });
-            if (message === 'ok') {
-                toast({
-                    text: t('wallet:earn_wallet:position:redeem_success'),
-                    type: 'success'
-                });
-                setDepositAmount(0);
-            } else {
-                toast({
-                    text: t('wallet:earn_wallet:position:error'),
-                    type: 'error'
-                });
-            }
-        } catch (error) {
-            toast({
-                text: t('wallet:earn_wallet:position:error'),
-                type: 'error'
-            });
-        } finally {
-            setIsLoading(false);
+        if (isEarly) {
+            setModal(MODAL.REDEEM_WARNING);
+            return;
+        } else {
+            setModal(MODAL.REDEEM_CONFIRM);
         }
+    };
+    const onRedeemSuccess = () => {
+        setDepositAmount(0);
+        setModal(MODAL.REDEEM_SUCCESS);
     };
     const claimProfit = async () => {
         if (!canClaim) {
@@ -214,6 +208,7 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
             setIsLoading(false);
         }
     };
+    const closeModal = () => setModal(undefined)
 
     const status = isSuspending ? STATUS.SUSPENDING : autoRenew ? STATUS.RENEWAL : STATUS.NON_RENEWAL;
     const Bagde = useMemo(() => {
@@ -222,7 +217,7 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
                 className={classNames('rounded-2xl flex space-x-2 items-center py-1 px-4', {
                     'bg-yellow-2/10 text-yellow-2': status === STATUS.SUSPENDING,
                     'bg-divider dark:bg-divider-dark text-txtSecondary dark:txt-txtSecondary-dark': status === STATUS.NON_RENEWAL,
-                    'bg-green-2/10 text-green-2': status === STATUS.RENEWAL
+                    'bg-green-2/10 text-green-3 dark:text-green-2': status === STATUS.RENEWAL
                 })}
             >
                 <Clock color="currentColor" size={13} />
@@ -249,7 +244,7 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
                 </div>
 
                 <div className="font-semibold text-2xl">
-                    {formatNumber(amount, asset?.assetDigit || 0)} {asset}
+                    {formatNumber(depositAmount, asset?.assetDigit || 0)} {asset}
                 </div>
 
                 {Bagde}
@@ -261,31 +256,31 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
                 <Tooltip
                     className="max-w-[calc(100%-6rem)] after:!left-6"
                     isV3
-                    id="unclaimed-tooltip"
+                    id="estimated_profit"
                     place="top"
-                    effect="solid"
-                    overridePosition={({ left, top }) => ({ left: 32, top: top })}
+                    // effect="solid"
+                    overridePosition={({ left, top }) => ({ left: 32, top: 400 })}
                 >
                     {t('wallet:earn_wallet:position:unclaimed_tooltip')}
                 </Tooltip>
                 <div className="flex justify-between">
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:apr')}</div>
-                    <div className="font-semibold text-teal text-right">{+(apr * 100).toFixed(2)}%</div>
+                    <div className="font-semibold text-green-3 dark:text-green-2 text-right">{+(apr * 100).toFixed(2)}%</div>
                 </div>
                 <div className="flex justify-between mt-4">
-                    <div
-                        className="text-txtSecondary dark:text-txtSecondary-dark border-dashed border-b border-gray-1 dark:border-gray-7"
-                        data-tip=""
-                        data-for="unclaimed-tooltip"
-                    >
-                        {t('wallet:earn_wallet:position:estimated_profit')}
-                    </div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:estimated_profit')}</div>
                     <div className="font-semibold text-right">
                         {formatNumber(estDailyReward, rewardInfo?.assetDigit || 0)} {rewardAsset}
                     </div>
                 </div>
                 <div className="flex justify-between py-3 mt-3">
-                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:unclaimed_profit')}</div>
+                    <div
+                        className="text-txtSecondary dark:text-txtSecondary-dark border-dashed border-b border-gray-1 dark:border-gray-7"
+                        data-tip=""
+                        data-for="estimated_profit"
+                    >
+                        {t('wallet:earn_wallet:position:unclaimed_profit')}
+                    </div>
                     <div className="font-semibold text-right">
                         <span>
                             {formatNumber(leftOverReward, rewardInfo?.assetDigit || 0)} {rewardAsset}
@@ -355,9 +350,43 @@ const EarnPositionDetail = ({ onClose, position, marketWatch }) => {
             </div>
 
             <div className="h-10"></div>
-            <Button className="w-full" disabled={canRedeem} loading={isLoading} onClick={redeem}>
+            <Button className="w-full" disabled={!canRedeem} loading={isLoading} onClick={redeem}>
                 {t('wallet:earn_wallet:position:redeem')}
             </Button>
+
+            <AlertModalV2
+                isVisible={modal === MODAL.REDEEM_WARNING}
+                type="warning"
+                onConfirm={() => setModal(MODAL.REDEEM_CONFIRM)}
+                onClose={closeModal}
+                title={t('wallet:earn_wallet:position:early_redeem')}
+                textButton={t('common:confirm')}
+                message={t('wallet:earn_wallet:position:early_redeem_note')}
+            />
+            <AlertModalV2
+                isVisible={modal === MODAL.REDEEM_SUCCESS}
+                type="success"
+                onConfirm={() => {
+                    router.push('/earn?tab=`history`');
+                }}
+                onClose={closeModal}
+                textButton={t('wallet:earn_wallet:position:go_to_history')}
+                message={t('wallet:earn_wallet:position:redeem_success')}
+            >
+                <div className="text-xl font-semibold text-center mt-4">
+                    {formatNumber(amount, asset?.assetDigit || 0)} {asset}
+                </div>
+            </AlertModalV2>
+            <RedeemConfirm
+                isVisible={modal === MODAL.REDEEM_CONFIRM}
+                position={position}
+                amount={depositAmount}
+                claimedReward={claimedAmount}
+                quote={quote}
+                isEarly={isEarly}
+                onClose={closeModal}
+                onSuccess={onRedeemSuccess}
+            />
         </ModalV2>
     );
 };
