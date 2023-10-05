@@ -255,7 +255,7 @@ const Futures = ({ integrate, orderId, symbol }) => {
     return (
         <>
             {isMediumDevices && <FuturesTermsModal />}
-            <FuturesPageTitle pair={state.pair} price={state.pairPrice?.lastPrice} pricePrecision={pairConfig?.pricePrecision} />
+            <FuturesPageTitle pair={state.pair} price={pairPrice?.lastPrice} pricePrecision={pairConfig?.pricePrecision} />
             <DynamicNoSsr>
                 <MaldivesLayout
                     navStyle={{
