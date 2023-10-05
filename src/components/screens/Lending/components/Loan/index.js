@@ -33,6 +33,8 @@ import classNames from 'classnames';
 const LoanTable = dynamic(() => import('./Table'), { ssr: false });
 const NotAuth = dynamic(() => import('components/screens/Lending/components/NotAuth'), { ssr: false });
 
+import { isEmpty, isEqual as isEqualLodash, xorWith } from 'lodash';
+
 const ASSETS = [
     {
         asset: 'USD',
