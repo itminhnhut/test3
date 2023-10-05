@@ -212,7 +212,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             return;
         }
         setState(INIT_STATE);
-        onCloseRepaymentModal();
+        setTimeout(() => onCloseRepaymentModal(), 50);
     };
 
     const isDisableRepayButton = !repayInLoanAmount || +repayInLoanAmount === 0 || validator.isError;
