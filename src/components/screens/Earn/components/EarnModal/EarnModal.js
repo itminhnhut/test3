@@ -188,7 +188,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                             >
                                 {t('earn:deposit_modal:apr')}:
                             </div>
-                            <div className="font-semibold text-right text-teal">{+(apr * 100).toFixed(2)}%</div>
+                            <div className="font-semibold text-right text-green-3 dark:text-green-2">{+(apr * 100).toFixed(2)}%</div>
                         </div>
                         <div className="flex justify-between space-x-2">
                             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:period')}:</div>
@@ -200,7 +200,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                     {systemMsg && (
                         <div className="mt-2 flex items-center text-red space-x-1">
                             <ErrorTriggersIcon />
-                            <span className="text-sm">{systemMsg}</span>
+                            <span className="text-xs">{systemMsg}</span>
                         </div>
                     )}
 
@@ -211,7 +211,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                         {auth && (
                             <div className="flex space-x-1 py-2 text-sm items-center">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:available')}:</span>
-                                <span className="font-semibold">{formatNumber(userBalance, asset?.assetDigit || 0)}</span>
+                                <span className="font-semibold">{formatNumber(userBalance, assetInfo?.assetDigit || 0)}</span>
                                 <AddCircle onClick={buyToken} size={16} className="cursor-pointer" />
                             </div>
                         )}

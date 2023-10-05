@@ -79,8 +79,11 @@
         "amount": "Số lượng tài sản gửi",
         "asset": "Tài sản gửi",
         "reward_asset": "Tài sản nhận lãi",
+        "select_asset": "Chọn tài sản gửi",
+        "select_reward": "Chọn tài sản nhận",
         "pool": "Khoản gửi",
         "pool_desc": "Gửi {{asset}} nhận {{reward}}",
-        "period": "Kỳ hạn"
+        "period": "Kỳ hạn",
+        "earn_now": "Earn ngay"
     }
 }

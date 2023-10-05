@@ -56,7 +56,7 @@ const RedeemConfirm = ({ onClose, position, isVisible, amount, claimedReward, qu
 
 
     return (
-        <ModalV2 isVisible={isVisible} onBackdropCb={isLoading ? null : onClose} className="w-[30.5rem]">
+        <ModalV2 isVisible={isVisible} onBackdropCb={isLoading ? null : onClose} className="w-[30.5rem]" >
             <div className="font-semibold text-2xl">
                 {t('wallet:earn_wallet:position:redeem')} {asset}
             </div>

@@ -34,6 +34,7 @@ const PopoverSelect = (props, ref) => {
             )}
         >
             <div className="py-4 z-50">
+                {props.title && <div className="px-4 mb-4 font-semibold">{props.title}</div>}
                 <div className="px-4 mb-6">
                     <SearchBox isValueTrim={false} inputClassname="text-base" width="100%" onChange={props.onChange} value={props.value} />
                 </div>

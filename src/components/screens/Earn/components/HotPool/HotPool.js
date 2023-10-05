@@ -6,10 +6,10 @@ import React from 'react';
 import { WalletCurrency } from 'utils/reference-utils';
 import { useEarnCtx } from '../../context/EarnContext';
 
-const Token = ({ symbol }) => {
+const Token = ({ symbol , size = 32 }) => {
     return (
         <div className="flex space-x-2 items-center">
-            <AssetLogo assetId={WalletCurrency[symbol]} size={24} />
+            <AssetLogo assetId={WalletCurrency[symbol]} size={size} />
             <span className="font-semibold">{symbol}</span>
         </div>
     );
@@ -27,9 +27,9 @@ const HotPool = ({ pool }) => {
     return (
         <div className="bg-bgContainer dark:bg-bgContainer-dark p-4 rounded-xl">
             <div className="flex justify-between items-center">
-                <Token symbol={asset} />
+                <Token symbol={asset} size={32} />
                 <div className="flex space-x-2 items-center px-4 py-1 rounded-full bg-teal/10">
-                    <HotIcon />
+                    <HotIcon size={16} />
                     <span className="text-teal text-sm">{t('earn:hot')}</span>
                 </div>
             </div>
@@ -45,7 +45,7 @@ const HotPool = ({ pool }) => {
                 </div>
                 <div className="">
                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mb-1">{t('earn:reward')}</div>
-                    <Token symbol={rewardAsset} />
+                    <Token symbol={rewardAsset} size={24} />
                 </div>
             </div>
 

@@ -40,7 +40,6 @@ const LINKS = {
 };
 
 const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
-    const [tab, setTab] = useState(0);
     const [skipWarning, setSkipWarning] = useState(false);
     const {
         t,
@@ -50,20 +49,20 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
     const user = useSelector((state) => state.auth?.user || null);
     const [isSuspending, setIsSuspending] = useState(false);
     const router = useRouter();
-
     const TABS = [
         {
-            key: 'pool_list',
+            key: 'pools',
             localized: 'earn:pool_list',
             component: <PoolSection pool_list={pool_list} />
         },
         {
             key: 'history',
             localized: 'earn:history',
-            component: <HistorySection assetList={assetList} rewardList={rewardList} />
+            component: <HistorySection />
         }
     ];
-    const activeTab = TABS[tab];
+    const tab = router.query?.tab || 'pools';
+    const activeTab = TABS.find(({ key }) => key === tab) || TABS[0];
 
     const closeModal = () => setPoolInfo(undefined);
     const goToWallet = () => {
@@ -71,9 +70,9 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
             router.push('/wallet/earn');
         } else {
             const loginUrl = getLoginUrl('sso', 'login');
-            router.push(loginUrl);
+            window?.open(loginUrl, '_self')
         }
-    }
+    };
     const earnBlogLink = LINKS.BLOG[language] ?? '/';
     const goToInfo = () => router.push(earnBlogLink);
 
@@ -117,15 +116,26 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
 
                     <div className="mt-8">
                         <div className="flex justify-between items-center border-b border-divider dark:border-divider-dark">
-                            <Tabs tab={tab} className="gap-6 items-center">
-                                {TABS.map((item, idx) => {
-                                    const active = idx === tab;
+                            <Tabs tab={activeTab.key} className="gap-6 items-center">
+                                {TABS.map((item) => {
+                                    const active = item.key === activeTab.key;
                                     return (
                                         <TabItem
-                                            key={item?.key}
+                                            key={item.key}
                                             className={`text-left !px-0 !text-sm md:!text-base !w-auto first:ml-4 md:first:ml-0`}
-                                            value={idx}
-                                            onClick={() => setTab(idx)}
+                                            value={item.key}
+                                            onClick={() =>
+                                                router.replace(
+                                                    {
+                                                        query: {
+                                                            ...router.query,
+                                                            tab: item.key
+                                                        }
+                                                    },
+                                                    null,
+                                                    { shallow: true }
+                                                )
+                                            }
                                             isActive={active}
                                         >
                                             {t(item.localized)}
@@ -148,7 +158,7 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
                                 </Button>
                             </div>
                         </div>
-                        <div className="mt-8">{activeTab.component}</div>
+                        <div className="mt-8">{activeTab?.component}</div>
                     </div>
 
                     <FAQSection />

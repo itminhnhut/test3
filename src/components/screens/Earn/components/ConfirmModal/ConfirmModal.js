@@ -11,9 +11,10 @@ import { API_DEPOSIT_EARN } from 'redux/actions/apis';
 import toast from 'utils/toast';
 import { useDispatch } from 'react-redux';
 import { getUserEarnBalance } from 'redux/actions/user';
+import Tooltip from 'components/common/Tooltip';
 
 const formatDateTime = (date = 0) => {
-    return formatDate(date, 'hh:mm dd/MM/yyyy');
+    return formatDate(date, 'hh:mm:ss dd/MM/yyyy');
 };
 
 
@@ -31,7 +32,7 @@ const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount
 
     const deposit = async () => {
 
-        if(isLoading) {
+        if (isLoading) {
             return
         }
 
@@ -75,6 +76,16 @@ const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount
 
             <div className="h-6"></div>
 
+            <Tooltip
+                className="w-[calc(50%-2.75rem)] after:!left-6"
+                isV3
+                id="apr-confirm-tooltip"
+                place="top"
+                effect="solid"
+                overridePosition={({ left, top }) => ({ left: 32, top: top })}
+            >
+                {t('earn:deposit_modal:apr_tooltip')}
+            </Tooltip>
             <div className="bg-gray-13 dark:bg-dark-4 rounded-xl p-4 flex flex-col space-y-4">
                 <div className="flex justify-between space-x-2">
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:deposit_amount')}</div>
@@ -93,8 +104,14 @@ const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount
                     </div>
                 </div>
                 <div className="flex justify-between space-x-2">
-                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:apr')}</div>
-                    <div className="font-semibold text-right text-teal">{(apr * 100).toFixed(2)}%</div>
+                    <div
+                        className="text-txtSecondary dark:text-txtSecondary-dark border-b border-dashed border-gray-1 dark:border-gray-7"
+                        data-tip=""
+                        data-for="apr-confirm-tooltip"
+                    >
+                        {t('earn:deposit_modal:apr')}
+                    </div>
+                    <div className="font-semibold text-right text-green-3 dark:text-green-2">{(apr * 100).toFixed(2)}%</div>
                 </div>
                 <div className="flex justify-between space-x-2">
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:starts_at')}</div>
@@ -128,7 +145,7 @@ const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount
             </div>
 
             <div className="h-10"></div>
-            <Button className="w-full" onClick={deposit} loading={isLoading} >
+            <Button className="w-full" onClick={deposit} loading={isLoading}>
                 {t('earn:deposit_modal:confirm')}
             </Button>
         </ModalV2>

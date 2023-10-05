@@ -22,7 +22,7 @@ const CheckBox = ({
                     {
                         'hover:!border-dominant ': !onusMode,
                         '!bg-dominant border-dominant': !onusMode && active,
-                        '!bg-gray-10 dark:!bg-dark-2 border-none': isDisable
+                        '!bg-gray-12 dark:!bg-dark-2 border-none': isDisable
                     },
                     {
                         'rounded-[3.2px]': onusMode,

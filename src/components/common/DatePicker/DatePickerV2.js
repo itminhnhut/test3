@@ -240,6 +240,9 @@ const DatePickerV2 = ({
 export default DatePickerV2;
 
 const DatePickerWrapper = styled.div`
+    .rdrMonthName {
+        text-transform: capitalize;
+    }
     ${({ noDatePicked, isDark }) =>
         noDatePicked
             ? `

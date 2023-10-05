@@ -4,6 +4,7 @@ import CollapseV2 from 'components/common/V2/CollapseV2';
 import classNames from 'classnames';
 import { ChevronDown } from 'react-feather';
 import Link from 'next/link';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 
 const mockQuestions = [
     {
@@ -58,21 +59,21 @@ const FAQSection = ({
                                 }}
                                 active={active}
                                 label={
-                                    <span className="">
-                                        <span className="mr-1">{idx + 1}.</span>
+                                    <span className="text-base">
+                                        <span className="mr-1 pointer-events-none">{idx + 1}.</span>
                                         {question.question}
                                     </span>
                                 }
                             >
-                                <div className="text-txtSecondary dark:text-txtSecondary-dark">{question.answer}</div>
+                                <div className="text-txtSecondary dark:text-txtSecondary-dark text-base">{question.answer}</div>
                             </CollapseV2>
                         );
                     })}
                 </div>
 
-                <Link href="/support/faq" passHref>
-                    <a className="text-teal text-sm font-semibold text-center cursor-pointer mt-2 mx-auto block">{t('common:read_more')}</a>
-                </Link>
+                <HrefButton href="/support/faq" variants="blank" className='mx-auto text-center'>
+                    {t('common:read_more')}
+                </HrefButton>
             </div>
         </div>
     );

@@ -11,44 +11,13 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import format from 'date-fns/format';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
+import Button from 'components/common/V2/ButtonV2/Button';
+import { useRouter } from 'next/router';
+import { addDays } from 'date-fns';
+import isValid from 'date-fns/isValid';
 
-const columns = [
-    {
-        title: '',
-        dataIndex: 'type',
-        key: 'type',
-        width: 'auto',
-        align: 'left'
-    },
-    {
-        title: '',
-        dataIndex: 'time',
-        key: 'time',
-        width: 'auto',
-        align: 'left'
-    },
-    {
-        title: '',
-        dataIndex: 'asset',
-        key: 'asset',
-        width: 'auto',
-        align: 'left'
-    },
-    {
-        title: '',
-        dataIndex: 'pool',
-        key: 'pool',
-        width: 'auto',
-        align: 'left'
-    },
-    {
-        title: '',
-        dataIndex: 'period',
-        key: 'period',
-        width: 'auto',
-        align: 'left'
-    }
-];
+const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+const isNil = (x) => typeof x === 'undefined' || x === null;
 const PAGE_SIZE = 10;
 
 const TxTypeToEnum = {
@@ -60,6 +29,8 @@ const TxTypeToEnum = {
 
 const Cell = ({ asset = '', title, amount, children }) => {
     const assetInfo = getAssetFromCode(asset);
+    const hasAmount = !isNil(amount);
+
     return (
         <div className="flex space-x-2 items-center">
             {asset && (
@@ -69,9 +40,9 @@ const Cell = ({ asset = '', title, amount, children }) => {
             )}
             <div className="">
                 <div className="text-txtSecondary dark:text-txtSecondary-dark">{title}</div>
-                {amount ? (
+                {hasAmount ? (
                     <div className="font-semibold">
-                        {formatNumber(amount, assetInfo?.assetDigit ?? 0)} {asset}
+                        {formatNumber(amount ?? 0, assetInfo?.assetDigit ?? 0)} {asset}
                     </div>
                 ) : (
                     <div className="font-semibold">{children}</div>
@@ -122,6 +93,9 @@ const HistorySection = () => {
             type: 'assetFilter',
             value: null,
             values: null,
+            showLableIcon: false,
+            hasOptionAll: true,
+            title: t('earn:history_table:select_asset'),
             label: t('earn:history_table:asset'),
             className: '!h-12 text-txtPrimary dark:text-txtPrimary-dark'
         },
@@ -129,6 +103,9 @@ const HistorySection = () => {
             type: 'assetFilter',
             value: null,
             values: null,
+            showLableIcon: false,
+            hasOptionAll: true,
+            title: t('earn:history_table:select_reward'),
             label: t('earn:history_table:reward_asset'),
             className: '!h-12 text-txtPrimary dark:text-txtPrimary-dark'
         },
@@ -149,28 +126,10 @@ const HistorySection = () => {
     const [filter, setFilter] = useState(configs);
     const [page, setPage] = useState(0);
     const auth = useSelector((state) => state.auth.user || null);
+    const router = useRouter();
+    const isDefaultFilter = isEqual(configs, filter);
 
-
-    const { data, loading } = useFetchApi(
-        {
-            url: API_HISTORY_EARN,
-            params: {
-                skip: page * PAGE_SIZE,
-                limit: PAGE_SIZE,
-                asset: filter.asset.value?.assetCode || null,
-                rewardAsset: filter.rewardAsset.value?.assetCode || null,
-                duration: filter.period.value,
-                type: filter.type.value ? TxTypeToEnum[filter.type.value] : null,
-                from: +filter.time.value?.startDate ? filter.time.value.startDate / 1000 : null,
-                to: +filter.time.value?.endDate ? filter.time.value.startDate / 1000 : null
-            }
-        },
-        true,
-        [page, filter]
-    );
-
-    const dataTable = useMemo(() => {
-        const txs = data?.result || [];
+    const columns = useMemo(() => {
         const txTypeMap = {
             0: {
                 type: t('earn:history_table:deposit'),
@@ -189,35 +148,98 @@ const HistorySection = () => {
                 amountTitle: t('earn:history_table:reward_amount')
             }
         };
-        return txs.map((tx) => {
-            const isRewardTx = [2, 3].includes(+tx.type);
+        return [
+            {
+                title: '',
+                dataIndex: 'type',
+                key: 'type',
+                width: 'auto',
+                align: 'left',
+                render: (data, tx) => {
+                    return <Cell title={t('earn:history_table:type')}>{txTypeMap[data]?.type}</Cell>;
+                }
+            },
+            {
+                title: '',
+                dataIndex: 'createdAt',
+                key: 'createdAt',
+                width: 'auto',
+                align: 'left',
+                render: (data) => {
+                    const date = new Date(data);
+                    return <Cell title={t('earn:history_table:time')}>{isValid(date) ? format(date, 'hh:mm:ss dd/MM/yyyy') : '--'}</Cell>;
+                }
+            },
+            {
+                title: '',
+                dataIndex: 'asset',
+                key: 'asset',
+                width: 'auto',
+                align: 'left',
+                render: (data, tx) => {
+                    const isRewardTx = [2, 3].includes(+tx.type);
+                    return (
+                        <Cell
+                            title={txTypeMap[tx.type]?.amountTitle}
+                            asset={isRewardTx ? tx.rewardAsset : tx.asset}
+                            amount={isRewardTx ? tx.amount : tx.amountOrigin}
+                        ></Cell>
+                    );
+                }
+            },
+            {
+                title: '',
+                dataIndex: 'pool',
+                key: 'pool',
+                width: 'auto',
+                align: 'left',
+                render: (data, tx) => {
+                    return (
+                        <Cell title={t('earn:history_table:pool')} asset={tx.rewardAsset}>
+                            {t('earn:history_table:pool_desc', { asset: tx.asset, reward: tx.rewardAsset })}
+                        </Cell>
+                    );
+                }
+            },
+            {
+                title: '',
+                dataIndex: 'duration',
+                key: 'duration',
+                width: 'auto',
+                align: 'left',
+                render: (data) => {
+                    return <Cell title={t('earn:history_table:period')}>{`${data} ${data > 1 ? t('common:days') : t('common:day')}`}</Cell>;
+                }
+            }
+        ];
+    }, [t]);
 
-            return {
-                type: <Cell title={t('earn:history_table:type')}>{txTypeMap[tx.type]?.type}</Cell>,
-                time: <Cell title={t('earn:history_table:time')}>{format(new Date(tx.createdAt), 'hh:mm dd/MM/yyyy')}</Cell>,
-                asset: (
-                    <Cell
-                        title={txTypeMap[tx.type]?.amountTitle}
-                        asset={isRewardTx ? tx.rewardAsset : tx.asset}
-                        amount={isRewardTx ? tx.amount : tx.amountOrigin}
-                    ></Cell>
-                ),
-                pool: (
-                    <Cell title={t('earn:history_table:pool')} asset={tx.rewardAsset}>
-                        {t('earn:history_table:pool_desc', { asset: tx.asset, reward: tx.rewardAsset })}
-                    </Cell>
-                ),
-                period: <Cell title={t('earn:history_table:period')}>{`${tx.duration} ${tx.duration > 1 ? t('common:days') : t('common:day')}`}</Cell>
-            };
-        });
-    }, [data?.result, t]);
+    const { data, loading } = useFetchApi(
+        {
+            url: API_HISTORY_EARN,
+            params: {
+                skip: page * PAGE_SIZE,
+                limit: PAGE_SIZE,
+                asset: filter.asset.value?.assetCode || null,
+                rewardAsset: filter.rewardAsset.value?.assetCode || null,
+                duration: filter.period.value,
+                type: filter.type.value ? TxTypeToEnum[filter.type.value] : null,
+                from: +filter.time.value?.startDate ? +filter.time.value.startDate : null,
+                to: +filter.time.value?.endDate ? +addDays(filter.time.value.endDate, 1) : null
+            }
+        },
+        true,
+        [page, filter]
+    );
 
     return (
-        <div className="bg-bgContainer dark:bg-bgContainer-dark rounded-xl mt-8 p-6">
-            {auth && <div className="grid grid-cols-[repeat(2,minmax(0,2fr)),repeat(3,1fr),110px] w-full gap-x-3">
-                <TableFilter config={configs} filter={filter} setFilter={setFilter} resetPagination={() => setPage(0)} />
-                <div className="h-8"></div>
-            </div>}
+        <div className="bg-bgContainer dark:bg-bgContainer-dark rounded-xl mt-8 py-6">
+            {auth && (!isDefaultFilter || data?.result?.length || page !== 0) && (
+                <div className="grid grid-cols-[repeat(2,minmax(0,2fr)),repeat(3,1fr),110px] w-full gap-x-3 px-6">
+                    <TableFilter config={configs} filter={filter} setFilter={setFilter} resetPagination={() => setPage(0)} />
+                    <div className="h-8"></div>
+                </div>
+            )}
             <TableWrapper>
                 <TableV2
                     showHeader={false}
@@ -229,8 +251,37 @@ const HistorySection = () => {
                     showPaging={data?.hasNext || page !== 0}
                     loading={loading}
                     columns={columns}
-                    data={dataTable}
-                    emptyText={<NoData text={t('earn:table:no_data')} />}
+                    data={data?.result || []}
+                    emptyText={
+                        <NoData
+                            text={
+                                !isDefaultFilter || data?.result?.length || page !== 0 ? (
+                                    t('earn:table:no_data')
+                                ) : (
+                                    <>
+                                        <div className="text-center">{t('earn:table:no_data')}</div>
+                                        <Button
+                                            className="mt-4 w-[11.75rem]"
+                                            onClick={() =>
+                                                router.replace(
+                                                    {
+                                                        query: {
+                                                            ...router.query,
+                                                            tab: 'pool'
+                                                        }
+                                                    },
+                                                    null,
+                                                    { shallow: true }
+                                                )
+                                            }
+                                        >
+                                            {t('earn:history_table:earn_now')}
+                                        </Button>
+                                    </>
+                                )
+                            }
+                        />
+                    }
                     rowClassName="border-bottom"
                     tableStyle={{
                         rowHeight: '96px',

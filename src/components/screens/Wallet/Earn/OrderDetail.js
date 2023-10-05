@@ -72,7 +72,6 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
         _id,
         purchaseTime,
         rewardsEndDate,
-        redeemDate = 0,
         canRedeemEarly,
         canReStake
     } = position;
@@ -130,7 +129,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
         return t('wallet:earn_wallet:position:suspending_desc', { from, to });
     }, [t]);
 
-    const isEarly = now < redeemDate * 1000;
+    const isEarly = now < rewardsEndDate * 1000;
     const canRedeem = !isSuspending && depositAmount && (!isEarly || !!canRedeemEarly);
     const leftOverReward = rewardAmt - claimedAmount;
     const canClaim = !isSuspending && leftOverReward > 0 && !isLoading;
@@ -227,7 +226,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
     }, [t, autoRenew, isSuspending, status]);
 
     return (
-        <ModalV2 isVisible={true} onBackdropCb={onClose} className="w-[600px]">
+        <ModalV2 isVisible={true} onBackdropCb={onClose} className="w-[600px]" wrapClassName="sm:!pt-6">
             <div className="font-semibold text-2xl">{t('wallet:earn_wallet:position:title')}</div>
 
             <div className="text-center flex flex-col space-y-4 items-center mt-6">
@@ -328,10 +327,18 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
             <div className="bg-gray-13 dark:bg-dark-4 p-4 rounded-xl">
                 {isSuspending ? (
                     <>
-                        <div className="flex items-center font-semibold space-x-2.5">
-                            <BxsInfoCircle size={20} />
-                            <span>{t('common:note')}</span>
-                        </div>
+                        {canReStake ? (
+                            <div className="flex items-center font-semibold space-x-4">
+                                <span>{t('wallet:earn_wallet:position:auto_renew')}</span>
+                                <SwitchV2 processing={isLoading} checked={autoRenew} disabled={true} />
+                            </div>
+                        ) : (
+                            <div className="flex items-center font-semibold space-x-2.5">
+                                <BxsInfoCircle size={20} />
+                                <span>{t('common:note')}</span>
+                            </div>
+                        )}
+
                         <div className="mt-4 text-txtSecondary dark:text-txtSecondary-dark">{suspend_msg}</div>
                     </>
                 ) : (
@@ -367,7 +374,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
                 isVisible={modal === MODAL.REDEEM_SUCCESS}
                 type="success"
                 onConfirm={() => {
-                    router.push('/earn?tab=`history`');
+                    router.push('/earn?tab=history');
                 }}
                 onClose={closeModal}
                 textButton={t('wallet:earn_wallet:position:go_to_history')}

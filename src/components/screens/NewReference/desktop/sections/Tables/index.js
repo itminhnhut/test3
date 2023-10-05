@@ -68,10 +68,10 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type, 
                 className={classNames(item.selectClassName)}
                 value={data?.value || item.values[0]?.value}
                 options={item.values}
-                popoverClassName="w-[240px]"
+                popoverClassName="min-w-[240px] w-full"
                 onChange={(e) => onChange(e, key)}
                 activeIcon={<CheckCircleIcon color="currentColor" size={16} />}
-                wrapperClassName="flex flex-row gap-2 flex-col"
+                wrapperClassName="flex flex-row gap-3 flex-col py-4"
                 optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
             />
         );
@@ -84,7 +84,17 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type, 
     const AssetFilterFunc = ({ item, filter, key }) => {
         const data = filter?.[key] || {};
         // only use when setFilter is React setState function due to useCallback cache
-        return <AssetFilter asset={data.value} labelClassName="hidden" className={item.className} setAsset={(value) => onChangeAsset(key, value)} />;
+        return (
+            <AssetFilter
+                showLableIcon={item?.showLableIcon ?? true}
+                hasOptionAll={item?.hasOptionAll ?? true}
+                title={item?.title}
+                asset={data.value}
+                labelClassName="hidden"
+                className={item.className}
+                setAsset={(value) => onChangeAsset(key, value)}
+            />
+        );
     };
 
     const Reset = ({ item }) => {

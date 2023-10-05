@@ -78,8 +78,11 @@
         "reward_amount": "Claimed",
         "asset": "Deposited asset",
         "reward_asset": "Reward asset",
+        "select_asset": "Select deposited asset",
+        "select_reward": "Select reward asset",
         "pool": "Pool",
         "pool_desc": "Deposit {{asset}} to earn {{reward}}",
-        "period": "Period"
+        "period": "Period",
+        "earn_now": "Earn now"
     }
 }

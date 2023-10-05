@@ -78,7 +78,7 @@ const OverviewWallet = (props) => {
                     {isHideAsset
                         ? SECRET_STRING
                         : formatWallet(
-                              exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + naoFuturesEstBtc?.totalValue + partnersEstBtc?.totalValue,
+                              exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + naoFuturesEstBtc?.totalValue + partnersEstBtc?.totalValue + earnEstBtc.totalValue,
                               exchangeEstBtc?.assetDigit
                           )}{' '}
                     BTC
@@ -87,13 +87,17 @@ const OverviewWallet = (props) => {
                     {isHideAsset
                         ? SECRET_STRING
                         : `$ ${formatWallet(
-                              exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue + naoFuturesRefPrice?.totalValue + partnersRefPrice?.totalValue,
+                              exchangeRefPrice?.totalValue +
+                                  futuresRefPrice?.totalValue +
+                                  naoFuturesRefPrice?.totalValue +
+                                  partnersRefPrice?.totalValue +
+                                  earnRefPrice?.totalValue,
                               2
                           )}`}
                 </div>
             </>
         );
-    }, [exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice, naoFuturesEstBtc, naoFuturesRefPrice, isHideAsset]);
+    }, [exchangeEstBtc, exchangeRefPrice, futuresEstBtc, earnEstBtc, futuresRefPrice, naoFuturesEstBtc, naoFuturesRefPrice, earnRefPrice, isHideAsset]);
 
     const renderExchangeEstBalance = useCallback(() => {
         return (

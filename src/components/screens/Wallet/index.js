@@ -654,8 +654,8 @@ const SCREEN_TAB_SERIES = [
         key: 'earn',
         code: WALLET_SCREENS.EARN,
         title: 'Earn',
-        localized: 'wallet:earn'
-    },
+        localized: 'wallet:earn_short'
+    }
     // {
     //     key: 3,
     //     code: WALLET_SCREENS.STAKING,
