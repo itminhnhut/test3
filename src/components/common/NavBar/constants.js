@@ -55,7 +55,7 @@ export const NAV_DATA = [
                 localized: 'futures',
                 isNew: false,
                 url: '/futures',
-                child_lv1: []
+                child_lv2: []
             },
             {
                 key: 5,
@@ -167,34 +167,37 @@ export const NAV_DATA = [
         ]
     },
     {
-        key: 'Finance',
-        title: 'Finance',
-        localized: 'finance',
+        key: 'finances',
+        title: 'Finances',
+        localized: 'finances',
         // hide: true,
         isNew: true,
+        // isVertical: true,
         url: '/',
         child_lv1: [
-            {
-                key: 'Staking',
-                title: 'Staking',
-                localized: 'staking',
-                isNew: false,
-                url: '/staking',
-                child_lv1: []
-            },
             {
                 key: 'lending',
                 title: 'Lending',
                 localized: 'lending',
                 isNew: false,
-                url: '/lending'
+                url: '/lending',
+                child_lv2: []
             },
             {
-                key: 'Earn',
+                key: 'earn',
                 title: 'Earn',
                 localized: 'earn',
                 isNew: false,
-                url: '/earn'
+                url: '/earn',
+                child_lv2: []
+            },
+            {
+                key: 'staking',
+                title: 'Staking',
+                localized: 'staking',
+                isNew: false,
+                url: '/staking',
+                child_lv2: []
             }
         ]
     },

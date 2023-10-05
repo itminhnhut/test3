@@ -21,7 +21,7 @@ import FetchApi from 'utils/fetch-api';
 import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 // ** Constants
-import { STATUS_VI, STATUS_EN, MILLISECOND, HISTORY_TAB, LIMIT } from 'components/screens/Lending/constants';
+import { STATUS_VI, STATUS_EN, MILLISECOND, HISTORY_TAB, LIMIT, ALLOW_ADJUST } from 'components/screens/Lending/constants';
 
 // ** Third party
 import pickBy from 'lodash/pickBy';
@@ -61,7 +61,6 @@ const initState = {
 };
 
 const TAB_STATUS = { adjust: 'ADJUST_MARGIN', repay: 'REPAY' };
-const ALLOW_ADJUST = ['adjust', 'repay'];
 
 const History = () => {
     const {
@@ -126,8 +125,7 @@ const History = () => {
 
     // ** useState
     useEffect(() => {
-        const id = setTimeout(() => getOrderLoan(), 300);
-        return () => clearTimeout(id);
+        getOrderLoan();
     }, [useMemoizeArgs(filter), tab, page]);
 
     useEffect(() => {

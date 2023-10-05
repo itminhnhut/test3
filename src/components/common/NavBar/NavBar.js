@@ -3,7 +3,7 @@ import SvgIcon from 'src/components/svg';
 import SvgMenu from 'src/components/svg/Menu';
 import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
-import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
+import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants';
 import SpotSetting from 'src/components/trade/SpotSetting';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
@@ -12,7 +12,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
-import { API_GET_VIP } from 'redux/actions/apis';
+import { API_GET_VIP, GOOGLE_OAUTH_CALLBACK } from 'redux/actions/apis';
 import { getMarketWatch } from 'redux/actions/market';
 import { getS3Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
@@ -49,6 +49,7 @@ import { useGoogleOneTapLogin } from '@react-oauth/google';
 import FetchApi from 'utils/fetch-api';
 import qs from 'qs';
 import toast from 'utils/toast';
+import AvatarFrame from '../AvatarFrame';
 
 const DailyLuckydraw = dynamic(() => import('components/screens/DailyLuckydraw'));
 // ** Dynamic
@@ -63,7 +64,7 @@ export const NAVBAR_USE_TYPE = {
     DARK: THEME_MODE.DARK
 };
 
-const ALLOW_DROPDOWN = ['product', 'trade', 'commission', 'nao', 'finance'];
+const ALLOW_DROPDOWN = ['product', 'trade', 'commission', 'nao', 'finances'];
 
 const NAV_HIDE_THEME_BUTTON = ['maldives_landingpage'];
 const AUTH_URL = process.env.NEXT_PUBLIC_AUTH_URL;
@@ -249,6 +250,9 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
         return NAV_DATA.map((item) => {
             const { key, title, localized, isNew, url, child_lv1, isVertical } = item;
 
+            const forceVertical = localized === 'finances' && width < 1440;
+            const shouldBeVertical = forceVertical || isVertical;
+
             if (item.hide) return null;
 
             if (localized === 'fee' && width < 1200) return null;
@@ -328,16 +332,15 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         isNamiInsurance && auth ? (
                             <InsuranceRedirectLink
                                 className={classNames('relative !pt-0 !pr-0 mal-navbar__link__group___item___childen__lv1___col2 w-1/2 flex', {
-                                    '!w-full': isVertical,
-                                    'w-[48%]': !isVertical
+                                    '!w-full': shouldBeVertical,
+                                    'w-[48%]': !shouldBeVertical
                                 })}
-                                key={`${child.title}_${child.key}`}
                                 targetType="_blank"
                             >
                                 {children}
                             </InsuranceRedirectLink>
                         ) : (
-                            <Link href={handleURLHref(child)} key={`${child.title}_${child.key}`} passHref>
+                            <Link href={handleURLHref(child)} passHref>
                                 <a
                                     className={classNames(
                                         '!pt-0 !pr-0',
@@ -345,8 +348,8 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                             ? 'mal-navbar__link__group___item___childen__lv1___col1 min-w-[350px]'
                                             : 'mal-navbar__link__group___item___childen__lv1___col2 w-1/2 flex',
                                         {
-                                            '!w-full': isVertical,
-                                            'w-[48%]': !isVertical,
+                                            '!w-full': shouldBeVertical,
+                                            'w-[48%]': !shouldBeVertical,
                                             hidden: child.hide
                                         }
                                     )}
@@ -358,7 +361,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         );
 
                     itemsLevel1withIcon.push(
-                        <WrapperLink>
+                        <WrapperLink key={`${child.title}_${child.key}`}>
                             <div className={'mal-navbar__link__group___item___childen__lv1___item2'}>
                                 <WrapperItemChild className="mal-navbar__link__group___item___childen__lv1___item2__icon">
                                     {Icon ? <Icon size={24} /> : renderImageSubMenu({ child })}
@@ -389,8 +392,8 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         //                 ? 'mal-navbar__link__group___item___childen__lv1___col1 min-w-[350px]'
                         //                 : 'mal-navbar__link__group___item___childen__lv1___col2 w-1/2 flex',
                         //             {
-                        //                 '!w-full': isVertical,
-                        //                 'w-[48%]': !isVertical,
+                        //                 '!w-full': shouldBeVertical,
+                        //                 'w-[48%]': !shouldBeVertical,
                         //                 hidden: child.hide
                         //             }
                         //         )}
@@ -444,8 +447,8 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                 className={classNames('mal-navbar__link__group___item___childen__lv1', {
                                     'mal-navbar__link__group___item___childen__lv1__w__icon': useDropdownWithIcon,
                                     'mal-navbar__link__group___item___childen__lv1__w__icon flex-col !min-w-0': useOneCol && useDropdownWithIcon,
-                                    'flex-col !min-w-[346px] gap-4': isVertical,
-                                    'gap-y-4 gap-x-6': !isVertical
+                                    'flex-col !min-w-[346px] gap-4': shouldBeVertical,
+                                    'gap-y-4 gap-x-6': !shouldBeVertical
                                 })}
                             >
                                 {useDropdownWithIcon ? itemsLevel1withIcon : itemsLevel1}
@@ -500,7 +503,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     };
 
     const renderUserControl = useCallback(() => {
-        const { avatar, code, kyc_status, partner_type } = auth;
+        const { avatar, code, kyc_status, partner_type, avatar_frame } = auth;
         const isLocking = kyc_status === KYC_STATUS.LOCKING;
         const isNotVerified = [KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(kyc_status);
         const isVerified = kyc_status >= KYC_STATUS.APPROVED;
@@ -537,13 +540,15 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">
-                                <img
-                                    width={48}
-                                    height={48}
-                                    className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover"
-                                    src={avatar || DefaultAvatar}
-                                    alt="avatar_user"
-                                />
+                                <AvatarFrame frame={avatar_frame}>
+                                    <img
+                                        width={48}
+                                        height={48}
+                                        className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover"
+                                        src={avatar || DefaultAvatar}
+                                        alt="avatar_user"
+                                    />
+                                </AvatarFrame>
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username whitespace-normal"> {auth?.name || auth?.email || auth?.code}</div>

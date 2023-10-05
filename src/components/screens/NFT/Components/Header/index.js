@@ -4,13 +4,16 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 
+// ** Redux
+import { getS3Url } from 'redux/actions/utils';
+
 // ** Import Swiper styles
 import 'swiper/css/pagination';
 import 'swiper/css';
 
 const ITEMS = [
     {
-        src: { vi: '/images/nft/banner/banner_1_vi.png', en: '/images/nft/banner/banner_1_en.png' },
+        src: { vi: getS3Url('/images/nft/banner/banner_1_vi.png'), en: getS3Url('/images/nft/banner/banner_1_en.png') },
         title: {
             vi: 'Bộ sưu tập các tài sản số độc đáo và sáng tạo - nơi kết nối nghệ thuật và công nghệ. Sở hữu ngay các vật phẩm để tận hưởng những ưu đãi độc quyền trên Nami Exchange!',
             en: 'Unique and innovative digital asset collection, where art, technology and cryptocurrency are being connected. Becoming the NTFs’ owner now to enjoy exclusive offers on Nami Exchange!'
@@ -34,7 +37,7 @@ const HeaderNFT = ({ isMobile }) => {
                     clickable: true
                 }}
                 modules={[Pagination, Autoplay]}
-                className="mySwiper"
+                className="mySwiper mySwiper_nft"
                 loop={true}
                 speed={3000}
                 centeredSlides={!!isMobile}
