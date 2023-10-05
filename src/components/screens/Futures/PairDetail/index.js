@@ -18,11 +18,13 @@ import { ExchangeOrderEnum } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import useDarkMode from 'hooks/useDarkMode';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { ArrowDropDownIcon, BxsBookIcon } from 'components/svg/SvgIcon';
+import { ArrowDropDownIcon, BxsBookIcon, BxsErrorIcon, PriceAlertIcon, PriceAlertV2Icon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import PriceChangePercent from 'components/common/PriceChangePercent';
 import dynamic from 'next/dynamic';
 import { getAssetConfig, getMarketWatch, getPairConfig } from 'redux/selectors';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 const FuturesPairList = dynamic(() => import('components/screens/Futures/PairList'), { ssr: false });
 
@@ -92,12 +94,15 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                         '!text-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : pairPrice?.lastPrice < prevLastPriceModal
                     })}
                 >
-                    <div>
-                        {formatNumber(
-                            roundTo(!isShownOnModal ? pairPrice?.lastPrice || 0 : pairPrice?.lastPrice || 0, pricePrecision),
-                            pricePrecision,
-                            lastPriceMinW !== undefined ? 0 : pricePrecision
-                        )}
+                    <div className="flex items-center space-x-2">
+                        <PriceAlert pairConfig={pairConfig} />
+                        <div>
+                            {formatNumber(
+                                roundTo(!isShownOnModal ? pairPrice?.lastPrice || 0 : pairPrice?.lastPrice || 0, pricePrecision),
+                                pricePrecision,
+                                lastPriceMinW !== undefined ? 0 : pricePrecision
+                            )}
+                        </div>
                     </div>
                     {!isShownOnModal && (
                         <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm font-normal">
@@ -325,6 +330,82 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     );
 };
 
+const PriceAlert = ({ pairConfig }) => {
+    const { t } = useTranslation();
+    const [visible, setVisible] = useState(false);
+    const KEY = 'PRICE_ALERT_EXPIRE_FUTURES';
+
+    const getExpire = () => {
+        const store = localStorage.getItem(KEY);
+        return store ? JSON.parse(store)?.[pairConfig?.symbol] : null;
+    };
+
+    useEffect(() => {
+        const expire = getExpire();
+        let isShowAlert = true;
+        if (expire) {
+            const diffTimeStamp = Date.now() - expire;
+            const diffHours = diffTimeStamp / (1000 * 60 * 60);
+            isShowAlert = diffHours >= 8;
+            // const diffMinutes = diffTimeStamp / (1000 * 60);
+            // isShowAlert = diffMinutes >= 5;
+        }
+        if (pairConfig?.isLowLiquidity && isShowAlert) setVisible(true);
+    }, [pairConfig]);
+
+    const onConfirm = () => {
+        const store = localStorage.getItem(KEY);
+        localStorage.setItem(
+            KEY,
+            JSON.stringify({
+                ...(store ? JSON.parse(store) : {}),
+                [pairConfig?.symbol]: Date.now()
+            })
+        );
+        setVisible(false);
+    };
+
+    const message = `
+        <div class='flex flex-col text-left max-h-[200px] overflow-auto space-y-1 visible-scrollbar'>
+            <span>
+                ${t('futures:price_alert:message_1')}
+            </span>
+            <span>${t('futures:price_alert:message_2')}</span>
+            <ul class='list-disc pl-4'>
+                <li>
+                    ${t('futures:price_alert:message_2_1')}
+                </li>
+                <li>
+                    ${t('futures:price_alert:message_2_2')}
+                </li>
+                <li>
+                    ${t('futures:price_alert:message_2_3')}
+                </li>
+            </ul>
+            <span>
+                ${t('futures:price_alert:message_3')}
+            </span>
+        </div>
+    `;
+
+    if (!pairConfig?.isLowLiquidity) return null;
+    return (
+        <>
+            <AlertModalV2
+                isVisible={visible}
+                type="warning"
+                title={t('futures:price_alert:title')}
+                message={<div dangerouslySetInnerHTML={{ __html: message }} />}
+                textButton={t('futures:funding_history_tab:funding_warning_accept')}
+                onConfirm={onConfirm}
+                customIcon={<PriceAlertV2Icon size={80} />}
+                closeButton={false}
+            />
+            <PriceAlertV2Icon className="cursor-pointer" onClick={() => setVisible(true)} />
+        </>
+    );
+};
+
 const ModalPerpetual = ({ isShowModalInfo, onBackdropCb, t, symbol, pairListMode, setPairListMode, isAuth, onClickFunding }) => {
     const router = useRouter();
     const pairListModalRef = useRef();
@@ -341,7 +422,9 @@ const ModalPerpetual = ({ isShowModalInfo, onBackdropCb, t, symbol, pairListMode
     const pairPrice = useSelector((state) => getMarketWatch(state, convertSymbol(curConfigPair)));
     const timesync = useSelector((state) => state.utils.timesync);
 
-    useEffect(() => {setCurConfigPair(symbol)}, [symbol])
+    useEffect(() => {
+        setCurConfigPair(symbol);
+    }, [symbol]);
 
     const decimals = useMemo(() => {
         return {

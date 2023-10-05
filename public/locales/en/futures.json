@@ -459,6 +459,9 @@
             "order": "order",
             "preview": "Preview",
             "close_orders_success": "Close orders successfully"
+        },
+        "warning": {
+            "understood": "I have understood"
         }
     },
     "orders_history": "Order History",
@@ -558,7 +561,16 @@
         "save": "Save",
         "futures_fee": "{{value}} Futures fee"
     },
-    "trading_rules_tooltip": "Applies to both NAMI Futures and NAO Futures",
     "read_more": "Read more",
-    "close_all_blog": "Close All"
+    "close_all_blog": "Close All",
+    "trading_rules_tooltip": "Applies to both NAMI Futures and NAO Futures",
+    "price_alert": {
+        "title": "Warning",
+        "message_1": "Trading around funding payment milestones with high funding rates contracts of above (+)/(-) 0.5% has high risk from one-sided market liquidity characteristics.",
+        "message_2": "Users trading around funding milestones may experience negative experiences such as:",
+        "message_2_1": "Closing orders manually with market orders requires longer processing time to determine the exact closing price. This time frame can range from 5 to 15 seconds for each trading contract and each position with different trading volume and leverage",
+        "message_2_2": "Manually opening and closing orders in the form of market orders will have a certain rate of unmatched orders due to lack of market liquidity in the opposite direction of the position.",
+        "message_2_3": "The following order types will be closed as market orders: Stop-loss orders, Stop Market pending opening orders, Stop Market partial closing orders and Stop Market increase volume orders, resulting in a longer order execution time and the actual order closing price will not be completely identical to the activation price, even though Nami has applied price protection mechanism so that the actual closing price does not differ by more than 3% from the activation price pre-set.",
+        "message_3": "Users please carefully consider the risks that may be encountered when trading around the funding payment milestone with high funding rates trading contracts. Nami Exchange will not be responsible for any losses users encounter when trading around the funding milestones with these trading contracts."
+    }
 }

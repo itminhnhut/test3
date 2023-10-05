@@ -459,6 +459,9 @@
             "order": "lệnh",
             "preview": "Xem trước",
             "close_orders_success": "Đặt lệnh đóng thành công"
+        },
+        "warning": {
+            "understood": "Tôi đã hiểu"
         }
     },
     "orders_history": "Lịch sử lệnh",
@@ -561,6 +564,15 @@
         "futures_fee": "Phí {{value}} Futures"
     },
     "trading_rules_tooltip": "Áp dụng cho cả NAMI Futures và NAO Futures",
+    "price_alert": {
+        "title": "Cảnh báo rủi ro",
+        "message_1": "Giao dịch quanh các mốc chi trả funding với các cặp có tỷ lệ funding cao trên (+)/(-) 0.5% có rủi ro cao từ đặc thù thanh khoản thị trường lệch một chiều.",
+        "message_2": "Người dùng giao dịch quanh các mốc funding sẽ có thể gặp những trải nghiệm không tốt như:",
+        "message_2_1": "Đóng lệnh thủ công với dạng lệnh thị trường cần thời gian xử lý lâu hơn để xác định giá đóng lệnh chính xác, khung thời gian này có thể giao động từ 5 đến 15 giây với từng cặp giao dịch và từng vị thế với các khối lượng giao dịch và đòn bẩy khác nhau",
+        "message_2_2": "Việc mở và đóng lệnh thủ công với dạng lệnh thị trường sẽ có tỷ lệ nhất định không khớp lệnh do thanh khoản thị trường ở chiều ngược lại của vị thế không có",
+        "message_2_3": "Các dạng lệnh sau sẽ được đóng dưới dạng lệnh thị trường: lệnh Cắt lỗ (Stop-loss), lệnh chờ mở dạng Stop Market, lệnh đóng từng phần dạng Stop Market và lệnh tăng khối lượng dạng Stop Market, dẫn tới thời gian khớp lệnh lâu hơn và giá đóng lệnh thực tế sẽ không hoàn toàn đồng nhất với giá kích hoạt dù Nami có cơ chế bảo vệ giá để giá đóng thực tế không chênh lệch quá 3% với giá kích hoạt người dùng đã cài đặt.",
+        "message_3": "Người dùng vui lòng cân nhắc kỹ các rủi ro có thể gặp phải khi giao dịch quanh mốc chi trả funding với các cặp giao dịch có tỷ lệ funding cao, Nami Exchange sẽ không chịu trách nhiệm trước bất cứ tổn thất nào người dùng gặp phải khi giao dịch quanh mốc funding với các cặp giao dịch nói trên."
+    },
     "read_more": "Xem thêm",
     "close_all_blog": "Đóng tất cả"
 }
