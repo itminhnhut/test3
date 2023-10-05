@@ -34,6 +34,9 @@ import { globalActionTypes as actions } from 'components/screens/Lending/Context
 import { formatTime } from 'redux/actions/utils';
 import { API_HISTORY_LOAN } from 'redux/actions/apis';
 
+// ** AXIOS
+import axios from 'axios';
+
 // ** Third party
 import colors from 'styles/colors';
 import classNames from 'classnames';
@@ -47,7 +50,7 @@ import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 // ** dynamic
 const ModalAdjustMargin = dynamic(() => import('components/screens/Lending/components/Modal/Adjust/AdjustMargin'), { ssr: false });
-const ModalLoanRepayment = dynamic(() => import('components/screens/Lending/components/Modal/LoanRepayment'), { ssr: false });
+const ModalLoanRepayment = dynamic(() => import('components/screens/Lending/components/Modal/LoanRepayment'), { ssr: true });
 
 // ** Constants
 const LIMIT = 10;
@@ -55,6 +58,12 @@ const LIMIT = 10;
 const INIT_DATA = {
     isModal: false
 };
+
+const DISABLE_STATUS = ['ACCRUING_INTEREST'];
+
+const CancelToken = axios.CancelToken;
+const isCancel = (error) => axios.isCancel(error);
+let cancel;
 
 const LoanTable = ({ data, page, loading, onPage }) => {
     const {
@@ -75,17 +84,28 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     const [dataCollateral, setDataCollateral] = useState({});
 
     // ** handle
-    const handleLoanOrderDetail = async (id, collateralAsset = {}) => {
+    const handleLoanOrderDetail = async (id, collateralAsset = {}, action = false) => {
         try {
             const { data, statusCode } = await FetchApi({
-                url: `${API_HISTORY_LOAN}/${id}`
+                url: `${API_HISTORY_LOAN}/${id}`,
+                cancelToken: new CancelToken(function exec(c) {
+                    cancel = c;
+                })
             });
             if (statusCode === STATUS_CODE) {
                 setDataCollateral({ ...data, collateralAsset });
+                if (action === 'adjust') {
+                    dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN });
+                } else {
+                    setIsOpenRepaymentModal(true);
+                }
             }
         } catch (error) {
-            throw new Error('api get loan order detail error', error);
-        } finally {
+            if (isCancel(error)) {
+                console.error('Cancelled');
+            } else {
+                throw new Error('api get loan order detail error', error);
+            }
         }
     };
 
@@ -94,19 +114,25 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     const [copied, setCopied] = useState(false);
 
     // ** handle modal
-    const handleToggleAdjustModal = ({ id, collateralAsset }) => {
-        handleLoanOrderDetail(id, collateralAsset);
-        dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN });
+    const handleToggleAdjustModal = async ({ id, collateralAsset }) => {
+        if (cancel !== undefined) {
+            cancel();
+        }
+        handleLoanOrderDetail(id, collateralAsset, 'adjust');
     };
-    const onOpenRepayment = ({ id, collateralAsset }) => {
-        setIsOpenRepaymentModal(true);
+    const onOpenRepayment = async ({ id, collateralAsset }) => {
+        if (cancel !== undefined) {
+            cancel();
+        }
         handleLoanOrderDetail(id, collateralAsset);
     };
 
     // ** handle modal
     const onCloseRepayment = () => setIsOpenRepaymentModal((prev) => !prev);
+
+    // ** handle close modal adjust (Điều chỉnh ký quỹ)
     const handleCloseAdjustModal = () => {
-        if (state.amount > 0) {
+        if (+state.amount > 0) {
             dispatchReducer({ type: actions.TOGGLE_MODAL_CANCEL, isCancel: true, isAdjust: false });
         } else {
             dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN });
@@ -277,21 +303,24 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     };
 
     const renderActions = (options) => {
-        const { _id, collateralAmount, collateralCoin } = options;
+        const { _id, collateralAmount, collateralCoin, isAccruingInterest } = options;
         const getCollateralAsset = totalAsset(collateralAmount, collateralCoin);
 
         return (
             <section className="flex flex-col h-[128px] w-max">
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1  h-[72px] whitespace-nowrap">
                     <section className="flex flex-row items-center w-[162px] ml-6">
-                        <ButtonV2 onClick={() => onOpenRepayment({ id: _id })}>Trả khoản vay</ButtonV2>
+                        <ButtonV2 disabled={DISABLE_STATUS.includes(isAccruingInterest)} onClick={() => onOpenRepayment({ id: _id })}>
+                            Trả khoản vay
+                        </ButtonV2>
                     </section>
                 </section>
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1  h-[72px] whitespace-nowrap">
-                    <section className="flex flex-row items-center w-[162px] ml-6">
+                    <section className="flex flex-col items-center w-[162px] ml-6">
                         <ButtonV2
                             onClick={() => handleToggleAdjustModal({ id: _id, collateralAsset: getCollateralAsset })}
-                            className="dark:!text-gray-7 !text-gray-1 !bg-gray-12 dark:!bg-dark-2"
+                            variants="adjust"
+                            disabled={DISABLE_STATUS.includes(isAccruingInterest)}
                         >
                             Điều chỉnh ký quỹ
                         </ButtonV2>

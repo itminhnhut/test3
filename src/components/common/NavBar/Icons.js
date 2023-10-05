@@ -21,7 +21,9 @@ import {
     PortfolioIconNoColor as futures_portfolio,
     ProfitStats as profit_stats,
     FutureNFTIcon as nft_wallet,
-    NFTIcon as nft
+    NFTIcon as nft,
+    EarningIcon as earn,
+    LendingIcon as lending,
 } from '../../svg/SvgIcon';
 
 export default {
@@ -46,5 +48,7 @@ export default {
     futures_portfolio,
     profit_stats,
     nft_wallet,
-    nft
+    nft,
+    earn,
+    lending
 };

@@ -20,7 +20,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_RANK_MEMBERS_PNL, API_CONTEST_GET_RANK_MEMBERS_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { formatNumber, getS3Url, getLoginUrl } from 'redux/actions/utils';
+import { formatNumber, getS3Url, getLoginUrl, convertSymbol } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
@@ -74,13 +74,17 @@ const ContestPerRanks = ({
     }, [isMobile]);
 
     useEffect(() => {
-        getRanks(sort);
+        setLoading(true);
         setType(sort);
     }, [contest_id]);
 
     useEffect(() => {
-        if (mount.current) getRanks(type);
-    }, [quoteAsset]);
+        getRanks(type);
+    }, [quoteAsset, type]);
+
+    useEffect(() => {
+        setQuoteAsset(q);
+    }, [q]);
 
     const onReadMore = () => {
         setPageSize((old) => {
@@ -99,7 +103,7 @@ const ContestPerRanks = ({
         try {
             const { data: originalData, status } = await fetchApi({
                 url: type === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
-                params: { contest_id, quoteAsset }
+                params: { contest_id, quoteAsset: convertSymbol(quoteAsset) }
             });
             const data = originalData?.users;
             setTotal(data.length);
@@ -123,7 +127,6 @@ const ContestPerRanks = ({
     const onFilter = (key) => {
         if (type === key) return;
         setLoading(true);
-        getRanks(key);
         setType(key);
     };
 
@@ -140,6 +143,7 @@ const ContestPerRanks = ({
             <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
+                        frame={item?.avatar_frame}
                         className="rounded-[50%] object-cover min-w-[1.5rem] min-h-[1.5rem] max-w-[1.5rem] max-h-[1.5rem]"
                         src={item?.avatar}
                         width="24"
@@ -226,8 +230,8 @@ const ContestPerRanks = ({
                         <CardNao key={index} className="!p-4 sm:!p-5">
                             <div className="flex items-center justify-between gap-2">
                                 <div className="flex items-center space-x-4">
-                                    <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
-                                        <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
+                                    <div className="min-w-[4rem] min-h-[4rem] rounded-[50%] p-1 ring-[1.5px] ring-teal flex items-center justify-center">
+                                        <ImageNao frame={item?.avatar_frame} className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col" style={{ wordBreak: 'break-word' }}>
                                         <div className="flex items-center gap-2 font-semibold">
@@ -281,6 +285,7 @@ const ContestPerRanks = ({
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center space-x-3">
                                                 <ImageNao
+                                                    frame={item?.avatar_frame}
                                                     className="rounded-[50%] object-cover w-9 h-9 flex-shrink-0"
                                                     src={item?.avatar}
                                                     width="36"

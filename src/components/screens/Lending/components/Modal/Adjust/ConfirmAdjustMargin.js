@@ -27,7 +27,7 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import { PERCENT } from '../../../constants';
 
 // ** Dynamic
-const SucessLoan = dynamic(() => import('../SucessLoan'), { ssrc: false });
+const SucessAdjust = dynamic(() => import('./SucessAdjust.js'), { ssrc: false });
 
 const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, currentLTV, adjustedLTV, totalAdjusted, initialLTV, id, amount }) => {
     const {
@@ -113,7 +113,7 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
                     Xác nhận
                 </ButtonV2>
             </ModalV2>
-            <SucessLoan isModal={state.modal?.isSuccess} onClose={handleToggleModal} tab={tab} adjustedLTV={adjustedLTV} totalAdjusted={totalAdjusted} />
+            <SucessAdjust isModal={state.modal?.isSuccess} onClose={handleToggleModal} tab={tab} adjustedLTV={adjustedLTV} totalAdjusted={totalAdjusted} />
         </>
     );
 };

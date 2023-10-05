@@ -20,7 +20,7 @@ const NoData = ({ isWallet }) => {
                 <>
                     <div className="mb-4">{t('nft:wallet_no_data')}</div>
                     <Link href="/nft">
-                        <Button>{t('nft:to_nft')}</Button>
+                        <Button className="mx-6">{t('nft:to_nft')}</Button>
                     </Link>
                 </>
             )}

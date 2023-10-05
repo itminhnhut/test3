@@ -15,7 +15,7 @@ import { getWallet, setTheme } from 'redux/actions/user';
 import Head from 'src/components/common/Head';
 import Tracking from 'src/components/common/Tracking';
 import initPublicSocket from 'src/redux/actions/publicSocket';
-import { getMe, getUserFuturesBalance, getVip, getUserPartnersBalance, getBalance } from 'src/redux/actions/user';
+import { getMe, getUserFuturesBalance, getVip, getUserPartnersBalance, getBalance, getCountry } from 'src/redux/actions/user';
 import initUserSocket from 'src/redux/actions/userSocket';
 import { useStore } from 'src/redux/store';
 import 'src/styles/app.scss';
@@ -125,6 +125,7 @@ const App = ({ Component, pageProps }) => {
             store.dispatch(getExchangeConfig());
             store.dispatch(getFuturesConfigs());
             store.dispatch(getPaymentConfigs());
+            store.dispatch(getCountry());
             initConfig = true;
             store.dispatch({
                 type: SET_USD_RATE,

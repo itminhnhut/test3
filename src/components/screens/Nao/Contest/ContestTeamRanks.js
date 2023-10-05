@@ -20,7 +20,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_RANK_GROUP_PNL, API_CONTEST_GET_RANK_GROUP_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { getS3Url, formatNumber } from 'redux/actions/utils';
+import { getS3Url, formatNumber, convertSymbol } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
@@ -64,6 +64,7 @@ const ContestTeamRanks = ({
     const lastUpdatedTime = useRef(null);
     const mount = useRef(false);
     const isMobile = width <= 640;
+    const timer = useRef();
 
     useEffect(() => {
         setPage(1);
@@ -71,14 +72,17 @@ const ContestTeamRanks = ({
     }, [isMobile]);
 
     useEffect(() => {
+        setQuoteAsset(q);
+    }, [q]);
+
+    useEffect(() => {
         setLoading(true);
-        getRanks(sort);
         setType(sort);
     }, [contest_id]);
 
     useEffect(() => {
-        if (mount.current) getRanks(type);
-    }, [quoteAsset]);
+        getRanks(type);
+    }, [quoteAsset, type]);
 
     useUpdateEffect(() => {
         const queryString = window.location.search;
@@ -94,7 +98,7 @@ const ContestTeamRanks = ({
         try {
             const { data: originalData, status } = await fetchApi({
                 url: type === 'pnl' ? API_CONTEST_GET_RANK_GROUP_PNL : API_CONTEST_GET_RANK_GROUP_VOLUME,
-                params: { contest_id, quoteAsset }
+                params: { contest_id, quoteAsset: convertSymbol(quoteAsset) }
             });
             let data = originalData?.groups;
             setTotal(data.length);
@@ -118,7 +122,6 @@ const ContestTeamRanks = ({
     const onFilter = (key) => {
         if (type === key) return;
         setLoading(true);
-        getRanks(key);
         setType(key);
     };
 
@@ -134,6 +137,7 @@ const ContestTeamRanks = ({
             <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
+                        frame={item?.avatar_frame}
                         className="object-cover rounded-[50%] min-w-[1.5rem] min-h-[1.5rem] max-w-[1.5rem] max-h-[1.5rem]"
                         src={item?.avatar}
                         width="32"
@@ -236,8 +240,8 @@ const ContestTeamRanks = ({
                         <CardNao key={index} className="!p-4 sm:!p-5 ">
                             <div className="flex items-center justify-between gap-2">
                                 <div className="flex items-center space-x-4">
-                                    <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
-                                        <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
+                                    <div className="min-w-[4rem] min-h-[4rem] rounded-[50%] p-1 ring-[1.5px] ring-teal flex items-center justify-center">
+                                        <ImageNao frame={item?.avatar_frame} className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
                                     </div>
                                     <div className="space-y-1 flex flex-col" style={{ wordBreak: 'break-word' }}>
                                         <div className="flex items-center gap-2 font-semibold ">
@@ -291,6 +295,7 @@ const ContestTeamRanks = ({
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center space-x-2">
                                                     <ImageNao
+                                                        frame={item?.avatar_frame}
                                                         className="rounded-[50%] object-cover w-9 h-9 flex-shrink-0"
                                                         src={item?.avatar}
                                                         width="36"

@@ -22,7 +22,7 @@ const Market = () => {
     const [state, set] = useState({
         currentPage: 1,
         tabIndex: 0,
-        subTabIndex: 1,
+        subTabIndex: 2,
         search: '',
         loadingTrend: false,
         trending: null,
@@ -40,6 +40,11 @@ const Market = () => {
     const { user: auth } = useSelector(state => state.auth) || null
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
     const futuresConfigs = useSelector((state) => state?.futures?.pairConfigs);
+    const ipCountry = useSelector((state) => state.user.country);
+
+    useEffect(() => {
+        if (ipCountry) setState({ ...state, subTabIndex: ipCountry === 'VN' ? 2 : 0 });
+    }, [ipCountry]);
 
     let categories = useMemo(() => {
         const data = {

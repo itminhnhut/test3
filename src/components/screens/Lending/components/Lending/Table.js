@@ -12,7 +12,6 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 // ** Redux
 import { formatNumber } from 'redux/actions/utils';
-import { useSelector } from 'react-redux';
 
 // ** Third party
 import { useWindowSize } from 'react-use';
@@ -22,7 +21,7 @@ import colors from 'styles/colors';
 import dynamic from 'next/dynamic';
 
 // ** dynamic
-const ModalRegisterLoan = dynamic(() => import('components/screens/Lending/components/Modal/RegisterLoan'));
+const ModalRegisterLoan = dynamic(() => import('components/screens/Lending/components/Modal/RegisterLoan'), { ssr: false });
 
 // ** Constants
 const LIMIT = 10;

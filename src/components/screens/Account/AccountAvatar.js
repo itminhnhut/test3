@@ -20,6 +20,7 @@ import WarningCircle from 'components/svg/WarningCircle';
 import toast from 'utils/toast';
 import colors from 'styles/colors';
 import { useWindowSize } from 'react-use';
+import AvatarFrame from 'components/common/AvatarFrame';
 
 const UPLOAD_TIMEOUT = 4000;
 
@@ -80,7 +81,7 @@ export const UploadAvatar = ({ t, onDropCustomAvatar, className = '' }) => {
     );
 };
 
-const AccountAvatar = ({ currentAvatar }) => {
+const AccountAvatar = ({ currentAvatar, avatar_frame }) => {
     const [avatarSets, setAvatarSets] = useState([]);
     const [avatar, setAvatar] = useState();
     const [uploadStatus, setUploadStatus] = useState(UPLOADING_STATUS.IDLE);
@@ -281,7 +282,9 @@ const AccountAvatar = ({ currentAvatar }) => {
                             <Spinner color={colors.darkBlue5} />
                         </div>
                     ) : (
-                        <img src={currentAvatar || DefaultAvatar} className="bg-white dark:bg-darkBlue-3 object-cover w-full h-full" alt="Nami.Exchange" />
+                        <AvatarFrame frame={avatar_frame} className="h-full">
+                            <img src={currentAvatar || DefaultAvatar} className="bg-white dark:bg-darkBlue-3 object-cover w-full h-full" alt="Nami.Exchange" />
+                        </AvatarFrame>
                     )}
                 </div>
                 <div

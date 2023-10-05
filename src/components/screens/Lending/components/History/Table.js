@@ -4,37 +4,45 @@ import { useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 
-// ** components
+// ** Redux
+import { useSelector } from 'react-redux';
+import { formatNumber, formatTime } from 'redux/actions/utils';
+
+// ** Components
 import SelectV2 from 'components/common/V2/SelectV2';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
+import AssetLogo from 'components/wallet/AssetLogo';
+
+// ** Constants
+import { PERCENT, YEAR, LOAN_HISTORY_STATUS, HOUR, ALLOW_ADJUST, FORMAT_HH_MM_SS, LIMIT } from 'components/screens/Lending/constants';
 
 // * Context
 import { useAssets } from 'components/screens/Lending/Context';
 
 // ** svg
+import Copy from 'components/svg/Copy';
 import { CheckCircleIcon } from 'components/svg/SvgIcon';
+
+// ** Utils
+import { substring } from 'utils';
 
 // ** Hooks
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 // ** Third party
+import { Check } from 'react-feather';
 import { useWindowSize } from 'react-use';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import colors from 'styles/colors';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 // ** Dynamic
 const AssetFilter = dynamic(() => import('components/screens/Lending/components/AssetFilter', { ssr: false }));
-const TemplateLoanContent = dynamic(() => import('components/screens/Lending/components/History/Template/LoanContent', { ssr: false }));
-const TemplateRejectContent = dynamic(() => import('components/screens/Lending/components/History/Template/RejectContent', { ssr: false }));
-const TemplateAdjustContent = dynamic(() => import('components/screens/Lending/components/History/Template/AdjustContent', { ssr: false }));
-const TemplateRepayContent = dynamic(() => import('components/screens/Lending/components/History/Template/RepayContent', { ssr: false }));
 
 // ** Constants
-const LIMIT = 10;
-
 const INIT_DATA = {
     isModal: false,
     assets: {
@@ -42,7 +50,9 @@ const INIT_DATA = {
         collateral: {}
     }
 };
-
+const TAB_LOAN = 'loan';
+const TAB_REPAY = 'repay';
+const TAB_ADJUST = 'adjust';
 const DISABLE_STATUS = ['reject', 'repay', 'adjust'];
 
 const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, configFilter, onReset }) => {
@@ -56,6 +66,9 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
 
     const { width } = useWindowSize();
     const isMobile = width < 830;
+
+    // ** useRedux
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
 
     // ** useContext
     const { assetLoanable, assetCollateral } = useAssets();
@@ -80,6 +93,12 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
 
     const onChange = (value, key) => {
         onFilter(value, key);
+    };
+
+    const handleTotalAsset = (data, asset) => {
+        const symbol = assetConfig.find((f) => f.assetCode === asset) || {};
+        const total = formatNumber(data || 0, symbol?.assetDigit, 0, true);
+        return { total: total, symbol: symbol };
     };
 
     const list = ({ data, key }) => {
@@ -116,7 +135,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                         wrapperClassNameContent="!h-6"
                         position={data?.position || 'center'}
                         onChange={(e) => onChange(e?.selection, key)}
-                        wrapperClassNameDate="dark:!text-gray-4 !text-gray-15 !text-base !font-normal"
+                        wrapperClassNameDate="dark:!text-gray-4 !text-gray-15 !text-base !font-normal whitespace-nowrap"
                     />
                 );
             case 'select':
@@ -160,10 +179,10 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
         }
     };
     // ** render
-    const renderTitle = () => {
+    const renderFilter = () => {
         return Object.keys(configFilter).map((key) => {
             const data = configFilter[key];
-            if (tab !== 'loan' && key === 'status') return;
+            if (tab !== TAB_LOAN && key === 'status') return;
             return (
                 <section>
                     <div className={classNames('dark:text-gray-7 text-gray-1 text-sm', { 'invisible h-5': !data.title })}>{data?.title}</div>
@@ -173,27 +192,300 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
         });
     };
 
-    const templateContent = {
-        loan: (value) => <TemplateLoanContent value={value} onCopy={onCopy} copied={copied} />,
-        adjust: (value) => <TemplateAdjustContent value={value} onCopy={onCopy} copied={copied} />,
-        repay: (value) => <TemplateRepayContent value={value} onCopy={onCopy} copied={copied} />,
-        reject: (value) => <TemplateRejectContent value={value} onCopy={onCopy} copied={copied} />
+    const renderAssetLogo = ({ title, total = 0, assetId, assetCode = '-' }) => {
+        return (
+            <section className="flex flex-row items-center gap-2 min-w-[214px]">
+                <AssetLogo assetId={assetId} />
+                <section className="dark:text-gray-7 text-gray-1">
+                    <div>{title}</div>
+                    <WrapperDetail>
+                        {total} {assetCode}
+                    </WrapperDetail>
+                </section>
+            </section>
+        );
     };
 
-    const renderContent = (value) => {
-        // return templateContent(value);
-        return templateContent?.[tab] && templateContent?.[tab].call(this, value);
+    const renderCopy = ({ id, title }) => {
+        return (
+            <WrapperSection>
+                <div>{title}</div>
+                <WrapperDetail>
+                    <div>#{substring(id)}</div>
+                    <CopyToClipboard onCopy={onCopy} text={id} className="cursor-pointer inline-block">
+                        {copied === id ? <Check size={16} color={colors.teal} /> : <Copy />}
+                    </CopyToClipboard>
+                </WrapperDetail>
+            </WrapperSection>
+        );
+    };
+
+    const renderID = ({ id, orderId }) => {
+        return !ALLOW_ADJUST.includes(tab) ? renderCopy({ title: 'ID khoản vay', id }) : renderCopy({ title: 'ID khoản vay', id: orderId });
+    };
+
+    const renderCol2 = (option) => {
+        const { status, _id } = option;
+        if (tab == 'loan') {
+            return (
+                <WrapperSection className="w-[150px]">
+                    <div>Trạng thái</div>
+                    <WrapperDetail
+                        className={classNames({
+                            'dark:!text-green-2 !text-green-3': status === 'REPAID'
+                        })}
+                    >
+                        {LOAN_HISTORY_STATUS?.[status]?.[language]}
+                    </WrapperDetail>
+                </WrapperSection>
+            );
+        }
+        if (tab === 'reject') {
+            const { collateralAmount, collateralCoin } = option;
+            const rsCollateralAmount = handleTotalAsset(collateralAmount, collateralCoin); //** Tổng ký quỹ ban đầu */
+            return renderAssetLogo({
+                title: 'Tổng ký quỹ ban đầu',
+                total: rsCollateralAmount.total,
+                assetId: rsCollateralAmount.symbol.id,
+                assetCode: collateralCoin
+            });
+        }
+        return renderCopy({ title: 'ID lệnh ký quỹ', id: _id });
+    };
+    const renderCol3 = (option) => {
+        const { totalDebt, loanCoin, metadata, interest, liquidationFee } = option;
+
+        if (tab === TAB_LOAN) {
+            const rsTotalDebt = handleTotalAsset(totalDebt, loanCoin); //** Tổng dư nợ */
+            return renderAssetLogo({
+                title: 'Tổng dư nợ',
+                total: rsTotalDebt.total,
+                assetId: rsTotalDebt.symbol.id,
+                assetCode: loanCoin
+            });
+        }
+        if (tab === TAB_REPAY) {
+            const type = metadata?.repayRate === 1 ? 'Toàn bộ' : 'Một phần';
+            return (
+                <WrapperSection>
+                    <div>Loại hoàn trả</div>
+                    <div className="dark:text-green-2 text-green-3 font-semibold">{type}</div>
+                </WrapperSection>
+            );
+        }
+        if (tab === TAB_ADJUST) {
+            const type = metadata?.payment?.amount < 0 ? 'Bớt ký quỹ' : 'Thêm ký quỹ';
+            return (
+                <WrapperSection className="w-[140px] whitespace-nowrap">
+                    <div>Loại ký quỹ</div>
+                    <div className="dark:text-green-2 text-green-3 font-semibold">{type}</div>
+                </WrapperSection>
+            );
+        }
+        // ** reject
+        const rsLiquidationFree = handleTotalAsset(interest * liquidationFee, loanCoin);
+        return renderAssetLogo({
+            title: 'Phí thanh lý',
+            total: rsLiquidationFree.total,
+            assetId: rsLiquidationFree.symbol.id,
+            assetCode: loanCoin
+        });
+    };
+
+    const renderCol4 = (option) => {
+        const { collateralAmount, collateralCoin, detail, createdAt } = option;
+
+        if (tab === TAB_LOAN) {
+            const rsCollateralAmount = handleTotalAsset(collateralAmount, collateralCoin); //** Tổng ký quỹ ban đầu */
+            return renderAssetLogo({
+                title: 'Ký quỹ ban đầu',
+                total: rsCollateralAmount.total,
+                assetId: rsCollateralAmount.symbol.id,
+                assetCode: collateralCoin
+            });
+        }
+        if (tab === TAB_REPAY) {
+            const totalRepaid = handleTotalAsset(detail?.totalRepaid?.to, detail?.totalRepaid?.currency);
+            return renderAssetLogo({
+                title: 'Tổng đã trả',
+                total: totalRepaid.total,
+                assetId: totalRepaid.symbol.id,
+                assetCode: totalRepaid.symbol.assetCode
+            });
+        }
+        if (tab === TAB_ADJUST) {
+            const totalCollateralAmount = detail?.totalCollateralAmount;
+            const initialCollateral = handleTotalAsset(totalCollateralAmount?.from, collateralCoin);
+            return renderAssetLogo({
+                title: 'Ký quỹ ban đầu',
+                total: initialCollateral.total,
+                assetId: initialCollateral.symbol.id,
+                assetCode: initialCollateral.symbol.assetCode
+            });
+        }
+        // ** reject
+        return (
+            <WrapperSection className="whitespace-nowrap">
+                <div>Thời gian vay</div>
+                <WrapperDetail>{formatTime(createdAt, FORMAT_HH_MM_SS)}</WrapperDetail>
+            </WrapperSection>
+        );
+    };
+
+    const renderCol5 = (option) => {
+        const { loanTerm, metadata, collateralCoin, detail, liquidationTime } = option;
+        if (tab === TAB_LOAN) {
+            return (
+                <WrapperSection>
+                    <div>Kỳ hạn</div>
+                    <WrapperDetail>{loanTerm} ngày</WrapperDetail>
+                </WrapperSection>
+            );
+        }
+        if (tab === TAB_REPAY) {
+            const repayCollateralAmount = handleTotalAsset(metadata?.repayCollateralAmount, collateralCoin);
+            return renderAssetLogo({
+                title: 'Tổng ký quỹ sử dụng',
+                total: repayCollateralAmount.total,
+                assetId: repayCollateralAmount.symbol.id,
+                assetCode: collateralCoin
+            });
+        }
+        if (tab === TAB_ADJUST) {
+            const totalCollateralAmount = detail?.totalCollateralAmount;
+            const adjustCollateral = handleTotalAsset(totalCollateralAmount?.to, collateralCoin);
+            return renderAssetLogo({
+                title: 'Ký quỹ điều chỉnh',
+                total: adjustCollateral.total,
+                assetId: adjustCollateral.symbol.id,
+                assetCode: adjustCollateral.symbol.assetCode
+            });
+        }
+        // ** reject
+        return (
+            <WrapperSection className="whitespace-nowrap">
+                <div>Thời gian thanh lý</div>
+                <WrapperDetail>{formatTime(liquidationTime, FORMAT_HH_MM_SS)}</WrapperDetail>
+            </WrapperSection>
+        );
+    };
+
+    const renderCol6 = (option) => {
+        const { hourlyInterestRate, metadata, collateralCoin, detail, status } = option;
+        if (tab === TAB_LOAN) {
+            const interestRate = hourlyInterestRate * HOUR * YEAR * PERCENT;
+            return (
+                <WrapperSection>
+                    <div>Lãi suất năm</div>
+                    <WrapperDetail>{formatNumber(interestRate)}%</WrapperDetail>
+                </WrapperSection>
+            );
+        }
+        if (tab === TAB_REPAY) {
+            const returnCollateralAmount = handleTotalAsset(metadata?.returnCollateralAmount, collateralCoin);
+
+            return renderAssetLogo({
+                title: 'Tổng ký quỹ hoàn trả',
+                total: returnCollateralAmount.total,
+                assetId: returnCollateralAmount.symbol.id,
+                assetCode: collateralCoin
+            });
+        }
+        if (tab === TAB_ADJUST) {
+            const LTV = detail?.LTV;
+            return (
+                <section className="flex flex-row items-center gap-2 whitespace-nowrap">
+                    <section className="dark:text-gray-7 text-gray-1 whitespace-nowrap">
+                        <div>LTV trước điều chỉnh</div>
+                        <WrapperDetail>{(LTV?.from * PERCENT).toFixed(0)}%</WrapperDetail>
+                    </section>
+                </section>
+            );
+        }
+        // ** reject
+        return (
+            <WrapperSection className="whitespace-nowrap">
+                <div>Nguyên nhân thanh lý</div>
+                <WrapperDetail>{LOAN_HISTORY_STATUS?.[status]?.[language]}</WrapperDetail>
+            </WrapperSection>
+        );
+    };
+
+    const renderCol7 = (option) => {
+        const { createdAt, detail } = option;
+        if (tab === TAB_LOAN) {
+            return (
+                <WrapperSection className="w-max">
+                    <div>Thời gian vay</div>
+                    <WrapperDetail>{formatTime(createdAt, 'HH:mm:ss dd/MM/yyyy')}</WrapperDetail>
+                </WrapperSection>
+            );
+        }
+        if (tab === TAB_ADJUST) {
+            const LTV = detail?.LTV;
+            return (
+                <section className="flex flex-row items-center gap-2 whitespace-nowrap">
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>LTV sau điều chỉnh</div>
+                        <WrapperDetail>{(LTV?.to * PERCENT).toFixed(0)}%</WrapperDetail>
+                    </section>
+                </section>
+            );
+        }
     };
 
     const renderTable = useCallback(() => {
         const columns = [
             {
-                key: 'currency',
-                dataIndex: 'currency',
-                title: renderTitle(),
+                key: '_id',
+                dataIndex: '_id',
+                title: '',
                 align: 'left',
-                width: 189,
-                render: (value, option) => renderContent(option)
+                render: (value, option) => renderID({ id: value, orderId: option.orderId })
+            },
+            {
+                key: '',
+                dataIndex: '',
+                title: '',
+                align: 'left',
+                render: (value, option) => renderCol2(option)
+            },
+            {
+                key: '',
+                dataIndex: '',
+                title: '',
+                align: 'left',
+                render: (value, option) => renderCol3(option)
+            },
+            {
+                key: '',
+                dataIndex: '',
+                title: '',
+                align: 'left',
+                width: 220,
+
+                render: (value, option) => renderCol4(option)
+            },
+            {
+                key: '',
+                dataIndex: '',
+                title: '',
+                align: 'left',
+                render: (value, option) => renderCol5(option)
+            },
+            {
+                key: '',
+                dataIndex: '',
+                title: '',
+                align: 'left',
+                render: (value, option) => renderCol6(option)
+            },
+            {
+                key: '',
+                dataIndex: '',
+                title: '',
+                align: 'left',
+                render: (value, option) => renderCol7(option)
             }
         ];
 
@@ -221,40 +513,40 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                     language: language
                 }}
                 tableStyle={{
-                    rowHeight: '64px'
+                    rowHeight: '96px'
                 }}
             />
         );
     }, [data?.result, loading, isDark, filter, tab, copied]);
 
-    return <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">{renderTable()}</section>;
+    return (
+        <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">
+            <div className="flex gap-6 flex-wrap mx-6 items-end justify-between">
+                <div className="flex justify-between gap-4 mb-8 mt-6">{renderFilter()}</div>
+            </div>
+            {renderTable()}
+        </section>
+    );
 };
+
+const WrapperSection = styled.section.attrs(({ className }) => ({
+    className: classNames('flex flex-col justify-center dark:text-gray-7 text-gray-1 whitespace-nowrap', className)
+}))``;
+
+const WrapperDetail = styled.section.attrs(({ className }) => ({
+    className: classNames('dark:text-gray-4 text-gray-15 font-semibold flex flex-row gap-1 items-center whitespace-nowrap', className)
+}))``;
 
 const WrapperTable = styled(TableV2).attrs(({ ...props }) => ({
     className: classNames(props)
 }))`
     .rc-table-container {
-        overflow: auto;
-        .rc-table-content {
-            width: ${(props) => (props.isMobile ? 'max-content' : '100%')};
-        }
-        // .rc-table-tbody {
-        //     display: flex;
-        //     flex-direction: row;
-        // }
         .rc-table-thead {
-            tr th {
-                max-height: 112px;
-                display: flex;
-                flex-direction: row;
-                gap: 12px;
-                white-space: nowrap;
-                font-size: 16px;
-                font-weight: 600 !important;
-                color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.gray[15])};
-                div > span {
-                    margin-top: 24px;
-                }
+            display: none;
+        }
+        .rc-table-tbody {
+            tr td {
+                border-color: ${(props) => (props.isDark ? colors.divider.dark : colors.divider.DEFAULT)} !important;
             }
         }
     }

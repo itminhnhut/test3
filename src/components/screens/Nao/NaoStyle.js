@@ -16,6 +16,7 @@ import { WarningFilledIcon, RemoveCircleIcon } from 'components/svg/SvgIcon';
 import { IconArrowOnus } from 'components/common/Icons';
 import { QUOTE_ASSET } from 'constants/constants';
 import { useSelector } from 'react-redux';
+import AvatarFrame from 'components/common/AvatarFrame';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-xl sm:text-2xl font-semibold w-max text-txtPrimary dark:text-txtPrimary-dark'
@@ -488,13 +489,15 @@ export const ImageNao = ({ src, fallBack, ...props }) => {
     }, [src]);
 
     return (
-        <img
-            src={image}
-            {...props}
-            onError={(e) => {
-                if (e.type === 'error') setImage(fallBackSrc);
-            }}
-        />
+        <AvatarFrame {...props}>
+            <img
+                src={image}
+                {...props}
+                onError={(e) => {
+                    if (e.type === 'error') setImage(fallBackSrc);
+                }}
+            />
+        </AvatarFrame>
     );
 };
 
@@ -637,10 +640,18 @@ export const VolumeTooltip = ({ item, tooltip, className, suffix }) => {
 };
 
 export const CPnl = ({ item, isTotal, className }) => {
+    const user = useSelector((state) => state.auth.user) || null;
     const value = isTotal ? item?.total_pnl : item?.pnl;
     const prefix = value !== 0 && value > 0 ? '+' : '';
     const suffix = isTotal ? '' : '%';
     const decimal = isTotal ? 0 : 2;
+
+    const isMe = useMemo(() => {
+        if (!user) return false;
+        return item?.members?.find((i) => i?.code === user?.code) || user?.code === item?.code;
+    }, [user, item]);
+
+    if (isTotal && Number(value) < 0 && !isMe) return <span>-</span>;
     return (
         <span className={`font-semibold ${getColor(value)} ${className}`}>
             {prefix}
