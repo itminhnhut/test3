@@ -31,7 +31,8 @@ export const TRANSACTION_TYPES = {
     PARTNERCOMMISSION: 'partnercommission',
     COMMISSION: 'commision',
     OFF_CHAIN: 'off_chain',
-    INSURANCE: 'insurance'
+    INSURANCE: 'insurance',
+    LOAN: 'loan'
 };
 
 export const TransactionTabs = [
@@ -100,6 +101,11 @@ export const TransactionTabs = [
         localized: null,
         title: 'Nami Insurance',
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.INSURANCE)
+    },
+    {
+        key: TRANSACTION_TYPES.LOAN,
+        localized: 'loan',
+        href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.LOAN)
     }
 ];
 
@@ -260,6 +266,11 @@ export const modalDetailColumn = {
         },
 
         { keys: ['additionalData.metadata.note'], localized: 'modal_detail.note' }
+    ],
+    [TRANSACTION_TYPES.LOAN]: [
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
+        { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
+        { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE }
     ],
     common: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },

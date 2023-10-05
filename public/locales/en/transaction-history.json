@@ -12,7 +12,8 @@
         "transfer": "Transfer",
         "staking": "Staking Daily",
         "commission": "Commissions",
-        "off_chain": "Send/Receive Off-chain"
+        "off_chain": "Send/Receive Off-chain",
+        "loan": "Crypto Loans"
     },
     "filter": {
         "all": "All",
