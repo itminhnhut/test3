@@ -22,10 +22,4 @@ const getReceiveCollateral = ({ repayAmount, totalDebt, totalCollateralAmount, m
     return ((repayAmount / totalDebt) * totalCollateralAmount - marginUsed) * 0.95;
 };
 
-const handleTotalAsset = (data, asset, assetConfig) => {
-    const symbol = assetConfig.find((f) => f.assetCode === asset) || {};
-    const total = formatNumber(data || 0, symbol?.assetDigit, 0, true);
-    return { total: total, symbol: symbol };
-};
-
-export { totalAsset, getCurrentLTV, getReceiveCollateral, handleTotalAsset };
+export { totalAsset, getCurrentLTV, getReceiveCollateral };

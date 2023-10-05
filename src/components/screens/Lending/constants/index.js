@@ -115,6 +115,7 @@ const DEFAULT_LOANABLE_ASSET = 'VNST';
 const DEFAULT_COLLATERAL_ASSET = 'BNB';
 const FORMAT_HH_MM_SS = 'HH:mm:ss dd/MM/yyyy';
 const ALLOW_LTV_TOOLTIP = ['ltv_initial', 'ltv_margin', 'ltv_liquidate'];
+const ALLOW_ADJUST = ['adjust', 'repay'];
 
 const LOAN_HISTORY_STATUS = {
     ONGOING: { vi: 'Bình thường', en: 'Bình thường', contentTooltip: { vi: 'Bình thường', en: 'Bình thường' } },
@@ -139,6 +140,7 @@ export {
     TABS,
     PERCENT,
     INTEREST,
+    ALLOW_ADJUST,
     LOANABLE,
     STATUS_VI,
     STATUS_EN,

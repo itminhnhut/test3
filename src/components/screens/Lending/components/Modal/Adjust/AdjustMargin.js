@@ -50,8 +50,17 @@ const getSpotAvailable = createSelector([(state) => state.wallet?.SPOT, (utils, 
 });
 
 const DEBOUNCE_TIME = 300;
+const initState = {
+    tab: 'add',
+    error: '',
+    amountAsset: 0
+};
 
-const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
+const ERRORS = {
+    max: { vi: 'số lượng tài sản lớn hơn khả dụng', en: 'số lượng tài sản lớn hơn khả dụng' }
+};
+
+const AdjustMargin = ({ onClose, dataCollateral }) => {
     // ** useReducer
     const { state, dispatchReducer } = useContext(LendingContext);
 
@@ -68,14 +77,12 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
     const collateralAvailable = useSelector((state) => getSpotAvailable(state, { assetId: dataCollateral?.collateralAsset?.symbol?.id }));
 
     //**  useState
-    const [tab, setTab] = useState('add');
-    const [error, setError] = useState('');
+    const [tab, setTab] = useState(initState.tab);
+    const [error, setError] = useState(initState.error);
+    const [amountAsset, setAmountAsset] = useState(initState.amountAsset);
 
-    const amount = useMemo(() => {
-        return state?.amount;
-    }, [state?.amount]);
-
-    const debounceAmount = useDebounce(amount, DEBOUNCE_TIME);
+    const amount = state?.amount;
+    const debounceAmount = useDebounce(amountAsset, DEBOUNCE_TIME);
 
     const { collateralCoin, loanCoin, totalDebt, totalCollateralAmount } = dataCollateral || {};
     const total_current_LTV = totalDebt / (totalCollateralAmount * pairPrice?.lastPrice);
@@ -89,6 +96,7 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
             dispatchReducer({ type: actions.UPDATE, data: { dataCollateral, rsTotalDebt, rsTotalCollateralAmount } });
             // ** reset amount
             dispatchReducer({ type: actions.RESET_AMOUNT });
+            setAmountAsset(initState.amountAsset);
         }
     }, [useMemoizeArgs(dataCollateral), tab]);
 
@@ -99,17 +107,34 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
         }
     }, [useMemoizeArgs(dataCollateral)]);
 
+    useEffect(() => {
+        // ** reset amount open modal adjust
+        if (state.amount === '' && amountAsset !== '') {
+            setAmountAsset(initState.amountAsset);
+        }
+    }, [state.modal.isAdjust]);
+
     // ** useEffect
     useEffect(() => {
-        if (collateralAvailable < amount) {
-            setError('amount > collateralAvailable');
+        if (collateralAvailable < amountAsset) {
+            setError(ERRORS.max?.[language]);
         } else {
-            error?.length > 0 && setError('');
+            error?.length > 0 && setError(initState.error);
         }
-    }, [collateralAvailable, amount]);
+    }, [collateralAvailable, debounceAmount]);
 
     useEffect(() => {
-        dispatchReducer({ type: actions.UPDATE_TOTAL_ADJUSTED, amount: amount || 0, method: tab });
+        if (+amountAsset < 0 || +amountAsset > collateralAvailable) {
+            setError(ERRORS.max?.[language]);
+            dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: amountAsset });
+        } else {
+            if (!amountAsset) {
+                dispatchReducer({ type: actions.RESET_AMOUNT });
+            } else {
+                dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: amountAsset });
+            }
+        }
+        dispatchReducer({ type: actions.UPDATE_TOTAL_ADJUSTED, amount: amountAsset || 0, method: tab });
     }, [debounceAmount]);
 
     const current_LTV = useMemo(() => {
@@ -127,7 +152,7 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
 
     const handleCloseModal = () => {
         onClose();
-        setTab('add');
+        setTab(initState.tab);
     };
 
     const handleSubmit = () => {
@@ -135,21 +160,13 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
         getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin }); //** update market price */
     };
 
+    // ** handle update amount assets
     const handleAmountChange = (value) => {
-        if (+value < 0 || +value > collateralAvailable) {
-            setError('value > collateralAvailable');
-            dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: value });
-            return;
-        }
-        if (!value) {
-            dispatchReducer({ type: actions.RESET_AMOUNT });
-        } else {
-            dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: value });
-        }
+        setAmountAsset(value);
     };
 
     const validationAdd = () => {
-        return amount > 0 && amount <= collateralAvailable;
+        return amountAsset > 0 && amountAsset <= collateralAvailable;
     };
 
     const validationSubtract = () => {
@@ -158,8 +175,8 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
     };
 
     const isSubmitted = useMemo(() => {
-        return tab === 'add' ? validationAdd() : validationSubtract();
-    }, [tab, amount]);
+        return tab === initState.tab ? validationAdd() : validationSubtract();
+    }, [tab, debounceAmount, collateralAvailable]);
 
     const handleCloseConfirmAdjustMargin = () => {
         setTimeout(() => {
@@ -169,13 +186,6 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
 
     const validator = useMemo(() => {
         let err = error;
-
-        // for (const key of Object.keys(state.errors)) {
-        //     if (state?.errors?.[key]) {
-        //         error = state.errors[key];
-        //         break;
-        //     }
-        // }
         return { isValid: !Boolean(err), msg: err, isError: Boolean(err) };
     }, [error]);
 
@@ -191,12 +201,12 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                     </section>
                     <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
                         <div>LTV đã điều chỉnh</div>
-                        <div className="dark:text-gray-4 font-semibold">{amount > 0 ? `${adjustedLTV?.toFixed(0)}%` : DEFAULT_VALUE} </div>
+                        <div className="dark:text-gray-4 font-semibold">{amountAsset > 0 ? `${adjustedLTV?.toFixed(0)}%` : DEFAULT_VALUE} </div>
                     </section>
                     <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7 flex-wrap">
                         <div>Tổng ký quỹ điều chỉnh</div>
                         <div className="dark:text-gray-4 font-semibold flex flex-row gap-1">
-                            {amount > 0 ? (
+                            {amountAsset > 0 ? (
                                 <>
                                     <span>{totalAdjusted.total}</span>
                                     <span>{totalAdjusted.assetCode}</span>
@@ -234,12 +244,12 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                     </section>
                     <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
                         <div>LTV đã điều chỉnh</div>
-                        <div className="dark:text-gray-4 font-semibold">{amount > 0 ? `${adjustedLTV?.toFixed(0)}%` : DEFAULT_VALUE} </div>
+                        <div className="dark:text-gray-4 font-semibold">{amountAsset > 0 ? `${adjustedLTV?.toFixed(0)}%` : DEFAULT_VALUE} </div>
                     </section>
                     <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7 flex-wrap">
                         <div>Tổng ký quỹ điều chỉnh</div>
                         <div className="dark:text-gray-4 font-semibold flex flex-row gap-1">
-                            {amount > 0 ? (
+                            {amountAsset > 0 ? (
                                 <>
                                     <span>{totalAdjusted.total}</span>
                                     <span>{totalAdjusted.assetCode}</span>
@@ -278,13 +288,12 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
                 </section>
                 <TradingInputV2
                     id="amount_input"
-                    value={amount || ''}
+                    value={amountAsset || ''}
                     allowNegative={false}
                     thousandSeparator={true}
                     containerClassName="mt-4"
                     inputClassName="!text-left !ml-0"
                     onValueChange={({ value }) => handleAmountChange(value)}
-                    // decimalScale={state.stakingCurrency.value === 72 ? 0 : 4}
                     allowedDecimalSeparators={[',', '.']}
                     clearAble
                     placeHolder="Nhập số lượng tài sản"
@@ -363,7 +372,7 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
             </ModalV2>
             <ConfirmAdjustMargin
                 tab={tab}
-                amount={amount}
+                amount={amountAsset}
                 id={dataCollateral?._id}
                 currentLTV={current_LTV}
                 adjustedLTV={adjustedLTV}
@@ -377,5 +386,11 @@ const AdjustMargin = ({ isModal, onClose, dataCollateral }) => {
         </>
     );
 };
+
+// const adjustMarginAreEqual = (prev, next) => {
+//     return JSON.stringify(prev.dataCollateral) === JSON.stringify(next.dataCollateral);
+// };
+
+// const MemoizedAdjustMargin = memo(AdjustMargin, adjustMarginAreEqual);
 
 export default AdjustMargin;
