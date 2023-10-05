@@ -73,17 +73,19 @@ const BORROWING_TERM = [
 ];
 
 const INTEREST = [
-    { title: { vi: 'Lãi suất theo năm', en: 'Lãi suất theo năm' }, asset: '%', key: 'interest_year' },
-    { title: { vi: 'Lãi suất hằng ngày', en: 'Lãi suất hằng ngày' }, asset: '%', key: 'interest_daily' },
-    { title: { vi: 'Lãi ước tính theo giờ', en: 'Lãi ước tính theo giờ' }, asset: 'VNDC', key: 'interest_hours' },
-    { title: { vi: 'Lãi ước tính theo kỳ hạn', en: 'Lãi ước tính theo kỳ hạn' }, asset: 'VNDC', key: 'interest_term' }
+    { title: { vi: 'Lãi vay (năm)', en: 'Annual interest rate' }, asset: '%', key: 'interest_year' },
+    { title: { vi: 'Lãi vay (ngày)', en: 'Daily interest rate' }, asset: '%', key: 'interest_daily' },
+    { title: { vi: 'Lãi ước tính theo giờ', en: 'Est. Hourly interest' }, asset: 'VNDC', key: 'interest_hours' },
+    { title: { vi: 'Tổng lãi ước tính', en: 'Est. Total interest' }, asset: 'VNDC', key: 'interest_term' }
 ];
 
 const LTV = [
-    { title: { vi: 'LTV Ban đầu', en: 'LTV Ban đầu' }, key: 'ltv_initial' },
-    { title: { vi: 'LTV Gọi ký quỹ', en: 'LTV Gọi ký quỹ' }, key: 'ltv_margin' },
-    { title: { vi: 'LTV Thanh lý', en: 'LTV Thanh lý' }, key: 'ltv_liquidate' }
+    { title: { vi: 'LTV ban đầu', en: 'Initial LTV' }, key: 'initial_ltv' },
+    { title: { vi: 'LTV gọi ký quỹ', en: 'Margin call LTV' }, key: 'margin_ltv' },
+    { title: { vi: 'LTV thanh lý', en: 'Liquidation LTV' }, key: 'liquidate_ltv' }
 ];
+
+
 
 const HISTORY_TAB = [
     { title: { vi: 'Vay', en: 'Vay' }, key: 'loan' },
@@ -150,7 +152,6 @@ export {
     HISTORY_TAB,
     BORROWING_TERM,
     FORMAT_HH_MM_SS,
-    ALLOW_LTV_TOOLTIP,
     LOAN_HISTORY_STATUS,
     REGISTER_HANDLE_TYPE,
     DEFAULT_LOANABLE_ASSET,
