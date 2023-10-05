@@ -151,7 +151,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             // gia tri cua field con lai
             const otherValue = {
                 percentage: roundByExactDigit((inputValue / totalDebt) * PERCENT, 0), // field "percentage" lam tron xuong
-                amount: ceilByExactDegit((totalDebt * inputValue) / PERCENT, 0) // field "amount" lam tron len
+                amount: ceilByExactDegit((totalDebt * inputValue) / PERCENT, 0) || '' // field "amount" lam tron len. neu amount === 0 thi = ""
             }[otherField];
 
             if (inputField === 'amount' && +inputValue > totalDebt) {
