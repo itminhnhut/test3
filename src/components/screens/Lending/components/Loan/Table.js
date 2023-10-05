@@ -50,7 +50,7 @@ import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 // ** dynamic
 const ModalAdjustMargin = dynamic(() => import('components/screens/Lending/components/Modal/Adjust/AdjustMargin'), { ssr: false });
-const ModalLoanRepayment = dynamic(() => import('components/screens/Lending/components/Modal/LoanRepayment'), { ssr: false });
+const ModalLoanRepayment = dynamic(() => import('components/screens/Lending/components/Modal/LoanRepayment'), { ssr: true });
 
 // ** Constants
 const LIMIT = 10;

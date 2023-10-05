@@ -125,8 +125,7 @@ const History = () => {
 
     // ** useState
     useEffect(() => {
-        const id = setTimeout(() => getOrderLoan(), 300);
-        return () => clearTimeout(id);
+        getOrderLoan();
     }, [useMemoizeArgs(filter), tab, page]);
 
     useEffect(() => {

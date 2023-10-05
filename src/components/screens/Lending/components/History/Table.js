@@ -8,13 +8,14 @@ import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 
-// ** components
+// ** Components
 import SelectV2 from 'components/common/V2/SelectV2';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
 import AssetLogo from 'components/wallet/AssetLogo';
 
+// ** Constants
 import { PERCENT, YEAR, LOAN_HISTORY_STATUS, HOUR, ALLOW_ADJUST, FORMAT_HH_MM_SS, LIMIT } from 'components/screens/Lending/constants';
 
 // * Context
@@ -208,7 +209,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
     const renderCopy = ({ id, title }) => {
         return (
             <WrapperSection>
-                <div>ID khoản vay</div>
+                <div>{title}</div>
                 <WrapperDetail>
                     <div>#{substring(id)}</div>
                     <CopyToClipboard onCopy={onCopy} text={id} className="cursor-pointer inline-block">
