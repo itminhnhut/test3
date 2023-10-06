@@ -43,19 +43,17 @@ import {
     LOANABLE,
     COLLATERAL,
     BORROWING_TERM,
-    ALLOW_LTV_TOOLTIP,
     DEFAULT_LOANABLE_ASSET,
     DEFAULT_COLLATERAL_ASSET,
     REGISTER_HANDLE_TYPE
 } from 'components/screens/Lending/constants';
-
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 // ** UTILS
 import { dwLinkBuilder, formatNumber, getLoginUrl } from 'redux/actions/utils';
 import { getSpotAvailable } from '../../utils/selector';
-import Spinner from 'components/svg/Spinner';
+
 // ** INIT DATA
 const INIT_DATA = {
     loanTerm: 7,
@@ -291,7 +289,11 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                     boxContainerClassName="w-6 h-6"
                     label={
                         <Trans i18nKey="lending:lending:rule">
-                            <a className="text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 cursor-pointer font-semibold" href="#" />
+                            <a
+                                className="text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 cursor-pointer font-semibold"
+                                target="_blank"
+                                href="/terms-of-service"
+                            />
                         </Trans>
                     }
                 />
@@ -317,18 +319,18 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     };
 
     const renderTooltipLTV = () => {
-        return ALLOW_LTV_TOOLTIP.map((item, key) => {
+        return LTV.map((item, index) => {
             return (
                 <Tooltip
                     isV3
                     place="top"
-                    id={item}
+                    id={item.key}
                     effect="solid"
                     className={classNames(
                         'max-w-[511px] dark:after:!border-t-[#2e333d] after:!border-t-[#e1e2e3]  !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1  dark:!text-gray-7 !text-gray-1 !text-sm',
                         {
-                            'after:!left-[8%]': key === 0,
-                            'after:!left-[84%]': key === 2
+                            'after:!left-[8%]': index === 0,
+                            'after:!left-[84%]': index === 2
                         }
                     )}
                     overridePosition={({ top }) => {
@@ -336,7 +338,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                     }}
                 >
                     <Trans
-                        i18nKey={`lending:lending:ltv:${item}`}
+                        i18nKey={`lending:lending:ltv:${item.key}`}
                         components={{
                             primary: <div className="flex" />,
                             secondary: <p className="text-green-3 hover:text-green-4 ml-1" />

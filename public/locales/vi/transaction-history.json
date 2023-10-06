@@ -12,7 +12,8 @@
         "transfer": "Chuyển ví",
         "staking": "Nhận lãi hàng ngày",
         "commission": "Hoa hồng",
-        "off_chain": "Gửi/Nhận Off-chain"
+        "off_chain": "Gửi/Nhận Off-chain",
+        "loan": "Vay Crypto"
     },
     "filter": {
         "all": "Tất cả",
