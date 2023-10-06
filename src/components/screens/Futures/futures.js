@@ -48,6 +48,7 @@ const FuturesTradeRecord = dynamic(() => import('components/screens/Futures/Trad
 const FuturesMarginRatioVndc = dynamic(() => import('./PlaceOrder/Vndc/MarginRatioVndc'), { ssr: false });
 const FuturesTermsModal = dynamic(() => import('components/screens/Futures/FuturesModal/FuturesTermsModal'), { ssr: false });
 const FuturesPlaceOrderVndc = dynamic(() => import('components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc'), { ssr: false });
+const Notification = dynamic(() => import('./RelatedInformation/Notification'), { ssr: false });
 
 const INITIAL_STATE = {
     layouts: futuresGridConfig.layoutsVndc,
@@ -255,7 +256,7 @@ const Futures = ({ integrate, orderId, symbol }) => {
     return (
         <>
             {isMediumDevices && <FuturesTermsModal />}
-            <FuturesPageTitle pair={state.pair} price={state.pairPrice?.lastPrice} pricePrecision={pairConfig?.pricePrecision} />
+            <FuturesPageTitle pair={state.pair} price={pairPrice?.lastPrice} pricePrecision={pairConfig?.pricePrecision} />
             <DynamicNoSsr>
                 <MaldivesLayout
                     navStyle={{
@@ -268,6 +269,7 @@ const Futures = ({ integrate, orderId, symbol }) => {
                     resetDefault={resetDefault}
                 >
                     <div className="w-full ">
+                        <Notification symbol={symbol} platform="FUTURES" />
                         {isMediumDevices ? (
                             <GridLayout
                                 className="layout"

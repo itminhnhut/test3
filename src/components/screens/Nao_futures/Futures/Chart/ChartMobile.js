@@ -49,18 +49,21 @@ const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, fo
     useEffect(() => {
         const el = document.querySelector('#chart-mobile');
         const elFutures = document.querySelector('#futures-mobile');
+        const notice_nao = document.querySelector('#notice_nao');
         if (!el) return;
         if (fullChart) {
             el.classList.add('chart-full-screen');
             elFutures.classList.add('!overflow-hidden');
+            if (notice_nao) notice_nao.classList.add('hidden');
         } else {
             el.classList.remove('chart-full-screen');
             elFutures.classList.remove('!overflow-hidden');
+            if (notice_nao) notice_nao.classList.remove('hidden');
         }
     }, [fullChart]);
 
     return (
-        <div id="chart-mobile" className={`spot-chart ${!fullChart ? 'max-w-full h-full' : ''}`} style={style}>
+        <div id="chart-mobile" className={`spot-chart ${!fullChart ? 'max-w-full h-full' : '!z-30'}`} style={style}>
             <MobileTradingView
                 refChart={(ref) => (refChart.current = ref)}
                 t={t}

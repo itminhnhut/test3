@@ -414,3 +414,4 @@ export const API_HISTORY_LOAN_ADJUST = API_V3_PREFIX + 'wallet/history/loan/adju
 export const API_OVERVIEW_LOAN = API_V3_PREFIX + 'wallet/history/loan/overview';
 export const API_GET_PAIR_PRICE = API_V3_PREFIX + 'wallet/history/price';
 export const API_PUT_HISTORY_LOAN_MARGIN = API_V3_PREFIX + 'wallet/history/loan/margin/:id';
+export const API_BLOG_FUTURES = API_PREFIX + 'blog/futures';
