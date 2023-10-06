@@ -139,11 +139,16 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
             key: 'amount',
             width: 'auto',
             align: 'left',
+            sorter: (a, b) => {
+                const aUsdVal = a.amount * (usdRate?.[WalletCurrency[a.asset]] || 1);
+                const bUsdVal = b.amount * (usdRate?.[WalletCurrency[b.asset]] || 1);
+                return bUsdVal - aUsdVal;
+            },
             render: (val, record) => {
                 return (
                     <div className="">
                         <div className="font-semibold">{`${val} ${record.asset}`}</div>
-                        {record.positions && <div className="text-xs">${formatNumber(val * (usdRate?.[WalletCurrency[record.asset]] || 1), 2)}</div>}
+                        {record.positions && <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">${formatNumber(val * (usdRate?.[WalletCurrency[record.asset]] || 1), 2)}</div>}
                     </div>
                 );
             }
@@ -224,7 +229,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
                                         <SvgChevronDown size={24} color="currentColor" className={classNames('m-auto', expanded && '!rotate-0')} />
                                     </div>
                                 ) : (
-                                    <Button variants='text' className="sm:!text-sm !p-0" onClick={() => setPosition(record)}>
+                                    <Button variants="text" className="sm:!text-sm !p-0" onClick={() => setPosition(record)}>
                                         {t('wallet:earn_wallet:table:order_detail')}
                                     </Button>
                                 ),
@@ -239,6 +244,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
                             rowHeight: '72px',
                             fontSize: '1rem'
                         }}
+                        sort={['amount']}
                     />
                 </TableWrapper>
             </div>

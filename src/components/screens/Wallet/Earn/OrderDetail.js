@@ -38,12 +38,35 @@ const getUTCToday = () => {
     return utcToday;
 };
 
-const Token = ({ symbol }) => {
-    return (
-        <div className="flex space-x-2 items-center">
-            <span className="font-semibold">{symbol}</span>
-        </div>
-    );
+const ERROR = {
+    POSITION_NOT_FOUND: {
+        en: 'Position not found',
+        vi: 'Vị thế Earn ko tìm thấy'
+    },
+    INVALID_REDEEM_EARLIER: {
+        en: 'Could not redeem in earn time',
+        vi: 'Ko thể redeem trước hạn'
+    },
+    INVALID_POSITION_STATUS: {
+        en: 'This position is ended',
+        vi: 'Vị thế này đã kết thúc'
+    },
+    INVALID_REWARD_AMOUNT: {
+        en: 'No reward to claim',
+        vi: 'hết ròi'
+    },
+    RENEW_UNAVAILABLE: {
+        en: 'Unable to renew',
+        vi: 'ko renew được'
+    },
+    429: {
+        en: 'No spam',
+        vi: 'ko spam'
+    },
+    INVALID_MAINTENANCE_TIME: {
+        en: 'Earn system is currently suspending',
+        vi: 'Chuơng trình Earn đang trong giai đoạn bảo trì'
+    }
 };
 
 const STATUS = {
@@ -82,6 +105,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
     const [depositAmount, setDepositAmount] = useState(amount);
     const [claimedAmount, setClaimedAmount] = useState(withdrewAmt);
     const [isLoading, setIsLoading] = useState(false);
+    const [actionError, setActionError] = useState();
     const [modal, setModal] = useState();
     const [isSuspending, setIsSuspending] = useState(false);
     const router = useRouter();
@@ -96,6 +120,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
         return rewardPrice === 0 ? 1 : assetPrice / rewardPrice;
     }, [usdRate, asset, rewardAsset]);
     const estDailyReward = (apr * quote * depositAmount) / 365;
+    const equivalentClaimedReward = claimedAmount / quote;
 
     const today = getUTCToday();
 
@@ -130,15 +155,45 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
     }, [t]);
 
     const isEarly = now < rewardsEndDate * 1000;
-    const canRedeem = !isSuspending && depositAmount && (!isEarly || !!canRedeemEarly);
+    const canRedeem = !isSuspending && depositAmount && (!isEarly || !!canRedeemEarly) && !isLoading;
     const leftOverReward = rewardAmt - claimedAmount;
     const canClaim = !isSuspending && leftOverReward > 0 && !isLoading;
 
-    const redeem = () => {
+    const redeem = async () => {
         if (!canRedeem) {
             return;
         }
 
+        try {
+            setIsLoading(true);
+            const { message, code } = await FetchApi({
+                url: API_EARN_REDEEM,
+                options: {
+                    method: 'POST',
+                    params: {
+                        _id
+                    }
+                }
+            });
+            if (message === 'ok') {
+                setDepositAmount(0);
+                setModal(MODAL.REDEEM_SUCCESS);
+            } else {
+                closeModal();
+                const error = ERROR[code || '']?.[language];
+                setActionError(error || t('wallet:earn_wallet:position:error'));
+            }
+        } catch (error) {
+            setActionError(t('wallet:earn_wallet:position:error'));
+
+        } finally {
+            setIsLoading(false);
+        }
+    }
+    const openRedeemModal = () => {
+        if (!canRedeem) {
+            return;
+        }
         if (isEarly) {
             setModal(MODAL.REDEEM_WARNING);
             return;
@@ -146,10 +201,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
             setModal(MODAL.REDEEM_CONFIRM);
         }
     };
-    const onRedeemSuccess = () => {
-        setDepositAmount(0);
-        setModal(MODAL.REDEEM_SUCCESS);
-    };
+
     const claimProfit = async () => {
         if (!canClaim) {
             return;
@@ -157,7 +209,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
 
         try {
             setIsLoading(true);
-            const { message } = await FetchApi({
+            const { message, code } = await FetchApi({
                 url: API_EARN_CLAIM_REWARD,
                 options: {
                     method: 'POST',
@@ -173,16 +225,11 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
                 });
                 setClaimedAmount(rewardAmt);
             } else {
-                toast({
-                    text: t('wallet:earn_wallet:position:error'),
-                    type: 'error'
-                });
+                const error = ERROR[code || '']?.[language];
+                setActionError(error || t('wallet:earn_wallet:position:error'));
             }
         } catch (error) {
-            toast({
-                text: t('wallet:earn_wallet:position:error'),
-                type: 'error'
-            });
+            setActionError(t('wallet:earn_wallet:position:error'));
         } finally {
             setIsLoading(false);
         }
@@ -190,7 +237,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
     const toggleAutoRenew = async () => {
         try {
             setIsLoading(true);
-            const { message } = await FetchApi({
+            const { message, code } = await FetchApi({
                 url: API_EARN_TOGGLE_RENEW,
                 options: {
                     method: 'PUT',
@@ -201,13 +248,18 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
             });
             if (message === 'ok') {
                 setAutoRenew((old) => !old);
+            } else {
+                const error = ERROR[code || '']?.[language];
+                setActionError(error || t('wallet:earn_wallet:position:error'));
             }
         } catch (error) {
+            setActionError(t('wallet:earn_wallet:position:error'));
         } finally {
             setIsLoading(false);
         }
     };
-    const closeModal = () => setModal(undefined)
+    const closeModal = () => setModal(undefined);
+    const closeErrorModal = () => setActionError(undefined);
 
     const status = isSuspending ? STATUS.SUSPENDING : autoRenew ? STATUS.RENEWAL : STATUS.NON_RENEWAL;
     const Bagde = useMemo(() => {
@@ -274,26 +326,22 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
                 </div>
                 <div className="flex justify-between py-3 mt-3">
                     <div
-                        className="text-txtSecondary dark:text-txtSecondary-dark border-dashed border-b border-gray-1 dark:border-gray-7"
+                        className="text-txtSecondary dark:text-txtSecondary-dark divide-dashed border-dashed border-b border-gray-1 dark:border-gray-7"
                         data-tip=""
                         data-for="estimated_profit"
                     >
                         {t('wallet:earn_wallet:position:unclaimed_profit')}
                     </div>
-                    <div className="font-semibold text-right">
-                        <span>
+                    <span className="font-semibold text-right flex items-center flex-1 space-x-3">
+                        <span className="flex-1">
                             {formatNumber(leftOverReward, rewardInfo?.assetDigit || 0)} {rewardAsset}
                         </span>
-                        <span
-                            className={classNames(
-                                'ml-3 cursor-pointer',
-                                canClaim ? 'text-teal cursor-pointer' : 'text-txtDisabled dark:text-txtDisabled-dark cursor-not-allowed'
-                            )}
-                            onClick={claimProfit}
-                        >
-                            {t('wallet:earn_wallet:position:claim')}
-                        </span>
-                    </div>
+                        {leftOverReward > 0 && (
+                            <Button className="!p-0 !h-auto !w-auto" variants="text" onClick={claimProfit} disabled={!canClaim} loading={isLoading}>
+                                {t('wallet:earn_wallet:position:claim')}
+                            </Button>
+                        )}
+                    </span>
                 </div>
             </div>
 
@@ -357,7 +405,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
             </div>
 
             <div className="h-10"></div>
-            <Button className="w-full" disabled={!canRedeem} loading={isLoading} onClick={redeem}>
+            <Button className="w-full" disabled={!canRedeem} loading={isLoading} onClick={openRedeemModal}>
                 {t('wallet:earn_wallet:position:redeem')}
             </Button>
 
@@ -374,16 +422,22 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
                 isVisible={modal === MODAL.REDEEM_SUCCESS}
                 type="success"
                 onConfirm={() => {
-                    router.push('/earn?tab=history');
+                    closeModal();
+                    setTimeout(() => router.push('/earn?tab=history'));
                 }}
-                onClose={closeModal}
+                onClose={() => {
+                    // don't use onClose() real quick. It will produce a bug
+                    closeModal();
+                    setTimeout(onClose);
+                }}
                 textButton={t('wallet:earn_wallet:position:go_to_history')}
                 message={t('wallet:earn_wallet:position:redeem_success')}
             >
                 <div className="text-xl font-semibold text-center mt-4">
-                    {formatNumber(amount, asset?.assetDigit || 0)} {asset}
+                    {formatNumber(amount - equivalentClaimedReward, asset?.assetDigit || 0)} {asset}
                 </div>
             </AlertModalV2>
+            <AlertModalV2 isVisible={!!actionError} title={t('common:error')} type="error" onClose={closeErrorModal} message={actionError} />
             <RedeemConfirm
                 isVisible={modal === MODAL.REDEEM_CONFIRM}
                 position={position}
@@ -391,8 +445,12 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
                 claimedReward={claimedAmount}
                 quote={quote}
                 isEarly={isEarly}
-                onClose={closeModal}
-                onSuccess={onRedeemSuccess}
+                onClose={() => {
+                    closeModal();
+                    setTimeout(onClose);
+                }}
+                onConfirm={redeem}
+                isLoading={isLoading}
             />
         </ModalV2>
     );

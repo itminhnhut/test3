@@ -253,11 +253,12 @@ const HistorySection = () => {
                     columns={columns}
                     data={data?.result || []}
                     emptyText={
-                        <NoData
-                            text={
-                                !isDefaultFilter || data?.result?.length || page !== 0 ? (
-                                    t('earn:table:no_data')
-                                ) : (
+                        !isDefaultFilter || data?.result?.length || page !== 0 ? (
+                            <NoData text={t('earn:table:no_data')} />
+                        ) : (
+                            <NoData
+                                className='py-3.5'
+                                text={
                                     <>
                                         <div className="text-center">{t('earn:table:no_data')}</div>
                                         <Button
@@ -278,9 +279,9 @@ const HistorySection = () => {
                                             {t('earn:history_table:earn_now')}
                                         </Button>
                                     </>
-                                )
-                            }
-                        />
+                                }
+                            />
+                        )
                     }
                     rowClassName="border-bottom"
                     tableStyle={{

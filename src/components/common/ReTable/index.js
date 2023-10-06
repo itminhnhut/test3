@@ -52,6 +52,45 @@ const DEFAULT_PAGINATION = {
 
 export const RETABLE_SORTBY = 'sortByValue';
 
+/**
+ *
+ * @param {unknown[]} data
+ * @param {[string, boolean]} _s
+ */
+const DeepSort = (data, _s, childrenColumnName = 'children') => {
+    const sorted = orderBy(
+        data,
+        [
+            (o) => {
+                const childrenRows = o[childrenColumnName];
+                if (childrenRows && Array.isArray(childrenRows)) {
+                    o[childrenColumnName] = DeepSort(childrenRows, _s, childrenColumnName);
+                }
+                const temp = _s[0].split('.');
+                let value;
+                switch (temp.length) {
+                    case 1:
+                        value = o[temp[0]];
+                        break;
+                    case 2:
+                        value = o?.[temp[0]]?.[temp[1]];
+                        break;
+                    case 3:
+                        value = o?.[temp[0]]?.[temp[1]]?.[temp[2]];
+                        break;
+                    default:
+                        value = null;
+                        break;
+                }
+                const x = value ? value : _s[1] ? 1000000000 : -1000000000;
+                return x;
+            }
+        ],
+        [`${_s[1] ? 'asc' : 'desc'}`]
+    );
+    return sorted
+}
+
 const ReTable = memo(
     ({
         data,
@@ -72,6 +111,7 @@ const ReTable = memo(
         sorted,
         cbSort,
         customSort,
+        expandable,
         ...restProps
     }) => {
         // * Init State
@@ -83,6 +123,7 @@ const ReTable = memo(
         // const [state, set] = useState({
         //
         // })
+        const childrenColumnName = expandable?.childrenColumnName || 'children'
 
         // * Use Hooks
         const { t } = useTranslation(['common']);
@@ -153,32 +194,7 @@ const ReTable = memo(
                     });
                 } else {
                     // defaultSort = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
-                    defaultSort = orderBy(
-                        data,
-                        [
-                            (o) => {
-                                const temp = _s[0].split('.');
-                                let value;
-                                switch (temp.length) {
-                                    case 1:
-                                        value = o[temp[0]];
-                                        break;
-                                    case 2:
-                                        value = o?.[temp[0]]?.[temp[1]];
-                                        break;
-                                    case 3:
-                                        value = o?.[temp[0]]?.[temp[1]]?.[temp[2]];
-                                        break;
-                                    default:
-                                        value = null;
-                                        break;
-                                }
-                                const x = value ? value : _s[1] ? 1000000000 : -1000000000;
-                                return x;
-                            }
-                        ],
-                        [`${_s[1] ? 'asc' : 'desc'}`]
-                    );
+                    defaultSort = DeepSort(data, _s, childrenColumnName);
                 }
             }
 
@@ -200,10 +216,11 @@ const ReTable = memo(
                     columns={resizable ? _columns : ownColumns}
                     components={resizable && components}
                     emptyText={emptyText}
+                    expandable={expandable}
                     {...restProps}
                 />
             );
-        }, [data, resizable, emptyText, restProps, paginationProps, sort, sorter, current, pageSize]);
+        }, [data, resizable, emptyText, restProps, paginationProps, sort, sorter, current, pageSize, childrenColumnName]);
 
         const renderPagination = useCallback(() => {
             if (!paginationProps || paginationProps?.hide) return null;

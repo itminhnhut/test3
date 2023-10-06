@@ -69,7 +69,10 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
         if (user) {
             router.push('/wallet/earn');
         } else {
-            const loginUrl = getLoginUrl('sso', 'login');
+            const redirect = window?.location?.origin + (language === 'en' ? '' : '/vi') + '/wallet/earn';
+            const loginUrl = getLoginUrl('sso', 'login', {
+                redirect
+            });
             window?.open(loginUrl, '_self')
         }
     };
@@ -165,7 +168,7 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
                 </div>
 
                 {poolInfo &&
-                    (skipWarning || !isSuspending ? (
+                    ((skipWarning || !isSuspending) ? (
                         <EarnModal pool={poolInfo} onClose={closeModal} isSuspending={isSuspending} />
                     ) : (
                         <AlertModalV2

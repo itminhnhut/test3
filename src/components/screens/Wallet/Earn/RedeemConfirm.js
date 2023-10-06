@@ -5,58 +5,18 @@ import { useTranslation } from 'next-i18next';
 import { getAssetFromCode } from 'redux/actions/utils';
 import { WalletCurrency, formatNumber } from 'utils/reference-utils';
 import Button from 'components/common/V2/ButtonV2/Button';
-import FetchApi from 'utils/fetch-api';
-import { API_EARN_REDEEM } from 'redux/actions/apis';
-import toast from 'utils/toast';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
 
-const RedeemConfirm = ({ onClose, position, isVisible, amount, claimedReward, quote, isEarly, onSuccess }) => {
+const RedeemConfirm = ({ onClose, position, isVisible, amount, claimedReward, quote, isEarly, isLoading, onConfirm }) => {
     const { asset, rewardAsset, _id } = position;
     const { t } = useTranslation();
     const assetInfo = getAssetFromCode(asset);
     const rewardInfo = getAssetFromCode(rewardAsset);
-    const [isLoading, setIsLoading] = useState(false);
 
     const equivalentClaimedReward = claimedReward / quote;
 
-    const redeem = async () => {
-        if (isLoading) {
-            return;
-        }
-
-
-        try {
-            setIsLoading(true);
-            const { message } = await FetchApi({
-                url: API_EARN_REDEEM,
-                options: {
-                    method: 'POST',
-                    params: {
-                        _id
-                    }
-                }
-            });
-            if (message === 'ok') {
-                onSuccess?.();
-            } else {
-                toast({
-                    text: t('wallet:earn_wallet:position:error'),
-                    type: 'error'
-                });
-            }
-        } catch (error) {
-            toast({
-                text: t('wallet:earn_wallet:position:error'),
-                type: 'error'
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-
     return (
-        <ModalV2 isVisible={isVisible} onBackdropCb={isLoading ? null : onClose} className="w-[30.5rem]" >
+        <ModalV2 isVisible={isVisible} onBackdropCb={isLoading ? null : onClose} className="w-[30.5rem]">
             <div className="font-semibold text-2xl">
                 {t('wallet:earn_wallet:position:redeem')} {asset}
             </div>
@@ -65,7 +25,7 @@ const RedeemConfirm = ({ onClose, position, isVisible, amount, claimedReward, qu
                 <AssetLogo assetId={WalletCurrency[asset]} size={48} />
 
                 <div className="font-semibold text-2xl mt-4">
-                    {formatNumber(amount, assetInfo?.assetDigit || 0)} {asset}
+                    {formatNumber(amount - equivalentClaimedReward, assetInfo?.assetDigit || 0)} {asset}
                 </div>
             </div>
 
@@ -116,7 +76,7 @@ const RedeemConfirm = ({ onClose, position, isVisible, amount, claimedReward, qu
             )}
 
             <div className="h-10"></div>
-            <Button className="w-full" loading={isLoading} onClick={redeem}>
+            <Button className="w-full" loading={isLoading} onClick={onConfirm}>
                 {t('wallet:earn_wallet:position:redeem')}
             </Button>
         </ModalV2>

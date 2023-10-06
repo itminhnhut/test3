@@ -91,7 +91,7 @@ const PoolSection = ({ pool_list }) => {
             key: 'APR',
             width: 'auto',
             align: 'left',
-            render: (val) => <div className="font-semibold text-green-2 dark:text-green-3">{val}</div>
+            render: (val) => <div className="font-semibold text-green-3 dark:text-green-2">{val}</div>
         },
         {
             title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('earn:table:period')}</div>,

@@ -4,8 +4,6 @@ import { useTranslation } from 'next-i18next';
 import { getAssetFromCode } from 'redux/actions/utils';
 import { formatNumber } from 'utils/reference-utils';
 import ModalV2 from 'components/common/V2/ModalV2';
-import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
-import { useRouter } from 'next/router';
 import Button from 'components/common/V2/ButtonV2/Button';
 import Tooltip from 'components/common/Tooltip';
 
@@ -15,12 +13,11 @@ const formatDateTime = (date = 0) => {
 };
 
 
-const SuccessModal = ({ onClose, pool, estimatedReward, depositAmount }) => {
+const SuccessModal = ({ onClose, pool, estimatedReward, depositAmount, onConfirm }) => {
     const { asset, rewardAsset, duration, apr } = pool;
     const { t } = useTranslation();
     const assetInfo = getAssetFromCode(asset);
     const rewardInfo = getAssetFromCode(rewardAsset);
-    const router = useRouter();
 
 
     return (
@@ -83,14 +80,7 @@ const SuccessModal = ({ onClose, pool, estimatedReward, depositAmount }) => {
             {/* <HrefButton className="w-full" variants="primary" href="/wallet/earn">
                 {t('earn:deposit_modal:go_to_wallet')}
             </HrefButton> */}
-            <Button
-                className="w-full"
-                variants="primary"
-                onClick={() => {
-                    onClose?.();
-                    router.push('/wallet/earn');
-                }}
-            >
+            <Button className="w-full" variants="primary" onClick={onConfirm}>
                 {t('earn:deposit_modal:go_to_wallet')}
             </Button>
         </ModalV2>

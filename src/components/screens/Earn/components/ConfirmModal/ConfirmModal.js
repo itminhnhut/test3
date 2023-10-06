@@ -17,58 +17,16 @@ const formatDateTime = (date = 0) => {
     return formatDate(date, 'hh:mm:ss dd/MM/yyyy');
 };
 
-
-const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount, subcribeAt, autoRenew }) => {
+const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount, subcribeAt, autoRenew, isLoading }) => {
     const { asset, rewardAsset, duration, apr, id } = pool;
     const { t } = useTranslation();
-    const [isLoading, setIsLoading] = useState(false);
     const assetInfo = getAssetFromCode(asset);
     const rewardInfo = getAssetFromCode(rewardAsset);
     const dispatch = useDispatch();
 
-
     const profitAt = subcribeAt + ONE_DAY;
     const endAt = subcribeAt + duration * ONE_DAY;
 
-    const deposit = async () => {
-
-        if (isLoading) {
-            return
-        }
-
-        try {
-            setIsLoading(true);
-            const { message } = await FetchApi({
-                url: API_DEPOSIT_EARN,
-                options: {
-                    method: 'POST',
-                    params: {
-                        asset,
-                        pool_id: id,
-                        amount: depositAmount,
-                        isRenew: autoRenew
-                    }
-                }
-            });
-            if (message === 'ok') {
-                dispatch(getUserEarnBalance());
-                onConfirm?.();
-
-            } else {
-                toast({
-                    text: t('earn:deposit_modal:error'),
-                    type: 'error'
-                });
-            }
-        } catch (error) {
-            toast({
-                text: t('earn:deposit_modal:error'),
-                type: 'error'
-            });
-        } finally {
-            setIsLoading(false)
-        }
-    };
 
     return (
         <ModalV2 isVisible={true} onBackdropCb={isLoading ? null : onClose} className="max-w-[488px]">
@@ -145,7 +103,7 @@ const ConfirmModal = ({ onClose, onConfirm, pool, estimatedReward, depositAmount
             </div>
 
             <div className="h-10"></div>
-            <Button className="w-full" onClick={deposit} loading={isLoading}>
+            <Button className="w-full" onClick={onConfirm} loading={isLoading}>
                 {t('earn:deposit_modal:confirm')}
             </Button>
         </ModalV2>

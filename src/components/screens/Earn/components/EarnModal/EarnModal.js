@@ -25,6 +25,7 @@ import classNames from 'classnames';
 import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import SuccessModal from '../SuccessModal/SuccessModal';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const formatDateTime = (date = 0) => {
     return formatDate(date, 'hh:mm dd/MM/yyyy');
@@ -54,12 +55,45 @@ const MODAL = {
     KYC: 'KYC'
 };
 
+const ERROR = {
+    FARMING_POOL_NOT_FOUND: {
+        en: 'This pool is currently inactive',
+        vi: 'Pool ko khả dụng'
+    },
+    PROJECT_NOT_FOUND: {
+        en: 'This pool is not existed',
+        vi: 'Pool ko tồn tại'
+    },
+    INVALID_SUBSCRIPTION_START_TIME: {
+        en: 'This pool is not ready yet',
+        vi: 'Pool này chưa bắt đầu'
+    },
+    INVALID_PROJECT: {
+        en: 'This pool is full',
+        vi: 'Pool này đã đầy'
+    },
+    INVALID_AMOUNT: {
+        en: 'Invalid amount',
+        vi: 'Số lượng nạp ko hợp lệ'
+    },
+    INVALID_BALANCEL: {
+        en: 'Insufficient balance',
+        vi: 'Hết tiền ròi'
+    },
+    INVALID_MAINTENANCE_TIME: {
+        en: 'Earn system is currently suspending',
+        vi: 'Chuơng trình Earn đang trong giai đoạn bảo trì'
+    }
+};
+
 const EarnModal = ({ onClose, pool, isSuspending }) => {
     const { asset, rewardAsset, accumulatedAmount, totalSupply, duration, apr, min, max, id, renewable } = pool;
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const assetInfo = getAssetFromCode(asset);
     const rewardInfo = getAssetFromCode(rewardAsset);
     const [depositAmount, setDepositAmount] = useState();
+    const [depositError, setDepositError] = useState();
+    const [isLoading, setIsLoading] = useState(false);
     const [autoRenew, setAutoRenew] = useState(true);
     const [agree, setAgree] = useState(false);
     const [openModal, setOpenModal] = useState();
@@ -136,6 +170,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
     }
 
     const closeModal = () => setOpenModal(undefined);
+    const closeErrorModal = () => setDepositError(undefined);
     const buyToken = () => {
         router.push({
             pathname: '/withdraw-deposit/crypto',
@@ -144,6 +179,40 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                 assetId: asset
             }
         });
+    };
+    const deposit = async () => {
+        if (isLoading) {
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+            const { message, code } = await FetchApi({
+                url: API_DEPOSIT_EARN,
+                options: {
+                    method: 'POST',
+                    params: {
+                        asset,
+                        pool_id: id,
+                        amount: depositAmount,
+                        isRenew: autoRenew
+                    }
+                }
+            });
+            if (message === 'ok') {
+                dispatch(getUserEarnBalance());
+                setOpenModal(MODAL.SUCCESS);
+            } else {
+                closeModal();
+                const error = ERROR[code || '']?.[language];
+                setDepositError(error || t('earn:deposit_modal:error'));
+            }
+        } catch (error) {
+            closeModal();
+            setDepositError(t('earn:deposit_modal:error'));
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -368,7 +437,8 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                     estimatedReward={estimatedReward}
                     onClose={closeModal}
                     subcribeAt={subcribeAt}
-                    onConfirm={() => setOpenModal(MODAL.SUCCESS)}
+                    onConfirm={deposit}
+                    isLoading={isLoading}
                 />
             )}
             {openModal === MODAL.SUCCESS && (
@@ -382,8 +452,13 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                         setOpenModal(undefined);
                         setTimeout(onClose);
                     }}
+                    onConfirm={() => {
+                        setOpenModal(undefined);
+                        router.push('/wallet/earn');
+                    }}
                 />
             )}
+            <AlertModalV2 isVisible={!!depositError} title={t('common:error')} type="error" onClose={closeErrorModal} message={depositError} />
         </ModalV2>
     );
 };

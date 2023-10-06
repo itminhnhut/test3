@@ -27,7 +27,7 @@ import { getTimeAgo, getS3Url } from 'src/redux/actions/utils';
 import colors from 'styles/colors';
 
 import { IconBell } from '../common/Icons';
-import { BxsBellIcon, FutureInsurance, SettingIcon } from '../svg/SvgIcon';
+import { BxsBellIcon, EarningIcon, FutureInsurance, SettingIcon } from '../svg/SvgIcon';
 
 const NOTI_READ = NotificationStatus.DELETED;
 
@@ -43,6 +43,7 @@ const MarkReadAllIcon = () => (
 const IconNoti = {
     0: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: ALL
     1: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: INDIVIDUAL
+    7: <EarningIcon size={32} />, // NOTE: EARN
     9: <Image src={getS3Url('/images/screen/noti/ic_noti_exchange.png')} width={32} height={32} />, // NOTE: TRANSACTIONS
     14: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: EVENTS
     16: <Image src={getS3Url('/images/screen/noti/ic_noti_system.png')} width={32} height={32} />, // NOTE: SYSTEM
@@ -299,7 +300,8 @@ const NOTI_GROUP_KEYS = {
     COMMISSION: 'COMMISSION',
     DEPOSIT_WITHDRAW: 'DEPOSIT_WITHDRAW',
     PROMOTION: 'PROMOTION',
-    SYSTEM: 'SYSTEM'
+    SYSTEM: 'SYSTEM',
+    EARN: 'EARN'
 };
 
 export const NotiSettingModal = ({ isVisible, onClose, language, isMobile, t }) => {
@@ -383,7 +385,7 @@ export const NotiSettingModal = ({ isVisible, onClose, language, isMobile, t }) 
                     </div>
                 </div>
                 <div className="mt-6">
-                    {(loading ? [1, 2, 3, 4, 5] : Object.values(omit(notiGroup, NOTI_GROUP_KEYS.ALL))).map((e) => {
+                    {(loading ? [1, 2, 3, 4, 5, 6] : Object.values(omit(notiGroup, NOTI_GROUP_KEYS.ALL))).map((e) => {
                         const key = e.key;
                         return (
                             <div className="mt-6">
