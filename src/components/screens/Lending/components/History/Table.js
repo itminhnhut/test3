@@ -253,10 +253,10 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
         return renderCopy({ title: 'ID lệnh ký quỹ', id: _id });
     };
     const renderCol3 = (option) => {
-        const { totalDebt, loanCoin, metadata, interest, liquidationFee } = option;
+        const { loanCoin, metadata, interest, liquidationFee, loanAmount } = option;
 
         if (tab === TAB_LOAN) {
-            const rsTotalDebt = handleTotalAsset(totalDebt, loanCoin); //** Tổng dư nợ */
+            const rsTotalDebt = handleTotalAsset(loanAmount + interest, loanCoin); //** Tổng dư nợ */
             return renderAssetLogo({
                 title: 'Tổng dư nợ',
                 total: rsTotalDebt.total,
