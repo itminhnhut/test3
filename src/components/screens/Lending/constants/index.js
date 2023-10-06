@@ -104,7 +104,7 @@ const STATUS_EN = [
 ];
 
 const HOUR = 24;
-const LIMIT = 10;
+const LIMIT = 20;
 const YEAR = 365;
 const PERCENT = 100;
 const MILLISECOND = 1;
@@ -118,12 +118,13 @@ const ALLOW_LTV_TOOLTIP = ['ltv_initial', 'ltv_margin', 'ltv_liquidate'];
 const ALLOW_ADJUST = ['adjust', 'repay'];
 
 const LOAN_HISTORY_STATUS = {
-    ONGOING: { vi: 'Bình thường', en: 'Bình thường', contentTooltip: { vi: 'Bình thường', en: 'Bình thường' } },
-    OVERDUE: { vi: 'Trả chậm', en: 'Trả chậm', contentTooltip: { vi: 'Trả chậm', en: 'Trả chậm' } },
+    ONGOING: { vi: 'Đang tính lãi', en: 'Đang tính lãi', contentTooltip: { vi: 'Đang tính lãi', en: 'Đang tính lãi' } },
+    OVERDUE: { vi: 'Quá kì hạn', en: 'Quá kì hạn', contentTooltip: { vi: 'Quá kì hạn', en: 'Quá kì hạn' } },
     LTV_LIQUIDATED: { vi: 'chạm ltv thanh lý', en: 'chạm ltv thanh lý', contentTooltip: { vi: 'chạm ltv thanh lý', en: 'chạm ltv thanh lý' } },
     DEADLINE_LIQUIDATED: { vi: 'Hết hạn', en: 'Hết hạn', contentTooltip: { vi: 'Hết hạn', en: 'Hết hạn' } },
     REPAID: { vi: 'Đã trả', en: 'Đã trả', contentTooltip: { vi: 'Đã trả', en: 'Đã trả' } },
-    ACCRUING_INTEREST: { vi: 'Đang tính lãi', en: 'Đang tính lãi', contentTooltip: { vi: 'Đang tính lãi', en: 'Đang tính lãi' } }
+    ACCRUING_INTEREST: { vi: 'Đang tính lãi', en: 'Đang tính lãi', contentTooltip: { vi: 'Đang tính lãi', en: 'Đang tính lãi' } },
+    MARGIN_CALL: { vi: 'Gọi ký quỹ', en: 'Gọi ký quỹ', contentTooltip: { vi: 'Gọi ký quỹ', en: 'Gọi ký quỹ' } }
 };
 
 const REGISTER_HANDLE_TYPE = {

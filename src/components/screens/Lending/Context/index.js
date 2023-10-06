@@ -10,7 +10,6 @@ import FetchApi from 'utils/fetch-api';
 import reducer from './reducers';
 
 import { LOANABLE, COLLATERAL, STATUS_CODE } from 'components/screens/Lending/constants';
-import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 const initData = {
     loanAsset: {
@@ -20,7 +19,7 @@ const initData = {
     pairPrice: {}
 };
 
-const INIT_DATA_REDUCER = {
+export const INIT_DATA_REDUCER = {
     infoDet: { total: 0, assetCode: '' },
     infoCollateralAmount: { total: 0, assetCode: '', assetDigit: '' },
     totalAdjusted: 0,
@@ -30,8 +29,10 @@ const INIT_DATA_REDUCER = {
         isAdjust: false,
         isConfirmAdjust: false,
         isSuccess: false,
-        inCancel: false
+        inCancel: false,
+        isError: false
     },
+    error: null,
     isRefetch: false
 };
 
@@ -40,8 +41,8 @@ const LendingContext = createContext();
 const LendingProvider = ({ children }) => {
     // ** useRedux
     const assetConfig = useSelector((state) => state.utils.assetConfig);
-    const auth = useSelector((state) => state.auth?.user);
-
+    // const auth = useSelector((state) => state.auth?.user);
+    const auth = true;
     const [state, dispatchReducer] = useReducer(reducer, INIT_DATA_REDUCER);
 
     const [loanAsset, setLoanAsset] = useState(initData.loanAsset);
@@ -89,17 +90,17 @@ const LendingProvider = ({ children }) => {
                 throw new Error('error handling pair price', error);
             }
         },
-        [useMemoizeArgs(pairPrice)]
+        [pairPrice?.lastPrice, pairPrice?.symbol]
     );
 
     useEffect(() => {
-        if (!auth) return;
+        // if (!auth) return;
         handleLoanAsset();
     }, [auth]);
 
     const value = useMemo(
         () => ({ loanAsset, assetConfig, auth, pairPrice, handlePairPrice, state, dispatchReducer }),
-        [useMemoizeArgs(loanAsset), useMemoizeArgs(assetConfig), useMemoizeArgs(auth), useMemoizeArgs(pairPrice), useMemoizeArgs(state)]
+        [loanAsset, assetConfig, auth, pairPrice, state]
     );
 
     return <LendingContext.Provider value={value}>{children}</LendingContext.Provider>;

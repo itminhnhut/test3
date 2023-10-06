@@ -1,17 +1,19 @@
 import { useEffect, useRef } from 'react';
-import { isEmpty, isEqual as isEqualLodash, xorWith } from 'lodash';
+import { isEmpty, isEqual, xorWith } from 'lodash';
 
 const useMemoizeArgs = (args) => {
     const ref = useRef();
     const prevArgs = ref.current;
+    const isXorWith = (x, y) => isEmpty(xorWith(x, y, isEqual));
 
-    const isArrayEqual = (x, y) => isEmpty(xorWith(x, y, isEqualLodash));
-    const isEqual = isArrayEqual(prevArgs, args);
+    let argsAreEqual = prevArgs?.length !== undefined && args.length === prevArgs.length && isXorWith(prevArgs, args);
+
     useEffect(() => {
-        if (!isEqual) {
+        if (!argsAreEqual) {
             ref.current = args;
         }
     });
-    return isEqual ? prevArgs : args;
+
+    return argsAreEqual ? JSON.stringify(prevArgs) : JSON.stringify(args);
 };
 export default useMemoizeArgs;

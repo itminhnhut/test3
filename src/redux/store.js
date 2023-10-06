@@ -25,8 +25,8 @@ const bindMiddleware = (middleware) => {
             collapsed: (getState, action, logEntry) => !logEntry.error
         });
 
-        return applyMiddleware(...middleware, logger);
-        // return applyMiddleware(...middleware);
+        // return applyMiddleware(...middleware, logger);
+        return applyMiddleware(...middleware);
     }
 
     return applyMiddleware(...middleware);

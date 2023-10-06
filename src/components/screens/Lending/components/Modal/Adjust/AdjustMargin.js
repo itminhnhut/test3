@@ -28,14 +28,13 @@ import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
 
 // ** Third party
 import classNames from 'classnames';
-import useMemoizeArgs from 'hooks/useMemoizeArgs';
 import { PERCENT } from '../../../constants';
 import useDebounce from 'hooks/useDebounce';
 import { formatNumber } from 'utils/reference-utils';
 
 // ** Dynamic components
 const ConfirmAdjustMargin = dynamic(() => import('./ConfirmAdjustMargin'), { ssr: false });
-const AdjustCancel = dynamic(() => import('./AdjustCancel'), { ssr: false });
+const AlertAdjust = dynamic(() => import('./AlertAdjust.js'), { ssr: false });
 
 const MARGIN = [
     { title: { vi: 'Thêm ký quỹ', en: 'Thêm ký quỹ' }, key: 'add' },
@@ -82,6 +81,8 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
     const [amountAsset, setAmountAsset] = useState(initState.amountAsset);
 
     const amount = state?.amount;
+    const isShowAdjust = state.modal.isAdjust;
+
     const debounceAmount = useDebounce(amountAsset, DEBOUNCE_TIME);
 
     const { collateralCoin, loanCoin, totalDebt, totalCollateralAmount } = dataCollateral || {};
@@ -92,27 +93,22 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
 
     // ** useEffect
     useEffect(() => {
-        if (dataCollateral) {
+        if (dataCollateral?._id) {
+            console.log('re-render');
             dispatchReducer({ type: actions.UPDATE, data: { dataCollateral, rsTotalDebt, rsTotalCollateralAmount } });
             // ** reset amount
             dispatchReducer({ type: actions.RESET_AMOUNT });
             setAmountAsset(initState.amountAsset);
         }
-    }, [useMemoizeArgs(dataCollateral), tab]);
-
-    // ** getPairPrice
-    useEffect(() => {
-        if (dataCollateral) {
-            getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
-        }
-    }, [useMemoizeArgs(dataCollateral)]);
+    }, [JSON.stringify(dataCollateral), tab]);
 
     useEffect(() => {
         // ** reset amount open modal adjust
         if (state.amount === '' && amountAsset !== '') {
             setAmountAsset(initState.amountAsset);
         }
-    }, [state.modal.isAdjust]);
+        isShowAdjust && getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
+    }, [isShowAdjust]);
 
     // ** useEffect
     useEffect(() => {
@@ -139,7 +135,7 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
 
     const current_LTV = useMemo(() => {
         return (total_current_LTV * PERCENT).toFixed(0);
-    }, [useMemoizeArgs(dataCollateral), pairPrice?.lastPrice]);
+    }, [pairPrice?.lastPrice, JSON.stringify(dataCollateral)]);
 
     const adjustedLTV = useMemo(() => {
         return (state.totalDebt / (state.totalAdjusted * pairPrice?.lastPrice || 0)) * PERCENT;
@@ -313,7 +309,7 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
     return (
         <>
             <ModalV2
-                isVisible={state.modal?.isAdjust}
+                isVisible={isShowAdjust}
                 className="w-[800px] overflow-auto no-scrollbar"
                 onBackdropCb={handleCloseModal}
                 wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
@@ -382,15 +378,9 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
                 isConfirmAdjust={state.modal?.isConfirmAdjust}
                 onCloseAdjustMargin={handleCloseConfirmAdjustMargin}
             />
-            <AdjustCancel />
+            <AlertAdjust />
         </>
     );
 };
-
-// const adjustMarginAreEqual = (prev, next) => {
-//     return JSON.stringify(prev.dataCollateral) === JSON.stringify(next.dataCollateral);
-// };
-
-// const MemoizedAdjustMargin = memo(AdjustMargin, adjustMarginAreEqual);
 
 export default AdjustMargin;

@@ -19,9 +19,6 @@ import { formatNumber } from 'src/redux/actions/utils';
 // ** Constants
 import { LIMIT, STATUS_CODE } from 'components/screens/Lending/constants';
 
-// ** Hooks
-import useMemoizeArgs from 'hooks/useMemoizeArgs';
-
 // ** Context
 import { getAssetConfig, useAuth, LendingContext } from 'components/screens/Lending/Context';
 import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
@@ -126,13 +123,13 @@ const Loan = () => {
     // ** get asset by code
     const getAssetBycCode = useMemo(() => {
         return assetConfig?.find((f) => f.assetCode === overView?.currency);
-    }, [useMemoizeArgs(overView)]);
+    }, [overView?.currency]);
 
     // ** total overview
     const totalOverview = useMemo(() => {
         const { debt = 0, collateral = 0 } = overView;
         return [debt, collateral];
-    }, [useMemoizeArgs(overView)]);
+    }, [overView?.debt, overView?.collateral]);
 
     return (
         <>
@@ -156,7 +153,7 @@ const Loan = () => {
                                     </div>
                                     <section className="flex flex-row gap-1 mt-4 text-gray-15 text-2xl font-semibold dark:text-gray-4">
                                         <div>{formatNumber(totalOverview?.[key], getAssetBycCode?.assetDigit)}</div>
-                                        <div>{overView.currency}</div>
+                                        <div>{overView?.currency}</div>
                                     </section>
                                 </section>
                             );

@@ -1,5 +1,7 @@
 import { globalActionTypes as actions } from '../actions';
 
+import { INIT_DATA_REDUCER } from '../index';
+
 const reducer = (state, action) => {
     switch (action.type) {
         case actions.UPDATE: {
@@ -64,27 +66,37 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 modal: {
-                    isAdjust: false,
-                    isConfirmAdjust: false,
-                    isSuccess: false,
-                    isCancel: false
+                    ...INIT_DATA_REDUCER.modal
                 }
             };
         case actions.TOGGLE_MODAL_CANCEL: {
-            const isCancel = action.isCancel;
-            const isAdjust = action.isAdjust;
+            const modal = action.modal;
             return {
                 ...state,
                 modal: {
-                    isAdjust,
-                    isConfirmAdjust: false,
-                    isSuccess: false,
-                    isCancel
+                    ...state.modal,
+                    ...modal
                 }
+            };
+        }
+        case actions.TOGGLE_MODAL_ERROR: {
+            const modal = action.modal;
+            const error = action?.error;
+            console.log('action', action);
+            return {
+                ...state,
+                modal: {
+                    ...state.modal,
+                    ...modal
+                },
+                error: { ...error }
             };
         }
         case actions.REFETCH: {
             return { ...state, isRefetch: !state.isRefetch };
+        }
+        case actions.RESET: {
+            return { ...INIT_DATA_REDUCER };
         }
         default:
             return { ...state, current: { totalAdjusted: totalCollateralAmount } };

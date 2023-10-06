@@ -274,7 +274,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
             );
         }
         if (tab === TAB_ADJUST) {
-            const type = metadata?.payment?.amount < 0 ? 'Bớt ký quỹ' : 'Thêm ký quỹ';
+            const type = metadata?.payload?.amount < 0 ? 'Bớt ký quỹ' : 'Thêm ký quỹ';
             return (
                 <WrapperSection className="w-[140px] whitespace-nowrap">
                     <div>Loại ký quỹ</div>
@@ -377,7 +377,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
             return (
                 <WrapperSection>
                     <div>Lãi suất năm</div>
-                    <WrapperDetail>{formatNumber(interestRate)}%</WrapperDetail>
+                    <WrapperDetail>{interestRate.toFixed(2)}%</WrapperDetail>
                 </WrapperSection>
             );
         }

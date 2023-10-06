@@ -46,7 +46,6 @@ import { Check } from 'react-feather';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Countdown from 'react-countdown';
 import moment from 'moment-timezone';
-import useMemoizeArgs from 'hooks/useMemoizeArgs';
 
 // ** dynamic
 const ModalAdjustMargin = dynamic(() => import('components/screens/Lending/components/Modal/Adjust/AdjustMargin'), { ssr: false });
@@ -133,7 +132,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     // ** handle close modal adjust (Điều chỉnh ký quỹ)
     const handleCloseAdjustModal = () => {
         if (+state.amount > 0) {
-            dispatchReducer({ type: actions.TOGGLE_MODAL_CANCEL, isCancel: true, isAdjust: false });
+            dispatchReducer({ type: actions.TOGGLE_MODAL_CANCEL, modal: { isCancel: true, isAdjust: false } });
         } else {
             dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN });
             dispatchReducer({ type: actions.RESET_AMOUNT });
@@ -145,7 +144,12 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     };
 
     const render_Col_Id_Status = (options) => {
-        const { _id, status } = options;
+        const { _id, status, onMarginCall } = options;
+        const loan_status = status;
+        if (status === 'ONGOING' && onMarginCall) {
+            loan_status = 'MARGIN_CALL';
+        }
+
         return (
             <section className="flex flex-col h-[128px] w-max">
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] whitespace-nowrap">
@@ -160,16 +164,16 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px]">
                     <div>Trạng thái</div>
                     <div
-                        className={classNames('font-semibold text-green-2 dark:text-green-3 border-b border-darkBlue-5 border-dashed cursor-pointer w-fit', {
-                            '!text-yellow-2': LOAN_HISTORY_STATUS?.[status] !== 'REPAID'
+                        className={classNames('font-semibold text-yellow-2 border-b border-darkBlue-5 border-dashed cursor-pointer w-fit', {
+                            'text-green-2 dark:text-green': loan_status === 'ONGOING'
                         })}
                         data-tip={LOAN_HISTORY_STATUS?.[status]?.contentTooltip?.[language]}
                         data-for={status}
                     >
-                        {LOAN_HISTORY_STATUS?.[status]?.[language]}
+                        {LOAN_HISTORY_STATUS?.[loan_status]?.[language]}
                     </div>
                 </section>
-                <Tooltip id={status} place="top" effect="solid" isV3 className="max-w-[300px]" />
+                <Tooltip id={loan_status} place="top" effect="solid" isV3 className="max-w-[300px]" />
             </section>
         );
     };
@@ -404,7 +408,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 }}
             />
         );
-    }, [useMemoizeArgs(data?.result), loading, isDark, copied]);
+    }, [data?.result, loading, isDark, copied]);
 
     return (
         <>

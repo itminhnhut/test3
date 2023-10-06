@@ -43,8 +43,7 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
 
     // ** handle
     const handleToggleModal = () => {
-        dispatchReducer({ type: actions.TOGGLE_MODAL_RESET });
-        dispatchReducer({ type: actions.RESET_AMOUNT });
+        dispatchReducer({ type: actions.RESET });
         dispatchReducer({ type: actions.REFETCH });
     };
 
@@ -62,6 +61,12 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
             });
             if (statusCode === 200) {
                 dispatchReducer({ type: actions.TOGGLE_MODAL_SUCCESS_ADJUST });
+            } else {
+                dispatchReducer({
+                    type: actions.TOGGLE_MODAL_ERROR,
+                    modal: { isError: true, isConfirmAdjust: false },
+                    error: { code: 'ORDER_IS_ACCRUING_INTEREST' }
+                });
             }
         } catch (error) {
             throw new Error('error api put Modify margin');

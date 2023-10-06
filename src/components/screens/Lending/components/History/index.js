@@ -17,9 +17,6 @@ import { API_HISTORY_LOAN, API_HISTORY_LOAN_ADJUST } from 'redux/actions/apis';
 // ** Utils
 import FetchApi from 'utils/fetch-api';
 
-// ** Hooks
-import useMemoizeArgs from 'hooks/useMemoizeArgs';
-
 // ** Constants
 import { STATUS_VI, STATUS_EN, MILLISECOND, HISTORY_TAB, LIMIT, ALLOW_ADJUST } from 'components/screens/Lending/constants';
 
@@ -31,7 +28,7 @@ const HistoryTable = dynamic(() => import('./Table'), { ssr: false });
 const NotAuth = dynamic(() => import('components/screens/Lending/components/NotAuth'), { ssr: false });
 
 const initState = {
-    tab: 'loan',
+    tab: null,
     page: 1,
     loading: false,
     data: {},
@@ -60,6 +57,8 @@ const initState = {
     }
 };
 
+const TAB_LOAN = 'loan';
+const NOT_ALLOW = ['time', 'action', 'status'];
 const TAB_STATUS = { adjust: 'ADJUST_MARGIN', repay: 'REPAY' };
 
 const History = () => {
@@ -125,19 +124,18 @@ const History = () => {
 
     // ** useState
     useEffect(() => {
+        if (!tab) return;
         getOrderLoan();
-    }, [useMemoizeArgs(filter), tab, page]);
+    }, [JSON.stringify(filter), tab, page]);
 
     useEffect(() => {
-        const isEqual = JSON.stringify(initState.filters) === JSON.stringify(filter);
-        if (!isEqual) {
-            setFilter(initState.filter);
-            setPage(initState.page);
-        }
+        if (!tab) return;
+        setFilter(initState.filter);
+        setPage(initState.page);
     }, [tab]);
 
     useEffect(() => {
-        const { action = initState.tab } = router.query;
+        const { action = TAB_LOAN } = router.query;
         if (action !== tab) {
             setTab(action);
         }
@@ -150,7 +148,6 @@ const History = () => {
     };
     // ** handle API
     const getOrderLoan = async () => {
-        const NOT_ALLOW = ['time', 'action', 'status'];
         try {
             setIsLoading(true);
             const { data } = await FetchApi({
@@ -193,7 +190,7 @@ const History = () => {
                 { scroll: false }
             );
         } else {
-            setTab(tab || 'loan');
+            setTab(tab || TAB_LOAN);
         }
     };
 
