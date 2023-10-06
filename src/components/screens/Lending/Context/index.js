@@ -41,8 +41,7 @@ const LendingContext = createContext();
 const LendingProvider = ({ children }) => {
     // ** useRedux
     const assetConfig = useSelector((state) => state.utils.assetConfig);
-    // const auth = useSelector((state) => state.auth?.user);
-    const auth = true;
+    const auth = useSelector((state) => state.auth?.user);
     const [state, dispatchReducer] = useReducer(reducer, INIT_DATA_REDUCER);
 
     const [loanAsset, setLoanAsset] = useState(initData.loanAsset);
@@ -94,7 +93,7 @@ const LendingProvider = ({ children }) => {
     );
 
     useEffect(() => {
-        // if (!auth) return;
+        if (!auth) return;
         handleLoanAsset();
     }, [auth]);
 
