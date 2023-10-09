@@ -82,13 +82,15 @@ const PoolSection = ({ pool_list }) => {
             title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('earn:table:coin')}</div>,
             dataIndex: 'coin',
             key: 'coin',
-            width: 384,
+            className: 'min-w-[280px]',
+            width: 'auto',
             align: 'left'
         },
         {
             title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('earn:table:apr')}</div>,
             dataIndex: 'APR',
             key: 'APR',
+            className: 'min-w-[200px]',
             width: 'auto',
             align: 'left',
             render: (val) => <div className="font-semibold text-green-3 dark:text-green-2">{val}</div>
@@ -97,6 +99,7 @@ const PoolSection = ({ pool_list }) => {
             title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('earn:table:period')}</div>,
             dataIndex: 'period',
             key: 'period',
+            className: 'min-w-[200px]',
             width: 'auto',
             align: 'left',
             render: (val) => <div className="font-semibold">{val}</div>
@@ -106,6 +109,7 @@ const PoolSection = ({ pool_list }) => {
             dataIndex: 'action',
             key: 'action',
             width: 174,
+            className: 'min-w-[174px]',
             align: 'center'
         }
     ];

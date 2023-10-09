@@ -8,8 +8,8 @@ import { ONE_DAY } from 'constants/constants';
 import { format as formatDate, startOfTomorrow } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import { getAssetFromCode, getLoginUrl } from 'redux/actions/utils';
-import { WalletCurrency, formatNumber } from 'utils/reference-utils';
+import { formatNumber, getAssetFromCode, getLoginUrl } from 'redux/actions/utils';
+import { WalletCurrency } from 'utils/reference-utils';
 import CheckBox from 'components/common/CheckBox';
 import Button from 'components/common/V2/ButtonV2/Button';
 import FetchApi from 'utils/fetch-api';
@@ -250,6 +250,12 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                             </div>
                         </div>
                         <div className="flex justify-between space-x-2">
+                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:period')}:</div>
+                            <div className="font-semibold text-right">
+                                {duration} {duration > 1 ? t('common:days') : t('common:day')}
+                            </div>
+                        </div>
+                        <div className="flex justify-between space-x-2">
                             <div
                                 className="text-txtSecondary dark:text-txtSecondary-dark border-b border-dashed border-gray-1 dark:border-gray-7"
                                 data-tip=""
@@ -258,12 +264,6 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                                 {t('earn:deposit_modal:apr')}:
                             </div>
                             <div className="font-semibold text-right text-green-3 dark:text-green-2">{+(apr * 100).toFixed(2)}%</div>
-                        </div>
-                        <div className="flex justify-between space-x-2">
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:period')}:</div>
-                            <div className="font-semibold text-right">
-                                {duration} {duration > 1 ? t('common:days') : t('common:day')}
-                            </div>
                         </div>
                     </div>
                     {systemMsg && (

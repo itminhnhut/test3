@@ -442,6 +442,17 @@ body {
     border-radius: 0px;
     background: transparent;
 }
+.scroll-margin{
+    &::-webkit-scrollbar-track {
+        margin: 5px;
+    }
+    &-x::-webkit-scrollbar-track {
+        margin: auto 5px;
+    }
+    &-y::-webkit-scrollbar-track {
+        margin: 5px auto;
+    }
+}
 
 .react-draggable {
     cursor: grab;

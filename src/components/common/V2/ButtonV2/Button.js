@@ -16,7 +16,8 @@ const Button = ({ className = '', disabled = false, children, variants = 'primar
             className={classNames(
                 'flex items-center justify-center rounded-md px-auto py-auto font-semibold h-11 sm:h-12 text-sm sm:text-base w-full py-3 space-x-1 duration-75',
                 {
-                    '!bg-gray-12 dark:!bg-dark-2 !text-txtDisabled dark:!text-txtDisabled-dark': disabled && !loading,
+                    '!text-txtDisabled dark:!text-txtDisabled-dark': disabled && !loading,
+                    '!bg-gray-12 dark:!bg-dark-2': disabled && !loading && variants !== 'text',
                     'pointer-events-none': loading
                 },
                 extendClass,

@@ -15,6 +15,7 @@ import Button from 'components/common/V2/ButtonV2/Button';
 import { useRouter } from 'next/router';
 import { addDays } from 'date-fns';
 import isValid from 'date-fns/isValid';
+import { useWindowSize } from 'utils/customHooks';
 
 const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const isNil = (x) => typeof x === 'undefined' || x === null;
@@ -32,7 +33,7 @@ const Cell = ({ asset = '', title, amount, children }) => {
     const hasAmount = !isNil(amount);
 
     return (
-        <div className="flex space-x-2 items-center">
+        <div className="flex space-x-2 items-center whitespace-nowrap">
             {asset && (
                 <div className="">
                     <AssetLogo assetCode={asset} size={30} />
@@ -69,6 +70,7 @@ const HistorySection = () => {
         { title: `90 ${t('common:days')}`, value: 90 },
         { title: `120 ${t('common:days')}`, value: 120 }
     ];
+    const { width } = useWindowSize();
     const configs = {
         type: {
             type: 'select',
@@ -76,18 +78,17 @@ const HistorySection = () => {
             values: transactionTab,
             label: t('earn:history_table:type'),
             position: 'left',
-            selectClassName: 'h-12'
+            selectClassName: 'h-12',
+            childClassName: '!w-[calc(50%-0.375rem)] v3:!w-auto v3:col-span-1'
         },
         time: {
             type: 'dateRange',
-            value: {
-                startDate: null,
-                endDate: null,
-                key: 'selection'
-            },
+            value: undefined,
             values: null,
             label: t('earn:history_table:time'),
-            wrapperDate: '!text-gray-15 dark:!text-gray-4 !text-base'
+            wrapperDate: '!text-gray-15 dark:!text-gray-4 !text-base truncate w-full',
+            position: width >= 1216 ? 'center' : 'right',
+            childClassName: '!w-[calc(50%-0.375rem)] v3:!w-auto v3:col-span-1'
         },
         asset: {
             type: 'assetFilter',
@@ -97,7 +98,8 @@ const HistorySection = () => {
             hasOptionAll: true,
             title: t('earn:history_table:select_asset'),
             label: t('earn:history_table:asset'),
-            className: '!h-12 text-txtPrimary dark:text-txtPrimary-dark'
+            className: '!h-12 text-txtPrimary dark:text-txtPrimary-dark',
+            childClassName: '!w-[calc(33.33%-3.25rem)] v3:!w-auto v3:col-span-1'
         },
         rewardAsset: {
             type: 'assetFilter',
@@ -107,27 +109,29 @@ const HistorySection = () => {
             hasOptionAll: true,
             title: t('earn:history_table:select_reward'),
             label: t('earn:history_table:reward_asset'),
-            className: '!h-12 text-txtPrimary dark:text-txtPrimary-dark'
+            className: '!h-12 text-txtPrimary dark:text-txtPrimary-dark',
+            childClassName: '!w-[calc(33.33%-3.25rem)] v3:!w-auto v3:col-span-1'
         },
         period: {
             type: 'select',
             value: null,
             values: periodTabs,
             label: t('earn:history_table:period'),
-            selectClassName: 'h-12'
+            selectClassName: 'h-12',
+            childClassName: '!w-[calc(33.33%-3.25rem)] v3:!w-auto v3:col-span-1'
         },
         reset: {
             type: 'reset',
             title: t('common:reset'),
             buttonClassName: '!text-gray-15 dark:!text-gray-7 font-semibold text-base w-full',
-            childClassName: 'justify-end'
+            childClassName: 'justify-end !w-[7.5rem] v3:!w-auto v3:col-span-1'
         }
     };
     const [filter, setFilter] = useState(configs);
     const [page, setPage] = useState(0);
     const auth = useSelector((state) => state.auth.user || null);
     const router = useRouter();
-    const isDefaultFilter = isEqual(configs, filter);
+    const isDefaultFilter = Object.keys(configs).every((key) => isEqual(configs[key].value, filter[key].value));
 
     const columns = useMemo(() => {
         const txTypeMap = {
@@ -154,8 +158,9 @@ const HistorySection = () => {
                 dataIndex: 'type',
                 key: 'type',
                 width: 'auto',
+                className: '',
                 align: 'left',
-                render: (data, tx) => {
+                render: (data) => {
                     return <Cell title={t('earn:history_table:type')}>{txTypeMap[data]?.type}</Cell>;
                 }
             },
@@ -164,6 +169,7 @@ const HistorySection = () => {
                 dataIndex: 'createdAt',
                 key: 'createdAt',
                 width: 'auto',
+                className: 'min-w-[180px]',
                 align: 'left',
                 render: (data) => {
                     const date = new Date(data);
@@ -175,6 +181,7 @@ const HistorySection = () => {
                 dataIndex: 'asset',
                 key: 'asset',
                 width: 'auto',
+                className: 'min-w-[11.25rem]',
                 align: 'left',
                 render: (data, tx) => {
                     const isRewardTx = [2, 3].includes(+tx.type);
@@ -235,7 +242,7 @@ const HistorySection = () => {
     return (
         <div className="bg-bgContainer dark:bg-bgContainer-dark rounded-xl mt-8 py-6">
             {auth && (!isDefaultFilter || data?.result?.length || page !== 0) && (
-                <div className="grid grid-cols-[repeat(2,minmax(0,2fr)),repeat(3,1fr),110px] w-full gap-x-3 px-6">
+                <div className="v3:grid flex flex-wrap v3:grid-cols-[repeat(2,minmax(0,1.5fr)),repeat(3,1fr),110px] w-full gap-y-2 gap-x-3 px-6">
                     <TableFilter config={configs} filter={filter} setFilter={setFilter} resetPagination={() => setPage(0)} />
                     <div className="h-8"></div>
                 </div>
@@ -257,7 +264,7 @@ const HistorySection = () => {
                             <NoData text={t('earn:table:no_data')} />
                         ) : (
                             <NoData
-                                className='py-3.5'
+                                className="py-3.5"
                                 text={
                                     <>
                                         <div className="text-center">{t('earn:table:no_data')}</div>

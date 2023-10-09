@@ -1,8 +1,7 @@
 import React from 'react';
 import { format as formatDate } from 'date-fns';
 import { useTranslation } from 'next-i18next';
-import { getAssetFromCode } from 'redux/actions/utils';
-import { formatNumber } from 'utils/reference-utils';
+import { formatNumber, getAssetFromCode } from 'redux/actions/utils';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Button from 'components/common/V2/ButtonV2/Button';
 import Tooltip from 'components/common/Tooltip';

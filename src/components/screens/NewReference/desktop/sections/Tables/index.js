@@ -32,7 +32,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type, 
         const data = filter?.[key] || {};
         return (
             <DatePickerV2
-                month={2}
+                month={item.months ?? 2}
                 hasShadow
                 initDate={data?.value}
                 wrapperClassname="!w-full !h-11"
@@ -132,7 +132,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type, 
     );
     const filterArray = Object.keys(config || []);
     return filterArray.map((key) => (
-        <div className={`flex flex-col items-start  w-auto ${config[key]?.childClassName || ''}`} key={key}>
+        <div className={`flex flex-col items-start w-auto ${config[key]?.childClassName || ''}`} key={key}>
             <div
                 className={classNames('text-txtSecondary dark:text-txtSecondary-dark mb-2 text-sm', {
                     hidden: config[key].label === '',

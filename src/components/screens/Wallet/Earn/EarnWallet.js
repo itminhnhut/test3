@@ -25,7 +25,7 @@ import classNames from 'classnames';
 import ExpandableTable from 'components/common/V2/TableV2/ExpandableTable';
 import DefaultMobileView from 'components/common/DefaultMobileView';
 import SvgChevronDown from 'components/svg/ChevronDown';
-import { WalletCurrency, formatNumber } from 'utils/reference-utils';
+import { WalletCurrency } from 'utils/reference-utils';
 import EarnPositionDetail from './OrderDetail';
 import { getUserEarnBalance } from 'redux/actions/user';
 import styled from 'styled-components';
@@ -39,6 +39,7 @@ const INITIAL_STATE = {
     action: null, // action = null is wallet overview
     allAssets: null
 };
+const cacheInfo = {};
 
 const Token = ({ symbol, subText }) => {
     const isGroup = typeof subText !== 'undefined' && subText !== null;
@@ -47,7 +48,7 @@ const Token = ({ symbol, subText }) => {
         <div className="flex space-x-2 items-center">
             <AssetLogo assetId={WalletCurrency[symbol]} size={32} />
             <div className="">
-                <div className={classNames(isGroup && 'font-semibold')}>{symbol}</div>
+                <div className={classNames(isGroup ?'font-semibold' : '!font-normal')}>{symbol}</div>
                 {subText && <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs">{subText}</div>}
             </div>
         </div>
@@ -61,10 +62,9 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
 
     // Use Hooks
     const [currentTheme] = useDarkMode();
-    const {
-        t,
-    } = useTranslation();
+    const { t } = useTranslation();
     const dispatch = useDispatch();
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
 
     // table
     const columns = [
@@ -72,9 +72,9 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
             title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('wallet:earn_wallet:table:coin')}</div>,
             dataIndex: 'coin',
             key: 'coin',
-            width: 384,
+            width: 'auto',
             align: 'left',
-            classNames: 'font-semibold md',
+            className: 'font-semibold md min-w-[280px]',
             render: (_, record) => {
                 if (record.positions) {
                     const txCount = record.positions?.length || 0;
@@ -82,7 +82,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
                     return <Token symbol={record.asset} subText={subText} />;
                 } else if (record.rewardAsset) {
                     return (
-                        <div className="ml-12 flex space-x-4 items-center">
+                        <div className="ml-10 flex space-x-4 items-center">
                             <span className="text-base font-semibold">{t('wallet:earn_wallet:table:receive')}</span>
                             <Token symbol={record.rewardAsset} />
                         </div>
@@ -96,6 +96,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
             dataIndex: 'apr',
             key: 'apr',
             width: 'auto',
+            className: 'min-w-[200px]',
             align: 'left',
             render: (val) => {
                 let render = '--';
@@ -117,6 +118,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
             dataIndex: 'duration',
             key: 'duration',
             width: 'auto',
+            className: 'min-w-[200px]',
             align: 'left',
             render: (val) => {
                 let render = '--';
@@ -134,10 +136,15 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
             }
         },
         {
-            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('wallet:earn_wallet:table:amount')}</div>,
+            title: (
+                <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base whitespace-nowrap">
+                    {t('wallet:earn_wallet:table:amount')}
+                </div>
+            ),
             dataIndex: 'amount',
             key: 'amount',
             width: 'auto',
+            className: '!whitespace-nowrap',
             align: 'left',
             sorter: (a, b) => {
                 const aUsdVal = a.amount * (usdRate?.[WalletCurrency[a.asset]] || 1);
@@ -145,19 +152,35 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
                 return bUsdVal - aUsdVal;
             },
             render: (val, record) => {
+                const assetId = WalletCurrency[record.asset] || '';
+                let assetInfo = cacheInfo[assetId];
+                if (!assetInfo) {
+                    assetInfo = assetConfig.find(({ id }) => id === assetId);
+                    cacheInfo[assetId] = assetInfo;
+                }
+
                 return (
                     <div className="">
-                        <div className="font-semibold">{`${val} ${record.asset}`}</div>
-                        {record.positions && <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">${formatNumber(val * (usdRate?.[WalletCurrency[record.asset]] || 1), 2)}</div>}
+                        <div className="font-semibold">{`${isHideAsset ? SECRET_STRING : formatWallet(val, assetInfo?.assetDigit ?? 0)} ${record.asset}`}</div>
+                        {record.positions && (
+                            <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                                ${isHideAsset ? SECRET_STRING : formatWallet(val * (usdRate?.[assetId] || 1), 2)}
+                            </div>
+                        )}
                     </div>
                 );
             }
         },
         {
-            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('wallet:earn_wallet:table:action')}</div>,
+            title: (
+                <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base whitespace-nowrap">
+                    {t('wallet:earn_wallet:table:action')}
+                </div>
+            ),
             dataIndex: 'action',
             key: 'action',
             width: 174,
+            className: 'min-w-[174px]',
             align: 'center'
         }
     ];
@@ -181,7 +204,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
     const closePositionModal = () => {
         dispatch(getUserEarnBalance());
         setPosition(undefined);
-    }
+    };
 
     return (
         <div>

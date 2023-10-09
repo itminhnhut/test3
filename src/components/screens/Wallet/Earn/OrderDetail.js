@@ -8,8 +8,8 @@ import { ONE_DAY } from 'constants/constants';
 import { format as formatDate } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import { getAssetFromCode } from 'redux/actions/utils';
-import { WalletCurrency, formatNumber } from 'utils/reference-utils';
+import { formatNumber, getAssetFromCode } from 'redux/actions/utils';
+import { WalletCurrency } from 'utils/reference-utils';
 import CheckBox from 'components/common/CheckBox';
 import Button from 'components/common/V2/ButtonV2/Button';
 import FetchApi from 'utils/fetch-api';
@@ -267,7 +267,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
             <div
                 className={classNames('rounded-2xl flex space-x-2 items-center py-1 px-4', {
                     'bg-yellow-2/10 text-yellow-2': status === STATUS.SUSPENDING,
-                    'bg-divider dark:bg-divider-dark text-txtSecondary dark:txt-txtSecondary-dark': status === STATUS.NON_RENEWAL,
+                    'bg-divider dark:bg-divider-dark text-txtTextBtn-tonal dark:txt-txtTextBtn-tonal_dark': status === STATUS.NON_RENEWAL,
                     'bg-green-2/10 text-green-3 dark:text-green-2': status === STATUS.RENEWAL
                 })}
             >
@@ -278,7 +278,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
     }, [t, autoRenew, isSuspending, status]);
 
     return (
-        <ModalV2 isVisible={true} onBackdropCb={onClose} className="w-[600px]" wrapClassName="sm:!pt-6">
+        <ModalV2 isVisible={true} onBackdropCb={onClose} className="w-[600px]">
             <div className="font-semibold text-2xl">{t('wallet:earn_wallet:position:title')}</div>
 
             <div className="text-center flex flex-col space-y-4 items-center mt-6">
@@ -295,7 +295,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
                 </div>
 
                 <div className="font-semibold text-2xl">
-                    {formatNumber(depositAmount, asset?.assetDigit || 0)} {asset}
+                    {formatNumber(depositAmount, assetInfo?.assetDigit || 0)} {asset}
                 </div>
 
                 {Bagde}
@@ -434,7 +434,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
                 message={t('wallet:earn_wallet:position:redeem_success')}
             >
                 <div className="text-xl font-semibold text-center mt-4">
-                    {formatNumber(amount - equivalentClaimedReward, asset?.assetDigit || 0)} {asset}
+                    {formatNumber(amount - equivalentClaimedReward, assetInfo?.assetDigit || 0)} {asset}
                 </div>
             </AlertModalV2>
             <AlertModalV2 isVisible={!!actionError} title={t('common:error')} type="error" onClose={closeErrorModal} message={actionError} />

@@ -257,8 +257,8 @@ const Wallet = () => {
     // Render Handler
     const renderScreenTab = useCallback(() => {
         return (
-            <div className="relative flex tracking-normal">
-                <Tabs isMobile tab={state.screenIndex} className="gap-6 border-b border-divider dark:border-divider-dark">
+            <div className="relative flex tracking-normal border-b border-divider dark:border-divider-dark ">
+                <Tabs isMobile tab={state.screenIndex} className="gap-6 max-w-[calc(100%-10rem)] overflow-x-auto">
                     {SCREEN_TAB_SERIES.map((e, index) => {
                         return (
                             <TabItem
@@ -277,7 +277,7 @@ const Wallet = () => {
                         );
                     })}
                 </Tabs>
-                <div className="absolute right-0 hidden md:block">
+                <div className="absolute top-1/2 -translate-y-1/2 right-0 hidden md:block">
                     {/* <div /> */}
                     <HrefButton variants="blank" className="w-auto !text-base" href={`/${WALLET_SCREENS.TRANSACTION_HISTORY}`}>
                         {t('common:transaction_history')}
