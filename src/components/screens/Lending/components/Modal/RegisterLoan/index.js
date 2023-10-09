@@ -53,6 +53,7 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 // ** UTILS
 import { dwLinkBuilder, formatNumber, getLoginUrl } from 'redux/actions/utils';
 import { getSpotAvailable } from '../../../utils/selector';
+import Spinner from 'components/svg/Spinner';
 
 // ** INIT DATA
 const INIT_DATA = {
@@ -474,10 +475,14 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                             }
                             textDescription={
                                 <span>
-                                    {t('lending:lending.modal.input_description.min_max', {
-                                        min: formatNumber(minCollateralAmount, filter.collateral?.assetDigit),
-                                        max: formatNumber(filter.collateral?.config?.maxLimit, filter.collateral?.assetDigit)
-                                    })}
+                                    {loadingPrice ? (
+                                        <Spinner size={16} color="currentColor" />
+                                    ) : (
+                                        t('lending:lending.modal.input_description.min_max', {
+                                            min: formatNumber(minCollateralAmount, filter.collateral?.assetDigit),
+                                            max: formatNumber(filter.collateral?.config?.maxLimit, filter.collateral?.assetDigit)
+                                        })
+                                    )}
                                 </span>
                             }
                             onFocus={() => setState({ typingField: COLLATERAL })}

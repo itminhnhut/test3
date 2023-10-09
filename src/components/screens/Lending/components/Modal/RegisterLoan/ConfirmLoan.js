@@ -60,6 +60,7 @@ const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessC
     // ** handle
     const handleToggleModalConfirm = () => setModalConfirm((prev) => !prev);
 
+    // ** variable
     const loanCoin = loanInfor.loanable?.assetCode;
     const collateralCoin = loanInfor.collateral?.assetCode;
 
@@ -71,6 +72,16 @@ const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessC
 
     const termInterestAmount = loanInfor?.['loanInterest']?.['termInterestAmount'];
     const totalDebt = +loanValue + +termInterestAmount;
+
+    //** mapping data
+    const confirmInfor = {
+        loanValue: `${formatNumber(loanValue, loanDigit)} ${loanCoin}`,
+        collateralValue: `${formatNumber(collateralValue, collateralDigit)} ${collateralCoin}`,
+        termInterestAmount: `${formatNumber(termInterestAmount, loanDigit)} ${loanCoin}`,
+        dailyInterestPercent: `${loanInfor?.['loanInterest']?.['dailyInterestPercent']?.toFixed(4)} %`,
+        loanTerm: `${loanInfor?.['loanTerm']} ngày`,
+        endLoanTermDate: <LoanTermExpireDate daysOfTerm={loanInfor?.['loanTerm']} />
+    };
 
     const handlerRegisterLoan = async () => {
         setLoading(true);
@@ -108,18 +119,10 @@ const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessC
                 <div className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Xác nhận khoản vay</div>
                 <section className="my-6 dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex flex-col gap-4">
                     {CONFIRM_INFORMATION?.map((item, key) => {
-                        const data = {
-                            loanValue: `${formatNumber(loanValue, loanDigit)} ${loanCoin}`,
-                            collateralValue: `${formatNumber(collateralValue, collateralDigit)} ${collateralCoin}`,
-                            termInterestAmount: `${formatNumber(termInterestAmount, loanDigit)} ${loanCoin}`,
-                            dailyInterestPercent: `${loanInfor?.['loanInterest']?.['dailyInterestPercent']?.toFixed(4)} %`,
-                            loanTerm: `${loanInfor?.['loanTerm']} ngày`,
-                            endLoanTermDate: <LoanTermExpireDate daysOfTerm={loanInfor?.['loanTerm']} />
-                        };
                         return (
                             <section className="flex flex-row justify-between" key={`modal_confirm_loan_${key}_${item.key}`}>
                                 <div className="dark:text-gray-7 text-gray-1">{item?.[language]}</div>
-                                <div className="dark:text-gray-4 text-gray-15 font-semibold">{data[item.key]}</div>
+                                <div className="dark:text-gray-4 text-gray-15 font-semibold">{confirmInfor?.[item.key]}</div>
                             </section>
                         );
                     })}

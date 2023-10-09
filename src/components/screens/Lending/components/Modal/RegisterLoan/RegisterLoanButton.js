@@ -3,11 +3,20 @@ import ButtonV2 from 'components/screens/Nao/Components/ButtonV2/Button';
 import React from 'react';
 
 const RegisterLoanButton = ({ loading, loadingPrice, handlerRegisterLoan, handleRefetch }) => {
-    const countdown = useFetchPriceCounter({ handleRefetch, loadingPrice });
+    const [countdown, resetCountdown] = useFetchPriceCounter({ loadingPrice });
+
+    const handleClick = () => {
+        if (countdown === null) {
+            handleRefetch();
+            resetCountdown()
+            return;
+        }
+        handlerRegisterLoan();
+    };
 
     return (
-        <ButtonV2 onClick={handlerRegisterLoan} loading={loading || loadingPrice} disabled={loadingPrice} className="mt-10">
-            Xác nhận ({countdown}s)
+        <ButtonV2 onClick={handleClick} loading={loading || loadingPrice} disabled={loadingPrice} className="mt-10">
+            {countdown === null ? 'Làm mới' : <>Xác nhận ({countdown}s)</>}
         </ButtonV2>
     );
 };
