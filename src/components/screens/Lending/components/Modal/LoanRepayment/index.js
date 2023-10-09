@@ -28,6 +28,7 @@ import { getCurrentLTV, getReceiveCollateral } from 'components/screens/Lending/
 import { PERCENT } from 'components/screens/Lending/constants';
 import PercentageInput from './PercentageInput';
 import ModalCancelLoanRepayment from './CancelLoanRepayment';
+import useCollateralPrice from 'components/screens/Lending/hooks/useCollateralPrice';
 
 export const REPAY_TAB = {
     LOAN: 'loan',
@@ -64,11 +65,19 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
         return assetConfig?.length && assetConfig.reduce((prevObj, asset) => ({ ...prevObj, [asset?.assetCode]: asset }), {});
     }, [assetConfig]);
 
-    const { totalDebt, initialLTV, totalCollateralAmount, collateralCoin, loanCoin, price: collateralPriceToLoanCoin, _id: loanId } = dataCollateral;
+    const { totalDebt, initialLTV, totalCollateralAmount, collateralCoin, loanCoin, _id: loanId } = dataCollateral;
 
     //**  useState
     const [state, set] = useState(INIT_STATE);
     const setState = (newState) => set((prev) => ({ ...prev, ...newState }));
+    //** state for toggle fetch price
+    const [refetchPrice, setRefetchPrice] = useState(false);
+
+    const { data: collateralPriceToLoanCoin, loading: loadingCollateralPrice } = useCollateralPrice({
+        collateralAssetCode: collateralCoin,
+        loanableAssetCode: loanCoin,
+        refetch: refetchPrice
+    });
 
     const isLoanRepay = state.tab === REPAY_TAB.LOAN;
     const isTypingAmountField = state.typingField === INPUT_FIELD.AMOUNT;
@@ -177,10 +186,13 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
     const onHandleAddMoreBalance = () => {
         dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT, asset: loanCoin }));
     };
+    const onHandleRefetchPrice = () => setRefetchPrice((prev) => !prev);
 
     const onRepayHandler = async (type) => {
         if (type === 'showConfirm') {
-            return handleToggleConfirmModal();
+            onHandleRefetchPrice();
+            handleToggleConfirmModal();
+            return;
         }
         return await repayLoan();
     };
@@ -325,6 +337,8 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             />
 
             <ModalConfirmLoanRepayment
+                handleRefetchPrice={onHandleRefetchPrice}
+                loadingPrice={loadingCollateralPrice}
                 repaymentData={repaymentDataProps}
                 repayLoan={onRepayHandler}
                 isModal={state.isShowConfirm}

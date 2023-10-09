@@ -19,6 +19,7 @@ import dynamic from 'next/dynamic';
 // ** Third party
 import addDays from 'date-fns/addDays';
 import { ApiStatus } from 'redux/actions/const';
+import RegisterLoanButton from './RegisterLoanButton';
 
 // ** Dynamic
 const SucessLoan = dynamic(() => import('./SucessLoan'), { ssrc: false });
@@ -45,7 +46,7 @@ const LoanTermExpireDate = memo(({ daysOfTerm, format = 'hh:mm:ss dd/MM/yyy' }) 
     return formatTime(addDays(now, daysOfTerm), format);
 });
 
-const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessClose }) => {
+const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessClose, handleRefetchPrice, loadingCollateralPrice }) => {
     const {
         t,
         i18n: { language }
@@ -131,9 +132,12 @@ const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessC
                         </div>
                     </section>
                 </section>
-                <ButtonV2 onClick={handlerRegisterLoan} loading={loading} className="mt-10">
-                    Xác nhận
-                </ButtonV2>
+                <RegisterLoanButton
+                    handlerRegisterLoan={handlerRegisterLoan}
+                    loading={loading}
+                    handleRefetch={handleRefetchPrice}
+                    loadingPrice={loadingCollateralPrice}
+                />
             </ModalV2>
             <SucessLoan
                 isModal={isShowModalConfirm}

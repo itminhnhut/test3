@@ -32,8 +32,8 @@ const ModalConfirmLoan = dynamic(() => import('./ConfirmLoan'), { ssr: false });
 const AssetLendingFilter = dynamic(() => import('components/screens/Lending/components/AssetLendingFilter'), { ssr: false });
 
 // ** Custom hooks
-import useRegisterLoan from '../../hooks/useRegisterLoan';
-import useLoanInput from '../../hooks/useLoanInput';
+import useRegisterLoan from '../../../hooks/useRegisterLoan';
+import useLoanInput from '../../../hooks/useLoanInput';
 
 // ** CONSTANTS
 import {
@@ -52,7 +52,7 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 // ** UTILS
 import { dwLinkBuilder, formatNumber, getLoginUrl } from 'redux/actions/utils';
-import { getSpotAvailable } from '../../utils/selector';
+import { getSpotAvailable } from '../../../utils/selector';
 
 // ** INIT DATA
 const INIT_DATA = {
@@ -527,10 +527,11 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                     setState(INIT_DATA);
                 }}
                 registerLoan={() => handleRegisterLoan(REGISTER_HANDLE_TYPE.FROM_CONFIRM_MODAL)}
-                refetchPrice={refetchCollateralPrice}
+                handleRefetchPrice={() => setRefetchCollateralPrice((prev) => !prev)}
                 isOpen={isConfirm}
                 onClose={onToggleConfirm}
                 loanInfor={confirmLoanInfor}
+                loadingCollateralPrice={loadingPrice}
             />
         </>
     );

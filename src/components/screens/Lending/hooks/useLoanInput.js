@@ -13,6 +13,7 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
         loanableAssetCode: loanable?.assetCode,
         refetch
     });
+
     const { t } = useTranslation();
     const isTypingLoanField = typingField === LOANABLE;
 

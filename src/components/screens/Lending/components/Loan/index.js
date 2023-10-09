@@ -44,7 +44,7 @@ const ASSETS = [
 const initState = {
     page: 1,
     loading: false,
-    overview: { currency: 'USD' },
+    overview: { currency: 'VND' },
     loan: { status: 'ACTIVE' },
     data: {}
 };

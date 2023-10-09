@@ -30,7 +30,7 @@ const INIT_DATA = {
     loanAsset: null
 };
 
-const LendingTable = ({ data, page, loading, onPage }) => {
+const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
     const {
         t,
         i18n: { language }
@@ -75,7 +75,7 @@ const LendingTable = ({ data, page, loading, onPage }) => {
                 dataIndex: 'minLimit',
                 title: renderTitle(t('lending:lending:table:minimum'), 'Đơn vị: VND'),
                 align: 'left',
-                minWidth: 205,
+                minWidth: 206,
                 render: (value) => <div>{formatNumber(value)}</div>
             },
             {
@@ -125,7 +125,7 @@ const LendingTable = ({ data, page, loading, onPage }) => {
 
         return (
             <WrapperTable
-                sort={['created_at2', 'created_at3']}
+                sort={['_7dHourlyInterestRate', '_30dHourlyInterestRate']}
                 skip={0}
                 useRowHover
                 height={350}
@@ -143,7 +143,7 @@ const LendingTable = ({ data, page, loading, onPage }) => {
                     page: page - 1,
                     hasNext: data?.hasNext,
                     onChangeNextPrev: (delta) => {
-                        onPage(page + delta);
+                        onPageChange(page + delta);
                     },
                     language: language
                 }}

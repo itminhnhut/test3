@@ -19,13 +19,14 @@ import { IconClose } from 'components/svg/SvgIcon';
 //** CONTEXT
 import { LendingContext } from 'components/screens/Lending/Context';
 import { globalActionTypes as lendingContextActions } from 'components/screens/Lending/Context/actions';
+import ConfirmLoanButton from './ConfirmLoanButton';
 
 // ** Dynamic
 const AlertModalV2 = dynamic(() => import('components/common/V2/ModalV2/AlertModalV2'), { ssrc: false });
 const LoanToValueInfor = dynamic(() => import('./LoanToValueInfor'), { ssrc: false });
 const DebtInfor = dynamic(() => import('./DebtInfor'), { ssrc: false });
 
-const ConfirmLoanRepayment = ({ repaymentData, isModal, onClose, onCloseMainModal, repayLoan }) => {
+const ConfirmLoanRepayment = ({ repaymentData, isModal, onClose, onCloseMainModal, repayLoan, handleRefetchPrice, loadingPrice }) => {
     const {
         initialLTV,
         adjustLTV,
@@ -127,9 +128,7 @@ const ConfirmLoanRepayment = ({ repaymentData, isModal, onClose, onCloseMainModa
                 <section className="mt-4 dark:bg-dark-4 bg-gray-13 rounded-xl p-4">
                     <LoanToValueInfor {...{ initialLTV, adjustLTV }} />
                 </section>
-                <ButtonV2 loading={loading} onClick={onRepayHandler} className="mt-10">
-                    Xác nhận
-                </ButtonV2>
+                <ConfirmLoanButton loading={loading} handleRefetch={handleRefetchPrice} loadingPrice={loadingPrice} onRepayHandler={onRepayHandler} />
             </ModalV2>
 
             {/* SUCCESS MODAL */}
