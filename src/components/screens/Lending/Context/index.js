@@ -98,7 +98,7 @@ const LendingProvider = ({ children }) => {
     }, [auth]);
 
     const value = useMemo(
-        () => ({ loanAsset, assetConfig, auth, pairPrice, handlePairPrice, state, dispatchReducer }),
+        () => ({ loanAsset, assetConfig, auth, pairPrice, state, dispatchReducer, handlePairPrice }),
         [loanAsset, assetConfig, auth, pairPrice, state]
     );
 
@@ -151,6 +151,7 @@ const usePairPrice = () => {
     const getPairPrice = (data) => {
         context.handlePairPrice(data);
     };
+
     return { getPairPrice: (data) => getPairPrice(data), pairPrice: context.pairPrice };
 };
 

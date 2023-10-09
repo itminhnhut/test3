@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 
 // ** Next
 import { useTranslation } from 'next-i18next';
@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 
 // ** components
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { PERCENT } from 'components/screens/Lending/constants';
 
 // ** Context
 import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
@@ -24,12 +25,15 @@ import { IconClose } from 'components/svg/SvgIcon';
 
 //** components
 import ModalV2 from 'components/common/V2/ModalV2';
-import { PERCENT } from '../../../constants';
+
+// ** Third party
+import Countdown from 'react-countdown';
 
 // ** Dynamic
 const SucessAdjust = dynamic(() => import('./SucessAdjust.js'), { ssrc: false });
 
-const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, currentLTV, adjustedLTV, totalAdjusted, initialLTV, id, amount }) => {
+const MILLISECOND_COUNT_DOWN = 6000;
+const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, currentLTV, adjustedLTV, totalAdjusted, initialLTV, id, amount, onRefreshPrice }) => {
     const {
         t,
         i18n: { language }
@@ -37,7 +41,15 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
 
     // ** useState
     const [isLoading, setIsLoading] = useState(false);
+    const [date, setDate] = useState(null);
 
+    useEffect(() => {
+        if (isConfirmAdjust && tab !== 'add') {
+            setDate(Date.now() + MILLISECOND_COUNT_DOWN);
+        }
+    }, [isConfirmAdjust]);
+
+    // JSON.stringify(date)
     // ** useReducer
     const { state, dispatchReducer } = useContext(LendingContext);
 
@@ -75,8 +87,27 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
         }
     };
 
+    const handleResetClick = (props) => {
+        onRefreshPrice();
+        setDate(Date.now() + MILLISECOND_COUNT_DOWN);
+        props?.api?.start();
+    };
+
+    const renderCountDown = ({ seconds, completed, ...props }) => {
+        return !completed ? (
+            <ButtonV2 className="mt-10" onClick={handleSubmitConfirm} disabled={isLoading}>
+                Xác nhận({seconds})
+            </ButtonV2>
+        ) : (
+            <ButtonV2 onClick={() => handleResetClick(props)} className="mt-10">
+                Làm mới
+            </ButtonV2>
+        );
+    };
+
     return (
         <>
+            <Countdown date={date} renderer={renderCountDown} />
             <ModalV2
                 isVisible={isConfirmAdjust}
                 className="w-[488px] overflow-auto no-scrollbar"
@@ -114,9 +145,13 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
                         <div className="dark:text-gray-4 text-gray-15 font-semibold">{`${totalAdjusted?.total} ${totalAdjusted?.assetCode}`}</div>
                     </section>
                 </section>
-                <ButtonV2 className="mt-10" onClick={handleSubmitConfirm} disabled={isLoading}>
-                    Xác nhận
-                </ButtonV2>
+                {tab === 'add' ? (
+                    <ButtonV2 className="mt-10" onClick={handleSubmitConfirm} disabled={isLoading}>
+                        Xác nhận
+                    </ButtonV2>
+                ) : (
+                    <Countdown date={date} renderer={renderCountDown} key={date} />
+                )}
             </ModalV2>
             <SucessAdjust isModal={state.modal?.isSuccess} onClose={handleToggleModal} tab={tab} adjustedLTV={adjustedLTV} totalAdjusted={totalAdjusted} />
         </>

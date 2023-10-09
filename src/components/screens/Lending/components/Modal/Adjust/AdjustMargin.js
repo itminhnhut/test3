@@ -94,7 +94,6 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
     // ** useEffect
     useEffect(() => {
         if (dataCollateral?._id) {
-            console.log('re-render');
             dispatchReducer({ type: actions.UPDATE, data: { dataCollateral, rsTotalDebt, rsTotalCollateralAmount } });
             // ** reset amount
             dispatchReducer({ type: actions.RESET_AMOUNT });
@@ -154,6 +153,10 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
     const handleSubmit = () => {
         dispatchReducer({ type: actions.TOGGLE_MODAL_CONFIRM_ADJUST }); //** open modal confirm */
         getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin }); //** update market price */
+    };
+
+    const handRefreshPrice = () => {
+        getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
     };
 
     // ** handle update amount assets
@@ -373,8 +376,9 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
                 currentLTV={current_LTV}
                 adjustedLTV={adjustedLTV}
                 totalAdjusted={totalAdjusted}
-                dispatchReducer={dispatchReducer}
                 initialLTV={state?.initialLTV}
+                onRefreshPrice={handRefreshPrice}
+                dispatchReducer={dispatchReducer}
                 isConfirmAdjust={state.modal?.isConfirmAdjust}
                 onCloseAdjustMargin={handleCloseConfirmAdjustMargin}
             />
