@@ -6,7 +6,6 @@ import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import colors from 'styles/colors';
 import SortIcon from 'components/screens/Nao_futures/SortIcon';
-import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
 
 const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
     const { t } = useTranslation();
@@ -33,13 +32,13 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
     }, [orderTypes, isVndcFutures]);
 
     return (
-        <Popover className="relative" style={{ flexGrow: 1 }}>
+        <Popover className="relative mr-2" style={{ flexGrow: 1 }}>
             {({ open, close }) => (
                 <>
-                    <Popover.Button data-tut="order-type" className="w-full h-9 px-3 rounded-md bg-gray-12 dark:bg-dark-2">
-                        <div className="flex items-center justify-between text-xs font-semibold">
+                    <Popover.Button data-tut="order-type" className="w-full h-[32px] border-b-2 border-divider dark:border-divider-dark">
+                        <div className="flex items-center justify-between text-xs font-medium">
                             <div className="w-full text-left">{getTypesLabel(type)}</div>
-                            <ArrowDropDownIcon size={20} color="currentColor" activeColor="currentColor" className="text-gray-1 dark:text-gray-7" />
+                            <SortIcon size={20} color="currentColor" activeColor="currentColor" className="text-gray-1 dark:text-gray-7" />
                             {/* <ChevronDown color={colors.gray[1]} size={16} className="ml-1" /> */}
                         </div>
                     </Popover.Button>

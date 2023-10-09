@@ -9,7 +9,7 @@ import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import Tooltip from 'components/common/Tooltip';
 import { useTranslation } from 'next-i18next';
 
-const Funding = ({ pairPrice, symbol }) => {
+const Funding = ({ pairPrice, symbol, className = '' }) => {
     const ticker = pairPrice ? pairPrice : useSelector((state) => getMarketWatch(state, symbol));
     // if (ticker?.buyFundingRate) return '-/-';
 
@@ -17,7 +17,7 @@ const Funding = ({ pairPrice, symbol }) => {
         return `${formatNumber(value * 100, 4, 0, true)}%`;
     };
     return (
-        <div>
+        <div className={className}>
             {formatFunding(ticker?.buyFundingRate)} / {formatFunding(ticker?.sellFundingRate)}
         </div>
     );
