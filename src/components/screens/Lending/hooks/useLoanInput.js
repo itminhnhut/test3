@@ -8,7 +8,7 @@ const calcCollateralAmount = ({ loanAmount, initLTV, collateralToLoanPrice }) =>
 const calcLoanAmount = ({ collateralAmount, initLTV, collateralToLoanPrice }) => collateralAmount * initLTV * collateralToLoanPrice;
 
 const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typingField, initialLTV, collateralAvailable, refetch }) => {
-    const { data: collateralPrice, loading } = useCollateralPrice({
+    const { data: collateralPrice, loading: loadingPrice } = useCollateralPrice({
         collateralAssetCode: collateral?.assetCode,
         loanableAssetCode: loanable?.assetCode,
         refetch
@@ -30,19 +30,20 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
         digit: collateral?.assetDigit
     });
 
-    const minCollateralAmount =
-        ceilByExactDegit(
-            calcCollateralAmount({
-                loanAmount: parseFloat(loanable?.config?.minLimit || 0),
-                collateralToLoanPrice: parseFloat(collateralPrice),
-                initLTV: parseFloat(initialLTV)
-            }),
-            collateral?.assetDigit
-        ) || 0;
+    const minCollateralAmount = loadingPrice
+        ? 0
+        : ceilByExactDegit(
+              calcCollateralAmount({
+                  loanAmount: parseFloat(loanable?.config?.minLimit || 0),
+                  collateralToLoanPrice: parseFloat(collateralPrice),
+                  initLTV: parseFloat(initialLTV)
+              }),
+              collateral?.assetDigit
+          ) || 0;
 
-    const loanValue = isTypingLoanField ? loanInput : ceilByExactDegit(loanAmount, 0) || '';
+    const loanValue = isTypingLoanField ? loanInput : loadingPrice ? '' : ceilByExactDegit(loanAmount, loanable?.assetDigit) || '';
 
-    const collateralValue = isTypingLoanField ? ceilByExactDegit(collateralAmount, collateral?.assetDigit) || '' : collateralInput;
+    const collateralValue = isTypingLoanField ? (loadingPrice ? '' : ceilByExactDegit(collateralAmount, collateral?.assetDigit) || '') : collateralInput;
 
     const validator = useMemo(
         () => ({
@@ -115,7 +116,7 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
         collateralValue,
         validator,
         minCollateralAmount,
-        loadingPrice: loading
+        loadingPrice
     };
 };
 

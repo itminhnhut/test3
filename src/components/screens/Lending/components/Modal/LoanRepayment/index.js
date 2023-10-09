@@ -9,7 +9,6 @@ import { useSelector, useDispatch } from 'react-redux';
 
 //** components
 import ModalV2 from 'components/common/V2/ModalV2';
-import InputSlider from 'components/trade/InputSlider';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 // ** svg
@@ -84,6 +83,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
 
     const loanCoinConfig = assetByCode?.[loanCoin];
     const collateralCoinConfig = assetByCode?.[collateralCoin];
+
     // ** loan asset balance
     const loanCoinAvailable = useSelector((state) => getSpotAvailable(state, { assetId: loanCoinConfig?.id }));
 
@@ -132,7 +132,8 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             collateralCoinConfig,
             collateralPriceToLoanCoin,
             repayAmount,
-            collateralAmountReceive
+            collateralAmountReceive,
+            repayType: state.tab
         }),
         [
             initialLTV,
@@ -144,7 +145,8 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             collateralCoinConfig?.assetCode,
             collateralPriceToLoanCoin,
             repayAmount,
-            collateralAmountReceive
+            collateralAmountReceive,
+            state.tab
         ]
     );
 
@@ -160,7 +162,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             // gia tri cua field con lai
             const otherValue = {
                 percentage: roundByExactDigit((inputValue / totalDebt) * PERCENT, 0), // field "percentage" lam tron xuong
-                amount: ceilByExactDegit((totalDebt * inputValue) / PERCENT, 0) || '' // field "amount" lam tron len. neu amount === 0 thi = ""
+                amount: roundByExactDigit((totalDebt * inputValue) / PERCENT, loanCoinConfig?.assetDigit) || '' // field "amount" lam tron xuong. neu amount === 0 thi = ""
             }[otherField];
 
             if (inputField === 'amount' && +inputValue > totalDebt) {
@@ -174,7 +176,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
                 }
             });
         },
-        [totalDebt]
+        [totalDebt, loanCoinConfig?.assetDigit]
     );
 
     const handleToggleConfirmModal = () => setState({ isShowConfirm: !state.isShowConfirm });

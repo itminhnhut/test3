@@ -1,27 +1,25 @@
 import React, { useEffect, useState } from 'react';
 
-const COUNTER = 6;
-const useFetchPriceCounter = ({ handleRefetch, loadingPrice, initCounter = COUNTER }) => {
+const INIT_COUNTER = 6;
+const useFetchPriceCounter = ({ loadingPrice, initCounter = INIT_COUNTER }) => {
     const [countdown, setCountdown] = useState(initCounter);
 
     useEffect(() => {
         let interval = setInterval(
             () =>
-                setCountdown((prevCoundown) => {
+                setCountdown((prevCountdown) => {
                     // ko cho dem nguoc neu nhu dang fetchPrice
-                    if (loadingPrice) return prevCoundown;
-                    if (prevCoundown === 1) {
-                        handleRefetch();
-                    }
-                    return prevCoundown === 1 ? COUNTER : prevCoundown - 1;
+                    // or countdown == null
+                    if (loadingPrice || prevCountdown === null) return prevCountdown;
+                    return prevCountdown === 1 ? null : prevCountdown - 1;
                 }),
             1000
         );
 
         return () => clearInterval(interval);
     }, [loadingPrice]);
-
-    return countdown;
+    const resetCountdown = () => setCountdown(initCounter);
+    return [countdown, resetCountdown];
 };
 
 export default useFetchPriceCounter;
