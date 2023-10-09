@@ -9,6 +9,7 @@ import Tooltip from 'components/common/Tooltip';
 import TableV2 from 'components/common/V2/TableV2';
 import AssetLogo from 'components/wallet/AssetLogo';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import EmptyData from 'components/screens/Lending/EmptyData';
 
 // ** Utils
 import { substring } from 'utils';
@@ -20,7 +21,7 @@ import Copy from 'components/svg/Copy';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 // ** Constants
-import { LOAN_HISTORY_STATUS, PERCENT, STATUS_CODE } from 'components/screens/Lending/constants';
+import { LIMIT, LOAN_HISTORY_STATUS, PERCENT, STATUS_CODE } from 'components/screens/Lending/constants';
 
 // ** Utils
 import FetchApi from 'utils/fetch-api';
@@ -50,9 +51,6 @@ import moment from 'moment-timezone';
 // ** dynamic
 const ModalAdjustMargin = dynamic(() => import('components/screens/Lending/components/Modal/Adjust/AdjustMargin'), { ssr: false });
 const ModalLoanRepayment = dynamic(() => import('components/screens/Lending/components/Modal/LoanRepayment'), { ssr: false });
-
-// ** Constants
-const LIMIT = 10;
 
 const INIT_DATA = {
     isModal: false
@@ -393,6 +391,9 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 scroll={{ x: true }}
                 className=""
                 data={data.result || []}
+                emptyDataCustom={
+                    data.result?.length === 0 && <EmptyData isDark={isDark} content="Không có lệnh cần thanh toán" textBtn="Vay Crypto ngay" link="/lending" />
+                }
                 rowKey={(item) => `${item?.key}`}
                 pagingClassName="!border-0 !py-8"
                 pagingPrevNext={{

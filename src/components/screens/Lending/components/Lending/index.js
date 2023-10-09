@@ -73,10 +73,11 @@ const Lending = () => {
     };
     return (
         <>
-            <section className="flex items-center flex-row justify-between">
+            <section className="flex flex-row justify-between items-center">
                 <h3 className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{t('lending:crypto:lending:title')}</h3>
                 <section className="flex flex-row gap-4">
                     <InputV2
+                        className="!pb-0"
                         value={filter.search}
                         onChange={handleSearch}
                         className="!pb-0 min-w-[360px]"

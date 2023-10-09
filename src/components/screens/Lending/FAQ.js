@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 
 // ** NEXT
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
 
 // ** components
 import CollapseV2 from 'components/common/V2/CollapseV2';
@@ -11,6 +12,7 @@ import colors from 'styles/colors';
 
 // ** CONSTANTS
 import { FAQ } from 'components/screens/Lending/constants';
+import Button from 'components/common/V2/ButtonV2/Button';
 
 const FQALending = ({ isDark }) => {
     const {
@@ -51,7 +53,12 @@ const FQALending = ({ isDark }) => {
     return (
         <section className="mt-20 pb-[120px]">
             <h2 className="text-6xl text-center font-semibold text-gray-15 dark:text-gray-4 mb-10">{t('lending:FAQ.title')}</h2>
-            <div className="dark:bg-dark-4 bg-white rounded-xl px-6 py-8">{renderFAQ}</div>
+            <div className="dark:bg-dark-4 bg-white rounded-xl px-6 py-8">
+                {renderFAQ}
+                <Button className="dark:!bg-dark-4 !bg-white dark:!text-green-2 !text-green-3 font-semibold">
+                    <Link href="#">Xem thêm</Link>
+                </Button>
+            </div>
         </section>
     );
 };
