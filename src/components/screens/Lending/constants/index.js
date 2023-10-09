@@ -85,8 +85,6 @@ const LTV = [
     { title: { vi: 'LTV thanh lý', en: 'Liquidation LTV' }, key: 'liquidate_ltv' }
 ];
 
-
-
 const HISTORY_TAB = [
     { title: { vi: 'Vay', en: 'Vay' }, key: 'loan' },
     { title: { vi: 'Thanh toán', en: 'Thanh toán' }, key: 'repay' },
@@ -106,7 +104,7 @@ const STATUS_EN = [
 ];
 
 const HOUR = 24;
-const LIMIT = 20;
+const LIMIT = 10;
 const YEAR = 365;
 const PERCENT = 100;
 const MILLISECOND = 1;
