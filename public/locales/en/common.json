@@ -206,7 +206,7 @@
     "support_type": "Support {{ types }}",
     "description": "Description",
     "details": "Details",
-    "detail":"Detail",
+    "detail": "Detail",
     "view_rules": "View Rules",
     "notes": "Notes",
     "note": "Note",

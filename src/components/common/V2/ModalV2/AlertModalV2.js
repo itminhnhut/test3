@@ -20,10 +20,13 @@ const AlertModalV2 = ({
     loading = false,
     buttonClassName = '',
     isButton = true,
-    messageClassName = ''
+    messageClassName = '',
+    customIcon,
+    closeButton = true
 }) => {
     const { t } = useTranslation();
     const getIcon = () => {
+        if (customIcon) return customIcon;
         switch (type) {
             case 'success':
                 return <SuccessIcon />;
@@ -43,7 +46,7 @@ const AlertModalV2 = ({
     };
 
     return (
-        <ModalV2 loading={loading} className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
+        <ModalV2 closeButton={closeButton} loading={loading} className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
             <div className="flex flex-col items-center">
                 {getIcon()}
                 <div className="mt-6 mb-4 font-semibold text-2xl text-txtPrimary dark:text-gray-4 text-center">{title}</div>

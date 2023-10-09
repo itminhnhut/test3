@@ -20,6 +20,8 @@ import AnnouncementPopup from 'components/screens/Nao_futures/AnnouncementPopup'
 import ContestModal from './ContestModal';
 import { getAssetConfig, getPairConfig } from 'redux/selectors';
 import { FUTURES_DEFAULT_SYMBOL } from 'constants/constants';
+import dynamic from 'next/dynamic';
+const Notification = dynamic(() => import('../../Futures/RelatedInformation/Notification'), { ssr: false });
 
 const INITIAL_STATE = {
     loading: false,
@@ -217,6 +219,7 @@ const FuturesMobile = ({ symbol }) => {
         <>
             <AnnouncementPopup />
             <FuturesPageTitle pair={state.pair} pricePrecision={pairConfig?.pricePrecision} pairConfig={pairConfig} />
+            <Notification symbol={symbol} platform="NAO_FUTURES" />
             <LayoutMobile>
                 <ContestModal />
                 {showOnBoardingModal && <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)} />}

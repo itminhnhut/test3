@@ -18,7 +18,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_RANK_WEEKLY_PNL, API_CONTEST_GET_RANK_WEEKLY_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { formatNumber, getS3Url, formatTime } from 'redux/actions/utils';
+import { formatNumber, getS3Url, formatTime, convertSymbol } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import TickFbIcon from 'components/svg/TickFbIcon';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
@@ -65,7 +65,7 @@ const ContestWeekRanks = ({
     const [pageSize, setPageSize] = useState(limit);
     const isMobile = width <= 640;
     const limit = isMobile ? 10 : 20;
-    const rank = 'individual_rank_volume';
+    const rank = filter.type === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
     const checked = useRef(false);
     const router = useRouter();
     const timer = useRef();
@@ -74,6 +74,10 @@ const ContestWeekRanks = ({
         setPage(1);
         setPageSize(limit);
     }, [isMobile]);
+
+    useEffect(() => {
+        setQuoteAsset(q);
+    }, [q]);
 
     useEffect(() => {
         clearTimeout(timer.current);
@@ -93,7 +97,7 @@ const ContestWeekRanks = ({
         try {
             const { data: originalData, status } = await fetchApi({
                 url: filter.type === 'volume' ? API_CONTEST_GET_RANK_WEEKLY_VOLUME : API_CONTEST_GET_RANK_WEEKLY_PNL,
-                params: { contestId: contest_id, quoteAsset, weekId: filter.weekly + 1 }
+                params: { contestId: contest_id, quoteAsset: convertSymbol(quoteAsset), weekId: filter.weekly + 1 }
             });
             const data = originalData?.users;
             setTotal(data.length);
@@ -123,6 +127,7 @@ const ContestWeekRanks = ({
             <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
+                        frame={item?.avatar_frame}
                         className="rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
                         src={item?.avatar}
                         width="32"
@@ -251,8 +256,8 @@ const ContestWeekRanks = ({
                             <CardNao key={index} className="!p-4 sm:!p-5">
                                 <div className="flex items-center justify-between gap-2">
                                     <div className="flex items-center space-x-4">
-                                        <div className="min-w-[4rem] min-h-[4rem] max-w-[4rem] max-h-[4rem] rounded-[50%] p-1 border-[1.5px] border-teal flex items-center">
-                                            <ImageNao className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
+                                        <div className="min-w-[4rem] min-h-[4rem] rounded-[50%] p-1 ring-[1.5px] ring-teal flex items-center justify-center">
+                                            <ImageNao frame={item?.avatar_frame} className="object-cover w-14 h-14 rounded-full" src={item?.avatar} alt="" />
                                         </div>
                                         <div className="sm:space-y-[2px] flex flex-col" style={{ wordBreak: 'break-word' }}>
                                             <div className="flex items-center gap-2 text-lg font-semibold capitalize">
@@ -307,6 +312,7 @@ const ContestWeekRanks = ({
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center space-x-3">
                                                 <ImageNao
+                                                    frame={item?.avatar_frame}
                                                     className="rounded-[50%] object-cover w-9 h-9 flex-shrink-0"
                                                     src={item?.avatar}
                                                     width="36"

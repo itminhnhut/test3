@@ -149,7 +149,7 @@ const Contents = ({ detail, wallet, isDark }) => {
                                         data-text-read-more={t('nft:collection:read_more')}
                                         data-text-dots={isDots ? '...' : ''}
                                         className={classNames(
-                                            'dark:bg-dark-4 bg-dark-13 cursor-pointer font-semibold text-sm ml-1 dark:after:text-green-2 after:text-green-3',
+                                            'dark:bg-dark-4 bg-dark-13 cursor-pointer font-semibold text-sm pl-1 dark:after:text-green-2 after:text-green-3',
                                             'relative bottom-[0] right-[0] leading-[1.2em]',
                                             { '!absolute': isDots }
                                         )}

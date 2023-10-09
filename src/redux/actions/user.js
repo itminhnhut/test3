@@ -30,7 +30,8 @@ import {
     API_USER_REFERRAL,
     API_WITHDRAW_ONCHAIN,
     API_GET_VIP,
-    API_EARN_WALLET
+    API_EARN_WALLET,
+    API_GET_COUNTRY
 } from './apis';
 import Axios from 'axios';
 import { SET_THEME, SET_USER } from './types';
@@ -1163,3 +1164,17 @@ export function getBalance(type, walletType) {
         } catch (e) {}
     };
 }
+
+export const getCountry = () => async (dispatch) => {
+    try {
+        const { status, country_code } = await fetchAPI({
+            url: API_GET_COUNTRY
+        });
+        if (status === ApiStatus.SUCCESS) {
+            dispatch({
+                type: types.SET_IP_COUNTRY,
+                payload: country_code
+            });
+        }
+    } catch (error) {}
+};

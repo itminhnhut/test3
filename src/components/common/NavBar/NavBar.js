@@ -49,6 +49,7 @@ import { useGoogleOneTapLogin } from '@react-oauth/google';
 import FetchApi from 'utils/fetch-api';
 import qs from 'qs';
 import toast from 'utils/toast';
+import AvatarFrame from '../AvatarFrame';
 
 const DailyLuckydraw = dynamic(() => import('components/screens/DailyLuckydraw'));
 // ** Dynamic
@@ -532,7 +533,8 @@ const NavBar = ({
             avatar,
             code,
             kyc_status,
-            partner_type
+            partner_type,
+            avatar_frame
         } = auth;
         const isLocking = kyc_status === KYC_STATUS.LOCKING;
         const isNotVerified = [KYC_STATUS.NO_KYC, KYC_STATUS.REJECT].includes(kyc_status);
@@ -571,25 +573,25 @@ const NavBar = ({
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">
-                                <img
-                                    width={48}
-                                    height={48}
-                                    className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover"
-                                    src={avatar || DefaultAvatar}
-                                    alt="avatar_user"
-                                />
+                                <AvatarFrame frame={avatar_frame}>
+                                    <img
+                                        width={48}
+                                        height={48}
+                                        className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover"
+                                        src={avatar || DefaultAvatar}
+                                        alt="avatar_user"
+                                    />
+                                </AvatarFrame>
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
-                                <div
-                                    className="mal-navbar__dropdown__user__info__username whitespace-normal"> {auth?.name || auth?.email || auth?.code}</div>
+                                <div className="mal-navbar__dropdown__user__info__username whitespace-normal"> {auth?.name || auth?.email || auth?.code}</div>
                                 <div className="text-txtSecondary items-center font-normal flex">
-                                    <TextCopyable text={code}/>
+                                    <TextCopyable text={code} />
                                 </div>
                             </div>
                         </div>
                         {!isNotVerified && (
-                            <TagV2 type={isLocking ? 'failed' : isVerified ? 'success' : 'warning'}
-                                   className="py-2 px-3 text-center !text-sm !ml-4">
+                            <TagV2 type={isLocking ? 'failed' : isVerified ? 'success' : 'warning'} className="py-2 px-3 text-center !text-sm !ml-4">
                                 {isLocking ? t('navbar:temp_locking') : isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
                             </TagV2>
                         )}
@@ -600,32 +602,30 @@ const NavBar = ({
                         </Button>
                     )}
 
-                    <hr className="border-divider dark:border-divider-dark mb-6"/>
+                    <hr className="border-divider dark:border-divider-dark mb-6" />
                     <Link href={PATHS.FEE_STRUCTURES.TRADING}>
                         <div className="flex items-center px-4 justify-between mb-6">
                             <div className="flex items-center ">
-                                <SuccessfulTransactionIcon size={24}/>
+                                <SuccessfulTransactionIcon size={24} />
                                 <div className="text-dominant font-semibold ml-2">
-                                    {state.loadingVipLevel ?
-                                        <PulseLoader size={3} color={colors.teal}/> : `VIP ${state.vipLevel || '0'}`}
+                                    {state.loadingVipLevel ? <PulseLoader size={3} color={colors.teal} /> : `VIP ${state.vipLevel || '0'}`}
                                 </div>
                             </div>
                             <div className="flex items-center space-x-1 ">
                                 <div className=" ">
-                                    {t('navbar:use')} <span
-                                    className="text-dominant uppercase">NAMI</span> - {t('navbar:get_discount')}
+                                    {t('navbar:use')} <span className="text-dominant uppercase">NAMI</span> - {t('navbar:get_discount')}
                                 </div>
                                 <div className=" text-txtPrimary dark:text-txtPrimary-dark">
-                                    <BxChevronDown className="!mr-0" size={24} color="currentColor"/>
+                                    <BxChevronDown className="!mr-0" size={24} color="currentColor" />
                                 </div>
                             </div>
                         </div>
                     </Link>
 
-                    <hr className="border-divider dark:border-divider-dark mb-6"/>
+                    <hr className="border-divider dark:border-divider-dark mb-6" />
                     <div className="mb-6">{items}</div>
 
-                    <hr className="border-divider dark:border-divider-dark mb-6"/>
+                    <hr className="border-divider dark:border-divider-dark mb-6" />
 
                     <Link href={buildLogoutUrl()}>
                         <a className="mal-navbar__dropdown___item rounded-xl justify-between  !text-base">

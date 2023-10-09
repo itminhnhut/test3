@@ -61,14 +61,20 @@ const HomeLightDark = dynamic(() => import('components/screens/Home/HomeLightDar
 // const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), { ssr: false });
 const Index = () => {
     // * Initial State
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation(['home', 'modal']);
+
     const [state, set] = useState({
         showQR: false,
         loadingTrendData: false,
-        marketTrendCurrency: null,
+        marketTrendCurrency: language === LANGUAGE_TAG.VI ? 'VNST' : 'USDT',
         marketWatchData: []
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const futuresConfigs = useSelector((state) => state.futures.pairConfigs);
+    const ipCountry = useSelector((state) => state.user.country);
 
     const setMarketTrendCurrency = useCallback(
         (currencyCode) =>
@@ -79,16 +85,12 @@ const Index = () => {
     );
 
     // * Use Hooks
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation(['home', 'modal']);
     const [currentTheme] = useDarkMode();
     const { width } = useRefWindowSize();
 
     useEffect(() => {
-        setMarketTrendCurrency(language === LANGUAGE_TAG.VI ? 'VNDC' : 'USDT');
-    }, [language]);
+        if (ipCountry) setMarketTrendCurrency(ipCountry === 'VN' ? 'VNST' : 'USDT');
+    }, [ipCountry]);
 
     // * Render Handler
     const renderQrCodeModal = useCallback(() => {

@@ -69,45 +69,51 @@ const AlertModal = forwardRef((props, ref) => {
 
     if (!options.current.title) return null;
     return (
-        <Modal onusMode={true} isVisible={true} onBackdropCb={!options?.current?.noUseOutside ? onCancel : null}
-               modalClassName="z-[99999999999]"
-               containerStyle={{transform: 'translate(-50%,0)', left: '50%'}}
-               onusClassName="!px-9 !pb-10 min-h-[334px] !bottom-[50px] rounded-[16px] !w-[calc(100vw-30px)] m-auto"
+        <Modal
+            onusMode={true}
+            isVisible={true}
+            onBackdropCb={!options?.current?.noUseOutside ? onCancel : null}
+            modalClassName="z-[99999999999]"
+            containerStyle={{ transform: 'translate(-50%,0)', left: '50%' }}
+            onusClassName="!px-9 !pb-10 min-h-[334px] !bottom-[50px] rounded-[16px] !w-[calc(100vw-30px)] m-auto"
         >
             <div className="flex flex-col items-center justify-between">
-                <div className='mb-8'>
-                    <img src={getS3Url(getImage(options.current.type))} width={80} height={80}/>
+                <div className="mb-8">
+                    {options?.current?.customIcon ? (
+                        options?.current?.customIcon
+                    ) : (
+                        <img src={getS3Url(getImage(options.current.type))} width={80} height={80} />
+                    )}
                 </div>
-                <div className='text-lg font-semibold mb-3 leading-6'>
-                    {options.current.title}
-                </div>
-                <div className={classNames('text-center text-txtSecondary dark:text-txtSecondary-dark font-normal leading-[1.375rem]', options?.current?.textClassname )}
-                     dangerouslySetInnerHTML={{__html: options.current.messages}}>
-                </div>
-                {options.current.note && <div className='text-xs text-center mt-[10px] text-yellow-2'>
-                    {options.current.note}
-                </div>
-                }
-                <div className='flex items-center w-full mt-8'>
-                    {!options.current?.hideCloseButton
-                    && <Button
-                        onusMode={true}
-                        title={options.current.closeTitle || t('common:close')}
-                        className={`!h-[3rem] !text-[1rem] !font-semibold`}
-                        componentType="button"
-                        onClick={onCancel}
-                    />
-                    }
-                    {actions.current?.onConfirm &&
-                    <Button
-                        onusMode={true}
-                        title={options.current?.confirmTitle || t('futures:leverage:confirm')}
-                        type="primary"
-                        className={`ml-[7px] !h-[3rem] !text-[1rem] !font-semibold`}
-                        componentType="button"
-                        onClick={onConfirm}
-                    />
-                    }
+                <div className="text-lg font-semibold mb-3 leading-6">{options.current.title}</div>
+                <div
+                    className={classNames(
+                        'text-center text-txtSecondary dark:text-txtSecondary-dark font-normal leading-[1.375rem]',
+                        options?.current?.textClassname
+                    )}
+                    dangerouslySetInnerHTML={{ __html: options.current.messages }}
+                ></div>
+                {options.current.note && <div className="text-xs text-center mt-[10px] text-yellow-2">{options.current.note}</div>}
+                <div className="flex items-center w-full mt-8">
+                    {!options.current?.hideCloseButton && (
+                        <Button
+                            onusMode={true}
+                            title={options.current.closeTitle || t('common:close')}
+                            className={`!h-[3rem] !text-[1rem] !font-semibold`}
+                            componentType="button"
+                            onClick={onCancel}
+                        />
+                    )}
+                    {actions.current?.onConfirm && (
+                        <Button
+                            onusMode={true}
+                            title={options.current?.confirmTitle || t('futures:leverage:confirm')}
+                            type="primary"
+                            className={`ml-[7px] !h-[3rem] !text-[1rem] !font-semibold`}
+                            componentType="button"
+                            onClick={onConfirm}
+                        />
+                    )}
                 </div>
             </div>
         </Modal>

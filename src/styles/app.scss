@@ -1160,7 +1160,7 @@ input:-webkit-autofill {
     border-left-color: transparent !important;
 }
 
-.mySwiper {
+.mySwiper_nft {
     .swiper-slide img {
         display: block !important;
         width: 100% !important;
@@ -1188,4 +1188,12 @@ input:-webkit-autofill {
 
 .max-h-max {
     height: max-content;
+}
+
+.visible-scrollbar {
+    &::-webkit-scrollbar,
+    ::-webkit-scrollbar {
+        width: 4px !important;
+        display: block !important;
+    }
 }

@@ -14,6 +14,7 @@ import { FutureNaoIcon } from 'components/svg/SvgIcon';
 import Image from 'next/image';
 import { isNumber } from 'lodash';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import AvatarFrame from 'components/common/AvatarFrame';
 
 const BannerInfo = ({ user, t, isMobile, typeProduct, setTypeProduct, firstTimeTrade, loadingOverview }) => {
     // Handle for Header tab:
@@ -132,13 +133,15 @@ const BannerInfo = ({ user, t, isMobile, typeProduct, setTypeProduct, firstTimeT
                                 {/* <div className="w-[104px] h-[104px] md:w-[120px] md:h-[120px] relative"> */}
                                 {user?.avatar ? (
                                     <div className="flex relative items-center">
-                                        <Image
-                                            width="120"
-                                            height="120"
-                                            objectFit="fill"
-                                            className="rounded-full"
-                                            src={user?.avatar || '/images/default_avatar.png'}
-                                        />
+                                        <AvatarFrame className="w-[7.5rem] h-[7.5rem]" frame={user?.avatar_frame}>
+                                            <Image
+                                                width="120"
+                                                height="120"
+                                                objectFit="fill"
+                                                className="rounded-full"
+                                                src={user?.avatar || '/images/default_avatar.png'}
+                                            />
+                                        </AvatarFrame>
                                         {/* <img src={user?.avatar || '/images/default_avatar.png'} className="h-full w-20 h-20 rounded-full object-fit" /> */}
                                     </div>
                                 ) : (
