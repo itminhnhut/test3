@@ -14,6 +14,7 @@ import Tooltip from 'components/common/Tooltip';
 import classNames from 'classnames';
 import ChevronDown from 'components/svg/ChevronDown';
 import PopoverV2 from 'components/common/V2/PopoverV2';
+import orderBy from 'lodash/orderBy';
 
 const sortDescending = (arr, key, isString) => {
     if (isString) return arr.sort((a, b) => b[key].localeCompare(a[key]));
@@ -34,6 +35,7 @@ const FILTER_OPTS = [
         placeholder: 'futures:funding_history_tab:opt_default_place',
         index: 0,
         keySort: 'symbol',
+        direction: '',
         sort: (arr, key) => arr
     },
     {
@@ -41,6 +43,7 @@ const FILTER_OPTS = [
         placeholder: 'futures:funding_history_tab:opt_contract_a_z_place',
         index: 1,
         keySort: 'symbol',
+        direction: 'asc',
         sort: (data, key) => {
             return sortAscending(data, key, true);
         }
@@ -50,6 +53,7 @@ const FILTER_OPTS = [
         placeholder: 'futures:funding_history_tab:opt_contract_z_a_place',
         index: 2,
         keySort: 'symbol',
+        direction: 'desc',
         sort: (data, key) => {
             return sortDescending(data, key, true);
         }
@@ -58,7 +62,8 @@ const FILTER_OPTS = [
         label: 'futures:funding_history_tab:opt_rate_inc',
         placeholder: 'futures:funding_history_tab:opt_rate_inc_place',
         index: 3,
-        keySort: 'fundingRate',
+        keySort: 'funding_rate',
+        direction: 'asc',
         sort: (data, key) => {
             return sortAscending(data, key);
         }
@@ -67,7 +72,8 @@ const FILTER_OPTS = [
         label: 'futures:funding_history_tab:opt_rate_desc',
         placeholder: 'futures:funding_history_tab:opt_rate_desc_place',
         index: 4,
-        keySort: 'fundingRate',
+        keySort: 'funding_rate',
+        direction: 'desc',
         sort: (data, key) => {
             return sortDescending(data, key);
         }
@@ -85,7 +91,7 @@ export default function FundingHistory({ currency, active }) {
     const [dataTable, setDataTable] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [strSearch, setStrSearch] = useState('');
-    const [selectedFilter, setSelectedFilter] = useState(FILTER_OPTS[0]);
+    const [sort, setSort] = useState({ field: 'symbol', direction: '' });
 
     useEffect(() => {
         FetchApi({
@@ -124,10 +130,10 @@ export default function FundingHistory({ currency, active }) {
                         key: data?.b,
                         fundingRate: +formatNumber(data?.r * 100, 0, 4, true),
                         fundingTime: data?.ft,
-                        sellFundingRate: formatFundingRateV2(data?.sr ?? 0),
-                        totalSellVolume: formatCurrency(data?.sv ?? 0),
-                        buyFundingRate: formatFundingRateV2(data?.br ?? 0),
-                        totalBuyVolume: formatCurrency(data?.bv ?? 0),
+                        sellFundingRate: data?.sr ?? 0,
+                        totalSellVolume: data?.sv ?? 0,
+                        buyFundingRate: data?.br ?? 0,
+                        totalBuyVolume: data?.bv ?? 0,
                         [RETABLE_SORTBY]: {
                             asset: data?.b,
                             fundingRate: +formatNumber(data?.r * 100, 0, 4, true)
@@ -136,7 +142,7 @@ export default function FundingHistory({ currency, active }) {
                 ];
             } else return pre;
         }, []);
-        setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
+        setDataTable(res);
     };
 
     const timer = useRef(null);
@@ -163,15 +169,30 @@ export default function FundingHistory({ currency, active }) {
             setCurrentPage(1);
             generateDataTable();
         }
-    }, [currency, selectedFilter]);
+    }, [currency, sort]);
 
     const dataFilter = useMemo(() => {
+        const _dataTable = [...dataTable];
         if (strSearch) {
             setCurrentPage(1);
-            return dataTable.filter((item) => item?.symbol.toLowerCase().includes(strSearch.toLowerCase()));
+            return _dataTable.filter((item) => item?.symbol.toLowerCase().includes(strSearch.toLowerCase()));
         }
-        return dataTable;
-    }, [dataTable, strSearch, currentPage]);
+        switch (sort.field) {
+            case 'volume':
+            case 'funding_rate':
+                const buyField = sort.field === 'funding_rate' ? 'buyFundingRate' : 'totalBuyVolume';
+                const sellField = sort.field === 'funding_rate' ? 'sellFundingRate' : 'totalSellVolume';
+                const dataSort = _dataTable.sort((obj1, obj2) => {
+                    const A = Math.max(Math.abs(obj1?.[buyField]), Math.abs(obj1?.[sellField]));
+                    const B = Math.max(Math.abs(obj2?.[buyField]), Math.abs(obj2?.[sellField]));
+                    if (sort.direction === 'asc') return A - B;
+                    return B - A;
+                });
+                return dataSort;
+            default:
+                return orderBy(_dataTable, [sort.field], [sort.direction]);
+        }
+    }, [dataTable, strSearch, currentPage, sort]);
 
     const columns = useMemo(() => {
         return [
@@ -194,26 +215,28 @@ export default function FundingHistory({ currency, active }) {
                 render: (data, item) => (data ? <Countdown date={data} onEnded={generateDataTable} /> : '00:00:00')
             },
             {
-                key: 'fundingTime',
-                dataIndex: 'vol',
+                key: 'volume',
+                dataIndex: 'volume',
                 title: `${t('common:volume')} (Long/Short)`,
                 align: 'right',
                 width: '30%',
-                preventSort: true,
-                render: (data, item) => <span>{`${item?.totalBuyVolume} / ${item?.totalSellVolume}`}</span>
+                render: (data, item) => <span>{`${formatCurrency(item?.totalBuyVolume)} / ${formatCurrency(item?.totalSellVolume)}`}</span>
             },
             {
-                key: 'fundingTime',
-                dataIndex: 'rate',
+                key: 'funding_rate',
+                dataIndex: 'funding_rate',
                 title: `${t('futures:funding_history_tab:funding_rate')} (Long/Short)`,
                 align: 'right',
                 width: '30%',
-                preventSort: true,
-                render: (data, item) => <span>{`${item?.buyFundingRate} / ${item?.sellFundingRate}`}</span>
+                render: (data, item) => <span>{`${formatFundingRateV2(item?.buyFundingRate)} / ${formatFundingRateV2(item?.sellFundingRate)}`}</span>
             }
         ];
     }, [dataTable, currency, currentPage]);
-    
+
+    const customSort = (asc, field) => {
+        setSort({ field, direction: asc ? 'asc' : 'desc' });
+    };
+
     return (
         <div className={classNames('mt-2 sm:mt-12 sm:border border-divider dark:border-divider-dark rounded-xl', { hidden: !active })}>
             <Tooltip id={'funding'} place="top" effect="solid" isV3 className="max-w-[300px]" />
@@ -242,14 +265,14 @@ export default function FundingHistory({ currency, active }) {
                         customWrapperStyle={{ minWidth: isMobile ? 0 : 368 }}
                         handleFilterAssetsList={setStrSearch}
                     />
-                    {isMobile && <FilterTable selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />}
+                    {isMobile && <FilterTable sort={sort} setSort={setSort} />}
                 </div>
             </div>
             {isMobile ? (
                 <ListFundingMobile dataTable={dataFilter} currency={currency} loading={isLoading} isSearch={strSearch} />
             ) : (
                 <TableV2
-                    defaultSort={{ key: 'symbol', direction: 'desc' }}
+                    cbSort={customSort}
                     useRowHover
                     sort={!isMobile}
                     data={dataFilter}
@@ -268,21 +291,22 @@ export default function FundingHistory({ currency, active }) {
     );
 }
 
-const FilterTable = ({ selectedFilter, setSelectedFilter }) => {
+const FilterTable = ({ sort, setSort }) => {
     const { t } = useTranslation();
     const popover = useRef(null);
 
     const handleChangeFilter = (item) => {
-        if (setSelectedFilter) setSelectedFilter(item);
+        if (setSort) setSort({ field: item.keySort, direction: item.direction });
         popover.current?.close();
     };
 
+    const rowData = FILTER_OPTS.find((rs) => rs.keySort === sort.field && rs.direction === sort.direction);
     return (
         <PopoverV2
             ref={popover}
             label={
                 <div className="h-11 px-4 py-3 bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between space-x-2 w-[150px]">
-                    <p className="text-sm truncate">{t(selectedFilter.label)}</p>
+                    <p className="text-sm truncate">{t(rowData?.label)}</p>
                     <ChevronDown size={16} />
                 </div>
             }
@@ -297,12 +321,11 @@ const FilterTable = ({ selectedFilter, setSelectedFilter }) => {
                                 key={index}
                                 onClick={() => {
                                     handleChangeFilter(item);
-                                    close();
                                 }}
                                 className={classNames(
                                     'cursor-pointer px-4 py-2 text-txtSecondary dark:text-txtSecondary-dark hover:bg-hover dark:hover:bg-hover-dark',
                                     {
-                                        '!text-txtPrimary dark:!text-white': selectedFilter.index === index
+                                        '!text-txtPrimary dark:!text-white': rowData.index === index
                                     }
                                 )}
                             >
