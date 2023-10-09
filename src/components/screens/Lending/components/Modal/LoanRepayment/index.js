@@ -9,7 +9,6 @@ import { useSelector, useDispatch } from 'react-redux';
 
 //** components
 import ModalV2 from 'components/common/V2/ModalV2';
-import InputSlider from 'components/trade/InputSlider';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 // ** svg
@@ -132,7 +131,8 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             collateralCoinConfig,
             collateralPriceToLoanCoin,
             repayAmount,
-            collateralAmountReceive
+            collateralAmountReceive,
+            repayType: state.tab
         }),
         [
             initialLTV,
@@ -144,7 +144,8 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             collateralCoinConfig?.assetCode,
             collateralPriceToLoanCoin,
             repayAmount,
-            collateralAmountReceive
+            collateralAmountReceive,
+            state.tab
         ]
     );
 
