@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import colors from 'styles/colors';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
+import Funding from './Funding';
 
 const getPairPrice = createSelector(
     [
@@ -22,58 +23,63 @@ const getPairPrice = createSelector(
 
 const ITEMS_WITH_TOOLTIPS = [
     {
-        title: 'funding_countdown',
-        tooltip: 'funding_rate_tooltip',
+        title: 'funding',
+        tooltip: 'futures:funding_rate_des',
+        leftPercent: 40
+    },
+    {
+        title: 'countdown',
+        tooltip: 'common:countdown_tooltip',
         leftPercent: 40
     },
     {
         title: 'min_order_size',
-        tooltip: 'min_order_size_tooltips',
+        tooltip: 'futures:min_order_size_tooltips',
         leftPercent: 40
     },
     {
         title: 'max_order_size_limit',
-        tooltip: 'max_order_size_limit_tooltip',
+        tooltip: 'futures:max_order_size_limit_tooltip',
         leftPercent: 40
     },
     {
         title: 'max_order_size_market',
-        tooltip: 'max_order_size_market_tooltip',
+        tooltip: 'futures:max_order_size_market_tooltip',
         leftPercent: 60
     },
     {
         title: 'total_max_trading_volumn',
-        tooltip: 'total_max_trading_volumn_tooltips',
+        tooltip: 'futures:total_max_trading_volumn_tooltips',
         leftPercent: 70
     },
     {
         title: 'max_number_order',
-        tooltip: 'max_number_order_tooltips',
+        tooltip: 'futures:max_number_order_tooltips',
         leftPercent: 70
     },
     {
         title: 'min_limit_order_price',
-        tooltip: 'min_limit_order_price_tooltips',
+        tooltip: 'futures:min_limit_order_price_tooltips',
         leftPercent: 40
     },
     {
         title: 'max_limit_order_price',
-        tooltip: 'max_limit_order_price_tooltips',
+        tooltip: 'futures:max_limit_order_price_tooltips',
         leftPercent: 40
     },
     {
         title: 'max_leverage',
-        tooltip: 'max_leverage_tooltips',
+        tooltip: 'futures:max_leverage_tooltips',
         leftPercent: 30
     },
     {
         title: 'liq_fee_rate',
-        tooltip: 'liq_fee_rate_tooltips',
+        tooltip: 'futures:liq_fee_rate_tooltips',
         leftPercent: 41
     },
     {
         title: 'min_difference_ratio',
-        tooltip: 'min_difference_ratio_tooltip',
+        tooltip: 'futures:min_difference_ratio_tooltip',
         leftPercent: 41
     },
     // {
@@ -199,21 +205,17 @@ export default function OrderInformation({ pair }) {
                     '%'
                 );
             }
-            case 'funding_countdown': {
-                return <div>
-                    <span>{formatFundingRate(_pairPrice?.fundingRate * 100)}</span> /
-                    <Countdown
-                        now={() => timesync ? timesync.now() : Date.now()}
-                        date={_pairPrice?.fundingTime} renderer={({ hours, minutes, seconds }) => {
-                            return <span>{hours}:{minutes}:{seconds}</span>
-                        }} />
-                </div>;
-            }
             case 'max_order_size_limit': {
                 return formatNumber(currentExchangeConfig?.quantityFilter?.maxQuoteQty, decimal)
             }
             case 'max_order_size_market': {
                 return formatNumber(currentExchangeConfig?.quantityFilterMarket?.maxQuoteQty, decimal)
+            }
+            case 'funding': {
+                return <Funding pairPrice={_pairPrice} symbol={pair} />
+            }
+            case 'countdown': {
+                return <Funding.Countdown pairPrice={_pairPrice} symbol={pair} />
             }
             default:
                 return '-';
@@ -243,83 +245,29 @@ export default function OrderInformation({ pair }) {
                         })}
                     >
                         <div className="py-[13px] flex w-full">
-                            {title === 'funding_countdown' ?
-                                <>
-                                    <Tooltip id={'funding_countdown'} place="bottom" effect="solid"
-                                        className={`!mx-7 !px-3 !py-5 w-[calc(100%-3.5rem)] !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg after:!left-10`}
-                                        overridePosition={(e) => ({
-                                            left: 0,
-                                            top: e.top
-                                        })}
-                                        arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
-                                    >
-                                        <div>
-                                            <label
-                                                className="font-medium text-white dark:text-txtPrimary-dark text-sm leading-[18px]">Funding</label>
-                                            <div
-                                                className="mt-3 text-3 font-normal text-white dark:text-txtPrimary-dark leading-[18px]">{t('futures:funding_rate_des')}</div>
-                                        </div>
-                                    </Tooltip>
-                                    <Tooltip id={'countdown-tooltip'} place="bottom" effect="solid"
-                                        className={`!mx-7 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 max-w-[300px] !opacity-100 !rounded-lg`}
-                                        overridePosition={(e) => ({
-                                            left: e.left - 50,
-                                            top: e.top
-                                        })}
-                                        arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
-                                    >
-                                        <div>
-                                            <label
-                                                className="font-medium text-white dark:text-txtPrimary-dark text-sm leading-[18px]">{t('futures:countdown')}</label>
-                                            <div
-                                                className="mt-3 text-3 font-normal text-white dark:text-txtPrimary-dark leading-[18px]">{t('common:countdown_tooltip')}</div>
-                                        </div>
-                                    </Tooltip>
-                                </>
-                                :
-                                <Tooltip id={title} place="top" effect="solid"
-                                    className={`!mx-7 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg`}
-                                    overridePosition={(e) => ({
-                                        left: 0,
-                                        top: e.top
-                                    })}
-                                    arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
-                                >
-                                    <div>
-                                        <label
-                                            className="font-medium text-white dark:text-txtPrimary-dark text-sm leading-[18px]">{t('futures:' + title)}</label>
-                                        <div
-                                            className="mt-3 text-3 font-normal text-white dark:text-txtPrimary-dark leading-[18px]">{t('futures:' + tooltip)}</div>
-                                    </div>
-                                </Tooltip>
-                            }
+                            <Tooltip id={title} place="top" effect="solid"
+                                className={`!mx-7 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg`}
+                                overridePosition={(e) => ({
+                                    left: 0,
+                                    top: e.top
+                                })}
+                                arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
+                            >
+                                <div>
+                                    <label
+                                        className="font-medium text-white dark:text-txtPrimary-dark text-sm leading-[18px]">{t('futures:' + title)}</label>
+                                    <div
+                                        className="mt-3 text-3 font-normal text-white dark:text-txtPrimary-dark leading-[18px]">{t(tooltip)}</div>
+                                </div>
+                            </Tooltip>
                             <Row>
-                                {title === 'funding_countdown' ? <>
-                                    <div className="flex items-center space-x-1">
-                                        <Label className=""> Funding
-                                            <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
-                                                <QuestionMarkIcon color="currentColor" size={14} />
-                                            </div>
-                                        </Label>
-                                        <span className="text-gray-1 dark:text-txtSecondary-dark">/</span>
-                                        <Label className="">{t('futures:countdown')}
-                                            <div className="flex px-2" data-tip="" data-for={'countdown-tooltip'} >
-                                                <QuestionMarkIcon color="currentColor" size={14} />
-                                            </div>
-                                        </Label>
+                                <Label className="">
+                                    {t('futures:' + title)}
+                                    <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
+                                        <QuestionMarkIcon color="currentColor" size={14} />
                                     </div>
-                                    <Span className="">{renderContent(title)}</Span>
-                                </> :
-                                    <>
-                                        <Label className="">
-                                            {t('futures:' + title)}
-                                            <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
-                                                <QuestionMarkIcon color="currentColor" size={14} />
-                                            </div>
-                                        </Label>
-                                        <Span className="">{renderContent(title)}</Span>
-                                    </>}
-
+                                </Label>
+                                <Span className="">{renderContent(title)}</Span>
                             </Row>
                         </div>
                         <div className="divide-y border-divider dark:border-divider-dark"></div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { formatNumber } from 'redux/actions/utils';
+import { convertSymbol, formatFundingRateV2 } from 'redux/actions/utils';
 import { getMarketWatch } from 'redux/selectors';
 import Countdown from 'react-countdown-now';
 import { PublicSocketEvent } from 'redux/actions/const';
@@ -9,21 +9,26 @@ import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import Tooltip from 'components/common/Tooltip';
 import { useTranslation } from 'next-i18next';
 
-const Funding = ({ pairPrice, symbol, className = '' }) => {
-    const ticker = pairPrice ? pairPrice : useSelector((state) => getMarketWatch(state, symbol));
-    // if (ticker?.buyFundingRate) return '-/-';
+const Funding = ({ pairPrice, symbol, className = '', buyClassName = '', sellClassName = '' }) => {
+    const ticker = pairPrice ? pairPrice : useSelector((state) => getMarketWatch(state, convertSymbol(symbol)));
+    const publicSocket = useSelector((state) => state.socket.publicSocket);
 
-    const formatFunding = (value) => {
-        return `${formatNumber(value * 100, 4, 0, true)}%`;
-    };
+    useEffect(() => {
+        if (!symbol || ticker) return;
+        const _symbol = convertSymbol(symbol);
+        publicSocket.emit('subscribe:futures:ticker', _symbol);
+    }, [publicSocket, symbol]);
+
     return (
-        <div className={className}>
-            {formatFunding(ticker?.buyFundingRate)} / {formatFunding(ticker?.sellFundingRate)}
+        <div className={`flex items-center space-x-1 ${className}`}>
+            <span className={buyClassName}>{formatFundingRateV2(ticker?.buyFundingRate)}</span>
+            <span>/</span>
+            <span className={sellClassName}>{formatFundingRateV2(ticker?.sellFundingRate)}</span>
         </div>
     );
 };
 
-const FundingCountdown = ({ pairPrice, symbol, tooltip }) => {
+const FundingCountdown = ({ pairPrice, symbol, tooltip, className = '' }) => {
     const { t } = useTranslation();
     const timesync = useSelector((state) => state.utils.timesync);
     const [ticker, setTicker] = useState(pairPrice);
@@ -55,7 +60,7 @@ const FundingCountdown = ({ pairPrice, symbol, tooltip }) => {
                 date={ticker?.fundingTime}
                 renderer={({ hours, minutes, seconds }) => {
                     return (
-                        <span>
+                        <span className={className}>
                             {hours}:{minutes}:{seconds}
                         </span>
                     );

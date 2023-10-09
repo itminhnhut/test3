@@ -1143,6 +1143,10 @@ export const formatFundingRate = (value) => {
     return (value ? (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true) : 0) + '%';
 };
 
+export const formatFundingRateV2 = (value) => {
+    return `${formatNumber(value * 100, 4, 0, true)}%`;
+};
+
 export function checkLargeVolume(notional, isVndc = true) {
     if (isVndc) {
         return notional >= 600e6;

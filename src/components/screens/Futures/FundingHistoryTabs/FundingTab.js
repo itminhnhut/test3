@@ -3,7 +3,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { convertSymbol, formatCurrency, formatNumber } from 'redux/actions/utils';
+import { convertSymbol, formatCurrency, formatFundingRateV2, formatNumber } from 'redux/actions/utils';
 import { RETABLE_SORTBY } from 'components/common/ReTable';
 import { Countdown } from 'redux/actions/utils';
 import FetchApi from 'utils/fetch-api';
@@ -124,9 +124,9 @@ export default function FundingHistory({ currency, active }) {
                         key: data?.b,
                         fundingRate: +formatNumber(data?.r * 100, 0, 4, true),
                         fundingTime: data?.ft,
-                        sellFundingRate: formatFunding(data?.sr ?? 0),
+                        sellFundingRate: formatFundingRateV2(data?.sr ?? 0),
                         totalSellVolume: formatCurrency(data?.sv ?? 0),
-                        buyFundingRate: formatFunding(data?.br ?? 0),
+                        buyFundingRate: formatFundingRateV2(data?.br ?? 0),
                         totalBuyVolume: formatCurrency(data?.bv ?? 0),
                         [RETABLE_SORTBY]: {
                             asset: data?.b,
@@ -173,11 +173,6 @@ export default function FundingHistory({ currency, active }) {
         return dataTable;
     }, [dataTable, strSearch, currentPage]);
 
-
-    const formatFunding = (value) => {
-        return `${formatNumber(value * 100, 4, 0, true)}%`;
-    };
-
     const columns = useMemo(() => {
         return [
             {
@@ -202,20 +197,18 @@ export default function FundingHistory({ currency, active }) {
                 key: 'fundingTime',
                 dataIndex: 'vol',
                 title: `${t('common:volume')} (Long/Short)`,
-                align: 'left',
+                align: 'right',
                 width: '30%',
                 preventSort: true,
-                fixed: width >= 992 ? 'none' : 'left',
                 render: (data, item) => <span>{`${item?.totalBuyVolume} / ${item?.totalSellVolume}`}</span>
             },
             {
                 key: 'fundingTime',
                 dataIndex: 'rate',
                 title: `${t('futures:funding_history_tab:funding_rate')} (Long/Short)`,
-                align: 'left',
+                align: 'right',
                 width: '30%',
                 preventSort: true,
-                fixed: width >= 992 ? 'none' : 'left',
                 render: (data, item) => <span>{`${item?.buyFundingRate} / ${item?.sellFundingRate}`}</span>
             }
         ];

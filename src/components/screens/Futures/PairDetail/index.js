@@ -476,25 +476,25 @@ const ModalPerpetual = ({ isShowModalInfo, onBackdropCb, t, symbol, pairListMode
 
     const renderFundingFee = useCallback(() => {
         return (
-            <div>
-                <div className="flex items-center space-x-1 text-base text-txtSecondary dark:text-txtSecondary-dark">
-                    <div onClick={onClickFunding} className="cursor-pointer border-b border-darkBlue-5 border-dashed pb-0.5">
-                        <span>Funding / {t('futures:countdown')}</span>
+            <div className="flex items-center space-x-9 ">
+                <div className="">
+                    <div
+                        onClick={onClickFunding}
+                        className="border-b border-darkBlue-5 border-dashed text-txtSecondary dark:text-txtSecondary-dark mb-2 w-max cursor-pointer"
+                    >
+                        Funding
                     </div>
+                    <Funding pairPrice={pairPrice} symbol={symbol} className="font-semibold" />
                 </div>
-                <div className="text-base font-semibold mt-2">
-                    <span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> /
-                    <Countdown
-                        now={() => (timesync ? timesync.now() : Date.now())}
-                        date={pairPrice?.fundingTime}
-                        renderer={({ hours, minutes, seconds }) => {
-                            return (
-                                <span>
-                                    {hours}:{minutes}:{seconds}
-                                </span>
-                            );
-                        }}
-                    />
+                <div className="">
+                    <div
+                        data-tip={''}
+                        data-for={`funding_countdown_${symbol}`}
+                        className="border-b border-darkBlue-5 border-dashed text-txtSecondary dark:text-txtSecondary-dark mb-2"
+                    >
+                        {t('futures:countdown')}
+                    </div>
+                    <Funding.Countdown pairPrice={pairPrice} symbol={symbol} tooltip className="font-semibold" />
                 </div>
             </div>
         );
@@ -625,7 +625,7 @@ const ModalPerpetual = ({ isShowModalInfo, onBackdropCb, t, symbol, pairListMode
                     </div>
                 </div>
                 {/* Funding fee */}
-                <div className="max-w-[216px] min-w-[216px] rounded-md py-4 px-3 border border-dashed dark:border-divider-dark">{renderFundingFee()}</div>
+                <div className="w-full rounded-md py-4 px-3 border border-dashed dark:border-divider-dark">{renderFundingFee()}</div>
             </div>
 
             <div className="mt-8 flex w-full">
