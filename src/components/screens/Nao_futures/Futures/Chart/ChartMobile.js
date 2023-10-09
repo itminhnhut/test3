@@ -40,9 +40,9 @@ const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, fo
         if (fullChart) return { height: '100vw' };
         if (typeof window !== 'undefined') {
             const vh = window.innerHeight * 0.01;
-            return { height: !isFullScreen ? 400 : `calc(100% - 240px)` };
+            return { height: !isFullScreen ? 400 : `calc(100% - 288px)` };
         } else {
-            return { height: `calc(100% - 240px)` };
+            return { height: `calc(100% - 288px)` };
         }
     }, [isFullScreen, typeof window, fullChart]);
 
@@ -63,7 +63,11 @@ const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, fo
     }, [fullChart]);
 
     return (
-        <div id="chart-mobile" className={`spot-chart ${!fullChart ? 'max-w-full h-full' : '!z-30'}`} style={style}>
+        <div
+            id="chart-mobile"
+            className={`spot-chart border-b border-divider dark:border-divider-dark ${!fullChart ? 'max-w-full h-full' : '!z-30'}`}
+            style={style}
+        >
             <MobileTradingView
                 refChart={(ref) => (refChart.current = ref)}
                 t={t}

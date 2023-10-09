@@ -37,8 +37,16 @@ export default function ListFundingMobile({ dataTable, currency, loading, isSear
                             </p>
                         </div>
                         <div className="flex justify-between w-full">
-                            <p className="text-sm text-txtTabInactive dark:text-txtTabInactive-dark">{t('futures:funding_history_tab:funding_rate')}</p>
-                            <p className="text-sm text-txtPrimary dark:text-txtPrimary-dark">{item?.isSkeleton ? item.fundingTime : `${item.fundingRate}%`}</p>
+                            <p className="text-sm text-txtTabInactive dark:text-txtTabInactive-dark">{`${t('common:volume')} (Long/Short)`}</p>
+                            <p className="text-sm text-txtPrimary dark:text-txtPrimary-dark">
+                                {item?.isSkeleton ? item.fundingTime : `${item?.totalBuyVolume} / ${item?.totalSellVolume}`}
+                            </p>
+                        </div>
+                        <div className="flex justify-between w-full">
+                            <p className="text-sm text-txtTabInactive dark:text-txtTabInactive-dark">{`${t('futures:funding_history_tab:funding_rate')} (Long/Short)`}</p>
+                            <p className="text-sm text-txtPrimary dark:text-txtPrimary-dark">
+                                {item?.isSkeleton ? item.fundingTime : `${item?.buyFundingRate} / ${item?.sellFundingRate}`}
+                            </p>
                         </div>
                     </div>
                 </div>

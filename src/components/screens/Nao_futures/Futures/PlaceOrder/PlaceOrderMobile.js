@@ -25,6 +25,7 @@ import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum, PublicSocketEve
 import EditSLTPVndcMobile from 'components/screens/Nao_futures/Futures/EditSLTPVndcMobile';
 import Emitter from 'redux/actions/emitter';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
+import OrderFunding from './OrderFunding';
 
 const getPairPrice = createSelector([(state) => state.futures, (state, pair) => pair], (futures, pair) => futures.marketWatch[pair]);
 
@@ -494,18 +495,22 @@ const PlaceOrder = ({ decimals, side, setSide, pair, isAuth, availableAsset, pai
                 )}
                 <div className={collapse ? 'hidden' : 'w-full flex flex-wrap justify-between'}>
                     <OrderInput>
-                        <div className="flex flex-row justify-between">
-                            <OrderTypeMobile type={type} setType={setType} orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures} />
-
-                            <OrderLeverage
-                                leverage={leverage} setLeverage={setLeverage}
-                                isAuth={isAuth} pair={pair}
-                                pairConfig={pairConfig}
-                                inputValidator={inputValidator}
-                                context={context}
-                                getLeverage={getLeverage}
-                            />
-                        </div>
+                        <OrderLeverage
+                            leverage={leverage}
+                            setLeverage={setLeverage}
+                            isAuth={isAuth}
+                            pair={pair}
+                            pairConfig={pairConfig}
+                            inputValidator={inputValidator}
+                            context={context}
+                            getLeverage={getLeverage}
+                        />
+                    </OrderInput>
+                    <OrderInput>
+                        <OrderFunding symbol={pair} />
+                    </OrderInput>
+                    <OrderInput>
+                        <OrderTypeMobile type={type} setType={setType} orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures} />
                     </OrderInput>
                     {!collapse && (
                         <OrderInput>

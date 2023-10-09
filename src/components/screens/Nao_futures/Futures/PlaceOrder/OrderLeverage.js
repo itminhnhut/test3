@@ -5,6 +5,7 @@ import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
 import axios from 'axios';
 import { ApiStatus } from 'redux/actions/const';
 import classnames from 'classnames';
+import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
 
 const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, context, getLeverage, inputValidator }) => {
     const { t } = useTranslation();
@@ -45,12 +46,12 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
             <div
                 onClick={() => setOpenModal(true)}
                 data-tut="order-leverage"
-                className={classnames(
-                    'flex items-center justify-center h-[32px] w-12 text-txtPrimary dark:text-txtPrimary-dark border-divider dark:border-gray-4 leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px] font-medium',
-                    { '!border-red-2': !inputValidator('leverage').isValid }
-                )}
+                className={classnames('w-full h-9 px-3 rounded-md bg-gray-12 dark:bg-dark-2 text-xs font-semibold flex items-center justify-between', {
+                    'border-[1px] !border-red-2': !inputValidator('leverage').isValid
+                })}
             >
-                {leverage}x
+                <span>{leverage}x</span>
+                <ArrowDropDownIcon size={20} color="currentColor" activeColor="currentColor" className="text-gray-1 dark:text-gray-7" />
             </div>
             {openModal && (
                 <FuturesLeverageSettings

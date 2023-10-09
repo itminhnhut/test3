@@ -3,7 +3,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { convertSymbol, formatNumber } from 'redux/actions/utils';
+import { convertSymbol, formatCurrency, formatNumber } from 'redux/actions/utils';
 import { RETABLE_SORTBY } from 'components/common/ReTable';
 import { Countdown } from 'redux/actions/utils';
 import FetchApi from 'utils/fetch-api';
@@ -124,6 +124,10 @@ export default function FundingHistory({ currency, active }) {
                         key: data?.b,
                         fundingRate: +formatNumber(data?.r * 100, 0, 4, true),
                         fundingTime: data?.ft,
+                        sellFundingRate: formatFunding(data?.sr ?? 0),
+                        totalSellVolume: formatCurrency(data?.sv ?? 0),
+                        buyFundingRate: formatFunding(data?.br ?? 0),
+                        totalBuyVolume: formatCurrency(data?.bv ?? 0),
                         [RETABLE_SORTBY]: {
                             asset: data?.b,
                             fundingRate: +formatNumber(data?.r * 100, 0, 4, true)
@@ -169,6 +173,11 @@ export default function FundingHistory({ currency, active }) {
         return dataTable;
     }, [dataTable, strSearch, currentPage]);
 
+
+    const formatFunding = (value) => {
+        return `${formatNumber(value * 100, 4, 0, true)}%`;
+    };
+
     const columns = useMemo(() => {
         return [
             {
@@ -190,17 +199,28 @@ export default function FundingHistory({ currency, active }) {
                 render: (data, item) => (data ? <Countdown date={data} onEnded={generateDataTable} /> : '00:00:00')
             },
             {
-                key: 'fundingRate',
-                dataIndex: 'fundingRate',
-                title: t('futures:funding_history_tab:funding_rate'),
-                align: 'right',
-                width: '20%',
+                key: 'fundingTime',
+                dataIndex: 'vol',
+                title: `${t('common:volume')} (Long/Short)`,
+                align: 'left',
+                width: '30%',
+                preventSort: true,
                 fixed: width >= 992 ? 'none' : 'left',
-                render: (data, item) => (!item?.isSkeleton ? data + '%' : item?.fundingRate)
+                render: (data, item) => <span>{`${item?.totalBuyVolume} / ${item?.totalSellVolume}`}</span>
+            },
+            {
+                key: 'fundingTime',
+                dataIndex: 'rate',
+                title: `${t('futures:funding_history_tab:funding_rate')} (Long/Short)`,
+                align: 'left',
+                width: '30%',
+                preventSort: true,
+                fixed: width >= 992 ? 'none' : 'left',
+                render: (data, item) => <span>{`${item?.buyFundingRate} / ${item?.sellFundingRate}`}</span>
             }
         ];
     }, [dataTable, currency, currentPage]);
-
+    
     return (
         <div className={classNames('mt-2 sm:mt-12 sm:border border-divider dark:border-divider-dark rounded-xl', { hidden: !active })}>
             <Tooltip id={'funding'} place="top" effect="solid" isV3 className="max-w-[300px]" />
@@ -286,9 +306,12 @@ const FilterTable = ({ selectedFilter, setSelectedFilter }) => {
                                     handleChangeFilter(item);
                                     close();
                                 }}
-                                className={classNames('cursor-pointer px-4 py-2 text-txtSecondary dark:text-txtSecondary-dark hover:bg-hover dark:hover:bg-hover-dark', {
-                                    '!text-txtPrimary dark:!text-white': selectedFilter.index === index
-                                })}
+                                className={classNames(
+                                    'cursor-pointer px-4 py-2 text-txtSecondary dark:text-txtSecondary-dark hover:bg-hover dark:hover:bg-hover-dark',
+                                    {
+                                        '!text-txtPrimary dark:!text-white': selectedFilter.index === index
+                                    }
+                                )}
                             >
                                 {t(label)}
                             </div>
