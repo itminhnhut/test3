@@ -23,7 +23,6 @@ const index = ({
     onRowClick,
     showPaging = true,
     textEmptyCustom,
-    emptyDataCustom = false,
     initPage,
     ...props
 }) => {
@@ -82,13 +81,7 @@ const index = ({
                 isNamiV2
                 height={height}
                 loading={loading}
-                emptyText={
-                    typeof emptyDataCustom === 'object' ? (
-                        emptyDataCustom
-                    ) : (
-                        <NoData text={textEmptyCustom} loading={loading} isSearch={!!isSearch} className="!text-base" />
-                    )
-                }
+                emptyText={<NoData text={textEmptyCustom} loading={loading} isSearch={!!isSearch} className="!text-base" />}
                 onRowClick={onRowClick}
                 {...props}
             />

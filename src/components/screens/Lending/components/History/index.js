@@ -124,7 +124,7 @@ const History = () => {
 
     // ** useState
     useEffect(() => {
-        if (!tab) return;
+        if (!tab || !isAuth) return;
         getOrderLoan();
     }, [JSON.stringify(filter), tab, page]);
 
@@ -220,7 +220,7 @@ const History = () => {
     return (
         <>
             {!isAuth ? (
-                <NotAuth />
+                <NotAuth tab="history" />
             ) : (
                 <section>
                     <section className="flex flex-row gap-3 mt-8">{renderTabs()}</section>

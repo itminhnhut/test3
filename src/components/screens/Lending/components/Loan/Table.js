@@ -229,7 +229,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     };
 
     const renderCol3 = (options) => {
-        const { collateralAmount, collateralCoin, expirationTime, status, liquidationTime } = options;
+        const { collateralAmount, collateralCoin, expirationTime, status } = options;
         const rsCollateralAmount = totalAsset(collateralAmount, collateralCoin); //** Tổng ký quỹ ban đầu */
         return (
             <section className="flex flex-col h-[128px] w-max">
@@ -251,7 +251,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                         <section className={classNames('flex flex-row items-center')}>
                             <section className="flex flex-col">
                                 <div className="text-gray-1 dark:text-gray-7">Thời gian hết hạn</div>
-                                <div className="dark:text-gray-4 text-gray-15 font-semibold">{formatTime(liquidationTime, 'HH:mm:ss dd/MM/yyyy')}</div>
+                                <div className="dark:text-gray-4 text-gray-15 font-semibold">{formatTime(expirationTime, 'HH:mm:ss dd/MM/yyyy')}</div>
                             </section>
                         </section>
                     )}
@@ -281,10 +281,10 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     };
 
     const renderCol5 = (options) => {
-        const { liquidationLTV, initialLTV } = options;
+        const { liquidationLTV, marginCallLTV } = options;
 
         const totalLiquidationLTV = (liquidationLTV * PERCENT).toFixed(0); //** LTV Thanh lý */
-        const totalInitialLTV = (initialLTV * PERCENT).toFixed(0);
+        const totalMarginCallLTV = (marginCallLTV * PERCENT).toFixed(0);
 
         return (
             <section className="flex flex-col h-[128px] w-max">
@@ -297,7 +297,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1  h-[72px] whitespace-nowrap">
                     <section className="flex flex-col">
                         <div className="text-gray-1 dark:text-gray-7">LTV gọi ký quỹ</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{totalInitialLTV}%</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{totalMarginCallLTV}%</div>
                     </section>
                 </section>
             </section>
@@ -389,11 +389,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 columns={columns}
                 isMobile={isMobile}
                 scroll={{ x: true }}
-                className=""
                 data={data.result || []}
-                emptyDataCustom={
-                    data.result?.length === 0 && <EmptyData isDark={isDark} content="Không có lệnh cần thanh toán" textBtn="Vay Crypto ngay" link="/lending" />
-                }
                 rowKey={(item) => `${item?.key}`}
                 pagingClassName="!border-0 !py-8"
                 pagingPrevNext={{
@@ -413,7 +409,13 @@ const LoanTable = ({ data, page, loading, onPage }) => {
 
     return (
         <>
-            <section className="rounded-b-2xl bg-white dark:bg-dark-4">{renderTable()}</section>
+            <section className="bg-white dark:bg-dark-4 rounded-xl">
+                {data?.result?.length === 0 ? (
+                    <EmptyData isDark={isDark} content="Không có lệnh cần thanh toán" textBtn="Vay Crypto ngay" link="/lending?tab=lending&loanAsset=USDT" />
+                ) : (
+                    renderTable()
+                )}
+            </section>
             <ModalAdjustMargin onClose={handleCloseAdjustModal} dataCollateral={dataCollateral} />
             <ModalLoanRepayment dataCollateral={dataCollateral} isOpen={isOpenRepaymentModal} onClose={onCloseRepayment} />
         </>
@@ -430,8 +432,11 @@ const WrapperTable = styled(TableV2).attrs(({ ...props }) => ({
         }
         .rc-table-tbody {
             tr td {
-                padding-top: 12px;
-                padding-bottom: 12px;
+                &:first-child {
+                    padding-top: 16px;
+                }
+                padding-top: 15px;
+                padding-bottom: 15px;
                 border-color: ${(props) => (props.isDark ? colors.divider.dark : colors.divider.DEFAULT)} !important;
             }
         }

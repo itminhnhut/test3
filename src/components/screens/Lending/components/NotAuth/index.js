@@ -1,13 +1,16 @@
 import React from 'react';
 
 // ** next
-import { Trans, useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import { Trans } from 'next-i18next';
 
 // ** redux
 import { getLoginUrl, getS3Url } from 'redux/actions/utils';
 
-const NotAuth = () => {
-    const { t } = useTranslation();
+const NotAuth = ({ tab }) => {
+    const router = useRouter();
+    const { locale, pathname } = router;
+
     return (
         <section className="rounded-xl p-6 md:p-8 bg-white dark:bg-bgContainer-dark flex items-center justify-center !py-[50px]">
             <div>
@@ -22,7 +25,14 @@ const NotAuth = () => {
                         />
                         <a
                             className="text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 cursor-pointer font-semibold"
-                            href={getLoginUrl('sso')}
+                            // href={getLoginUrl('sso')}
+                            href={
+                                !tab
+                                    ? getLoginUrl('sso')
+                                    : getLoginUrl('sso', 'login', {
+                                          redirect: `${process.env.NEXT_PUBLIC_API_URL}${locale === 'en' ? '' : `/${locale}`}${pathname}?tab=${tab}`
+                                      })
+                            }
                         />
                     </Trans>
                 </div>

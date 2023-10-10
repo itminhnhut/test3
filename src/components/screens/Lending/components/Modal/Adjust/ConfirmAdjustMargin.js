@@ -8,6 +8,9 @@ import dynamic from 'next/dynamic';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PERCENT } from 'components/screens/Lending/constants';
 
+// ** components screens
+import SucessAdjust from './SucessAdjust.js';
+
 // ** Context
 import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
 
@@ -28,9 +31,6 @@ import ModalV2 from 'components/common/V2/ModalV2';
 
 // ** Third party
 import Countdown from 'react-countdown';
-
-// ** Dynamic
-const SucessAdjust = dynamic(() => import('./SucessAdjust.js'), { ssrc: false });
 
 const MILLISECOND_COUNT_DOWN = 6000;
 const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, currentLTV, adjustedLTV, totalAdjusted, initialLTV, id, amount, onRefreshPrice }) => {

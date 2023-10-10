@@ -110,6 +110,7 @@ const Loan = () => {
     };
     // ** useEffect
     useEffect(() => {
+        if (!isAuth) return;
         handleAPI();
     }, [page]);
 
@@ -134,7 +135,7 @@ const Loan = () => {
     return (
         <>
             {!isAuth ? (
-                <NotAuth />
+                <NotAuth tab="loan" />
             ) : (
                 <section>
                     <h3 className="text-2xl font-semibold dark:text-gray-4 text-gray-15">Tổng quan tài sản</h3>
@@ -152,15 +153,13 @@ const Loan = () => {
                                         {item.title?.[language]}
                                     </div>
                                     <section className="flex flex-row gap-1 mt-4 text-gray-15 text-2xl font-semibold dark:text-gray-4">
-                                        <div>{formatNumber(totalOverview?.[key], getAssetBycCode?.assetDigit)}</div>
-                                        <div>{overView?.currency}</div>
+                                        <div>${formatNumber(totalOverview?.[key], getAssetBycCode?.assetDigit)}</div>
                                     </section>
                                 </section>
                             );
                         })}
                     </section>
-                    <h4 className="mt-12 text-2xl font-semibold dark:text-gray-4 text-gray-15">Khoản vay đang mở</h4>
-                    <section className="mt-8">
+                    <section className="mt-12">
                         <LoanTable data={data} page={page} loading={loading} onPage={setPage} />
                     </section>
                     <Tooltip id={'totalDebt'} place="top" effect="solid" isV3 className="max-w-[300px]" />

@@ -48,16 +48,6 @@ const FAQ = [
             vi: 'Người dùng chỉ cần duy trì số dư VNDC và USDT đạt mức tối thiểu tại ví Spot và ví Futures là đủ điều kiện tham gia chương trình.',
             en: 'Users only need to maintain a minimum balance of VNDC and USDT at Spot and Futures wallets to be eligible to participate in the program.'
         }
-    },
-    {
-        title: {
-            vi: 'Làm cách nào để điều chỉnh số tiền đảm bảo?',
-            en: 'Làm cách nào để điều chỉnh số tiền đảm bảo?'
-        },
-        content: {
-            vi: 'Người dùng chỉ cần duy trì số dư VNDC và USDT đạt mức tối thiểu tại ví Spot và ví Futures là đủ điều kiện tham gia chương trình.',
-            en: 'Users only need to maintain a minimum balance of VNDC and USDT at Spot and Futures wallets to be eligible to participate in the program.'
-        }
     }
 ];
 
