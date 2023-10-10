@@ -153,8 +153,7 @@ const Loan = () => {
                                         {item.title?.[language]}
                                     </div>
                                     <section className="flex flex-row gap-1 mt-4 text-gray-15 text-2xl font-semibold dark:text-gray-4">
-                                        <div>{formatNumber(totalOverview?.[key], getAssetBycCode?.assetDigit)}</div>
-                                        <div>{overView?.currency}</div>
+                                        <div>${formatNumber(totalOverview?.[key], getAssetBycCode?.assetDigit)}</div>
                                     </section>
                                 </section>
                             );

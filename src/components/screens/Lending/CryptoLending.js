@@ -5,6 +5,12 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
+// ** Redux
+import { API_HISTORY_LOAN_COUNT } from 'redux/actions/apis';
+
+// ** Utils
+import FetchApi from 'utils/fetch-api';
+
 // ** components
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
@@ -12,7 +18,7 @@ import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import { LendingProvider } from 'components/screens/Lending/Context';
 
 // * constants
-import { TABS } from 'components/screens/Lending/constants';
+import { STATUS_CODE, TABS } from 'components/screens/Lending/constants';
 
 // ** third party
 import styled from 'styled-components';
@@ -47,6 +53,21 @@ const CryptoLending = () => {
 
     // ** useState
     const [tab, setTab] = useState(initData.tab);
+    const [countLoan, setCountLoan] = useState(0);
+
+    // ** useEffect
+    useEffect(() => {
+        (async () => {
+            try {
+                const { data, statusCode } = await FetchApi({ url: API_HISTORY_LOAN_COUNT, params: { status: 'ACTIVE' } });
+                if (statusCode === STATUS_CODE) {
+                    setCountLoan(data);
+                }
+            } catch (error) {
+                throw new Error('error call api history loan count', error);
+            }
+        })();
+    }, []);
 
     // ** useEffect
     useEffect(() => {
@@ -95,11 +116,11 @@ const CryptoLending = () => {
                             isActive={item.value === tab}
                         >
                             {item.label?.[language]}
-                            {/* {item.value === 'loan' && <span className="ml-1">{count.current}</span>} */}
+                            {item.value === 'loan' && <span className="ml-1">({countLoan})</span>}
                         </TabItem>
                     ))}
                 </div>
-                <div className="text-green-3 dark:text-green-2 font-semibold cursor-pointer">{t('lending:tabs:info')}</div>
+                <div className="text-green-3 dark:text-green-2 hover:text-green-4 font-semibold cursor-pointer">{t('lending:tabs:info')}</div>
             </Tabs>
             {renderTabContent()}
         </LendingProvider>
