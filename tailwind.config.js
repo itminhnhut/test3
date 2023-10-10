@@ -254,7 +254,7 @@ module.exports = {
                 xsm: '320px',
                 xs: '319px',
                 sm_only: { max: defaultTheme.screens.sm },
-                mb_only: { max: '820px' },
+                mb_only: { max: '820px' }
             },
             spacing: {
                 128: '32rem',
@@ -432,7 +432,8 @@ module.exports = {
                 'nao-corner-mb': "url('/images/nao/bg-corner-light-mb.webp')",
                 'nao-corner-dark': "url('/images/nao/bg-corner.webp')",
                 'nao-corner-mb-dark': "url('/images/nao/bg-corner-mb.webp')",
-                'nao-corner-mb-2': "url('/images/nao/bg-light-stake-mb.png')"
+                'nao-corner-mb-2': "url('/images/nao/bg-light-stake-mb.png')",
+                'finance-banner': 'linear-gradient(253deg, #071713 99%, #091b16 26%, #1a3831 0%)',
             },
             backgroundSize: {
                 auto: 'auto',
