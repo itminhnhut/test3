@@ -23,7 +23,7 @@ import useRepayLoan from 'components/screens/Lending/hooks/useRepayLoan';
 // ** Utils
 import { getCurrentLTV, getReceiveCollateral } from 'components/screens/Lending/utils';
 import { getSpotAvailable } from 'components/screens/Lending/utils/selector';
-import { formatNumber2, roundByExactDigit, setTransferModal } from 'redux/actions/utils';
+import { ceilByExactDegit, formatNumber2, roundByExactDigit, setTransferModal } from 'redux/actions/utils';
 
 // ** Constants
 import { PERCENT } from 'components/screens/Lending/constants';
@@ -169,7 +169,9 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             // gia tri cua field con lai
             const otherValue = {
                 percentage: roundByExactDigit((inputValue / totalDebt) * PERCENT, 0), // field "percentage" lam tron xuong
-                amount: roundByExactDigit((totalDebt * inputValue) / PERCENT, loanCoinConfig?.assetDigit) || '' // field "amount" lam tron xuong. neu amount === 0 thi = ""
+                amount: inputValue === 100 ? totalDebt : ceilByExactDegit((totalDebt * inputValue) / PERCENT, loanCoinConfig?.assetDigit) || ''
+                // if percentage === 100% thi amount = totalDebt
+                // else: field "amount" lam tron len. neu amount === 0 thi = ""
             }[otherField];
 
             if (inputField === 'amount' && +inputValue > totalDebt) {
