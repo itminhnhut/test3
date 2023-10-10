@@ -110,6 +110,7 @@ const Loan = () => {
     };
     // ** useEffect
     useEffect(() => {
+        if (!isAuth) return;
         handleAPI();
     }, [page]);
 

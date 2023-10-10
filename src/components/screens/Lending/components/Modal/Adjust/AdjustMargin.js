@@ -23,6 +23,10 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TradingInputV2 from 'components/trade/TradingInputV2';
 
+//** components screen
+import ConfirmAdjustMargin from './ConfirmAdjustMargin';
+import AlertAdjust from './AlertAdjust.js';
+
 // ** svg
 import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
 
@@ -31,10 +35,6 @@ import classNames from 'classnames';
 import { PERCENT } from '../../../constants';
 import useDebounce from 'hooks/useDebounce';
 import { formatNumber } from 'utils/reference-utils';
-
-// ** Dynamic components
-const ConfirmAdjustMargin = dynamic(() => import('./ConfirmAdjustMargin'), { ssr: false });
-const AlertAdjust = dynamic(() => import('./AlertAdjust.js'), { ssr: false });
 
 const MARGIN = [
     { title: { vi: 'Thêm ký quỹ', en: 'Thêm ký quỹ' }, key: 'add' },
@@ -82,6 +82,7 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
 
     const amount = state?.amount;
     const isShowAdjust = state.modal.isAdjust;
+    const modalAdjust = state.modal;
 
     const debounceAmount = useDebounce(amountAsset, DEBOUNCE_TIME);
 
@@ -369,6 +370,7 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
                     {tab === 'add' ? 'Thêm ký quỹ' : 'Bớt ký quỹ'}
                 </ButtonV2>
             </ModalV2>
+
             <ConfirmAdjustMargin
                 tab={tab}
                 amount={amountAsset}
@@ -379,7 +381,7 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
                 initialLTV={state?.initialLTV}
                 onRefreshPrice={handRefreshPrice}
                 dispatchReducer={dispatchReducer}
-                isConfirmAdjust={state.modal?.isConfirmAdjust}
+                isConfirmAdjust={modalAdjust.isConfirmAdjust}
                 onCloseAdjustMargin={handleCloseConfirmAdjustMargin}
             />
             <AlertAdjust />

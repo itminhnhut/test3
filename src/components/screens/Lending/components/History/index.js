@@ -124,7 +124,7 @@ const History = () => {
 
     // ** useState
     useEffect(() => {
-        if (!tab) return;
+        if (!tab || !isAuth) return;
         getOrderLoan();
     }, [JSON.stringify(filter), tab, page]);
 
