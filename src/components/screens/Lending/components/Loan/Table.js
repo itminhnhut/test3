@@ -439,6 +439,14 @@ const WrapperTable = styled(TableV2).attrs(({ ...props }) => ({
                 padding-bottom: 15px;
                 border-color: ${(props) => (props.isDark ? colors.divider.dark : colors.divider.DEFAULT)} !important;
             }
+            tr:nth-child(2) td {
+                &:first-child {
+                    border-top-left-radius: 12px;
+                }
+                &:last-child {
+                    border-top-right-radius: 12px;
+                }
+            }
         }
         .rc-table-thead {
             tr th {
