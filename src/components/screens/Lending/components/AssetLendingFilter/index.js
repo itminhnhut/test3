@@ -70,7 +70,7 @@ const AssetLendingFilter = ({
             function (asset) {
                 return asset.assetCode;
             }
-        ]).filter((f) => f.id !== assetCode);
+        ]).filter((f) => f.assetCode !== assetCode);
     }, [assets, search, assetCode, wallets]);
 
     // ** render

@@ -5,9 +5,6 @@ import dynamic from 'next/dynamic';
 import { useTranslation, Trans } from 'next-i18next';
 import Link from 'next/link';
 
-// * Context
-import { useLoanableList, useCollateralList } from 'components/screens/Lending/Context';
-
 // ** Redux
 import { useSelector } from 'react-redux';
 
@@ -206,10 +203,22 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
     const onChangeAsset = (value, key) => {
         if ([LOANABLE, COLLATERAL].includes(key)) {
             if (value) {
-                setFilter({ [key]: value });
+                set((prev) => ({
+                    ...prev,
+                    filter: {
+                        ...prev.filter,
+                        [key]: value
+                    }
+                }));
             } else {
                 const defaultAsset = getDefaultAsset({ assetKey: key });
-                setFilter({ [key]: defaultAsset });
+                set((prev) => ({
+                    ...prev,
+                    filter: {
+                        ...prev.filter,
+                        [key]: defaultAsset
+                    }
+                }));
             }
         }
     };
@@ -369,6 +378,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                             inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
                             placeholder={t('lending:lending.modal.loan_input.placeholder')}
                             validator={isAuth && validator[LOANABLE]()} // validate if only authenticated
+                            containerClassName="!bg-gray-12 dark:!bg-dark-2"
                             value={loanValue}
                             onValueChange={({ value }) => {
                                 onChangeAssetAmount({ value, field: LOANABLE });
@@ -380,7 +390,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                                         asset: filter?.loanable,
                                         onChange: onChangeAsset,
                                         assetListKey: LOANABLE,
-                                        assetCode: filter?.collateral?.id
+                                        assetCode: filter?.collateral?.assetCode
                                     })}
                                 </label>
                             }
@@ -421,6 +431,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                             thousandSeparator={true}
                             decimalScale={filter?.collateral?.assetDigit}
                             inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
+                            containerClassName="!bg-gray-12 dark:!bg-dark-2"
                             errorTooltip={false}
                             validator={isAuth && validator[COLLATERAL]()} // validate if only authenticated
                             value={collateralValue}
@@ -433,7 +444,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                                         asset: filter?.collateral,
                                         onChange: onChangeAsset,
                                         assetListKey: COLLATERAL,
-                                        assetCode: filter?.loanable?.id
+                                        assetCode: filter?.loanable?.assetCode
                                     })}
                                 </div>
                             }
