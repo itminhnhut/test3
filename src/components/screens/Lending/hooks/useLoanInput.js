@@ -40,6 +40,19 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
               }),
               collateral?.assetDigit
           ) || 0;
+    const maxCollateralAmount = loadingPrice
+        ? 0
+        : Math.min(
+              roundByExactDigit(
+                  calcCollateralAmount({
+                      loanAmount: parseFloat(loanable?.config?.maxLimit || 0),
+                      collateralToLoanPrice: parseFloat(collateralPrice),
+                      initLTV: parseFloat(initialLTV)
+                  }),
+                  collateral?.assetDigit
+              ),
+              +collateral?.config?.maxLimit
+          ) || 0;
 
     const loanValue = isTypingLoanField ? loanInput : loadingPrice ? '' : ceilByExactDegit(loanAmount, loanable?.assetDigit) || '';
 
@@ -92,11 +105,11 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
                         msg: `Số lượng muốn thế chấp phải lớn hơn ${formatNumber(minCollateralAmount, collateral?.assetDigit)}`
                     };
                 }
-                if (+collateralValue > +collateral?.config?.maxLimit) {
+                if (+collateralValue > maxCollateralAmount) {
                     return {
                         isValid: false,
                         isError: true,
-                        msg: `Số lượng muốn thế chấp phải bé hơn ${formatNumber(collateral?.config?.maxLimit, collateral?.assetDigit)} `
+                        msg: `Số lượng muốn thế chấp phải bé hơn ${formatNumber(maxCollateralAmount, collateral?.assetDigit)} `
                     };
                 }
 
@@ -107,7 +120,16 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
                 };
             }
         }),
-        [loanable, collateral, collateralValue, loanValue, minCollateralAmount, isTypingLoanField, collateralAvailable]
+        [
+            loanable?.assetCode,
+            collateral?.assetCode,
+            collateralValue,
+            loanValue,
+            minCollateralAmount,
+            maxCollateralAmount,
+            isTypingLoanField,
+            collateralAvailable
+        ]
     );
 
     return {
@@ -116,6 +138,7 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
         collateralValue,
         validator,
         minCollateralAmount,
+        maxCollateralAmount,
         loadingPrice
     };
 };

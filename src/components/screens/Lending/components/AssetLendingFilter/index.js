@@ -75,7 +75,7 @@ const AssetLendingFilter = ({
 
     // ** render
     const rowRenderer = useCallback(
-        ({ index, key, style, rowKey, list }) => {
+        ({ index, key, style, list }) => {
             const currentAsset = list[index];
             const isAssetChosen = asset && asset?.id === currentAsset?.id;
 
@@ -111,10 +111,8 @@ const AssetLendingFilter = ({
                             <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">{currentAsset?.assetName}</div>
                         </div>
                         <div className="flex items-center space-x-2 text-txtPrimary dark:text-txtPrimary-dark">
-                            {/* SHOW BALANCE AVAILABLE ONLY ON COLLATERAL LIST */}
-                            {assetListKey === COLLATERAL && rowKey === 'collateralAsset' && (
-                                <span>{formatNumber(currentAsset?.available, currentAsset?.assetDigit || 0)}</span>
-                            )}
+                            {/* SHOW BALANCE AVAILABLE ONLY ON COLLATERAL LIST AND AUTH */}
+                            {assetListKey === COLLATERAL && isAuth && <span>{formatNumber(currentAsset?.available, currentAsset?.assetDigit || 0)}</span>}
 
                             {isAssetChosen && <CheckCircleIcon color="currentColor" size={16} />}
                         </div>
@@ -161,13 +159,49 @@ const AssetLendingFilter = ({
                         {!Boolean(search) && isAuth && assetListKey === COLLATERAL && previousSearchList.length > 0 && (
                             <>
                                 <div className="dark:!text-gray-4 !text-gray-15 !text-base font-semibold px-4 mb-4">Tìm kiếm gần đây</div>
-                                <List
-                                    width={400}
-                                    height={180}
-                                    rowCount={previousSearchList.length}
-                                    rowHeight={60}
-                                    rowRenderer={(props) => rowRenderer({ ...props, list: previousSearchList })}
-                                />
+                                <div className="space-y-3">
+                                    {previousSearchList.map((currentAsset) => {
+                                        const isAssetChosen = asset && asset?.id === currentAsset?.id;
+                                        return (
+                                            <div
+                                                onClick={() => {
+                                                    if (isAssetChosen) return;
+
+                                                    popoverRef?.current?.close();
+                                                    setTimeout(() => setSearch(''), 100);
+                                                    onChangeAsset(currentAsset);
+
+                                                    // save to localStorage search list only for collateral list && isAuth
+                                                    if (assetListKey === COLLATERAL && isAuth) {
+                                                        const copySearchList = JSON.parse(JSON.stringify(previousSearchList));
+                                                        const existAsset = copySearchList.find((asset) => asset?.id === currentAsset?.id);
+                                                        if (existAsset) return;
+
+                                                        const newSearchList = [currentAsset, ...copySearchList].slice(0, MAX_SEARCH_LIST_LENGTH);
+                                                        setPreviousSearchList(newSearchList);
+                                                        setLocalPreviousSearch(newSearchList);
+                                                    }
+                                                }}
+                                                className={classNames('flex items-center justify-between px-4 py-3 hover:bg-hover dark:hover:bg-hover-dark ', {
+                                                    'text-txtPrimary dark:text-txtPrimary-dark': isAssetChosen,
+                                                    'cursor-pointer ': !isAssetChosen
+                                                })}
+                                            >
+                                                <div className="flex items-center space-x-2">
+                                                    <AssetLogo useNextImg={true} size={24} assetCode={currentAsset?.assetCode} />
+                                                    <div className="text-txtPrimary dark:text-txtPrimary-dark">{currentAsset?.assetCode}</div>
+                                                    <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">{currentAsset?.assetName}</div>
+                                                </div>
+
+                                                {isAssetChosen && (
+                                                    <div className="flex items-center space-x-2 text-txtPrimary dark:text-txtPrimary-dark">
+                                                        <CheckCircleIcon color="currentColor" size={16} />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </>
                         )}
                         <div className="dark:!text-gray-4 !text-gray-15 !text-base font-semibold px-4 my-4">Danh sách tài sản ký quỹ</div>
@@ -176,7 +210,7 @@ const AssetLendingFilter = ({
                             height={180}
                             rowCount={filterAssets.length}
                             rowHeight={60}
-                            rowRenderer={(props) => rowRenderer({ ...props, rowKey: 'collateralAsset', list: filterAssets })}
+                            rowRenderer={(props) => rowRenderer({ ...props, list: filterAssets })}
                         />
                     </>
                 )}
