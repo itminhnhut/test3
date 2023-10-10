@@ -89,8 +89,8 @@ const AssetLendingFilter = ({
                             setTimeout(() => setSearch(''), 100);
                             onChangeAsset(currentAsset);
 
-                            // save to search list only for collateral list
-                            if (assetListKey === COLLATERAL) {
+                            // save to localStorage search list only for collateral list && isAuth
+                            if (assetListKey === COLLATERAL && isAuth) {
                                 const copySearchList = JSON.parse(JSON.stringify(previousSearchList));
                                 const existAsset = copySearchList.find((asset) => asset?.id === currentAsset?.id);
                                 if (existAsset) return;
@@ -122,7 +122,7 @@ const AssetLendingFilter = ({
                 </div>
             );
         },
-        [search, asset, assetListKey]
+        [search, asset, assetListKey, isAuth]
     );
 
     return (

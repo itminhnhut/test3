@@ -10,7 +10,6 @@ import { useLoanableList, useCollateralList } from 'components/screens/Lending/C
 
 // ** Redux
 import { useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
 import AuthSelector from 'redux/selectors/authSelectors';
 
 //** components
@@ -22,7 +21,7 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TradingInputV2 from 'components/trade/TradingInputV2';
 
 // ** svg
-import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
+import { AddCircleColorIcon } from 'components/svg/SvgIcon';
 
 // ** Third party
 import classNames from 'classnames';
@@ -32,8 +31,8 @@ const ModalConfirmLoan = dynamic(() => import('./ConfirmLoan'), { ssr: false });
 const AssetLendingFilter = dynamic(() => import('components/screens/Lending/components/AssetLendingFilter'), { ssr: false });
 
 // ** Custom hooks
-import useRegisterLoan from '../../../hooks/useRegisterLoan';
-import useLoanInput from '../../../hooks/useLoanInput';
+import useRegisterLoan from 'components/screens/Lending/hooks/useRegisterLoan';
+import useLoanInput from 'components/screens/Lending/hooks/useLoanInput';
 
 // ** CONSTANTS
 import {
@@ -52,8 +51,9 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 // ** UTILS
 import { dwLinkBuilder, formatNumber, getLoginUrl } from 'redux/actions/utils';
-import { getSpotAvailable } from '../../../utils/selector';
+import { getSpotAvailable } from 'components/screens/Lending/utils/selector';
 import Spinner from 'components/svg/Spinner';
+import styled from 'styled-components';
 
 // ** INIT DATA
 const INIT_DATA = {
@@ -257,20 +257,37 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
 
     const renderLTV = () => {
         const data = {
-            ltv_initial: totalLTV.initialLTV * PERCENT,
-            ltv_margin: totalLTV.marginCallLTV * PERCENT,
-            ltv_liquidate: totalLTV.liquidationLTV * PERCENT
+            initial_ltv: totalLTV.initialLTV * PERCENT,
+            margin_ltv: totalLTV.marginCallLTV * PERCENT,
+            liquidate_ltv: totalLTV.liquidationLTV * PERCENT
         };
         return (
-            <section className="flex flex-row mt-4">
-                {LTV.map((item, key) => {
+            <section className="relative flex flex-row mt-4">
+                {LTV.map((item, index) => {
                     return (
-                        <section className="h-6 flex flex-row" key={`ltv_${key}_${item.title?.[language]}`}>
-                            <section className="border-b border-darkBlue-5 border-dashed cursor-pointer flex flex-row" data-tip="" data-for={item.key}>
+                        <section className="group h-6 flex flex-row" key={`ltv_${index}_${item.title?.[language]}`}>
+                            <section className="border-b border-darkBlue-5 border-dashed cursor-pointer flex flex-row">
                                 <section className="dark:text-gray-7 text-gray-1">{item.title?.[language]}:</section>
                                 <section className="dark:text-gray-4 text-gray-15 ml-1">{data?.[item.key] || '-'}%</section>
                             </section>
-                            {key !== 2 ? <div className="mx-2 dark:text-gray-7 text-gray-1">/</div> : null}
+                            {index !== 2 ? <div className="mx-2 dark:text-gray-7 text-gray-1">/</div> : null}
+                            <TooltipCustom
+                                className={classNames(
+                                    'absolute left-0 bottom-full dark:after:border-t-dark-1 after:border-t-gray-11 text-sm text-txtSecondary dark:text-txtSecondary-dark mb-4 w-full transition opacity-0 group-hover:opacity-100 group-hover:visible invisible  px-6 py-[11px] bg-gray-11 dark:bg-dark-1 rounded-lg',
+                                    {
+                                        'after:!left-[8%]': index === 0,
+                                        'after:!left-[84%]': index === 2
+                                    }
+                                )}
+                            >
+                                <Trans
+                                    i18nKey={`lending:lending:ltv:${item.key}`}
+                                    components={{
+                                        primary: <div className="flex" />,
+                                        secondary: <p className="text-green-3 hover:text-green-4 ml-1" />
+                                    }}
+                                />
+                            </TooltipCustom>
                         </section>
                     );
                 })}
@@ -285,11 +302,13 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                     isV3
                     onChange={onChangeRule}
                     active={isAcceptRule}
-                    className="h-full"
+                    className="h-full !w-auto"
                     labelClassName="!text-base"
                     boxContainerClassName="w-6 h-6"
                     label={
                         <Trans i18nKey="lending:lending:rule">
+                            <span />
+
                             <a
                                 className="text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4 cursor-pointer font-semibold"
                                 target="_blank"
@@ -300,54 +319,6 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                 />
             </section>
         );
-    };
-
-    const renderTooltip = () => {
-        return (
-            <Tooltip
-                isV3
-                place="top"
-                id="loan_term"
-                effect="solid"
-                className="max-w-[527px] dark:after:!border-t-[#2e333d] after:!border-t-[#e1e2e3] after:!left-[auto] !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1  dark:!text-gray-7 !text-gray-1 !text-sm"
-                overridePosition={({ top }) => {
-                    return { left: 32, top };
-                }}
-            >
-                <div dangerouslySetInnerHTML={{ __html: t('lending:lending.modal.loan_term_description') }} />
-            </Tooltip>
-        );
-    };
-
-    const renderTooltipLTV = () => {
-        return LTV.map((item, index) => {
-            return (
-                <Tooltip
-                    isV3
-                    place="top"
-                    id={item.key}
-                    effect="solid"
-                    className={classNames(
-                        'max-w-[511px] dark:after:!border-t-[#2e333d] after:!border-t-[#e1e2e3]  !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1  dark:!text-gray-7 !text-gray-1 !text-sm',
-                        {
-                            'after:!left-[8%]': index === 0,
-                            'after:!left-[84%]': index === 2
-                        }
-                    )}
-                    overridePosition={({ top }) => {
-                        return { left: 32, top };
-                    }}
-                >
-                    <Trans
-                        i18nKey={`lending:lending:ltv:${item.key}`}
-                        components={{
-                            primary: <div className="flex" />,
-                            secondary: <p className="text-green-3 hover:text-green-4 ml-1" />
-                        }}
-                    />
-                </Tooltip>
-            );
-        });
     };
 
     const renderValueToken = useCallback(
@@ -382,21 +353,25 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                     onClose();
                     setState(INIT_DATA);
                 }}
-                wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
-                customHeader={() => (
-                    <div className="flex justify-end mb-6">
-                        <div
-                            className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
-                            onClick={onClose}
-                        >
-                            <IconClose />
-                        </div>
-                    </div>
-                )}
+                wrapClassName="p-8 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
+                btnCloseclassName="text-txtPrimary dark:text-txtPrimary-dark mb-6 !py-0"
             >
                 <section>
-                    {renderTooltip()}
-                    {renderTooltipLTV()}
+                    {/* loan term description */}
+                    <Tooltip
+                        isV3
+                        place="top"
+                        id="loan_term"
+                        effect="solid"
+                        className="max-w-[527px] dark:after:!border-t-[#2e333d] after:!border-t-[#e1e2e3] after:!left-[auto] !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1  dark:!text-gray-7 !text-gray-1 !text-sm"
+                        overridePosition={({ top }) => {
+                            return { left: 32, top };
+                        }}
+                    >
+                        <div dangerouslySetInnerHTML={{ __html: t('lending:lending.modal.loan_term_description') }} />
+                    </Tooltip>
+                    {/* loan term description */}
+
                     <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{t('lending:lending.modal.title')} </p>
                     <section className="mt-6">
                         <TradingInputV2
@@ -408,7 +383,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                             errorTooltip={false}
                             inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
                             placeholder={t('lending:lending.modal.loan_input.placeholder')}
-                            validator={validator[LOANABLE]()}
+                            validator={isAuth && validator[LOANABLE]()} // validate if only authenticated
                             value={loanValue}
                             onValueChange={({ value }) => {
                                 onChangeAssetAmount({ value, field: LOANABLE });
@@ -437,19 +412,23 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                     <section className="mt-8">
                         <section className="flex flex-row justify-between mb-2 text-txtPrimary  dark:text-txtPrimary-dark">
                             <div className="font-semibold">{t('lending:lending.modal.collateral_input.label')}</div>
-                            <section className="flex text-sm flex-row gap-1 items-center">
-                                <div className="space-x-1">
-                                    <span className="dark:text-txtSecondary-dark text-txtSecondary">{t('common:available_balance')}</span>
-                                    <span className="font-semibold ">
-                                        {formatNumber(collateralAvailable, filter.collateral?.assetDigit) || '-'} {filter.collateral?.assetCode}
-                                    </span>
-                                </div>
-                                <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, filter.collateral?.assetCode)} passHref>
-                                    <a className="inline-block">
-                                        <AddCircleColorIcon size={16} className="cursor-pointer" />
-                                    </a>
-                                </Link>
-                            </section>
+
+                            {/* hien thi balance chi khi auth */}
+                            {isAuth && (
+                                <section className="flex text-sm flex-row gap-1 items-center">
+                                    <div className="space-x-1">
+                                        <span className="dark:text-txtSecondary-dark text-txtSecondary">{t('common:available_balance')}</span>
+                                        <span className="font-semibold ">
+                                            {formatNumber(collateralAvailable, filter.collateral?.assetDigit) || '-'} {filter.collateral?.assetCode}
+                                        </span>
+                                    </div>
+                                    <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, filter.collateral?.assetCode)} passHref>
+                                        <a className="inline-block">
+                                            <AddCircleColorIcon size={16} className="cursor-pointer" />
+                                        </a>
+                                    </Link>
+                                </section>
+                            )}
                         </section>
                         <TradingInputV2
                             clearAble
@@ -458,7 +437,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                             decimalScale={filter?.collateral?.assetDigit}
                             inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
                             errorTooltip={false}
-                            validator={validator[COLLATERAL]()}
+                            validator={isAuth && validator[COLLATERAL]()} // validate if only authenticated
                             value={collateralValue}
                             onValueChange={({ value }) => {
                                 onChangeAssetAmount({ value, field: COLLATERAL });
@@ -541,5 +520,20 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
         </>
     );
 };
+
+const TooltipCustom = styled.div`
+    &:after {
+        --size: 12px;
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: calc(var(--size) * -1);
+        border-width: calc(var(--size) / 2);
+        border-right-color: transparent !important;
+        border-bottom-color: transparent !important;
+        border-left-color: transparent !important;
+    }
+`;
 
 export default ModalRegisterLoan;
