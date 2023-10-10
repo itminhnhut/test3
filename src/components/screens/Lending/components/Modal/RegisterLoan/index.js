@@ -105,7 +105,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     }, [filter.collateral?.assetCode]);
 
     // ** use custom Hooks
-    const { loanValue, collateralValue, minCollateralAmount, validator, loadingPrice } = useLoanInput({
+    const { loanValue, collateralValue, minCollateralAmount, maxCollateralAmount, validator, loadingPrice } = useLoanInput({
         collateral: filter?.collateral,
         loanable: filter?.loanable,
         initialLTV: totalLTV.initialLTV,
@@ -263,22 +263,19 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
         };
         return (
             <section className="relative flex flex-row mt-4">
-                {LTV.map((item, index) => {
+                {LTV.slice(0, 1).map((item, index) => {
                     return (
-                        <section className="group h-6 flex flex-row" key={`ltv_${index}_${item.title?.[language]}`}>
+                        <section className="group relative h-6 flex flex-row" key={`ltv_${index}_${item.title?.[language]}`}>
                             <section className="border-b border-darkBlue-5 border-dashed cursor-pointer flex flex-row">
                                 <section className="dark:text-gray-7 text-gray-1">{item.title?.[language]}:</section>
                                 <section className="dark:text-gray-4 text-gray-15 ml-1">{data?.[item.key] || '-'}%</section>
                             </section>
                             {index !== 2 ? <div className="mx-2 dark:text-gray-7 text-gray-1">/</div> : null}
-                            <TooltipCustom
-                                className={classNames(
-                                    'absolute left-0 bottom-full dark:after:border-t-dark-1 after:border-t-gray-11 text-sm text-txtSecondary dark:text-txtSecondary-dark mb-4 w-full transition opacity-0 group-hover:opacity-100 group-hover:visible invisible  px-6 py-[11px] bg-gray-11 dark:bg-dark-1 rounded-lg',
-                                    {
-                                        'after:!left-[8%]': index === 0,
-                                        'after:!left-[84%]': index === 2
-                                    }
-                                )}
+                            <StyledToolTip
+                                // className={classNames({
+                                //     'after:!left-[8%]': index === 0,
+                                //     'after:!left-[84%]': index === 2
+                                // })}
                             >
                                 <Trans
                                     i18nKey={`lending:lending:ltv:${item.key}`}
@@ -287,7 +284,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                                         secondary: <p className="text-green-3 hover:text-green-4 ml-1" />
                                     }}
                                 />
-                            </TooltipCustom>
+                            </StyledToolTip>
                         </section>
                     );
                 })}
@@ -459,7 +456,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                                     ) : (
                                         t('lending:lending.modal.input_description.min_max', {
                                             min: formatNumber(minCollateralAmount, filter.collateral?.assetDigit),
-                                            max: formatNumber(filter.collateral?.config?.maxLimit, filter.collateral?.assetDigit)
+                                            max: formatNumber(maxCollateralAmount, filter.collateral?.assetDigit)
                                         })
                                     )}
                                 </span>
@@ -468,13 +465,15 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                         />
                     </section>
                     <section>
-                        <div
-                            data-tip=""
-                            data-for="loan_term"
-                            className="dark:text-gray-4 font-semibold text-gray-15 border-b border-darkBlue-5 border-dashed cursor-pointer w-max mt-8"
-                        >
-                            {t('lending:lending.modal.loan_term')}
+                        <div className="relative">
+                            <div className="dark:text-gray-4 group  text-gray-15 border-b border-darkBlue-5 border-dashed cursor-pointer w-max mt-8">
+                                <span className="font-semibold">{t('lending:lending.modal.loan_term')}</span>
+                                <StyledToolTip className="after:!left-[8%]">
+                                    <div dangerouslySetInnerHTML={{ __html: t('lending:lending.modal.loan_term_description') }} />
+                                </StyledToolTip>
+                            </div>
                         </div>
+
                         <section className="flex flex-row gap-4 w-max mt-4">
                             {BORROWING_TERM.map((term) => {
                                 const isActive = term.day === loanTerm;
@@ -487,7 +486,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                         </section>
                         {renderInterest()}
                         {renderLTV()}
-                        {renderRules()}
+                        {isAuth && renderRules()}
                         {!isAuth ? (
                             <ButtonV2
                                 onClick={() => {
@@ -521,7 +520,11 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     );
 };
 
-const TooltipCustom = styled.div`
+const StyledToolTip = styled.div.attrs({
+    className: classNames(
+        'absolute left-0 bottom-full dark:after:border-t-dark-1 after:border-t-gray-11 text-sm text-txtSecondary dark:text-txtSecondary-dark mb-4 w-full transition opacity-0 group-hover:opacity-100 group-hover:visible invisible  px-6 py-[11px] bg-gray-11 dark:bg-dark-1 rounded-lg'
+    )
+})`
     &:after {
         --size: 12px;
         content: '';

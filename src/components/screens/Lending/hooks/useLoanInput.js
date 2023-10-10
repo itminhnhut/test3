@@ -40,6 +40,19 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
               }),
               collateral?.assetDigit
           ) || 0;
+    const maxCollateralAmount = loadingPrice
+        ? 0
+        : Math.min(
+              roundByExactDigit(
+                  calcCollateralAmount({
+                      loanAmount: parseFloat(loanable?.config?.maxLimit || 0),
+                      collateralToLoanPrice: parseFloat(collateralPrice),
+                      initLTV: parseFloat(initialLTV)
+                  }),
+                  collateral?.assetDigit
+              ),
+              +collateral?.config?.maxLimit
+          ) || 0;
 
     const loanValue = isTypingLoanField ? loanInput : loadingPrice ? '' : ceilByExactDegit(loanAmount, loanable?.assetDigit) || '';
 
@@ -116,6 +129,7 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
         collateralValue,
         validator,
         minCollateralAmount,
+        maxCollateralAmount,
         loadingPrice
     };
 };
