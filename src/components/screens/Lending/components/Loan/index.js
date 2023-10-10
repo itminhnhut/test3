@@ -135,7 +135,7 @@ const Loan = () => {
     return (
         <>
             {!isAuth ? (
-                <NotAuth />
+                <NotAuth tab="loan" />
             ) : (
                 <section>
                     <h3 className="text-2xl font-semibold dark:text-gray-4 text-gray-15">Tổng quan tài sản</h3>
@@ -159,8 +159,7 @@ const Loan = () => {
                             );
                         })}
                     </section>
-                    <h4 className="mt-12 text-2xl font-semibold dark:text-gray-4 text-gray-15">Khoản vay đang mở</h4>
-                    <section className="mt-8">
+                    <section className="mt-12">
                         <LoanTable data={data} page={page} loading={loading} onPage={setPage} />
                     </section>
                     <Tooltip id={'totalDebt'} place="top" effect="solid" isV3 className="max-w-[300px]" />

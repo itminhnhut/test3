@@ -220,7 +220,7 @@ const History = () => {
     return (
         <>
             {!isAuth ? (
-                <NotAuth />
+                <NotAuth tab="history" />
             ) : (
                 <section>
                     <section className="flex flex-row gap-3 mt-8">{renderTabs()}</section>

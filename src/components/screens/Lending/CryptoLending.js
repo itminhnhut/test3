@@ -37,7 +37,7 @@ const CONTENT = {
 
 // ** initData
 const initData = {
-    tab: 'lending'
+    tab: 'loan'
 };
 
 const TAB_ALLOW = ['lending', 'loan', 'history'];
