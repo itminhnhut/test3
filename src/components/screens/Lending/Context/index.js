@@ -47,33 +47,6 @@ const LendingProvider = ({ children }) => {
     const [loanAsset, setLoanAsset] = useState(initData.loanAsset);
     const [pairPrice, setPairPrice] = useState({});
 
-    const handleLoanAsset = () => {
-        const apiLoanable = FetchApi({
-            url: API_LOAN_ASSETS,
-            options: {
-                method: 'GET'
-            }
-        });
-        const apiCollateral = FetchApi({
-            url: API_LOAN_COLLATERAL_ASSETS,
-            options: {
-                method: 'GET'
-            }
-        });
-
-        Promise.all([apiLoanable, apiCollateral])
-            .then((data) => {
-                const [rsLoanable, rsCollateral] = data || [];
-                if (rsLoanable.statusCode === 200) {
-                    setLoanAsset((prev) => ({ ...prev, loanable: rsLoanable?.data || [] }));
-                }
-                if (rsCollateral.statusCode === 200) {
-                    setLoanAsset((prev) => ({ ...prev, collateral: rsCollateral?.data.result || [] }));
-                }
-            })
-            .catch((error) => console.error(error));
-    };
-
     // ** PAIR_PRICE
     const handlePairPrice = useCallback(
         async ({ collateralAssetCode, loanableAssetCode }) => {
@@ -93,9 +66,34 @@ const LendingProvider = ({ children }) => {
     );
 
     useEffect(() => {
-        if (!auth) return;
+        const handleLoanAsset = () => {
+            const promiseArray = [API_LOAN_ASSETS, API_LOAN_COLLATERAL_ASSETS].map((apiUrl) =>
+                FetchApi({
+                    url: apiUrl,
+                    options: {
+                        method: 'GET'
+                    }
+                })
+            );
+
+            Promise.allSettled(promiseArray)
+                .then((data) => {
+                    let loanable = [],
+                        collateral = [];
+                    const [rsLoanable, rsCollateral] = data || [];
+
+                    if (rsLoanable.status === 'fulfilled' && rsLoanable.value?.statusCode === 200) {
+                        loanable = rsLoanable.value?.data || [];
+                    }
+                    if (rsCollateral.status === 'fulfilled' && rsCollateral.value?.statusCode === 200) {
+                        collateral = rsCollateral.value?.data?.result || [];
+                    }
+                    setLoanAsset({ loanable, collateral });
+                })
+                .catch((error) => console.error(error));
+        };
         handleLoanAsset();
-    }, [auth]);
+    }, []);
 
     const value = useMemo(
         () => ({ loanAsset, assetConfig, auth, pairPrice, state, dispatchReducer, handlePairPrice }),

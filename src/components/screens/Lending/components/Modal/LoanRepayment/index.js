@@ -2,32 +2,39 @@ import { useCallback, useMemo, useState } from 'react';
 
 // ** next
 import { useTranslation } from 'next-i18next';
+import dynamic from 'next/dynamic';
 
 // ** Redux
-import { ceilByExactDegit, formatNumber2, roundByExactDigit, setTransferModal } from 'redux/actions/utils';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-//** components
-import ModalV2 from 'components/common/V2/ModalV2';
+//** Components
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-
-// ** svg
-import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
-import classNames from 'classnames';
-import dynamic from 'next/dynamic';
+import ModalV2 from 'components/common/V2/ModalV2';
+import { AddCircleColorIcon, IconClose } from 'components/svg/SvgIcon';
 import TradingInputV2 from 'components/trade/TradingInputV2';
-
 import AssetLogo from 'components/wallet/AssetLogo';
-import { getSpotAvailable } from 'components/screens/Lending/utils/selector';
-import { getAssetConfig } from 'components/screens/Lending/Context';
-import { WalletType } from 'redux/actions/const';
-import RepaymentInformation from './RepaymentInformation';
-import useRepayLoan from 'components/screens/Lending/hooks/useRepayLoan';
-import { getCurrentLTV, getReceiveCollateral } from 'components/screens/Lending/utils';
-import { PERCENT } from 'components/screens/Lending/constants';
 import PercentageInput from './PercentageInput';
-import ModalCancelLoanRepayment from './CancelLoanRepayment';
+import RepaymentInformation from './RepaymentInformation';
+
+// ** Custom hooks
 import useCollateralPrice from 'components/screens/Lending/hooks/useCollateralPrice';
+import useRepayLoan from 'components/screens/Lending/hooks/useRepayLoan';
+
+// ** Utils
+import { getCurrentLTV, getReceiveCollateral } from 'components/screens/Lending/utils';
+import { getSpotAvailable } from 'components/screens/Lending/utils/selector';
+import { formatNumber2, roundByExactDigit, setTransferModal } from 'redux/actions/utils';
+
+// ** Constants
+import { PERCENT } from 'components/screens/Lending/constants';
+import { WalletType } from 'redux/actions/const';
+
+// ** Third parties
+import classNames from 'classnames';
+
+// dynamic import
+const ModalConfirmLoanRepayment = dynamic(() => import('./ConfirmLoanRepayment'), { ssr: false });
+const ModalCancelLoanRepayment = dynamic(() => import('./CancelLoanRepayment'), { ssr: false });
 
 export const REPAY_TAB = {
     LOAN: 'loan',
@@ -38,8 +45,6 @@ const INPUT_FIELD = {
     AMOUNT: 'amount',
     PERCENTAGE: 'percentage'
 };
-
-const ModalConfirmLoanRepayment = dynamic(() => import('./ConfirmLoanRepayment'), { ssr: false });
 
 const INIT_STATE = {
     input: {
@@ -132,6 +137,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             collateralCoinConfig,
             collateralPriceToLoanCoin,
             repayAmount,
+            repayInLoanAmount,
             collateralAmountReceive,
             repayType: state.tab
         }),
@@ -145,6 +151,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             collateralCoinConfig?.assetCode,
             collateralPriceToLoanCoin,
             repayAmount,
+            repayInLoanAmount,
             collateralAmountReceive,
             state.tab
         ]
@@ -179,8 +186,6 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
         [totalDebt, loanCoinConfig?.assetDigit]
     );
 
-    const handleToggleConfirmModal = () => setState({ isShowConfirm: !state.isShowConfirm });
-
     const onChangeRepayTypeHandler = (newTab) => {
         setState({ tab: newTab });
     };
@@ -193,10 +198,19 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
     const onRepayHandler = async (type) => {
         if (type === 'showConfirm') {
             onHandleRefetchPrice();
-            handleToggleConfirmModal();
+            setState({ isShowConfirm: true });
             return;
         }
         return await repayLoan();
+    };
+
+    const onHandleCloseRepaymentModal = (forceClose = false) => {
+        if (!forceClose && +repayInLoanAmount > 0) {
+            setState({ isShowConfirmCancel: true });
+            return;
+        }
+        setState(INIT_STATE);
+        setTimeout(() => onCloseRepaymentModal(), 50);
     };
 
     const validator = useMemo(() => {
@@ -219,15 +233,6 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
             msg
         };
     }, [loanCoinAvailable, repayInLoanAmount, isLoanRepay]);
-
-    const onHandleCloseRepaymentModal = (forceClose = false) => {
-        if (!forceClose && +repayInLoanAmount > 0) {
-            setState({ isShowConfirmCancel: true });
-            return;
-        }
-        setState(INIT_STATE);
-        setTimeout(() => onCloseRepaymentModal(), 50);
-    };
 
     const isDisableRepayButton = !repayInLoanAmount || +repayInLoanAmount === 0 || validator.isError;
 
@@ -344,7 +349,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
                 repaymentData={repaymentDataProps}
                 repayLoan={onRepayHandler}
                 isModal={state.isShowConfirm}
-                onClose={handleToggleConfirmModal}
+                onClose={() => setState({ isShowConfirm: false })}
                 onCloseMainModal={onCloseRepaymentModal}
             />
         </>

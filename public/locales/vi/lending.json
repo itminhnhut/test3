@@ -48,7 +48,7 @@
 
             "loan_term_description": "Mỗi thời hạn vay có thời gian trả chậm cho phép, phí trả chậm trong trường hợp này bằng 3 lần lãi vay. Thời gian trả chậm cho phép:<ul class=\"list-disc px-4\"><li>Kỳ hạn 7 ngày: trả chậm tối đa 72h</li><li>Kỳ hạn 30 ngày: trả chậm tối đa 168h</li></ul> Nếu vượt quá thời gian trả chậm cho phép, tài sản ký quỹ của bạn sẽ bị thanh lý với phí thanh lý là 2% trên tổng dư nợ."
         },
-        "rule": "Tôi đã đọc và đồng ý với <0>Điều khoản và Chính sách của Nami Lending</0>",
+        "rule": "<0>Tôi đã đọc và đồng ý với</0> <1>Điều khoản và Chính sách của Nami Lending</1>",
         "ltv": {
             "initial_ltv": "<primary>LTV = <secondary>(Giá trị khoản vay / Giá trị tài sản ký quỹ)</secondary></primary>Tỷ lệ cho vay trên giá trị (LTV) là tỷ lệ giá trị tài sản vay trên giá trị tài sản ký quỹ. Trong đó, tỷ lệ LTV ban đầu xác định số lượng tài sản ban đầu có thể vay.",
             "margin_ltv": "<primary>Nếu tỷ lệ LTV <secondary>[Giá trị khoản vay (gốc + lãi) / Giá trị tài sản ký quỹ]</secondary></primary> đạt ngưỡng này, bạn phải thêm tài sản ký quỹ vào khoản vay để tránh bị thanh lý.",

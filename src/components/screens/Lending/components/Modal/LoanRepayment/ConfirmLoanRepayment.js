@@ -33,6 +33,7 @@ const ConfirmLoanRepayment = ({ repaymentData, isModal, onClose, onCloseMainModa
         adjustLTV,
         isLoanRepay,
         repayAmount,
+        repayInLoanAmount,
         totalDebt,
         totalDebtLeft,
         loanCoinConfig,
@@ -151,7 +152,7 @@ const ConfirmLoanRepayment = ({ repaymentData, isModal, onClose, onCloseMainModa
             >
                 <div className="mt-4 w-full">
                     <div className="text-2xl text-center font-semibold mb-6">
-                        {formatNumber(repayAmount, loanCoinConfig?.assetDigit || 0)} {loanCoinConfig?.assetCode}
+                        {formatNumber(repayInLoanAmount, loanCoinConfig?.assetDigit || 0)} {loanCoinConfig?.assetCode}
                     </div>
                     <div className="dark:bg-dark-4 bg-gray-13 p-4 rounded-xl flex justify-between items-center">
                         <div>Dư nợ còn lại</div>
