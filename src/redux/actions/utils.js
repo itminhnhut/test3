@@ -1144,7 +1144,12 @@ export const formatFundingRate = (value) => {
 };
 
 export const formatFundingRateV2 = (value) => {
-    return `${formatNumber(value * 100, 4, 0, true)}%`;
+    const force = value * 100;
+    const sign = Math.sign(force);
+    const absoluteValue = Math.abs(force);
+    const decimal = 10000;
+    const formattedNumber = ((sign * Math.floor(absoluteValue * decimal)) / decimal).toString();
+    return `${formatNanNumber(formattedNumber, 4, 0, true)}%`;
 };
 
 export function checkLargeVolume(notional, isVndc = true) {
