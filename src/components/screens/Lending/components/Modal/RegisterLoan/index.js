@@ -10,11 +10,9 @@ import { useLoanableList, useCollateralList } from 'components/screens/Lending/C
 
 // ** Redux
 import { useSelector } from 'react-redux';
-import AuthSelector from 'redux/selectors/authSelectors';
 
 //** components
 import Chip from 'components/common/V2/Chip';
-import Tooltip from 'components/common/Tooltip';
 import CheckBox from 'components/common/CheckBox';
 import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -54,6 +52,8 @@ import { dwLinkBuilder, formatNumber, getLoginUrl } from 'redux/actions/utils';
 import { getSpotAvailable } from 'components/screens/Lending/utils/selector';
 import Spinner from 'components/svg/Spinner';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
+import { PATHS } from 'constants/paths';
 
 // ** INIT DATA
 const INIT_DATA = {
@@ -74,9 +74,12 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
         t,
         i18n: { language }
     } = useTranslation();
+    const router = useRouter();
 
     const assetConfig = useSelector((state) => state.utils.assetConfig) || [];
-    const isAuth = useSelector(AuthSelector.isAuthSelector);
+    const user = useSelector((state) => state?.auth?.user);
+    const isAuth = Boolean(user);
+    const isUserEKyc = user?.kyc_status === 2;
 
     // ** useContext
     const { loanable: loanAssetList } = useLoanableList();
@@ -126,6 +129,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     });
 
     const handleRegisterLoan = async (type) => {
+        if (!isUserEKyc) return router.push(PATHS.ACCOUNT.IDENTIFICATION);
         switch (type) {
             case REGISTER_HANDLE_TYPE.FROM_CONFIRM_MODAL:
                 return await registerLoan();
@@ -201,7 +205,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
         };
 
         settingDefaultAsset();
-    }, [getDefaultAsset, assetList]);
+    }, [getDefaultAsset]);
 
     const onChangeAsset = (value, key) => {
         if ([LOANABLE, COLLATERAL].includes(key)) {
@@ -236,8 +240,8 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     // ** render
     const renderInterest = () => {
         const interestRate = {
-            interest_year: `${loanInterest.annualInterestPercent.toFixed(5)}%`,
-            interest_daily: `${loanInterest.dailyInterestPercent.toFixed(5)}%`,
+            interest_year: `${loanInterest.annualInterestPercent.toFixed(4)}%`,
+            interest_daily: `${loanInterest.dailyInterestPercent.toFixed(4)}%`,
             interest_hours: `${formatNumber(loanInterest.hourInterestAmount, filter?.loanable?.assetDigit || 0)} ${filter?.loanable?.assetCode}`,
             interest_term: `${formatNumber(loanInterest.termInterestAmount, filter?.loanable?.assetDigit || 0)} ${filter?.loanable?.assetCode}`
         };
@@ -261,21 +265,24 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
             margin_ltv: totalLTV.marginCallLTV * PERCENT,
             liquidate_ltv: totalLTV.liquidationLTV * PERCENT
         };
+
         return (
-            <section className="relative flex flex-row mt-4">
-                {LTV.slice(0, 1).map((item, index) => {
+            <section id="ltv_wrapper" className="relative flex flex-row mt-4">
+                {LTV.map((item, index) => {
                     return (
-                        <section className="group relative h-6 flex flex-row" key={`ltv_${index}_${item.title?.[language]}`}>
+                        <section className="group h-6 flex flex-row" key={`ltv_${index}_${item.title?.[language]}`}>
                             <section className="border-b border-darkBlue-5 border-dashed cursor-pointer flex flex-row">
                                 <section className="dark:text-gray-7 text-gray-1">{item.title?.[language]}:</section>
                                 <section className="dark:text-gray-4 text-gray-15 ml-1">{data?.[item.key] || '-'}%</section>
                             </section>
                             {index !== 2 ? <div className="mx-2 dark:text-gray-7 text-gray-1">/</div> : null}
                             <StyledToolTip
-                                // className={classNames({
-                                //     'after:!left-[8%]': index === 0,
-                                //     'after:!left-[84%]': index === 2
-                                // })}
+                                // arrow position
+                                className={classNames({
+                                    'after:!left-[6%]': index === 0,
+                                    'after:!left-[45%]': index === 1,
+                                    'after:!left-[80%]': index === 2
+                                })}
                             >
                                 <Trans
                                     i18nKey={`lending:lending:ltv:${item.key}`}
@@ -354,21 +361,6 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                 btnCloseclassName="text-txtPrimary dark:text-txtPrimary-dark mb-6 !py-0"
             >
                 <section>
-                    {/* loan term description */}
-                    <Tooltip
-                        isV3
-                        place="top"
-                        id="loan_term"
-                        effect="solid"
-                        className="max-w-[527px] dark:after:!border-t-[#2e333d] after:!border-t-[#e1e2e3] after:!left-[auto] !px-6 !py-3 !bg-gray-11 dark:!bg-dark-1  dark:!text-gray-7 !text-gray-1 !text-sm"
-                        overridePosition={({ top }) => {
-                            return { left: 32, top };
-                        }}
-                    >
-                        <div dangerouslySetInnerHTML={{ __html: t('lending:lending.modal.loan_term_description') }} />
-                    </Tooltip>
-                    {/* loan term description */}
-
                     <p className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{t('lending:lending.modal.title')} </p>
                     <section className="mt-6">
                         <TradingInputV2
@@ -486,7 +478,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                         </section>
                         {renderInterest()}
                         {renderLTV()}
-                        {isAuth && renderRules()}
+                        {isAuth && isUserEKyc && renderRules()}
                         {!isAuth ? (
                             <ButtonV2
                                 onClick={() => {
@@ -497,8 +489,12 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                                 {t('common:sign_in')}
                             </ButtonV2>
                         ) : (
-                            <ButtonV2 onClick={() => handleRegisterLoan(REGISTER_HANDLE_TYPE.FROM_MAIN_MODAL)} className="mt-10" disabled={isError}>
-                                Vay ngay
+                            <ButtonV2
+                                onClick={() => handleRegisterLoan(REGISTER_HANDLE_TYPE.FROM_MAIN_MODAL)}
+                                className="mt-10"
+                                disabled={isUserEKyc ? isError : false}
+                            >
+                                {isUserEKyc ? 'Vay ngay' : 'eKyc Ngay'}
                             </ButtonV2>
                         )}
                     </section>
@@ -521,16 +517,14 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
 };
 
 const StyledToolTip = styled.div.attrs({
-    className: classNames(
-        'absolute left-0 bottom-full dark:after:border-t-dark-1 after:border-t-gray-11 text-sm text-txtSecondary dark:text-txtSecondary-dark mb-4 w-full transition opacity-0 group-hover:opacity-100 group-hover:visible invisible  px-6 py-[11px] bg-gray-11 dark:bg-dark-1 rounded-lg'
-    )
+    className:
+        'z-10 absolute left-0 bottom-full dark:after:border-t-dark-1 after:border-t-gray-11 text-sm text-txtSecondary dark:text-txtSecondary-dark mb-4 w-full transition opacity-0 group-hover:opacity-100 group-hover:visible invisible  px-6 py-[11px] bg-gray-11 dark:bg-dark-1 rounded-lg'
 })`
     &:after {
         --size: 12px;
         content: '';
         position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
+        left: ${({ offsetLeft }) => (offsetLeft ? `${offsetLeft}px` : '50%')};
         bottom: calc(var(--size) * -1);
         border-width: calc(var(--size) / 2);
         border-right-color: transparent !important;
