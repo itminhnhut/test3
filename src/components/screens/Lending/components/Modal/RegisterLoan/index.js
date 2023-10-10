@@ -69,7 +69,7 @@ const INIT_DATA = {
     loanInput: ''
 };
 
-const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
+const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collateralAssetList }) => {
     const {
         t,
         i18n: { language }
@@ -80,10 +80,6 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     const user = useSelector((state) => state?.auth?.user);
     const isAuth = Boolean(user);
     const isUserEKyc = user?.kyc_status === 2;
-
-    // ** useContext
-    const { loanable: loanAssetList } = useLoanableList();
-    const { collateral: collateralAssetList } = useCollateralList();
 
     // ** useState
     const [refetchCollateralPrice, setRefetchCollateralPrice] = useState(false);
@@ -339,7 +335,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
                     labelClassName="mr-2"
                     labelAsset="Chọn tài sản ký quỹ"
                     wrapperClassName="w-max right-[-12px] !left-[auto]"
-                    containerClassName={classNames({ '!z-[auto]': assetListKey === COLLATERAL })}
+                    containerClassName={classNames('!z-[auto]')}
                     isAuth={isAuth}
                 />
             );
@@ -351,7 +347,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
     return (
         <>
             <ModalV2
-                isVisible={isModal}
+                isVisible={isOpen}
                 className="w-[596px] overflow-auto no-scrollbar"
                 onBackdropCb={() => {
                     onClose();
@@ -518,7 +514,7 @@ const ModalRegisterLoan = ({ isModal, onClose, loanAsset }) => {
 
 const StyledToolTip = styled.div.attrs({
     className:
-        'z-10 absolute left-0 bottom-full dark:after:border-t-dark-1 after:border-t-gray-11 text-sm text-txtSecondary dark:text-txtSecondary-dark mb-4 w-full transition opacity-0 group-hover:opacity-100 group-hover:visible invisible  px-6 py-[11px] bg-gray-11 dark:bg-dark-1 rounded-lg'
+        'z-10 absolute left-0 bottom-full dark:after:border-t-dark-1 after:border-t-darkBlue text-sm text-white dark:text-txtPrimary-dark mb-4 w-full transition opacity-0 group-hover:opacity-100 group-hover:visible invisible  px-6 py-[11px] bg-darkBlue dark:bg-dark-1 rounded-lg'
 })`
     &:after {
         --size: 12px;

@@ -2,6 +2,7 @@ import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 
 // ** NEXT
 import { useTranslation } from 'next-i18next';
+import { useLoanableList, useCollateralList } from 'components/screens/Lending/Context';
 
 // ** components
 import AssetLogo from 'components/wallet/AssetLogo';
@@ -19,16 +20,13 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import colors from 'styles/colors';
 import dynamic from 'next/dynamic';
+import useRedirectLoanAsset from '../../hooks/useRedirectLoanAsset';
 
 // ** dynamic
 const ModalRegisterLoan = dynamic(() => import('components/screens/Lending/components/Modal/RegisterLoan'), { ssr: false });
 
 // ** Constants
 const LIMIT = 10;
-
-const INIT_DATA = {
-    loanAsset: null
-};
 
 const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
     const {
@@ -42,8 +40,10 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
     const { width } = useWindowSize();
     const isMobile = width < 830;
 
-    // ** useState
-    const [loanAsset, setLoanAsset] = useState(INIT_DATA.loanAsset);
+    const { loanable: loanAssetList } = useLoanableList();
+    const { collateral: collateralAssetList } = useCollateralList();
+
+    const { loanAsset, setLoanAsset } = useRedirectLoanAsset({ loanAssetList });
 
     // ** render
     const renderTitle = (title, content) => {
@@ -94,7 +94,7 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 minWidth: 205,
                 render: (value, data) => {
                     const interestRate = +value * 100;
-                    return <div className="font-normal">{`${interestRate?.toFixed(5)}% / ${(interestRate * 24 * 365)?.toFixed(5)}%`}</div>;
+                    return <div className="font-normal">{`${interestRate?.toFixed(4)}% / ${(interestRate * 24 * 365)?.toFixed(4)}%`}</div>;
                 }
             },
             {
@@ -105,7 +105,7 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 minWidth: 206,
                 render: (value, data) => {
                     const interestRate = +value * 100;
-                    return <div className="font-normal">{`${interestRate?.toFixed(5)}% / ${(interestRate * 24 * 365)?.toFixed(5)}%`}</div>;
+                    return <div className="font-normal">{`${interestRate?.toFixed(4)}% / ${(interestRate * 24 * 365)?.toFixed(4)}%`}</div>;
                 }
             },
             {
@@ -158,7 +158,13 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
         <>
             <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">{renderTable()}</section>
             {/* Tạo khoản vay  */}
-            <ModalRegisterLoan isModal={Boolean(loanAsset)} loanAsset={loanAsset} onClose={() => setLoanAsset(null)} />
+            <ModalRegisterLoan
+                loanAssetList={loanAssetList}
+                collateralAssetList={collateralAssetList}
+                isOpen={Boolean(loanAsset)}
+                loanAsset={loanAsset}
+                onClose={() => setLoanAsset(null)}
+            />
         </>
     );
 };
