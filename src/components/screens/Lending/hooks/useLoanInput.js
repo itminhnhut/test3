@@ -105,11 +105,11 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
                         msg: `Số lượng muốn thế chấp phải lớn hơn ${formatNumber(minCollateralAmount, collateral?.assetDigit)}`
                     };
                 }
-                if (+collateralValue > +collateral?.config?.maxLimit) {
+                if (+collateralValue > maxCollateralAmount) {
                     return {
                         isValid: false,
                         isError: true,
-                        msg: `Số lượng muốn thế chấp phải bé hơn ${formatNumber(collateral?.config?.maxLimit, collateral?.assetDigit)} `
+                        msg: `Số lượng muốn thế chấp phải bé hơn ${formatNumber(maxCollateralAmount, collateral?.assetDigit)} `
                     };
                 }
 
@@ -120,7 +120,16 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
                 };
             }
         }),
-        [loanable, collateral, collateralValue, loanValue, minCollateralAmount, isTypingLoanField, collateralAvailable]
+        [
+            loanable?.assetCode,
+            collateral?.assetCode,
+            collateralValue,
+            loanValue,
+            minCollateralAmount,
+            maxCollateralAmount,
+            isTypingLoanField,
+            collateralAvailable
+        ]
     );
 
     return {
