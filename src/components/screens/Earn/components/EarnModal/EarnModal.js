@@ -7,7 +7,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import { ONE_DAY } from 'constants/constants';
 import { format as formatDate, startOfTomorrow } from 'date-fns';
 import { useTranslation } from 'next-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { formatNumber, getAssetFromCode, getLoginUrl } from 'redux/actions/utils';
 import { WalletCurrency } from 'utils/reference-utils';
 import CheckBox from 'components/common/CheckBox';
@@ -26,6 +26,7 @@ import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import SuccessModal from '../SuccessModal/SuccessModal';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import { getUserEarnBalance } from 'redux/actions/user';
 
 const formatDateTime = (date = 0) => {
     return formatDate(date, 'hh:mm dd/MM/yyyy');
@@ -97,6 +98,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
     const [autoRenew, setAutoRenew] = useState(true);
     const [agree, setAgree] = useState(false);
     const [openModal, setOpenModal] = useState();
+    const dispatch = useDispatch();
     const auth = useSelector((state) => state?.auth?.user || null);
     const kyc_status = auth?.kyc_status ?? KYC_STATUS.NO_KYC;
 
@@ -208,6 +210,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                 setDepositError(error || t('earn:deposit_modal:error'));
             }
         } catch (error) {
+            console.log('error:', error)
             closeModal();
             setDepositError(t('earn:deposit_modal:error'));
         } finally {

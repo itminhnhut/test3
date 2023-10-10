@@ -267,7 +267,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
             <div
                 className={classNames('rounded-2xl flex space-x-2 items-center py-1 px-4', {
                     'bg-yellow-2/10 text-yellow-2': status === STATUS.SUSPENDING,
-                    'bg-divider dark:bg-divider-dark text-txtTextBtn-tonal dark:txt-txtTextBtn-tonal_dark': status === STATUS.NON_RENEWAL,
+                    'bg-divider dark:bg-divider-dark text-txtTextBtn-tonal dark:text-txtTextBtn-tonal_dark': status === STATUS.NON_RENEWAL,
                     'bg-green-2/10 text-green-3 dark:text-green-2': status === STATUS.RENEWAL
                 })}
             >
