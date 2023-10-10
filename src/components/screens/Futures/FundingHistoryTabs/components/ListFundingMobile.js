@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import Divider from 'components/common/Divider';
 import { usePrevious } from 'react-use';
 import Skeletor from 'components/common/Skeletor';
-import { Countdown, formatCurrency, formatFundingRateV2 } from 'redux/actions/utils';
+import { Countdown, formatCurrency, formatFundingRateV2, formatVolFundingRateV2 } from 'redux/actions/utils';
 import NoData from 'components/common/V2/TableV2/NoData';
 
 export default function ListFundingMobile({ dataTable, currency, loading, isSearch }) {
@@ -39,14 +39,24 @@ export default function ListFundingMobile({ dataTable, currency, loading, isSear
                         <div className="flex justify-between w-full">
                             <p className="text-sm text-txtTabInactive dark:text-txtTabInactive-dark">{`${t('common:volume')} (Long/Short)`}</p>
                             <p className="text-sm text-txtPrimary dark:text-txtPrimary-dark">
-                                {item?.isSkeleton ? item.fundingTime : `${formatCurrency(item?.totalBuyVolume)} / ${formatCurrency(item?.totalSellVolume)}`}
+                                {item?.isSkeleton ? item.fundingTime : `${formatVolFundingRateV2(item, 'buy')} / ${formatVolFundingRateV2(item, 'sell')}`}
                             </p>
                         </div>
                         <div className="flex justify-between w-full">
-                            <p className="text-sm text-txtTabInactive dark:text-txtTabInactive-dark">{`${t('futures:funding_history_tab:funding_rate')} (Long/Short)`}</p>
-                            <p className="text-sm text-txtPrimary dark:text-txtPrimary-dark">
-                                {item?.isSkeleton ? item.fundingTime : `${formatFundingRateV2(item?.buyFundingRate)} / ${formatFundingRateV2(item?.sellFundingRate)}`}
-                            </p>
+                            <p className="text-sm text-txtTabInactive dark:text-txtTabInactive-dark">{`${t(
+                                'futures:funding_history_tab:funding_rate'
+                            )} (Long/Short)`}</p>
+                            <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark">
+                                {item?.isSkeleton ? (
+                                    item.fundingTime
+                                ) : (
+                                    <div className="flex items-center justify-end space-x-1">
+                                        <span className="text-teal">{formatFundingRateV2(item?.buyFundingRate)}</span>
+                                        <span>/</span>
+                                        <span className="text-red">{formatFundingRateV2(item?.sellFundingRate)}</span>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

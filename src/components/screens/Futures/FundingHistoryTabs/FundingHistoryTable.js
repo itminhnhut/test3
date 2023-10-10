@@ -196,7 +196,13 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
             width: '30%',
             preventSort: true,
             fixed: width >= 992 ? 'none' : 'left',
-            render: (data, item) => <span>{`${formatFundingRateV2(item?.lastBuyFundingRate)} / ${formatFundingRateV2(item?.lastSellFundingRate)}`}</span>
+            render: (data, item) => (
+                <div className="flex items-center justify-end space-x-1">
+                    <span className="text-teal">{formatFundingRateV2(item?.lastBuyFundingRate)}</span>
+                    <span>/</span>
+                    <span className="text-red">{formatFundingRateV2(item?.lastSellFundingRate)}</span>
+                </div>
+            )
         }
     ];
 
@@ -214,7 +220,7 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
                         return formatTime(+tooltipItem[0]?.label, 'yyyy-MM-dd HH:mm:ss');
                     },
                     labelTextColor: function (data) {
-                        return !data.datasetIndex ? colors.teal : colors.blue[2];
+                        return !data.datasetIndex ? colors.teal : colors.red[2];
                     },
                     label: function (context) {
                         return formatNumber(context.raw, 0, 6, true) + '%';
@@ -274,7 +280,7 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
     };
 
     const createGradient = (ctx, area, side) => {
-        const colorStart = side === 'buy' ? '#47cc8526' : '#4f95f026';
+        const colorStart = side === 'buy' ? '#47cc8526' : '#f9363626';
         const colorEnd = '#ffffff00';
         const gradient = ctx?.createLinearGradient(0, area.top, 0, area.bottom);
         gradient?.addColorStop(0, colorStart);
@@ -288,7 +294,7 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
         const labels = dataReverse.map((item) => item.calcTime);
         return {
             labels,
-            color: [colors.teal, colors.blue[2]],
+            color: [colors.teal, colors.red[2]],
             datasets: [
                 {
                     backgroundColor: createGradient(chart.current?.ctx, chart.current?.chartArea, 'buy'),
@@ -302,8 +308,8 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
                 {
                     backgroundColor: createGradient(chart.current?.ctx, chart.current?.chartArea, 'sell'),
                     data: dataReverse.map((item) => item.lastSellFundingRate * 100),
-                    borderColor: colors.blue[2],
-                    pointBackgroundColor: colors.blue[2],
+                    borderColor: colors.red[2],
+                    pointBackgroundColor: colors.red[2],
                     borderWidth: 2,
                     tension: 0.4,
                     fill: true
@@ -360,9 +366,11 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
                             </div>
                         </div>
                         <div className="relative z-10 sm:flex sm:space-x-1 mt-2 sm:mt-0 text-xs sm:text-base">
-                            <span className="text-txtSecondary-dark text-sm flex items-center mb-1 sm:mb-0">{`${t('futures:funding_rate')} (Long/Short)`}:</span>
+                            <span className="text-txtSecondary-dark text-sm flex items-center mb-1 sm:mb-0">
+                                {`${t('futures:funding_rate')} (Long/Short)`}:
+                            </span>
                             <span className="font-semibold">
-                                <Funding symbol={symbol} sellClassName="text-blue-2" buyClassName="text-teal" />
+                                <Funding symbol={symbol} />
                             </span>
                         </div>
                     </div>
@@ -432,10 +440,10 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
                                                     </div>
                                                     <div className="flex items-center justify-between">
                                                         <div className="dark:text-txtSecondary-dark">{`${t('futures:funding_rate')} (Long/Short)`}</div>
-                                                        <div>
-                                                            <span>{`${formatFundingRateV2(item?.lastBuyFundingRate)} / ${formatFundingRateV2(
-                                                                item?.lastSellFundingRate
-                                                            )}`}</span>
+                                                        <div className="flex items-center justify-end space-x-1">
+                                                            <span className="text-teal">{formatFundingRateV2(item?.lastBuyFundingRate)}</span>
+                                                            <span>/</span>
+                                                            <span className="text-red">{formatFundingRateV2(item?.lastSellFundingRate)}</span>
                                                         </div>
                                                     </div>
                                                 </div>

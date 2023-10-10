@@ -5,6 +5,7 @@ import { getMarketWatch } from 'redux/selectors';
 import Countdown from 'react-countdown-now';
 import Tooltip from 'components/common/Tooltip';
 import { useTranslation } from 'next-i18next';
+import classNames from 'classnames';
 
 const Funding = ({ pairPrice, symbol, className = '', buyClassName = '', sellClassName = '' }) => {
     const marketWatch = useSelector((state) => getMarketWatch(state, convertSymbol(symbol)));
@@ -19,9 +20,9 @@ const Funding = ({ pairPrice, symbol, className = '', buyClassName = '', sellCla
 
     return (
         <div className={`flex items-center space-x-1 ${className}`}>
-            <span className={buyClassName}>{formatFundingRateV2(ticker?.buyFundingRate)}</span>
+            <span className={classNames('text-teal', buyClassName)}>{formatFundingRateV2(ticker?.buyFundingRate)}</span>
             <span>/</span>
-            <span className={sellClassName}>{formatFundingRateV2(ticker?.sellFundingRate)}</span>
+            <span className={classNames('text-red', sellClassName)}>{formatFundingRateV2(ticker?.sellFundingRate)}</span>
         </div>
     );
 };

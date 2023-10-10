@@ -1143,6 +1143,16 @@ export const formatFundingRate = (value) => {
     return (value ? (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true) : 0) + '%';
 };
 
+export const formatVolFundingRateV2 = (item, side) => {
+    let ratio = 0;
+    if (side === 'buy') {
+        ratio = item?.totalBuyVolume ? item?.totalBuyVolume / (item?.totalBuyVolume + item?.totalSellVolume) : 0;
+    } else {
+        ratio = item?.totalSellVolume ? item?.totalSellVolume / (item?.totalSellVolume + item?.totalBuyVolume) : 0;
+    }
+    return `${formatNumber(+ratio.toFixed(2) * 100, 0)}%`;
+};
+
 export const formatFundingRateV2 = (value) => {
     const force = value * 100;
     const sign = Math.sign(force);

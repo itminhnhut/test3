@@ -3,7 +3,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { convertSymbol, formatCurrency, formatFundingRateV2, formatNumber } from 'redux/actions/utils';
+import { convertSymbol, formatCurrency, formatFundingRateV2, formatNumber, formatVolFundingRateV2 } from 'redux/actions/utils';
 import { RETABLE_SORTBY } from 'components/common/ReTable';
 import { Countdown } from 'redux/actions/utils';
 import FetchApi from 'utils/fetch-api';
@@ -220,7 +220,7 @@ export default function FundingHistory({ currency, active }) {
                 title: `${t('common:volume')} (Long/Short)`,
                 align: 'right',
                 width: '30%',
-                render: (data, item) => <span>{`${formatCurrency(item?.totalBuyVolume)} / ${formatCurrency(item?.totalSellVolume)}`}</span>
+                render: (data, item) => <span>{`${formatVolFundingRateV2(item, 'buy')} / ${formatVolFundingRateV2(item, 'sell')}`}</span>
             },
             {
                 key: 'funding_rate',
@@ -228,7 +228,13 @@ export default function FundingHistory({ currency, active }) {
                 title: `${t('futures:funding_history_tab:funding_rate')} (Long/Short)`,
                 align: 'right',
                 width: '30%',
-                render: (data, item) => <span>{`${formatFundingRateV2(item?.buyFundingRate)} / ${formatFundingRateV2(item?.sellFundingRate)}`}</span>
+                render: (data, item) => (
+                    <div className="flex items-center justify-end space-x-1">
+                        <span className="text-teal">{formatFundingRateV2(item?.buyFundingRate)}</span>
+                        <span>/</span>
+                        <span className="text-red">{formatFundingRateV2(item?.sellFundingRate)}</span>
+                    </div>
+                )
             }
         ];
     }, [dataTable, currency, currentPage]);
