@@ -21,6 +21,8 @@ import classNames from 'classnames';
 import colors from 'styles/colors';
 import dynamic from 'next/dynamic';
 import useRedirectLoanAsset from '../../hooks/useRedirectLoanAsset';
+import useFetchApi from 'hooks/useFetchApi';
+import { API_GET_PAIR_PRICE } from 'redux/actions/apis';
 
 // ** dynamic
 const ModalRegisterLoan = dynamic(() => import('components/screens/Lending/components/Modal/RegisterLoan'), { ssr: false });
@@ -44,6 +46,14 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
     const { collateral: collateralAssetList } = useCollateralList();
 
     const { loanAsset, setLoanAsset } = useRedirectLoanAsset({ loanAssetList });
+
+    const {
+        data: pairsPrice,
+        loading: fetchingPairPrice,
+        error
+    } = useFetchApi({
+        url: `${API_GET_PAIR_PRICE}/all`
+    });
 
     // ** render
     const renderTitle = (title, content) => {
@@ -73,18 +83,24 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
             {
                 key: 'minLimit',
                 dataIndex: 'minLimit',
-                title: renderTitle(t('lending:lending:table:minimum'), 'Đơn vị: VND'),
+                title: renderTitle(t('lending:lending:table:minimum'), 'Đơn vị: USD'),
                 align: 'left',
                 minWidth: 206,
-                render: (value) => <div>{formatNumber(value)}</div>
+                render: (limitValue, data) => {
+                    const pairPriceInUSDT = pairsPrice?.[`${data?.loanCoin}USDT`]?.lastPrice || 1;
+                    return <div>{formatNumber(limitValue * pairPriceInUSDT)}</div>;
+                }
             },
             {
                 key: 'maxLimit',
                 dataIndex: 'maxLimit',
-                title: renderTitle(t('lending:lending:table:maximum'), 'Đơn vị: VND'),
+                title: renderTitle(t('lending:lending:table:maximum'), 'Đơn vị: USD'),
                 align: 'left',
                 width: 205,
-                render: (value) => <div className="font-normal">{formatNumber(value)}</div>
+                render: (limitValue, data) => {
+                    const pairPriceInUSDT = pairsPrice?.[`${data?.loanCoin}USDT`]?.lastPrice || 1;
+                    return <div className="font-normal">{formatNumber(limitValue * pairPriceInUSDT)}</div>;
+                }
             },
             {
                 key: '_7dHourlyInterestRate',
@@ -137,6 +153,7 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 scroll={{ x: true }}
                 className=""
                 data={data || []}
+                onRowClick={(item) => setLoanAsset(item?.loanCoin)}
                 rowKey={(item) => `${item?.key}`}
                 pagingClassName="!border-0 !py-8"
                 pagingPrevNext={{
@@ -152,7 +169,7 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 }}
             />
         );
-    }, [data?.result, loading, isDark]);
+    }, [data?.result, loading, isDark, pairsPrice]);
 
     return (
         <>

@@ -20,6 +20,7 @@ import dynamic from 'next/dynamic';
 import addDays from 'date-fns/addDays';
 import { ApiStatus } from 'redux/actions/const';
 import RegisterLoanButton from './RegisterLoanButton';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 // ** Dynamic
 const SucessLoan = dynamic(() => import('./SucessLoan'), { ssrc: false });
@@ -53,12 +54,17 @@ const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessC
     } = useTranslation();
 
     // ** useState
-    const [isShowModalConfirm, setModalConfirm] = useState(false);
+    const [modal, setModal] = useState({
+        isShowConfirm: false,
+        isShowError: false
+    });
+
     const [loading, setLoading] = useState(false);
     const [registerLoanResponse, setRegisterLoanResponse] = useState(null);
 
     // ** handle
-    const handleToggleModalConfirm = () => setModalConfirm((prev) => !prev);
+    const handleToggleModalConfirm = () => setModal((prevState) => ({ ...prevState, isShowConfirm: !prevState.isShowConfirm }));
+    const handleToggleModalError = () => setModal((prevState) => ({ ...prevState, isShowError: !prevState.isShowError }));
 
     // ** variable
     const loanCoin = loanInfor.loanable?.assetCode;
@@ -87,12 +93,15 @@ const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessC
         setLoading(true);
         try {
             const registerResponse = await registerLoan();
+            onClose();
             if (registerResponse?.data && registerResponse?.message === ApiStatus.SUCCESS) {
                 setRegisterLoanResponse(registerResponse.data);
-                onClose();
                 setTimeout(() => handleToggleModalConfirm(), 200);
+            } else {
+                setTimeout(() => handleToggleModalError(), 200);
             }
         } catch (error) {
+            handleToggleModalError();
         } finally {
             setLoading(false);
         }
@@ -142,13 +151,19 @@ const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessC
                     loadingPrice={loadingCollateralPrice}
                 />
             </ModalV2>
+
+            <AlertModalV2 isVisible={modal.isShowError} onClose={handleToggleModalError} type="error" title="Lỗi" message="Có lỗi xảy ra" />
+
             <SucessLoan
-                isModal={isShowModalConfirm}
+                isModal={modal.isShowConfirm}
                 collateralAmount={formatNumber(registerLoanResponse?.collateralAmount, collateralDigit)}
                 collateralCoin={registerLoanResponse?.collateralCoin}
+                loanAmount={formatNumber(registerLoanResponse?.loanAmount, loanDigit)}
+                loanCoin={registerLoanResponse?.loanCoin}
                 onClose={() => {
                     handleToggleModalConfirm();
-                    setTimeout(() => onSuccessClose(), 150);
+                    // this must return a promise to detect setTimeout has done
+                    return new Promise((resolve) => setTimeout(() => resolve(onSuccessClose()), 150));
                 }}
             />
         </>
