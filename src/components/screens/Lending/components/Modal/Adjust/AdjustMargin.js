@@ -22,6 +22,7 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import AssetLogo from 'components/wallet/AssetLogo';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TradingInputV2 from 'components/trade/TradingInputV2';
+
 //** components screen
 import ConfirmAdjustMargin from './ConfirmAdjustMargin';
 import AlertAdjust from './AlertAdjust.js';
@@ -58,7 +59,7 @@ const ERRORS = {
     max: { vi: 'số lượng tài sản lớn hơn khả dụng', en: 'số lượng tài sản lớn hơn khả dụng' }
 };
 
-const AdjustMargin = ({ onClose, dataCollateral, isShow }) => {
+const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     // ** useReducer
     const { state, dispatchReducer } = useContext(LendingContext);
 
@@ -105,6 +106,7 @@ const AdjustMargin = ({ onClose, dataCollateral, isShow }) => {
         if (state.amount === '' && amountAsset !== '') {
             setAmountAsset(initState.amountAsset);
         }
+        isShow && getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin }); //** get price token
     }, [isShow]);
 
     // ** useEffect
@@ -268,11 +270,11 @@ const AdjustMargin = ({ onClose, dataCollateral, isShow }) => {
         return (
             <section>
                 <section className="flex flex-row justify-between dark:text-gray-7 text-gray-1 text-sm">
-                    <section className="">Số lượng</section>
+                    <section className="text-base font-semibold">Số lượng</section>
                     <section className="flex flex-row items-center gap-1">
                         <div className="flex flex-row">
                             <span>Khả dụng:</span>
-                            <span className="dark:text-gray-4 text-gray-15">
+                            <span className="dark:text-gray-4 text-gray-15 ml-1 font-semibold">
                                 {totalAvailable} {collateralAsset?.symbol?.assetCode}
                             </span>
                         </div>

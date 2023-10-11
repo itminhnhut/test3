@@ -28,7 +28,7 @@ import FetchApi from 'utils/fetch-api';
 import { totalAsset } from 'components/screens/Lending/utils';
 
 // ** Context
-import { LendingContext, usePairPrice } from 'components/screens/Lending/Context';
+import { LendingContext } from 'components/screens/Lending/Context';
 import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
 
 // ** Redux
@@ -76,7 +76,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
 
     // ** useContent
     const { dispatchReducer, state } = useContext(LendingContext);
-    const { getPairPrice } = usePairPrice();
+
     // ** useState
     const [dataCollateral, setDataCollateral] = useState({});
 
@@ -93,7 +93,6 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 setDataCollateral({ ...data, collateralAsset });
                 if (action === 'adjust') {
                     dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN }); //** show modal adjust
-                    getPairPrice({ collateralAssetCode: data?.collateralCoin, loanableAssetCode: data?.loanCoin }); //** get price token
                 } else {
                     setIsOpenRepaymentModal(true);
                 }
@@ -230,17 +229,17 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     };
 
     const renderCol3 = (options) => {
-        const { collateralAmount, collateralCoin, expirationTime, status } = options;
-        const rsCollateralAmount = totalAsset(collateralAmount, collateralCoin); //** Tổng ký quỹ ban đầu */
+        const { totalCollateralAmount, collateralCoin, expirationTime, status } = options;
+        const rsTotalCollateralAmount = totalAsset(totalCollateralAmount, collateralCoin); //** Tổng ký quỹ ban đầu */
         return (
             <section className="flex flex-col h-[128px] w-max">
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] whitespace-nowrap">
                     <section className={classNames('flex flex-row items-center gap-1')}>
-                        <AssetLogo assetId={rsCollateralAmount?.symbol?.id} />
+                        <AssetLogo assetId={rsTotalCollateralAmount?.symbol?.id} />
                         <section className="flex flex-col">
                             <div className="text-gray-1 dark:text-gray-7">Tổng dư nợ</div>
                             <div className="dark:text-gray-4 text-gray-15 font-semibold">
-                                {rsCollateralAmount?.total} {rsCollateralAmount?.symbol?.assetCode}
+                                {rsTotalCollateralAmount?.total} {rsTotalCollateralAmount?.symbol?.assetCode}
                             </div>
                         </section>
                     </section>
