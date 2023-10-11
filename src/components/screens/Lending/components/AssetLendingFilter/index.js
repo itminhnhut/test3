@@ -106,7 +106,7 @@ const AssetLendingFilter = ({
                         })}
                     >
                         <div className="flex items-center space-x-2">
-                            <AssetLogo useNextImg={true} size={24} assetCode={currentAsset?.assetCode} />
+                            <AssetLogo useNextImg size={24} assetCode={currentAsset?.assetCode} />
                             <div className="text-txtPrimary dark:text-txtPrimary-dark">{currentAsset?.assetCode}</div>
                             <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">{currentAsset?.assetName}</div>
                         </div>
@@ -140,7 +140,7 @@ const AssetLendingFilter = ({
                             ) : (
                                 <div className={classNames(' flex items-center space-x-2', labelClassName)}>
                                     <div className="w-6 h-6 min-w-[24px] min-h-[24px]">
-                                        <AssetLogo useNextImg={true} size={24} assetCode={asset?.assetCode} />
+                                        <AssetLogo useNextImg size={24} assetCode={asset?.assetCode} />
                                     </div>
                                     <div className="font-semibold">{asset?.assetCode || asset?.assetName}</div>
                                 </div>
@@ -162,17 +162,17 @@ const AssetLendingFilter = ({
                                 <div className="space-y-3">
                                     {previousSearchList.map((currentAsset) => {
                                         const isAssetChosen = asset && asset?.id === currentAsset?.id;
+                                        const isAssetInLoanList = currentAsset?.assetCode === assetCode;
                                         return (
                                             <div
                                                 onClick={() => {
-                                                    if (isAssetChosen) return;
+                                                    if (isAssetChosen || isAssetInLoanList) return;
 
                                                     popoverRef?.current?.close();
                                                     setTimeout(() => setSearch(''), 100);
                                                     onChangeAsset(currentAsset);
 
-                                                    // save to localStorage search list only for collateral list && isAuth
-                                                    if (assetListKey === COLLATERAL && isAuth) {
+                                                    if (isAuth) {
                                                         const copySearchList = JSON.parse(JSON.stringify(previousSearchList));
                                                         const existAsset = copySearchList.find((asset) => asset?.id === currentAsset?.id);
                                                         if (existAsset) return;
@@ -184,11 +184,12 @@ const AssetLendingFilter = ({
                                                 }}
                                                 className={classNames('flex items-center justify-between px-4 py-3 hover:bg-hover dark:hover:bg-hover-dark ', {
                                                     'text-txtPrimary dark:text-txtPrimary-dark': isAssetChosen,
-                                                    'cursor-pointer ': !isAssetChosen
+                                                    'cursor-pointer ': !isAssetChosen,
+                                                    'opacity-50 pointer-events-none cursor-default': isAssetInLoanList
                                                 })}
                                             >
                                                 <div className="flex items-center space-x-2">
-                                                    <AssetLogo useNextImg={true} size={24} assetCode={currentAsset?.assetCode} />
+                                                    <AssetLogo useNextImg size={24} assetCode={currentAsset?.assetCode} />
                                                     <div className="text-txtPrimary dark:text-txtPrimary-dark">{currentAsset?.assetCode}</div>
                                                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">{currentAsset?.assetName}</div>
                                                 </div>

@@ -23,7 +23,7 @@ import useRepayLoan from 'components/screens/Lending/hooks/useRepayLoan';
 // ** Utils
 import { getCurrentLTV, getReceiveCollateral } from 'components/screens/Lending/utils';
 import { getSpotAvailable } from 'components/screens/Lending/utils/selector';
-import { ceilByExactDegit, formatNumber2, roundByExactDigit, setTransferModal } from 'redux/actions/utils';
+import { ceilByExactDegit, dwLinkBuilder, formatNumber2, roundByExactDigit, setTransferModal } from 'redux/actions/utils';
 
 // ** Constants
 import { PERCENT } from 'components/screens/Lending/constants';
@@ -31,6 +31,10 @@ import { WalletType } from 'redux/actions/const';
 
 // ** Third parties
 import classNames from 'classnames';
+import Link from 'next/link';
+import { PATHS } from 'constants/paths';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 // dynamic import
 const ModalConfirmLoanRepayment = dynamic(() => import('./ConfirmLoanRepayment'), { ssr: false });
@@ -112,7 +116,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
     const collateralAmountReceive = getReceiveCollateral({ repayAmount: repayInLoanAmount, totalDebt, totalCollateralAmount, marginUsed });
 
     // ki quy con lai
-    const totalMarginLeft = totalCollateralAmount - collateralAmountReceive;
+    const totalMarginLeft = totalCollateralAmount - marginUsed - collateralAmountReceive;
 
     // tong du no con lai
     const totalDebtLeft = totalDebt - repayInLoanAmount;
@@ -267,7 +271,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
                                 return (
                                     <section
                                         key={`repay_${repayType}}`}
-                                        className={classNames('w-1/2 dark:text-gray-7 text-gray-1 py-4', {
+                                        className={classNames('w-1/2 dark:text-gray-7 text-gray-1 py-3', {
                                             'dark:bg-dark-2 bg-dark-12  font-semibold !text-txtPrimary dark:!text-txtPrimary-dark': repayType === state.tab,
                                             'border-r-[1px] border-r-divider dark:border-r-divider-dark': index === 0
                                         })}
@@ -288,9 +292,11 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
                                             <span className="font-semibold ">{formatNumber2(loanCoinAvailable, loanCoinConfig?.assetDigit || 0) || '0'}</span>
                                         </div>
 
-                                        <div className="inline-block" onClick={onHandleAddMoreBalance}>
-                                            <AddCircleColorIcon size={16} className="cursor-pointer" />
-                                        </div>
+                                        <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, loanCoin)}>
+                                            <a className="inline-block">
+                                                <AddCircleColorIcon size={16} className="cursor-pointer" />
+                                            </a>
+                                        </Link>
                                     </section>
                                 )}
                             </section>
@@ -313,7 +319,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
                                     renderTail={
                                         <div className={classNames('text-txtPrimary dark:text-txtPrimary-dark flex items-center space-x-2')}>
                                             <div className="w-6 h-6 min-w-[24px] min-h-[24px]">
-                                                <AssetLogo useNextImg={true} size={24} assetCode={loanCoinConfig?.assetCode} />
+                                                <AssetLogo useNextImg size={24} assetCode={loanCoinConfig?.assetCode} />
                                             </div>
                                             <div className="font-semibold">{loanCoinConfig?.assetCode || loanCoinConfig?.assetName}</div>
                                         </div>
@@ -322,7 +328,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
                                 />
                             </div>
                             <PercentageInput
-                                tab={state.tab}
+                                key={state.tab} // handle change tab -> reset input
                                 onHandlerInputChange={(value) => {
                                     onHandlerInputChange('percentage', value);
                                     setState({ typingField: 'percentage' });
@@ -332,7 +338,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
                             />
                         </section>
                     </section>
-                    <section className="w-1/2 dark:bg-dark-2 bg-gray-12 p-4 text-txtPrimary dark:text-txtPrimary-dark rounded-xl">
+                    <section className="w-1/2 dark:bg-dark-4 bg-dark-13 p-4 text-txtPrimary dark:text-txtPrimary-dark rounded-xl">
                         <RepaymentInformation {...repaymentDataProps} />
                     </section>
                 </section>
