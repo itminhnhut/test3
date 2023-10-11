@@ -29,7 +29,7 @@ const SucessLoan = ({ isModal, onClose, tab, adjustedLTV, totalAdjusted }) => {
     return (
         <ModalV2
             isVisible={isModal}
-            className="w-[545px] overflow-auto no-scrollbar"
+            className="w-[488px] overflow-auto no-scrollbar"
             onBackdropCb={onClose}
             wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
             customHeader={() => (
