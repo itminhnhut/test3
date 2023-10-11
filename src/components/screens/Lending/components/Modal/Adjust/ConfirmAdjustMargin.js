@@ -7,7 +7,6 @@ import dynamic from 'next/dynamic';
 // ** components
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PERCENT } from 'components/screens/Lending/constants';
-
 // ** components screens
 import SucessAdjust from './SucessAdjust.js';
 
@@ -49,7 +48,6 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
         }
     }, [isConfirmAdjust]);
 
-    // JSON.stringify(date)
     // ** useReducer
     const { state, dispatchReducer } = useContext(LendingContext);
 

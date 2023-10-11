@@ -153,17 +153,6 @@ const usePairPrice = () => {
     return { getPairPrice: (data) => getPairPrice(data), pairPrice: context.pairPrice };
 };
 
-const getNewPairPrice = () => {
-    const context = useContext(LendingContext);
-    if (context === undefined) {
-        throw new Error('LoanableList must be used within a LendingContext');
-    }
-    const getPairPrice = (data) => {
-        context.handlePairPrice(data);
-    };
-    return { getPairPrice: (data) => getPairPrice(data) };
-};
-
 const useAssets = () => {
     const { loanCoin, loanable } = useLoanableList();
     const { collateralCoin, collateral } = useCollateralList();
@@ -197,4 +186,4 @@ const getAssetConfig = () => {
     return { assetConfig: context?.assetConfig, assetById };
 };
 
-export { LendingContext, LendingProvider, useLoanableList, useCollateralList, useAuth, useAssets, getAssetConfig, usePairPrice, getNewPairPrice };
+export { LendingContext, LendingProvider, useLoanableList, useCollateralList, useAuth, useAssets, getAssetConfig, usePairPrice };

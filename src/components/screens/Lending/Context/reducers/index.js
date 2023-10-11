@@ -82,7 +82,6 @@ const reducer = (state, action) => {
         case actions.TOGGLE_MODAL_ERROR: {
             const modal = action.modal;
             const error = action?.error;
-            console.log('action', action);
             return {
                 ...state,
                 modal: {

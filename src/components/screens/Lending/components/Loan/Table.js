@@ -28,7 +28,7 @@ import FetchApi from 'utils/fetch-api';
 import { totalAsset } from 'components/screens/Lending/utils';
 
 // ** Context
-import { LendingContext } from 'components/screens/Lending/Context';
+import { LendingContext, usePairPrice } from 'components/screens/Lending/Context';
 import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
 
 // ** Redux
@@ -49,7 +49,7 @@ import Countdown from 'react-countdown';
 import moment from 'moment-timezone';
 
 // ** dynamic
-const ModalAdjustMargin = dynamic(() => import('components/screens/Lending/components/Modal/Adjust/AdjustMargin'), { ssr: false });
+const ModalAdjustMargin = dynamic(() => import('components/screens/Lending/components/Modal/Adjust/AdjustMargin'));
 const ModalLoanRepayment = dynamic(() => import('components/screens/Lending/components/Modal/LoanRepayment'), { ssr: false });
 
 const INIT_DATA = {
@@ -76,7 +76,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
 
     // ** useContent
     const { dispatchReducer, state } = useContext(LendingContext);
-
+    const { getPairPrice } = usePairPrice();
     // ** useState
     const [dataCollateral, setDataCollateral] = useState({});
 
@@ -92,7 +92,8 @@ const LoanTable = ({ data, page, loading, onPage }) => {
             if (statusCode === STATUS_CODE) {
                 setDataCollateral({ ...data, collateralAsset });
                 if (action === 'adjust') {
-                    dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN });
+                    dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN }); //** show modal adjust
+                    getPairPrice({ collateralAssetCode: data?.collateralCoin, loanableAssetCode: data?.loanCoin }); //** get price token
                 } else {
                     setIsOpenRepaymentModal(true);
                 }
@@ -163,7 +164,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                     <div>Trạng thái</div>
                     <div
                         className={classNames('font-semibold text-yellow-2 border-b border-darkBlue-5 border-dashed cursor-pointer w-fit', {
-                            'text-green-2 dark:text-green': loan_status === 'ONGOING'
+                            'dark:!text-green-2 !text-green-3': loan_status === 'ONGOING'
                         })}
                         data-tip={LOAN_HISTORY_STATUS?.[status]?.contentTooltip?.[language]}
                         data-for={status}
@@ -416,7 +417,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                     renderTable()
                 )}
             </section>
-            <ModalAdjustMargin onClose={handleCloseAdjustModal} dataCollateral={dataCollateral} />
+            <ModalAdjustMargin isShow={state.modal.isAdjust} onClose={handleCloseAdjustModal} dataCollateral={dataCollateral} />
             <ModalLoanRepayment dataCollateral={dataCollateral} isOpen={isOpenRepaymentModal} onClose={onCloseRepayment} />
         </>
     );

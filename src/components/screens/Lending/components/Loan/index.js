@@ -17,7 +17,7 @@ import FetchApi from 'utils/fetch-api';
 import { formatNumber } from 'src/redux/actions/utils';
 
 // ** Constants
-import { LIMIT, STATUS_CODE } from 'components/screens/Lending/constants';
+import { STATUS_CODE } from 'components/screens/Lending/constants';
 
 // ** Context
 import { getAssetConfig, useAuth, LendingContext } from 'components/screens/Lending/Context';
@@ -49,6 +49,7 @@ const initState = {
     data: {}
 };
 
+const LIMIT = 5;
 const Loan = () => {
     const {
         t,

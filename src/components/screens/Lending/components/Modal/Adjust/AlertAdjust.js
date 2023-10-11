@@ -10,7 +10,13 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { LendingContext } from 'components/screens/Lending/Context';
 import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
 
-const AlertError = () => {
+const ERRORS = {
+    ORDER_IS_ACCRUING_INTEREST: {
+        message: { vi: 'Đơn hàng đang tích lũy tiền lãi', en: 'Order is accruing interest' }
+    }
+};
+
+const AlertAdjust = () => {
     const {
         t,
         i18n: { language }
@@ -50,11 +56,19 @@ const AlertError = () => {
             );
         }
         if (isModal?.isError) {
-            return <AlertModalV2 title="Lổi" message={state?.error?.code} isVisible={isModal.isError} onClose={() => handleClose()} type="error" />;
+            return (
+                <AlertModalV2
+                    title="Lổi"
+                    message={ERRORS?.[state.error?.code]?.message?.[language]}
+                    isVisible={isModal.isError}
+                    onClose={() => handleClose()}
+                    type="error"
+                />
+            );
         }
     };
 
     return <>{renderModal()}</>;
 };
 
-export default AlertError;
+export default AlertAdjust;

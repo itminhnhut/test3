@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 
 // ** next
 import { useTranslation } from 'next-i18next';
@@ -22,7 +22,6 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import AssetLogo from 'components/wallet/AssetLogo';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TradingInputV2 from 'components/trade/TradingInputV2';
-
 //** components screen
 import ConfirmAdjustMargin from './ConfirmAdjustMargin';
 import AlertAdjust from './AlertAdjust.js';
@@ -59,7 +58,7 @@ const ERRORS = {
     max: { vi: 'số lượng tài sản lớn hơn khả dụng', en: 'số lượng tài sản lớn hơn khả dụng' }
 };
 
-const AdjustMargin = ({ onClose, dataCollateral }) => {
+const AdjustMargin = ({ onClose, dataCollateral, isShow }) => {
     // ** useReducer
     const { state, dispatchReducer } = useContext(LendingContext);
 
@@ -81,7 +80,6 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
     const [amountAsset, setAmountAsset] = useState(initState.amountAsset);
 
     const amount = state?.amount;
-    const isShowAdjust = state.modal.isAdjust;
     const modalAdjust = state.modal;
 
     const debounceAmount = useDebounce(amountAsset, DEBOUNCE_TIME);
@@ -103,12 +101,11 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
     }, [JSON.stringify(dataCollateral), tab]);
 
     useEffect(() => {
-        // ** reset amount open modal adjust
+        // ** reset amount
         if (state.amount === '' && amountAsset !== '') {
             setAmountAsset(initState.amountAsset);
         }
-        isShowAdjust && getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
-    }, [isShowAdjust]);
+    }, [isShow]);
 
     // ** useEffect
     useEffect(() => {
@@ -313,7 +310,7 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
     return (
         <>
             <ModalV2
-                isVisible={isShowAdjust}
+                isVisible={isShow}
                 className="w-[800px] overflow-auto no-scrollbar"
                 onBackdropCb={handleCloseModal}
                 wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
@@ -336,8 +333,8 @@ const AdjustMargin = ({ onClose, dataCollateral }) => {
                                 return (
                                     <section
                                         key={`margin_${key}_${item.title?.[language]}`}
-                                        className={classNames('w-1/2 dark:text-gray-7 text-gray-1 font-semibold py-4', {
-                                            'dark:bg-dark-2 bg-dark-12 dark:text-gray-4 text-gray-15': item.key === tab,
+                                        className={classNames('w-1/2 dark:text-gray-7 text-gray-1 py-3', {
+                                            'dark:bg-dark-2 bg-dark-12 dark:!text-gray-4 !text-gray-15 font-semibold': item.key === tab,
                                             'border-r-[1px] border-r-divider dark:border-r-divider-dark': key === 0
                                         })}
                                         onClick={() => handleTab(item.key)}
