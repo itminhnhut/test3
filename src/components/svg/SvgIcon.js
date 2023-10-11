@@ -113,6 +113,15 @@ const CheckCircleIcon = ({ className = '', color, size }) => (
     </svg>
 );
 
+const CheckCircleIconV2 = ({ className = '', color, size }) => (
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M40.001 6.668c-18.4 0-33.333 14.933-33.333 33.333s14.933 33.334 33.333 33.334S73.335 58.4 73.335 40C73.335 21.601 58.4 6.668 40 6.668zm-6.666 50L16.668 40.001l4.7-4.7 11.967 11.934 25.3-25.3 4.7 4.733-30 30z"
+            fill={color || '#1F2633'}
+        />
+    </svg>
+);
+
 const SwapIcon = ({ className = '', color, size = 16 }) => {
     const [currentTheme] = useDarkMode();
     const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E';
@@ -2084,5 +2093,6 @@ export {
     TimeIcon,
     RightTopArrowCircleIcon,
     RightDownArrowCircleIcon,
-    MoneyNFTIcon
+    MoneyNFTIcon,
+    CheckCircleIconV2
 };

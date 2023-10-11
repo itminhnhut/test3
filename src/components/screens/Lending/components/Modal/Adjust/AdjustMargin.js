@@ -274,9 +274,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
                     <section className="flex flex-row items-center gap-1">
                         <div className="flex flex-row">
                             <span>Khả dụng:</span>
-                            <span className="dark:text-gray-4 text-gray-15 ml-1 font-semibold">
-                                {totalAvailable} {collateralAsset?.symbol?.assetCode}
-                            </span>
+                            <span className="dark:text-gray-4 text-gray-15 ml-1 font-semibold">{totalAvailable}</span>
                         </div>
                         <AddCircleColorIcon
                             size={16}

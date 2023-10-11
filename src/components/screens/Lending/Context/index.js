@@ -52,7 +52,7 @@ const LendingProvider = ({ children }) => {
         async ({ collateralAssetCode, loanableAssetCode }) => {
             if (!collateralAssetCode || !collateralAssetCode) return;
             const symbol = collateralAssetCode + loanableAssetCode;
-            const url = `${API_GET_PAIR_PRICE}/${symbol}`;
+            const url = `${API_GET_PAIR_PRICE}/${symbol}?base=${collateralAssetCode}&quote=${loanableAssetCode}`;
             try {
                 const { data, statusCode } = await FetchApi({ url });
                 if (statusCode === STATUS_CODE) {

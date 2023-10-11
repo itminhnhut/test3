@@ -12,7 +12,7 @@ import { formatNumber } from 'redux/actions/utils';
 
 // ** svg
 import { IconClose } from 'components/svg/SvgIcon';
-import { CheckCircleIcon } from 'components/svg/SvgIcon';
+import { CheckCircleIconV2 } from 'components/svg/SvgIcon';
 
 // ** Third party
 import colors from 'styles/colors';
@@ -44,15 +44,15 @@ const SucessLoan = ({ isModal, onClose, tab, adjustedLTV, totalAdjusted }) => {
             )}
         >
             <section className="flex flex-col items-center">
-                <CheckCircleIcon size={80} color={colors.teal} />
-                <div className="dark:text-gray-4 text-gray-15 mt-6 mb-4">{tab === 'add' ? 'Thêm ký quỹ thành công' : 'Bớt ký quỹ thành công'}</div>
+                <CheckCircleIconV2 size={80} color={colors.teal} />
+                <div className="dark:text-gray-7text-gray-15 mt-6 mb-4">{tab === 'add' ? 'Thêm ký quỹ thành công' : 'Bớt ký quỹ thành công'}</div>
                 <div className="dark:text-txtPrimary-dark text-txtPrimary font-semibold text-2xl">
                     {totalAdjusted?.total} {totalAdjusted?.assetCode}
                 </div>
                 <section className="dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex w-full mt-6">
                     <section className="flex justify-between w-full">
                         <div className="dark:text-gray-7 text-gray-1">LTV đã điều chỉnh</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{adjustedLTV?.toFixed(0)}%</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{(adjustedLTV || 0)?.toFixed(0)}%</div>
                     </section>
                 </section>
             </section>
