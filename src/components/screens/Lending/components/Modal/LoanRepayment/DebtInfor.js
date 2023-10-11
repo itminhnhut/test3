@@ -16,8 +16,8 @@ const DebtInfor = ({
     const loanCoinDigit = loanCoinConfig?.assetDigit || 0;
     const collateralCoinDigit = collateralCoinConfig?.assetDigit || 0;
 
-    // lay digit = 4 chu so thap phan neu totalDebtLeft < 1.
-    const totalDebtLeftDigit = totalDebtLeft < 1 ? 4 : loanCoinDigit;
+    // lay digit = 4 chu so thap phan neu totalDebtLeft < 1 (chi gianh cho VNDC, VNST).
+    const totalDebtLeftDigit = loanCoinDigit === 0 ? (totalDebtLeft < 1 ? 4 : loanCoinDigit) : loanCoinDigit;
 
     return (
         <section className="flex flex-col space-y-3">

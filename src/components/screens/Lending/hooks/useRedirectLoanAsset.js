@@ -12,7 +12,7 @@ const useRedirectLoanAsset = ({ loanAssetList }) => {
         if (!loanAsset) {
             query.delete('loanAsset');
         }
-        router.replace({ pathname: router.pathname, query: query.toString() }, undefined, { shallow: true });
+        return router.replace({ pathname: router.pathname, query: query.toString() }, undefined, { shallow: true });
     };
 
     useEffect(() => {
