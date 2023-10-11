@@ -81,8 +81,8 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
         collateralAssetCode: collateralCoin,
         loanableAssetCode: loanCoin,
         refetch: refetchPrice,
-        dependencies: [isOpen],
-        condition: Boolean(isOpen)
+        condition: isOpen,
+        dependencies: [isOpen]
     });
 
     const isLoanRepay = state.tab === REPAY_TAB.LOAN;

@@ -509,8 +509,8 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
             </ModalV2>
             <ModalConfirmLoan
                 onSuccessClose={() => {
-                    onClose();
                     setState(INIT_DATA);
+                    return onClose();
                 }}
                 registerLoan={() => handleRegisterLoan(REGISTER_HANDLE_TYPE.FROM_CONFIRM_MODAL)}
                 handleRefetchPrice={() => setRefetchCollateralPrice((prev) => !prev)}
