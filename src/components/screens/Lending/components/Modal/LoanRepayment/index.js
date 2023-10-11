@@ -112,7 +112,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
     const collateralAmountReceive = getReceiveCollateral({ repayAmount: repayInLoanAmount, totalDebt, totalCollateralAmount, marginUsed });
 
     // ki quy con lai
-    const totalMarginLeft = totalCollateralAmount - collateralAmountReceive;
+    const totalMarginLeft = totalCollateralAmount - marginUsed - collateralAmountReceive;
 
     // tong du no con lai
     const totalDebtLeft = totalDebt - repayInLoanAmount;
