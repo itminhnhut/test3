@@ -1,12 +1,13 @@
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_PAIR_PRICE } from 'redux/actions/apis';
 
-const useCollateralPrice = ({ collateralAssetCode, loanableAssetCode, refetch }) => {
+const useCollateralPrice = ({ collateralAssetCode, loanableAssetCode, refetch, dependencies = [], condition = true }) => {
     let symbol = collateralAssetCode + loanableAssetCode;
-    const { data, loading, error } = useFetchApi({ url: `${API_GET_PAIR_PRICE}/${symbol}` }, Boolean(symbol), [
+    const { data, loading, error } = useFetchApi({ url: `${API_GET_PAIR_PRICE}/${symbol}` }, Boolean(symbol) && condition, [
         collateralAssetCode,
         loanableAssetCode,
-        refetch
+        refetch,
+        ...dependencies
     ]);
 
     return {
