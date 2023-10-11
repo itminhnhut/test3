@@ -41,9 +41,9 @@ class FuturesMarketWatch {
         this.fundingRate = options.fundingRate
         this.fundingTime = options.fundingTime
         this.sellFundingRate = options.sellFundingRate;
-        this.totalSellVolume = options.totalSellVolume;
+        this.sellVolumeRate = options.sellVolumeRate;
         this.buyFundingRate = options.buyFundingRate;
-        this.totalBuyVolume = options.totalBuyVolume;
+        this.buyVolumeRate = options.buyVolumeRate;
     }
 
     static create(source, mode = 'VNDC') {
@@ -74,9 +74,9 @@ class FuturesMarketWatch {
             fundingRate: source?.r || 0,
             fundingTime: source?.ft,
             sellFundingRate: source?.sr,
-            totalSellVolume: source?.sv,
+            sellVolumeRate: source?.svr,
             buyFundingRate: source?.br,
-            totalBuyVolume: source?.bv
+            buyVolumeRate: source?.bvr
         });
     }
 }

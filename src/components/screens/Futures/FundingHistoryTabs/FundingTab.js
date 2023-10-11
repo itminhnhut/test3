@@ -131,9 +131,9 @@ export default function FundingHistory({ currency, active }) {
                         fundingRate: +formatNumber(data?.r * 100, 0, 4, true),
                         fundingTime: data?.ft,
                         sellFundingRate: data?.sr ?? 0,
-                        totalSellVolume: data?.sv ?? 0,
+                        sellVolumeRate: data?.svr ?? 0,
                         buyFundingRate: data?.br ?? 0,
-                        totalBuyVolume: data?.bv ?? 0,
+                        buyVolumeRate: data?.bvr ?? 0,
                         [RETABLE_SORTBY]: {
                             asset: data?.b,
                             fundingRate: +formatNumber(data?.r * 100, 0, 4, true)
@@ -180,8 +180,8 @@ export default function FundingHistory({ currency, active }) {
         switch (sort.field) {
             case 'volume':
             case 'funding_rate':
-                const buyField = sort.field === 'funding_rate' ? 'buyFundingRate' : 'totalBuyVolume';
-                const sellField = sort.field === 'funding_rate' ? 'sellFundingRate' : 'totalSellVolume';
+                const buyField = sort.field === 'funding_rate' ? 'buyFundingRate' : 'buyVolumeRate';
+                const sellField = sort.field === 'funding_rate' ? 'sellFundingRate' : 'sellVolumeRate';
                 const dataSort = _dataTable.sort((obj1, obj2) => {
                     const A = Math.max(Math.abs(obj1?.[buyField]), Math.abs(obj1?.[sellField]));
                     const B = Math.max(Math.abs(obj2?.[buyField]), Math.abs(obj2?.[sellField]));
