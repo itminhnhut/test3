@@ -874,7 +874,7 @@ const OrderDetail = ({
                     >
                         <div>
                             <label className="text-sm font-semibold text-white dark:text-txtPrimary-dark">{t('futures:funding_rate')}</label>
-                            <div className="text-sm mt-3 text-white dark:text-txtPrimary-dark">{t('futures:funding_rate_des')}</div>
+                            <div className="text-sm mt-3 text-white dark:text-txtPrimary-dark" dangerouslySetInnerHTML={{__html:t('futures:funding_rate_des')}}></div>
                         </div>
                     </Tooltip>
                     <Row>

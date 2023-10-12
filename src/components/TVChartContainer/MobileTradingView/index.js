@@ -34,7 +34,7 @@ import { useEffect } from 'react';
 import { useContext } from 'react';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import filter from 'lodash/filter';
-import CFunding from 'components/screens/Futures/Information/Funding'
+import CFunding from 'components/screens/Futures/Information/Funding';
 
 export class MobileTradingView extends React.PureComponent {
     state = {
@@ -787,7 +787,7 @@ const Funding = ({ symbol }) => {
                     <div className="flex items-center space-x-1" onClick={() => setShowModal(true)}>
                         <span className="text-txtSecondary dark:text-txtSecondary-dark border-b border-darkBlue-5 border-dashed">Funding:</span>
                     </div>
-                    <CFunding symbol={symbol} className='text-right whitespace-nowrap' />
+                    <CFunding symbol={symbol} className="text-right whitespace-nowrap" />
                 </div>
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
                     <div className="flex items-center space-x-1" data-tip={t('common:countdown_tooltip')} data-for="tooltip-countdown">
@@ -807,7 +807,9 @@ const Funding = ({ symbol }) => {
                                 return { top, left };
                             }}
                         />
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark border-b border-darkBlue-5 border-dashed">{t('futures:countdown')}:</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark border-b border-darkBlue-5 border-dashed">
+                            {t('futures:countdown')}:
+                        </span>
                     </div>
                     <CFunding.Countdown symbol={symbol} />
                 </div>
@@ -844,8 +846,8 @@ const ModalFundingRate = ({ onClose, t, symbol }) => {
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}>
             <div className="text-2xl font-semibold text-center">{t('futures:funding_rate')}</div>
-            <div className="text-sm pt-4 text-center text-txtSecondary dark:text-txtSecondary-dark">
-                {t('futures:funding_rate_des')}{' '}
+            <div className="text-sm pt-4 text-txtSecondary dark:text-txtSecondary-dark">
+                <span dangerouslySetInnerHTML={{ __html: t('futures:funding_rate_des') }} />{' '}
                 <span onClick={onDetail} className="text-teal font-semibold">
                     {t('common:read_more')}
                 </span>

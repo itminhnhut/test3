@@ -149,7 +149,7 @@ const ModalFundingRate = ({ onClose, t, symbol }) => {
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}>
             <div className="text-2xl font-semibold text-center">{t('futures:funding_rate')}</div>
-            <div className="text-sm pt-4 text-center text-txtSecondary dark:text-txtSecondary-dark">
+            <div className="text-sm pt-4 text-txtSecondary dark:text-txtSecondary-dark">
                 {t('futures:funding_rate_des')}{' '}
                 <span onClick={onDetail} className="text-teal font-semibold">
                     {t('common:read_more')}

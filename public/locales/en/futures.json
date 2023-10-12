@@ -473,7 +473,7 @@
     "countdown": "Countdown",
     "funding_fee": "Funding Fee",
     "funding_rate": "Funding Rate",
-    "funding_rate_des": "The payment rate exchanged between the long and short positions for the next funding. If the funding rate is positive, longs pay shorts. If negative, shorts pay longs.",
+    "funding_rate_des": "Funding rates are periodic payments between traders to make the perpetual futures contract.<br/>When the the funding rate is positive, traders who are long on a perpetual contract will pay a funding fee to traders on the opposing side (short traders). On the other hand, when funding rate is negative, traders who are short on a perpetual contract will pay a funding fee to long traders.",
     "funding_history": "Funding History",
     "information": "Information",
     "funding": "Funding",

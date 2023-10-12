@@ -229,15 +229,9 @@ export default function OrderInformation({ pair }) {
 
     return (
         <div className={'py-4 px-4 overflow-y-auto h-[calc(100%-70px)]'}>
-            <p className="text-lg my-4 leading-6 font-semibold">
-                {t('futures:trading_rules')}
-            </p>
+            <p className="text-lg my-4 leading-6 font-semibold">{t('futures:trading_rules')}</p>
             <div className="bg-gray-12 dark:bg-dark-4 rounded-[8px]">
-                {ITEMS_WITH_TOOLTIPS.map(({
-                    title,
-                    tooltip,
-                    leftPercent
-                }, index) => (
+                {ITEMS_WITH_TOOLTIPS.map(({ title, tooltip, leftPercent }, index) => (
                     <div
                         key={index}
                         className={classNames('px-3 w-full', {
@@ -245,7 +239,10 @@ export default function OrderInformation({ pair }) {
                         })}
                     >
                         <div className="py-[13px] flex w-full">
-                            <Tooltip id={title} place="top" effect="solid"
+                            <Tooltip
+                                id={title}
+                                place={title === 'funding' ? 'bottom' : 'top'}
+                                effect="solid"
                                 className={`!mx-7 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg`}
                                 overridePosition={(e) => ({
                                     left: 0,
@@ -254,10 +251,11 @@ export default function OrderInformation({ pair }) {
                                 arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                             >
                                 <div>
-                                    <label
-                                        className="font-medium text-white dark:text-txtPrimary-dark text-sm leading-[18px]">{t('futures:' + title)}</label>
+                                    <label className="font-medium text-white dark:text-txtPrimary-dark text-sm leading-[18px]">{t('futures:' + title)}</label>
                                     <div
-                                        className="mt-3 text-3 font-normal text-white dark:text-txtPrimary-dark leading-[18px]">{t(tooltip)}</div>
+                                        className="mt-3 text-3 font-normal text-white dark:text-txtPrimary-dark leading-[18px]"
+                                        dangerouslySetInnerHTML={{ __html: t(tooltip) }}
+                                    ></div>
                                 </div>
                             </Tooltip>
                             <Row>
@@ -274,7 +272,9 @@ export default function OrderInformation({ pair }) {
                     </div>
                 ))}
             </div>
-            <div onClick={onViewAll} className="text-teal text-sm font-medium mt-6">{t('futures:view_all_trading_rule')}</div>
+            <div onClick={onViewAll} className="text-teal text-sm font-medium mt-6">
+                {t('futures:view_all_trading_rule')}
+            </div>
         </div>
     );
 }
