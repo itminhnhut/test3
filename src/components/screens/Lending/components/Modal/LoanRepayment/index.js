@@ -252,7 +252,7 @@ const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal 
                 onBackdropCb={onHandleCloseRepaymentModal}
                 wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
                 customHeader={() => (
-                    <div className="flex justify-end mb-6">
+                    <div className="flex justify-end sticky top-0 z-10 mb-6">
                         <div
                             className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
                             onClick={(e) => onHandleCloseRepaymentModal()}
