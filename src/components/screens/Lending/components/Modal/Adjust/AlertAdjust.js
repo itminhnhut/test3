@@ -7,8 +7,8 @@ import { useTranslation } from 'next-i18next';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 // ** Context
-import { LendingContext } from 'components/screens/Lending/Context';
-import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
+import { LendingContext } from 'components/screens/Lending/context';
+import { globalActionTypes as actions } from 'components/screens/Lending/context/actions';
 
 const ERRORS = {
     ORDER_IS_ACCRUING_INTEREST: {

@@ -19,7 +19,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import { PERCENT, YEAR, LOAN_HISTORY_STATUS, HOUR, ALLOW_ADJUST, FORMAT_HH_MM_SS, LIMIT } from 'components/screens/Lending/constants';
 
 // * Context
-import { useAssets } from 'components/screens/Lending/Context';
+import { useAssets } from 'components/screens/Lending/context';
 
 // ** svg
 import Copy from 'components/svg/Copy';

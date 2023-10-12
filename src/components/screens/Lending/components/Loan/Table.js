@@ -28,8 +28,8 @@ import FetchApi from 'utils/fetch-api';
 import { totalAsset } from 'components/screens/Lending/utils';
 
 // ** Context
-import { LendingContext } from 'components/screens/Lending/Context';
-import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
+import { LendingContext } from 'components/screens/Lending/context';
+import { globalActionTypes as actions } from 'components/screens/Lending/context/actions';
 
 // ** Redux
 import { formatTime } from 'redux/actions/utils';
@@ -305,25 +305,19 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     };
 
     const renderActions = (options) => {
-        const { _id, collateralAmount, collateralCoin, isAccruingInterest } = options;
+        const { _id, collateralAmount, collateralCoin } = options;
         const getCollateralAsset = totalAsset(collateralAmount, collateralCoin);
 
         return (
             <section className="flex flex-col h-[128px] w-max">
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1  h-[72px] whitespace-nowrap">
                     <section className="flex flex-row items-center w-[162px] ml-6">
-                        <ButtonV2 disabled={DISABLE_STATUS.includes(isAccruingInterest)} onClick={() => onOpenRepayment({ id: _id })}>
-                            Trả khoản vay
-                        </ButtonV2>
+                        <ButtonV2 onClick={() => onOpenRepayment({ id: _id })}>Trả khoản vay</ButtonV2>
                     </section>
                 </section>
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1  h-[72px] whitespace-nowrap">
                     <section className="flex flex-col items-center w-[162px] ml-6">
-                        <ButtonV2
-                            onClick={() => handleToggleAdjustModal({ id: _id, collateralAsset: getCollateralAsset })}
-                            variants="adjust"
-                            disabled={DISABLE_STATUS.includes(isAccruingInterest)}
-                        >
+                        <ButtonV2 onClick={() => handleToggleAdjustModal({ id: _id, collateralAsset: getCollateralAsset })} variants="adjust">
                             Điều chỉnh ký quỹ
                         </ButtonV2>
                     </section>

@@ -11,7 +11,7 @@ import { PERCENT } from 'components/screens/Lending/constants';
 import SucessAdjust from './SucessAdjust.js';
 
 // ** Context
-import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
+import { globalActionTypes as actions } from 'components/screens/Lending/context/actions/index.js';
 
 //** Redux
 import { API_PUT_HISTORY_LOAN_MARGIN } from 'redux/actions/apis';
@@ -20,7 +20,7 @@ import { API_PUT_HISTORY_LOAN_MARGIN } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
 
 // ** Context
-import { LendingContext } from 'components/screens/Lending/Context';
+import { LendingContext } from 'components/screens/Lending/context/index.js';
 
 // ** svg
 import { IconClose } from 'components/svg/SvgIcon';

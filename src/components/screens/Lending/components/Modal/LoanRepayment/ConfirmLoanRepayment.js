@@ -17,8 +17,8 @@ import { formatNumber } from 'redux/actions/utils';
 import { IconClose } from 'components/svg/SvgIcon';
 
 //** CONTEXT
-import { LendingContext } from 'components/screens/Lending/Context';
-import { globalActionTypes as lendingContextActions } from 'components/screens/Lending/Context/actions';
+import { LendingContext } from 'components/screens/Lending/context';
+import { globalActionTypes as lendingContextActions } from 'components/screens/Lending/context/actions';
 import ConfirmLoanButton from './ConfirmLoanButton';
 import { REPAY_TAB } from '.';
 

@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import Chip from 'components/common/V2/Chip';
 
 // * Context
-import { useAuth } from 'components/screens/Lending/Context';
+import { useAuth } from 'components/screens/Lending/context';
 
 // ** Redux
 import { API_HISTORY_LOAN, API_HISTORY_LOAN_ADJUST } from 'redux/actions/apis';

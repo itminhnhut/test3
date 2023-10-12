@@ -15,7 +15,7 @@ import FetchApi from 'utils/fetch-api';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
 // ** API Context
-import { LendingProvider } from 'components/screens/Lending/Context';
+import { LendingProvider } from 'components/screens/Lending/context';
 
 // * constants
 import { STATUS_CODE, TABS } from 'components/screens/Lending/constants';
@@ -37,7 +37,7 @@ const CONTENT = {
 
 // ** initData
 const initData = {
-    tab: 'loan'
+    tab: 'lending'
 };
 
 const TAB_ALLOW = ['lending', 'loan', 'history'];

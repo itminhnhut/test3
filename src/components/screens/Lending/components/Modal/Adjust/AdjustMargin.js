@@ -14,8 +14,8 @@ import { createSelector } from 'reselect';
 import { totalAsset } from 'components/screens/Lending/utils';
 
 // ** Context
-import { usePairPrice, LendingContext } from 'components/screens/Lending/Context';
-import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
+import { usePairPrice, LendingContext } from 'components/screens/Lending/context';
+import { globalActionTypes as actions } from 'components/screens/Lending/context/actions';
 
 //** components
 import ModalV2 from 'components/common/V2/ModalV2';

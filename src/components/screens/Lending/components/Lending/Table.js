@@ -2,7 +2,7 @@ import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 
 // ** NEXT
 import { useTranslation } from 'next-i18next';
-import { useLoanableList, useCollateralList } from 'components/screens/Lending/Context';
+import { useLoanableList, useCollateralList } from 'components/screens/Lending/context';
 
 // ** components
 import AssetLogo from 'components/wallet/AssetLogo';

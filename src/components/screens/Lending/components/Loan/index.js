@@ -20,8 +20,8 @@ import { formatNumber } from 'src/redux/actions/utils';
 import { STATUS_CODE } from 'components/screens/Lending/constants';
 
 // ** Context
-import { getAssetConfig, useAuth, LendingContext } from 'components/screens/Lending/Context';
-import { globalActionTypes as actions } from 'components/screens/Lending/Context/actions';
+import { getAssetConfig, useAuth, LendingContext } from 'components/screens/Lending/context';
+import { globalActionTypes as actions } from 'components/screens/Lending/context/actions';
 
 // ** Third party
 import classNames from 'classnames';
