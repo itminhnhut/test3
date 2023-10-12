@@ -22,6 +22,7 @@ import { formatAbbreviateNumber } from 'redux/actions/utils';
 import { useIsomorphicLayoutEffect } from 'react-use';
 import dynamic from 'next/dynamic';
 import { addDays, differenceInDays, endOfMonth, endOfWeek, format, isValid, parse } from 'date-fns';
+import SelectV2 from 'components/common/V2/SelectV2';
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const ApexChartWrapper = styled.div`
@@ -109,6 +110,21 @@ const CHART_TYPES = {
     user: 'user',
     fee: 'fee'
 };
+
+const futuresAssets = [
+    {
+        title: 'VNDC',
+        value: WalletCurrency.VNDC
+    },
+    {
+        title: 'VNST',
+        value: WalletCurrency.VNST
+    },
+    {
+        title: 'USDT',
+        value: WalletCurrency.USDT
+    }
+];
 
 const showTimeRange = (timestamp, chartInterval) => {
     const today = addDays(new Date(), 1);
@@ -547,50 +563,35 @@ const NaoPerformance = memo(({}) => {
                     <TextLiner className="">{t('nao:onus_performance:title')}</TextLiner>
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:onus_performance:description')}</span>
                 </div>
-                <div className="flex flex-wrap gap-2 w-full mb:w-auto justify-between mb:justify-end">
+                <div className="flex flex-wrap gap-2 w-full mb:w-auto justify-start mb:justify-end">
+                    <div className="w-auto">
+                        <SelectV2
+                            options={futuresAssets}
+                            value={filter.marginCurrency || WalletCurrency.VNDC}
+                            onChange={(asset) => handleChangeMarginCurrency(asset)}
+                            className="!h-auto px-4 py-2 font-semibold text-sm !bg-gray-12 dark:!bg-dark-2"
+                            popoverPanelClassName="min-w-[12.5rem] !left-0 !right-auto sm:!left-auto sm:!right-0"
+                            chevronStyle={{
+                                color: 'currentColor',
+                                size: 20
+                            }}
+                            optionClassName="flex justify-between items-center"
+                            activeIcon={<CheckCircle color="currentColor" size={16} />}
+                            prefix={`${t('nao:onus_performance:asset')}: `}
+                        />
+                    </div>
                     <RangePopover
                         language={language}
                         active={days.find((d) => d.value === filter.day)}
                         onChange={handleChangeDateRange}
                         className="flex order-last"
-                        popoverClassName={'mb:mr-2 ml-auto'}
+                        // popoverClassName={'mb:mr-2 ml-auto'}
                         range={range}
                         setRange={setRange}
                         days={days}
-                        textPopoverClassName="sm:text-sm text-gray-15"
+                        textPopoverClassName="sm:text-sm text-txtPrimary dark:text-txtPrimary-dark"
+                        prefix={`${t('nao:onus_performance:time')}: `}
                     />
-                    <div className="order-first gap-2 flex gap-last max-w-[calc(100%-32px)] overflow-x-auto no-scrollbar">
-                        <button
-                            type="BUTTON"
-                            className={classNames(
-                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
-                                { '!border-teal !bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNST }
-                            )}
-                            onClick={() => handleChangeMarginCurrency(WalletCurrency.VNST)}
-                        >
-                            VNST
-                        </button>
-                        <button
-                            type="BUTTON"
-                            className={classNames(
-                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
-                                { '!border-teal !bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
-                            )}
-                            onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
-                        >
-                            VNDC
-                        </button>
-                        <button
-                            type="BUTTON"
-                            className={classNames(
-                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
-                                { '!border-teal !bg-teal/10 bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.USDT }
-                            )}
-                            onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
-                        >
-                            USDT
-                        </button>
-                    </div>
                 </div>
             </div>
             <div className="pt-5 flex flex-col lg:flex-row sm:pt-8 gap-4 sm:gap-6">

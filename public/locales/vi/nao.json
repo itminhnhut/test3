@@ -26,7 +26,9 @@
         "chart_total_orders": "Số lệnh",
         "chart_users": "Người dùng",
         "chart_total_fee": "Phí",
-        "chart_title": ""
+        "chart_title": "",
+        "asset": "Đơn vị",
+        "time": "Thời gian"
     },
     "pool": {
         "title": "Pool quản trị {{value}}",
