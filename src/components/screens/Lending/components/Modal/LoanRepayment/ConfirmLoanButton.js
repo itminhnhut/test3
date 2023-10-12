@@ -3,10 +3,10 @@ import ButtonV2 from 'components/screens/Nao/Components/ButtonV2/Button';
 import React from 'react';
 
 const ConfirmLoanButton = ({ loading, onRepayHandler, handleRefetch, loadingPrice }) => {
-    const [countdown, resetCountdown] = useFetchPriceCounter({ loadingPrice });
+    const { resetCountdown, status, countdown } = useFetchPriceCounter({ loadingPrice });
 
     const handleClick = () => {
-        if (countdown === null) {
+        if (status === 'finished') {
             handleRefetch();
             resetCountdown();
             return;
@@ -16,7 +16,7 @@ const ConfirmLoanButton = ({ loading, onRepayHandler, handleRefetch, loadingPric
 
     return (
         <ButtonV2 loading={loading || loadingPrice} disabled={loadingPrice} onClick={handleClick} className="mt-10">
-            {countdown === null ? 'Làm mới' : <>Xác nhận ({countdown}s)</>}
+            {status === 'finished' ? 'Làm mới' : <>Xác nhận ({countdown}s)</>}
         </ButtonV2>
     );
 };

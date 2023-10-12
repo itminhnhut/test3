@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const INIT_COUNTER = 6;
 const useFetchPriceCounter = ({ loadingPrice, initCounter = INIT_COUNTER }) => {
@@ -19,7 +19,17 @@ const useFetchPriceCounter = ({ loadingPrice, initCounter = INIT_COUNTER }) => {
         return () => clearInterval(interval);
     }, [loadingPrice]);
     const resetCountdown = () => setCountdown(initCounter);
-    return [countdown, resetCountdown];
+
+    const status = useMemo(() => {
+        if (countdown === null) return 'finished';
+        return 'in-progress';
+    }, [countdown]);
+
+    return {
+        status,
+        countdown,
+        resetCountdown
+    };
 };
 
 export default useFetchPriceCounter;
