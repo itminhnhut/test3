@@ -35,9 +35,12 @@ import classNames from 'classnames';
 import { PERCENT } from 'components/screens/Lending/constants';
 import useDebounce from 'hooks/useDebounce';
 
+const TAB_ADD = 'add';
+const TAB_SUBTRACT = 'subtract';
+
 const MARGIN = [
-    { title: { vi: 'Thêm ký quỹ', en: 'Thêm ký quỹ' }, key: 'add' },
-    { title: { vi: 'Bớt ký quỹ', en: 'Bớt ký quỹ' }, key: 'subtract' }
+    { title: { vi: 'Thêm ký quỹ', en: 'Thêm ký quỹ' }, key: TAB_ADD },
+    { title: { vi: 'Bớt ký quỹ', en: 'Bớt ký quỹ' }, key: TAB_SUBTRACT }
 ];
 
 const DEFAULT_VALUE = '-';
@@ -48,11 +51,10 @@ const getSpotAvailable = createSelector([(state) => state.wallet?.SPOT, (utils, 
 });
 
 const DEBOUNCE_TIME = 300;
-const TAB_ADD = 'add';
 
 const initState = {
     tab: TAB_ADD,
-    error: '',
+    error: {},
     amountAsset: 0
 };
 
@@ -61,7 +63,9 @@ const VALIDATION_ERROR = {
         max: { vi: 'số lượng tài sản lớn hơn khả dụng', en: 'số lượng tài sản lớn hơn khả dụng' }
     },
     subtract: {
-        max: { vi: 'số lượng tài sản lớn hơn tổng ký quỹ', en: 'số lượng tài sản lớn hơn tổng ký quỹ' }
+        max: { vi: 'số lượng tài sản lớn hơn tổng ký quỹ', en: 'số lượng tài sản lớn hơn tổng ký quỹ' },
+        current_ltv: { vi: 'LTV Hiện tại lớn hơn hoặc bằng LTV ban đầu', en: 'LTV Hiện tại lớn hơn hoặc bằng LTV ban đầu' },
+        adjusted_ltv: { vi: 'LTV đã điều chỉnh lớn hơn LTV hiện tại', en: 'LTV đã điều chỉnh lớn hơn LTV hiện tại' }
     }
 };
 
@@ -102,6 +106,21 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
         return { total, assetCode };
     }, [state?.totalAdjusted, adjustedCurrent.assetDigit]);
 
+    // ** useMemo
+    const current_LTV = useMemo(() => {
+        return formatLTV(total_current_LTV * PERCENT);
+    }, [pairPrice?.lastPrice, JSON.stringify(dataCollateral)]);
+
+    const adjustedLTV = useMemo(() => {
+        return (state.totalDebt / (state.totalAdjusted * pairPrice?.lastPrice || 0)) * PERCENT;
+    }, [amount, state.totalDebt, state.totalAdjusted, pairPrice?.lastPrice]);
+
+    const dataLTV = useMemo(() => {
+        const initial_LTV = formatLTV(state.initialLTV * PERCENT);
+        const formatAdjustedLTV = formatLTV(adjustedLTV);
+        return { initial: +initial_LTV, adjusted: +formatAdjustedLTV };
+    }, [state.initialLTV, adjustedLTV]);
+
     // ** useEffect
     useEffect(() => {
         if (dataCollateral?._id) {
@@ -120,25 +139,26 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
         isShow && getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin }); //** get price token
     }, [isShow]);
 
-    // ** useEffect
+    // ** useEffect modal Transfer
     useEffect(() => {
         if (collateralAvailable < amountAsset) {
-            const error = VALIDATION_ERROR?.[tab]?.max?.[language];
-            setError(error);
+            const msg = VALIDATION_ERROR?.[tab]?.max?.[language];
+            setError({ msg, type: 'max' });
         } else {
             error?.length > 0 && setError(initState.error);
         }
-    }, [collateralAvailable, debounceAmount]);
+    }, [collateralAvailable]);
 
     useEffect(() => {
         handleCheckAmountInput();
         dispatchReducer({ type: actions.UPDATE_TOTAL_ADJUSTED, amount: amountAsset || 0, method: tab });
-    }, [debounceAmount]);
+    }, [debounceAmount, adjustedLTV]);
 
     // ** handle reset clear input or update amount
     const handleRestUpdateAmount = () => {
         if (!amountAsset) {
             dispatchReducer({ type: actions.RESET_AMOUNT });
+            setError(initState.error);
         } else {
             dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: amountAsset });
         }
@@ -154,21 +174,25 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
             isCheckAmount = +amountAsset < 0 || +amountAsset > total;
         }
         if (isCheckAmount) {
-            const error = VALIDATION_ERROR?.[tab]?.max?.[language];
-            setError(error);
-            dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: amountAsset });
-        } else {
-            handleRestUpdateAmount();
+            const msg = VALIDATION_ERROR?.[tab]?.max?.[language];
+            setError({ msg, type: 'max' });
+            return;
         }
+        if (tab === TAB_SUBTRACT) {
+            if (!isCheckCurrentLTV()) {
+                const msg = VALIDATION_ERROR?.[tab]?.current_ltv?.[language];
+                setError({ msg });
+                return;
+            }
+            if (!isCheckAdjustLTV()) {
+                const msg = VALIDATION_ERROR?.[tab]?.adjusted_ltv?.[language];
+                setError({ msg });
+                return;
+            }
+        }
+        error?.msg && setError(initState.error);
+        handleRestUpdateAmount();
     };
-
-    const current_LTV = useMemo(() => {
-        return formatLTV(total_current_LTV * PERCENT);
-    }, [pairPrice?.lastPrice, JSON.stringify(dataCollateral)]);
-
-    const adjustedLTV = useMemo(() => {
-        return (state.totalDebt / (state.totalAdjusted * pairPrice?.lastPrice || 0)) * PERCENT;
-    }, [amount, state.totalDebt, state.totalAdjusted, pairPrice?.lastPrice]);
 
     // ** handle
     const handleTab = (tab) => {
@@ -194,35 +218,48 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
         setAmountAsset(value);
     };
 
-    const validationAdd = () => {
+    //* check amount - Available
+    const isCheckAmountAvailable = () => {
         return amountAsset > 0 && amountAsset <= collateralAvailable;
     };
 
-    const validationAmount = () => {
+    //* check amount - adjusted current
+    const isCheckAmountAdjusted = () => {
         return amountAsset > 0 && +amountAsset <= adjustedCurrent.total;
     };
 
+    //** check LTV by current - initial
+    const isCheckCurrentLTV = () => {
+        const { initial } = dataLTV;
+        return current_LTV < initial;
+    };
+
+    //** check LTV adjusted - initial
+    const isCheckAdjustLTV = () => {
+        const { adjusted, initial } = dataLTV;
+        return adjusted <= initial;
+    };
+
+    //** validation subtract
     const validationSubtract = () => {
-        const initial_LTV = formatLTV(state.initialLTV * PERCENT);
-        const formatAdjustedLTV = formatLTV(adjustedLTV);
-        return current_LTV < +initial_LTV && formatAdjustedLTV <= initial_LTV && validationAmount();
+        return isCheckCurrentLTV() && isCheckAdjustLTV() && isCheckAmountAdjusted();
     };
 
     const isSubmitted = useMemo(() => {
-        return tab === initState.tab ? validationAdd() : validationSubtract();
-    }, [tab, debounceAmount, collateralAvailable, adjustedLTV, adjustedCurrent?.total, amountAsset]);
+        return tab === initState.tab ? isCheckAmountAvailable() : validationSubtract();
+    }, [tab, debounceAmount, collateralAvailable, adjustedLTV, adjustedCurrent?.total]);
 
     const handleCloseConfirmAdjustMargin = () => {
         dispatchReducer({ type: actions.TOGGLE_MODAL_CONFIRM_ADJUST });
     };
 
     const validator = useMemo(() => {
-        let err = error;
-        return { isValid: !Boolean(err), msg: err, isError: Boolean(err) };
+        let msg = error?.msg || null;
+        return { isValid: !Boolean(msg), msg, isError: Boolean(msg) };
     }, [error]);
 
     const isDefaultDash = useMemo(() => {
-        return !(amountAsset > 0 && !error) ? DEFAULT_VALUE : false;
+        return amountAsset < 0 || error?.type === 'max' ? DEFAULT_VALUE : false;
     }, [amountAsset, error]);
 
     // ** render
@@ -302,7 +339,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
             <section>
                 <section className="flex flex-row justify-between dark:text-gray-7 text-gray-1 text-sm">
                     <section className="text-base font-semibold">Số lượng</section>
-                    <section className={classNames('flex flex-row items-center gap-1', { hidden: tab === 'subtract' })}>
+                    <section className={classNames('flex flex-row items-center gap-1', { hidden: tab === TAB_SUBTRACT })}>
                         <div className="flex flex-row">
                             <span>Khả dụng:</span>
                             <span className="dark:text-gray-4 text-gray-15 ml-1 font-semibold">{totalAvailable}</span>

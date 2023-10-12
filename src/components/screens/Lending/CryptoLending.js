@@ -37,7 +37,8 @@ const CONTENT = {
 
 // ** initData
 const initData = {
-    tab: 'lending'
+    tab: 'loan',
+    countLoan: 0
 };
 
 const TAB_ALLOW = ['lending', 'loan', 'history'];
@@ -53,7 +54,7 @@ const CryptoLending = () => {
 
     // ** useState
     const [tab, setTab] = useState(initData.tab);
-    const [countLoan, setCountLoan] = useState(0);
+    const [countLoan, setCountLoan] = useState(initData.countLoan);
 
     // ** useEffect
     useEffect(() => {
