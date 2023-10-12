@@ -336,12 +336,12 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                             {formatNumber(estimatedReward, rewardInfo?.assetDigit ?? 0)} {rewardAsset}
                         </div>
                     </div>
-                    {asset !== rewardAsset && <div className="flex justify-between space-x-2 mt-3">
+                    <div className="flex justify-between space-x-2 mt-3">
                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:quote')}:</div>
                         <div className="font-semibold">
                             {1} {asset} ≈ {formatNumber(quote, rewardInfo?.assetDigit ?? 0)} {rewardAsset}
                         </div>
-                    </div>}
+                    </div>
 
                     <div className="h-5"></div>
                     <hr className="border-divider dark:border-divider-dark"></hr>
