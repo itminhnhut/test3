@@ -58,7 +58,7 @@ const SucessLoan = ({ isModal, onClose, tab, adjustedLTV, totalAdjusted }) => {
             </section>
             <ButtonV2
                 onClick={() => {
-                    router.replace(
+                    router.push(
                         {
                             pathname: router.pathname,
                             query: {
