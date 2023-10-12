@@ -147,8 +147,8 @@ const Wallet = () => {
                 key: asset,
                 asset: asset,
                 apr: showRange({
-                    min: +(minAPR * 100).toFixed(2),
-                    max: +(maxAPR * 100).toFixed(2),
+                    min: +(minAPR * 100).toFixed(4),
+                    max: +(maxAPR * 100).toFixed(4),
                     postFix: {
                         singular: '%',
                         plural: '%'

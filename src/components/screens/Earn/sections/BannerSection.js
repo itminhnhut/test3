@@ -22,7 +22,7 @@ const BannerSection = () => {
     const { t } = useTranslation();
 
     return (
-        <Background className="w-full h-[0.30625vw] min-h-[20rem] max-h-[27.5rem]">
+        <Background className="w-full h-[30.625vw] min-h-[20rem] max-h-[27.5rem]">
             <div className="max-w-screen-xxl w-full m-auto relative h-full">
                 <div className="w-full m-auto px-4 v3:px-0 max-w-screen-v3 2xl:max-w-screen-xxl h-full relative z-10">
                     <div className="flex flex-col justify-center h-full max-w-[460px]">

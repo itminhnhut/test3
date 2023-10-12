@@ -105,7 +105,7 @@ const PoolSection = ({ pool_list }) => {
             render: (val) => <div className="font-semibold">{val}</div>
         },
         {
-            title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('earn:table:action')}</div>,
+            // title: <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base">{t('earn:table:action')}</div>,
             dataIndex: 'action',
             key: 'action',
             width: 174,

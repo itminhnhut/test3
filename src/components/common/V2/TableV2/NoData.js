@@ -6,7 +6,7 @@ import { getLoginUrl, getS3Url } from 'src/redux/actions/utils';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import HrefButton from '../ButtonV2/HrefButton';
 
-const NoData = ({ text, loading = false, isSearch = false, className = '', isAuth = false, textClassName = '' }) => {
+const NoData = ({ text, textLoginToDo, loading = false, isSearch = false, className = '', isAuth = false, textClassName = '' }) => {
     const { t } = useTranslation();
     const [currentTheme] = useDarkMode();
     const user = useSelector((state) => state.auth.user) || isAuth;
@@ -27,7 +27,7 @@ const NoData = ({ text, loading = false, isSearch = false, className = '', isAut
                         <HrefButton className="!p-0" variants="blank" href={getLoginUrl('sso', 'register')}>
                             {t('common:sign_up')}
                         </HrefButton>
-                        <div>{t('common:to_experience')}</div>
+                        <div>{textLoginToDo ?? t('common:to_experience')}</div>
                     </div>
                 </>
             ) : (

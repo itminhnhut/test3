@@ -37,7 +37,7 @@ const HotPool = ({ pool }) => {
             <div className="flex justify-between mt-4">
                 <div className="">
                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mb-1">{t('earn:apr')}</div>
-                    <div className="font-semibold text-teal">{+(apr * 100).toFixed(2)} %</div>
+                    <div className="font-semibold text-teal">{+(apr * 100).toFixed(4)} %</div>
                 </div>
                 <div className="">
                     <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mb-1">{t('earn:period')}</div>

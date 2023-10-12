@@ -214,7 +214,8 @@ export function getUserEarnBalance() {
                 dispatch({
                     type: types.UPDATE_WALLET,
                     walletType: WalletType.EARN,
-                    payload: data
+                    payload: data,
+                    forceUpdate: true,
                 });
             }
         } catch (e) {}

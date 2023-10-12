@@ -106,7 +106,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
                         break;
                     }
                     case 'number': {
-                        render = `${+(val * 100).toFixed(2)}%`;
+                        render = `${+(val * 100).toFixed(4)}%`;
                         break;
                     }
                 }

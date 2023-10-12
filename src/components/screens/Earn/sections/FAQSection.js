@@ -71,8 +71,8 @@ const FAQSection = ({
                     })}
                 </div>
 
-                <HrefButton href="/support/faq" variants="blank" className='mx-auto text-center'>
-                    {t('common:read_more')}
+                <HrefButton href="/support/faq" variants="blank" className="mx-auto text-center">
+                    {t('common:view_more')}
                 </HrefButton>
             </div>
         </div>

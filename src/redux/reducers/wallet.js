@@ -19,10 +19,10 @@ export const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case types.UPDATE_WALLET:
-            let { walletType } = action
+            let { walletType, forceUpdate } = action
             if (!walletType) walletType = WalletType.SPOT
-            if (!state[walletType]) {
-                return { ...state, [walletType]: action.payload }
+            if (!state[walletType] || forceUpdate) {
+                return { ...state, [walletType]: action.payload };
             }
             const balance = { ...state[walletType], ...action.payload }
             return { ...state, [walletType]: balance }

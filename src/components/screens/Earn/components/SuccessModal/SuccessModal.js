@@ -59,7 +59,7 @@ const SuccessModal = ({ onClose, pool, estimatedReward, depositAmount, onConfirm
                     >
                         {t('earn:deposit_modal:apr')}
                     </div>
-                    <div className="font-semibold text-right text-green-3 dark:text-green-2">{(apr * 100).toFixed(2)}%</div>
+                    <div className="font-semibold text-right text-green-3 dark:text-green-2">{+(apr * 100).toFixed(4)}%</div>
                 </div>
                 <div className="flex justify-between space-x-2">
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:period')}</div>

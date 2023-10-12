@@ -13,7 +13,7 @@ import { WalletCurrency } from 'utils/reference-utils';
 import CheckBox from 'components/common/CheckBox';
 import Button from 'components/common/V2/ButtonV2/Button';
 import FetchApi from 'utils/fetch-api';
-import { API_DEPOSIT_EARN, API_EARN_CLAIM_REWARD, API_EARN_REDEEM, API_EARN_TOGGLE_RENEW, API_GET_MARKET_WATCH } from 'redux/actions/apis';
+import { API_DEPOSIT_EARN, API_EARN_CLAIM_REWARD, API_EARN_REDEEM, API_EARN_TOGGLE_RENEW, API_GET_MARKET_WATCH, API_GET_QUOTE } from 'redux/actions/apis';
 import toast from 'utils/toast';
 import useQuery from 'hooks/useQuery';
 import { useRouter } from 'next/router';
@@ -39,33 +39,33 @@ const getUTCToday = () => {
 };
 
 const ERROR = {
-    POSITION_NOT_FOUND: {
-        en: 'Position not found',
-        vi: 'Vị thế Earn ko tìm thấy'
-    },
+    // POSITION_NOT_FOUND: {
+    //     en: 'Position not found',
+    //     vi: 'Vị thế Earn ko tìm thấy'
+    // },
     INVALID_REDEEM_EARLIER: {
-        en: 'Could not redeem in earn time',
-        vi: 'Ko thể redeem trước hạn'
+        en: 'Early redemption is not allowed',
+        vi: 'Lệnh không được phép rút trước hạn'
     },
     INVALID_POSITION_STATUS: {
-        en: 'This position is ended',
-        vi: 'Vị thế này đã kết thúc'
+        en: 'The pool has expired',
+        vi: 'Pool đã hết kỳ hạn'
     },
-    INVALID_REWARD_AMOUNT: {
-        en: 'No reward to claim',
-        vi: 'hết ròi'
-    },
+    // INVALID_REWARD_AMOUNT: {
+    //     en: 'No reward to claim',
+    //     vi: 'hết ròi'
+    // },
     RENEW_UNAVAILABLE: {
-        en: 'Unable to renew',
-        vi: 'ko renew được'
+        en: 'Auto-renewal is not applicable',
+        vi: 'Tự động gia hạn không được áp dụng'
     },
     429: {
-        en: 'No spam',
-        vi: 'ko spam'
+        en: 'No spam, please!',
+        vi: 'Vui lòng không spam!'
     },
     INVALID_MAINTENANCE_TIME: {
-        en: 'Earn system is currently suspending',
-        vi: 'Chuơng trình Earn đang trong giai đoạn bảo trì'
+        en: 'Maintenance is in progress',
+        vi: 'Hệ thống đang bảo trì'
     }
 };
 
@@ -109,16 +109,23 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
     const [modal, setModal] = useState();
     const [isSuspending, setIsSuspending] = useState(false);
     const router = useRouter();
-    const quote = useMemo(() => {
-        if (asset === rewardAsset) {
-            return 1;
-        }
-
-        const assetPrice = usdRate?.[WalletCurrency[asset]] || 0;
-        const rewardPrice = usdRate?.[WalletCurrency[rewardAsset]] || 0;
-
-        return rewardPrice === 0 ? 1 : assetPrice / rewardPrice;
-    }, [usdRate, asset, rewardAsset]);
+    const { data: quote } = useQuery(
+        [API_GET_QUOTE, asset, rewardAsset],
+        async () => {
+            if (asset === rewardAsset) {
+                return 1;
+            }
+            const { data } = await FetchApi({
+                url: API_GET_QUOTE + `/${asset}${rewardAsset}`,
+                params: {
+                    base: asset,
+                    quote: rewardAsset
+                }
+            });
+            return data?.lastPrice ?? 0;
+        },
+        { ttl: '20s' }
+    );
     const estDailyReward = (apr * quote * depositAmount) / 365;
     const equivalentClaimedReward = claimedAmount / quote;
 
@@ -316,7 +323,7 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
                 </Tooltip>
                 <div className="flex justify-between">
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:apr')}</div>
-                    <div className="font-semibold text-green-3 dark:text-green-2 text-right">{+(apr * 100).toFixed(2)}%</div>
+                    <div className="font-semibold text-green-3 dark:text-green-2 text-right">{+(apr * 100).toFixed(4)}%</div>
                 </div>
                 <div className="flex justify-between mt-4">
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:estimated_profit')}</div>
@@ -372,37 +379,35 @@ const EarnPositionDetail = ({ onClose, position, usdRate }) => {
 
             <div className="h-6"></div>
 
-            <div className="bg-gray-13 dark:bg-dark-4 p-4 rounded-xl">
-                {isSuspending ? (
-                    <>
-                        {canReStake ? (
+            {isSuspending ? (
+                <div className="bg-gray-13 dark:bg-dark-4 p-4 rounded-xl">
+                    {canReStake ? (
+                        <div className="flex items-center font-semibold space-x-4">
+                            <span>{t('wallet:earn_wallet:position:auto_renew')}</span>
+                            <SwitchV2 processing={isLoading} checked={autoRenew} disabled={true} />
+                        </div>
+                    ) : (
+                        <div className="flex items-center font-semibold space-x-2.5">
+                            <BxsInfoCircle size={20} />
+                            <span>{t('common:note')}</span>
+                        </div>
+                    )}
+
+                    <div className="mt-4 text-txtSecondary dark:text-txtSecondary-dark">{suspend_msg}</div>
+                </div>
+            ) : (
+                <>
+                    {canReStake && (
+                        <div className="bg-gray-13 dark:bg-dark-4 p-4 rounded-xl">
                             <div className="flex items-center font-semibold space-x-4">
                                 <span>{t('wallet:earn_wallet:position:auto_renew')}</span>
-                                <SwitchV2 processing={isLoading} checked={autoRenew} disabled={true} />
+                                <SwitchV2 processing={isLoading} checked={autoRenew} onChange={toggleAutoRenew} />
                             </div>
-                        ) : (
-                            <div className="flex items-center font-semibold space-x-2.5">
-                                <BxsInfoCircle size={20} />
-                                <span>{t('common:note')}</span>
-                            </div>
-                        )}
-
-                        <div className="mt-4 text-txtSecondary dark:text-txtSecondary-dark">{suspend_msg}</div>
-                    </>
-                ) : (
-                    <>
-                        {canReStake && (
-                            <>
-                                <div className="flex items-center font-semibold space-x-4">
-                                    <span>{t('wallet:earn_wallet:position:auto_renew')}</span>
-                                    <SwitchV2 processing={isLoading} checked={autoRenew} onChange={toggleAutoRenew} />
-                                </div>
-                                <div className="mt-4 text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:auto_renew_tooltip')}</div>
-                            </>
-                        )}
-                    </>
-                )}
-            </div>
+                            <div className="mt-4 text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:earn_wallet:position:auto_renew_tooltip')}</div>
+                        </div>
+                    )}
+                </>
+            )}
 
             <div className="h-10"></div>
             <Button className="w-full" disabled={!canRedeem} loading={isLoading} onClick={openRedeemModal}>

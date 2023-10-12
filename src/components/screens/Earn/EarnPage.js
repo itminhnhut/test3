@@ -177,7 +177,7 @@ const EarnPage = ({ pool_list, hotPools, assetList, rewardList }) => {
                             onConfirm={() => setSkipWarning(true)}
                             onClose={closeModal}
                             title={t('earn:suspend_title')}
-                            textButton={t('common:confirm')}
+                            textButton={t('common:continue')}
                             message={suspend_msg}
                         />
                     ))}

@@ -24,7 +24,7 @@ const Earn = ({ pool_list, hotPools }) => {
 
 export const getServerSideProps = async (ctx) => {
     const { locale } = ctx;
-    // await i18n.reloadResources(locale, ['common', 'navbar', 'earn', 'wallet']);
+    // await i18n.reloadResources(locale ?? 'en', ['common', 'navbar', 'earn', 'wallet']);
 
     let hotPools = [];
     let pool_list = [];

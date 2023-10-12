@@ -32,7 +32,8 @@ const DatePickerV2 = ({
     maxMonths,
     minDate,
     maxDate,
-    ignoreAuth
+    ignoreAuth,
+    placeHolder
 }) => {
     const [showPicker, setShowPicker] = useState(false);
     const wrapperRef = useRef(null);
@@ -54,7 +55,7 @@ const DatePickerV2 = ({
         if (showPicker) {
             if (isFunction(onClickOutside)) onClickOutside();
             if (!isCalendar) {
-                setDate(initDate);
+                setDate({ ...initDate, ...(!initDate?.key && { key: 'selection' }) });
             }
             setShowPicker(false);
         }

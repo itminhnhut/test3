@@ -13,8 +13,7 @@ import { WalletCurrency } from 'utils/reference-utils';
 import CheckBox from 'components/common/CheckBox';
 import Button from 'components/common/V2/ButtonV2/Button';
 import FetchApi from 'utils/fetch-api';
-import { API_DEPOSIT_EARN, API_GET_MARKET_WATCH, API_GET_USD_RATE } from 'redux/actions/apis';
-import toast from 'utils/toast';
+import { API_DEPOSIT_EARN, API_GET_MARKET_WATCH, API_GET_QUOTE, API_GET_USD_RATE } from 'redux/actions/apis';
 import useQuery from 'hooks/useQuery';
 import { useRouter } from 'next/router';
 import Tooltip from 'components/common/Tooltip';
@@ -57,39 +56,42 @@ const MODAL = {
 };
 
 const ERROR = {
-    FARMING_POOL_NOT_FOUND: {
-        en: 'This pool is currently inactive',
-        vi: 'Pool ko khả dụng'
-    },
-    PROJECT_NOT_FOUND: {
-        en: 'This pool is not existed',
-        vi: 'Pool ko tồn tại'
-    },
+    // FARMING_POOL_NOT_FOUND: {
+    //     en: 'This pool is currently inactive',
+    //     vi: 'Pool ko khả dụng'
+    // },
+    // PROJECT_NOT_FOUND: {
+    //     en: 'This pool is not existed',
+    //     vi: 'Pool ko tồn tại'
+    // },
     INVALID_SUBSCRIPTION_START_TIME: {
-        en: 'This pool is not ready yet',
-        vi: 'Pool này chưa bắt đầu'
+        en: 'The pool is not open for registration',
+        vi: 'Pool không nằm trong thời gian cho phép đăng ký'
     },
     INVALID_PROJECT: {
-        en: 'This pool is full',
-        vi: 'Pool này đã đầy'
+        en: 'The pool is inactive',
+        vi: 'Pool không hoạt động'
     },
     INVALID_AMOUNT: {
-        en: 'Invalid amount',
-        vi: 'Số lượng nạp ko hợp lệ'
+        en: 'Exceeds the allowed pool size',
+        vi: 'Vượt quá pool size cho phép'
     },
     INVALID_BALANCEL: {
         en: 'Insufficient balance',
-        vi: 'Hết tiền ròi'
+        vi: 'Số dư không khả dụng'
     },
     INVALID_MAINTENANCE_TIME: {
-        en: 'Earn system is currently suspending',
-        vi: 'Chuơng trình Earn đang trong giai đoạn bảo trì'
+        en: 'Maintenance is in progress',
+        vi: 'Hệ thống đang bảo trì'
     }
 };
 
 const EarnModal = ({ onClose, pool, isSuspending }) => {
     const { asset, rewardAsset, accumulatedAmount, totalSupply, duration, apr, min, max, id, renewable } = pool;
-    const { t, i18n: { language } } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const assetInfo = getAssetFromCode(asset);
     const rewardInfo = getAssetFromCode(rewardAsset);
     const [depositAmount, setDepositAmount] = useState();
@@ -111,25 +113,20 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
             const { value = 0, locked_value = 0 } = userAsset;
             return value - locked_value;
         }) || 0;
-    const { data: usdRate } = useQuery([API_GET_USD_RATE], async () => {
-        const { data } = await FetchApi({
-            url: API_GET_USD_RATE
-        });
-        if (data) {
-            data[39] = data[72];
-        }
-        return data;
-    });
-    const quote = useMemo(() => {
+    const { data: quote } = useQuery([API_GET_QUOTE, asset, rewardAsset], async () => {
         if (asset === rewardAsset) {
             return 1;
         }
+        const { data } = await FetchApi({
+            url: API_GET_QUOTE + `/${asset}${rewardAsset}`,
+            params: {
+                base: asset,
+                quote: rewardAsset,
+            }
+        });
+        return data?.lastPrice ?? 0;
+    }, { ttl: '20s' });
 
-        const assetPrice = usdRate?.[WalletCurrency[asset]] || 0;
-        const rewardPrice = usdRate?.[WalletCurrency[rewardAsset]] || 0;
-
-        return rewardPrice === 0 ? 0 : assetPrice / rewardPrice;
-    }, [usdRate, asset, rewardAsset]);
     const router = useRouter();
 
     const poolLoad = +((accumulatedAmount * 100) / totalSupply).toFixed(2);
@@ -148,12 +145,8 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
     const validation = useMemo(() => {
         let isValid = true;
         let msg = null;
-        if (min > +depositAmount) {
-            msg = t('earn:deposit_modal:min_deposit') + ` ${min}`;
-            isValid = false;
-        }
-        if (maxDeposit < +depositAmount) {
-            msg = t('earn:deposit_modal:max_deposit') + ` ${maxDeposit}`;
+        if (min > +depositAmount || maxDeposit < +depositAmount) {
+            msg = t('earn:deposit_modal:min_max', { min, max: maxDeposit });
             isValid = false;
         }
         if (userBalance < +depositAmount) {
@@ -210,7 +203,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                 setDepositError(error || t('earn:deposit_modal:error'));
             }
         } catch (error) {
-            console.log('error:', error)
+            console.log('error:', error);
             closeModal();
             setDepositError(t('earn:deposit_modal:error'));
         } finally {
@@ -266,7 +259,7 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                             >
                                 {t('earn:deposit_modal:apr')}:
                             </div>
-                            <div className="font-semibold text-right text-green-3 dark:text-green-2">{+(apr * 100).toFixed(2)}%</div>
+                            <div className="font-semibold text-right text-green-3 dark:text-green-2">{+(apr * 100).toFixed(4)}%</div>
                         </div>
                     </div>
                     {systemMsg && (
@@ -343,12 +336,12 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                             {formatNumber(estimatedReward, rewardInfo?.assetDigit ?? 0)} {rewardAsset}
                         </div>
                     </div>
-                    <div className="flex justify-between space-x-2 mt-3">
+                    {asset !== rewardAsset && <div className="flex justify-between space-x-2 mt-3">
                         <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:quote')}:</div>
                         <div className="font-semibold">
                             {1} {asset} ≈ {formatNumber(quote, rewardInfo?.assetDigit ?? 0)} {rewardAsset}
                         </div>
-                    </div>
+                    </div>}
 
                     <div className="h-5"></div>
                     <hr className="border-divider dark:border-divider-dark"></hr>
@@ -373,14 +366,14 @@ const EarnModal = ({ onClose, pool, isSuspending }) => {
                                 </div>
                             </div>
                             <div className="relative">
-                                {!autoRenew && <div className="bg-gray-13 dark:bg-dark-4 absolute h-1/2 w-2 -left-1 bottom-0"></div>}
+                                {(!autoRenew || !renewable) && <div className="bg-gray-13 dark:bg-dark-4 absolute h-1/2 w-2 -left-1 bottom-0"></div>}
                                 <div className="rounded-full bg-teal w-2 h-2 absolute -left-1 top-1/2 -translate-y-1/2"></div>
                                 <div className="flex justify-between space-x-2 items-center flex-1 ml-2">
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('earn:deposit_modal:ends_at')}:</div>
                                     <div className="font-semibold text-right">{formatDateTime(endAt)}</div>
                                 </div>
                             </div>
-                            {autoRenew && (
+                            {autoRenew && renewable && (
                                 <div className="relative">
                                     <div className="bg-gray-13 dark:bg-dark-4 absolute h-1/2 w-2 -left-1 bottom-0"></div>
                                     <div className="rounded-full bg-teal w-2 h-2 absolute -left-1 top-1/2 -translate-y-1/2"></div>
