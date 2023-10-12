@@ -1,6 +1,8 @@
 // ** Context
-import { formatNumber } from 'redux/actions/utils';
+import { ceilByExactDegit, formatNumber } from 'redux/actions/utils';
 import { getAssetConfig } from 'components/screens/Lending/Context';
+
+const PERCENT_DECIMAL = 4;
 
 // ** Context
 const totalAsset = (total, asset) => {
@@ -22,4 +24,7 @@ const getReceiveCollateral = ({ repayAmount, totalDebt, totalCollateralAmount, m
     return ((repayAmount / totalDebt) * totalCollateralAmount - marginUsed) * 0.95;
 };
 
-export { totalAsset, getCurrentLTV, getReceiveCollateral };
+// K dung cai nay cho % LTV
+const formatPercent = (percent) => ceilByExactDegit(percent, PERCENT_DECIMAL);
+
+export { totalAsset, getCurrentLTV, getReceiveCollateral, formatPercent };
