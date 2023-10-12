@@ -1,0 +1,9 @@
+node_modules/**
+dist/**
+.next/**
+.analyzer/**
+build/**
+
+src/components/TradingView/**
+
+src/*

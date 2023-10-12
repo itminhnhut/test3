@@ -1,0 +1,24 @@
+import React from 'react';
+import classNames from 'classnames';
+
+const TextButton = ({ className = '', disabled = false, children, variants = 'primary', onClick, loading }) => {
+    return (
+        <button
+            className={classNames(
+                'flex whitespace-nowrap items-center justify-center font-semibold text-base w-full py-3 px-6',
+                {
+                    'px-0 text-sm sm:text-base text-txtTextBtn hover:text-txtTextBtn-pressed active:text-txtTextBtn-pressed disabled:text-txtTextBtn-disabled dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed dark:disabled:text-txtTextBtn-dark_disabled disabled:pointer-events-none':
+                        variants === 'primary',
+                    'text-gray-5/[0.1]': disabled
+                },
+                className
+            )}
+            onClick={onClick}
+            disabled={disabled || loading}
+        >
+            {children}
+        </button>
+    );
+};
+
+export default TextButton;

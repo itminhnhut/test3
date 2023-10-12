@@ -1,0 +1,15 @@
+# *
+User-agent: *
+Allow: /
+
+Disallow: /*mobile/futures/order/*
+Disallow: /*library/*
+Disallow: /*_next/*
+
+
+# Host
+Host: https://nami.exchange
+
+# Sitemaps
+Sitemap: https://nami.exchange/sitemap.xml
+Sitemap: https://nami.exchange/server-sitemap.xml

@@ -1,0 +1,139 @@
+import React, { useState, useRef, useEffect } from 'react';
+import PopupModal from 'components/screens/NewReference/PopupModal';
+import FetchApi from 'utils/fetch-api';
+import _ from 'lodash';
+import { API_NEW_REFERRAL_EDIT_NOTE } from 'redux/actions/apis';
+import { useTranslation } from 'next-i18next';
+import { scrollFocusInput } from 'redux/actions/utils';
+import classNames from 'classnames';
+import ModalV2 from 'components/common/V2/ModalV2';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { CloseIcon } from 'components/svg/SvgIcon';
+
+
+const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDesktop }) => {
+    const { t } = useTranslation();
+    const [note, setNote] = useState(currentNote ?? '');
+    const refInput = useRef(null);
+    const timer = useRef(null);
+    const handleInputNote = (e) => {
+        const text = e?.target?.value;
+        if (text.length > 30) return;
+        setNote(text);
+    };
+
+    const doClose = () => {
+        refInput.current.blur();
+        // const elements = document.getElementsByTagName('input');
+        // elements[0].value = '';
+        setTimeout(() => {
+            onClose();
+        }, 100);
+        // setNote('');
+    };
+
+    const handleSubmitEditNote = _.throttle(async () => {
+        const { status } = await FetchApi({
+            url: API_NEW_REFERRAL_EDIT_NOTE.replace(':code', code),
+            options: {
+                method: 'PATCH'
+            },
+            params: {
+                note
+            }
+        });
+        if (status === 'ok') {
+            doClose();
+            doRefresh();
+        } else {
+        }
+    }, 1000);
+
+    const onFocus = (e) => {
+        clearTimeout(timer.current);
+        timer.current = setTimeout(() => {
+            scrollFocusInput;
+        }, 100);
+    };
+
+    return isDesktop ?
+        <ModalV2
+            isVisible={isShow}
+            onBackdropCb={doClose}
+            className='w-[30rem]'
+            wrapClassName='px-8'
+        >
+            <p className='text-2xl font-semibold mb-6'>{t('reference:referral.modify_note')}</p>
+            <div>
+                <p className='text-txtSecondary dark:text-txtSecondary-dark text-sm mb-2'>{t('reference:referral.note')}</p>
+                <div className="rounded-md px-3 h-12 flex justify-between items-center bg-gray-10 dark:bg-dark-2 gap-4">
+                    <div className="flex justify-between items-center w-full">
+                        <input
+                            onFocus={onFocus}
+                            className="w-full"
+                            maxLength={30}
+                            onChange={handleInputNote}
+                            value={note ?? ''}
+                            ref={refInput}
+                        // autoFocus
+                        />
+                        <button className={`border-r border-r-divider dark:border-r-divider-dark pr-3 ${!!note.length ? 'visible' : 'invisible'}`}>
+                            <CloseIcon onClick={() => setNote('')} size={16} className="cursor-pointer" />
+                        </button>
+                    </div>
+                    <div className="w-10 text-txtSecondary dark:text-txtSecondary-dark">{note.length}/30</div>
+                </div>
+            </div>
+            <ButtonV2
+                className='mt-10'
+                onClick={() => handleSubmitEditNote()}
+            >
+                {t('common:confirm')}
+            </ButtonV2>
+        </ModalV2>
+        :
+        <PopupModal
+            isVisible={isShow}
+            onBackdropCb={doClose}
+            title={t('reference:referral.modify_note')}
+            useAboveAll
+            isDesktop={isDesktop}
+            useCenter={isDesktop}
+            contentClassname={isDesktop ? "!rounded !w-[390px] !px-0" : undefined}
+            isMobile
+        >
+            <div className={classNames("font-medium text-sm text-gray-7 leading-6 flex flex-col gap-4", { 'px-4': isDesktop })}>
+                <div>
+                    {t('reference:referral.note')}
+                    <div className="mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-hover-dark font-medium text-sm leading-6 gap-4">
+                        <div className="flex justify-between items-center w-full">
+                            <input
+                                onFocus={onFocus}
+                                className="text-gray-6 w-full font-medium text-sm leading-6"
+                                maxLength={30}
+                                onChange={handleInputNote}
+                                value={note ?? ''}
+                                ref={refInput}
+                                autoFocus
+                                style={{
+                                    outline: 'none'
+                                }}
+                            />
+                            <button className={`border-r border-r-divider dark:border-r-divider-dark pr-3 ${!!note.length ? 'visible' : 'invisible'}`}>
+                                <CloseIcon onClick={() => setNote('')} size={16} className="cursor-pointer" />
+                            </button>
+                        </div>
+                        <div className="w-10">{note.length}/30</div>
+                    </div>
+                </div>
+                <div
+                    className="w-full h-11 mt-4 bg-teal rounded-md font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer text-white"
+                    onClick={() => handleSubmitEditNote()}
+                >
+                    {t('common:confirm')}
+                </div>
+            </div>
+        </PopupModal>
+};
+
+export default EditNote;

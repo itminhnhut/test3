@@ -1,0 +1,369 @@
+import { useCallback, useMemo, useState } from 'react';
+
+// ** next
+import { useTranslation } from 'next-i18next';
+import dynamic from 'next/dynamic';
+
+// ** Redux
+import { useDispatch, useSelector } from 'react-redux';
+
+//** Components
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import ModalV2 from 'components/common/V2/ModalV2';
+import { AddCircleColorIcon, IconClose } from 'components/svg/SvgIcon';
+import TradingInputV2 from 'components/trade/TradingInputV2';
+import AssetLogo from 'components/wallet/AssetLogo';
+import PercentageInput from './PercentageInput';
+import RepaymentInformation from './RepaymentInformation';
+
+// ** Custom hooks
+import useCollateralPrice from 'components/screens/Lending/hooks/useCollateralPrice';
+import useRepayLoan from 'components/screens/Lending/hooks/useRepayLoan';
+
+// ** Utils
+import { getCurrentLTV, getReceiveCollateral } from 'components/screens/Lending/utils';
+import { getSpotAvailable } from 'components/screens/Lending/utils/selector';
+import { ceilByExactDegit, dwLinkBuilder, formatNumber2, roundByExactDigit, setTransferModal } from 'redux/actions/utils';
+
+// ** Constants
+import { PERCENT } from 'components/screens/Lending/constants';
+import { WalletType } from 'redux/actions/const';
+
+// ** Third parties
+import classNames from 'classnames';
+import Link from 'next/link';
+import { PATHS } from 'constants/paths';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+
+// dynamic import
+const ModalConfirmLoanRepayment = dynamic(() => import('./ConfirmLoanRepayment'), { ssr: false });
+const ModalCancelLoanRepayment = dynamic(() => import('./CancelLoanRepayment'), { ssr: false });
+
+export const REPAY_TAB = {
+    LOAN: 'loan',
+    COLLATERAL: 'collateral'
+};
+
+const INPUT_FIELD = {
+    AMOUNT: 'amount',
+    PERCENTAGE: 'percentage'
+};
+
+const INIT_STATE = {
+    input: {
+        percentage: 0,
+        amount: ''
+    },
+    typingField: INPUT_FIELD.PERCENTAGE,
+    tab: REPAY_TAB.LOAN,
+    isShowConfirm: false,
+    isShowConfirmCancel: false
+};
+
+const LoanRepayment = ({ dataCollateral, isOpen, onClose: onCloseRepaymentModal }) => {
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+
+    const dispatch = useDispatch();
+    const assetConfig = useSelector((state) => state.utils.assetConfig) || [];
+    const assetByCode = useMemo(() => {
+        return assetConfig?.length && assetConfig.reduce((prevObj, asset) => ({ ...prevObj, [asset?.assetCode]: asset }), {});
+    }, [assetConfig]);
+
+    const { totalDebt, initialLTV, totalCollateralAmount, collateralCoin, loanCoin, _id: loanId } = dataCollateral;
+
+    //**  useState
+    const [state, set] = useState(INIT_STATE);
+    const setState = (newState) => set((prev) => ({ ...prev, ...newState }));
+    //** state for toggle fetch price
+    const [refetchPrice, setRefetchPrice] = useState(false);
+
+    const { data: collateralPriceToLoanCoin, loading: loadingCollateralPrice } = useCollateralPrice({
+        collateralAssetCode: collateralCoin,
+        loanableAssetCode: loanCoin,
+        refetch: refetchPrice,
+        condition: isOpen,
+        dependencies: [isOpen]
+    });
+
+    const isLoanRepay = state.tab === REPAY_TAB.LOAN;
+    const isTypingAmountField = state.typingField === INPUT_FIELD.AMOUNT;
+
+    const loanCoinConfig = assetByCode?.[loanCoin];
+    const collateralCoinConfig = assetByCode?.[collateralCoin];
+
+    // ** loan asset balance
+    const loanCoinAvailable = useSelector((state) => getSpotAvailable(state, { assetId: loanCoinConfig?.id }));
+
+    const repayInLoanAmount = +state.input.amount;
+
+    // amount repay in loanCoin and collateralCoin
+    const repayAmount = {
+        [REPAY_TAB.LOAN]: repayInLoanAmount,
+        [REPAY_TAB.COLLATERAL]: repayInLoanAmount / collateralPriceToLoanCoin
+    }?.[state.tab];
+
+    // ki quy da su dung
+    const marginUsed = {
+        [REPAY_TAB.LOAN]: 0, // tra bang tai san vay luon = 0
+        [REPAY_TAB.COLLATERAL]: repayInLoanAmount / collateralPriceToLoanCoin
+    }?.[state.tab];
+
+    // so luong ki quy nhan lai uoc tinh
+    const collateralAmountReceive = getReceiveCollateral({ repayAmount: repayInLoanAmount, totalDebt, totalCollateralAmount, marginUsed });
+
+    // ki quy con lai
+    const totalMarginLeft = totalCollateralAmount - marginUsed - collateralAmountReceive;
+
+    // tong du no con lai
+    const totalDebtLeft = totalDebt - repayInLoanAmount;
+
+    // ltv dieu chinh
+    const adjustLTV = getCurrentLTV({ totalDebtLeft, totalCollateralLeft: totalMarginLeft, collateralPrice: collateralPriceToLoanCoin });
+
+    //** useCustomHook
+    const repayLoan = useRepayLoan({
+        type: state.tab,
+        amount: repayInLoanAmount,
+        loanId
+    });
+
+    // repayment information
+    const repaymentDataProps = useMemo(
+        () => ({
+            initialLTV,
+            adjustLTV,
+            isLoanRepay,
+            totalDebtLeft,
+            totalDebt,
+            loanCoinConfig,
+            collateralCoinConfig,
+            collateralPriceToLoanCoin,
+            repayAmount,
+            repayInLoanAmount,
+            collateralAmountReceive,
+            repayType: state.tab
+        }),
+        [
+            initialLTV,
+            adjustLTV,
+            isLoanRepay,
+            totalDebtLeft,
+            totalDebt,
+            loanCoinConfig?.assetCode,
+            collateralCoinConfig?.assetCode,
+            collateralPriceToLoanCoin,
+            repayAmount,
+            repayInLoanAmount,
+            collateralAmountReceive,
+            state.tab
+        ]
+    );
+
+    // ** handle
+    const onHandlerInputChange = useCallback(
+        (inputField, inputValue) => {
+            // field con lai
+            const otherField = {
+                percentage: 'amount',
+                amount: 'percentage'
+            }[inputField];
+
+            // gia tri cua field con lai
+            const otherValue = {
+                percentage: roundByExactDigit((inputValue / totalDebt) * PERCENT, 0), // field "percentage" lam tron xuong
+                amount: inputValue === 100 ? totalDebt : ceilByExactDegit((totalDebt * inputValue) / PERCENT, loanCoinConfig?.assetDigit) || ''
+                // if percentage === 100% thi amount = totalDebt
+                // else: field "amount" lam tron len. neu amount === 0 thi = ""
+            }[otherField];
+
+            if (inputField === 'amount' && +inputValue > totalDebt) {
+                return;
+            }
+
+            setState({
+                input: {
+                    [inputField]: inputValue,
+                    [otherField]: otherValue
+                }
+            });
+        },
+        [totalDebt, loanCoinConfig?.assetDigit]
+    );
+
+    const onChangeRepayTypeHandler = (newTab) => {
+        setState({ tab: newTab });
+    };
+
+    const onHandleAddMoreBalance = () => {
+        dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT, asset: loanCoin }));
+    };
+    const onHandleRefetchPrice = () => setRefetchPrice((prev) => !prev);
+
+    const onRepayHandler = async (type) => {
+        if (type === 'showConfirm') {
+            onHandleRefetchPrice();
+            setState({ isShowConfirm: true });
+            return;
+        }
+        return await repayLoan();
+    };
+
+    const onHandleCloseRepaymentModal = (forceClose = false) => {
+        if (!forceClose && +repayInLoanAmount > 0) {
+            setState({ isShowConfirmCancel: true });
+            return;
+        }
+        setState(INIT_STATE);
+        setTimeout(() => onCloseRepaymentModal(), 50);
+    };
+
+    const validator = useMemo(() => {
+        let isValid = true,
+            isError = false,
+            msg = '';
+
+        // loan repay phai check balance cua loanCoin
+        if (isLoanRepay) {
+            if (+repayInLoanAmount > loanCoinAvailable) {
+                isValid = false;
+                isError = true;
+                msg = t('lending:lending.modal.input_description.insufficient_balance');
+            }
+        }
+
+        return {
+            isValid,
+            isError,
+            msg
+        };
+    }, [loanCoinAvailable, repayInLoanAmount, isLoanRepay]);
+
+    const isDisableRepayButton = !repayInLoanAmount || +repayInLoanAmount === 0 || validator.isError;
+
+    return (
+        <>
+            <ModalV2
+                isVisible={isOpen}
+                className="w-[800px] overflow-auto no-scrollbar"
+                onBackdropCb={onHandleCloseRepaymentModal}
+                wrapClassName="p-6 flex flex-col text-gray-1 dark:text-gray-7 tracking-normal"
+                customHeader={() => (
+                    <div className="flex justify-end mb-6">
+                        <div
+                            className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
+                            onClick={(e) => onHandleCloseRepaymentModal()}
+                        >
+                            <IconClose />
+                        </div>
+                    </div>
+                )}
+            >
+                <div className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Trả khoản vay</div>
+                <section className="mt-6 flex flex-row gap-6">
+                    <section className="w-1/2">
+                        <section className="cursor-pointer flex flex-row border rounded border-divider dark:border-divider-dark justify-between text-center bg-white dark:bg-dark">
+                            {Object.keys(REPAY_TAB).map((key, index) => {
+                                const repayType = REPAY_TAB[key];
+                                return (
+                                    <section
+                                        key={`repay_${repayType}}`}
+                                        className={classNames('w-1/2 dark:text-gray-7 text-gray-1 py-3', {
+                                            'dark:bg-dark-2 bg-dark-12  font-semibold !text-txtPrimary dark:!text-txtPrimary-dark': repayType === state.tab,
+                                            'border-r-[1px] border-r-divider dark:border-r-divider-dark': index === 0
+                                        })}
+                                        onClick={() => onChangeRepayTypeHandler(repayType)}
+                                    >
+                                        {t(`lending:repayment.${repayType}`)}
+                                    </section>
+                                );
+                            })}
+                        </section>
+                        <section className="mt-6">
+                            <section className="flex flex-row justify-between mb-2 text-txtPrimary  dark:text-txtPrimary-dark">
+                                <div className="font-semibold">Số lượng</div>
+                                {isLoanRepay && (
+                                    <section className="flex text-sm flex-row gap-1 items-center">
+                                        <div className="space-x-1">
+                                            <span className="dark:text-txtSecondary-dark text-txtSecondary">{t('common:available_balance')}</span>
+                                            <span className="font-semibold ">{formatNumber2(loanCoinAvailable, loanCoinConfig?.assetDigit || 0) || '0'}</span>
+                                        </div>
+
+                                        <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, loanCoin)}>
+                                            <a className="inline-block">
+                                                <AddCircleColorIcon size={16} className="cursor-pointer" />
+                                            </a>
+                                        </Link>
+                                    </section>
+                                )}
+                            </section>
+                            <div className="mb-4 ">
+                                <TradingInputV2
+                                    containerClassName="!bg-gray-12 dark:!bg-dark-2"
+                                    clearAble
+                                    allowNegative={false}
+                                    placeholder={t('lending:lending.modal.collateral_input.placeholder')}
+                                    thousandSeparator={true}
+                                    inputClassName="!text-left !ml-0 !text-txtPrimary dark:!text-txtPrimary-dark"
+                                    errorTooltip={false}
+                                    decimalScale={loanCoinConfig?.assetDigit || 0}
+                                    value={state.input.amount}
+                                    validator={validator}
+                                    errorTooltip={false}
+                                    onValueChange={({ value }) => {
+                                        onHandlerInputChange('amount', value);
+                                    }}
+                                    renderTail={
+                                        <div className={classNames('text-txtPrimary dark:text-txtPrimary-dark flex items-center space-x-2')}>
+                                            <div className="w-6 h-6 min-w-[24px] min-h-[24px]">
+                                                <AssetLogo useNextImg size={24} assetCode={loanCoinConfig?.assetCode} />
+                                            </div>
+                                            <div className="font-semibold">{loanCoinConfig?.assetCode || loanCoinConfig?.assetName}</div>
+                                        </div>
+                                    }
+                                    onFocus={() => setState({ typingField: 'amount' })}
+                                />
+                            </div>
+                            <PercentageInput
+                                key={state.tab} // handle change tab -> reset input
+                                onHandlerInputChange={(value) => {
+                                    onHandlerInputChange('percentage', value);
+                                    setState({ typingField: 'percentage' });
+                                }}
+                                isTypingAmountField={isTypingAmountField}
+                                percentageFormat={state.input.percentage}
+                            />
+                        </section>
+                    </section>
+                    <section className="w-1/2 dark:bg-dark-4 bg-dark-13 p-4 text-txtPrimary dark:text-txtPrimary-dark rounded-xl">
+                        <RepaymentInformation {...repaymentDataProps} />
+                    </section>
+                </section>
+                <ButtonV2 disabled={isDisableRepayButton} onClick={() => onRepayHandler('showConfirm')} className="mt-10">
+                    Trả khoản vay
+                </ButtonV2>
+            </ModalV2>
+
+            <ModalCancelLoanRepayment
+                isOpen={state.isShowConfirmCancel}
+                onClose={() => setState({ isShowConfirmCancel: false })}
+                onConfirm={() => onHandleCloseRepaymentModal(true)}
+            />
+
+            <ModalConfirmLoanRepayment
+                handleRefetchPrice={onHandleRefetchPrice}
+                loadingPrice={loadingCollateralPrice}
+                repaymentData={repaymentDataProps}
+                repayLoan={onRepayHandler}
+                isModal={state.isShowConfirm}
+                onClose={() => setState({ isShowConfirm: false })}
+                onCloseMainModal={onCloseRepaymentModal}
+            />
+        </>
+    );
+};
+
+export default LoanRepayment;
