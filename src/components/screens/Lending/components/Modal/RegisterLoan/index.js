@@ -51,6 +51,7 @@ import Spinner from 'components/svg/Spinner';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
+import { formatPercent } from 'components/screens/Lending/utils';
 
 // ** INIT DATA
 const INIT_DATA = {
@@ -183,17 +184,19 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
     const onChangeRule = () => setState({ isAcceptRule: !isAcceptRule });
 
     const getDefaultAsset = useCallback(
-        ({ assetKey }) => {
+        ({ assetKey, filterAssetCode }) => {
             const defaultAssetCode = assetKey === LOANABLE ? loanAsset || DEFAULT_LOANABLE_ASSET : DEFAULT_COLLATERAL_ASSET;
-            const assetFound = assetList[assetKey].find((asset) => asset?.assetCode === defaultAssetCode);
-            return assetFound;
+            const filterAssetList = assetList[assetKey].filter((asset) => asset?.assetCode !== filterAssetCode);
+
+            // neu tim khong thay defaultAssetCode, su dung index 0 cua filterAssetList
+            return filterAssetList.find((asset) => asset?.assetCode === defaultAssetCode) || filterAssetList[0];
         },
         [assetList, loanAsset]
     );
     useEffect(() => {
         const settingDefaultAsset = () => {
             const loanAsset = getDefaultAsset({ assetKey: LOANABLE });
-            const collateralAsset = getDefaultAsset({ assetKey: COLLATERAL });
+            const collateralAsset = getDefaultAsset({ assetKey: COLLATERAL, filterAssetCode: loanAsset?.assetCode || '' });
             setFilter({ [LOANABLE]: loanAsset, [COLLATERAL]: collateralAsset });
         };
 
@@ -245,8 +248,8 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
     // ** render
     const renderInterest = () => {
         const interestRate = {
-            interest_year: `${loanInterest.annualInterestPercent.toFixed(4)}%`,
-            interest_daily: `${loanInterest.dailyInterestPercent.toFixed(4)}%`,
+            interest_year: `${formatPercent(loanInterest.annualInterestPercent)}%`,
+            interest_daily: `${formatPercent(loanInterest.dailyInterestPercent)}%`,
             interest_hours: `${formatNumber(loanInterest.hourInterestAmount, filter?.loanable?.assetDigit || 0)} ${filter?.loanable?.assetCode}`,
             interest_term: `${formatNumber(loanInterest.termInterestAmount, filter?.loanable?.assetDigit || 0)} ${filter?.loanable?.assetCode}`
         };

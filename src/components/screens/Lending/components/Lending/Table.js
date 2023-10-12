@@ -12,7 +12,7 @@ import TableV2 from 'components/common/V2/TableV2';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 // ** Redux
-import { formatNumber } from 'redux/actions/utils';
+import { ceilByExactDegit, formatNumber } from 'redux/actions/utils';
 
 // ** Third party
 import { useWindowSize } from 'react-use';
@@ -23,6 +23,7 @@ import dynamic from 'next/dynamic';
 import useRedirectLoanAsset from '../../hooks/useRedirectLoanAsset';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_PAIR_PRICE } from 'redux/actions/apis';
+import { formatPercent } from 'components/screens/Lending/utils';
 
 // ** dynamic
 const ModalRegisterLoan = dynamic(() => import('components/screens/Lending/components/Modal/RegisterLoan'), { ssr: false });
@@ -110,7 +111,7 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 minWidth: 205,
                 render: (value, data) => {
                     const interestRate = +value * 100;
-                    return <div className="font-normal">{`${interestRate?.toFixed(4)}% / ${(interestRate * 24 * 365)?.toFixed(4)}%`}</div>;
+                    return <div className="font-normal">{`${formatPercent(interestRate)}% / ${formatPercent(interestRate * 24 * 365)}%`}</div>;
                 }
             },
             {
@@ -121,7 +122,7 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 minWidth: 206,
                 render: (value, data) => {
                     const interestRate = +value * 100;
-                    return <div className="font-normal">{`${interestRate?.toFixed(4)}% / ${(interestRate * 24 * 365)?.toFixed(4)}%`}</div>;
+                    return <div className="font-normal">{`${formatPercent(interestRate)}% / ${formatPercent(interestRate * 24 * 365)}%`}</div>;
                 }
             },
             {
