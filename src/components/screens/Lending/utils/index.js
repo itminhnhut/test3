@@ -22,4 +22,8 @@ const getReceiveCollateral = ({ repayAmount, totalDebt, totalCollateralAmount, m
     return ((repayAmount / totalDebt) * totalCollateralAmount - marginUsed) * 0.95;
 };
 
-export { totalAsset, getCurrentLTV, getReceiveCollateral };
+const formatLTV = (total) => {
+    return Math.floor(+total);
+};
+
+export { totalAsset, getCurrentLTV, getReceiveCollateral, formatLTV };

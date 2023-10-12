@@ -2,11 +2,11 @@ import { useState, useContext, useEffect } from 'react';
 
 // ** Next
 import { useTranslation } from 'next-i18next';
-import dynamic from 'next/dynamic';
 
 // ** components
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PERCENT } from 'components/screens/Lending/constants';
+
 // ** components screens
 import SucessAdjust from './SucessAdjust.js';
 
@@ -18,6 +18,7 @@ import { API_PUT_HISTORY_LOAN_MARGIN } from 'redux/actions/apis';
 
 // ** Utils
 import FetchApi from 'utils/fetch-api';
+import { formatLTV } from 'components/screens/Lending/utils';
 
 // ** Context
 import { LendingContext } from 'components/screens/Lending/context/index.js';
@@ -136,7 +137,7 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
                     </section>
                     <section className="flex flex-row justify-between">
                         <div className="dark:text-gray-7 text-gray-1">LTV đã điều chỉnh</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{adjustedLTV.toFixed(0)}%</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{formatLTV(adjustedLTV)}%</div>
                     </section>
                     <section className="flex flex-row justify-between">
                         <div className="dark:text-gray-7 text-gray-1">Tổng ký quỹ đã điều chỉnh</div>

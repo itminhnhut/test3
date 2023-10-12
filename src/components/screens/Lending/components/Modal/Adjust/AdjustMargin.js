@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useContext } from 'react';
 
 // ** next
 import { useTranslation } from 'next-i18next';
-import dynamic from 'next/dynamic';
 
 // ** Redux
 import { WalletType } from 'redux/actions/const';
@@ -11,7 +10,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
 
 // ** Utils
-import { totalAsset } from 'components/screens/Lending/utils';
+import { totalAsset, formatLTV } from 'components/screens/Lending/utils';
+import { formatNumber } from 'utils/reference-utils';
 
 // ** Context
 import { usePairPrice, LendingContext } from 'components/screens/Lending/context';
@@ -34,7 +34,6 @@ import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
 import classNames from 'classnames';
 import { PERCENT } from 'components/screens/Lending/constants';
 import useDebounce from 'hooks/useDebounce';
-import { formatNumber } from 'utils/reference-utils';
 
 const MARGIN = [
     { title: { vi: 'Thêm ký quỹ', en: 'Thêm ký quỹ' }, key: 'add' },
@@ -164,7 +163,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     };
 
     const current_LTV = useMemo(() => {
-        return (total_current_LTV * PERCENT).toFixed(0);
+        return formatLTV(total_current_LTV * PERCENT);
     }, [pairPrice?.lastPrice, JSON.stringify(dataCollateral)]);
 
     const adjustedLTV = useMemo(() => {
@@ -204,8 +203,8 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     };
 
     const validationSubtract = () => {
-        const initial_LTV = +(state.initialLTV * PERCENT).toFixed(0);
-        const formatAdjustedLTV = +adjustedLTV.toFixed(0);
+        const initial_LTV = formatLTV(state.initialLTV * PERCENT);
+        const formatAdjustedLTV = formatLTV(adjustedLTV);
         return current_LTV < +initial_LTV && formatAdjustedLTV <= initial_LTV && validationAmount();
     };
 
@@ -238,7 +237,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
                     </section>
                     <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
                         <div>LTV đã điều chỉnh</div>
-                        <div className="dark:text-gray-4 font-semibold">{isDefaultDash || `${adjustedLTV?.toFixed(0)}%`}</div>
+                        <div className="dark:text-gray-4 font-semibold">{isDefaultDash || `${formatLTV(adjustedLTV)}%`}</div>
                     </section>
                     <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7 flex-wrap">
                         <div>Tổng ký quỹ điều chỉnh</div>
@@ -276,7 +275,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
                         </section>
                         <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
                             <div>LTV đã điều chỉnh</div>
-                            <div className="dark:text-gray-4 font-semibold">{isDefaultDash || `${adjustedLTV?.toFixed(0)}%`} </div>
+                            <div className="dark:text-gray-4 font-semibold">{isDefaultDash || `${formatLTV(adjustedLTV)}%`} </div>
                         </section>
                         <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7 flex-wrap">
                             <div>Tổng ký quỹ điều chỉnh</div>
