@@ -1,5 +1,3 @@
-import { useCallback, useState } from 'react';
-
 // ** Next
 import { useTranslation } from 'next-i18next';
 
@@ -7,8 +5,8 @@ import { useTranslation } from 'next-i18next';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import ModalV2 from 'components/common/V2/ModalV2';
 
-// ** Redux
-import { formatNumber } from 'redux/actions/utils';
+// ** utils
+import { formatLTV } from 'components/screens/Lending/utils';
 
 // ** svg
 import { IconClose } from 'components/svg/SvgIcon';
@@ -18,7 +16,7 @@ import { CheckCircleIconV2 } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import { useRouter } from 'next/router';
 
-const SucessLoan = ({ isModal, onClose, tab, adjustedLTV, totalAdjusted }) => {
+const SucessLoan = ({ isModal, onClose, tab, adjustedLTV = 0, totalAdjusted }) => {
     const {
         t,
         i18n: { language }
@@ -52,7 +50,7 @@ const SucessLoan = ({ isModal, onClose, tab, adjustedLTV, totalAdjusted }) => {
                 <section className="dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex w-full mt-6">
                     <section className="flex justify-between w-full">
                         <div className="dark:text-gray-7 text-gray-1">LTV đã điều chỉnh</div>
-                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{(adjustedLTV || 0)?.toFixed(0)}%</div>
+                        <div className="dark:text-gray-4 text-gray-15 font-semibold">{formatLTV(adjustedLTV)}%</div>
                     </section>
                 </section>
             </section>

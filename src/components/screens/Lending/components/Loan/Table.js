@@ -25,7 +25,7 @@ import { LIMIT, LOAN_HISTORY_STATUS, PERCENT, STATUS_CODE } from 'components/scr
 
 // ** Utils
 import FetchApi from 'utils/fetch-api';
-import { totalAsset } from 'components/screens/Lending/utils';
+import { totalAsset, formatLTV } from 'components/screens/Lending/utils';
 
 // ** Context
 import { LendingContext } from 'components/screens/Lending/context';
@@ -55,8 +55,6 @@ const ModalLoanRepayment = dynamic(() => import('components/screens/Lending/comp
 const INIT_DATA = {
     isModal: false
 };
-
-const DISABLE_STATUS = ['ACCRUING_INTEREST'];
 
 const CancelToken = axios.CancelToken;
 const isCancel = (error) => axios.isCancel(error);
@@ -261,7 +259,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     };
     const renderCol4 = (options) => {
         const { totalDebt, totalCollateralAmount, loanTerm, price } = options;
-        const LTV = ((totalDebt / (totalCollateralAmount * price)) * PERCENT).toFixed(0); // ** LTV hiện tại */
+        const LTV = formatLTV((totalDebt / (totalCollateralAmount * price)) * PERCENT); // ** LTV hiện tại */
         return (
             <section className="flex flex-col h-[128px] w-max">
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] whitespace-nowrap">
@@ -283,8 +281,8 @@ const LoanTable = ({ data, page, loading, onPage }) => {
     const renderCol5 = (options) => {
         const { liquidationLTV, marginCallLTV } = options;
 
-        const totalLiquidationLTV = (liquidationLTV * PERCENT).toFixed(0); //** LTV Thanh lý */
-        const totalMarginCallLTV = (marginCallLTV * PERCENT).toFixed(0);
+        const totalLiquidationLTV = formatLTV(liquidationLTV * PERCENT); //** LTV Thanh lý */
+        const totalMarginCallLTV = formatLTV(marginCallLTV * PERCENT);
 
         return (
             <section className="flex flex-col h-[128px] w-max">

@@ -27,4 +27,8 @@ const getReceiveCollateral = ({ repayAmount, totalDebt, totalCollateralAmount, m
 // K dung cai nay cho % LTV
 const formatPercent = (percent) => ceilByExactDegit(percent, PERCENT_DECIMAL);
 
-export { totalAsset, getCurrentLTV, getReceiveCollateral, formatPercent };
+const formatLTV = (total) => {
+    return Math.floor(+total);
+};
+
+export { totalAsset, getCurrentLTV, getReceiveCollateral, formatPercent, formatLTV };
