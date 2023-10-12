@@ -1,6 +1,6 @@
 // ** Context
 import { ceilByExactDegit, formatNumber } from 'redux/actions/utils';
-import { getAssetConfig } from 'components/screens/Lending/Context';
+import { getAssetConfig } from 'components/screens/Lending/context';
 
 const PERCENT_DECIMAL = 4;
 
