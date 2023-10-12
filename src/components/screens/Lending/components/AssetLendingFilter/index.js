@@ -163,6 +163,7 @@ const AssetLendingFilter = ({
                                     {previousSearchList.map((currentAsset) => {
                                         const isAssetChosen = asset && asset?.id === currentAsset?.id;
                                         const isAssetInLoanList = currentAsset?.assetCode === assetCode;
+                                        const balanceAvailable = filterAssets?.find((item) => item?.id === currentAsset?.id)?.available;
                                         return (
                                             <div
                                                 onClick={() => {
@@ -170,7 +171,8 @@ const AssetLendingFilter = ({
 
                                                     popoverRef?.current?.close();
                                                     setTimeout(() => setSearch(''), 100);
-                                                    onChangeAsset(currentAsset);
+                                                    // phai su dung available moi nhat tu filterAssets
+                                                    onChangeAsset({ ...currentAsset, available: balanceAvailable });
 
                                                     if (isAuth) {
                                                         const copySearchList = JSON.parse(JSON.stringify(previousSearchList));
