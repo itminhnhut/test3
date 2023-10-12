@@ -20,10 +20,7 @@ const useFetchPriceCounter = ({ loadingPrice, initCounter = INIT_COUNTER }) => {
     }, [loadingPrice]);
     const resetCountdown = () => setCountdown(initCounter);
 
-    const status = useMemo(() => {
-        if (countdown === null) return 'finished';
-        return 'in-progress';
-    }, [countdown]);
+    const status = countdown === null ? 'finished' : 'in-progress';
 
     return {
         status,
