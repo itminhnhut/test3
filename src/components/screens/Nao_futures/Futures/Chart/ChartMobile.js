@@ -63,7 +63,11 @@ const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, fo
     }, [fullChart]);
 
     return (
-        <div id="chart-mobile" className={`spot-chart ${!fullChart ? 'max-w-full h-full' : '!z-30'}`} style={style}>
+        <div
+            id="chart-mobile"
+            className={`spot-chart border-b border-divider dark:border-divider-dark ${!fullChart ? 'max-w-full h-full' : '!z-30'}`}
+            style={style}
+        >
             <MobileTradingView
                 refChart={(ref) => (refChart.current = ref)}
                 t={t}

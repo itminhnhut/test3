@@ -1144,6 +1144,20 @@ export const formatFundingRate = (value) => {
     return (value ? (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true) : 0) + '%';
 };
 
+export const formatVolFundingRateV2 = (item, side) => {
+    const field = side === 'buy' ? 'buyVolumeRate' : 'sellVolumeRate';
+    return `${formatNumber((item?.[field] * 100).toFixed(0), 0)}%`;
+};
+
+export const formatFundingRateV2 = (value) => {
+    const force = value * 100;
+    const sign = Math.sign(force);
+    const absoluteValue = Math.abs(force);
+    const decimal = 10000;
+    const formattedNumber = ((sign * Math.floor(absoluteValue * decimal)) / decimal).toString();
+    return `${formatNanNumber(formattedNumber, 4, 0, true)}%`;
+};
+
 export function checkLargeVolume(notional, isVndc = true) {
     if (isVndc) {
         return notional >= 600e6;

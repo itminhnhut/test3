@@ -241,6 +241,9 @@ module.exports = {
             },
             purple: {
                 ...commonColors.purple
+            },
+            blue:{
+                ...commonColors.blue
             }
         },
         extend: {

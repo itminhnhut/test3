@@ -25,6 +25,7 @@ import dynamic from 'next/dynamic';
 import { getAssetConfig, getMarketWatch, getPairConfig } from 'redux/selectors';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import Funding from '../Information/Funding';
 
 const FuturesPairList = dynamic(() => import('components/screens/Futures/PairList'), { ssr: false });
 
@@ -39,7 +40,6 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     const [isShowModalInfo, setIsShowModalInfo] = useState(false);
     const [isShowModalPriceList, setIsShowModalPriceList] = useState(false);
     // state, vars for information modal (Trading rules)
-    const timesync = useSelector((state) => state.utils.timesync);
     const [showPopover, setShowPopover] = useState(false);
     const isFunding = useRef(true);
     const { t } = useTranslation();
@@ -125,23 +125,11 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
             let localized = t(localizedPath);
 
             switch (code) {
-                case 'fundingCountdown':
-                    value = (
-                        <div>
-                            {formatFundingRate(pairPrice?.fundingRate * 100)} /
-                            <Countdown
-                                now={() => (timesync ? timesync.now() : Date.now())}
-                                date={pairPrice?.fundingTime}
-                                renderer={({ hours, minutes, seconds }) => {
-                                    return (
-                                        <span>
-                                            {hours}:{minutes}:{seconds}
-                                        </span>
-                                    );
-                                }}
-                            />
-                        </div>
-                    );
+                case 'funding':
+                    value = <Funding pairPrice={pairPrice} symbol={pair} />;
+                    break;
+                case 'countdown':
+                    value = <Funding.Countdown pairPrice={pairPrice} symbol={pair} tooltip />;
                     break;
                 case '24hHigh':
                     value = formatNumber(roundTo(pairPrice?.highPrice || 0, pricePrecision), pricePrecision);
@@ -205,7 +193,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                     // style={{ minWidth: minWidth || 0 }}
                 >
                     <FuturesPairDetailItem
-                        label={code === 'fundingCountdown' ? renderFunding() : localized}
+                        label={['funding', 'countdown'].includes(code) ? renderFunding(localized, code) : localized}
                         containerClassName={`${className} mr-6`}
                         value={value}
                         icon={icon}
@@ -220,11 +208,15 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
         setShowPopover(true);
     };
 
-    const renderFunding = () => {
+    const renderFunding = (localized, code) => {
         return (
-            <div className="flex items-center space-x-1 text-xs leading-[16px] font-normal text-txtSecondary dark:text-txtSecondary-dark">
+            <div
+                data-tip={''}
+                data-for={code === 'countdown' ? `funding_countdown_${pair}` : ''}
+                className="flex items-center space-x-1 text-xs leading-[16px] font-normal text-txtSecondary dark:text-txtSecondary-dark"
+            >
                 <div onClick={onClickFunding} className="cursor-pointer border-b border-darkBlue-5 border-dashed pb-0.5">
-                    <span>Funding / {t('futures:countdown')}</span>
+                    <span>{localized}</span>
                 </div>
             </div>
         );
@@ -484,25 +476,25 @@ const ModalPerpetual = ({ isShowModalInfo, onBackdropCb, t, symbol, pairListMode
 
     const renderFundingFee = useCallback(() => {
         return (
-            <div>
-                <div className="flex items-center space-x-1 text-base text-txtSecondary dark:text-txtSecondary-dark">
-                    <div onClick={onClickFunding} className="cursor-pointer border-b border-darkBlue-5 border-dashed pb-0.5">
-                        <span>Funding / {t('futures:countdown')}</span>
+            <div className="flex items-center space-x-9 ">
+                <div className="">
+                    <div
+                        onClick={onClickFunding}
+                        className="border-b border-darkBlue-5 border-dashed text-txtSecondary dark:text-txtSecondary-dark mb-2 w-max cursor-pointer"
+                    >
+                        Funding
                     </div>
+                    <Funding pairPrice={pairPrice} symbol={symbol} className="font-semibold" />
                 </div>
-                <div className="text-base font-semibold mt-2">
-                    <span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> /
-                    <Countdown
-                        now={() => (timesync ? timesync.now() : Date.now())}
-                        date={pairPrice?.fundingTime}
-                        renderer={({ hours, minutes, seconds }) => {
-                            return (
-                                <span>
-                                    {hours}:{minutes}:{seconds}
-                                </span>
-                            );
-                        }}
-                    />
+                <div className="">
+                    <div
+                        data-tip={''}
+                        data-for={`funding_countdown_${symbol}`}
+                        className="border-b border-darkBlue-5 border-dashed text-txtSecondary dark:text-txtSecondary-dark mb-2"
+                    >
+                        {t('futures:countdown')}
+                    </div>
+                    <Funding.Countdown pairPrice={pairPrice} symbol={symbol} tooltip className="font-semibold" />
                 </div>
             </div>
         );
@@ -633,7 +625,7 @@ const ModalPerpetual = ({ isShowModalInfo, onBackdropCb, t, symbol, pairListMode
                     </div>
                 </div>
                 {/* Funding fee */}
-                <div className="max-w-[216px] min-w-[216px] rounded-md py-4 px-3 border border-dashed dark:border-divider-dark">{renderFundingFee()}</div>
+                <div className="w-full rounded-md py-4 px-3 border border-dashed dark:border-divider-dark">{renderFundingFee()}</div>
             </div>
 
             <div className="mt-8 flex w-full">
@@ -674,7 +666,7 @@ const PopoverFunding = ({ visible, onClose, isFunding, symbol }) => {
                 {/* <Modal isVisible={visible} onBackdropCb={onClose} containerClassName="max-w-[342px]"> */}
                 <div className="font-semibold text-2xl">{isFunding ? 'Funding' : t('futures:countdown')}</div>
                 <div className="text-gray-9 dark:text-gray-7 text-sm mt-4">
-                    {isFunding ? t('futures:funding_rate_des') : t('common:countdown_tooltip')}{' '}
+                    {isFunding ? <span dangerouslySetInnerHTML={{ __html: t('futures:funding_rate_des') }} /> : t('common:countdown_tooltip')}{' '}
                     {isFunding && (
                         <span onClick={onDetail} className="text-teal font-semibold cursor-pointer">
                             {t('common:read_more')}
@@ -698,9 +690,15 @@ const PopoverFunding = ({ visible, onClose, isFunding, symbol }) => {
 
 const PAIR_PRICE_DETAIL_ITEMS = [
     {
-        key: 2,
-        code: 'fundingCountdown',
-        localized: 'futures:funding_countdown'
+        key: 'funding',
+        code: 'funding',
+        localized: 'futures:funding'
+        // icon: <PopoverFunding />
+    },
+    {
+        key: 'countdown',
+        code: 'countdown',
+        localized: 'futures:countdown'
         // icon: <PopoverFunding />
     },
     {

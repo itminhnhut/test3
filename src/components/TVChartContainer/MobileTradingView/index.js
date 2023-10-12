@@ -34,6 +34,7 @@ import { useEffect } from 'react';
 import { useContext } from 'react';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 import filter from 'lodash/filter';
+import CFunding from 'components/screens/Futures/Information/Funding';
 
 export class MobileTradingView extends React.PureComponent {
     state = {
@@ -784,12 +785,9 @@ const Funding = ({ symbol }) => {
             <div className="flex items-center px-4 pt-3 pb-4 space-x-6 border-b-4 border-divider/70 dark:border-divider-dark/50">
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
                     <div className="flex items-center space-x-1" onClick={() => setShowModal(true)}>
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">Funding:</span>
-                        <div>
-                            <QuestionMarkIcon size={12} color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" />
-                        </div>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark border-b border-darkBlue-5 border-dashed">Funding:</span>
                     </div>
-                    <div>{formatFundingRate(marketWatch[symbol]?.fundingRate * 100)}</div>
+                    <CFunding symbol={symbol} className="text-right whitespace-nowrap" />
                 </div>
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
                     <div className="flex items-center space-x-1" data-tip={t('common:countdown_tooltip')} data-for="tooltip-countdown">
@@ -809,24 +807,11 @@ const Funding = ({ symbol }) => {
                                 return { top, left };
                             }}
                         />
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:countdown')}:</span>
-                        <div className="w-3 h-3">
-                            <QuestionMarkIcon size={12} color="currentColor" className="text-txtSecondary dark:text-txtSecondary-dark" />
-                        </div>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark border-b border-darkBlue-5 border-dashed">
+                            {t('futures:countdown')}:
+                        </span>
                     </div>
-                    <div>
-                        <Countdown
-                            now={() => (timesync ? timesync.now() : Date.now())}
-                            date={marketWatch[symbol]?.fundingTime}
-                            renderer={({ hours, minutes, seconds }) => {
-                                return (
-                                    <span>
-                                        {hours}:{minutes}:{seconds}
-                                    </span>
-                                );
-                            }}
-                        />
-                    </div>
+                    <CFunding.Countdown symbol={symbol} />
                 </div>
             </div>
         </>
@@ -861,8 +846,8 @@ const ModalFundingRate = ({ onClose, t, symbol }) => {
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}>
             <div className="text-2xl font-semibold text-center">{t('futures:funding_rate')}</div>
-            <div className="text-sm pt-4 text-center text-txtSecondary dark:text-txtSecondary-dark">
-                {t('futures:funding_rate_des')}{' '}
+            <div className="text-sm pt-4 text-txtSecondary dark:text-txtSecondary-dark">
+                <span dangerouslySetInnerHTML={{ __html: t('futures:funding_rate_des') }} />{' '}
                 <span onClick={onDetail} className="text-teal font-semibold">
                     {t('common:read_more')}
                 </span>
