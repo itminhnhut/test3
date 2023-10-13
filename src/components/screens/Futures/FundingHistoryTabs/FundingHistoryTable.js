@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, formatTime, formatFundingRate } from 'redux/actions/utils';
+import { formatNumber, formatTime, formatFundingRate, formatFundingRateV2 } from 'redux/actions/utils';
 import useWindowSize from 'hooks/useWindowSize';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
@@ -20,6 +20,7 @@ import PopoverV2 from 'components/common/V2/PopoverV2';
 import sortBy from 'lodash/sortBy';
 import NoData from 'components/common/V2/TableV2/NoData';
 import Chip from 'components/common/V2/Chip';
+import Funding from '../Information/Funding';
 
 ChartJS.register(Title, Tooltip, LineElement, Legend, CategoryScale, LinearScale, PointElement, Filler);
 
@@ -188,13 +189,20 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
             render: (data, item) => `${data} ${t('common:hours')}`
         },
         {
-            key: 'lastFundingRate',
-            dataIndex: 'lastFundingRate',
-            title: t('futures:funding_rate'),
+            key: 'fundingTime',
+            dataIndex: 'rate',
+            title: `${t('futures:funding_history_tab:funding_rate')} (Long/Short)`,
             align: 'right',
-            width: '20%',
-            sorter: false,
-            render: (data, item) => formatFundingRate(data * 100)
+            width: '30%',
+            preventSort: true,
+            fixed: width >= 992 ? 'none' : 'left',
+            render: (data, item) => (
+                <div className="flex items-center justify-end space-x-1">
+                    <span className="text-teal">{formatFundingRateV2(item?.lastBuyFundingRate)}</span>
+                    <span>/</span>
+                    <span className="text-red">{formatFundingRateV2(item?.lastSellFundingRate)}</span>
+                </div>
+            )
         }
     ];
 
@@ -211,8 +219,8 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
                     title: function (tooltipItem, data) {
                         return formatTime(+tooltipItem[0]?.label, 'yyyy-MM-dd HH:mm:ss');
                     },
-                    labelTextColor: function () {
-                        return colors.teal;
+                    labelTextColor: function (data) {
+                        return !data.datasetIndex ? colors.teal : colors.red[2];
                     },
                     label: function (context) {
                         return formatNumber(context.raw, 0, 6, true) + '%';
@@ -220,7 +228,6 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
                 }
             }
         },
-        pointBackgroundColor: colors.teal,
         pointBorderColor: isDark ? '#001219' : colors.gray[13],
         pointBorderWidth: isMobile ? 1.5 : 2,
         elements: {
@@ -272,8 +279,8 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
         }
     };
 
-    const createGradient = (ctx, area) => {
-        const colorStart = '#47cc8526';
+    const createGradient = (ctx, area, side) => {
+        const colorStart = side === 'buy' ? '#47cc8526' : '#f9363626';
         const colorEnd = '#ffffff00';
         const gradient = ctx?.createLinearGradient(0, area.top, 0, area.bottom);
         gradient?.addColorStop(0, colorStart);
@@ -287,11 +294,22 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
         const labels = dataReverse.map((item) => item.calcTime);
         return {
             labels,
+            color: [colors.teal, colors.red[2]],
             datasets: [
                 {
-                    backgroundColor: createGradient(chart.current?.ctx, chart.current?.chartArea),
-                    data: dataReverse.map((item) => item.lastFundingRate * 100),
+                    backgroundColor: createGradient(chart.current?.ctx, chart.current?.chartArea, 'buy'),
+                    data: dataReverse.map((item) => item.lastBuyFundingRate * 100),
                     borderColor: colors.teal,
+                    pointBackgroundColor: colors.teal,
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    backgroundColor: createGradient(chart.current?.ctx, chart.current?.chartArea, 'sell'),
+                    data: dataReverse.map((item) => item.lastSellFundingRate * 100),
+                    borderColor: colors.red[2],
+                    pointBackgroundColor: colors.red[2],
                     borderWidth: 2,
                     tension: 0.4,
                     fill: true
@@ -325,7 +343,7 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
     return (
         <div className={classNames('mt-6 sm:mt-12', { hidden: !active })}>
             <div className="dark:bg-darkBlue-3 p-4 border border-divider dark:border-0 sm:p-8 rounded-xl mb-12">
-                <div className="h-full flex items-center justify-between mb-8">
+                <div className="h-full flex items-start sm:items-center justify-between mb-8">
                     <div className="sm:flex items-center relative cursor-pointer sm:space-x-8">
                         <div
                             className="relative z-10 flex items-center text-lg leading-6 "
@@ -347,9 +365,13 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
                                 />
                             </div>
                         </div>
-                        <div className="relative z-10 flex space-x-1 mt-2 sm:mt-0 text-xs sm:text-base">
-                            <span className="text-txtSecondary-dark">{t('futures:funding_rate')}:</span>
-                            <span className="text-teal font-semibold">{formatFundingRate(fundingRate * 100)}</span>
+                        <div className="relative z-10 sm:flex sm:space-x-1 mt-2 sm:mt-0 text-xs sm:text-base">
+                            <span className="text-txtSecondary-dark text-sm flex items-center mb-1 sm:mb-0">
+                                {`${t('futures:funding_rate')} (Long/Short)`}:
+                            </span>
+                            <span className="font-semibold">
+                                <Funding symbol={symbol} />
+                            </span>
                         </div>
                     </div>
                     <div className="flex items-center space-x-4">
@@ -417,8 +439,12 @@ export default function FundingHistoryTable({ symbol, currency, active, isDark }
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center justify-between">
-                                                        <div className="dark:text-txtSecondary-dark">{t('futures:funding_rate')}</div>
-                                                        <div>{formatFundingRate(item?.lastFundingRate * 100)}</div>
+                                                        <div className="dark:text-txtSecondary-dark">{`${t('futures:funding_rate')} (Long/Short)`}</div>
+                                                        <div className="flex items-center justify-end space-x-1">
+                                                            <span className="text-teal">{formatFundingRateV2(item?.lastBuyFundingRate)}</span>
+                                                            <span>/</span>
+                                                            <span className="text-red">{formatFundingRateV2(item?.lastSellFundingRate)}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

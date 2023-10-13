@@ -10,11 +10,8 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { LendingContext } from 'components/screens/Lending/context';
 import { globalActionTypes as actions } from 'components/screens/Lending/context/actions';
 
-const ERRORS = {
-    ORDER_IS_ACCRUING_INTEREST: {
-        message: { vi: 'Đơn hàng đang tích lũy tiền lãi', en: 'Order is accruing interest' }
-    }
-};
+//** Constant
+import { ERRORS } from 'components/screens/Lending/constants';
 
 const AlertAdjust = () => {
     const {

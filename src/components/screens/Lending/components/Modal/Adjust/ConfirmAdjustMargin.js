@@ -61,7 +61,7 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
     const handleSubmitConfirm = async () => {
         try {
             setIsLoading(true);
-            const { statusCode } = await FetchApi({
+            const { statusCode, code } = await FetchApi({
                 url: API_PUT_HISTORY_LOAN_MARGIN.replace(':id', id),
                 params: {
                     amount: tab === 'add' ? +amount : -amount
@@ -76,7 +76,7 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
                 dispatchReducer({
                     type: actions.TOGGLE_MODAL_ERROR,
                     modal: { isError: true, isConfirmAdjust: false },
-                    error: { code: 'ORDER_IS_ACCRUING_INTEREST' }
+                    error: { code }
                 });
             }
         } catch (error) {

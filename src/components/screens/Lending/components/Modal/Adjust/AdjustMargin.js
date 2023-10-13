@@ -150,15 +150,17 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     }, [collateralAvailable]);
 
     useEffect(() => {
-        handleCheckAmountInput();
         dispatchReducer({ type: actions.UPDATE_TOTAL_ADJUSTED, amount: amountAsset || 0, method: tab });
-    }, [debounceAmount, adjustedLTV]);
+    }, [debounceAmount]);
+
+    useEffect(() => {
+        handleCheckAmountInput();
+    }, [adjustedLTV]);
 
     // ** handle reset clear input or update amount
     const handleRestUpdateAmount = () => {
         if (!amountAsset) {
             dispatchReducer({ type: actions.RESET_AMOUNT });
-            setError(initState.error);
         } else {
             dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: amountAsset });
         }
@@ -168,6 +170,8 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     const handleCheckAmountInput = () => {
         let total = collateralAvailable;
         let isCheckAmount = +amountAsset < 0 || +amountAsset > total;
+
+        if (amountAsset === '') return;
 
         if (tab !== TAB_ADD) {
             total = adjustedCurrent?.total;
@@ -190,7 +194,6 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
                 return;
             }
         }
-        error?.msg && setError(initState.error);
         handleRestUpdateAmount();
     };
 
@@ -216,6 +219,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     // ** handle update amount assets
     const handleAmountChange = (value) => {
         setAmountAsset(value);
+        error?.msg && setError(initState.error);
     };
 
     //* check amount - Available
@@ -259,7 +263,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     }, [error]);
 
     const isDefaultDash = useMemo(() => {
-        return amountAsset < 0 || error?.type === 'max' ? DEFAULT_VALUE : false;
+        return !amountAsset || amountAsset < 0 || error?.type === 'max' ? DEFAULT_VALUE : false;
     }, [amountAsset, error]);
 
     // ** render

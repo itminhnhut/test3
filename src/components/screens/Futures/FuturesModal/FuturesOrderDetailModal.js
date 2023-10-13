@@ -125,7 +125,9 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
                 </div>
             )}
         >
-            <Tooltip id={'funding_fee'} place="top" effect="solid" isV3 className="max-w-[300px]" />
+            <Tooltip id={'funding_fee'} place="top" effect="solid" isV3 className="max-w-[300px]">
+                <span dangerouslySetInnerHTML={{ __html: t('futures:funding_rate_des') }} />
+            </Tooltip>
             <Tooltip
                 id={'liquidate_fee'}
                 place="top"

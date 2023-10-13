@@ -32,28 +32,18 @@ const initState = {
     page: 1,
     loading: false,
     data: {},
-    filter: { status: 'CLOSED', from: null, to: null, loanCoin: null, collateralCoin: null },
-    filters: {
+    // filter: { status: 'REPAID', time: { from: null, to: null }, loanCoin: null, collateralCoin: null },
+    default_filters: {
         time: {
             value: {
                 startDate: null,
                 endDate: null,
                 key: 'selection'
-            },
-            values: null
+            }
         },
-        status: {
-            key: 'status',
-            value: 'CLOSED'
-        },
-        loanCoin: {
-            key: 'loanCoin',
-            value: null
-        },
-        collateralCoin: {
-            key: 'collateralCoin',
-            value: null
-        }
+        status: 'REPAID',
+        loanCoin: null,
+        collateralCoin: null
     }
 };
 
@@ -120,7 +110,7 @@ const History = () => {
     const [page, setPage] = useState(initState.page);
     const [data, setData] = useState(initState.data);
     const [isLoading, setIsLoading] = useState(initState.loading);
-    const [filter, setFilter] = useState(initState.filter);
+    const [filter, setFilter] = useState(initState.default_filters);
 
     // ** useState
     useEffect(() => {
@@ -130,7 +120,7 @@ const History = () => {
 
     useEffect(() => {
         if (!tab) return;
-        setFilter(initState.filter);
+        setFilter(initState.default_filters);
         setPage(initState.page);
     }, [tab]);
 
@@ -156,8 +146,8 @@ const History = () => {
                     ...pickBy(filter, (value, key) => value !== '' && !NOT_ALLOW.includes(key)),
                     collateralCoin: filter?.collateralCoin?.assetCode,
                     loanCoin: filter?.loanCoin?.assetCode,
-                    from: formatDate(filter?.time, 'startDate'),
-                    to: formatDate(filter?.time, 'endDate'),
+                    from: formatDate(filter?.time?.value, 'startDate'),
+                    to: formatDate(filter?.time?.value, 'endDate'),
                     limit: LIMIT,
                     skip: (page - 1) * LIMIT,
                     ...(ALLOW_ADJUST?.includes(tab) ? { action: TAB_STATUS?.[tab] } : { status: tab === 'reject' ? 'LIQUIDATED' : filter?.status })
@@ -198,19 +188,25 @@ const History = () => {
         if (key === 'loanCoin' || key === 'collateralCoin') {
             setFilter((prev) => ({ ...prev, [key]: !value?.assetName ? null : { assetName: value?.assetName, assetCode: value?.assetCode, id: value?.id } }));
         } else {
+            console.log('f', value, key);
             setFilter((prev) => ({ ...prev, [key]: value }));
         }
         setPage(initState.page);
     };
 
-    const handleResetFilter = () => setFilter(initState.filter);
+    const handleResetFilter = () => setFilter(initState.default_filters);
 
     // ** render
     const renderTabs = () => {
         return HISTORY_TAB.map((item) => {
             const isActive = item.key === tab;
             return (
-                <Chip onClick={() => handleChangeTab(item.key)} selected={isActive} key={`tab_${item.title?.[language]}`}>
+                <Chip
+                    className="dark:!bg-dark-4 bg-dark-12"
+                    onClick={() => handleChangeTab(item.key)}
+                    selected={isActive}
+                    key={`tab_${item.title?.[language]}`}
+                >
                     {item.title?.[language]}
                 </Chip>
             );

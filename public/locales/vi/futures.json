@@ -474,7 +474,7 @@
     "countdown": "Đếm ngược",
     "funding_fee": "Phí funding",
     "funding_rate": "Tỉ lệ funding",
-    "funding_rate_des": "Tỷ lệ thanh toán qua lại giữa vị thế mua (long) và vị thế bán (short) cho lần funding tiếp theo. Nếu tỷ lệ funding dương, long trả tiền cho short. Nếu âm, short trả tiền cho long.",
+    "funding_rate_des": "Funding Rate là các khoản thanh toán định kỳ được thực hiện giữa các nhà giao dịch Futures theo vị thế Long hoặc Short.<br/>Khi Funding Rate có giá trị dương, những người giao dịch lệnh Long sẽ trả một khoản phí “tài trợ” cho những người giao dịch lệnh Short, khi Funding Rate âm, các nhà giao dịch lệnh Short sẽ trả một khoản phí tài trợ cho các nhà giao dịch theo lệnh Long.",
     "funding_history": "Lịch sử funding",
     "information": "Thông tin",
     "funding": "Funding",

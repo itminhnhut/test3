@@ -83,12 +83,12 @@ const HISTORY_TAB = [
 ];
 
 const STATUS_VI = [
-    { title: 'Tất cả', value: 'CLOSED' },
+    // { title: 'Tất cả', value: 'CLOSED' },
     { title: 'Thanh lý', value: 'LIQUIDATED' },
     { title: 'Đã thanh toán', value: 'REPAID' }
 ];
 const STATUS_EN = [
-    { title: 'All', value: 'CLOSED' },
+    // { title: 'All', value: 'CLOSED' },
     { title: 'Thanh lý', value: 'LIQUIDATED' },
     { title: 'Đã thanh toán', value: 'REPAID' }
 ];
@@ -122,6 +122,15 @@ const REGISTER_HANDLE_TYPE = {
     FROM_CONFIRM_MODAL: 'fromConfirmModal'
 };
 
+const ERRORS = {
+    ORDER_IS_ACCRUING_INTEREST: {
+        message: { vi: 'Đơn hàng đang tích lũy tiền lãi', en: 'Order is accruing interest' }
+    },
+    UNSUPPORTED_ASSET_PAIR: {
+        message: { vi: 'Chúng tôi không hỗ trợ cặp tiền cho vay và tiền thế chấp này', en: 'We do not support this loan coin and collateral coin pair' }
+    }
+};
+
 export {
     FAQ,
     LTV,
@@ -130,6 +139,7 @@ export {
     LIMIT,
     TABS,
     PERCENT,
+    ERRORS,
     INTEREST,
     ALLOW_ADJUST,
     LOANABLE,
