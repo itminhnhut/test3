@@ -165,7 +165,7 @@ const NaoPerformance = memo(({}) => {
         endDate: new Date(),
         key: 'selection'
     });
-    const [fee, setFee] = useState(WalletCurrency.VNDC);
+    const [fee, setFee] = useState(WalletCurrency.VNST);
     const [referencePrice, setReferencePrice] = useState({});
     const [typeChart, setTypeChart] = useState(CHART_TYPES.volume);
     const [chartLabels, setChartLabels] = useState(null);
@@ -388,7 +388,7 @@ const NaoPerformance = memo(({}) => {
 
     const handleChangeMarginCurrency = (currency) => {
         setFilter((old) => ({ ...old, marginCurrency: currency }));
-        setFee(currency);
+        setFee(currency === 'all' ? WalletCurrency.VNST : currency);
     };
 
     const updateDateRangeUrl = (dateValue) => {
@@ -574,7 +574,7 @@ const NaoPerformance = memo(({}) => {
                             value={filter.marginCurrency || 'all'}
                             onChange={(asset) => handleChangeMarginCurrency(asset)}
                             className="!h-auto px-4 py-2 font-semibold text-sm !bg-gray-12 dark:!bg-dark-2"
-                            popoverPanelClassName="min-w-[12.5rem] !left-0 !right-auto sm:!left-auto sm:!right-0"
+                            popoverPanelClassName="!left-0 !right-auto sm:!left-auto sm:!right-0"
                             chevronStyle={{
                                 color: 'currentColor',
                                 size: 20
