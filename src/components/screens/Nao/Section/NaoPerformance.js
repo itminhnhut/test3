@@ -111,21 +111,6 @@ const CHART_TYPES = {
     fee: 'fee'
 };
 
-const futuresAssets = [
-    {
-        title: 'VNDC',
-        value: WalletCurrency.VNDC
-    },
-    {
-        title: 'VNST',
-        value: WalletCurrency.VNST
-    },
-    {
-        title: 'USDT',
-        value: WalletCurrency.USDT
-    }
-];
-
 const showTimeRange = (timestamp, chartInterval) => {
     const today = addDays(new Date(), 1);
     switch (chartInterval) {
@@ -173,7 +158,7 @@ const NaoPerformance = memo(({}) => {
     const initRange = isValidRange(performanceRange) ? performanceRange : 'd';
     const [filter, setFilter] = useState({
         day: initRange,
-        marginCurrency: WalletCurrency.VNDC
+        marginCurrency: 'all'
     });
     const [range, setRange] = useState({
         startDate: undefined,
@@ -189,6 +174,26 @@ const NaoPerformance = memo(({}) => {
     const [dataChartUser, setDataChartUser] = useState([]);
     const [dataChartFee, setDataChartFee] = useState([]);
     const [dataChartSource, setDataChartSource] = useState([defaultChartData]);
+
+    const futuresAssets = [
+        {
+            title: t('common:all'),
+            value: 'all'
+        },
+        {
+            title: 'VNST',
+            value: WalletCurrency.VNST
+        },
+        {
+            title: 'VNDC',
+            value: WalletCurrency.VNDC
+        },
+        {
+            title: 'USDT',
+            value: WalletCurrency.USDT
+        }
+    ];
+    const currency = filter.marginCurrency === 'all' ? WalletCurrency.VNST : filter.marginCurrency;
 
     useEffect(() => {
         getRef();
@@ -214,7 +219,7 @@ const NaoPerformance = memo(({}) => {
             case CHART_TYPES.fee: {
                 return setDataChartSource([
                     {
-                        data: dataChartFee[filter.marginCurrency],
+                        data: dataChartFee[currency],
                         name: 'chart_total_fee'
                     }
                 ]);
@@ -244,7 +249,7 @@ const NaoPerformance = memo(({}) => {
                 ]);
             }
         }
-    }, [chartLabels, typeChart, filter.marginCurrency, dataChartFee, dataChartVolume, dataChartUser, dataChartOrder]);
+    }, [chartLabels, typeChart, currency, dataChartFee, dataChartVolume, dataChartUser, dataChartOrder]);
 
     const getData = async () => {
         setLoading(true);
@@ -535,7 +540,6 @@ const NaoPerformance = memo(({}) => {
                     const x = w.globals.seriesX[0][dataPointIndex];
                     const _referencePrice = w.config.variable.referencePrice || referencePrice;
                     const type = w.globals.seriesNames[0];
-                    const currency = filter.marginCurrency;
                     const isUSD = currency === 22;
                     const isMonetary = type !== 'chart_users' && type !== 'chart_total_orders';
                     const titleText = t(`nao:onus_performance:${type}`);
@@ -554,7 +558,7 @@ const NaoPerformance = memo(({}) => {
                 }
             }
         };
-    }, [isDark, isMobile, referencePrice, chartInterval, typeChart, filter.marginCurrency]);
+    }, [isDark, isMobile, referencePrice, chartInterval, typeChart, currency]);
 
     return (
         <section id="nao_performance" className="pt-6 sm:pt-20 text-sm sm:text-base">
@@ -567,7 +571,7 @@ const NaoPerformance = memo(({}) => {
                     <div className="w-auto">
                         <SelectV2
                             options={futuresAssets}
-                            value={filter.marginCurrency || WalletCurrency.VNDC}
+                            value={filter.marginCurrency || 'all'}
                             onChange={(asset) => handleChangeMarginCurrency(asset)}
                             className="!h-auto px-4 py-2 font-semibold text-sm !bg-gray-12 dark:!bg-dark-2"
                             popoverPanelClassName="min-w-[12.5rem] !left-0 !right-auto sm:!left-auto sm:!right-0"
@@ -600,11 +604,11 @@ const NaoPerformance = memo(({}) => {
                         <label className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base">{t('nao:onus_performance:total_volume')}</label>
                         <div className="pt-4">
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-base sm:text-lg font-semibold pb-2">
-                                {dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}
+                                {dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(currency)}` : '-'}
                             </div>
                             <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base">
                                 {dataSource
-                                    ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3)
+                                    ? '$' + formatPrice(referencePrice[`${assetCodeFromId(currency)}/USD`] * dataSource?.notionalValue, 4)
                                     : '-'}{' '}
                             </span>
                         </div>
