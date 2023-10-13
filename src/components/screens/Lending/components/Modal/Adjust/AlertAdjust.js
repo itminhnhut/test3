@@ -13,6 +13,9 @@ import { globalActionTypes as actions } from 'components/screens/Lending/context
 const ERRORS = {
     ORDER_IS_ACCRUING_INTEREST: {
         message: { vi: 'Đơn hàng đang tích lũy tiền lãi', en: 'Order is accruing interest' }
+    },
+    UNSUPPORTED_ASSET_PAIR: {
+        message: { vi: 'Chúng tôi không hỗ trợ cặp tiền cho vay và tiền thế chấp này', en: 'We do not support this loan coin and collateral coin pair' }
     }
 };
 

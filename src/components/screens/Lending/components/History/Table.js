@@ -435,7 +435,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
     };
 
     const renderCol8 = (option) => {
-        const { expirationTime } = option;
+        const { expirationTime, createdAt } = option;
 
         if (tab === TAB_LOAN) {
             return (
@@ -443,6 +443,31 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                     <div>Thời gian hết hạn</div>
                     <WrapperDetail>{formatTime(expirationTime, FORMAT_HH_MM_SS)}</WrapperDetail>
                 </WrapperSection>
+            );
+        }
+        if (tab === TAB_ADJUST) {
+            return (
+                <section className="flex flex-row items-center gap-2 whitespace-nowrap">
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>Thời gian vay</div>
+                        <WrapperDetail>{formatTime(createdAt, FORMAT_HH_MM_SS)}</WrapperDetail>
+                    </section>
+                </section>
+            );
+        }
+    };
+
+    const renderCol9 = (option) => {
+        const { metadata } = option;
+
+        if (tab === TAB_ADJUST) {
+            return (
+                <section className="flex flex-row items-center gap-2 whitespace-nowrap">
+                    <section className="dark:text-gray-7 text-gray-1">
+                        <div>Thời gian điều chỉnh</div>
+                        <WrapperDetail>{formatTime(metadata?.orderCreatedAt || '-', FORMAT_HH_MM_SS)}</WrapperDetail>
+                    </section>
+                </section>
             );
         }
     };
@@ -506,6 +531,13 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                 title: '',
                 align: 'left',
                 render: (value, option) => renderCol8(option)
+            },
+            {
+                key: '',
+                dataIndex: '',
+                title: '',
+                align: 'left',
+                render: (value, option) => renderCol9(option)
             }
         ];
 
