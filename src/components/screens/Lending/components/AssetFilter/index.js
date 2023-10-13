@@ -57,7 +57,6 @@ const AssetFilter = ({
         return rs;
     }, [search, assetCode, data]);
 
-    console.log('filterAssets', filterAssets);
     // ** render
     const rowRenderer = useCallback(
         ({ index, key, style }) => {

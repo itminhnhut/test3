@@ -114,13 +114,11 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
 
         if (type === 'select_assets') {
             if (key === 'loanCoin') {
-                // dataAssetByKey = dataAssets?.loanable?.concat({ assetCode: t('transaction-history:filter.all'), assetName: '', order: 0, id: '0' });
                 dataAssetByKey = dataAssets?.loanable;
                 valueAssetByKey = filter?.loanCoin;
             }
             if (key === 'collateralCoin') {
                 dataAssetByKey = dataAssets?.collateral;
-                // dataAssetByKey = dataAssets?.collateral?.concat({ assetCode: t('transaction-history:filter.all'), assetName: '', order: 0, id: '0' });
                 valueAssetByKey = filter?.collateralCoin;
             }
         }
@@ -132,8 +130,8 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                         month={2}
                         hasShadow
                         colorX="#8694b2"
-                        initDate={rsFilter?.value}
-                        wrapperClassname="w-[270px]"
+                        initDate={rsFilter}
+                        wrapperClassname="w-[278px]"
                         wrapperClassNameContent="!h-6"
                         position={data?.position || 'center'}
                         onChange={(e) => onChange(e?.selection, key)}
@@ -255,7 +253,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
         return renderCopy({ title: 'ID lệnh ký quỹ', id: _id });
     };
     const renderCol3 = (option) => {
-        const { loanCoin, metadata, interest, liquidationFee, loanAmount } = option;
+        const { loanCoin, metadata, interest, liquidationFee, loanAmount, totalDebt } = option;
 
         if (tab === TAB_LOAN) {
             const rsTotalDebt = handleTotalAsset(loanAmount + interest, loanCoin); //** Tổng dư nợ */
@@ -285,7 +283,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
             );
         }
         // ** reject
-        const rsLiquidationFree = handleTotalAsset(interest * liquidationFee, loanCoin);
+        const rsLiquidationFree = handleTotalAsset(totalDebt * liquidationFee, loanCoin);
         return renderAssetLogo({
             title: 'Phí thanh lý',
             total: rsLiquidationFree.total,
