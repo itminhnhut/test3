@@ -46,8 +46,8 @@ const AssetFilter = dynamic(() => import('components/screens/Lending/components/
 const INIT_DATA = {
     isModal: false,
     assets: {
-        loanable: {},
-        collateral: {}
+        loanable: [],
+        collateral: []
     }
 };
 const TAB_LOAN = 'loan';
@@ -114,11 +114,13 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
 
         if (type === 'select_assets') {
             if (key === 'loanCoin') {
+                // dataAssetByKey = dataAssets?.loanable?.concat({ assetCode: t('transaction-history:filter.all'), assetName: '', order: 0, id: '0' });
                 dataAssetByKey = dataAssets?.loanable;
                 valueAssetByKey = filter?.loanCoin;
             }
             if (key === 'collateralCoin') {
                 dataAssetByKey = dataAssets?.collateral;
+                // dataAssetByKey = dataAssets?.collateral?.concat({ assetCode: t('transaction-history:filter.all'), assetName: '', order: 0, id: '0' });
                 valueAssetByKey = filter?.collateralCoin;
             }
         }
@@ -131,7 +133,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                         hasShadow
                         colorX="#8694b2"
                         initDate={rsFilter?.value}
-                        wrapperClassname="!w-full"
+                        wrapperClassname="w-[270px]"
                         wrapperClassNameContent="!h-6"
                         position={data?.position || 'center'}
                         onChange={(e) => onChange(e?.selection, key)}
@@ -147,11 +149,11 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                         popoverPanelClassName="top-auto"
                         onChange={(e) => onChange(e, key)}
                         value={filter?.status || data?.values[0]?.value}
-                        wrapperClassName="flex flex-row gap-2 flex-col"
+                        wrapperClassName="flex flex-row py-4 gap-3 flex-col"
                         labelClassName="dark:!text-gray-4 !text-gray-15 !text-base"
                         className={classNames('!h-12 w-[247px]', data.childClassName)}
                         activeIcon={<CheckCircleIcon color="currentColor" size={16} />}
-                        optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 py-3 text-base hover:bg-dark-13 dark:hover:bg-hover-dark"
+                        optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 py-3 text-base hover:bg-dark-13 dark:hover:bg-hover-dark !font-normal"
                     />
                 );
             case 'select_assets':
@@ -231,7 +233,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                 <WrapperSection className="w-[150px]">
                     <div>Trạng thái</div>
                     <WrapperDetail
-                        className={classNames({
+                        className={classNames('dark:text-gray-7 text-gray-1', {
                             'dark:!text-green-2 !text-green-3': status === 'REPAID'
                         })}
                     >
@@ -434,6 +436,19 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
         }
     };
 
+    const renderCol8 = (option) => {
+        const { expirationTime } = option;
+
+        if (tab === TAB_LOAN) {
+            return (
+                <WrapperSection className="w-max">
+                    <div>Thời gian hết hạn</div>
+                    <WrapperDetail>{formatTime(expirationTime, FORMAT_HH_MM_SS)}</WrapperDetail>
+                </WrapperSection>
+            );
+        }
+    };
+
     const renderTable = useCallback(() => {
         const columns = [
             {
@@ -486,6 +501,13 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                 title: '',
                 align: 'left',
                 render: (value, option) => renderCol7(option)
+            },
+            {
+                key: '',
+                dataIndex: '',
+                title: '',
+                align: 'left',
+                render: (value, option) => renderCol8(option)
             }
         ];
 

@@ -22,16 +22,14 @@ const PopoverSelect = (props, ref) => {
                     <div className="leading-5 truncate flex w-full">
                         {props.labelValue && isFunction(props.labelValue) ? props.labelValue() : props.labelValue}
                     </div>
-                    {!props.hideChevron && (
-                        <div className={classNames('text-txtSecondary dark:text-gray-7', props.chevronClassName)}>
-                            <SvgIcon
-                                size={16}
-                                name="chevron_down"
-                                color="currentColor"
-                                className={`${open ? '!rotate-0 ' : ' '} transition-transform duration-150`}
-                            />
-                        </div>
-                    )}
+                    <div className={classNames('text-txtSecondary dark:text-gray-7', props.chevronClassName)}>
+                        <SvgIcon
+                            size={16}
+                            name="chevron_down"
+                            color="currentColor"
+                            className={`${open ? '!rotate-0 ' : ' '} transition-transform duration-150`}
+                        />
+                    </div>
                 </div>
             )}
         >

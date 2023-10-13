@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 
 // ** Redux
-import { API_HISTORY_LOAN, API_OVERVIEW_LOAN } from 'redux/actions/apis';
+import { API_HISTORY_LOAN, API_OVERVIEW_LOAN, API_GET_PAIR_PRICE } from 'redux/actions/apis';
 
 // ** Components
 import Tooltip from 'components/common/Tooltip';
@@ -67,6 +67,7 @@ const Loan = () => {
     const [page, setPage] = useState(initState.page);
     const [data, setData] = useState(initState.data);
     const [overView, setOverView] = useState(initState.data);
+    const [historyPriceAll, setHistoryPriceAll] = useState(initState.data);
     const [loading, setLoading] = useState(initState.loading);
 
     const handleAPI = () => {
@@ -91,15 +92,25 @@ const Loan = () => {
                 method: 'GET'
             }
         });
-        Promise.all([apiOverView, apiLoanOrders])
+        const apiHistoryPrice = FetchApi({
+            url: `${API_GET_PAIR_PRICE}/all`,
+            options: {
+                method: 'GET'
+            }
+        });
+
+        Promise.all([apiOverView, apiLoanOrders, apiHistoryPrice])
             .then((value) => {
-                const [rsOverView, rsLoanOrders] = value;
+                const [rsOverView, rsLoanOrders, rsHistoryPriceAll] = value;
 
                 if (rsOverView.statusCode === STATUS_CODE) {
-                    setOverView(rsOverView?.data || {});
+                    setOverView(rsOverView?.data);
                 }
                 if (rsLoanOrders.statusCode === STATUS_CODE) {
-                    setData(rsLoanOrders?.data || {});
+                    setData(rsLoanOrders?.data);
+                }
+                if (rsHistoryPriceAll.statusCode === STATUS_CODE) {
+                    setHistoryPriceAll(rsHistoryPriceAll?.data);
                 }
             })
             .catch((err) => {
@@ -161,7 +172,7 @@ const Loan = () => {
                         })}
                     </section>
                     <section className="mt-12">
-                        <LoanTable data={data} page={page} loading={loading} onPage={setPage} />
+                        <LoanTable data={data} page={page} loading={loading} onPage={setPage} historyPriceAll={historyPriceAll} />
                     </section>
                     <Tooltip id={'totalDebt'} place="top" effect="solid" isV3 className="max-w-[300px]" />
                 </section>

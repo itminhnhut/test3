@@ -60,7 +60,7 @@ const CancelToken = axios.CancelToken;
 const isCancel = (error) => axios.isCancel(error);
 let cancel;
 
-const LoanTable = ({ data, page, loading, onPage }) => {
+const LoanTable = ({ data, page, historyPriceAll, loading, onPage }) => {
     const {
         t,
         i18n: { language }
@@ -235,7 +235,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                     <section className={classNames('flex flex-row items-center gap-1')}>
                         <AssetLogo assetId={rsTotalCollateralAmount?.symbol?.id} />
                         <section className="flex flex-col">
-                            <div className="text-gray-1 dark:text-gray-7">Tổng dư nợ</div>
+                            <div className="text-gray-1 dark:text-gray-7">Tổng ký quỹ ban đầu</div>
                             <div className="dark:text-gray-4 text-gray-15 font-semibold">
                                 {rsTotalCollateralAmount?.total} {rsTotalCollateralAmount?.symbol?.assetCode}
                             </div>
@@ -397,7 +397,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 }}
             />
         );
-    }, [data?.result, loading, isDark, copied]);
+    }, [data?.result, historyPriceAll, loading, isDark, copied]);
 
     return (
         <>

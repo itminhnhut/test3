@@ -47,16 +47,17 @@ const AssetFilter = ({
     const filterAssets = useMemo(() => {
         let rsData = assetConfigs;
         if (data) {
-            rsData = data;
+            rsData = [{ assetCode: t('transaction-history:filter.all'), assetName: '', order: 1, id: 0 }, ...data];
         }
         const rs = sortBy(filterSearch(rsData, ['assetCode', 'assetName'], search), [
             function (asset) {
-                return asset?.assetCode;
+                return asset?.order || asset?.assetCode;
             }
-        ]).filter((f) => f.id !== assetCode);
+        ]).filter((f) => f?.id !== assetCode);
         return rs;
     }, [search, assetCode, data]);
 
+    console.log('filterAssets', filterAssets);
     // ** render
     const rowRenderer = useCallback(
         ({ index, key, style }) => {
@@ -112,21 +113,10 @@ const AssetFilter = ({
                             {!asset ? (
                                 t('transaction-history:filter.all')
                             ) : (
-                                <>
-                                    <div className={classNames('flex items-center space-x-2', labelClassName)}>
-                                        <AssetLogo useNextImg={true} size={24} assetCode={asset?.assetCode} />
-                                        <div>{asset?.assetCode || asset?.assetName}</div>
-                                    </div>
-                                    <div className="text-gray-7">
-                                        <X
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                onChangeAsset(null);
-                                            }}
-                                            size={16}
-                                        />
-                                    </div>
-                                </>
+                                <div className={classNames('flex items-center space-x-2', labelClassName)}>
+                                    <AssetLogo useNextImg={true} size={24} assetCode={asset?.assetCode} />
+                                    <div>{asset?.assetCode || asset?.assetName}</div>
+                                </div>
                             )}
                         </div>
                     </>

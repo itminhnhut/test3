@@ -32,7 +32,7 @@ const initState = {
     page: 1,
     loading: false,
     data: {},
-    filter: { status: 'CLOSED', from: null, to: null, loanCoin: null, collateralCoin: null },
+    filter: { status: 'REPAID', from: null, to: null, loanCoin: null, collateralCoin: null },
     filters: {
         time: {
             value: {
@@ -44,7 +44,7 @@ const initState = {
         },
         status: {
             key: 'status',
-            value: 'CLOSED'
+            value: 'REPAID'
         },
         loanCoin: {
             key: 'loanCoin',
@@ -210,7 +210,12 @@ const History = () => {
         return HISTORY_TAB.map((item) => {
             const isActive = item.key === tab;
             return (
-                <Chip onClick={() => handleChangeTab(item.key)} selected={isActive} key={`tab_${item.title?.[language]}`}>
+                <Chip
+                    className="dark:!bg-dark-4 bg-dark-12"
+                    onClick={() => handleChangeTab(item.key)}
+                    selected={isActive}
+                    key={`tab_${item.title?.[language]}`}
+                >
                     {item.title?.[language]}
                 </Chip>
             );

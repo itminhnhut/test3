@@ -83,12 +83,12 @@ const HISTORY_TAB = [
 ];
 
 const STATUS_VI = [
-    { title: 'Tất cả', value: 'CLOSED' },
+    // { title: 'Tất cả', value: 'CLOSED' },
     { title: 'Thanh lý', value: 'LIQUIDATED' },
     { title: 'Đã thanh toán', value: 'REPAID' }
 ];
 const STATUS_EN = [
-    { title: 'All', value: 'CLOSED' },
+    // { title: 'All', value: 'CLOSED' },
     { title: 'Thanh lý', value: 'LIQUIDATED' },
     { title: 'Đã thanh toán', value: 'REPAID' }
 ];
