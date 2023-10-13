@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 
 // ** next
+import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 
 // ** Redux
-import { WalletType } from 'redux/actions/const';
-import { setTransferModal } from 'redux/actions/utils';
-import { useSelector, useDispatch } from 'react-redux';
-import { createSelector } from 'reselect';
+import { dwLinkBuilder } from 'redux/actions/utils';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { useSelector } from 'react-redux';
 
 // ** Utils
 import { totalAsset, formatLTV } from 'components/screens/Lending/utils';
@@ -27,13 +27,17 @@ import TradingInputV2 from 'components/trade/TradingInputV2';
 import ConfirmAdjustMargin from './ConfirmAdjustMargin';
 import AlertAdjust from './AlertAdjust.js';
 
+// ** constants
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+
 // ** svg
 import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
 
 // ** Third party
 import classNames from 'classnames';
-import { PERCENT } from 'components/screens/Lending/constants';
+import { createSelector } from 'reselect';
 import useDebounce from 'hooks/useDebounce';
+import { PERCENT } from 'components/screens/Lending/constants';
 
 const TAB_ADD = 'add';
 const TAB_SUBTRACT = 'subtract';
@@ -70,14 +74,6 @@ const VALIDATION_ERROR = {
 };
 
 const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
-    // ** useContext
-    const { state, dispatchReducer } = useContext(LendingContext);
-    const dispatch = useDispatch();
-    const { getPairPrice, pairPrice } = usePairPrice();
-
-    const amount = state.amount;
-    const modalAdjust = state.modal;
-
     const {
         t,
         i18n: { language }
@@ -86,6 +82,13 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     // ** collateral wallet balance
     const collateralAvailable = useSelector((state) => getSpotAvailable(state, { assetId: dataCollateral?.collateralAsset?.symbol?.id }));
 
+    // ** useContext
+    const { state, dispatchReducer } = useContext(LendingContext);
+    const { getPairPrice, pairPrice } = usePairPrice();
+
+    const amount = state.amount;
+    const modalAdjust = state.modal;
+
     //**  useState
     const [tab, setTab] = useState(initState.tab);
     const [error, setError] = useState(initState.error);
@@ -93,8 +96,8 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     const debounceAmount = useDebounce(amountAsset, DEBOUNCE_TIME);
 
     const { collateralCoin, loanCoin, totalDebt, totalCollateralAmount } = dataCollateral || {};
-    const total_current_LTV = totalDebt / (totalCollateralAmount * pairPrice?.lastPrice);
 
+    const total_current_LTV = totalDebt / (totalCollateralAmount * pairPrice?.lastPrice);
     const rsTotalDebt = totalAsset(totalDebt, loanCoin);
     const rsTotalCollateralAmount = totalAsset(totalCollateralAmount, collateralCoin);
     const adjustedCurrent = state?.infoCollateralAmount; // ** tổng ký quỷ ban đầu
@@ -138,16 +141,6 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
         }
         isShow && getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin }); //** get price token
     }, [isShow]);
-
-    // ** useEffect modal Transfer
-    useEffect(() => {
-        if (collateralAvailable < amountAsset) {
-            const msg = VALIDATION_ERROR?.[tab]?.max?.[language];
-            setError({ msg, type: 'max' });
-        } else {
-            error?.length > 0 && setError(initState.error);
-        }
-    }, [collateralAvailable]);
 
     useEffect(() => {
         dispatchReducer({ type: actions.UPDATE_TOTAL_ADJUSTED, amount: amountAsset || 0, method: tab });
@@ -207,11 +200,13 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
         setTab(initState.tab);
     };
 
+    //**  handle submit form
     const handleSubmit = () => {
         dispatchReducer({ type: actions.TOGGLE_MODAL_CONFIRM_ADJUST }); //** open modal confirm */
         getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin }); //** update market price */
     };
 
+    // ** handle refresh price
     const handRefreshPrice = () => {
         getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
     };
@@ -222,17 +217,17 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
         error?.msg && setError(initState.error);
     };
 
-    //* check amount - Available
+    //* check amount <-> Available
     const isCheckAmountAvailable = () => {
         return amountAsset > 0 && amountAsset <= collateralAvailable;
     };
 
-    //* check amount - adjusted current
+    //* check amount <-> adjusted current
     const isCheckAmountAdjusted = () => {
         return amountAsset > 0 && +amountAsset <= adjustedCurrent.total;
     };
 
-    //** check LTV by current - initial
+    //** check LTV by current <-> initial
     const isCheckCurrentLTV = () => {
         const { initial } = dataLTV;
         return current_LTV < initial;
@@ -249,6 +244,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
         return isCheckCurrentLTV() && isCheckAdjustLTV() && isCheckAmountAdjusted();
     };
 
+    // ** submitted
     const isSubmitted = useMemo(() => {
         return tab === initState.tab ? isCheckAmountAvailable() : validationSubtract();
     }, [tab, debounceAmount, collateralAvailable, adjustedLTV, adjustedCurrent?.total]);
@@ -257,11 +253,13 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
         dispatchReducer({ type: actions.TOGGLE_MODAL_CONFIRM_ADJUST });
     };
 
+    // ** validation input
     const validator = useMemo(() => {
         let msg = error?.msg || null;
         return { isValid: !Boolean(msg), msg, isError: Boolean(msg) };
     }, [error]);
 
+    // ** handle default dash or content
     const isDefaultDash = useMemo(() => {
         return !amountAsset || amountAsset < 0 || error?.type === 'max' ? DEFAULT_VALUE : false;
     }, [amountAsset, error]);
@@ -336,7 +334,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     };
 
     const renderForm = () => {
-        const { collateralAsset = {} } = dataCollateral;
+        const { collateralAsset = {}, collateralCoin = '' } = dataCollateral;
         const totalAvailable = formatNumber(collateralAvailable, collateralAsset?.symbol?.assetDigit);
 
         return (
@@ -348,27 +346,27 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
                             <span>Khả dụng:</span>
                             <span className="dark:text-gray-4 text-gray-15 ml-1 font-semibold">{totalAvailable}</span>
                         </div>
-                        <AddCircleColorIcon
-                            size={16}
-                            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }))}
-                            className="cursor-pointer"
-                        />
+                        <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, collateralCoin)}>
+                            <a className="inline-block">
+                                <AddCircleColorIcon size={16} className="cursor-pointer" />
+                            </a>
+                        </Link>
                     </section>
                 </section>
                 <TradingInputV2
+                    clearAble
                     id="amount_input"
-                    value={amountAsset || ''}
+                    errorTooltip={false}
                     allowNegative={false}
+                    validator={validator}
                     thousandSeparator={true}
+                    value={amountAsset || ''}
                     containerClassName="mt-4"
                     inputClassName="!text-left !ml-0"
-                    onValueChange={({ value }) => handleAmountChange(value)}
-                    allowedDecimalSeparators={[',', '.']}
-                    decimalScale={dataCollateral?.collateralAsset?.symbol?.assetDigit || 0}
-                    clearAble
                     placeHolder="Nhập số lượng tài sản"
-                    validator={validator}
-                    errorTooltip={false}
+                    allowedDecimalSeparators={[',', '.']}
+                    onValueChange={({ value }) => handleAmountChange(value)}
+                    decimalScale={dataCollateral?.collateralAsset?.symbol?.assetDigit || 0}
                     renderTail={
                         <div className="flex flex-row gap-2 items-center">
                             <AssetLogo size={24} assetId={dataCollateral?.collateralAsset?.symbol?.id} />
