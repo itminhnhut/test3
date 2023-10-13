@@ -293,7 +293,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                                 })}
                             >
                                 <Trans
-                                    i18nKey={`lending:lending:ltv:${item.key}`}
+                                    i18nKey={`lending:lending.modal.ltv.${item.key}`}
                                     components={{
                                         primary: <div className="flex" />,
                                         secondary: <p className="text-green-3 hover:text-green-4 ml-1" />
@@ -318,7 +318,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                     labelClassName="!text-base"
                     boxContainerClassName="w-6 h-6"
                     label={
-                        <Trans i18nKey="lending:lending:rule">
+                        <Trans i18nKey="lending:lending.modal.rule">
                             <span />
 
                             <a
@@ -335,6 +335,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
 
     const renderValueToken = useCallback(
         ({ asset, onChange, assetListKey, assetCode }) => {
+            const labelType = assetListKey === LOANABLE ? 'loan' : 'collateral';
             return (
                 <AssetLendingFilter
                     assets={assetList[assetListKey]}
@@ -345,7 +346,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                     wrapperLabel="h-6 !p-0 !bg-transparent"
                     onChangeAsset={(e) => onChange(e, assetListKey)}
                     labelClassName="mr-2"
-                    labelAsset="Chọn tài sản ký quỹ"
+                    labelAsset={t(`lending:lending.modal.asset_list:select_${labelType}`)}
                     wrapperClassName="w-max right-[-12px] !left-[auto]"
                     containerClassName={classNames('!z-[auto]')}
                     isAuth={isAuth}

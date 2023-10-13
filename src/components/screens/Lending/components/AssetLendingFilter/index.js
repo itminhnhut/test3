@@ -158,7 +158,9 @@ const AssetLendingFilter = ({
                     <>
                         {!Boolean(search) && isAuth && assetListKey === COLLATERAL && previousSearchList.length > 0 && (
                             <>
-                                <div className="dark:!text-gray-4 !text-gray-15 !text-base font-semibold px-4 mb-4">Tìm kiếm gần đây</div>
+                                <div className="dark:!text-gray-4 !text-gray-15 !text-base font-semibold px-4 mb-4">
+                                    {t('lending:lending.modal.asset_list.search_history')}
+                                </div>
                                 <div className="space-y-3">
                                     {previousSearchList.map((currentAsset) => {
                                         const isAssetChosen = asset && asset?.id === currentAsset?.id;
@@ -207,7 +209,9 @@ const AssetLendingFilter = ({
                                 </div>
                             </>
                         )}
-                        <div className="dark:!text-gray-4 !text-gray-15 !text-base font-semibold px-4 my-4">Danh sách tài sản ký quỹ</div>
+                        <div className="dark:!text-gray-4 !text-gray-15 !text-base font-semibold px-4 my-4">
+                            {t('lending:lending.modal.asset_list.crypto_list')}
+                        </div>
                         <List
                             width={400}
                             height={180}

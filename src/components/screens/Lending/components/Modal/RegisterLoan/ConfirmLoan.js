@@ -26,15 +26,13 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 const SucessLoan = dynamic(() => import('./SucessLoan'), { ssrc: false });
 
 const CONFIRM_INFORMATION = [
-    { vi: 'Tài sản vay', en: 'Tài sản vay', key: 'loanValue' },
-    { vi: 'Tài sản ký quỹ', en: 'Tài sản ký quỹ', key: 'collateralValue' },
-    { vi: 'Lãi ước tính theo kỳ hạn', en: 'Lãi ước tính theo kỳ hạn', key: 'termInterestAmount' },
-    { vi: 'Lãi hằng ngày', en: 'Lãi hằng ngày', key: 'dailyInterestPercent' },
-    { vi: 'Thời hạn vay', en: 'Thời hạn vay', key: 'loanTerm' },
-    { vi: 'Thời gian hết hạn', en: 'Thời gian hết hạn', key: 'endLoanTermDate' }
+    { key: 'loanValue', localized: 'loan_amount' },
+    { key: 'collateralValue', localized: 'collateral_amount' },
+    { key: 'termInterestAmount', localized: 'confirm_loan.interest_est' },
+    { key: 'dailyInterestPercent', localized: 'confirm_loan.daily_interest_rate' },
+    { key: 'loanTerm', localized: 'confirm_loan.loan_term' },
+    { key: 'endLoanTermDate', localized: 'confirm_loan.expire_date' }
 ];
-
-const DATA2 = { vi: 'Tổng dư nợ', en: 'Tổng dư nợ' };
 
 const LoanTermExpireDate = memo(({ daysOfTerm, format = 'hh:mm:ss dd/MM/yyy' }) => {
     const [now, setNow] = useState(new Date());
@@ -48,10 +46,7 @@ const LoanTermExpireDate = memo(({ daysOfTerm, format = 'hh:mm:ss dd/MM/yyy' }) 
 });
 
 const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessClose, handleRefetchPrice, loadingCollateralPrice }) => {
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation();
+    const { t } = useTranslation();
 
     // ** useState
     const [modal, setModal] = useState({
@@ -85,7 +80,7 @@ const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessC
         collateralValue: `${formatNumber(collateralValue, collateralDigit)} ${collateralCoin}`,
         termInterestAmount: `${formatNumber(termInterestAmount, loanDigit)} ${loanCoin}`,
         dailyInterestPercent: `${loanInfor?.['loanInterest']?.['dailyInterestPercent']?.toFixed(4)} %`,
-        loanTerm: `${loanInfor?.['loanTerm']} ngày`,
+        loanTerm: `${loanInfor?.['loanTerm']} ${t('common:days')}`,
         endLoanTermDate: <LoanTermExpireDate daysOfTerm={loanInfor?.['loanTerm']} />
     };
 
@@ -125,12 +120,12 @@ const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessC
                     </div>
                 )}
             >
-                <div className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">Xác nhận khoản vay</div>
+                <div className="dark:text-gray-4 text-gray-15 text-2xl font-semibold">{t('lending:lending.modal.confirm_loan.title')} </div>
                 <section className="my-6 dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex flex-col gap-4">
                     {CONFIRM_INFORMATION?.map((item, key) => {
                         return (
                             <section className="flex flex-row justify-between" key={`modal_confirm_loan_${key}_${item.key}`}>
-                                <div className="dark:text-gray-7 text-gray-1">{item?.[language]}</div>
+                                <div className="dark:text-gray-7 text-gray-1">{t(`lending:lending.modal.${item?.localized}`)}</div>
                                 <div className="dark:text-gray-4 text-gray-15 font-semibold">{confirmInfor?.[item.key]}</div>
                             </section>
                         );
@@ -138,7 +133,7 @@ const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessC
                 </section>
                 <section className="dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex flex-col gap-4">
                     <section className="flex flex-row justify-between">
-                        <div className="dark:text-gray-7 text-gray-1">{DATA2?.[language]}</div>
+                        <div className="dark:text-gray-7 text-gray-1">{t('lending:lending.modal.confirm_loan.debt_est')}</div>
                         <div className="dark:text-gray-4 text-gray-15 font-semibold">
                             {formatNumber(totalDebt, loanDigit)} {loanCoin}
                         </div>

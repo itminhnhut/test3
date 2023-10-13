@@ -22,7 +22,6 @@ const SucessLoan = ({ isModal, onClose, collateralCoin, collateralAmount, loanAm
     } = useTranslation();
 
     const router = useRouter();
-    const loanAsset = router.query.loanAsset;
 
     return (
         <ModalV2
@@ -43,13 +42,13 @@ const SucessLoan = ({ isModal, onClose, collateralCoin, collateralAmount, loanAm
         >
             <section className="flex flex-col items-center">
                 <CheckCircleIcon size={80} color={colors.teal} />
-                <div className="mt-6 mb-4 text-txtSecondary dark:text-txtSecondary-dark">Vay thành công</div>
+                <div className="mt-6 mb-4 text-txtSecondary dark:text-txtSecondary-dark">{t('lending:lending.modal.success_loan.title')}</div>
                 <div className="mb-6 text-2xl font-semibold">
                     {loanAmount} {loanCoin}
                 </div>
                 <section className="dark:bg-dark-4 bg-gray-13 rounded-xl p-4 flex w-full">
                     <section className="flex justify-between w-full">
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{DATA2?.[language]}</div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('lending:lending.modal.collateral_amount')}</div>
                         <div className="font-semibold">
                             {collateralAmount} {collateralCoin}
                         </div>
@@ -75,7 +74,7 @@ const SucessLoan = ({ isModal, onClose, collateralCoin, collateralAmount, loanAm
                 }
                 className="mt-10"
             >
-                Xem khoản vay đang mở
+                {t('lending:lending.modal.success_loan.view_loans')}
             </ButtonV2>
         </ModalV2>
     );
