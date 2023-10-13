@@ -37,7 +37,7 @@ const CONTENT = {
 
 // ** initData
 const initData = {
-    tab: 'history',
+    tab: 'lending',
     countLoan: 0
 };
 
