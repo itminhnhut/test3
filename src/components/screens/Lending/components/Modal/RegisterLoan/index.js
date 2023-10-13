@@ -348,7 +348,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                     labelClassName="mr-2"
                     labelAsset={t(`lending:lending.modal.asset_list:select_${labelType}`)}
                     wrapperClassName="w-max right-[-12px] !left-[auto]"
-                    containerClassName={classNames('!z-[auto]')}
+                    containerClassName={classNames('!z-[5]')}
                     isAuth={isAuth}
                 />
             );
