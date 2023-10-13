@@ -26,7 +26,9 @@
         "chart_total_orders": "Trades",
         "chart_users": "Users",
         "chart_total_fee": "Fee",
-        "chart_title": ""
+        "chart_title": "",
+        "asset": "Unit",
+        "time": "Time"
     },
     "pool": {
         "title": "Governance pool {{value}}",

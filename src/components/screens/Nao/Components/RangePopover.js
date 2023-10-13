@@ -52,7 +52,9 @@ const RangePopover = ({
     popoverClassName = '',
     range = { startDate: undefined, endDate: new Date() },
     setRange,
-    textPopoverClassName = ''
+    textPopoverClassName = '',
+    panelClassName = '',
+    prefix = ''
 }) => {
     const popOverClasses = classNames('relative flex', popoverClassName);
     const { t } = useTranslation();
@@ -136,12 +138,16 @@ const RangePopover = ({
                 <>
                     <Popover.Button>
                         <div className="flex justify-center items-center">
-                            <div className="md:hidden ml-auto">
+                            {/* <div className="md:hidden ml-auto">
                                 <SvgFilter size={24} color="currentColor" className="text-txtPrimary dark:text-txtPrimary-dark" />
-                            </div>
+                            </div> */}
                             <div
-                                className={`hidden md:flex px-4 py-2 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtSecondary dark:text-txtSecondary-dark rounded-md !font-SF-Pro whitespace-nowrap ${textPopoverClassName}`}
+                                className={classNames(
+                                    'flex px-4 py-2 items-center gap-x-1 bg-gray-12 dark:bg-dark-2 font-semibold text-txtSecondary dark:text-txtSecondary-dark rounded-md !font-SF-Pro whitespace-nowrap',
+                                    textPopoverClassName
+                                )}
                             >
+                                {prefix && <span>{prefix}</span>}
                                 {showActive()}
                                 <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
                             </div>
@@ -158,7 +164,12 @@ const RangePopover = ({
                             leaveFrom="opacity-100 translate-y-0"
                             leaveTo="opacity-0 translate-y-1"
                         >
-                            <Popover.Panel className="absolute min-w-[8rem] md:min-w-[10rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-bgPrimary dark:bg-dark-4 border border-divider dark:border-divider-dark rounded-md mt-3">
+                            <Popover.Panel
+                                className={classNames(
+                                    'absolute min-w-[8rem] md:min-w-[10rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-bgPrimary dark:bg-dark-4 border border-divider dark:border-divider-dark rounded-md mt-3',
+                                    panelClassName
+                                )}
+                            >
                                 <div className="text-sm md:text-base flex flex-col text-txtPrimary dark:text-txtPrimary-dark md:py-3">
                                     {days.map((day, index) => {
                                         const isActive = active.value === day.value;

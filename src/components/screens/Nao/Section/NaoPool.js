@@ -737,24 +737,24 @@ const NaoPool = ({ dataSource, assetNao }) => {
 
     return (
         <section id="nao_pool" className="pt-12 sm:pt-20 text-sm sm:text-base">
-            <div className="flex sm:items-center justify-between gap-4">
+            <div className="flex flex-wrap sm:items-center justify-between gap-4">
                 <div className="space-y-2 flex flex-col">
                     <TextLiner className="normal-case">{t('nao:pool:title')}</TextLiner>
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:pool:description')}</span>
                 </div>
-                <div className="ml-auto">
-                    <RangePopover
-                        language={language}
-                        active={days.find((d) => d.value === filter.day)}
-                        onChange={handleChangeDateRange}
-                        className="flex order-last"
-                        popoverClassName="mb:mr-2"
-                        range={range}
-                        setRange={setRange}
-                        days={days}
-                        fallbackDay="w"
-                    />
-                </div>
+                <RangePopover
+                    language={language}
+                    active={days.find((d) => d.value === filter.day)}
+                    onChange={handleChangeDateRange}
+                    className="flex order-last"
+                    popoverClassName="mb:mr-2"
+                    range={range}
+                    setRange={setRange}
+                    days={days}
+                    fallbackDay="w"
+                    textPopoverClassName="text-sm text-txtPrimary dark:text-txtPrimary-dark"
+                    panelClassName="!left-0 !right-auto sm:!left-auto sm:!right-0"
+                />
             </div>
             <div className="mt-6 grid grid-cols-12 gap-4 sm:gap-6">
                 <CardNao className="sm:!min-w-[50%] sm:!px-8 sm:!py-8 flex flex-col col-span-12 lg:col-span-4 !justify-start" customHeight="sm:max-h-[514px]">
