@@ -34,7 +34,7 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
         ? 0
         : ceilByExactDegit(
               calcCollateralAmount({
-                  loanAmount: parseFloat(loanable?.config?.minLimit || 0),
+                  loanAmount: parseFloat(loanable?.config?.convertedMinLimit || 0),
                   collateralToLoanPrice: parseFloat(collateralPrice),
                   initLTV: parseFloat(initialLTV)
               }),
@@ -45,13 +45,13 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
         : Math.min(
               roundByExactDigit(
                   calcCollateralAmount({
-                      loanAmount: parseFloat(loanable?.config?.maxLimit || 0),
+                      loanAmount: parseFloat(loanable?.config?.convertedMaxLimit || 0),
                       collateralToLoanPrice: parseFloat(collateralPrice),
                       initLTV: parseFloat(initialLTV)
                   }),
                   collateral?.assetDigit
               ),
-              +collateral?.config?.maxLimit
+              +collateral?.config?.convertedMaxLimit
           ) || 0;
 
     const loanValue = isTypingLoanField ? loanInput : loadingPrice ? '' : ceilByExactDegit(loanAmount, loanable?.assetDigit) || '';
@@ -64,18 +64,18 @@ const useLoanInput = ({ collateralInput, loanInput, collateral, loanable, typing
                 let isValid = true,
                     msg = '',
                     isError = false;
-                if (loanValue < +loanable?.config?.minLimit) {
+                if (loanValue < +loanable?.config?.convertedMinLimit) {
                     return {
                         isValid: false,
                         isError: true,
-                        msg: `Số lượng muốn vay phải lớn hơn ${formatNumber(loanable?.config?.minLimit, loanable?.assetDigit)} `
+                        msg: `Số lượng muốn vay phải lớn hơn ${formatNumber(loanable?.config?.convertedMinLimit, loanable?.assetDigit)} `
                     };
                 }
-                if (loanValue > +loanable?.config?.maxLimit) {
+                if (loanValue > +loanable?.config?.convertedMaxLimit) {
                     return {
                         isValid: false,
                         isError: true,
-                        msg: `Số lượng muốn vay phải bé hơn ${formatNumber(loanable?.config?.maxLimit, loanable?.assetDigit)} `
+                        msg: `Số lượng muốn vay phải bé hơn ${formatNumber(loanable?.config?.convertedMaxLimit, loanable?.assetDigit)} `
                     };
                 }
 

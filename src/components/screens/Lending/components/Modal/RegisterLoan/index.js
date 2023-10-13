@@ -102,7 +102,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
     }, [filter.collateral?.assetCode]);
 
     // ** use custom Hooks
-    const { loanValue, collateralValue, minCollateralAmount, maxCollateralAmount, validator, loadingPrice } = useLoanInput({
+    const { loanValue, collateralValue, minCollateralAmount, maxCollateralAmount, validator, loadingPrice, collateralPrice } = useLoanInput({
         collateral: filter?.collateral,
         loanable: filter?.loanable,
         initialLTV: totalLTV.initialLTV,
@@ -243,7 +243,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
         };
     }, [loanValue, collateralValue, filter.loanable, filter.collateral, loanTerm, loanInterest]);
 
-    const isError = !isAcceptRule || validator[COLLATERAL]().isError || validator[LOANABLE]().isError;
+    const isError = !collateralPrice || !isAcceptRule || validator[COLLATERAL]().isError || validator[LOANABLE]().isError;
 
     // ** render
     const renderInterest = () => {
@@ -400,8 +400,8 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                             textDescription={
                                 <span>
                                     {t('lending:lending.modal.input_description.min_max', {
-                                        min: formatNumber(filter.loanable?.config?.minLimit, filter.loanable?.assetDigit),
-                                        max: formatNumber(filter.loanable?.config?.maxLimit, filter.loanable?.assetDigit)
+                                        min: formatNumber(filter.loanable?.config?.convertedMinLimit || 0, filter.loanable?.assetDigit),
+                                        max: formatNumber(filter.loanable?.config?.convertedMaxLimit || 0, filter.loanable?.assetDigit)
                                     })}
                                 </span>
                             }

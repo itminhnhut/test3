@@ -48,14 +48,6 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
 
     const { loanAsset, setLoanAsset } = useRedirectLoanAsset({ loanAssetList });
 
-    const {
-        data: pairsPrice,
-        loading: fetchingPairPrice,
-        error
-    } = useFetchApi({
-        url: `${API_GET_PAIR_PRICE}/all`
-    });
-
     // ** render
     const renderTitle = (title, content) => {
         return (
@@ -88,8 +80,7 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 align: 'left',
                 minWidth: 206,
                 render: (limitValue, data) => {
-                    const pairPriceInUSDT = pairsPrice?.[`${data?.loanCoin}USDT`]?.lastPrice || 1;
-                    return <div>{formatNumber(limitValue * pairPriceInUSDT)}</div>;
+                    return <div>{formatNumber(limitValue)}</div>;
                 }
             },
             {
@@ -99,8 +90,7 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 align: 'left',
                 width: 205,
                 render: (limitValue, data) => {
-                    const pairPriceInUSDT = pairsPrice?.[`${data?.loanCoin}USDT`]?.lastPrice || 1;
-                    return <div className="font-normal">{formatNumber(limitValue * pairPriceInUSDT)}</div>;
+                    return <div className="font-normal">{formatNumber(limitValue)}</div>;
                 }
             },
             {
@@ -170,7 +160,7 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 }}
             />
         );
-    }, [data?.result, loading, isDark, pairsPrice]);
+    }, [data?.result, loading, isDark]);
 
     return (
         <>
