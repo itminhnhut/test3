@@ -333,7 +333,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
     };
 
     const renderCol5 = (option) => {
-        const { loanTerm, metadata, collateralCoin, detail, liquidationTime } = option;
+        const { loanTerm, metadata, collateralCoin, detail, liquidatedAt } = option;
         if (tab === TAB_LOAN) {
             return (
                 <WrapperSection>
@@ -365,7 +365,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
         return (
             <WrapperSection className="whitespace-nowrap">
                 <div>Thời gian thanh lý</div>
-                <WrapperDetail>{formatTime(liquidationTime, FORMAT_HH_MM_SS)}</WrapperDetail>
+                <WrapperDetail>{formatTime(liquidatedAt, FORMAT_HH_MM_SS)}</WrapperDetail>
             </WrapperSection>
         );
     };
@@ -435,7 +435,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
     };
 
     const renderCol8 = (option) => {
-        const { expirationTime, createdAt } = option;
+        const { expirationTime, metadata } = option;
 
         if (tab === TAB_LOAN) {
             return (
@@ -450,7 +450,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                 <section className="flex flex-row items-center gap-2 whitespace-nowrap">
                     <section className="dark:text-gray-7 text-gray-1">
                         <div>Thời gian vay</div>
-                        <WrapperDetail>{formatTime(createdAt, FORMAT_HH_MM_SS)}</WrapperDetail>
+                        <WrapperDetail>{formatTime(metadata?.orderCreatedAt || '-', FORMAT_HH_MM_SS)}</WrapperDetail>
                     </section>
                 </section>
             );
@@ -458,14 +458,14 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
     };
 
     const renderCol9 = (option) => {
-        const { metadata } = option;
+        const { createdAt } = option;
 
         if (tab === TAB_ADJUST) {
             return (
                 <section className="flex flex-row items-center gap-2 whitespace-nowrap">
                     <section className="dark:text-gray-7 text-gray-1">
                         <div>Thời gian điều chỉnh</div>
-                        <WrapperDetail>{formatTime(metadata?.orderCreatedAt || '-', FORMAT_HH_MM_SS)}</WrapperDetail>
+                        <WrapperDetail>{formatTime(createdAt || '-', FORMAT_HH_MM_SS)}</WrapperDetail>
                     </section>
                 </section>
             );

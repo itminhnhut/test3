@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 
 // ** next
+import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 
 // ** Redux
-import { WalletType } from 'redux/actions/const';
-import { setTransferModal } from 'redux/actions/utils';
+import { dwLinkBuilder } from 'redux/actions/utils';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { useSelector, useDispatch } from 'react-redux';
-import { createSelector } from 'reselect';
 
 // ** Utils
 import { totalAsset, formatLTV } from 'components/screens/Lending/utils';
@@ -27,13 +27,17 @@ import TradingInputV2 from 'components/trade/TradingInputV2';
 import ConfirmAdjustMargin from './ConfirmAdjustMargin';
 import AlertAdjust from './AlertAdjust.js';
 
+// ** constants
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+
 // ** svg
 import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
 
 // ** Third party
 import classNames from 'classnames';
-import { PERCENT } from 'components/screens/Lending/constants';
+import { createSelector } from 'reselect';
 import useDebounce from 'hooks/useDebounce';
+import { PERCENT } from 'components/screens/Lending/constants';
 
 const TAB_ADD = 'add';
 const TAB_SUBTRACT = 'subtract';
@@ -336,7 +340,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     };
 
     const renderForm = () => {
-        const { collateralAsset = {} } = dataCollateral;
+        const { collateralAsset = {}, collateralCoin = '' } = dataCollateral;
         const totalAvailable = formatNumber(collateralAvailable, collateralAsset?.symbol?.assetDigit);
 
         return (
@@ -348,11 +352,11 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
                             <span>Khả dụng:</span>
                             <span className="dark:text-gray-4 text-gray-15 ml-1 font-semibold">{totalAvailable}</span>
                         </div>
-                        <AddCircleColorIcon
-                            size={16}
-                            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }))}
-                            className="cursor-pointer"
-                        />
+                        <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, collateralCoin)}>
+                            <a className="inline-block">
+                                <AddCircleColorIcon size={16} className="cursor-pointer" />
+                            </a>
+                        </Link>
                     </section>
                 </section>
                 <TradingInputV2
