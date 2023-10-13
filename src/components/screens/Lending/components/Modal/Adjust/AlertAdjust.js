@@ -10,14 +10,8 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { LendingContext } from 'components/screens/Lending/context';
 import { globalActionTypes as actions } from 'components/screens/Lending/context/actions';
 
-const ERRORS = {
-    ORDER_IS_ACCRUING_INTEREST: {
-        message: { vi: 'Đơn hàng đang tích lũy tiền lãi', en: 'Order is accruing interest' }
-    },
-    UNSUPPORTED_ASSET_PAIR: {
-        message: { vi: 'Chúng tôi không hỗ trợ cặp tiền cho vay và tiền thế chấp này', en: 'We do not support this loan coin and collateral coin pair' }
-    }
-};
+//** Constant
+import { ERRORS } from 'components/screens/Lending/constants';
 
 const AlertAdjust = () => {
     const {
