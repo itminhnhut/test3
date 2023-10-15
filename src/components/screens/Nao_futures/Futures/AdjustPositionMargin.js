@@ -14,132 +14,119 @@ import { DefaultFuturesFee } from 'redux/actions/const';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { IconLoading } from 'components/common/Icons';
 import WarningCircle from 'components/svg/WarningCircle';
-import floor from 'lodash/floor'
-import Modal from "components/common/ReModal";
+import floor from 'lodash/floor';
+import Modal from 'components/common/ReModal';
 import { reFetchOrderListInterval } from 'redux/actions/futures';
-import { find } from 'lodash'
+import { find } from 'lodash';
 import { createSelector } from 'reselect';
 import colors from 'styles/colors';
 
-const getPairConfig = createSelector(
-    [
-        state => state?.futures?.pairConfigs,
-        (utils, params) => params
-    ],
-    (pairConfigs, params) => {
-        return find(pairConfigs, { ...params })
-    }
-);
+const getPairConfig = createSelector([(state) => state?.futures?.pairConfigs, (utils, params) => params], (pairConfigs, params) => {
+    return find(pairConfigs, { ...params });
+});
 
-const getAsset = createSelector(
-    [
-        state => state?.utils?.assetConfig,
-        (utils, params) => params
-    ],
-    (assetConfig, params) => {
-        return find(assetConfig, { ...params })
-    }
-);
+const getAsset = createSelector([(state) => state?.utils?.assetConfig, (utils, params) => params], (assetConfig, params) => {
+    return find(assetConfig, { ...params });
+});
 
-const getWallet = createSelector(
-    [
-        state => state?.wallet?.NAO_FUTURES,
-        (utils, params) => params
-    ],
-    (wallet, params) => {
-        return wallet[params]
-    }
-);
+const getWallet = createSelector([(state) => state?.wallet?.NAO_FUTURES, (utils, params) => params], (wallet, params) => {
+    return wallet[params];
+});
 
 const ADJUST_TYPE = {
     ADD: 'ADD',
     REMOVE: 'REMOVE'
-}
+};
 
-const VNDC_ID = 72
+const VNDC_ID = 72;
 
 const CONFIG_MIN_PROFIT = [
-    { leverage: [-Infinity, 1], minMarginRatio: .2 },
-    { leverage: [1, 5], minMarginRatio: .25 },
-    { leverage: [5, 10], minMarginRatio: .3 },
-    { leverage: [10, 15], minMarginRatio: .4 },
-    { leverage: [15, 25], minMarginRatio: .5 },
-    { leverage: [25, Infinity], minMarginRatio: null },
-]
+    { leverage: [-Infinity, 1], minMarginRatio: 0.2 },
+    { leverage: [1, 5], minMarginRatio: 0.25 },
+    { leverage: [5, 10], minMarginRatio: 0.3 },
+    { leverage: [10, 15], minMarginRatio: 0.4 },
+    { leverage: [15, 25], minMarginRatio: 0.5 },
+    { leverage: [25, Infinity], minMarginRatio: null }
+];
 
 const calMinProfitAllow = (leverage) => {
-    const { minMarginRatio } = CONFIG_MIN_PROFIT.find(c => {
-        const [start, end] = c.leverage
-        return leverage > start && leverage <= end
-    })
-    return minMarginRatio
-}
+    const { minMarginRatio } = CONFIG_MIN_PROFIT.find((c) => {
+        const [start, end] = c.leverage;
+        return leverage > start && leverage <= end;
+    });
+    return minMarginRatio;
+};
 
 const calLiqPrice = (side, quantity, open_price, margin, fee, order) => {
-    const size = (side === VndcFutureOrderType.Side.SELL ? -quantity : quantity)
-    const number = (side === VndcFutureOrderType.Side.SELL ? -1 : 1);
+    const size = side === VndcFutureOrderType.Side.SELL ? -quantity : quantity;
+    const number = side === VndcFutureOrderType.Side.SELL ? -1 : 1;
     // const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
-    return (size * open_price + fee - margin) / (quantity * (number - DefaultFuturesFee.NamiFrameOnus))
-}
+    return (size * open_price + fee - margin) / (quantity * (number - DefaultFuturesFee.NamiFrameOnus));
+};
 
 const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) => {
-    const [adjustType, setAdjustType] = useState(ADJUST_TYPE.ADD)
-    const [amount, setAmount] = useState('')
-    const [submitting, setSubmitting] = useState(false)
+    const [adjustType, setAdjustType] = useState(ADJUST_TYPE.ADD);
+    const [amount, setAmount] = useState('');
+    const [submitting, setSubmitting] = useState(false);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const _setAdjustType = (type) => {
-        setAdjustType(type)
-        setAmount('')
-    }
+        setAdjustType(type);
+        setAmount('');
+    };
 
-    const pairConfig = useSelector(state => getPairConfig(state, { symbol: order?.symbol }));
-    const assetConfig = useSelector(state => getAsset(state, { id: pairConfig?.quoteAssetId }));
-    const futuresBalance = useSelector(state => getWallet(state, pairConfig?.quoteAssetId));
+    const pairConfig = useSelector((state) => getPairConfig(state, { symbol: order?.symbol }));
+    const assetConfig = useSelector((state) => getAsset(state, { id: pairConfig?.quoteAssetId }));
+    const futuresBalance = useSelector((state) => getWallet(state, pairConfig?.quoteAssetId));
     const alertContext = useContext(AlertContext);
 
     const { available } = useMemo(() => {
-        if (!assetConfig || !futuresBalance) return {}
+        if (!assetConfig || !futuresBalance) return {};
         return {
             available: Math.max(futuresBalance.value, 0) - Math.max(futuresBalance.locked_value, 0)
-        }
-    }, [assetConfig, futuresBalance])
+        };
+    }, [assetConfig, futuresBalance]);
 
-    const { t } = useTranslation()
+    const { t } = useTranslation();
 
-    const lastPrice = order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask
-    const profit = getProfitVndc(order, lastPrice, true)
+    const lastPrice = order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask;
+    const profit = getProfitVndc(order, lastPrice, true);
 
-    const { newMargin = 0, newLiqPrice = 0, minMarginRatio, initMargin = 0, maxRemovable = 0 } = useMemo(() => {
-        if (!order) return {}
-        const profit = getProfitVndc(order, lastPrice, true)
-        const initMargin = +order.order_value / +order.leverage
-        const minMarginRatio = calMinProfitAllow(order.leverage)
+    const {
+        newMargin = 0,
+        newLiqPrice = 0,
+        minMarginRatio,
+        initMargin = 0,
+        maxRemovable = 0
+    } = useMemo(() => {
+        if (!order) return {};
+        const profit = getProfitVndc(order, lastPrice, true);
+        const initMargin = +order.order_value / +order.leverage;
+        const minMarginRatio = calMinProfitAllow(order.leverage);
         // const maxRemovable = initMargin * (1 - minMarginRatio + Math.min(profit / initMargin, 0)) - (initMargin - order.margin)
-        let maxRemovable = order.margin - initMargin * minMarginRatio + Math.min(profit, 0)
+        let maxRemovable = order.margin - initMargin * minMarginRatio + Math.min(profit, 0);
         if (!minMarginRatio) {
-            maxRemovable = 0
+            maxRemovable = 0;
         }
 
-        const newMargin = +order?.margin + (adjustType === ADJUST_TYPE.REMOVE ? -amount : +amount)
+        const newMargin = +order?.margin + (adjustType === ADJUST_TYPE.REMOVE ? -amount : +amount);
         return {
             newMargin,
             newLiqPrice: calLiqPrice(order.side, order.quantity, order.open_price, newMargin, order.fee, order),
             minMarginRatio,
             initMargin,
-            maxRemovable: maxRemovable * .9 // Minus 10% to ensure valid in server
-        }
-    }, [order, amount, adjustType, lastPrice])
+            maxRemovable: maxRemovable * 0.9 // Minus 10% to ensure valid in server
+        };
+    }, [order, amount, adjustType, lastPrice]);
 
-    const percent = formatNumber(((profit / newMargin) * 100), 2, 0, true);
+    const percent = formatNumber((profit / newMargin) * 100, 2, 0, true);
 
     const error = useMemo(() => {
         if (+amount > available && adjustType === ADJUST_TYPE.ADD) {
-            return `${t('common:max')} ${formatNumber(available, assetConfig?.assetDigit)}`; 
+            return `${t('common:max')} ${formatNumber(available, assetConfig?.assetDigit)}`;
         }
-
-    }, [amount, available, assetConfig, adjustType, percent])
+    }, [amount, available, assetConfig, adjustType, percent]);
 
     const handleSetMaxAmount = () => {
         switch (adjustType) {
@@ -151,48 +138,53 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                 setAmount(formatNumber(maxRemovable, assetConfig?.assetDigit));
                 break;
         }
-    }
+    };
 
     const errorProfit = useMemo(() => {
         if (adjustType === ADJUST_TYPE.REMOVE) {
-            return t('futures:mobile:adjust_margin:temp_future')
+            return t('futures:mobile:adjust_margin:temp_future');
         }
         if (adjustType === ADJUST_TYPE.REMOVE) {
             if (minMarginRatio === null) {
-                return t('futures:mobile:adjust_margin:not_allow_change_margin')
+                return t('futures:mobile:adjust_margin:not_allow_change_margin');
             } else if (+amount > maxRemovable) {
-                return t(`futures:mobile:adjust_margin:max_removable`, { max: formatNumber(maxRemovable, assetConfig?.assetDigit || 0) })
+                return t(`futures:mobile:adjust_margin:max_removable`, { max: formatNumber(maxRemovable, assetConfig?.assetDigit || 0) });
             }
         }
-    }, [adjustType, amount, maxRemovable, minMarginRatio, assetConfig])
+    }, [adjustType, amount, maxRemovable, minMarginRatio, assetConfig]);
 
     const handleConfirm = async () => {
-        setSubmitting(true)
-        const { data, status } = await axios.put(API_VNDC_FUTURES_CHANGE_MARGIN, {
-            displaying_id: order?.displaying_id,
-            margin_change: amount,
-            type: adjustType
-        }).catch(err => {
-            console.error(err)
-            return { data: { status: err.message === 'Network Error' ? 'NETWORK_ERROR' : 'UNKNOWN' } }
-        })
+        setSubmitting(true);
+        const { data, status } = await axios
+            .put(API_VNDC_FUTURES_CHANGE_MARGIN, {
+                displaying_id: order?.displaying_id,
+                margin_change: amount,
+                type: adjustType
+            })
+            .catch((err) => {
+                console.error(err);
+                return { data: { status: err.message === 'Network Error' ? 'NETWORK_ERROR' : 'UNKNOWN' } };
+            });
         dispatch(reFetchOrderListInterval(2, 5000, true));
-        setSubmitting(false)
+        setSubmitting(false);
 
-        if (forceFetchOrder) forceFetchOrder()
+        if (forceFetchOrder) forceFetchOrder();
 
         if (data.status === 'ok') {
-            const message = t(`futures:mobile:adjust_margin:${{
-                [ADJUST_TYPE.ADD]: 'add_success',
-                [ADJUST_TYPE.REMOVE]: 'remove_success'
-            }[adjustType]
-                }`)
-            alertContext.alert.show('success', t('common:success'), message, null, null, onClose)
+            const message = t(
+                `futures:mobile:adjust_margin:${
+                    {
+                        [ADJUST_TYPE.ADD]: 'add_success',
+                        [ADJUST_TYPE.REMOVE]: 'remove_success'
+                    }[adjustType]
+                }`
+            );
+            alertContext.alert.show('success', t('common:success'), message, null, null, onClose);
         } else {
-            const requestId = data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`
-            alertContext.alert.show('error', t('common:failed'), t(`error:futures:${data.status || 'UNKNOWN'}`), requestId)
+            const requestId = data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`;
+            alertContext.alert.show('error', t('common:failed'), t(`error:futures:${data.status || 'UNKNOWN'}`), requestId);
         }
-    }
+    };
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={() => !submitting && onClose()} onusClassName="px-0">
@@ -223,9 +215,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                     </div>
                 </div>
                 <div className="px-4 pt-6">
-                    <div className="uppercase text-xs text-txtSecondary dark:text-txtSecondary-dark leading-[1.125rem] pb-2">
-                        {t('futures:margin')}
-                    </div>
+                    <div className="uppercase text-xs text-txtSecondary dark:text-txtSecondary-dark leading-[1.125rem] pb-2">{t('futures:margin')}</div>
                     <ErrorToolTip message={!errorProfit ? error : ''}>
                         <div className="flex justify-between items-center pl-4 bg-gray-12 dark:bg-dark-2 text-sm rounded-md h-11">
                             <NumberFormat
@@ -241,7 +231,9 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                                 // onFocus={scrollFocusInput}
                             />
                             <div className="flex items-center">
-                                <span className="px-4 py-2 text-teal font-semibold" onClick={handleSetMaxAmount}>{t('futures:mobile:adjust_margin:max')}</span>
+                                <span className="px-4 py-2 text-teal font-semibold" onClick={handleSetMaxAmount}>
+                                    {t('futures:mobile:adjust_margin:max')}
+                                </span>
                                 <div className="h-full leading-[2.75rem] bg-gray-11/50 dark:bg-dark-1/50 w-16 text-txtSecondary dark:text-txtSecondary-dark font-medium rounded-r-md text-center">
                                     {assetConfig?.assetCode}
                                 </div>
@@ -291,9 +283,12 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                         </div>
                     )}
                     <div
-                        className={classNames('flex justify-center items-center bg-bgBtnPrimary align-middle h-12 text-txtBtnPrimary rounded-md font-bold mt-6', {
-                            '!bg-gray-12 dark:!bg-dark-2 text-txtDisabled dark:text-txtDisabled-dark': !!error || !+amount || !!errorProfit
-                        })}
+                        className={classNames(
+                            'flex justify-center items-center bg-bgBtnPrimary align-middle h-12 text-txtBtnPrimary rounded-md font-bold mt-6',
+                            {
+                                '!bg-gray-12 dark:!bg-dark-2 text-txtDisabled dark:text-txtDisabled-dark': !!error || !+amount || !!errorProfit
+                            }
+                        )}
                         onClick={() => {
                             if (!error && !errorProfit && !!+amount && !submitting) {
                                 handleConfirm();
@@ -306,9 +301,9 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
             </div>
         </Modal>
     );
-}
+};
 
-export default AdjustPositionMargin
+export default AdjustPositionMargin;
 
 const ErrorToolTip = ({ children, message }) => {
     return (
@@ -324,4 +319,4 @@ const ErrorToolTip = ({ children, message }) => {
             {children}
         </div>
     );
-}
+};

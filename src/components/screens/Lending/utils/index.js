@@ -16,6 +16,11 @@ const totalAsset = (total, asset) => {
     return { total: rsTotal, symbol: symbol };
 };
 
+const getTotalAsset = (total, assetCode) => {
+    const rsTotal = formatNumber(total || 0, assetCode, 0, true);
+    return rsTotal;
+};
+
 const getCurrentLTV = ({ totalDebtLeft, totalCollateralLeft, collateralPrice }) => {
     return totalDebtLeft / (totalCollateralLeft * collateralPrice);
 };
@@ -31,4 +36,4 @@ const formatLTV = (total) => {
     return Math.floor(+total);
 };
 
-export { totalAsset, getCurrentLTV, getReceiveCollateral, formatPercent, formatLTV };
+export { totalAsset, getTotalAsset, getCurrentLTV, getReceiveCollateral, formatPercent, formatLTV };

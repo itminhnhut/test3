@@ -88,10 +88,11 @@ const LoanTable = ({ data, page, historyPriceAll, loading, onPage }) => {
                 })
             });
             if (statusCode === STATUS_CODE) {
-                setDataCollateral({ ...data, collateralAsset });
                 if (action === 'adjust') {
-                    dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN }); //** show modal adjust
+                    data && dispatchReducer({ type: actions.DETAIL_ADJUST, data: { dataCollateral: { ...data, collateralAsset } } });
+                    //   dispatchReducer({ type: actions.TOGGLE_MODAL_ADJUST_MARGIN }); //** show modal adjust
                 } else {
+                    setDataCollateral({ ...data, collateralAsset });
                     setIsOpenRepaymentModal(true);
                 }
             }
