@@ -531,7 +531,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
 
 const StyledToolTip = styled.div.attrs({
     className:
-        'z-10 absolute left-0 bottom-full dark:after:border-t-dark-1 after:border-t-darkBlue text-sm text-white dark:text-txtPrimary-dark mb-4 w-full transition opacity-0 group-hover:opacity-100 group-hover:visible invisible  px-6 py-[11px] bg-darkBlue dark:bg-dark-1 rounded-lg'
+        'z-[16] absolute left-0 bottom-full dark:after:border-t-dark-1 after:border-t-darkBlue text-sm text-white dark:text-txtPrimary-dark mb-4 w-full transition opacity-0 group-hover:opacity-100 group-hover:visible invisible  px-6 py-[11px] bg-darkBlue dark:bg-dark-1 rounded-lg'
 })`
     &:after {
         --size: 12px;
