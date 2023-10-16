@@ -80,11 +80,11 @@ export const WalletTypeV1 = {
 };
 
 export const MinTransferFromBroker = {
-    NAMI: 500,
-    VNDC: 100000,
-    VNST: 100000,
-    USDT: 5,
-    NAO: 100
+    NAMI: 50,
+    VNDC: 10000,
+    VNST: 10000,
+    USDT: 0.5,
+    NAO: 10
 };
 
 const ALLOWED_ASSET = ['VNDC', 'NAMI', 'USDT', 'NAC', 'NAO', 'VNST'];
