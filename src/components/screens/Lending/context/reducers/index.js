@@ -29,6 +29,7 @@ const reducer = (state, action) => {
                 ...dataCollateral,
                 totalAdjusted: totalCollateralAmount,
                 initial: { adjusted: totalCollateralAmount },
+                amount: '',
                 modal: {
                     ...state.modal,
                     isAdjust: true
@@ -53,19 +54,22 @@ const reducer = (state, action) => {
         case actions.UPDATE_AMOUNT: {
             return { ...state, amount: action.amount };
         }
-        case actions.RESET_AMOUNT: {
+        case actions.RESET_AMOUNT:
             return { ...state, amount: '' };
-        }
         case actions.TOGGLE_MODAL_ADJUST_MARGIN:
             return {
                 ...state,
                 modal: { ...state.modal, isAdjust: !state.modal?.isAdjust }
             };
-        case actions.TOGGLE_MODAL_CONFIRM_ADJUST:
+        case actions.TOGGLE_MODAL_CONFIRM_ADJUST: {
+            const isConfirmAdjust = !state.modal?.isConfirmAdjust;
+            const isAdjust = !state.modal?.isAdjust;
+
             return {
                 ...state,
-                modal: { ...state.modal, isAdjust: !state.modal?.isAdjust, isConfirmAdjust: !state.modal?.isConfirmAdjust }
+                modal: { ...state.modal, isAdjust, isConfirmAdjust }
             };
+        }
         case actions.TOGGLE_MODAL_SUCCESS_ADJUST:
             return {
                 ...state,

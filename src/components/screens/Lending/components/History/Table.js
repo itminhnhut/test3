@@ -41,6 +41,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 // ** Dynamic
 const AssetFilter = dynamic(() => import('components/screens/Lending/components/AssetFilter', { ssr: false }));
+const EmptyData = dynamic(() => import('components/screens/Lending/EmptyData'), { ssr: false });
 
 // ** Constants
 const INIT_DATA = {
@@ -573,10 +574,16 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
 
     return (
         <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">
-            <div className="flex gap-6 flex-wrap mx-6 items-end justify-between">
-                <div className="flex justify-between gap-4 mb-8 mt-6">{renderFilter()}</div>
-            </div>
-            {renderTable()}
+            {data?.result?.length === 0 ? (
+                <EmptyData isDark={isDark} content="Không có lịch sử khoản vay" textBtn="Vay Crypto ngay" link="/lending?tab=lending&loanAsset=USDT" />
+            ) : (
+                <>
+                    <div className="flex gap-6 flex-wrap mx-6 items-end justify-between">
+                        <div className="flex justify-between gap-4 mb-8 mt-6">{renderFilter()}</div>
+                    </div>
+                    {renderTable()}
+                </>
+            )}
         </section>
     );
 };

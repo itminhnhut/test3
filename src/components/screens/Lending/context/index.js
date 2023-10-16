@@ -100,7 +100,11 @@ const LendingProvider = ({ children }) => {
         [loanAsset, assetConfig, auth, pairPrice, state]
     );
 
-    return <LendingContext.Provider value={value}>{children}</LendingContext.Provider>;
+    return (
+        <LendingContext.Provider displayName="Context Display Name" value={value}>
+            {children}
+        </LendingContext.Provider>
+    );
 };
 
 const useLoanableList = () => {

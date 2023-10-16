@@ -85,19 +85,8 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
     const { state, dispatchReducer } = useContext(LendingContext);
     const { getPairPrice, pairPrice } = usePairPrice();
 
-    const {
-        _id,
-        amount,
-        loanCoin,
-        totalDebt,
-        initialLTV,
-        modalAdjust,
-        totalAdjusted,
-        collateralCoin,
-        collateralAsset,
-        collateralAmount,
-        totalCollateralAmount
-    } = state;
+    const { _id, amount, loanCoin, totalDebt, initialLTV, modal, totalAdjusted, collateralCoin, collateralAsset, collateralAmount, totalCollateralAmount } =
+        state;
 
     // ** useState
     const [tab, setTab] = useState(initState.tab);
@@ -123,7 +112,7 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
     const current_LTV = useMemo(() => {
         const total_current_LTV = totalDebt / (totalCollateralAmount * pairPrice?.lastPrice);
         return formatLTV(total_current_LTV * PERCENT);
-    }, [pairPrice?.lastPrice]);
+    }, [pairPrice?.lastPrice, _id]);
 
     const adjustedLTV = useMemo(() => {
         return (totalDebt / (totalAdjusted * pairPrice?.lastPrice || 0)) * PERCENT;
@@ -147,11 +136,11 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
         // ** reset amount
         dispatchReducer({ type: actions.RESET_AMOUNT });
         setAmountAsset(initState.amountAsset);
-    }, [tab]);
+    }, [tab, _id]);
 
     useEffect(() => {
         // ** reset amount
-        if (state.amount === '' && amountAsset !== '') {
+        if (amount === '' && amountAsset !== '') {
             setAmountAsset(initState.amountAsset);
         }
         isShow && getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin }); //** get price token
@@ -162,6 +151,7 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
     }, [debounceAmount]);
 
     useEffect(() => {
+        dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: amountAsset });
         handleCheckAmountInput();
     }, [totalAdjusted]);
 
@@ -192,15 +182,8 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
                 return;
             }
         }
-        handleRestUpdateAmount();
-    };
-
-    // ** handle reset clear input or update amount
-    const handleRestUpdateAmount = () => {
         if (!amountAsset) {
             dispatchReducer({ type: actions.RESET_AMOUNT });
-        } else {
-            dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: amountAsset });
         }
     };
 
@@ -228,18 +211,8 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
 
     // ** handle update amount assets
     const handleAmountChange = (value) => {
-        setAmountAsset(value);
         error?.msg && setError(initState.error);
-    };
-
-    //* check amount <-> Available
-    const isCheckAmountAvailable = () => {
-        return amountAsset > 0 && amountAsset <= collateralAvailable;
-    };
-
-    //* check amount <-> adjusted current
-    const isCheckAmountAdjusted = () => {
-        return amountAsset > 0 && +amountAsset <= totalAdjusted;
+        setAmountAsset(value);
     };
 
     //** check LTV by current <-> initial
@@ -254,16 +227,6 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
         return adjusted <= initial;
     };
 
-    //** validation subtract
-    const validationSubtract = () => {
-        return isCheckCurrentLTV() && isCheckAdjustLTV() && isCheckAmountAdjusted();
-    };
-
-    // ** submitted
-    const isSubmitted = useMemo(() => {
-        return tab === initState.tab ? isCheckAmountAvailable() : validationSubtract();
-    }, [tab, debounceAmount, collateralAvailable, adjustedLTV, totalAdjusted]);
-
     const handleCloseConfirmAdjustMargin = () => {
         dispatchReducer({ type: actions.TOGGLE_MODAL_CONFIRM_ADJUST });
     };
@@ -276,8 +239,13 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
 
     // ** handle default dash or content
     const isDefaultDash = useMemo(() => {
-        return !amountAsset || amountAsset < 0 || error?.type === 'max' ? DEFAULT_VALUE : false;
-    }, [amountAsset, error]);
+        return !debounceAmount || debounceAmount < 0 || error?.type === 'max' ? DEFAULT_VALUE : false;
+    }, [debounceAmount, error]);
+
+    // ** submitted
+    const isSubmitted = useMemo(() => {
+        return +debounceAmount > 0 && !validator?.msg;
+    }, [tab, error?.msg, debounceAmount]);
 
     return (
         <>
@@ -356,10 +324,10 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
                 initialLTV={initialLTV}
                 currentLTV={current_LTV}
                 adjustedLTV={adjustedLTV}
-                totalAdjusted={totalAdjusted}
+                totalAdjusted={totalAmountAdjusted}
                 dispatchReducer={dispatchReducer}
                 onRefreshPrice={handRefreshPrice}
-                isConfirmAdjust={modalAdjust?.isConfirmAdjust}
+                isConfirmAdjust={modal?.isConfirmAdjust}
                 onCloseAdjustMargin={handleCloseConfirmAdjustMargin}
             />
             <AlertAdjust />
