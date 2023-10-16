@@ -106,7 +106,7 @@ const CryptoLending = () => {
 
     return (
         <LendingProvider>
-            <Tabs isDark tab={tab} className="mt-8 gap-6 border-b border-divider dark:border-divider-dark justify-between">
+            <Tabs isDark tab={tab} className="mt-20 gap-6 border-b border-divider dark:border-divider-dark justify-between">
                 <div className="flex flex-row gap-x-6">
                     {TABS?.map((item) => (
                         <TabItem
@@ -121,7 +121,7 @@ const CryptoLending = () => {
                         </TabItem>
                     ))}
                 </div>
-                <div className="text-green-3 dark:text-green-2 hover:text-green-4 font-semibold cursor-pointer">{t('lending:tabs:info')}</div>
+                <div className="text-green-3 dark:text-green-2 hover:!text-green-4 font-semibold cursor-pointer">{t('lending:tabs:info')}</div>
             </Tabs>
             {renderTabContent()}
         </LendingProvider>

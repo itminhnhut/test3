@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 
 // ** next
-import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 
 // ** Redux
-import { dwLinkBuilder } from 'redux/actions/utils';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { useSelector } from 'react-redux';
 
 // ** Utils
-import { totalAsset, formatLTV, getTotalAsset } from 'components/screens/Lending/utils';
+import { formatLTV, getTotalAsset } from 'components/screens/Lending/utils';
 import { formatNumber } from 'utils/reference-utils';
 
 // ** Context
@@ -19,22 +16,16 @@ import { globalActionTypes as actions } from 'components/screens/Lending/context
 
 //** components
 import ModalV2 from 'components/common/V2/ModalV2';
-import AssetLogo from 'components/wallet/AssetLogo';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import TradingInputV2 from 'components/trade/TradingInputV2';
 
 //** components screen
-import ConfirmAdjustMargin from './AlertModal/ConfirmAdjustMargin';
-import AlertAdjust from './AlertModal/AlertAdjust.js';
 import InfoMargin from './Margin/InfoMargin';
-import SubtractMarginResult from './Margin/SubtractMarginResult';
+import AlertAdjust from './AlertModal/AlertAdjust.js';
 import AddMarginResult from './Margin/AddMarginResult';
-
-// ** constants
-import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
-
+import SubtractMarginResult from './Margin/SubtractMarginResult';
+import ConfirmAdjustMargin from './AlertModal/ConfirmAdjustMargin';
 // ** svg
-import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
+import { IconClose } from 'components/svg/SvgIcon';
 
 // ** Third party
 import classNames from 'classnames';
@@ -91,10 +82,28 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
     // ** collateral wallet balance
 
     // ** useContext
-    const { state } = useContext(LendingContext);
+    const { state, dispatchReducer } = useContext(LendingContext);
     const { getPairPrice, pairPrice } = usePairPrice();
 
-    const { totalDebt, loanCoin, collateralCoin, collateralAmount, totalCollateralAmount, amount, totalAdjusted, collateralAsset, initialLTV } = state;
+    const {
+        _id,
+        amount,
+        loanCoin,
+        totalDebt,
+        initialLTV,
+        modalAdjust,
+        totalAdjusted,
+        collateralCoin,
+        collateralAsset,
+        collateralAmount,
+        totalCollateralAmount
+    } = state;
+
+    // ** useState
+    const [tab, setTab] = useState(initState.tab);
+    const [error, setError] = useState(initState.error);
+    const [amountAsset, setAmountAsset] = useState(initState.amountAsset);
+    const debounceAmount = useDebounce(amountAsset, DEBOUNCE_TIME);
 
     const collateralAvailable = useSelector((state) => getSpotAvailable(state, { assetId: collateralAsset?.symbol?.id }));
 
@@ -118,20 +127,27 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
 
     const adjustedLTV = useMemo(() => {
         return (totalDebt / (totalAdjusted * pairPrice?.lastPrice || 0)) * PERCENT;
-    }, [amount, totalDebt, totalAdjusted, pairPrice?.lastPrice]);
+    }, [debounceAmount, totalAdjusted, pairPrice?.lastPrice]);
 
-    // ** total Tổng ký quỹ
+    // ** Tổng ký quỹ điều chỉnh
     const totalAmountAdjusted = useMemo(() => {
         const total = formatNumber(totalAdjusted, collateralAsset?.symbol?.assetDigit);
         const assetCode = collateralAsset?.symbol?.assetCode;
         return { total, assetCode };
     }, [totalAdjusted]);
 
-    // ** useState
-    const [tab, setTab] = useState(initState.tab);
-    const [error, setError] = useState(initState.error);
-    const [amountAsset, setAmountAsset] = useState(initState.amountAsset);
-    const debounceAmount = useDebounce(amountAsset, DEBOUNCE_TIME);
+    const dataLTV = useMemo(() => {
+        const initial_LTV = formatLTV(initialLTV * PERCENT);
+        const formatAdjustedLTV = formatLTV(adjustedLTV);
+        return { initial: +initial_LTV, adjusted: +formatAdjustedLTV };
+    }, [adjustedLTV]);
+
+    // ** useEffect
+    useEffect(() => {
+        // ** reset amount
+        dispatchReducer({ type: actions.RESET_AMOUNT });
+        setAmountAsset(initState.amountAsset);
+    }, [tab]);
 
     useEffect(() => {
         // ** reset amount
@@ -141,13 +157,69 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
         isShow && getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin }); //** get price token
     }, [isShow]);
 
+    useEffect(() => {
+        dispatchReducer({ type: actions.UPDATE_TOTAL_ADJUSTED, amount: amountAsset || 0, method: tab });
+    }, [debounceAmount]);
+
+    useEffect(() => {
+        handleCheckAmountInput();
+    }, [totalAdjusted]);
+
+    const handleCheckAmountInput = () => {
+        let total = collateralAvailable;
+        let isCheckAmount = +amountAsset < 0 || +amountAsset > total;
+
+        if (amountAsset === '') return;
+
+        if (tab !== TAB_ADD) {
+            isCheckAmount = +amountAsset < 0 || +amountAsset > totalAdjusted;
+        }
+
+        if (isCheckAmount) {
+            const msg = VALIDATION_ERROR?.[tab]?.max?.[language];
+            setError({ msg, type: 'max' });
+            return;
+        }
+        if (tab === TAB_SUBTRACT) {
+            if (!isCheckCurrentLTV()) {
+                const msg = VALIDATION_ERROR?.[tab]?.current_ltv?.[language];
+                setError({ msg });
+                return;
+            }
+            if (!isCheckAdjustLTV()) {
+                const msg = VALIDATION_ERROR?.[tab]?.adjusted_ltv?.[language];
+                setError({ msg });
+                return;
+            }
+        }
+        handleRestUpdateAmount();
+    };
+
+    // ** handle reset clear input or update amount
+    const handleRestUpdateAmount = () => {
+        if (!amountAsset) {
+            dispatchReducer({ type: actions.RESET_AMOUNT });
+        } else {
+            dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: amountAsset });
+        }
+    };
+
+    // ** handle
     const handleCloseModal = () => {
         onClose();
         setTab(initState.tab);
     };
 
-    const handleSubmit = () => {};
-    const isSubmitted = () => {};
+    //**  handle submit form
+    const handleSubmit = () => {
+        dispatchReducer({ type: actions.TOGGLE_MODAL_CONFIRM_ADJUST }); //** open modal confirm */
+        getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin }); //** update market price */
+    };
+
+    // ** handle refresh price
+    const handRefreshPrice = () => {
+        getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
+    };
 
     //** handle */
     const handleChangeTab = (tab) => {
@@ -158,6 +230,42 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
     const handleAmountChange = (value) => {
         setAmountAsset(value);
         error?.msg && setError(initState.error);
+    };
+
+    //* check amount <-> Available
+    const isCheckAmountAvailable = () => {
+        return amountAsset > 0 && amountAsset <= collateralAvailable;
+    };
+
+    //* check amount <-> adjusted current
+    const isCheckAmountAdjusted = () => {
+        return amountAsset > 0 && +amountAsset <= totalAdjusted;
+    };
+
+    //** check LTV by current <-> initial
+    const isCheckCurrentLTV = () => {
+        const { initial } = dataLTV;
+        return current_LTV < initial;
+    };
+
+    //** check LTV adjusted - initial
+    const isCheckAdjustLTV = () => {
+        const { adjusted, initial } = dataLTV;
+        return adjusted <= initial;
+    };
+
+    //** validation subtract
+    const validationSubtract = () => {
+        return isCheckCurrentLTV() && isCheckAdjustLTV() && isCheckAmountAdjusted();
+    };
+
+    // ** submitted
+    const isSubmitted = useMemo(() => {
+        return tab === initState.tab ? isCheckAmountAvailable() : validationSubtract();
+    }, [tab, debounceAmount, collateralAvailable, adjustedLTV, totalAdjusted]);
+
+    const handleCloseConfirmAdjustMargin = () => {
+        dispatchReducer({ type: actions.TOGGLE_MODAL_CONFIRM_ADJUST });
     };
 
     // ** validation input
@@ -211,27 +319,27 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
                         <InfoMargin totalDebt={debit} totalAdjust={adjust} />
                         <FormInput
                             tab={tab}
-                            collateralAvailable={collateralAvailable}
-                            collateralAsset={collateralAsset}
-                            collateralCoin={collateralCoin}
                             validator={validator}
                             amountAsset={amountAsset}
+                            collateralCoin={collateralCoin}
+                            collateralAsset={collateralAsset}
                             onChangeAmount={handleAmountChange}
+                            collateralAvailable={collateralAvailable}
                         />
                     </section>
                     {tab === TAB_ADD ? (
                         <AddMarginResult
                             currentLTV={current_LTV}
                             adjustedLTV={adjustedLTV}
-                            totalAmountAdjusted={totalAmountAdjusted}
                             isDefaultDash={isDefaultDash}
+                            totalAmountAdjusted={totalAmountAdjusted}
                         />
                     ) : (
                         <SubtractMarginResult
-                            isDefaultDash={isDefaultDash}
-                            currentLTV={current_LTV}
                             initialLTV={initialLTV}
+                            currentLTV={current_LTV}
                             adjustedLTV={adjustedLTV}
+                            isDefaultDash={isDefaultDash}
                             totalAmountAdjusted={totalAmountAdjusted}
                         />
                     )}
@@ -241,20 +349,20 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
                 </ButtonV2>
             </ModalV2>
 
-            {/* <ConfirmAdjustMargin
+            <ConfirmAdjustMargin
+                id={_id}
                 tab={tab}
                 amount={amountAsset}
-                id={dataCollateral?._id}
+                initialLTV={initialLTV}
                 currentLTV={current_LTV}
                 adjustedLTV={adjustedLTV}
                 totalAdjusted={totalAdjusted}
-                initialLTV={state?.initialLTV}
-                onRefreshPrice={handRefreshPrice}
                 dispatchReducer={dispatchReducer}
-                isConfirmAdjust={modalAdjust.isConfirmAdjust}
+                onRefreshPrice={handRefreshPrice}
+                isConfirmAdjust={modalAdjust?.isConfirmAdjust}
                 onCloseAdjustMargin={handleCloseConfirmAdjustMargin}
             />
-            <AlertAdjust /> */}
+            <AlertAdjust />
         </>
     );
 };

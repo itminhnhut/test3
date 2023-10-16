@@ -1,3 +1,4 @@
+//** utils
 import { formatLTV } from 'components/screens/Lending/utils';
 
 const AddMarginResult = ({ currentLTV, adjustedLTV, totalAmountAdjusted, isDefaultDash }) => {
@@ -28,4 +29,5 @@ const AddMarginResult = ({ currentLTV, adjustedLTV, totalAmountAdjusted, isDefau
         </section>
     );
 };
+
 export default AddMarginResult;

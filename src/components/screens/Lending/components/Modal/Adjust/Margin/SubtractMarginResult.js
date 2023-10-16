@@ -1,3 +1,7 @@
+// ** utils
+import { formatLTV } from 'components/screens/Lending/utils';
+
+// ** constants
 import { PERCENT } from 'components/screens/Lending/constants';
 
 const SubtractMarginResult = ({ isDefaultDash, currentLTV, initialLTV, adjustedLTV, totalAmountAdjusted }) => {

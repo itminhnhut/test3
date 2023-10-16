@@ -1,4 +1,6 @@
-const InfoDeposit = ({ totalDebt, totalAdjust }) => {
+import React from 'react';
+
+const InfoMargin = ({ totalDebt, totalAdjust }) => {
     return (
         <section className="dark:bg-dark-4 bg-dark-13 pt-6 pb-4 px-4 rounded-md my-6">
             <section className="flex flex-row justify-between">
@@ -18,4 +20,10 @@ const InfoDeposit = ({ totalDebt, totalAdjust }) => {
     );
 };
 
-export default InfoDeposit;
+const InfoMarginAreEqual = (next, prev) => {
+    return next.totalDebt?.total === prev?.totalDebt?.total || next.totalAdjust?.total === prev?.totalAdjust?.total;
+};
+
+const MemoizedInfoMargin = React.memo(InfoMargin, InfoMarginAreEqual);
+
+export default MemoizedInfoMargin;

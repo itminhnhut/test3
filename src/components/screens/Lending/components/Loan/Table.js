@@ -60,7 +60,7 @@ const CancelToken = axios.CancelToken;
 const isCancel = (error) => axios.isCancel(error);
 let cancel;
 
-const LoanTable = ({ data, page, historyPriceAll, loading, onPage }) => {
+const LoanTable = ({ data, page, loading, onPage }) => {
     const {
         t,
         i18n: { language }
@@ -259,8 +259,9 @@ const LoanTable = ({ data, page, historyPriceAll, loading, onPage }) => {
         );
     };
     const renderCol4 = (options) => {
-        const { totalDebt, totalCollateralAmount, loanTerm, price } = options;
-        const LTV = formatLTV((totalDebt / (totalCollateralAmount * price)) * PERCENT); // ** LTV hiện tại */
+        const { loanTerm, currentLTV } = options;
+
+        const LTV = formatLTV(currentLTV * PERCENT); // ** LTV hiện tại */
         return (
             <section className="flex flex-col h-[128px] w-max">
                 <section className="flex flex-col justify-center dark:text-gray-7 text-gray-1 h-[72px] whitespace-nowrap">
@@ -398,7 +399,7 @@ const LoanTable = ({ data, page, historyPriceAll, loading, onPage }) => {
                 }}
             />
         );
-    }, [data?.result, historyPriceAll, loading, isDark, copied]);
+    }, [data?.result, loading, isDark, copied]);
 
     return (
         <>

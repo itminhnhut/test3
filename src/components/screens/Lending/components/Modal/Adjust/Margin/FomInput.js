@@ -4,16 +4,21 @@ import Link from 'next/link';
 // ** Redux
 import { dwLinkBuilder } from 'redux/actions/utils';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 
 // ** Utils
 import { formatNumber } from 'utils/reference-utils';
 
+// ** Components
 import AssetLogo from 'components/wallet/AssetLogo';
 import TradingInputV2 from 'components/trade/TradingInputV2';
 
+// ** Constants
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+
+// ** SVG
 import { AddCircleColorIcon } from 'components/svg/SvgIcon';
 
+//** Third party
 import classNames from 'classnames';
 
 const TAB_SUBTRACT = 'subtract';
