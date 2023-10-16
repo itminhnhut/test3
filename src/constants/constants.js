@@ -294,12 +294,16 @@ export const PATH_WITH_GHOST_ARTICLE_ID = {
     [LANGUAGE_TAG.EN]: {
         'terms-of-service': '64e7338c7022fbae9d5e3997',
         'terms-of-futures': '64e7344d7022fbae9d5e39a9',
+        'terms-of-lending': '652cc3bd7022fbae9d5e5fbe',
+        'terms-of-earn': '652cd33f7022fbae9d5e6000',
         licences: '64e735fe7022fbae9d5e39db',
         privacy: '64e735027022fbae9d5e39c3'
     },
     [LANGUAGE_TAG.VI]: {
         'terms-of-service': '64e732d37022fbae9d5e3986',
         'terms-of-futures': '64e734127022fbae9d5e39a1',
+        'terms-of-lending': '652cc9447022fbae9d5e5fca',
+        'terms-of-earn': '652cd3647022fbae9d5e6006',
         licences: '64e735547022fbae9d5e39c9',
         privacy: '64e734a37022fbae9d5e39b3'
     }
