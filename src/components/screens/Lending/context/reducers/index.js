@@ -4,23 +4,6 @@ import { INIT_DATA_REDUCER } from '../index';
 
 const reducer = (state, action) => {
     switch (action.type) {
-        case actions.UPDATE: {
-            const { dataCollateral = {}, rsTotalDebt, rsTotalCollateralAmount } = action?.data || {};
-            const { totalDebt, totalCollateralAmount, initialLTV } = dataCollateral;
-            return {
-                ...state,
-                totalDebt,
-                initialLTV,
-                totalAdjusted: totalCollateralAmount,
-                current: { totalAdjusted: totalCollateralAmount },
-                infoDet: { total: rsTotalDebt?.total, assetCode: rsTotalDebt?.symbol?.assetCode },
-                infoCollateralAmount: {
-                    total: rsTotalCollateralAmount?.total,
-                    assetDigit: rsTotalCollateralAmount?.symbol?.assetDigit,
-                    assetCode: rsTotalCollateralAmount?.symbol?.assetCode
-                }
-            };
-        }
         case actions.DETAIL_ADJUST: {
             const { dataCollateral = {} } = action?.data || {};
             const { totalCollateralAmount } = dataCollateral;
