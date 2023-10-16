@@ -78,7 +78,7 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 dataIndex: 'minLimit',
                 title: renderTitle(t('lending:lending:table:minimum'), 'Đơn vị: USD'),
                 align: 'left',
-                minWidth: 206,
+                width: 206,
                 render: (limitValue, data) => {
                     return <div>{formatNumber(limitValue)}</div>;
                 }
@@ -98,7 +98,7 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 dataIndex: '_7dHourlyInterestRate',
                 title: renderTitle(t('lending:lending:table:7days'), 'Lãi suất theo giờ/theo năm'),
                 align: 'left',
-                minWidth: 205,
+                width: 205,
                 render: (value, data) => {
                     const interestRate = +value * 100;
                     return <div className="font-normal">{`${formatPercent(interestRate)}% / ${formatPercent(interestRate * 24 * 365)}%`}</div>;
@@ -109,20 +109,20 @@ const LendingTable = ({ data, page, loading, onPage: onPageChange }) => {
                 dataIndex: '_30dHourlyInterestRate',
                 title: renderTitle(t('lending:lending:table:30days'), 'Lãi suất theo giờ/theo năm'),
                 align: 'left',
-                minWidth: 206,
+                width: 206,
                 render: (value, data) => {
                     const interestRate = +value * 100;
                     return <div className="font-normal">{`${formatPercent(interestRate)}% / ${formatPercent(interestRate * 24 * 365)}%`}</div>;
                 }
             },
             {
-                key: '',
-                dataIndex: '',
-                align: 'right',
+                key: 'setLoan',
+                dataIndex: 'setLoan',
+                align: 'center',
                 width: 205,
                 render: (_, data) => {
                     return (
-                        <div className="dark:text-green-2 text-green-3 font-semibold text-center" onClick={() => setLoanAsset(data?.loanCoin)}>
+                        <div className="w-full dark:text-green-2 text-green-3 font-semibold text-center" onClick={() => setLoanAsset(data?.loanCoin)}>
                             {t('lending:lending:table:active')}
                         </div>
                     );
