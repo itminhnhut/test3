@@ -9,7 +9,7 @@ const Button = ({ className = '', disabled = false, children, variants = 'primar
         text: 'whitespace-nowrap px-0 text-green-3 hover:text-green-4 active:text-green-4 dark:text-green-2 dark:hover:text-green-4 dark:active:text-green-4',
         secondary: 'whitespace-nowrap bg-gray-10 hover:bg-gray-6 text-gray-15 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7',
         reset: 'whitespace-nowrap bg-dark-12 dark:bg-dark-2 hover:bg-gray-6 dark:hover:bg-dark-5 text-gray-1 dark:text-gray-7 px-4 rounded-md px-auto py-auto font-semibold h-12',
-        adjust: 'dark:text-gray-7 text-gray-1 bg-gray-12 dark:bg-dark-2 hover:text-gray-15 dark:hover:text-gray-7'
+        adjust: 'dark:text-gray-7 text-gray-1 bg-gray-12 dark:bg-dark-2 hover:!text-gray-15 dark:hover:!text-gray-7'
     }[variants];
 
     return (

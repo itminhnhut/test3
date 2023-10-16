@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 
 // ** next
-import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 
 // ** Redux
-import { dwLinkBuilder } from 'redux/actions/utils';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { useSelector } from 'react-redux';
 
 // ** Utils
-import { totalAsset, formatLTV } from 'components/screens/Lending/utils';
+import { formatLTV, getTotalAsset } from 'components/screens/Lending/utils';
 import { formatNumber } from 'utils/reference-utils';
 
 // ** Context
@@ -19,25 +16,24 @@ import { globalActionTypes as actions } from 'components/screens/Lending/context
 
 //** components
 import ModalV2 from 'components/common/V2/ModalV2';
-import AssetLogo from 'components/wallet/AssetLogo';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import TradingInputV2 from 'components/trade/TradingInputV2';
 
 //** components screen
-import ConfirmAdjustMargin from './ConfirmAdjustMargin';
-import AlertAdjust from './AlertAdjust.js';
-
-// ** constants
-import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
-
+import InfoMargin from './Margin/InfoMargin';
+import AlertAdjust from './AlertModal/AlertAdjust.js';
+import AddMarginResult from './Margin/AddMarginResult';
+import SubtractMarginResult from './Margin/SubtractMarginResult';
+import ConfirmAdjustMargin from './AlertModal/ConfirmAdjustMargin';
 // ** svg
-import { IconClose, AddCircleColorIcon } from 'components/svg/SvgIcon';
+import { IconClose } from 'components/svg/SvgIcon';
 
 // ** Third party
 import classNames from 'classnames';
 import { createSelector } from 'reselect';
 import useDebounce from 'hooks/useDebounce';
+import { find } from 'lodash';
 import { PERCENT } from 'components/screens/Lending/constants';
+import FormInput from './Margin/FomInput';
 
 const TAB_ADD = 'add';
 const TAB_SUBTRACT = 'subtract';
@@ -73,66 +69,85 @@ const VALIDATION_ERROR = {
     }
 };
 
-const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
+const getAsset = createSelector([(state) => state?.utils?.assetConfig, (utils, params) => params], (assetConfig, params) => {
+    return find(assetConfig, { ...params });
+});
+
+const AdjustMargin = ({ onClose, isShow = false }) => {
     const {
         t,
         i18n: { language }
     } = useTranslation();
 
     // ** collateral wallet balance
-    const collateralAvailable = useSelector((state) => getSpotAvailable(state, { assetId: dataCollateral?.collateralAsset?.symbol?.id }));
 
     // ** useContext
     const { state, dispatchReducer } = useContext(LendingContext);
     const { getPairPrice, pairPrice } = usePairPrice();
 
-    const amount = state.amount;
-    const modalAdjust = state.modal;
+    const {
+        _id,
+        amount,
+        loanCoin,
+        totalDebt,
+        initialLTV,
+        modalAdjust,
+        totalAdjusted,
+        collateralCoin,
+        collateralAsset,
+        collateralAmount,
+        totalCollateralAmount
+    } = state;
 
-    //**  useState
+    // ** useState
     const [tab, setTab] = useState(initState.tab);
     const [error, setError] = useState(initState.error);
     const [amountAsset, setAmountAsset] = useState(initState.amountAsset);
     const debounceAmount = useDebounce(amountAsset, DEBOUNCE_TIME);
 
-    const { collateralCoin, loanCoin, totalDebt, totalCollateralAmount } = dataCollateral || {};
+    const collateralAvailable = useSelector((state) => getSpotAvailable(state, { assetId: collateralAsset?.symbol?.id }));
 
-    const total_current_LTV = totalDebt / (totalCollateralAmount * pairPrice?.lastPrice);
-    const rsTotalDebt = totalAsset(totalDebt, loanCoin);
-    const rsTotalCollateralAmount = totalAsset(totalCollateralAmount, collateralCoin);
-    const adjustedCurrent = state?.infoCollateralAmount; // ** tổng ký quỷ ban đầu
+    const assetLoan = useSelector((value) => getAsset(value, { assetCode: loanCoin }));
+    const assetCollateralCoin = useSelector((value) => getAsset(value, { assetCode: collateralCoin }));
 
-    // ** total Tổng ký quỹ
-    const totalAdjusted = useMemo(() => {
-        const total = formatNumber(state?.totalAdjusted, adjustedCurrent.assetDigit);
-        const assetCode = adjustedCurrent.assetCode;
-        return { total, assetCode };
-    }, [state?.totalAdjusted, adjustedCurrent.assetDigit]);
+    const debit = useMemo(() => {
+        const rs = getTotalAsset(totalDebt, assetLoan?.assetDigit);
+        return { total: rs, assetCode: assetLoan?.assetCode };
+    }, [totalDebt]);
 
-    // ** useMemo
+    const adjust = useMemo(() => {
+        const rs = getTotalAsset(collateralAmount, assetCollateralCoin?.assetDigit);
+        return { total: rs, assetCode: assetCollateralCoin?.assetCode };
+    }, [collateralAmount]);
+
     const current_LTV = useMemo(() => {
+        const total_current_LTV = totalDebt / (totalCollateralAmount * pairPrice?.lastPrice);
         return formatLTV(total_current_LTV * PERCENT);
-    }, [pairPrice?.lastPrice, JSON.stringify(dataCollateral)]);
+    }, [pairPrice?.lastPrice]);
 
     const adjustedLTV = useMemo(() => {
-        return (state.totalDebt / (state.totalAdjusted * pairPrice?.lastPrice || 0)) * PERCENT;
-    }, [amount, state.totalDebt, state.totalAdjusted, pairPrice?.lastPrice]);
+        return (totalDebt / (totalAdjusted * pairPrice?.lastPrice || 0)) * PERCENT;
+    }, [debounceAmount, totalAdjusted, pairPrice?.lastPrice]);
+
+    // ** Tổng ký quỹ điều chỉnh
+    const totalAmountAdjusted = useMemo(() => {
+        const total = formatNumber(totalAdjusted, collateralAsset?.symbol?.assetDigit);
+        const assetCode = collateralAsset?.symbol?.assetCode;
+        return { total, assetCode };
+    }, [totalAdjusted]);
 
     const dataLTV = useMemo(() => {
-        const initial_LTV = formatLTV(state.initialLTV * PERCENT);
+        const initial_LTV = formatLTV(initialLTV * PERCENT);
         const formatAdjustedLTV = formatLTV(adjustedLTV);
         return { initial: +initial_LTV, adjusted: +formatAdjustedLTV };
-    }, [state.initialLTV, adjustedLTV]);
+    }, [adjustedLTV]);
 
     // ** useEffect
     useEffect(() => {
-        if (dataCollateral?._id) {
-            dispatchReducer({ type: actions.UPDATE, data: { dataCollateral, rsTotalDebt, rsTotalCollateralAmount } });
-            // ** reset amount
-            dispatchReducer({ type: actions.RESET_AMOUNT });
-            setAmountAsset(initState.amountAsset);
-        }
-    }, [JSON.stringify(dataCollateral), tab]);
+        // ** reset amount
+        dispatchReducer({ type: actions.RESET_AMOUNT });
+        setAmountAsset(initState.amountAsset);
+    }, [tab]);
 
     useEffect(() => {
         // ** reset amount
@@ -148,18 +163,8 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
 
     useEffect(() => {
         handleCheckAmountInput();
-    }, [adjustedLTV]);
+    }, [totalAdjusted]);
 
-    // ** handle reset clear input or update amount
-    const handleRestUpdateAmount = () => {
-        if (!amountAsset) {
-            dispatchReducer({ type: actions.RESET_AMOUNT });
-        } else {
-            dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: amountAsset });
-        }
-    };
-
-    // ** handle check amount < collateralAvailable || totalAdjusted (tổng ký quỷ)
     const handleCheckAmountInput = () => {
         let total = collateralAvailable;
         let isCheckAmount = +amountAsset < 0 || +amountAsset > total;
@@ -167,9 +172,9 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
         if (amountAsset === '') return;
 
         if (tab !== TAB_ADD) {
-            total = adjustedCurrent?.total;
-            isCheckAmount = +amountAsset < 0 || +amountAsset > total;
+            isCheckAmount = +amountAsset < 0 || +amountAsset > totalAdjusted;
         }
+
         if (isCheckAmount) {
             const msg = VALIDATION_ERROR?.[tab]?.max?.[language];
             setError({ msg, type: 'max' });
@@ -190,11 +195,16 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
         handleRestUpdateAmount();
     };
 
-    // ** handle
-    const handleTab = (tab) => {
-        setTab(tab);
+    // ** handle reset clear input or update amount
+    const handleRestUpdateAmount = () => {
+        if (!amountAsset) {
+            dispatchReducer({ type: actions.RESET_AMOUNT });
+        } else {
+            dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: amountAsset });
+        }
     };
 
+    // ** handle
     const handleCloseModal = () => {
         onClose();
         setTab(initState.tab);
@@ -211,6 +221,11 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
         getPairPrice({ collateralAssetCode: collateralCoin, loanableAssetCode: loanCoin });
     };
 
+    //** handle */
+    const handleChangeTab = (tab) => {
+        setTab(tab);
+    };
+
     // ** handle update amount assets
     const handleAmountChange = (value) => {
         setAmountAsset(value);
@@ -224,7 +239,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
 
     //* check amount <-> adjusted current
     const isCheckAmountAdjusted = () => {
-        return amountAsset > 0 && +amountAsset <= adjustedCurrent.total;
+        return amountAsset > 0 && +amountAsset <= totalAdjusted;
     };
 
     //** check LTV by current <-> initial
@@ -247,7 +262,7 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     // ** submitted
     const isSubmitted = useMemo(() => {
         return tab === initState.tab ? isCheckAmountAvailable() : validationSubtract();
-    }, [tab, debounceAmount, collateralAvailable, adjustedLTV, adjustedCurrent?.total]);
+    }, [tab, debounceAmount, collateralAvailable, adjustedLTV, totalAdjusted]);
 
     const handleCloseConfirmAdjustMargin = () => {
         dispatchReducer({ type: actions.TOGGLE_MODAL_CONFIRM_ADJUST });
@@ -263,120 +278,6 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
     const isDefaultDash = useMemo(() => {
         return !amountAsset || amountAsset < 0 || error?.type === 'max' ? DEFAULT_VALUE : false;
     }, [amountAsset, error]);
-
-    // ** render
-    const renderAddMargin = () => {
-        return (
-            <section className="w-1/2 dark:bg-dark-4 bg-dark-13 p-4 rounded-xl">
-                <div className="dark:text-gray-4 text-gray-15 font-semibold">Kết quả</div>
-                <section className="flex flex-col gap-3 mt-6">
-                    <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
-                        <div>LTV Hiện tại</div>
-                        <div className="dark:text-gray-4 font-semibold">{current_LTV}%</div>
-                    </section>
-                    <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
-                        <div>LTV đã điều chỉnh</div>
-                        <div className="dark:text-gray-4 font-semibold">{isDefaultDash || `${formatLTV(adjustedLTV)}%`}</div>
-                    </section>
-                    <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7 flex-wrap">
-                        <div>Tổng ký quỹ điều chỉnh</div>
-                        <div className="dark:text-gray-4 font-semibold flex flex-row gap-1">
-                            {isDefaultDash || (
-                                <>
-                                    <span>{totalAdjusted.total}</span>
-                                    <span>{totalAdjusted.assetCode}</span>
-                                </>
-                            )}
-                        </div>
-                    </section>
-                </section>
-            </section>
-        );
-    };
-
-    const renderSubtractMargin = () => {
-        return (
-            <section className="flex flex-col gap-6 w-1/2">
-                <section className="dark:bg-dark-4 bg-dark-13 p-4 rounded-xl">
-                    <div className="dark:text-gray-4 text-gray-15 font-semibold">Lưu ý</div>
-                    <div className="mt-6 text-gray-1 dark:text-gray-7">{`Chỉ cho phép bớt ký quỹ khi LTV < LTV ban đầu. LTV cuối cùng phải ≤ LTV ban đầu.`}</div>
-                </section>
-                <section className="dark:bg-dark-4 bg-dark-13 p-4 rounded-xl">
-                    <div className="dark:text-gray-4 text-gray-15 font-semibold">Kết quả</div>
-                    <section className="flex flex-col gap-3 mt-6">
-                        <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
-                            <div>LTV ban đầu</div>
-                            <div className="dark:text-gray-4 font-semibold">{state?.initialLTV * PERCENT}%</div>
-                        </section>
-                        <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
-                            <div>LTV Hiện tại</div>
-                            <div className="dark:text-gray-4 font-semibold">{current_LTV}%</div>
-                        </section>
-                        <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
-                            <div>LTV đã điều chỉnh</div>
-                            <div className="dark:text-gray-4 font-semibold">{isDefaultDash || `${formatLTV(adjustedLTV)}%`} </div>
-                        </section>
-                        <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7 flex-wrap">
-                            <div>Tổng ký quỹ điều chỉnh</div>
-                            <div className="dark:text-gray-4 font-semibold flex flex-row gap-1">
-                                {isDefaultDash || (
-                                    <>
-                                        <span>{totalAdjusted.total}</span>
-                                        <span>{totalAdjusted.assetCode}</span>
-                                    </>
-                                )}
-                            </div>
-                        </section>
-                    </section>
-                </section>
-            </section>
-        );
-    };
-
-    const renderForm = () => {
-        const { collateralAsset = {}, collateralCoin = '' } = dataCollateral;
-        const totalAvailable = formatNumber(collateralAvailable, collateralAsset?.symbol?.assetDigit);
-
-        return (
-            <section>
-                <section className="flex flex-row justify-between dark:text-gray-7 text-gray-1 text-sm">
-                    <section className="text-base font-semibold">Số lượng</section>
-                    <section className={classNames('flex flex-row items-center gap-1', { hidden: tab === TAB_SUBTRACT })}>
-                        <div className="flex flex-row">
-                            <span>Khả dụng:</span>
-                            <span className="dark:text-gray-4 text-gray-15 ml-1 font-semibold">{totalAvailable}</span>
-                        </div>
-                        <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, collateralCoin)}>
-                            <a className="inline-block">
-                                <AddCircleColorIcon size={16} className="cursor-pointer" />
-                            </a>
-                        </Link>
-                    </section>
-                </section>
-                <TradingInputV2
-                    clearAble
-                    id="amount_input"
-                    errorTooltip={false}
-                    allowNegative={false}
-                    validator={validator}
-                    thousandSeparator={true}
-                    value={amountAsset || ''}
-                    containerClassName="mt-4"
-                    inputClassName="!text-left !ml-0"
-                    placeHolder="Nhập số lượng tài sản"
-                    allowedDecimalSeparators={[',', '.']}
-                    onValueChange={({ value }) => handleAmountChange(value)}
-                    decimalScale={dataCollateral?.collateralAsset?.symbol?.assetDigit || 0}
-                    renderTail={
-                        <div className="flex flex-row gap-2 items-center">
-                            <AssetLogo size={24} assetId={dataCollateral?.collateralAsset?.symbol?.id} />
-                            <span className="text-gray-15 font-semibold dark:text-gray-4">{dataCollateral?.collateralAsset?.symbol?.assetCode}</span>
-                        </div>
-                    }
-                />
-            </section>
-        );
-    };
 
     return (
         <>
@@ -408,31 +309,40 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
                                             'dark:bg-dark-2 bg-dark-12 dark:!text-gray-4 !text-gray-15 font-semibold': item.key === tab,
                                             'border-r-[1px] border-r-divider dark:border-r-divider-dark': key === 0
                                         })}
-                                        onClick={() => handleTab(item.key)}
+                                        onClick={() => handleChangeTab(item.key)}
                                     >
                                         {item.title?.[language]}
                                     </section>
                                 );
                             })}
                         </section>
-                        <section className="dark:bg-dark-4 bg-dark-13 pt-6 pb-4 px-4 rounded-md my-6">
-                            <section className="flex flex-row justify-between">
-                                <section className="dark:text-gray-7 text-gray-1">Tổng dư nợ</section>
-                                <section className="text-gray-15 font-semibold dark:text-gray-4">
-                                    {state?.infoDet?.total} {state?.infoDet?.assetCode}
-                                </section>
-                            </section>
-                            <div className="h-[1px] dark:bg-divider-dark bg-divider my-3" />
-                            <section className="flex flex-row justify-between">
-                                <section className="dark:text-gray-7 text-gray-1">Tổng ký quỹ</section>
-                                <section className="text-gray-15 font-semibold dark:text-gray-4">
-                                    {adjustedCurrent.total} {adjustedCurrent.assetCode}
-                                </section>
-                            </section>
-                        </section>
-                        {renderForm()}
+                        <InfoMargin totalDebt={debit} totalAdjust={adjust} />
+                        <FormInput
+                            tab={tab}
+                            validator={validator}
+                            amountAsset={amountAsset}
+                            collateralCoin={collateralCoin}
+                            collateralAsset={collateralAsset}
+                            onChangeAmount={handleAmountChange}
+                            collateralAvailable={collateralAvailable}
+                        />
                     </section>
-                    {tab === TAB_ADD ? renderAddMargin() : renderSubtractMargin()}
+                    {tab === TAB_ADD ? (
+                        <AddMarginResult
+                            currentLTV={current_LTV}
+                            adjustedLTV={adjustedLTV}
+                            isDefaultDash={isDefaultDash}
+                            totalAmountAdjusted={totalAmountAdjusted}
+                        />
+                    ) : (
+                        <SubtractMarginResult
+                            initialLTV={initialLTV}
+                            currentLTV={current_LTV}
+                            adjustedLTV={adjustedLTV}
+                            isDefaultDash={isDefaultDash}
+                            totalAmountAdjusted={totalAmountAdjusted}
+                        />
+                    )}
                 </section>
                 <ButtonV2 disabled={!isSubmitted} className="mt-10" onClick={handleSubmit}>
                     {tab === TAB_ADD ? 'Thêm ký quỹ' : 'Bớt ký quỹ'}
@@ -440,16 +350,16 @@ const AdjustMargin = ({ onClose, dataCollateral = {}, isShow = false }) => {
             </ModalV2>
 
             <ConfirmAdjustMargin
+                id={_id}
                 tab={tab}
                 amount={amountAsset}
-                id={dataCollateral?._id}
+                initialLTV={initialLTV}
                 currentLTV={current_LTV}
                 adjustedLTV={adjustedLTV}
                 totalAdjusted={totalAdjusted}
-                initialLTV={state?.initialLTV}
-                onRefreshPrice={handRefreshPrice}
                 dispatchReducer={dispatchReducer}
-                isConfirmAdjust={modalAdjust.isConfirmAdjust}
+                onRefreshPrice={handRefreshPrice}
+                isConfirmAdjust={modalAdjust?.isConfirmAdjust}
                 onCloseAdjustMargin={handleCloseConfirmAdjustMargin}
             />
             <AlertAdjust />

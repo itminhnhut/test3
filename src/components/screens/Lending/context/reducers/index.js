@@ -21,16 +21,30 @@ const reducer = (state, action) => {
                 }
             };
         }
+        case actions.DETAIL_ADJUST: {
+            const { dataCollateral = {} } = action?.data || {};
+            const { totalCollateralAmount } = dataCollateral;
 
+            return {
+                ...dataCollateral,
+                totalAdjusted: totalCollateralAmount,
+                initial: { adjusted: totalCollateralAmount },
+                modal: {
+                    ...state.modal,
+                    isAdjust: true
+                }
+            };
+        }
         case actions.UPDATE_TOTAL_ADJUSTED: {
             const method = action.method;
             const amount = +action.amount;
-            const getCurrentAdjusted = state?.current?.totalAdjusted;
+            const getCurrentAdjusted = state?.initial?.adjusted;
 
             let totalAdjusted = method === 'add' ? getCurrentAdjusted + amount : getCurrentAdjusted - amount;
             if (action.amount === 0) {
                 totalAdjusted = getCurrentAdjusted;
             }
+
             return {
                 ...state,
                 totalAdjusted
