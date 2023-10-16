@@ -22,6 +22,7 @@ import { formatAbbreviateNumber } from 'redux/actions/utils';
 import { useIsomorphicLayoutEffect } from 'react-use';
 import dynamic from 'next/dynamic';
 import { addDays, differenceInDays, endOfMonth, endOfWeek, format, isValid, parse } from 'date-fns';
+import SelectV2 from 'components/common/V2/SelectV2';
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const ApexChartWrapper = styled.div`
@@ -157,14 +158,14 @@ const NaoPerformance = memo(({}) => {
     const initRange = isValidRange(performanceRange) ? performanceRange : 'd';
     const [filter, setFilter] = useState({
         day: initRange,
-        marginCurrency: WalletCurrency.VNDC
+        marginCurrency: 'all'
     });
     const [range, setRange] = useState({
         startDate: undefined,
         endDate: new Date(),
         key: 'selection'
     });
-    const [fee, setFee] = useState(WalletCurrency.VNDC);
+    const [fee, setFee] = useState(WalletCurrency.VNST);
     const [referencePrice, setReferencePrice] = useState({});
     const [typeChart, setTypeChart] = useState(CHART_TYPES.volume);
     const [chartLabels, setChartLabels] = useState(null);
@@ -173,6 +174,26 @@ const NaoPerformance = memo(({}) => {
     const [dataChartUser, setDataChartUser] = useState([]);
     const [dataChartFee, setDataChartFee] = useState([]);
     const [dataChartSource, setDataChartSource] = useState([defaultChartData]);
+
+    const futuresAssets = [
+        {
+            title: t('common:all'),
+            value: 'all'
+        },
+        {
+            title: 'VNST',
+            value: WalletCurrency.VNST
+        },
+        {
+            title: 'VNDC',
+            value: WalletCurrency.VNDC
+        },
+        {
+            title: 'USDT',
+            value: WalletCurrency.USDT
+        }
+    ];
+    const currency = filter.marginCurrency === 'all' ? WalletCurrency.VNST : filter.marginCurrency;
 
     useEffect(() => {
         getRef();
@@ -198,7 +219,7 @@ const NaoPerformance = memo(({}) => {
             case CHART_TYPES.fee: {
                 return setDataChartSource([
                     {
-                        data: dataChartFee[filter.marginCurrency],
+                        data: dataChartFee[currency],
                         name: 'chart_total_fee'
                     }
                 ]);
@@ -228,7 +249,7 @@ const NaoPerformance = memo(({}) => {
                 ]);
             }
         }
-    }, [chartLabels, typeChart, filter.marginCurrency, dataChartFee, dataChartVolume, dataChartUser, dataChartOrder]);
+    }, [chartLabels, typeChart, currency, dataChartFee, dataChartVolume, dataChartUser, dataChartOrder]);
 
     const getData = async () => {
         setLoading(true);
@@ -367,7 +388,7 @@ const NaoPerformance = memo(({}) => {
 
     const handleChangeMarginCurrency = (currency) => {
         setFilter((old) => ({ ...old, marginCurrency: currency }));
-        setFee(currency);
+        setFee(currency === 'all' ? WalletCurrency.VNST : currency);
     };
 
     const updateDateRangeUrl = (dateValue) => {
@@ -519,7 +540,6 @@ const NaoPerformance = memo(({}) => {
                     const x = w.globals.seriesX[0][dataPointIndex];
                     const _referencePrice = w.config.variable.referencePrice || referencePrice;
                     const type = w.globals.seriesNames[0];
-                    const currency = filter.marginCurrency;
                     const isUSD = currency === 22;
                     const isMonetary = type !== 'chart_users' && type !== 'chart_total_orders';
                     const titleText = t(`nao:onus_performance:${type}`);
@@ -538,7 +558,7 @@ const NaoPerformance = memo(({}) => {
                 }
             }
         };
-    }, [isDark, isMobile, referencePrice, chartInterval, typeChart, filter.marginCurrency]);
+    }, [isDark, isMobile, referencePrice, chartInterval, typeChart, currency]);
 
     return (
         <section id="nao_performance" className="pt-6 sm:pt-20 text-sm sm:text-base">
@@ -547,50 +567,35 @@ const NaoPerformance = memo(({}) => {
                     <TextLiner className="">{t('nao:onus_performance:title')}</TextLiner>
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:onus_performance:description')}</span>
                 </div>
-                <div className="flex flex-wrap gap-2 w-full mb:w-auto justify-between mb:justify-end">
+                <div className="flex flex-wrap gap-2 w-full mb:w-auto justify-start mb:justify-end">
+                    <div className="w-auto">
+                        <SelectV2
+                            options={futuresAssets}
+                            value={filter.marginCurrency || 'all'}
+                            onChange={(asset) => handleChangeMarginCurrency(asset)}
+                            className="!h-auto px-4 py-2 font-semibold text-sm !bg-gray-12 dark:!bg-dark-2"
+                            popoverPanelClassName="!left-0 !right-auto sm:!left-auto sm:!right-0"
+                            chevronStyle={{
+                                color: 'currentColor',
+                                size: 20
+                            }}
+                            optionClassName="flex justify-between items-center"
+                            activeIcon={<CheckCircle color="currentColor" size={16} />}
+                            prefix={`${t('nao:onus_performance:asset')}: `}
+                        />
+                    </div>
                     <RangePopover
                         language={language}
                         active={days.find((d) => d.value === filter.day)}
                         onChange={handleChangeDateRange}
                         className="flex order-last"
-                        popoverClassName={'mb:mr-2 ml-auto'}
+                        // popoverClassName={'mb:mr-2 ml-auto'}
                         range={range}
                         setRange={setRange}
                         days={days}
-                        textPopoverClassName="sm:text-sm text-gray-15"
+                        textPopoverClassName="sm:text-sm text-txtPrimary dark:text-txtPrimary-dark"
+                        prefix={`${t('nao:onus_performance:time')}: `}
                     />
-                    <div className="order-first gap-2 flex gap-last max-w-[calc(100%-32px)] overflow-x-auto no-scrollbar">
-                        <button
-                            type="BUTTON"
-                            className={classNames(
-                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
-                                { '!border-teal !bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNST }
-                            )}
-                            onClick={() => handleChangeMarginCurrency(WalletCurrency.VNST)}
-                        >
-                            VNST
-                        </button>
-                        <button
-                            type="BUTTON"
-                            className={classNames(
-                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
-                                { '!border-teal !bg-teal/10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
-                            )}
-                            onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
-                        >
-                            VNDC
-                        </button>
-                        <button
-                            type="BUTTON"
-                            className={classNames(
-                                'flex flex-col justify-center p-2 sm:px-4 sm:py-auto text-xs sm:text-sm rounded-[6px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary bg-gray-12 dark:bg-dark-4',
-                                { '!border-teal !bg-teal/10 bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.USDT }
-                            )}
-                            onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
-                        >
-                            USDT
-                        </button>
-                    </div>
                 </div>
             </div>
             <div className="pt-5 flex flex-col lg:flex-row sm:pt-8 gap-4 sm:gap-6">
@@ -599,11 +604,11 @@ const NaoPerformance = memo(({}) => {
                         <label className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base">{t('nao:onus_performance:total_volume')}</label>
                         <div className="pt-4">
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-base sm:text-lg font-semibold pb-2">
-                                {dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}
+                                {dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(currency)}` : '-'}
                             </div>
                             <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base">
                                 {dataSource
-                                    ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3)
+                                    ? '$' + formatPrice(referencePrice[`${assetCodeFromId(currency)}/USD`] * dataSource?.notionalValue, 4)
                                     : '-'}{' '}
                             </span>
                         </div>
