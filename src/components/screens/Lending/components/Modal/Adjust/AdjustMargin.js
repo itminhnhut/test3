@@ -105,9 +105,9 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
     }, [totalDebt]);
 
     const adjust = useMemo(() => {
-        const rs = getTotalAsset(collateralAmount, assetCollateralCoin?.assetDigit);
+        const rs = getTotalAsset(totalCollateralAmount, assetCollateralCoin?.assetDigit);
         return { total: rs, assetCode: assetCollateralCoin?.assetCode };
-    }, [collateralAmount]);
+    }, [totalCollateralAmount]);
 
     const current_LTV = useMemo(() => {
         const total_current_LTV = totalDebt / (totalCollateralAmount * pairPrice?.lastPrice);
@@ -153,7 +153,7 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
     useEffect(() => {
         dispatchReducer({ type: actions.UPDATE_AMOUNT, amount: amountAsset });
         handleCheckAmountInput();
-    }, [totalAdjusted]);
+    }, [totalCollateralAmount, debounceAmount, adjustedLTV]);
 
     const handleCheckAmountInput = () => {
         let total = collateralAvailable;
@@ -162,7 +162,7 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
         if (amountAsset === '') return;
 
         if (tab !== TAB_ADD) {
-            isCheckAmount = +amountAsset < 0 || +amountAsset > totalAdjusted;
+            isCheckAmount = +amountAsset < 0 || +amountAsset > +totalCollateralAmount;
         }
 
         if (isCheckAmount) {
@@ -171,6 +171,11 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
             return;
         }
         if (tab === TAB_SUBTRACT) {
+            if (adjustedLTV === Infinity) {
+                const msg = VALIDATION_ERROR?.[tab]?.adjusted_ltv?.[language];
+                setError({ msg });
+                return;
+            }
             if (!isCheckCurrentLTV()) {
                 const msg = VALIDATION_ERROR?.[tab]?.current_ltv?.[language];
                 setError({ msg });
@@ -239,8 +244,8 @@ const AdjustMargin = ({ onClose, isShow = false }) => {
 
     // ** handle default dash or content
     const isDefaultDash = useMemo(() => {
-        return !debounceAmount || debounceAmount < 0 || error?.type === 'max' ? DEFAULT_VALUE : false;
-    }, [debounceAmount, error]);
+        return !debounceAmount || debounceAmount < 0 || adjustedLTV === Infinity || error?.type === 'max' ? DEFAULT_VALUE : false;
+    }, [debounceAmount, error, adjustedLTV]);
 
     // ** submitted
     const isSubmitted = useMemo(() => {

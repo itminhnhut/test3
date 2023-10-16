@@ -29,11 +29,13 @@ const FormInput = ({ collateralAvailable, collateralAsset, collateralCoin, valid
     return (
         <section>
             <section className="flex flex-row justify-between dark:text-gray-7 text-gray-1 text-sm">
-                <section className="text-base font-semibold">Số lượng</section>
+                <section className="text-base font-semibold dark:text-gray-4 text-gray-15">Số lượng</section>
                 <section className={classNames('flex flex-row items-center gap-1', { hidden: tab === TAB_SUBTRACT })}>
                     <div className="flex flex-row">
                         <span>Khả dụng:</span>
-                        <span className="dark:text-gray-4 text-gray-15 ml-1 font-semibold">{totalAvailable}</span>
+                        <span className="dark:text-gray-4 text-gray-15 ml-1 font-semibold">
+                            {totalAvailable} {collateralAsset?.symbol?.assetName}
+                        </span>
                     </div>
                     <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, collateralCoin)}>
                         <a className="inline-block">
@@ -51,7 +53,7 @@ const FormInput = ({ collateralAvailable, collateralAsset, collateralCoin, valid
                 thousandSeparator={true}
                 value={amountAsset || ''}
                 containerClassName="mt-4"
-                inputClassName="!text-left !ml-0"
+                inputClassName="!text-left !ml-0 text-gray-15 dark:text-gray-4"
                 placeHolder="Nhập số lượng tài sản"
                 allowedDecimalSeparators={[',', '.']}
                 onValueChange={({ value }) => onChangeAmount(value)}

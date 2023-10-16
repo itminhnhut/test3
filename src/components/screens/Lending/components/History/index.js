@@ -44,7 +44,8 @@ const initState = {
         status: 'REPAID',
         loanCoin: null,
         collateralCoin: null
-    }
+    },
+    isEmptyData: true
 };
 
 const TAB_LOAN = 'loan';
@@ -111,6 +112,7 @@ const History = () => {
     const [data, setData] = useState(initState.data);
     const [isLoading, setIsLoading] = useState(initState.loading);
     const [filter, setFilter] = useState(initState.default_filters);
+    const [isEmptyData, setIsEmptyData] = useState(initState.isEmptyData);
 
     // ** useState
     useEffect(() => {
@@ -156,6 +158,9 @@ const History = () => {
 
             if (data) {
                 setData(data);
+                if (JSON.stringify(filter) === JSON.stringify(initState.default_filters)) {
+                    data?.result?.length > 0 && setIsEmptyData((prev) => !prev);
+                }
             }
         } catch (error) {
             throw new Error('handle api history order loan');
@@ -188,7 +193,6 @@ const History = () => {
         if (key === 'loanCoin' || key === 'collateralCoin') {
             setFilter((prev) => ({ ...prev, [key]: !value?.assetName ? null : { assetName: value?.assetName, assetCode: value?.assetCode, id: value?.id } }));
         } else {
-            console.log('f', value, key);
             setFilter((prev) => ({ ...prev, [key]: value }));
         }
         setPage(initState.page);
@@ -196,6 +200,9 @@ const History = () => {
 
     const handleResetFilter = () => setFilter(initState.default_filters);
 
+    // const isEmptyData = useMemo(() => {
+    //     if()
+    // }, [data?.result]);
     // ** render
     const renderTabs = () => {
         return HISTORY_TAB.map((item) => {
@@ -226,6 +233,7 @@ const History = () => {
                             page={page}
                             tab={tab}
                             filter={filter}
+                            isEmptyData={isEmptyData}
                             onPage={setPage}
                             configFilter={filters}
                             loading={isLoading}

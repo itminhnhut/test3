@@ -47,7 +47,7 @@ const AssetFilter = ({
     const filterAssets = useMemo(() => {
         let rsData = assetConfigs;
         if (data) {
-            rsData = [{ assetCode: t('transaction-history:filter.all'), assetName: '', order: 1, id: 0 }, ...data];
+            rsData = [{ assetCode: t('transaction-history:filter.all'), assetName: '', order: 1, id: 0, value: 'all' }, ...data];
         }
         const rs = sortBy(filterSearch(rsData, ['assetCode', 'assetName'], search), [
             function (asset) {
@@ -60,8 +60,13 @@ const AssetFilter = ({
     // ** render
     const rowRenderer = useCallback(
         ({ index, key, style }) => {
+            let isAssetChosen;
             const currentAsset = filterAssets[index];
-            const isAssetChosen = asset && asset?.id === currentAsset?.id;
+            if (asset === null) {
+                isAssetChosen = currentAsset?.value;
+            } else {
+                isAssetChosen = asset && asset?.id === currentAsset?.id;
+            }
             return (
                 <div style={style}>
                     <div
@@ -113,7 +118,7 @@ const AssetFilter = ({
                                 t('transaction-history:filter.all')
                             ) : (
                                 <div className={classNames('flex items-center space-x-2', labelClassName)}>
-                                    <AssetLogo useNextImg={true} size={24} assetCode={asset?.assetCode} />
+                                    {/* <AssetLogo useNextImg={true} size={24} assetCode={asset?.assetCode} /> */}
                                     <div>{asset?.assetCode || asset?.assetName}</div>
                                 </div>
                             )}

@@ -8,15 +8,15 @@ const AddMarginResult = ({ currentLTV, adjustedLTV, totalAmountAdjusted, isDefau
             <section className="flex flex-col gap-3 mt-6">
                 <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
                     <div>LTV Hiện tại</div>
-                    <div className="dark:text-gray-4 font-semibold">{currentLTV}%</div>
+                    <div className="text-gray-15 dark:text-gray-4 font-semibold">{currentLTV}%</div>
                 </section>
                 <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
                     <div>LTV đã điều chỉnh</div>
-                    <div className="dark:text-gray-4 font-semibold">{isDefaultDash || `${formatLTV(adjustedLTV)}%`}</div>
+                    <div className="text-gray-15 dark:text-gray-4 font-semibold">{isDefaultDash || `${formatLTV(adjustedLTV)}%`}</div>
                 </section>
                 <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7 flex-wrap">
                     <div>Tổng ký quỹ điều chỉnh</div>
-                    <div className="dark:text-gray-4 font-semibold flex flex-row gap-1">
+                    <div className="text-gray-15 dark:text-gray-4 font-semibold flex flex-row gap-1">
                         {isDefaultDash || (
                             <>
                                 <span>{totalAmountAdjusted.total}</span>

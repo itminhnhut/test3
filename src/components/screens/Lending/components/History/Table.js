@@ -56,7 +56,7 @@ const TAB_REPAY = 'repay';
 const TAB_ADJUST = 'adjust';
 const DISABLE_STATUS = ['reject', 'repay', 'adjust'];
 
-const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, configFilter, onReset }) => {
+const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, onFilter, configFilter, onReset }) => {
     const {
         t,
         i18n: { language }
@@ -232,8 +232,9 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
                 <WrapperSection className="w-[150px]">
                     <div>Trạng thái</div>
                     <WrapperDetail
-                        className={classNames('dark:text-gray-7 text-gray-1', {
-                            'dark:!text-green-2 !text-green-3': status === 'REPAID'
+                        className={classNames('', {
+                            'dark:!text-gray-7 !text-gray-1': filter?.status === 'LIQUIDATED',
+                            'dark:!text-green-2 !text-green-3': filter?.status === 'REPAID'
                         })}
                     >
                         {LOAN_HISTORY_STATUS?.[status]?.[language]}
@@ -413,12 +414,20 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
     };
 
     const renderCol7 = (option) => {
-        const { createdAt, detail } = option;
+        const { createdAt, detail, metadata } = option;
         if (tab === TAB_LOAN) {
             return (
                 <WrapperSection className="w-max">
                     <div>Thời gian vay</div>
-                    <WrapperDetail>{formatTime(createdAt, 'HH:mm:ss dd/MM/yyyy')}</WrapperDetail>
+                    <WrapperDetail>{formatTime(createdAt, FORMAT_HH_MM_SS)}</WrapperDetail>
+                </WrapperSection>
+            );
+        }
+        if (tab === TAB_REPAY) {
+            return (
+                <WrapperSection className="w-max">
+                    <div>Thời gian vay</div>
+                    <WrapperDetail>{formatTime(metadata?.orderCreatedAt, FORMAT_HH_MM_SS)}</WrapperDetail>
                 </WrapperSection>
             );
         }
@@ -436,13 +445,21 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
     };
 
     const renderCol8 = (option) => {
-        const { expirationTime, metadata } = option;
+        const { expirationTime, metadata, createdAt } = option;
 
         if (tab === TAB_LOAN) {
             return (
                 <WrapperSection className="w-max">
                     <div>Thời gian hết hạn</div>
                     <WrapperDetail>{formatTime(expirationTime, FORMAT_HH_MM_SS)}</WrapperDetail>
+                </WrapperSection>
+            );
+        }
+        if (tab === TAB_REPAY) {
+            return (
+                <WrapperSection className="w-max">
+                    <div>Thời gian trả</div>
+                    <WrapperDetail>{formatTime(createdAt, FORMAT_HH_MM_SS)}</WrapperDetail>
                 </WrapperSection>
             );
         }
@@ -574,7 +591,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
 
     return (
         <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">
-            {data?.result?.length === 0 ? (
+            {isEmptyData ? (
                 <EmptyData isDark={isDark} content="Không có lịch sử khoản vay" textBtn="Vay Crypto ngay" link="/lending?tab=lending&loanAsset=USDT" />
             ) : (
                 <>
