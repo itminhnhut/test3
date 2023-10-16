@@ -34,17 +34,6 @@ const CONFIRM_INFORMATION = [
     { key: 'endLoanTermDate', localized: 'confirm_loan.expire_date' }
 ];
 
-const LoanTermExpireDate = memo(({ daysOfTerm, format = 'hh:mm:ss dd/MM/yyy' }) => {
-    const [now, setNow] = useState(new Date());
-    useEffect(() => {
-        const interval = setInterval(() => setNow(new Date()), 1000);
-
-        return () => clearInterval(interval);
-    }, []);
-
-    return formatTime(addDays(now, daysOfTerm), format);
-});
-
 const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessClose, handleRefetchPrice, loadingCollateralPrice }) => {
     const { t } = useTranslation();
 
@@ -81,7 +70,7 @@ const ConfirmLoan = memo(({ isOpen, onClose, loanInfor, registerLoan, onSuccessC
         termInterestAmount: `${formatNumber(termInterestAmount, loanDigit)} ${loanCoin}`,
         dailyInterestPercent: `${loanInfor?.['loanInterest']?.['dailyInterestPercent']?.toFixed(4)} %`,
         loanTerm: `${loanInfor?.['loanTerm']} ${t('common:days')}`,
-        endLoanTermDate: <LoanTermExpireDate daysOfTerm={loanInfor?.['loanTerm']} />
+        endLoanTermDate: formatTime(addDays(new Date(), loanInfor?.['loanTerm']), 'hh:mm:ss dd/MM/yyyy')
     };
 
     const handlerRegisterLoan = async () => {
