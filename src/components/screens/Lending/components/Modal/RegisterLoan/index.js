@@ -334,7 +334,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
     };
 
     const renderValueToken = useCallback(
-        ({ asset, onChange, assetListKey, assetCode }) => {
+        ({ asset, onChange, assetListKey, assetCode, className }) => {
             const labelType = assetListKey === LOANABLE ? 'loan' : 'collateral';
             return (
                 <AssetLendingFilter
@@ -348,7 +348,7 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                     labelClassName="mr-2"
                     labelAsset={t(`lending:lending.modal.asset_list:select_${labelType}`)}
                     wrapperClassName="w-max right-[-12px] !left-[auto]"
-                    containerClassName={classNames('!z-[5]')}
+                    containerClassName={classNames(className)}
                     isAuth={isAuth}
                 />
             );
@@ -394,7 +394,8 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                                         asset: filter?.loanable,
                                         onChange: onChangeAsset,
                                         assetListKey: LOANABLE,
-                                        assetCode: filter?.collateral?.assetCode
+                                        assetCode: filter?.collateral?.assetCode,
+                                        className: '!z-[15]'
                                     })}
                                 </label>
                             }
@@ -448,7 +449,8 @@ const ModalRegisterLoan = ({ isOpen, onClose, loanAsset, loanAssetList, collater
                                         asset: filter?.collateral,
                                         onChange: onChangeAsset,
                                         assetListKey: COLLATERAL,
-                                        assetCode: filter?.loanable?.assetCode
+                                        assetCode: filter?.loanable?.assetCode,
+                                        className: '!z-[11]'
                                     })}
                                 </div>
                             }
