@@ -385,7 +385,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                 scroll={{ x: true }}
                 data={data.result || []}
                 rowKey={(item) => `${item?.key}`}
-                pagingClassName="!border-0 !py-8"
+                // pagingClassName="!border-0 !py-8"
                 pagingPrevNext={{
                     page: page - 1,
                     hasNext: data?.hasNext,

@@ -26,8 +26,8 @@ const SubtractMarginResult = ({ isDefaultDash, currentLTV, initialLTV, adjustedL
                         <div>LTV đã điều chỉnh</div>
                         <div className="text-gray-15 dark:text-gray-4 font-semibold">{isDefaultDash || `${formatLTV(adjustedLTV)}%`}</div>
                     </section>
-                    <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7 flex-wrap">
-                        <div>Tổng ký quỹ điều chỉnh</div>
+                    <section className="flex flex-row justify-between text-gray-1 dark:text-gray-7">
+                        <div className="flex flex-wrap">Tổng ký quỹ điều chỉnh</div>
                         <div className="text-gray-15 dark:text-gray-4 font-semibold flex flex-row gap-1">
                             {isDefaultDash || (
                                 <>

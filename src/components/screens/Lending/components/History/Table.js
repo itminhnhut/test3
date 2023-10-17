@@ -93,7 +93,11 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
     };
 
     const onChange = (value, key) => {
-        onFilter(value, key);
+        if (key === 'time') {
+            onFilter({ value }, key);
+        } else {
+            onFilter(value, key);
+        }
     };
 
     const handleTotalAsset = (data, asset) => {
@@ -131,7 +135,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
                         month={2}
                         hasShadow
                         colorX="#8694b2"
-                        initDate={rsFilter}
+                        initDate={rsFilter?.value}
                         wrapperClassname="w-[278px]"
                         wrapperClassNameContent="!h-6"
                         position={data?.position || 'center'}
@@ -573,7 +577,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
                 className=""
                 data={data.result || []}
                 rowKey={(item) => `${item?.key}`}
-                pagingClassName="!border-0 !py-8"
+                // pagingClassName="!border-0 !py-8"
                 pagingPrevNext={{
                     page: page - 1,
                     hasNext: data?.hasNext,

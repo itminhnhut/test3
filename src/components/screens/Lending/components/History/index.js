@@ -169,7 +169,7 @@ const History = () => {
         }
     };
 
-    // ** handle
+    // ** handle change tab
     const handleChangeTab = (tab) => {
         const { action = initState.tab } = router.query;
         if (action) {
@@ -189,6 +189,7 @@ const History = () => {
         }
     };
 
+    //** handle on change filter
     const handleChangeFilter = (value, key) => {
         if (key === 'loanCoin' || key === 'collateralCoin') {
             setFilter((prev) => ({ ...prev, [key]: !value?.assetName ? null : { assetName: value?.assetName, assetCode: value?.assetCode, id: value?.id } }));
@@ -198,6 +199,7 @@ const History = () => {
         setPage(initState.page);
     };
 
+    // ** handle reset filter
     const handleResetFilter = () => setFilter(initState.default_filters);
 
     // ** render
