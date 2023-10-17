@@ -34,7 +34,7 @@ const FormInput = ({ collateralAvailable, collateralAsset, collateralCoin, valid
                     <div className="flex flex-row">
                         <span>Khả dụng:</span>
                         <span className="dark:text-gray-4 text-gray-15 ml-1 font-semibold">
-                            {totalAvailable} {collateralAsset?.symbol?.assetName}
+                            {totalAvailable} {collateralAsset?.symbol?.assetCode}
                         </span>
                     </div>
                     <Link href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, collateralCoin)}>

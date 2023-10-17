@@ -159,7 +159,7 @@ const History = () => {
             if (data) {
                 setData(data);
                 if (JSON.stringify(filter) === JSON.stringify(initState.default_filters)) {
-                    data?.result?.length > 0 && setIsEmptyData((prev) => !prev);
+                    setIsEmptyData(!data?.result?.length > 0);
                 }
             }
         } catch (error) {
@@ -200,9 +200,6 @@ const History = () => {
 
     const handleResetFilter = () => setFilter(initState.default_filters);
 
-    // const isEmptyData = useMemo(() => {
-    //     if()
-    // }, [data?.result]);
     // ** render
     const renderTabs = () => {
         return HISTORY_TAB.map((item) => {
