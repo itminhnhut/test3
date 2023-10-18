@@ -70,9 +70,7 @@
                 "title": "Borrowed successfully ",
                 "view_loans": "View Active Loans"
             },
-
             "loan_term": "Loan term",
-
             "loan_term_description": "Each loan term has an allowable late payment period, the late payment fee in this case is equal to 3 times the loan interest. Allowedlate payment time:<ul class=\"list-disc px-4\"><li>7 days term: up to 72 hours</li><li>30 days term: up to 168 hours</li></ul>If you exceed the allowed late payment period, your collateral will be liquidated with a liquidation fee of 2% of the total debt."
         }
     },
@@ -85,5 +83,5 @@
             "reset": "Đặt lại"
         }
     },
-    "not_auth": "<0>Register</0> now to start receive Daily Staking interest or <1>login</1> to check your statistics"
+    "not_auth": "<0>Register</0> or <1>login</1> to experience our product"
 }
