@@ -38,7 +38,7 @@ const HeaderLending = () => {
                                 })}
                             </section>
                         </section>
-                        <img width={805} height={440} src={getS3Url('/images/lending/element_element_lending.png')} />
+                        <img width={805} height={440} src={getS3Url('/images/lending/element_lending.png')} />
                     </section>
                 </section>
             </WrapperContainer>
