@@ -105,7 +105,7 @@ const PaginationWrapper = styled.div`
     .rc-pagination-item:focus a,
     .rc-pagination-item:hover a {
         color: ${colors.white} !important;
-        background-color: ${colors.teal};
+        background-color: ${({ isDark }) => isDark ? colors.green[2] : colors.green[3]};
     }
 
     .rc-pagination-jump-prev button:after,
@@ -141,9 +141,9 @@ const PaginationWrapper = styled.div`
     .rc-pagination-prev:hover:not(.rc-pagination-disabled) .rc-pagination-item-link,
     .rc-pagination-next:hover:not(.rc-pagination-disabled) .rc-pagination-item-link {
         color: ${colors.white};
-        border-color: ${colors.teal};
+        border-color: ${({ isDark }) => isDark ? colors.green[2] : colors.green[3]};
         ::after {
-            background-color: ${colors.teal};
+            background-color: ${({ isDark }) => isDark ? colors.green[2] : colors.green[3]};
         }
     }
 `;
@@ -168,7 +168,7 @@ const NamiV2PaginationWrapper = styled.div`
     }
 
     .rc-pagination-item-active {
-        background-color: ${colors?.teal};
+        background-color: ${({ isDark }) => (isDark ? colors.green[2] : colors.green[3])};
         a {
             color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.white)} !important;
         }

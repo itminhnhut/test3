@@ -14,7 +14,7 @@ import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { WALLET_SCREENS } from 'pages/wallet';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAsync, useLocalStorage } from 'react-use';
 import { API_FARMING_SUMMARY, API_STAKING_SUMMARY } from 'redux/actions/apis';
@@ -22,6 +22,8 @@ import { ApiStatus, LOCAL_STORAGE_KEY, WalletType } from 'redux/actions/const';
 import { getFuturesMarketWatch, getMarketWatch, getUsdRate } from 'redux/actions/market';
 import styled from 'styled-components';
 import colors from 'styles/colors';
+import EarnWallet from './Earn/EarnWallet';
+import { WalletCurrency } from 'utils/reference-utils';
 
 // ** Dynamic
 const NFTWallet = dynamic(() => import('./NFT'), { ssr: false });
@@ -76,7 +78,10 @@ const INITIAL_STATE = {
     allPartnersAsset: null,
     partnersEstBtc: null,
     partnersRefPrice: null,
-    partnersMarketWatch: null
+    partnersMarketWatch: null,
+
+    earnEstBtc: { totalValue: 0, assetDigit: 8 },
+    earnRefPrice: { totalValue: 0, assetDigit: 2 }
     // ... Add new state
 };
 
@@ -97,6 +102,7 @@ const Wallet = () => {
     const allFuturesWallet = useSelector((state) => state.wallet?.FUTURES) || null;
     const allNAOFuturesWallet = useSelector((state) => state.wallet?.NAO_FUTURES) || null;
     const allPartnersWallet = useSelector((state) => state.wallet?.PARTNERS) || null;
+    const allEarnWallet = useSelector((state) => state.wallet.EARN) || null;
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
 
     // Use Hooks
@@ -107,6 +113,65 @@ const Wallet = () => {
         t,
         i18n: { language }
     } = useTranslation(['common']);
+
+    // earn
+    const allEarnAsset = useMemo(() => {
+        const showRange = ({ min = 0, max = 0, postFix = { plural: '', singular: '' }, separator = '-' }) => {
+            const epsilon = 0.01;
+            const showMax = Math.abs(max - min) > epsilon;
+            return showMax
+                ? `${min}${min <= 1 ? postFix.singular : postFix.plural} ${separator} ${max}${postFix.plural}`
+                : `${min}${min <= 1 ? postFix.singular : postFix.plural}`;
+        };
+
+        const assets = Object.keys(allEarnWallet).reduce((data, asset) => {
+            const group = allEarnWallet[asset];
+            if (!group?.length) {
+                return data;
+            }
+            let minAPR = Number.MAX_SAFE_INTEGER,
+                maxAPR = Number.MIN_SAFE_INTEGER,
+                minPeriod = Number.MAX_SAFE_INTEGER,
+                maxPeriod = Number.MIN_SAFE_INTEGER,
+                amount = 0;
+            group.forEach((position) => {
+                minAPR = Math.min(position.apr ?? 0, minAPR);
+                maxAPR = Math.max(position.apr ?? 0, maxAPR);
+                minPeriod = Math.min(position.duration, minPeriod);
+                maxPeriod = Math.max(position.duration, maxPeriod);
+                amount += position.amount;
+                position.asset = asset;
+                return position
+            });
+            const groupData = {
+                key: asset,
+                asset: asset,
+                apr: showRange({
+                    min: +(minAPR * 100).toFixed(4),
+                    max: +(maxAPR * 100).toFixed(4),
+                    postFix: {
+                        singular: '%',
+                        plural: '%'
+                    },
+                    separator: '~'
+                }),
+                duration: showRange({
+                    min: minPeriod,
+                    max: maxPeriod,
+                    postFix: {
+                        singular: ` ${t('common:day')}`,
+                        plural: ` ${t('common:days')}`
+                    },
+                    separator: '-'
+                }),
+                amount,
+                positions: group
+            };
+            data.push(groupData);
+            return data;
+        }, []);
+        return assets;
+    }, [allEarnWallet]);
 
     // Helper
     const walletMapper = (walletType, allWallet, assetConfig) => {
@@ -141,7 +206,7 @@ const Wallet = () => {
             [WalletType.NAO_FUTURES]: 'allNAOFuturesAsset',
             [WalletType.INSURANCE]: 'allInsuranceAsset',
             [WalletType.PARTNERS]: 'allPartnersAsset',
-            [WalletType.INSURANCE]: 'allInsuranceAsset'
+            [WalletType.EARN]: 'allEarnAsset'
         }?.[walletType];
         if (!stateKey) return;
         setState({ [stateKey]: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
@@ -180,7 +245,7 @@ const Wallet = () => {
     const reNewUsdRate = async () => {
         const usdRate = await getUsdRate();
         if (usdRate) {
-            usdRate[39] = usdRate[72]
+            usdRate[39] = usdRate[72];
             setState({ usdRate });
         }
     };
@@ -192,8 +257,8 @@ const Wallet = () => {
     // Render Handler
     const renderScreenTab = useCallback(() => {
         return (
-            <div className="relative flex tracking-normal">
-                <Tabs isMobile tab={state.screenIndex} className="gap-6 border-b border-divider dark:border-divider-dark">
+            <div className="relative flex tracking-normal border-b border-divider dark:border-divider-dark ">
+                <Tabs isMobile tab={state.screenIndex} className="gap-6 max-w-[calc(100%-10rem)] overflow-x-auto">
                     {SCREEN_TAB_SERIES.map((e, index) => {
                         return (
                             <TabItem
@@ -212,7 +277,7 @@ const Wallet = () => {
                         );
                     })}
                 </Tabs>
-                <div className="absolute right-0 hidden md:block">
+                <div className="absolute top-1/2 -translate-y-1/2 right-0 hidden md:block">
                     {/* <div /> */}
                     <HrefButton variants="blank" className="w-auto !text-base" href={`/${WALLET_SCREENS.TRANSACTION_HISTORY}`}>
                         {t('common:transaction_history')}
@@ -351,6 +416,36 @@ const Wallet = () => {
             });
         }
 
+        const totalEarnValue =
+            Object.keys(allEarnWallet).reduce?.((totalUsdDeposited, depositAsset) => {
+                const usdRate = allAssetValue?.[WalletCurrency[depositAsset]] || 1;
+                const poolGroup = allEarnWallet[depositAsset];
+                const poolGroupValue =
+                    poolGroup?.reduce?.((totalUsd, pool) => {
+                        const { rewardAsset = '', amount = 0, rewardAmt = 0, withdrewAmt = 0 } = pool;
+                        const rewardQuote = allAssetValue?.[WalletCurrency[rewardAsset]];
+                        const leftOverReward = Math.max(rewardAmt - withdrewAmt, 0);
+                        const usdDeposited = amount * usdRate;
+                        const usdReward = leftOverReward * rewardQuote;
+                        return totalUsd + usdDeposited + usdReward;
+                    }, 0) || 0;
+
+                return poolGroupValue + totalUsdDeposited;
+            }, 0) || 0;
+        if (totalEarnValue) {
+            setState({
+                earnEstBtc: {
+                    totalValue: totalEarnValue / btcUsdRate,
+                    assetDigit: 8
+                },
+                earnRefPrice: {
+                    totalValue: totalEarnValue,
+                    assetDigit: 2
+                }
+            });
+        }
+
+        // the rest
         if (btcUsdRate > 0) {
             const newWalletState = walletTypes.reduce((obj, walletType) => {
                 return {
@@ -372,7 +467,7 @@ const Wallet = () => {
 
             setState(newWalletState);
         }
-    }, [state.allAssets, state.allFuturesAsset, state.allPartnersAsset, state.stakingSummary, state.farmingSummary, state.usdRate]);
+    }, [state.allAssets, state.allFuturesAsset, state.allPartnersAsset, state.stakingSummary, state.farmingSummary, state.usdRate, allEarnWallet]);
 
     useAsync(async () => {
         if (state.screen === WALLET_SCREENS.EXCHANGE) {
@@ -419,6 +514,8 @@ const Wallet = () => {
                                 stakingRefPrice={state.stakingRefPrice}
                                 farmingEstBtc={state.farmingEstBtc}
                                 farmingRefPrice={state.farmingRefPrice}
+                                earnEstBtc={state.earnEstBtc}
+                                earnRefPrice={state.earnRefPrice}
                                 isSmallScreen={isSmallScreen}
                                 isHideAsset={isHideAsset}
                                 setIsHideAsset={setIsHideAsset}
@@ -487,6 +584,18 @@ const Wallet = () => {
                         {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory />} */}
 
                         {state.screen === WALLET_SCREENS.NFT && <NFTWallet />}
+                        {state.screen === WALLET_SCREENS.EARN && (
+                            <EarnWallet
+                                allAssetValue={allEarnAsset}
+                                estBtc={state.earnEstBtc}
+                                estUsd={state.earnRefPrice}
+                                usdRate={state.usdRate}
+                                marketWatch={state.exchangeMarketWatch}
+                                isSmallScreen={isSmallScreen}
+                                isHideAsset={isHideAsset}
+                                setIsHideAsset={setIsHideAsset}
+                            />
+                        )}
                     </div>
                 </CustomContainer>
             ) : (
@@ -540,6 +649,12 @@ const SCREEN_TAB_SERIES = [
         code: WALLET_SCREENS.NFT,
         title: 'NFT',
         localized: 'wallet:nft'
+    },
+    {
+        key: 'earn',
+        code: WALLET_SCREENS.EARN,
+        title: 'Earn',
+        localized: 'wallet:earn_short'
     }
     // {
     //     key: 3,

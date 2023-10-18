@@ -25,6 +25,7 @@ const InputV2 = forwardRef(
             label,
             value,
             onChange,
+            onClear,
             placeholder,
             canPaste = false,
             allowClear = true,
@@ -58,6 +59,7 @@ const InputV2 = forwardRef(
 
         const handleClear = () => {
             internalChange('');
+            onClear?.();
         };
 
         const paste = () => {

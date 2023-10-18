@@ -18,6 +18,7 @@ export const WALLET_SCREENS = {
     PARTNERS: 'partners',
     NAO_FUTURES: 'nao-futures',
     INSURANCE: 'insurance',
+    EARN: 'earn',
     // FARMING: 'farming',
     TRANSACTION_HISTORY: 'transaction-history/all',
     NFT: 'NFT'

@@ -32,7 +32,8 @@ export const TRANSACTION_TYPES = {
     COMMISSION: 'commision',
     OFF_CHAIN: 'off_chain',
     INSURANCE: 'insurance',
-    LOAN: 'loan'
+    LOAN: 'loan',
+    EARN: 'earn',
 };
 
 export const TransactionTabs = [
@@ -106,6 +107,12 @@ export const TransactionTabs = [
         key: TRANSACTION_TYPES.LOAN,
         localized: 'loan',
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.LOAN)
+    },
+    {
+        key: TRANSACTION_TYPES.EARN,
+        localized: null,
+        title: 'Earn',
+        href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.EARN)
     }
 ];
 
@@ -271,6 +278,11 @@ export const modalDetailColumn = {
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
         { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
         { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE }
+    ],
+    [TRANSACTION_TYPES.EARN]: [
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
+        { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
+        { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
     ],
     common: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },

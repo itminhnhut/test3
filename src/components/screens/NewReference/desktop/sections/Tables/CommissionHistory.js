@@ -56,6 +56,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
             values: levelTabs,
             label: t('reference:referral.level'),
             title: t('reference:referral.level'),
+            selectClassName: 'h-11',
             childClassName: 'text-sm !text-gray-15 dark:!text-gray-7'
         },
         commission_type: {
@@ -63,6 +64,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
             value: null,
             values: typeTabs,
             label: t('reference:referral.commission_type'),
+            selectClassName: 'h-11',
             childClassName: 'text-sm !text-gray-15 dark:!text-gray-7'
         },
         asset_type: {
@@ -70,6 +72,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
             value: null,
             values: assetTabs,
             label: t('reference:referral.asset_type'),
+            selectClassName: 'h-11',
             childClassName: 'text-sm !text-gray-15 dark:!text-gray-7'
         },
         reset: {

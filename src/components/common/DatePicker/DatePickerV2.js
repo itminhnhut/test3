@@ -33,7 +33,8 @@ const DatePickerV2 = ({
     maxMonths,
     minDate,
     maxDate,
-    ignoreAuth
+    ignoreAuth,
+    placeHolder
 }) => {
     const [showPicker, setShowPicker] = useState(false);
     const wrapperRef = useRef(null);
@@ -55,7 +56,7 @@ const DatePickerV2 = ({
         if (showPicker) {
             if (isFunction(onClickOutside)) onClickOutside();
             if (!isCalendar) {
-                setDate(initDate);
+                setDate({ ...initDate, ...(!initDate?.key && { key: 'selection' }) });
             }
             setShowPicker(false);
         }
@@ -159,7 +160,7 @@ const DatePickerV2 = ({
                     )}
                     onClick={() => onHandleClick('show_modal')}
                 >
-                    <div className={classNames('flex flex-1 items-center justify-between', wrapperClassNameContent)}>
+                    <div className={classNames('flex flex-1 items-center justify-between max-w-full', wrapperClassNameContent)}>
                         <div
                             className={classNames(
                                 'px-2 leading-5',
@@ -241,6 +242,9 @@ const DatePickerV2 = ({
 export default DatePickerV2;
 
 const DatePickerWrapper = styled.div`
+    .rdrMonthName {
+        text-transform: capitalize;
+    }
     ${({ noDatePicked, isDark }) =>
         noDatePicked
             ? `
