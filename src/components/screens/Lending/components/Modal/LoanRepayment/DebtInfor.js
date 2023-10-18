@@ -44,7 +44,7 @@ const DebtInfor = ({
 
             <section className="flex flex-row justify-between ">
                 <div className="text-txtSecondary dark:text-txtSecondary-dark flex flex-wrap">Kí quỹ nhận lại ước tính</div>
-                <div className="font-semibold flex flex-row gap-1 whitespace-nowrap">
+                <div className="font-semibold flex flex-row whitespace-nowrap">
                     {formatNumber(collateralAmountReceive, collateralCoinDigit)} {collateralCoin}
                 </div>
             </section>
