@@ -311,7 +311,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
             });
         }
         if (tab === TAB_REPAY) {
-            const totalRepaid = handleTotalAsset(detail?.totalRepaid?.to, detail?.totalRepaid?.currency);
+            const totalRepaid = handleTotalAsset(Math.abs(detail?.totalRepaid?.change), detail?.totalRepaid?.currency);
             return renderAssetLogo({
                 title: 'Tổng đã trả',
                 total: totalRepaid.total,

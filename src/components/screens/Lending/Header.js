@@ -22,7 +22,7 @@ const HeaderLending = () => {
     return (
         <section className="relative">
             <WrapperContainer className="flex flex-row">
-                <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
+                <section className="px-4 v3:px-0 max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                     <section className="flex flex-row items-center">
                         <section className="flex flex-col justify-start w-[100vw]">
                             <h1 className="text-6xl font-semibold text-white">{t('lending:header:title')}</h1>

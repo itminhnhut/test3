@@ -25,7 +25,7 @@ const Lending = () => {
         <MaldivesLayout>
             <main className="bg-dark-13 dark:bg-dark-dark">
                 <HeaderLending />
-                <section className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
+                <section className="px-4 v3:px-0 max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                     <CryptoLending />
                     <FQALending isDark={isDark} />
                 </section>
