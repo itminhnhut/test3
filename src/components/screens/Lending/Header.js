@@ -1,8 +1,8 @@
 // ** NEXT
-import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 import classNames from 'classnames';
+import { getS3Url } from 'redux/actions/utils';
 
 // ** SVG
 import CheckCircle from 'components/svg/CheckCircle';
@@ -38,7 +38,7 @@ const HeaderLending = () => {
                                 })}
                             </section>
                         </section>
-                        <img width={805} height={440} src="/images/lending/element.png" />
+                        <img width={805} height={440} src={getS3Url('/images/lending/element_element_lending.png')} />
                     </section>
                 </section>
             </WrapperContainer>
@@ -49,7 +49,7 @@ const HeaderLending = () => {
 const WrapperContainer = styled.section.attrs(({ className }) => ({
     className: classNames(className)
 }))`
-    background-image: url('/images/lending/BG@2x.png');
+    background-image: ${() => `url(${getS3Url('/images/lending/bg_lending.png')})`};
     height: 440px;
     background-repeat: round;
 `;

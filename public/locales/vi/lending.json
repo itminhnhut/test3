@@ -70,7 +70,6 @@
                 "title": "Vay thành công",
                 "view_loans": "Xem khoản vay đang mở"
             },
-
             "loan_term": "Thời hạn vay",
             "loan_term_description": "Mỗi thời hạn vay có thời gian trả chậm cho phép, phí trả chậm trong trường hợp này bằng 3 lần lãi vay. Thời gian trả chậm cho phép:<ul class=\"list-disc px-4\"><li>Kỳ hạn 7 ngày: trả chậm tối đa 72h</li><li>Kỳ hạn 30 ngày: trả chậm tối đa 168h</li></ul> Nếu vượt quá thời gian trả chậm cho phép, tài sản ký quỹ của bạn sẽ bị thanh lý với phí thanh lý là 2% trên tổng dư nợ."
         }
@@ -84,5 +83,5 @@
             "reset": "Đặt lại"
         }
     },
-    "not_auth": "<0>Register</0> now to start receive Daily Staking interest or <1>login</1> to check your statistics"
+    "not_auth": "<0>Register</0> or <1>login</1> to experience our product"
 }
