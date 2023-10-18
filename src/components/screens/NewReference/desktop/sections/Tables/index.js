@@ -16,6 +16,7 @@ import { CheckCircleIcon } from 'components/svg/SvgIcon';
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import AssetFilter from 'components/screens/TransactionHistory/TransactionFilter/AssetFilter';
 
 const Tables = ({ language, t, commisionConfig, id1, id2 }) => {
     return (
@@ -26,12 +27,12 @@ const Tables = ({ language, t, commisionConfig, id1, id2 }) => {
     );
 };
 
-export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }) => {
+export const TableFilter = ({ config, filter, setFilter, resetParentCode, type, resetPagination }) => {
     const DatePicker = ({ item, filter, key }) => {
         const data = filter?.[key] || {};
         return (
             <DatePickerV2
-                month={2}
+                month={item.months ?? 2}
                 hasShadow
                 initDate={data?.value}
                 wrapperClassname="!w-full !h-11"
@@ -64,14 +65,34 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
                 name="customer"
                 keyExpr="value"
                 popoverPanelClassName="top-auto"
-                className={classNames('!h-11', item.childClassName)}
+                className={classNames(item.selectClassName)}
                 value={data?.value || item.values[0]?.value}
                 options={item.values}
-                popoverClassName="w-[240px]"
+                popoverClassName="min-w-[240px] w-full"
                 onChange={(e) => onChange(e, key)}
                 activeIcon={<CheckCircleIcon color="currentColor" size={16} />}
-                wrapperClassName="flex flex-row gap-2 flex-col"
+                wrapperClassName="flex flex-row gap-3 flex-col py-4"
                 optionClassName="flex flex-row items-center justify-between text-gray-1 dark:text-gray-4 text-base py-3 hover:bg-dark-13 dark:hover:bg-hover-dark"
+            />
+        );
+    };
+
+    const onChangeAsset = (key, value) => {
+        resetPagination?.();
+        setFilter((old) => ({ ...old, [key]: { ...old[key], value } }));
+    };
+    const AssetFilterFunc = ({ item, filter, key }) => {
+        const data = filter?.[key] || {};
+        // only use when setFilter is React setState function due to useCallback cache
+        return (
+            <AssetFilter
+                showLableIcon={item?.showLableIcon ?? true}
+                hasOptionAll={item?.hasOptionAll ?? true}
+                title={item?.title}
+                asset={data.value}
+                labelClassName="hidden"
+                className={item.className}
+                setAsset={(value) => onChangeAsset(key, value)}
             />
         );
     };
@@ -88,7 +109,8 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
         dateRange: (data) => DatePicker(data),
         input: (data) => Input(data),
         select: (data) => Select(data),
-        reset: (data) => Reset(data)
+        reset: (data) => Reset(data),
+        assetFilter: (data) => AssetFilterFunc(data)
     };
 
     const onChange = (value, key) => {
@@ -99,6 +121,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
         if (key === 'search') {
             resetParentCode();
         }
+        resetPagination?.();
     };
 
     const renderFilter = useCallback(
@@ -109,7 +132,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode, type }
     );
     const filterArray = Object.keys(config || []);
     return filterArray.map((key) => (
-        <div className={`flex flex-col items-start  w-auto ${config[key]?.childClassName || ''}`} key={key}>
+        <div className={`flex flex-col items-start w-auto ${config[key]?.childClassName || ''}`} key={key}>
             <div
                 className={classNames('text-txtSecondary dark:text-txtSecondary-dark mb-2 text-sm', {
                     hidden: config[key].label === '',

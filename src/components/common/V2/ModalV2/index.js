@@ -90,7 +90,7 @@ const ModalV2 = ({
                     <div
                         ref={wrapperRef}
                         className={classnames(
-                            'w-full absolute overflow-auto max-h-[90%] border-transparent dark:!border-divider-dark',
+                            'w-full bg-white dark:bg-dark absolute overflow-auto max-h-[90%] border-transparent dark:!border-divider-dark scroll-margin-y',
                             {
                                 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl max-w-[90%] min-w-[390px]':
                                     !isMobile || (width && width >= 820),
@@ -101,7 +101,7 @@ const ModalV2 = ({
                     >
                         <div
                             className={classnames(
-                                `h-full bg-white dark:bg-dark text-base`,
+                                `h-full text-base`,
                                 { 'px-8 pb-8': !isMobile, 'px-6 pb-6': isMobile, 'pt-6 sm:pt-8': !closeButton || loading },
                                 wrapClassName
                             )}
@@ -113,8 +113,8 @@ const ModalV2 = ({
                                       !loading && (
                                           <div
                                               className={classnames(
-                                                  'flex items-end justify-end sticky top-0 z-10 py-6 sm:pt-8',
-                                                  { 'bg-white dark:bg-dark': isMobile },
+                                                  'flex items-end justify-end sticky top-0 z-10 py-6 sm:pt-8 bg-white dark:bg-dark',
+                                                  //   { 'bg-white dark:bg-dark': isMobile },
                                                   btnCloseclassName
                                               )}
                                           >

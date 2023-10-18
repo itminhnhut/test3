@@ -38,11 +38,11 @@ export const asyncLocalStorage = new AsyncLocalStorage();
  *
  * @param {unknown[]} queryKey
  * @param {(context: {queryKey: unknown[], signal?: AbortSignal}) => T | Promise<T>} fetch
- * @param {?{persist: boolean, ttl: string, storage: BaseStorage}} options ttl is currently using ms see: https://github.com/vercel/ms
+ * @param {?{persist: boolean, ttl: string, storage: BaseStorage, cache: Boolean}} options ttl is currently using ms see: https://github.com/vercel/ms
  * @returns {{data: T | undefined, isLoading: boolean, reFetch: Function, stale}}
  */
-const useQuery = (queryKey = [''], fetch, options = { persist: false, ttl: '1d', storage: asyncLocalStorage }) => {
-    const { persist = false, ttl = '1d', storage = asyncLocalStorage } = options;
+const useQuery = (queryKey = [''], fetch, options = { persist: false, ttl: '1d', storage: asyncLocalStorage, cache: true, }) => {
+    const { persist = false, ttl = '1d', storage = asyncLocalStorage, cache = true } = options;
     const key = JSON.stringify(queryKey);
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState();
@@ -57,11 +57,13 @@ const useQuery = (queryKey = [''], fetch, options = { persist: false, ttl: '1d',
             try {
                 const data = await fetch({ queryKey, signal });
                 setData(data);
-                const toCache = {
-                    expiry: Date.now() + ms(ttl),
-                    data
-                };
-                cacheMap[key] = toCache;
+                if (cache) {
+                    const toCache = {
+                        expiry: Date.now() + ms(ttl),
+                        data
+                    };
+                    cacheMap[key] = toCache;
+                }
 
                 if (persist) {
                     storage.set(key, JSON.stringify(toCache));
@@ -77,7 +79,7 @@ const useQuery = (queryKey = [''], fetch, options = { persist: false, ttl: '1d',
 
     const getData = async (abortSignal) => {
         setIsLoading(true);
-        let cached = cacheMap[key];
+        let cached = cache ? cacheMap[key] : null;
         if (persist) {
             try {
                 if (!cached) {

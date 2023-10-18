@@ -4,7 +4,7 @@ import { getS3Url } from 'redux/actions/utils';
 import { DOWNLOAD_APP_LINK } from 'src/redux/actions/const';
 import useWindowSize from 'hooks/useWindowSize';
 
-const DefaultMobileView = (props, ref) => {
+const DefaultMobileView = (props) => {
     const { t } = useTranslation();
     const { width } = useWindowSize();
 
@@ -19,7 +19,7 @@ const DefaultMobileView = (props, ref) => {
         <div
             className={classNames('py-4 md:pt-10 px-4 sm:px-0 max-w-[456px] m-auto flex flex-col', {
                 'absolute top-1/2 -translate-y-1/2 lg:flex-row lg:items-center lg:space-x-[76px] lg:px-10 lg:max-w-full': width >= 1024
-            })}
+            }, props.className)}
         >
             {width < 1024 && renderText()}
             <div className="flex flex-col lg:flex-col-reverse ">

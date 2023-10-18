@@ -14,7 +14,7 @@ import { EXCHANGE_ACTION, WALLET_SCREENS } from 'pages/wallet';
 import SvgWalletOverview from 'components/svg/SvgWalletOverview';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { PartnersIcon, MoreHorizIcon, FutureExchangeIcon, FutureInsurance } from 'components/svg/SvgIcon';
+import { PartnersIcon, MoreHorizIcon, FutureExchangeIcon, FutureInsurance, EarningIcon } from 'components/svg/SvgIcon';
 import styled from 'styled-components';
 import ModalV2 from 'components/common/V2/ModalV2';
 import EstBalance from 'components/common/EstBalance';
@@ -35,7 +35,8 @@ const OverviewWallet = (props) => {
         naoFuturesRefPrice,
         partnersEstBtc,
         partnersRefPrice,
-
+        earnEstBtc,
+        earnRefPrice,
         isSmallScreen,
         isHideAsset,
         setIsHideAsset
@@ -77,7 +78,7 @@ const OverviewWallet = (props) => {
                     {isHideAsset
                         ? SECRET_STRING
                         : formatWallet(
-                              exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + naoFuturesEstBtc?.totalValue + partnersEstBtc?.totalValue,
+                              exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + naoFuturesEstBtc?.totalValue + partnersEstBtc?.totalValue + earnEstBtc.totalValue,
                               exchangeEstBtc?.assetDigit
                           )}{' '}
                     BTC
@@ -86,13 +87,17 @@ const OverviewWallet = (props) => {
                     {isHideAsset
                         ? SECRET_STRING
                         : `$ ${formatWallet(
-                              exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue + naoFuturesRefPrice?.totalValue + partnersRefPrice?.totalValue,
+                              exchangeRefPrice?.totalValue +
+                                  futuresRefPrice?.totalValue +
+                                  naoFuturesRefPrice?.totalValue +
+                                  partnersRefPrice?.totalValue +
+                                  earnRefPrice?.totalValue,
                               2
                           )}`}
                 </div>
             </>
         );
-    }, [exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice, naoFuturesEstBtc, naoFuturesRefPrice, isHideAsset]);
+    }, [exchangeEstBtc, exchangeRefPrice, futuresEstBtc, earnEstBtc, futuresRefPrice, naoFuturesEstBtc, naoFuturesRefPrice, earnRefPrice, isHideAsset]);
 
     const renderExchangeEstBalance = useCallback(() => {
         return (
@@ -146,6 +151,16 @@ const OverviewWallet = (props) => {
             </span>
         );
     }, [partnersEstBtc, partnersRefPrice, isHideAsset]);
+
+    const renderEarnEstBalance = useCallback(() => {
+        return (
+            <span>
+                {isHideAsset
+                    ? SECRET_STRING
+                    : formatWallet(earnEstBtc?.totalValue, partnersEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(earnRefPrice?.totalValue, 2)}
+            </span>
+        );
+    }, [earnEstBtc, earnRefPrice, isHideAsset]);
 
     // Check Kyc before redirect to page Deposit / Withdraw
     const router = useRouter();
@@ -237,6 +252,13 @@ const OverviewWallet = (props) => {
                     return;
                 }
                 router.push(`/wallet/${WALLET_SCREENS.PARTNERS}`);
+                break;
+            case WALLET_SCREENS.EARN:
+                if (flag.current) {
+                    flag.current = false;
+                    return;
+                }
+                router.push(`/wallet/${WALLET_SCREENS.EARN}`);
                 break;
             default:
                 break;
@@ -421,6 +443,21 @@ const OverviewWallet = (props) => {
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
+                    </div>
+                </CardWallet>
+                <CardWallet onClick={() => onHandleClick(WALLET_SCREENS.EARN)} isSmallScreen={isSmallScreen}>
+                    <AssetBalance
+                        title={t('wallet:earn')}
+                        icon={<EarningIcon size={isSmallScreen ? 24 : 32} />}
+                        renderEstBalance={renderEarnEstBalance}
+                        isSmallScreen={isSmallScreen}
+                    />
+                    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
+                        {!isSmallScreen && (
+                            <div className="flex items-center text-base font-normal text-gray-15 dark:text-gray-4 mr-3">
+                                <Trans>{t('wallet:earn_overview')}</Trans>
+                            </div>
+                        )}
                     </div>
                 </CardWallet>
 

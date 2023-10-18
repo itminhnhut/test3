@@ -9,7 +9,7 @@ import { isFunction } from 'lodash';
 import { KYC_STATUS } from 'redux/actions/const';
 import { ErrorIcon, SuccessIcon } from './V2/ModalV2/AlertModalV2';
 
-const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile, auth, isShowLocking = true }) => {
+const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, auth, isShowLocking = true }) => {
     if (!isOpenModalKyc) return null;
 
     const isWaitingEkyc = auth?.kyc_status === KYC_STATUS.PENDING_APPROVAL;
@@ -18,11 +18,12 @@ const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile, auth, isShowLock
     const { t } = useTranslation(['common', 'wallet']);
     const [currentLocale] = useLanguage();
     const { width } = useWindowSize();
+    const isMobile = width < WIDTH_MD;
 
 
     return (
         <ModalV2
-            isMobile={isMobile || width < WIDTH_MD}
+            isMobile={isMobile}
             isVisible={isOpenModalKyc}
             onBackdropCb={onBackdropCb}
             className="!max-w-[488px]"

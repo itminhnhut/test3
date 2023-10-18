@@ -440,7 +440,7 @@ export function render24hChange(ticker, showPrice = false, className = '') {
 }
 
 export function getS3Url(url) {
-    return process.env.NEXT_PUBLIC_CDN + url;
+    return( process.env.NEXT_PUBLIC_CDN || "") + url;
 }
 export const getEventImg = (img_endpoint) => img_endpoint;
 

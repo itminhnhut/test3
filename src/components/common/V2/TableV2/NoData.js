@@ -4,8 +4,9 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useSelector } from 'react-redux';
 import { getLoginUrl, getS3Url } from 'src/redux/actions/utils';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
+import HrefButton from '../ButtonV2/HrefButton';
 
-const NoData = ({ text, loading = false, isSearch = false, className = '', isAuth = false, textClassName = '' }) => {
+const NoData = ({ text, textLoginToDo, loading = false, isSearch = false, className = '', isAuth = false, textClassName = '' }) => {
     const { t } = useTranslation();
     const [currentTheme] = useDarkMode();
     const user = useSelector((state) => state.auth.user) || isAuth;
@@ -19,20 +20,14 @@ const NoData = ({ text, loading = false, isSearch = false, className = '', isAut
                 <>
                     <img className="max-h-[124px]" src={getS3Url('/images/icon/ic_login.png')} />
                     <div className="flex space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
-                        <a href={getLoginUrl('sso')}>
-                            <span
-                                className="text-teal hover:underline cursor-pointer font-semibold"
-                                dangerouslySetInnerHTML={{ __html: t('common:sign_in') }}
-                            />
-                        </a>
+                        <HrefButton className="!p-0" variants="blank" href={getLoginUrl('sso')}>
+                            {t('common:sign_in')}
+                        </HrefButton>
                         <div>{t('common:or')}</div>
-                        <a href={getLoginUrl('sso', 'register')}>
-                            <span
-                                className="text-teal hover:underline cursor-pointer font-semibold"
-                                dangerouslySetInnerHTML={{ __html: t('common:sign_up') }}
-                            />
-                        </a>
-                        <div>{t('common:to_experience')}</div>
+                        <HrefButton className="!p-0" variants="blank" href={getLoginUrl('sso', 'register')}>
+                            {t('common:sign_up')}
+                        </HrefButton>
+                        <div>{textLoginToDo ?? t('common:to_experience')}</div>
                     </div>
                 </>
             ) : (

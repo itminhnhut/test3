@@ -442,6 +442,17 @@ body {
     border-radius: 0px;
     background: transparent;
 }
+.scroll-margin{
+    &::-webkit-scrollbar-track {
+        margin: 5px;
+    }
+    &-x::-webkit-scrollbar-track {
+        margin: auto 5px;
+    }
+    &-y::-webkit-scrollbar-track {
+        margin: 5px auto;
+    }
+}
 
 .react-draggable {
     cursor: grab;
@@ -996,6 +1007,38 @@ input[type='number'] {
     .rc-table-content {
         border-radius: 20px;
         border: none !important;
+    }
+}
+
+.rc-table-content {
+    .border-bottom {
+        &:last-of-type{
+            td {
+                border-bottom: none !important;
+            }
+        }
+        td {
+            @apply border-b border-divider dark:border-divider-dark #{!important};
+        }
+    }
+}
+
+.expandable-table {
+    .rc-table-content{
+        .expanded, .rc-table-row-level-1{
+            @apply bg-dark-12 dark:bg-dark-2;
+            td {
+                border-bottom: none;
+            }
+        }
+        .rc-table-row-level-1 {
+            + .rc-table-row-level-0 {
+                td {
+                    @apply border-divider dark:border-divider-dark;
+                    border-top: 1px solid;
+                }
+            }
+        }
     }
 }
 

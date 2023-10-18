@@ -10,12 +10,15 @@ import { X } from 'react-feather';
 import NoResult from 'components/screens/Support/NoResult';
 import { CheckCircleIcon } from 'components/svg/SvgIcon';
 import { filterSearch } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
 
-const AssetFilter = ({ asset, setAsset, t }) => {
+const AssetFilter = ({ asset, setAsset, label, labelClassName, showLableIcon = true, className, title, hasOptionAll = false }) => {
     const popoverRef = useRef(null);
     const [search, setSearch] = useState('');
     const { user: auth } = useSelector((state) => state.auth) || null;
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
+    const {t} = useTranslation();
+    const _label = label ?? t('transaction-history:filter.asset_type');
 
     const fitlerAssets = useMemo(() => {
         return sortBy(filterSearch(assetConfigs, ['assetCode', 'assetName'], search), [
@@ -30,7 +33,7 @@ const AssetFilter = ({ asset, setAsset, t }) => {
             const currentAsset = fitlerAssets[index];
             const isAssetChosen = asset && asset?.id === currentAsset?.id;
             return (
-                <div style={style}>
+                <div style={style} key={key}>
                     <div
                         onClick={() => {
                             if (isAssetChosen) return;
@@ -38,7 +41,6 @@ const AssetFilter = ({ asset, setAsset, t }) => {
                             setTimeout(() => setSearch(''), 100);
                             setAsset(currentAsset);
                         }}
-                        key={key}
                         className={classNames('flex items-center justify-between px-4 py-3 hover:bg-hover dark:hover:bg-hover-dark ', {
                             'text-txtPrimary dark:text-txtPrimary-dark': isAssetChosen,
                             'cursor-pointer ': !isAssetChosen
@@ -58,11 +60,12 @@ const AssetFilter = ({ asset, setAsset, t }) => {
     );
 
     return (
-        <FilterWrapper label={t('transaction-history:filter.asset_type')}>
+        <FilterWrapper label={_label} labelClassName={labelClassName}>
             <PopoverSelect
                 containerClassName="!z-40"
                 className="min-w-[400px] rounded-xl !left-0 !translate-x-0"
                 hideChevron={Boolean(asset)}
+                labelClassName={className}
                 labelValue={() => (
                     <div
                         className={classNames(
@@ -73,11 +76,11 @@ const AssetFilter = ({ asset, setAsset, t }) => {
                         )}
                     >
                         {!asset ? (
-                            t('transaction-history:filter.all')
+                            t('common:all')
                         ) : (
                             <>
                                 <div className="flex items-center  space-x-2">
-                                    <AssetLogo useNextImg={true} size={24} assetCode={asset?.assetCode} />
+                                    {showLableIcon && <AssetLogo useNextImg={true} size={24} assetCode={asset?.assetCode} />}
                                     <span>{asset?.assetCode || asset?.assetName}</span>
                                 </div>
                                 <div className="text-gray-7">
@@ -96,11 +99,35 @@ const AssetFilter = ({ asset, setAsset, t }) => {
                 ref={popoverRef}
                 value={search}
                 onChange={(value) => setSearch(value)}
+                title={title}
             >
                 {!fitlerAssets?.length ? (
                     <NoResult text={t('common:no_results_found')} />
                 ) : (
-                    <List width={400} height={280} rowCount={fitlerAssets.length} rowHeight={60} rowRenderer={rowRenderer} />
+                    <>
+                        {(hasOptionAll && !search) && (
+                            <div>
+                                <div
+                                    onClick={() => {
+                                        if (!asset) return;
+                                        popoverRef?.current?.close();
+                                        setTimeout(() => setSearch(''), 100);
+                                        setAsset(undefined);
+                                    }}
+                                    className={classNames('flex items-center justify-between px-4 py-3 hover:bg-hover dark:hover:bg-hover-dark ', {
+                                        'text-txtPrimary dark:text-txtPrimary-dark': !asset,
+                                        'cursor-pointer ': asset
+                                    })}
+                                >
+                                    <div className="flex items-center space-x-2">
+                                        <div className="text-txtPrimary dark:text-txtPrimary-dark">{t('common:all')}</div>
+                                    </div>
+                                    {!asset && <CheckCircleIcon color="currentColor" size={16} />}
+                                </div>
+                            </div>
+                        )}
+                        <List width={400} height={280} rowCount={fitlerAssets.length} rowHeight={60} rowRenderer={rowRenderer} />
+                    </>
                 )}
             </PopoverSelect>
         </FilterWrapper>
