@@ -488,7 +488,8 @@ export const WalletType = {
     EARN: 'EARN',
     ONUS: 'ONUS',
     INSURANCE: 'INSURANCE',
-    NAO_FUTURES: 'NAO_FUTURES'
+    NAO_FUTURES: 'NAO_FUTURES',
+    FINANCE: 'FINANCE'
 };
 
 export const EarnWalletType = {
@@ -507,7 +508,8 @@ export const WalletTypeById = {
     7: EarnWalletType.FARM,
     8: WalletType.BROKER,
     9: WalletType.NAO_FUTURES,
-    10: WalletType.INSURANCE
+    10: WalletType.INSURANCE,
+    11: WalletType.FINANCE,
 };
 
 export const WalletTypeReducerKey = {
@@ -517,7 +519,8 @@ export const WalletTypeReducerKey = {
     [WalletType.P2P]: 'P2P',
     [WalletType.POOL]: 'POOL',
     [WalletType.BROKER]: 'BROKER',
-    [WalletType.EARN]: 'EARN'
+    [WalletType.EARN]: 'EARN',
+    [WalletType.FINANCE]: 'FINANCE'
 };
 
 export const WalletTypeName = {

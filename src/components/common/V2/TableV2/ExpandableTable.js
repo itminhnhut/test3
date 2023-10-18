@@ -14,7 +14,6 @@ const ExpandableTable = ({
     page = 1,
     useRowHover = true,
     height = 575,
-    rowKey,
     className = '',
     pagingClassName = '',
     isSearch,

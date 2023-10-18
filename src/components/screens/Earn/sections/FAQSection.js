@@ -13,15 +13,15 @@ const mockQuestions = [
     },
     {
         question: 'Chương trình giới thiệu là gì? Khi nào tôi nhận được hoa hồng thường?',
-        answer: 'Tết Congo á'
+        answer: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam nobis sunt maiores aperiam modi nulla quaerat vel nisi eos veritatis optio temporibus perspiciatis adipisci.'
     },
     {
         question: 'Thế nào là người giới thiệu đủ điều kiện?',
-        answer: 'Khi người giới thiệu ko thiếu điều kiện'
+        answer: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam nobis sunt maiores aperiam modi nulla quaerat vel nisi eos veritatis optio temporibus perspiciatis adipisci.'
     },
     {
         question: 'Làm sao để đủ điều kiện nhận hoa hồng?',
-        answer: 'Không thiếu điều kiện là được'
+        answer: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam nobis sunt maiores aperiam modi nulla quaerat vel nisi eos veritatis optio temporibus perspiciatis adipisci.'
     }
 ];
 

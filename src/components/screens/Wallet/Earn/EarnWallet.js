@@ -268,6 +268,7 @@ const EarnWallet = ({ allAssetValue, estBtc, estUsd, usdRate, isSmallScreen, isH
                             fontSize: '1rem'
                         }}
                         sort={['amount']}
+                        rowKey={(record, idx) => record.key ?? record.id ?? idx}
                     />
                 </TableWrapper>
             </div>
