@@ -112,7 +112,6 @@ const History = () => {
     const [data, setData] = useState(initState.data);
     const [isLoading, setIsLoading] = useState(initState.loading);
     const [filter, setFilter] = useState(initState.default_filters);
-    const [isEmptyData, setIsEmptyData] = useState(initState.isEmptyData);
 
     // ** useState
     useEffect(() => {
@@ -158,9 +157,6 @@ const History = () => {
 
             if (data) {
                 setData(data);
-                if (JSON.stringify(filter) === JSON.stringify(initState.default_filters)) {
-                    setIsEmptyData(!data?.result?.length > 0);
-                }
             }
         } catch (error) {
             throw new Error('handle api history order loan');
@@ -228,16 +224,15 @@ const History = () => {
                     <section className="flex flex-row gap-3 mt-8">{renderTabs()}</section>
                     <section className="mt-8">
                         <HistoryTable
+                            tab={tab}
                             data={data}
                             page={page}
-                            tab={tab}
                             filter={filter}
-                            isEmptyData={isEmptyData}
                             onPage={setPage}
-                            configFilter={filters}
                             loading={isLoading}
-                            onFilter={handleChangeFilter}
+                            configFilter={filters}
                             onReset={handleResetFilter}
+                            onFilter={handleChangeFilter}
                         />
                     </section>
                 </section>

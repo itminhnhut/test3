@@ -96,6 +96,7 @@ const STATUS_EN = [
 const HOUR = 24;
 const LIMIT = 10;
 const YEAR = 365;
+const DEFAULT_DATE = '-';
 const PERCENT = 100;
 const MILLISECOND = 1;
 const STATUS_CODE = 200;
@@ -138,6 +139,7 @@ export {
     YEAR,
     LIMIT,
     TABS,
+    DEFAULT_DATE,
     PERCENT,
     ERRORS,
     INTEREST,
