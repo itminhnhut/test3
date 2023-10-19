@@ -48,7 +48,7 @@ const IconNoti = {
     16: <Image src={getS3Url('/images/screen/noti/ic_noti_system.png')} width={32} height={32} />, // NOTE: SYSTEM
     17: <Image src={getS3Url('/images/screen/noti/ic_noti_referral.png')} width={32} height={32} />, // NOTE: COMMISSION
     24: <FutureInsurance size={32} />, // NOTE: INSURANCE
-    26: <LendingIcon size={32} /> // NOTE: COMMISSION
+    26: <LendingIcon size={32} /> // ** NOTE: LENDING
 };
 
 const NotificationList = ({ btnClass }) => {

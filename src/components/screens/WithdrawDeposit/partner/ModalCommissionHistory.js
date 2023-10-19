@@ -6,7 +6,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_COMMISSION_HISTORY_PARTNER } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
-import { WalletTypeById } from 'components/screens/TransactionHistory/ModalHistory';
+import { WalletTypeById } from 'redux/actions/const';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import { ALLOWED_ASSET_ID } from '../constants';
 
