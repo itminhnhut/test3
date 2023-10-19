@@ -145,7 +145,7 @@ const ConfirmAdjustMargin = ({ onCloseAdjustMargin, isConfirmAdjust, tab, curren
                     </section>
                 </section>
                 {tab === 'add' ? (
-                    <ButtonV2 className="mt-10" onClick={handleSubmitConfirm} disabled={isLoading}>
+                    <ButtonV2 className="mt-10" onClick={handleSubmitConfirm} disabled={isLoading} loading={isLoading}>
                         Xác nhận
                     </ButtonV2>
                 ) : (

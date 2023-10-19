@@ -5,8 +5,9 @@ import { useRouter } from 'next/router';
 // ** components
 import Button from 'components/common/V2/ButtonV2/Button';
 import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
+import classNames from 'classnames';
 
-const EmptyData = ({ isDark, content, textBtn, tabDirect = 'lending' }) => {
+const EmptyData = ({ isDark, content, textBtn, tabDirect = 'lending', wrapperContainer = '' }) => {
     // ** useRouter
     const router = useRouter();
 
@@ -24,7 +25,7 @@ const EmptyData = ({ isDark, content, textBtn, tabDirect = 'lending' }) => {
         );
     };
     return (
-        <section className="flex flex-col space-y-3 items-center justify-center py-[50px]">
+        <section className={classNames('flex flex-col space-y-3 items-center justify-center py-[50px]', wrapperContainer)}>
             {isDark ? <NoDataDarkIcon /> : <NoDataLightIcon />}
             <span className="text-txtSecondary dark:text-darkBlue-5 text-sm sm:text-base !mt-3 !mb-4 !ml-0">{content}</span>
             <Button className="w-max px-6 !m-0" onClick={handleDirectionUrl}>

@@ -21,7 +21,7 @@ import Copy from 'components/svg/Copy';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 // ** Constants
-import { LIMIT, LOAN_HISTORY_STATUS, PERCENT, STATUS_CODE } from 'components/screens/Lending/constants';
+import { LIMIT, LOAN_HISTORY_STATUS, PERCENT, STATUS_CODE, DEFAULT_DATE, FORMAT_HH_MM_SS } from 'components/screens/Lending/constants';
 
 // ** Utils
 import FetchApi from 'utils/fetch-api';
@@ -77,6 +77,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
 
     // ** useState
     const [dataCollateral, setDataCollateral] = useState({});
+    const [isLoading, setIsLoading] = useState({});
 
     // ** handle
     const handleLoanOrderDetail = async (id, collateralAsset = {}, action = false) => {
@@ -195,7 +196,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                     <section className={classNames('flex flex-row items-center')}>
                         <section className="flex flex-col">
                             <div className="text-gray-1 dark:text-gray-7">Thời gian vay</div>
-                            <div className="dark:text-gray-4 text-gray-15 font-semibold">{formatTime(createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
+                            <div className="dark:text-gray-4 text-gray-15 font-semibold">{formatTime(createdAt || DEFAULT_DATE, FORMAT_HH_MM_SS)}</div>
                         </section>
                     </section>
                 </section>
@@ -216,7 +217,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
         const expTime = moment(new Date(expirationTime));
         const isActive = currentTime <= expTime;
 
-        const rs = isActive ? formatTime(liquidationTime, 'HH:mm:ss dd/MM/yyyy') : <Countdown date={Date.parse(liquidationTime)} renderer={renderer} />;
+        const rs = isActive ? formatTime(liquidationTime, FORMAT_HH_MM_SS) : <Countdown date={Date.parse(liquidationTime)} renderer={renderer} />;
         return (
             <section className="flex flex-row items-center">
                 <section className="flex flex-col">
@@ -250,7 +251,7 @@ const LoanTable = ({ data, page, loading, onPage }) => {
                         <section className={classNames('flex flex-row items-center')}>
                             <section className="flex flex-col">
                                 <div className="text-gray-1 dark:text-gray-7">Thời gian hết hạn</div>
-                                <div className="dark:text-gray-4 text-gray-15 font-semibold">{formatTime(expirationTime, 'HH:mm:ss dd/MM/yyyy')}</div>
+                                <div className="dark:text-gray-4 text-gray-15 font-semibold">{formatTime(expirationTime || DEFAULT_DATE, FORMAT_HH_MM_SS)}</div>
                             </section>
                         </section>
                     )}

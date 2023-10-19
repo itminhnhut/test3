@@ -16,7 +16,7 @@ import TableV2 from 'components/common/V2/TableV2';
 import AssetLogo from 'components/wallet/AssetLogo';
 
 // ** Constants
-import { PERCENT, YEAR, LOAN_HISTORY_STATUS, HOUR, ALLOW_ADJUST, FORMAT_HH_MM_SS, LIMIT } from 'components/screens/Lending/constants';
+import { PERCENT, YEAR, LOAN_HISTORY_STATUS, HOUR, ALLOW_ADJUST, FORMAT_HH_MM_SS, LIMIT, DEFAULT_DATE } from 'components/screens/Lending/constants';
 
 // * Context
 import { useAssets } from 'components/screens/Lending/context';
@@ -56,7 +56,7 @@ const TAB_REPAY = 'repay';
 const TAB_ADJUST = 'adjust';
 const DISABLE_STATUS = ['reject', 'repay', 'adjust'];
 
-const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, onFilter, configFilter, onReset }) => {
+const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, configFilter, onReset }) => {
     const {
         t,
         i18n: { language }
@@ -333,7 +333,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
         return (
             <WrapperSection className="whitespace-nowrap">
                 <div>Thời gian vay</div>
-                <WrapperDetail>{formatTime(createdAt, FORMAT_HH_MM_SS)}</WrapperDetail>
+                <WrapperDetail>{formatTime(createdAt || DEFAULT_DATE, FORMAT_HH_MM_SS)}</WrapperDetail>
             </WrapperSection>
         );
     };
@@ -371,7 +371,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
         return (
             <WrapperSection className="whitespace-nowrap">
                 <div>Thời gian thanh lý</div>
-                <WrapperDetail>{formatTime(liquidatedAt, FORMAT_HH_MM_SS)}</WrapperDetail>
+                <WrapperDetail>{formatTime(liquidatedAt || DEFAULT_DATE, FORMAT_HH_MM_SS)}</WrapperDetail>
             </WrapperSection>
         );
     };
@@ -423,7 +423,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
             return (
                 <WrapperSection className="w-max">
                     <div>Thời gian vay</div>
-                    <WrapperDetail>{formatTime(createdAt, FORMAT_HH_MM_SS)}</WrapperDetail>
+                    <WrapperDetail>{formatTime(createdAt || DEFAULT_DATE, FORMAT_HH_MM_SS)}</WrapperDetail>
                 </WrapperSection>
             );
         }
@@ -431,7 +431,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
             return (
                 <WrapperSection className="w-max">
                     <div>Thời gian vay</div>
-                    <WrapperDetail>{formatTime(metadata?.orderCreatedAt, FORMAT_HH_MM_SS)}</WrapperDetail>
+                    <WrapperDetail>{formatTime(metadata?.orderCreatedAt || DEFAULT_DATE, FORMAT_HH_MM_SS)}</WrapperDetail>
                 </WrapperSection>
             );
         }
@@ -463,7 +463,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
             return (
                 <WrapperSection className="w-max">
                     <div>Thời gian trả</div>
-                    <WrapperDetail>{formatTime(createdAt, FORMAT_HH_MM_SS)}</WrapperDetail>
+                    <WrapperDetail>{formatTime(createdAt || DEFAULT_DATE, FORMAT_HH_MM_SS)}</WrapperDetail>
                 </WrapperSection>
             );
         }
@@ -472,7 +472,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
                 <section className="flex flex-row items-center gap-2 whitespace-nowrap">
                     <section className="dark:text-gray-7 text-gray-1">
                         <div>Thời gian vay</div>
-                        <WrapperDetail>{formatTime(metadata?.orderCreatedAt || '-', FORMAT_HH_MM_SS)}</WrapperDetail>
+                        <WrapperDetail>{formatTime(metadata?.orderCreatedAt || DEFAULT_DATE, FORMAT_HH_MM_SS)}</WrapperDetail>
                     </section>
                 </section>
             );
@@ -487,7 +487,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
                 <section className="flex flex-row items-center gap-2 whitespace-nowrap">
                     <section className="dark:text-gray-7 text-gray-1">
                         <div>Thời gian điều chỉnh</div>
-                        <WrapperDetail>{formatTime(createdAt || '-', FORMAT_HH_MM_SS)}</WrapperDetail>
+                        <WrapperDetail>{formatTime(createdAt || DEFAULT_DATE, FORMAT_HH_MM_SS)}</WrapperDetail>
                     </section>
                 </section>
             );
@@ -595,15 +595,19 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, isEmptyData, o
 
     return (
         <section className="rounded-xl border-[0px] border-divider dark:border-divider-dark bg-white dark:bg-dark-4">
-            {isEmptyData ? (
-                <EmptyData isDark={isDark} content="Không có lịch sử khoản vay" textBtn="Vay Crypto ngay" link="/lending?tab=lending&loanAsset=USDT" />
+            <div className="flex gap-6 flex-wrap mx-6 items-end justify-between">
+                <div className="flex justify-between gap-4 mb-8 mt-6">{renderFilter()}</div>
+            </div>
+            {data?.result?.length === 0 ? (
+                <EmptyData
+                    isDark={isDark}
+                    wrapperContainer="!pt-[18px]"
+                    content="Không có lịch sử khoản vay"
+                    textBtn="Vay Crypto ngay"
+                    link="/lending?tab=lending&loanAsset=USDT"
+                />
             ) : (
-                <>
-                    <div className="flex gap-6 flex-wrap mx-6 items-end justify-between">
-                        <div className="flex justify-between gap-4 mb-8 mt-6">{renderFilter()}</div>
-                    </div>
-                    {renderTable()}
-                </>
+                renderTable()
             )}
         </section>
     );

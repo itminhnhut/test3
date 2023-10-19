@@ -27,7 +27,7 @@ import { getTimeAgo, getS3Url } from 'src/redux/actions/utils';
 import colors from 'styles/colors';
 
 import { IconBell } from '../common/Icons';
-import { BxsBellIcon, EarningIcon, FutureInsurance, SettingIcon } from '../svg/SvgIcon';
+import { BxsBellIcon, FutureInsurance, LendingIcon, EarningIcon } from '../svg/SvgIcon';
 
 const NOTI_READ = NotificationStatus.DELETED;
 
@@ -48,7 +48,8 @@ const IconNoti = {
     14: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: EVENTS
     16: <Image src={getS3Url('/images/screen/noti/ic_noti_system.png')} width={32} height={32} />, // NOTE: SYSTEM
     17: <Image src={getS3Url('/images/screen/noti/ic_noti_referral.png')} width={32} height={32} />, // NOTE: COMMISSION
-    24: <FutureInsurance size={32} /> // NOTE: INSURANCE
+    24: <FutureInsurance size={32} />, // NOTE: INSURANCE
+    26: <LendingIcon size={32} /> // ** NOTE: LENDING
 };
 
 const NotificationList = ({ btnClass }) => {
