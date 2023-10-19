@@ -601,7 +601,7 @@ const HistoryTable = ({ data, page, loading, onPage, tab, filter, onFilter, conf
             {data?.result?.length === 0 ? (
                 <EmptyData
                     isDark={isDark}
-                    wrapperContainer="!pt-[180x"
+                    wrapperContainer="!pt-[18px]"
                     content="Không có lịch sử khoản vay"
                     textBtn="Vay Crypto ngay"
                     link="/lending?tab=lending&loanAsset=USDT"
